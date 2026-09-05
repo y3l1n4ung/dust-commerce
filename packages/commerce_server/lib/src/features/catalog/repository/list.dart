@@ -127,7 +127,9 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       AND lower(filter_tag.value) = lower($6)
       AND filter_tag.deleted_at IS NULL
   ))
-ORDER BY product.handle
+-- Latest arrivals are the source storefront default; handle is deterministic
+-- when a bulk insert gives multiple products the same generated timestamp.
+ORDER BY product.created_at DESC, product.handle
 LIMIT $2 OFFSET $3
 ''')
   Future<Result<List<ProductResponse>, SqlxError>> listPublished(
