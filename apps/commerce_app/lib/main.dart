@@ -139,7 +139,11 @@ class _CommerceAppState extends State<CommerceApp> {
               child: CatalogViewModelScope(
                 args: (_) => CatalogViewModelArgs(api: widget.api),
                 create: (_, args) => CatalogViewModel(args),
-                child: app,
+                child: ProductListingViewModelScope(
+                  args: (_) => ProductListingViewModelArgs(api: widget.api),
+                  create: (_, args) => ProductListingViewModel(args),
+                  child: app,
+                ),
               ),
             ),
           ),

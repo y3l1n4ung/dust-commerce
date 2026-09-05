@@ -16,9 +16,9 @@ and the `Medusa DTC storefront parity` milestone.
 | :--- | :--- | :--- |
 | `layout/templates/nav` | shared storefront shell | partial in #19; nav/menu/cart count work, footer remains |
 | `home/components/hero` | home hero | implemented in #19 |
-| `featured-products/product-rail` | featured product grid | partial in #19; collection rails wait on #18 |
+| `featured-products/product-rail` | featured product grid | implemented in #18 with source-ordered, API-backed collection rails; rendered QA remains |
 | `products/components/product-preview` | product card | implemented in #19 |
-| `store/templates` | catalogue | partial in #19; dedicated store filters and paging remain |
+| `store/templates` | catalogue | partial in #18 and #19; source sorting and 12-item paging implemented, option-value filtering remains |
 | `products/templates` | product detail route | implemented in #22; source-ordered mobile and sticky desktop composition |
 | `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations and sticky mobile actions |
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
@@ -27,7 +27,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `account/templates` | account shell and session | partial in #26; register, sign in, sign out, secure restore, overview, navigation and order list implemented; profile and address editing remain |
 | `checkout/templates` | checkout and payment | queued in #28 |
 | `order/templates` | confirmation and order details | partial in #26; authenticated order list and source-shaped cards implemented; confirmation, detail, transfer and return flows remain in #20 and #28 |
-| categories and collections routes | product organisation | queued in #18 and #24 |
+| categories and collections routes | product organisation | implemented in #18 with real API metadata, filtering, hierarchy, sorting and paging; exact nested category paths wait on `dust#542`, rendered QA remains |
 
 ## Theme and selection map
 
@@ -58,6 +58,14 @@ The Medusa-only `ProductOnboardingCta` is intentionally excluded. It appears
 only when a private admin-setup cookie is present and links to Medusa's local
 admin onboarding flow; it is not a customer storefront capability or a valid
 Morrow production destination.
+
+Medusa declares categories as a catch-all route so a full hierarchical handle
+stays readable (`/categories/clothing/shirts`). Dust Flutter 0.1.4 currently
+supports one segment per typed path parameter, so the generated route preserves
+the same handle as `/categories/clothing%2Fshirts`. Exact parse-and-restore
+support is tracked upstream in
+[`dust#542`](https://github.com/y3l1n4ung/dust/issues/542); generated files are
+not hand-edited around that limitation.
 
 ## Customer session boundary
 

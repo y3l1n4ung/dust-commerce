@@ -13,7 +13,10 @@ import 'package:commerce_app/src/features/account/view/account_orders_page.dart'
 import 'package:commerce_app/src/features/account/view/account_page.dart';
 import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
+import 'package:commerce_app/src/features/catalog/view/category_page.dart';
+import 'package:commerce_app/src/features/catalog/view/collection_page.dart';
 import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
+import 'package:commerce_app/src/features/catalog/view/store_page.dart';
 import 'package:commerce_app/src/features/checkout/view/checkout_page.dart';
 import 'package:commerce_app/src/features/checkout/view/order_confirmation_page.dart';
 import 'package:commerce_app/src/features/product/view/product_page.dart';
@@ -56,11 +59,35 @@ const List<GeneratedRoute> $commerceRoutes = [
     guards: [],
   ),
   GeneratedRoute(
+    '/categories',
+    routes: [
+      GeneratedRoute(
+        ':handle',
+        page: CategoryPage,
+        name: 'category',
+        resultType: 'void',
+        guards: [],
+      ),
+    ],
+  ),
+  GeneratedRoute(
     '/checkout',
     page: CheckoutPage,
     name: 'checkout',
     resultType: 'void',
     guards: [CheckoutGuard],
+  ),
+  GeneratedRoute(
+    '/collections',
+    routes: [
+      GeneratedRoute(
+        ':handle',
+        page: CollectionPage,
+        name: 'collection',
+        resultType: 'void',
+        guards: [],
+      ),
+    ],
   ),
   GeneratedRoute(
     '/order',
@@ -91,6 +118,13 @@ const List<GeneratedRoute> $commerceRoutes = [
       ),
     ],
   ),
+  GeneratedRoute(
+    '/store',
+    page: StorePage,
+    name: 'store',
+    resultType: 'void',
+    guards: [],
+  ),
 ];
 
 bool commerceRouteRequiresAuth(CommerceRoute route) => route.requiresAuth;
@@ -108,9 +142,12 @@ RouteDebugInfo commerceRouteDebugInfo(CommerceRoute route) {
     AccountRoute() => const RouteDebugInfo(name: 'account', shell: null, branch: null, resultType: 'void'),
     AccountOrdersRoute() => const RouteDebugInfo(name: 'accountOrders', shell: null, branch: null, resultType: 'void'),
     CartRoute() => const RouteDebugInfo(name: 'cart', shell: null, branch: null, resultType: 'void'),
+    CategoryRoute(handle: _, page: _, sortBy: _) => const RouteDebugInfo(name: 'category', shell: null, branch: null, resultType: 'void'),
     CheckoutRoute() => const RouteDebugInfo(name: 'checkout', shell: null, branch: null, resultType: 'void'),
+    CollectionRoute(handle: _, page: _, sortBy: _) => const RouteDebugInfo(name: 'collection', shell: null, branch: null, resultType: 'void'),
     OrderConfirmedRoute(id: _) => const RouteDebugInfo(name: 'orderConfirmed', shell: null, branch: null, resultType: 'void'),
     ProductRoute(handle: _) => const RouteDebugInfo(name: 'product', shell: null, branch: null, resultType: 'void'),
+    StoreRoute(page: _, sortBy: _) => const RouteDebugInfo(name: 'store', shell: null, branch: null, resultType: 'void'),
   };
 }
 

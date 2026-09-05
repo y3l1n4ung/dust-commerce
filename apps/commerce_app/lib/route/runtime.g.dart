@@ -14,7 +14,10 @@ import 'package:commerce_app/src/features/account/view/account_orders_page.dart'
 import 'package:commerce_app/src/features/account/view/account_page.dart';
 import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
+import 'package:commerce_app/src/features/catalog/view/category_page.dart';
+import 'package:commerce_app/src/features/catalog/view/collection_page.dart';
 import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
+import 'package:commerce_app/src/features/catalog/view/store_page.dart';
 import 'package:commerce_app/src/features/checkout/view/checkout_page.dart';
 import 'package:commerce_app/src/features/checkout/view/order_confirmation_page.dart';
 import 'package:commerce_app/src/features/product/view/product_page.dart';
@@ -80,7 +83,15 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const CatalogRoute(),
       route,
     ],
+    CategoryRoute(handle: _, page: _, sortBy: _) => [
+      const CatalogRoute(),
+      route,
+    ],
     CheckoutRoute() => [
+      const CatalogRoute(),
+      route,
+    ],
+    CollectionRoute(handle: _, page: _, sortBy: _) => [
       const CatalogRoute(),
       route,
     ],
@@ -89,6 +100,10 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       route,
     ],
     ProductRoute(handle: _) => [
+      const CatalogRoute(),
+      route,
+    ],
+    StoreRoute(page: _, sortBy: _) => [
       const CatalogRoute(),
       route,
     ],
@@ -101,9 +116,12 @@ const Map<Type, Type?> _$appliedShellsByPage = {
   AccountPage: null,
   AccountOrdersPage: null,
   CartPage: null,
+  CategoryPage: null,
   CheckoutPage: null,
+  CollectionPage: null,
   OrderConfirmationPage: null,
   ProductPage: null,
+  StorePage: null,
 };
 
 Page<dynamic> buildCommerceRoutePage(
@@ -161,6 +179,15 @@ Page<dynamic> buildCommerceRoutePage(
       maintainState: true,
       child: const CartPage(),
     ),
+    CategoryRoute(handle: final handle, page: final page, sortBy: final sortBy) => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'category',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: CategoryPage(handle: handle, page: page, sortBy: sortBy),
+    ),
     CheckoutRoute() => generatedPage(
       key: key,
       location: route.location,
@@ -169,6 +196,19 @@ Page<dynamic> buildCommerceRoutePage(
       fullscreenDialog: false,
       maintainState: true,
       child: const CheckoutPage(),
+    ),
+    CollectionRoute(
+      handle: final handle,
+      page: final page,
+      sortBy: final sortBy,
+    ) => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'collection',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: CollectionPage(handle: handle, page: page, sortBy: sortBy),
     ),
     OrderConfirmedRoute(id: final id) => generatedPage(
       key: key,
@@ -187,6 +227,15 @@ Page<dynamic> buildCommerceRoutePage(
       fullscreenDialog: false,
       maintainState: true,
       child: ProductPage(handle: handle),
+    ),
+    StoreRoute(page: final page, sortBy: final sortBy) => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'store',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: StorePage(page: page, sortBy: sortBy),
     ),
   };
 }

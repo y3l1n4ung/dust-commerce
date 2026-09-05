@@ -86,7 +86,7 @@ class _StoreMenu extends StatelessWidget {
                   label: context.tr('shop_title', defaultText: 'Store'),
                   onPressed: () => _go(
                     context,
-                    () => context.navigator.catalog().go(),
+                    () => context.navigator.store().go(),
                   ),
                 ),
                 _MenuLink(

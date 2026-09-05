@@ -92,6 +92,34 @@ final class CartRoute extends CommerceRoute<void> {
   bool get requiresAuth => false;
 }
 
+/// Typed route data for `CategoryRoute`.
+final class CategoryRoute extends CommerceRoute<void> {
+  const CategoryRoute({required this.handle, this.page = 1, this.sortBy = 'created_at'});
+
+  final String handle;
+  final int page;
+  final String sortBy;
+
+  @override
+  String get location {
+    final query = <String, dynamic>{};
+    if (page != 1) {
+      query['page'] = page.toString();
+    }
+    if (sortBy != 'created_at') {
+      query['sortBy'] = sortBy;
+    }
+    return generatedRoutePath(
+      ['categories', handle],
+      queryParameters: query.isEmpty ? null : query,
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+
+  @override
+  bool get requiresAuth => false;
+}
+
 /// Typed route data for `CheckoutRoute`.
 final class CheckoutRoute extends CommerceRoute<void> {
   const CheckoutRoute();
@@ -103,6 +131,34 @@ final class CheckoutRoute extends CommerceRoute<void> {
       uriExtras: generatedRouteUriExtrasOf(this),
     );
   }
+}
+
+/// Typed route data for `CollectionRoute`.
+final class CollectionRoute extends CommerceRoute<void> {
+  const CollectionRoute({required this.handle, this.page = 1, this.sortBy = 'created_at'});
+
+  final String handle;
+  final int page;
+  final String sortBy;
+
+  @override
+  String get location {
+    final query = <String, dynamic>{};
+    if (page != 1) {
+      query['page'] = page.toString();
+    }
+    if (sortBy != 'created_at') {
+      query['sortBy'] = sortBy;
+    }
+    return generatedRoutePath(
+      ['collections', handle],
+      queryParameters: query.isEmpty ? null : query,
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+
+  @override
+  bool get requiresAuth => false;
 }
 
 /// Typed route data for `OrderConfirmedRoute`.
@@ -141,6 +197,33 @@ final class ProductRoute extends CommerceRoute<void> {
   bool get requiresAuth => false;
 }
 
+/// Typed route data for `StoreRoute`.
+final class StoreRoute extends CommerceRoute<void> {
+  const StoreRoute({this.page = 1, this.sortBy = 'created_at'});
+
+  final int page;
+  final String sortBy;
+
+  @override
+  String get location {
+    final query = <String, dynamic>{};
+    if (page != 1) {
+      query['page'] = page.toString();
+    }
+    if (sortBy != 'created_at') {
+      query['sortBy'] = sortBy;
+    }
+    return generatedRoutePath(
+      ['store'],
+      queryParameters: query.isEmpty ? null : query,
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+
+  @override
+  bool get requiresAuth => false;
+}
+
 String commerceRouteLocation(CommerceRoute route) => route.location;
 
 CommerceRoute parseCommerceRoute(Uri uri) {
@@ -166,9 +249,29 @@ CommerceRoute parseCommerceRoute(Uri uri) {
     final route = CartRoute();
     return withGeneratedRouteUriExtras(route, uri, const <String>{});
   }
+  if (segments.length == 2 && segments[0] == 'categories') {
+    final handle = segments[1];
+    final page = uri.queryParameters.containsKey('page') ? int.tryParse(uri.queryParameters['page'] ?? '') : 1;
+    final sortBy = uri.queryParameters['sortBy'] ?? 'created_at';
+    if (page == null) {
+      return _$notFoundRoute(uri);
+    }
+    final route = CategoryRoute(handle: handle, page: page, sortBy: sortBy);
+    return withGeneratedRouteUriExtras(route, uri, const <String>{'page', 'sortBy'});
+  }
   if (segments.length == 1 && segments[0] == 'checkout') {
     final route = CheckoutRoute();
     return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (segments.length == 2 && segments[0] == 'collections') {
+    final handle = segments[1];
+    final page = uri.queryParameters.containsKey('page') ? int.tryParse(uri.queryParameters['page'] ?? '') : 1;
+    final sortBy = uri.queryParameters['sortBy'] ?? 'created_at';
+    if (page == null) {
+      return _$notFoundRoute(uri);
+    }
+    final route = CollectionRoute(handle: handle, page: page, sortBy: sortBy);
+    return withGeneratedRouteUriExtras(route, uri, const <String>{'page', 'sortBy'});
   }
   if (segments.length == 3 && segments[0] == 'order' && segments[2] == 'confirmed') {
     final id = segments[1];
@@ -179,6 +282,15 @@ CommerceRoute parseCommerceRoute(Uri uri) {
     final handle = segments[1];
     final route = ProductRoute(handle: handle);
     return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (segments.length == 1 && segments[0] == 'store') {
+    final page = uri.queryParameters.containsKey('page') ? int.tryParse(uri.queryParameters['page'] ?? '') : 1;
+    final sortBy = uri.queryParameters['sortBy'] ?? 'created_at';
+    if (page == null) {
+      return _$notFoundRoute(uri);
+    }
+    final route = StoreRoute(page: page, sortBy: sortBy);
+    return withGeneratedRouteUriExtras(route, uri, const <String>{'page', 'sortBy'});
   }
   return _$notFoundRoute(uri);
 }

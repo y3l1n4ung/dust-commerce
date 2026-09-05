@@ -13,12 +13,7 @@
 
 part of 'catalog_state.dart';
 
-const DeepCollectionEquality _catalogStateProductsEquality = DeepCollectionEquality();
-final class _CatalogStateCopyWithUnset {
-  const _CatalogStateCopyWithUnset();
-}
-
-const _catalogStateCopyWithUnset = _CatalogStateCopyWithUnset();
+const DeepCollectionEquality _catalogStateRailsEquality = DeepCollectionEquality();
 
 mixin _$CatalogState {
   @override
@@ -26,10 +21,8 @@ mixin _$CatalogState {
     final self = this as CatalogState;
     return 'CatalogState('
         'currencyCode: ${self.currencyCode}, '
-        'message: ${self.message}, '
-        'products: ${self.products}, '
-        'status: ${self.status}, '
-        'total: ${self.total}'
+        'rails: ${self.rails}, '
+        'status: ${self.status}'
         ')';
   }
 
@@ -40,10 +33,8 @@ mixin _$CatalogState {
         other is CatalogState &&
             runtimeType == other.runtimeType &&
             other.currencyCode == self.currencyCode &&
-            other.message == self.message &&
-            _catalogStateProductsEquality.equals(other.products, self.products) &&
-            other.status == self.status &&
-            other.total == self.total;
+            _catalogStateRailsEquality.equals(other.rails, self.rails) &&
+            other.status == self.status;
   }
 
   @override
@@ -52,10 +43,8 @@ mixin _$CatalogState {
     return Object.hashAll([
       runtimeType,
       self.currencyCode,
-      self.message,
-      _catalogStateProductsEquality.hash(self.products),
+      _catalogStateRailsEquality.hash(self.rails),
       self.status,
-      self.total,
     ]);
   }
 
@@ -64,7 +53,6 @@ mixin _$CatalogState {
   /// Usage:
   /// ```dart
   /// final updated = catalogState.copyWith(currencyCode: 'John');
-  /// final cleared = catalogState.copyWith(message: null);
   /// ```
   @pragma('vm:prefer-inline')
   _$CatalogStateCopyWith<CatalogState> get copyWith => _$CatalogStateCopyWithImpl<CatalogState>(this as CatalogState, (value) => value);
@@ -76,10 +64,8 @@ mixin _$CatalogState {
 abstract class _$CatalogStateCopyWith<$Res> {
   $Res call({
     String? currencyCode,
-    String? message,
-    List<Product>? products,
+    List<FeaturedProductRail>? rails,
     CatalogStatus? status,
-    int? total,
   });
 }
 
@@ -94,20 +80,14 @@ final class _$CatalogStateCopyWithImpl<$Res> implements _$CatalogStateCopyWith<$
   @pragma('vm:prefer-inline')
   $Res call({
     Object? currencyCode = null,
-    Object? message = _catalogStateCopyWithUnset,
-    Object? products = null,
+    Object? rails = null,
     Object? status = null,
-    Object? total = null,
   }) {
     return _then(
       CatalogState(
         status: status == null ? _self.status : status as CatalogStatus,
-        products: products == null ? _self.products : products as List<Product>,
-        total: total == null ? _self.total : total as int,
+        rails: rails == null ? _self.rails : rails as List<FeaturedProductRail>,
         currencyCode: currencyCode == null ? _self.currencyCode : currencyCode as String,
-        message: identical(message, _catalogStateCopyWithUnset)
-            ? _self.message
-            : message as String?,
       )
     );
   }

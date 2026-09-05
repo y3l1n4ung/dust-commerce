@@ -578,10 +578,6 @@
   "@fast_delivery_body": {
     "description": "Fast-delivery policy detail."
   },
-  "featured_products": "အထူးရွေးချယ်ထားသော ကုန်ပစ္စည်းများ",
-  "@featured_products": {
-    "description": "Heading above the home product grid."
-  },
   "from_price": "မှစ၍ ",
   "@from_price": {
     "description": "Prefix shown before the cheapest unselected variant price."
@@ -614,6 +610,14 @@
   "@origin_country": {
     "description": "Product origin fact label."
   },
+  "catalog_failure": "ကုန်ပစ္စည်းစာရင်းကို ရယူ၍ မရပါ။",
+  "@catalog_failure": {
+    "description": "Safe error shown when the home catalogue cannot load."
+  },
+  "pagination_ellipsis": "…",
+  "@pagination_ellipsis": {
+    "description": "Gap between non-adjacent product page numbers."
+  },
   "out_of_stock": "ပစ္စည်းကုန်နေပါသည်",
   "@out_of_stock": {
     "description": "Unavailable selected variant label."
@@ -622,18 +626,13 @@
   "@price_separator": {
     "description": "Separator between product title and price."
   },
-  "product_count": "ကုန်ပစ္စည်း {count} ခု",
-  "@product_count": {
-    "description": "Number of products in the catalogue.",
-    "placeholders": {
-      "count": {
-        "example": "4"
-      }
-    }
-  },
   "product_information": "ကုန်ပစ္စည်း အချက်အလက်",
   "@product_information": {
     "description": "Product facts accordion title."
+  },
+  "products_failure": "ကုန်ပစ္စည်းများကို ရယူ၍ မရပါ။",
+  "@products_failure": {
+    "description": "Safe error shown when a product listing cannot load."
   },
   "product_type": "အမျိုးအစား",
   "@product_type": {
@@ -692,9 +691,29 @@
   "@sold_out": {
     "description": "Translation for `shop_sold_out`."
   },
+  "sort_by": "အစီအစဉ်",
+  "@sort_by": {
+    "description": "Heading above product sort choices."
+  },
+  "sort_latest": "နောက်ဆုံးရောက်ကုန်ပစ္စည်းများ",
+  "@sort_latest": {
+    "description": "Sorts products by newest first."
+  },
+  "sort_price_asc": "ဈေးနှုန်း: အနိမ့်မှ အမြင့်",
+  "@sort_price_asc": {
+    "description": "Sorts products from lowest to highest price."
+  },
+  "sort_price_desc": "ဈေးနှုန်း: အမြင့်မှ အနိမ့်",
+  "@sort_price_desc": {
+    "description": "Sorts products from highest to lowest price."
+  },
   "title": "ဆိုင်",
   "@title": {
     "description": "Translation for `shop_title`."
+  },
+  "view_all": "အားလုံး ကြည့်ရန်",
+  "@view_all": {
+    "description": "Opens every product in a featured collection."
   },
   "weight": "အလေးချိန်",
   "@weight": {

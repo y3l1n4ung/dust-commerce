@@ -26,6 +26,28 @@ void main() {
     );
   });
 
+  test('generated listing routes retain sort and page queries', () {
+    final store = parseCommerceRoute(
+      Uri.parse('/store?page=2&sortBy=price_asc'),
+    );
+    final collection = parseCommerceRoute(
+      Uri.parse('/collections/featured?sortBy=price_desc'),
+    );
+    final category = parseCommerceRoute(
+      Uri.parse('/categories/clothing%2Fshirts?page=3'),
+    );
+
+    expect(store, isA<StoreRoute>());
+    expect(store.location, '/store?page=2&sortBy=price_asc');
+    expect(collection, isA<CollectionRoute>());
+    expect(
+      collection.location,
+      '/collections/featured?sortBy=price_desc',
+    );
+    expect(category, isA<CategoryRoute>());
+    expect(category.location, '/categories/clothing%2Fshirts?page=3');
+  });
+
   test('router preserves the browser location on its first parse', () {
     const api = _UnusedApi();
     final router = CommerceRouter(
