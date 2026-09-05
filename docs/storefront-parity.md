@@ -23,7 +23,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations and sticky mobile actions |
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
 | `layout/components/cart-dropdown` | cart preview | queued in #21 |
-| `cart/templates` | cart route | partial in #21; persistence and mutations remain |
+| `cart/templates` | cart route | partial in #21; secure scoped persistence and server-authoritative mutations implemented, source UI remains |
 | `account/templates` | account shell and session | queued in #26 |
 | `checkout/templates` | checkout and payment | queued in #28 |
 | `order/templates` | confirmation and order details | queued in #20 and #28 |
