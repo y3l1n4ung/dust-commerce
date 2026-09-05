@@ -1,6 +1,6 @@
-import 'package:commerce_server/src/features/cart/model/model.dart';
+import 'package:commerce_server/src/features/cart/model/cart.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
-import 'package:commerce_shared/commerce_shared.dart';
+import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
 
 /// Starts an empty cart, in [regionId] when one is named.
@@ -10,9 +10,9 @@ import 'package:dust_dart/db.dart';
 /// matters as soon as there is more than one: without it the cart's currency
 /// depends on which region sorts first, which is not a decision anybody made.
 ///
-/// Returns `Ok(null)` when the named region does not exist, or when the shop
-/// has no regions at all.
-Future<Result<Cart?, SqlxError>> createCart(
+/// Returns [None] when the named region does not exist, or when the shop has no
+/// regions at all.
+Future<Result<Option<CartResponse>, SqlxError>> createCart(
   CartCreateRepository writes, {
   required String id,
   String? regionId,
@@ -24,32 +24,27 @@ Future<Result<Cart?, SqlxError>> createCart(
       : await writes.regionById(regionId);
   if (regions case Err(:final error)) return Err(error);
 
-  final region = (regions as Ok<RegionRow?, SqlxError>).value;
-  if (region == null) return const Ok(null);
+  final region = optionOf(
+    (regions as Ok<RegionResponse?, SqlxError>).value,
+  );
+  if (region case None()) return const Ok(None<CartResponse>());
+  final selected = (region as Some<RegionResponse>).value;
 
   final written = await writes.createCart(
     id,
-    region.id,
+    selected.id,
     customerId,
     email,
   );
   if (written case Err(:final error)) return Err(error);
 
   return Ok(
-    Cart(
+    Some<CartResponse>(CartResponse(
       id: id,
-      region: Region(
-        id: region.id,
-        name: region.name,
-        currencyCode: region.currencyCode,
-        taxRate: region.taxRate,
-        taxInclusive: region.taxInclusive != 0,
-        countries:
-            region.countries.split(',').where((it) => it.isNotEmpty).toList(),
-      ),
+      region: selected,
       email: email,
       customerId: customerId,
       items: const [],
-    ),
+    )),
   );
 }

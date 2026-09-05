@@ -1,6 +1,7 @@
 import 'package:commerce_server/src/features/cart/deps.dart';
 import 'package:commerce_server/src/features/cart/extractor.dart';
 import 'package:commerce_server/src/features/cart/handler/read.dart';
+import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
@@ -14,7 +15,8 @@ const ValidatedExtractable<AddLineBody> _body =
 /// 404 about the thing in the path; an unknown variant is a 422 about the
 /// body; running out of stock is a 409, because somebody buying the last one
 /// is an ordinary outcome of a shop rather than a malformed request.
-Future<Result<CartView, Rejection>> addLineHandler(Request request) async {
+Future<Result<CartViewResponse, Rejection>> addLineHandler(
+    Request request) async {
   final access = await request.extract(const Extension<CartAccess>());
   final cartId = access.cart.id;
 
@@ -37,16 +39,16 @@ Future<Result<CartView, Rejection>> addLineHandler(Request request) async {
   );
 
   return switch (result) {
-    Ok(value: null) => await cartViewOf(deps.reads, cartId),
-    Ok(value: AddLineFailure.noCart) =>
+    Ok(value: None()) => await cartViewOf(deps.reads, cartId),
+    Ok(value: Some(value: AddLineFailure.noCart)) =>
       Err(Rejection.notFound('Cart "$cartId"')),
-    Ok(value: AddLineFailure.noVariant) => Err(
+    Ok(value: Some(value: AddLineFailure.noVariant)) => Err(
         Rejection.status(
           422,
           'Variant "${body.variantId}" is not on sale in this currency',
         ),
       ),
-    Ok(value: AddLineFailure.outOfStock) =>
+    Ok(value: Some(value: AddLineFailure.outOfStock)) =>
       Err(Rejection.conflict('Not enough stock for "${body.variantId}"')),
     Err() => const Err(Rejection.internal()),
   };

@@ -1,6 +1,7 @@
 import 'package:commerce_server/src/features/cart/deps.dart';
 import 'package:commerce_server/src/features/cart/extractor.dart';
 import 'package:commerce_server/src/features/cart/handler/read.dart';
+import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
@@ -10,7 +11,7 @@ const ValidatedExtractable<ChooseShippingBody> _body = ValidatedExtractable(
 );
 
 /// `POST /carts/{id}/shipping-method` — choose how the goods travel.
-Future<Result<CartView, Rejection>> chooseShippingHandler(
+Future<Result<CartViewResponse, Rejection>> chooseShippingHandler(
   Request request,
 ) async {
   final access = await request.extract(const Extension<CartAccess>());
@@ -33,10 +34,10 @@ Future<Result<CartView, Rejection>> chooseShippingHandler(
   );
 
   return switch (result) {
-    Ok(value: null) => await cartViewOf(deps.reads, cartId),
-    Ok(value: ChooseShippingFailure.noCart) =>
+    Ok(value: None()) => await cartViewOf(deps.reads, cartId),
+    Ok(value: Some(value: ChooseShippingFailure.noCart)) =>
       Err(Rejection.notFound('Cart "$cartId"')),
-    Ok(value: ChooseShippingFailure.noOption) => Err(
+    Ok(value: Some(value: ChooseShippingFailure.noOption)) => Err(
         Rejection.status(
           422,
           'Shipping option "${body.optionId}" is not offered here',

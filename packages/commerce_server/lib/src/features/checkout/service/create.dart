@@ -1,8 +1,11 @@
+import 'package:commerce_server/src/features/cart/model/cart.dart';
 import 'package:commerce_server/src/features/cart/model/promotion.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
 import 'package:commerce_server/src/features/checkout/repository/repository.dart';
+import 'package:commerce_server/src/features/checkout/model.dart';
 import 'package:commerce_server/src/infra/database.dart';
+import 'package:commerce_server/src/infra/option.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
 
@@ -35,11 +38,11 @@ enum CheckoutFailure {
 ///
 /// The cart is emptied last. Its lines are copied onto the order first, so the
 /// order does not reference rows that are about to be deleted.
-Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
+Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
   CommerceDatabase database, {
   required String cartId,
   required String email,
-  String? customerId,
+  required Option<String> customerId,
   required Address shippingAddress,
   required Address billingAddress,
   required DateTime placedAt,
@@ -48,22 +51,26 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
   return database.transaction((tx) async {
     final carts = CartReadRepository(tx);
     final orders = CheckoutCreateRepository(tx);
+    final reads = CheckoutReadRepository(tx);
 
     final loaded = await loadCart(carts, cartId);
     if (loaded case Err(:final error)) return Err(error);
 
-    final cart = (loaded as Ok<Cart?, SqlxError>).value;
-    if (cart == null) return const Ok((null, CheckoutFailure.noCart));
-    if (cart.customerId != null && cart.customerId != customerId) {
-      return const Ok((null, CheckoutFailure.wrongCustomer));
+    final cartOption = (loaded as Ok<Option<CartResponse>, SqlxError>).value;
+    if (cartOption case None()) {
+      return const Ok(Err(CheckoutFailure.noCart));
     }
-    if (cart.isEmpty) return const Ok((null, CheckoutFailure.emptyCart));
+    final cart = (cartOption as Some<CartResponse>).value;
+    if (cart.customerId case final owner? when customerId != Some(owner)) {
+      return const Ok(Err(CheckoutFailure.wrongCustomer));
+    }
+    if (cart.isEmpty) return const Ok(Err(CheckoutFailure.emptyCart));
 
     for (final line in cart.items) {
       final taken = await orders.reserveStock(line.variantId, line.quantity);
       if (taken case Err(:final error)) return Err(error);
       if ((taken as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
-        return const Ok((null, CheckoutFailure.outOfStock));
+        return const Ok(Err(CheckoutFailure.outOfStock));
       }
     }
 
@@ -71,7 +78,10 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
     final written = await orders.insertOrder(
       orderId,
       cart.region.id,
-      customerId ?? cart.customerId,
+      customerId.match<String?>(
+        some: (value) => value,
+        none: () => cart.customerId,
+      ),
       email,
       cart.region.currencyCode,
       cart.subtotal.amount,
@@ -127,9 +137,11 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
     if (cart.discount != null && !cart.discount!.isZero) {
       final promotion = await carts.promotionOn(cartId);
       if (promotion case Err(:final error)) return Err(error);
-      final applied = (promotion as Ok<CartPromotionRow?, SqlxError>).value;
-      if (applied != null) {
-        final counted = await orders.countRedemption(applied.code);
+      final applied = optionOf(
+        (promotion as Ok<AppliedPromotion?, SqlxError>).value,
+      );
+      if (applied case Some(value: final promotion)) {
+        final counted = await orders.countRedemption(promotion.code);
         if (counted case Err(:final error)) return Err(error);
       }
     }
@@ -137,24 +149,16 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
     final emptied = await orders.clearCart(cartId);
     if (emptied case Err(:final error)) return Err(error);
 
-    return Ok((
-      Order(
-        id: orderId,
-        email: email,
-        customerId: customerId ?? cart.customerId,
-        region: cart.region,
-        items: cart.items,
-        subtotal: cart.subtotal,
-        shippingTotal: cart.shippingTotal,
-        discountTotal: cart.discountTotal,
-        shippingMethod: cart.shippingMethod,
-        tax: cart.tax,
-        total: cart.total,
-        shippingAddress: shippingAddress,
-        billingAddress: billingAddress,
-        placedAt: placedAt,
-      ),
-      null,
-    ));
+    final response = await reads.findOrder(orderId);
+    if (response case Err(:final error)) return Err(error);
+    final created = optionOf(
+      (response as Ok<OrderResponse?, SqlxError>).value,
+    );
+    return switch (created) {
+      Some(value: final order) => Ok(Ok(order)),
+      None() => Err(
+          SqlxError.decode('The order was written but could not be read back'),
+        ),
+    };
   });
 }

@@ -13,270 +13,212 @@
 
 part of 'cart.dart';
 
-mixin _$CartRow {
-  @override
-  String toString() {
-    final self = this as CartRow;
-    return 'CartRow('
-        'countries: ${self.countries}, '
-        'currencyCode: ${self.currencyCode}, '
-        'customerId: ${self.customerId}, '
-        'email: ${self.email}, '
-        'id: ${self.id}, '
-        'regionId: ${self.regionId}, '
-        'regionName: ${self.regionName}, '
-        'taxInclusive: ${self.taxInclusive}, '
-        'taxRate: ${self.taxRate}'
-        ')';
-  }
+mixin _$CartResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$CartResponseSerialize(this as CartResponse);
 
-  @override
-  bool operator ==(Object other) {
-    final self = this as CartRow;
-    return identical(this, other) ||
-        other is CartRow &&
-            runtimeType == other.runtimeType &&
-            other.countries == self.countries &&
-            other.currencyCode == self.currencyCode &&
-            other.customerId == self.customerId &&
-            other.email == self.email &&
-            other.id == self.id &&
-            other.regionId == self.regionId &&
-            other.regionName == self.regionName &&
-            other.taxInclusive == self.taxInclusive &&
-            other.taxRate == self.taxRate;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as CartRow;
-    return Object.hashAll([
-      runtimeType,
-      self.countries,
-      self.currencyCode,
-      self.customerId,
-      self.email,
-      self.id,
-      self.regionId,
-      self.regionName,
-      self.taxInclusive,
-      self.taxRate,
-    ]);
-  }
+  Map<String, Object?> toJson() => serialize();
 }
 
-mixin _$LineItemRow {
-  @override
-  String toString() {
-    final self = this as LineItemRow;
-    return 'LineItemRow('
-        'currencyCode: ${self.currencyCode}, '
-        'id: ${self.id}, '
-        'productId: ${self.productId}, '
-        'productHandle: ${self.productHandle}, '
-        'quantity: ${self.quantity}, '
-        'title: ${self.title}, '
-        'thumbnail: ${self.thumbnail}, '
-        'unitAmount: ${self.unitAmount}, '
-        'variantId: ${self.variantId}, '
-        'variantTitle: ${self.variantTitle}'
-        ')';
-  }
+mixin _$LineItemResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$LineItemResponseSerialize(this as LineItemResponse);
 
-  @override
-  bool operator ==(Object other) {
-    final self = this as LineItemRow;
-    return identical(this, other) ||
-        other is LineItemRow &&
-            runtimeType == other.runtimeType &&
-            other.currencyCode == self.currencyCode &&
-            other.id == self.id &&
-            other.productId == self.productId &&
-            other.productHandle == self.productHandle &&
-            other.quantity == self.quantity &&
-            other.title == self.title &&
-            other.thumbnail == self.thumbnail &&
-            other.unitAmount == self.unitAmount &&
-            other.variantId == self.variantId &&
-            other.variantTitle == self.variantTitle;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as LineItemRow;
-    return Object.hashAll([
-      runtimeType,
-      self.currencyCode,
-      self.id,
-      self.productId,
-      self.productHandle,
-      self.quantity,
-      self.title,
-      self.thumbnail,
-      self.unitAmount,
-      self.variantId,
-      self.variantTitle,
-    ]);
-  }
+  Map<String, Object?> toJson() => serialize();
 }
 
-mixin _$RegionRow {
-  @override
-  String toString() {
-    final self = this as RegionRow;
-    return 'RegionRow('
-        'countries: ${self.countries}, '
-        'currencyCode: ${self.currencyCode}, '
-        'id: ${self.id}, '
-        'name: ${self.name}, '
-        'taxInclusive: ${self.taxInclusive}, '
-        'taxRate: ${self.taxRate}'
-        ')';
-  }
+mixin _$RegionResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$RegionResponseSerialize(this as RegionResponse);
 
-  @override
-  bool operator ==(Object other) {
-    final self = this as RegionRow;
-    return identical(this, other) ||
-        other is RegionRow &&
-            runtimeType == other.runtimeType &&
-            other.countries == self.countries &&
-            other.currencyCode == self.currencyCode &&
-            other.id == self.id &&
-            other.name == self.name &&
-            other.taxInclusive == self.taxInclusive &&
-            other.taxRate == self.taxRate;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as RegionRow;
-    return Object.hashAll([
-      runtimeType,
-      self.countries,
-      self.currencyCode,
-      self.id,
-      self.name,
-      self.taxInclusive,
-      self.taxRate,
-    ]);
-  }
+  Map<String, Object?> toJson() => serialize();
 }
 
-CartRow _$CartRowFromRow(Row row) {
-  return CartRow(
+final class $CartResponseSerializer implements Serializer<CartResponse, Map<String, Object?>> {
+  const $CartResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(CartResponse value) => _$CartResponseSerialize(value);
+}
+final class $LineItemResponseSerializer implements Serializer<LineItemResponse, Map<String, Object?>> {
+  const $LineItemResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(LineItemResponse value) => _$LineItemResponseSerialize(value);
+}
+final class $RegionResponseSerializer implements Serializer<RegionResponse, Map<String, Object?>> {
+  const $RegionResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(RegionResponse value) => _$RegionResponseSerialize(value);
+}
+CartResponse _$CartResponseFromRow(Row row) {
+  return CartResponse(
     id: row.read<String>('id'),
-    regionId: row.read<String>('region_id'),
-    regionName: row.read<String>('region_name'),
-    currencyCode: row.read<String>('currency_code'),
-    taxRate: row.read<int>('tax_rate'),
-    taxInclusive: row.read<int>('tax_inclusive'),
-    countries: row.read<String>('countries'),
+    region: RegionResponseFromJson().decode(row.read<String>('region')),
+    items: row.readNullable<Object?>('items') == null ? const [] : LineItemsFromJson().decode(row.read<String>('items')),
     customerId: row.readNullable<String>('customer_id'),
     email: row.readNullable<String>('email'),
+    shippingMethod: OptionalShippingMethodFromJson().decode(row.read<String>('shipping_method')),
+    discount: OptionalMoneyFromJson().decode(row.read<String>('discount')),
+    promotionCode: row.readNullable<String>('promotion_code'),
   );
 }
 
-/// Row deserializer for [CartRow].
-final class $CartRowRowDeserializer implements RowDeserializer<CartRow> {
-  const $CartRowRowDeserializer();
+/// Row deserializer for [CartResponse].
+final class $CartResponseRowDeserializer implements RowDeserializer<CartResponse> {
+  const $CartResponseRowDeserializer();
 
   @override
-  CartRow deserialize(Row row) => _$CartRowFromRow(row);
+  CartResponse deserialize(Row row) => _$CartResponseFromRow(row);
 }
 
-/// Typed row query terminals for [CartRow].
+/// Typed row query terminals for [CartResponse].
 ///
 /// Resolved from the static type of the receiver, so a row type with no
 /// `FromRow` has no terminals and the call does not compile.
-extension $CartRowQuery on QueryAs<CartRow> {
+extension $CartResponseQuery on QueryAs<CartResponse> {
   /// Fetches exactly one row.
-  Future<CartRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$CartRowFromRow);
+  Future<CartResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$CartResponseFromRow);
 
   /// Fetches zero or one row.
-  Future<CartRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$CartRowFromRow);
+  Future<CartResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$CartResponseFromRow);
 
   /// Fetches every row.
-  Future<List<CartRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$CartRowFromRow);
+  Future<List<CartResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$CartResponseFromRow);
 }
 
-LineItemRow _$LineItemRowFromRow(Row row) {
-  return LineItemRow(
+LineItemResponse _$LineItemResponseFromRow(Row row) {
+  return LineItemResponse(
     id: row.read<String>('id'),
     variantId: row.read<String>('variant_id'),
     productId: row.read<String>('product_id'),
     productHandle: row.read<String>('product_handle'),
     title: row.read<String>('title'),
-    unitAmount: row.read<int>('unit_amount'),
-    currencyCode: row.read<String>('currency_code'),
+    unitPrice: MoneyFromJson().decode(row.read<String>('unit_price')),
     quantity: row.read<int>('quantity'),
     variantTitle: row.readNullable<String>('variant_title'),
     thumbnail: row.readNullable<String>('thumbnail'),
   );
 }
 
-/// Row deserializer for [LineItemRow].
-final class $LineItemRowRowDeserializer implements RowDeserializer<LineItemRow> {
-  const $LineItemRowRowDeserializer();
+/// Row deserializer for [LineItemResponse].
+final class $LineItemResponseRowDeserializer implements RowDeserializer<LineItemResponse> {
+  const $LineItemResponseRowDeserializer();
 
   @override
-  LineItemRow deserialize(Row row) => _$LineItemRowFromRow(row);
+  LineItemResponse deserialize(Row row) => _$LineItemResponseFromRow(row);
 }
 
-/// Typed row query terminals for [LineItemRow].
+/// Typed row query terminals for [LineItemResponse].
 ///
 /// Resolved from the static type of the receiver, so a row type with no
 /// `FromRow` has no terminals and the call does not compile.
-extension $LineItemRowQuery on QueryAs<LineItemRow> {
+extension $LineItemResponseQuery on QueryAs<LineItemResponse> {
   /// Fetches exactly one row.
-  Future<LineItemRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$LineItemRowFromRow);
+  Future<LineItemResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$LineItemResponseFromRow);
 
   /// Fetches zero or one row.
-  Future<LineItemRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$LineItemRowFromRow);
+  Future<LineItemResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$LineItemResponseFromRow);
 
   /// Fetches every row.
-  Future<List<LineItemRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$LineItemRowFromRow);
+  Future<List<LineItemResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$LineItemResponseFromRow);
 }
 
-RegionRow _$RegionRowFromRow(Row row) {
-  return RegionRow(
+RegionResponse _$RegionResponseFromRow(Row row) {
+  return RegionResponse(
     id: row.read<String>('id'),
     name: row.read<String>('name'),
     currencyCode: row.read<String>('currency_code'),
     taxRate: row.read<int>('tax_rate'),
-    taxInclusive: row.read<int>('tax_inclusive'),
-    countries: row.read<String>('countries'),
+    countries: CountriesFromCsv().decode(row.read<String>('countries')),
+    taxInclusive: BoolFromInt().decode(row.read<int>('tax_inclusive')),
   );
 }
 
-/// Row deserializer for [RegionRow].
-final class $RegionRowRowDeserializer implements RowDeserializer<RegionRow> {
-  const $RegionRowRowDeserializer();
+/// Row deserializer for [RegionResponse].
+final class $RegionResponseRowDeserializer implements RowDeserializer<RegionResponse> {
+  const $RegionResponseRowDeserializer();
 
   @override
-  RegionRow deserialize(Row row) => _$RegionRowFromRow(row);
+  RegionResponse deserialize(Row row) => _$RegionResponseFromRow(row);
 }
 
-/// Typed row query terminals for [RegionRow].
+/// Typed row query terminals for [RegionResponse].
 ///
 /// Resolved from the static type of the receiver, so a row type with no
 /// `FromRow` has no terminals and the call does not compile.
-extension $RegionRowQuery on QueryAs<RegionRow> {
+extension $RegionResponseQuery on QueryAs<RegionResponse> {
   /// Fetches exactly one row.
-  Future<RegionRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$RegionRowFromRow);
+  Future<RegionResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$RegionResponseFromRow);
 
   /// Fetches zero or one row.
-  Future<RegionRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$RegionRowFromRow);
+  Future<RegionResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$RegionResponseFromRow);
 
   /// Fetches every row.
-  Future<List<RegionRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$RegionRowFromRow);
+  Future<List<RegionResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$RegionResponseFromRow);
 }
+
+Map<String, Object?> _$CartResponseSerialize(CartResponse instance) {
+  return <String, Object?>{
+    'customer_id': instance.customerId,
+    'discount': instance.discount == null
+        ? null
+        : (instance.discount!).toJson(),
+    'email': instance.email,
+    'id': instance.id,
+    'items': instance.items
+        .map((item) => _$LineItemResponseSerialize(item))
+        .toList(),
+    'promotion_code': instance.promotionCode,
+    'region': _$RegionResponseSerialize(instance.region),
+    'shipping_method': instance.shippingMethod == null
+        ? null
+        : (instance.shippingMethod!).toJson(),
+  };
+}
+
+Map<String, Object?> _$CartResponseToJson(CartResponse instance) =>
+    _$CartResponseSerialize(instance);
+
+Map<String, Object?> _$LineItemResponseSerialize(LineItemResponse instance) {
+  return <String, Object?>{
+    'id': instance.id,
+    'product_handle': instance.productHandle,
+    'product_id': instance.productId,
+    'quantity': instance.quantity,
+    'thumbnail': instance.thumbnail,
+    'title': instance.title,
+    'unit_price': instance.unitPrice.toJson(),
+    'variant_id': instance.variantId,
+    'variant_title': instance.variantTitle,
+  };
+}
+
+Map<String, Object?> _$LineItemResponseToJson(LineItemResponse instance) =>
+    _$LineItemResponseSerialize(instance);
+
+Map<String, Object?> _$RegionResponseSerialize(RegionResponse instance) {
+  return <String, Object?>{
+    'countries': instance.countries
+        .map((item) => item)
+        .toList(),
+    'currency_code': instance.currencyCode,
+    'id': instance.id,
+    'name': instance.name,
+    'tax_inclusive': instance.taxInclusive,
+    'tax_rate': instance.taxRate,
+  };
+}
+
+Map<String, Object?> _$RegionResponseToJson(RegionResponse instance) =>
+    _$RegionResponseSerialize(instance);

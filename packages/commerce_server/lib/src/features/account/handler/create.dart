@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/account/crypto.dart';
 import 'package:commerce_server/src/features/account/deps.dart';
+import 'package:commerce_server/src/features/account/model.dart';
 import 'package:commerce_server/src/features/account/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
@@ -14,7 +15,7 @@ const ValidatedExtractable<Credentials> _credentialsBody = ValidatedExtractable(
 );
 
 /// `POST /store/customers` — create a customer account.
-Future<Result<Customer, Rejection>> registerAccountHandler(
+Future<Result<CustomerResponse, Rejection>> registerAccountHandler(
   Request request,
 ) async {
   final decoded = await _registerBody.extract(request);
@@ -23,7 +24,8 @@ Future<Result<Customer, Rejection>> registerAccountHandler(
   if (depsResult case Err(:final error)) return Err(error);
   final deps = (depsResult as Ok<AccountDeps, Rejection>).value;
 
-  late final Result<(Customer?, RegisterFailure?), SqlxError> result;
+  late final Result<Result<CustomerResponse, RegisterFailure>, SqlxError>
+      result;
   try {
     result = await registerAccount(
       deps.database,
@@ -37,10 +39,10 @@ Future<Result<Customer, Rejection>> registerAccountHandler(
     );
   }
   return switch (result) {
-    Ok(value: (final customer?, _)) => Ok(customer),
-    Ok(value: (_, RegisterFailure.alreadyExists)) =>
+    Ok(value: Ok(value: final customer)) => Ok(customer),
+    Ok(value: Err(error: RegisterFailure.alreadyExists)) =>
       const Err(Rejection.conflict('A customer account already exists')),
-    Ok() || Err() => const Err(Rejection.internal()),
+    Err() => const Err(Rejection.internal()),
   };
 }
 
@@ -52,7 +54,7 @@ Future<Result<IssuedToken, Rejection>> signInHandler(Request request) async {
   if (depsResult case Err(:final error)) return Err(error);
   final deps = (depsResult as Ok<AccountDeps, Rejection>).value;
 
-  late final Result<(IssuedToken?, bool), SqlxError> result;
+  late final Result<Option<IssuedToken>, SqlxError> result;
   try {
     result = await signIn(
       deps.reads,
@@ -68,8 +70,9 @@ Future<Result<IssuedToken, Rejection>> signInHandler(Request request) async {
     );
   }
   return switch (result) {
-    Ok(value: (final token?, false)) => Ok(token),
-    Ok() => const Err(Rejection.unauthorized('Invalid email or password')),
+    Ok(value: Some(value: final token)) => Ok(token),
+    Ok(value: None()) =>
+      const Err(Rejection.unauthorized('Invalid email or password')),
     Err() => const Err(Rejection.internal()),
   };
 }

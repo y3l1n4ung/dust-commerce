@@ -13,11 +13,6 @@ abstract final class AccountReadRepository {
   /// Resolves email/password credentials without exposing provider metadata.
   @Query(r'''
 SELECT a.id AS auth_identity_id,
-       c.id AS customer_id,
-       coalesce(c.email, '') AS email,
-       c.first_name,
-       c.last_name,
-       c.phone,
        coalesce(CAST(json_extract(p.provider_metadata, '$.password') AS TEXT),
                 '') AS password_hash
 FROM provider_identity p
@@ -30,12 +25,11 @@ WHERE p.provider = 'emailpass'
   AND a.deleted_at IS NULL
   AND c.deleted_at IS NULL
 ''')
-  Future<Result<AccountRow?, SqlxError>> accountByEmail(String email);
+  Future<Result<PasswordCredential?, SqlxError>> accountByEmail(String email);
 
   /// Resolves an unexpired token fingerprint to its customer actor.
   @Query(r'''
-SELECT a.id AS auth_identity_id,
-       c.id AS customer_id,
+SELECT c.id,
        coalesce(c.email, '') AS email,
        c.first_name,
        c.last_name,
@@ -49,7 +43,7 @@ WHERE t.token_hash = $1
   AND a.deleted_at IS NULL
   AND c.deleted_at IS NULL
 ''')
-  Future<Result<AuthenticatedCustomerRow?, SqlxError>> customerForToken(
+  Future<Result<CustomerResponse?, SqlxError>> customerForToken(
     String tokenHash,
     String now,
   );

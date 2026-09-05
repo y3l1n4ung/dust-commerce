@@ -1,12 +1,14 @@
 import 'package:commerce_server/src/features/cart/deps.dart';
 import 'package:commerce_server/src/features/cart/extractor.dart';
 import 'package:commerce_server/src/features/cart/handler/read.dart';
+import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
 
 /// `DELETE /carts/{id}/line-items/{lineId}` — remove one scoped line.
-Future<Result<CartView, Rejection>> removeLineHandler(Request request) async {
+Future<Result<CartViewResponse, Rejection>> removeLineHandler(
+  Request request,
+) async {
   final access = await request.extract(const Extension<CartAccess>());
   final lineId = pathParametersOf(request)['lineId'];
   if (lineId == null || lineId.isEmpty) {

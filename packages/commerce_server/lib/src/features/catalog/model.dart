@@ -1,289 +1,176 @@
+import 'dart:convert';
+
+import 'package:commerce_server/src/features/catalog/option_response.dart';
+import 'package:commerce_server/src/features/catalog/variant_response.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
+import 'package:dust_dart/serde.dart';
 
 part 'model.g.dart';
 
-/// One row of `products`.
+/// Explicit storefront product response populated directly by SQLx.
 ///
-/// Deliberately not the shared `Product`. A row is the shape the table has —
-/// flat, nullable where the column is, with the status as the text SQLite
-/// stores. The domain type is assembled from several of these, and keeping
-/// them apart is what stops a column rename reaching the client.
-@Derive([ToString(), Eq(), FromRow()])
-final class ProductRow with _$ProductRow {
-  /// Creates a [ProductRow].
-  const ProductRow({
+/// This does not extend the domain product. Every serialized field is declared
+/// here, so adding an internal field to [Product] cannot widen the API.
+@Derive([Serialize(), FromRow()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class ProductResponse with _$ProductResponse {
+  /// Creates one complete product response.
+  const ProductResponse({
     required this.id,
     required this.title,
     required this.handle,
     required this.status,
+    required this.details,
+    required this.images,
+    required this.options,
+    required this.variants,
     this.description,
-    this.height,
-    this.length,
-    this.material,
-    this.originCountry,
-    this.productType,
     this.thumbnail,
-    this.weight,
-    this.width,
   });
 
-  /// Long-form copy.
+  /// Long-form storefront copy.
   final String? description;
 
-  /// Height in the merchant's configured unit.
-  final int? height;
+  /// Physical and merchandising facts approved for the storefront.
+  @Sqlx(tryFrom: ProductDetailsFromJson())
+  final ProductDetails details;
 
-  /// URL-safe identifier.
+  /// Stable customer-facing route segment.
   final String handle;
 
-  /// The primary key.
+  /// Stable product identifier.
   final String id;
 
-  /// Length in the merchant's configured unit.
-  final int? length;
+  /// Ordered gallery image URLs.
+  @Sqlx(tryFrom: ProductImagesFromJson())
+  final List<String> images;
 
-  /// Merchant-facing composition.
-  final String? material;
+  /// Explicit variant axes approved for the storefront.
+  @Sqlx(tryFrom: ProductOptionsFromJson())
+  final List<ProductOptionResponse> options;
 
-  /// ISO 3166-1 alpha-2 country code.
-  @Sqlx(rename: 'origin_country')
-  final String? originCountry;
-
-  /// Simple product classification.
-  @Sqlx(rename: 'product_type')
-  final String? productType;
-
-  /// Publishing state, as stored.
+  /// Public lifecycle status as its stable wire value.
   final String status;
 
-  /// Primary image.
+  /// Customer-facing product name.
+  final String title;
+
+  /// Primary storefront image.
   final String? thumbnail;
 
-  /// Display name.
-  final String title;
-
-  /// Weight in the merchant's configured unit.
-  final int? weight;
-
-  /// Width in the merchant's configured unit.
-  final int? width;
+  /// Currency-scoped buyable configurations.
+  @Sqlx(tryFrom: ProductVariantsFromJson())
+  final List<ProductVariantResponse> variants;
 }
 
-/// One ordered gallery entry from `product_images`.
-@Derive([ToString(), Eq(), FromRow()])
-final class ProductImageRow with _$ProductImageRow {
-  /// Creates a [ProductImageRow].
-  const ProductImageRow({
-    required this.id,
-    required this.productId,
-    required this.url,
-    required this.rank,
+/// Explicit paginated product response.
+@Derive([Serialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class ProductPageResponse with _$ProductPageResponse {
+  /// Creates a page response from complete products.
+  const ProductPageResponse({
+    required this.products,
+    required this.count,
+    required this.total,
+    required this.limit,
+    required this.offset,
   });
 
-  /// Stable image identity.
-  final String id;
+  /// Number of products in this response.
+  final int count;
 
-  /// Product that owns this asset.
-  @Sqlx(rename: 'product_id')
-  final String productId;
+  /// Requested page size.
+  final int limit;
 
-  /// Position in the product gallery.
-  final int rank;
+  /// Number of products skipped.
+  final int offset;
 
-  /// Remote merchant asset.
-  final String url;
+  /// Explicit product response allowlists.
+  final List<ProductResponse> products;
+
+  /// Number of published products in the catalogue.
+  final int total;
 }
 
-/// One row of `product_variants`, joined with its price in one currency.
-///
-/// The price is joined rather than fetched separately because a variant
-/// without a price in the requested currency is not sellable there, and a
-/// query that returns it anyway pushes that decision into Dart.
-@Derive([ToString(), Eq(), FromRow()])
-final class VariantRow with _$VariantRow {
-  /// Creates a [VariantRow].
-  const VariantRow({
-    required this.id,
-    required this.productId,
-    required this.title,
-    required this.inventoryQuantity,
-    required this.manageInventory,
-    required this.allowBackorder,
-    required this.currencyCode,
-    required this.amount,
-    this.sku,
-  });
+/// Decodes the public detail object selected as JSON.
+final class ProductDetailsFromJson
+    implements SqlxTryFrom<ProductDetails, String> {
+  /// Creates the stateless converter.
+  const ProductDetailsFromJson();
 
-  /// Whether this variant sells past its stock.
-  @Sqlx(rename: 'allow_backorder')
-  final int allowBackorder;
-
-  /// The price in [currencyCode], in minor units.
-  final int amount;
-
-  /// The currency the price is in.
-  @Sqlx(rename: 'currency_code')
-  final String currencyCode;
-
-  /// The primary key.
-  final String id;
-
-  /// Units on hand.
-  @Sqlx(rename: 'inventory_quantity')
-  final int inventoryQuantity;
-
-  /// Whether stock is tracked.
-  @Sqlx(rename: 'manage_inventory')
-  final int manageInventory;
-
-  /// The product this belongs to.
-  @Sqlx(rename: 'product_id')
-  final String productId;
-
-  /// Stock keeping unit.
-  final String? sku;
-
-  /// Display name.
-  final String title;
+  @override
+  ProductDetails decode(String value) =>
+      ProductDetails.fromJson(_object(value));
 }
 
-/// One row of `product_options`.
-///
-/// The permitted values are stored as one comma-separated column rather than a
-/// child table. An option's values are read and written together, never
-/// queried individually, so a join would buy nothing and cost a table.
-@Derive([ToString(), Eq(), FromRow()])
-final class ProductOptionRow with _$ProductOptionRow {
-  /// Creates a [ProductOptionRow].
-  const ProductOptionRow({
-    required this.id,
-    required this.productId,
-    required this.title,
-    required this.valuesCsv,
-  });
+/// Decodes ordered product image URLs selected as JSON.
+final class ProductImagesFromJson implements SqlxTryFrom<List<String>, String> {
+  /// Creates the stateless converter.
+  const ProductImagesFromJson();
 
-  /// The primary key.
-  final String id;
-
-  /// The product this option belongs to.
-  @Sqlx(rename: 'product_id')
-  final String productId;
-
-  /// Display name, such as `Size`.
-  final String title;
-
-  /// The permitted values, comma separated.
-  @Sqlx(rename: 'values_csv')
-  final String valuesCsv;
+  @override
+  List<String> decode(String value) => [
+        for (final item in _array(value)) item! as String,
+      ];
 }
 
-/// One row of `variant_option_values`: the value a variant chose.
-@Derive([ToString(), Eq(), FromRow()])
-final class VariantOptionValueRow with _$VariantOptionValueRow {
-  /// Creates a [VariantOptionValueRow].
-  const VariantOptionValueRow({
-    required this.variantId,
-    required this.optionId,
-    required this.value,
-  });
+/// Decodes explicit public product options selected as JSON.
+final class ProductOptionsFromJson
+    implements SqlxTryFrom<List<ProductOptionResponse>, String> {
+  /// Creates the stateless converter.
+  const ProductOptionsFromJson();
 
-  /// The option this value answers.
-  @Sqlx(rename: 'option_id')
-  final String optionId;
+  @override
+  List<ProductOptionResponse> decode(String value) => [
+        for (final item in _array(value))
+          _option(item! as Map<String, Object?>),
+      ];
 
-  /// The chosen value.
-  final String value;
-
-  /// The variant that chose it.
-  @Sqlx(rename: 'variant_id')
-  final String variantId;
+  static ProductOptionResponse _option(Map<String, Object?> item) =>
+      ProductOptionResponse(
+        id: item['id']! as String,
+        title: item['title']! as String,
+        values: (item['values_csv']! as String)
+            .split(',')
+            .where((choice) => choice.isNotEmpty)
+            .toList(growable: false),
+      );
 }
 
-/// Builds the domain [Product] a client sees from the rows a query returned.
-///
-/// This is the seam the row types exist for. A row is the table's shape; a
-/// Product is the contract. Assembling here means a column rename touches this
-/// function and stops, rather than travelling to the client.
-Product assembleProduct(
-  ProductRow product,
-  List<VariantRow> variants, {
-  List<ProductOptionRow> options = const [],
-  List<VariantOptionValueRow> optionValues = const [],
-  List<ProductImageRow> images = const [],
-}) {
-  return Product(
-    id: product.id,
-    title: product.title,
-    handle: product.handle,
-    description: product.description,
-    details: ProductDetails(
-      material: product.material,
-      originCountry: product.originCountry,
-      productType: product.productType,
-      weight: product.weight,
-      length: product.length,
-      width: product.width,
-      height: product.height,
-    ),
-    images: images.map((image) => image.url).toList(growable: false),
-    thumbnail: product.thumbnail,
-    status: _status(product.status),
-    options: options.map(assembleOption).toList(growable: false),
-    variants: [
-      for (final variant in variants)
-        assembleVariant(
-          variant,
-          optionValues: {
-            for (final chosen in optionValues)
-              if (chosen.variantId == variant.id) chosen.optionId: chosen.value,
-          },
+/// Decodes currency-scoped public variants selected as JSON.
+final class ProductVariantsFromJson
+    implements SqlxTryFrom<List<ProductVariantResponse>, String> {
+  /// Creates the stateless converter.
+  const ProductVariantsFromJson();
+
+  @override
+  List<ProductVariantResponse> decode(String value) => [
+        for (final item in _array(value))
+          _variant(item! as Map<String, Object?>),
+      ];
+
+  static ProductVariantResponse _variant(Map<String, Object?> value) =>
+      ProductVariantResponse(
+        id: value['id']! as String,
+        title: value['title']! as String,
+        sku: value['sku'] as String?,
+        prices: [
+          Money(
+            amount: value['amount']! as int,
+            currencyCode: value['currency_code']! as String,
+          ),
+        ],
+        inventoryQuantity: value['inventory_quantity']! as int,
+        manageInventory: value['manage_inventory']! as int != 0,
+        allowBackorder: value['allow_backorder']! as int != 0,
+        optionValues: (value['option_values']! as Map<String, Object?>).map(
+          (key, choice) => MapEntry(key, choice! as String),
         ),
-    ],
-  );
+      );
 }
 
-/// Builds a [ProductVariant] from a joined variant-and-price row.
-///
-/// SQLite has no boolean, so the flags arrive as integers and are converted
-/// here rather than being exposed as ints on the domain type.
-ProductVariant assembleVariant(
-  VariantRow row, {
-  Map<String, String> optionValues = const {},
-}) {
-  return ProductVariant(
-    id: row.id,
-    title: row.title,
-    sku: row.sku,
-    prices: [Money(amount: row.amount, currencyCode: row.currencyCode)],
-    inventoryQuantity: row.inventoryQuantity,
-    manageInventory: row.manageInventory != 0,
-    allowBackorder: row.allowBackorder != 0,
-    optionValues: optionValues,
-  );
-}
+List<Object?> _array(String value) => jsonDecode(value) as List<Object?>;
 
-/// Builds the domain [ProductOption] a row describes.
-///
-/// An empty value is dropped rather than kept: a trailing comma in the column
-/// would otherwise become an option a storefront renders as a blank choice.
-ProductOption assembleOption(ProductOptionRow row) {
-  return ProductOption(
-    id: row.id,
-    title: row.title,
-    values: row.valuesCsv.split(',').where((it) => it.isNotEmpty).toList(),
-  );
-}
-
-/// Reads the status text a row carries.
-///
-/// An unknown value is treated as a draft. The catalogue queries only ever
-/// select published rows, so reaching this with anything else means the
-/// database holds a state this build does not know about, and the safe
-/// reading of an unknown state is the one that does not sell anything.
-ProductStatus _status(String stored) {
-  for (final status in ProductStatus.values) {
-    if (status.name == stored) return status;
-  }
-  return ProductStatus.draft;
-}
+Map<String, Object?> _object(String value) =>
+    jsonDecode(value) as Map<String, Object?>;

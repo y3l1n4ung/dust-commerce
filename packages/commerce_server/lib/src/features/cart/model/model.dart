@@ -5,3 +5,4 @@ library;
 export 'cart.dart';
 export 'promotion.dart';
 export 'shipping.dart';
+export 'view.dart';

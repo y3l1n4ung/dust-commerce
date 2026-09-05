@@ -19,29 +19,31 @@ final class _$CartListRepository implements CartListRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<ShippingOptionRow>, SqlxError>> shippingOptionsOf(String regionId) {
-    return _db.fetchAll<ShippingOptionRow>(
+  Future<Result<List<ShippingMethodResponse>, SqlxError>> shippingOptionsOf(String regionId) {
+    return _db.fetchAll<ShippingMethodResponse>(
       r'''
-SELECT id, region_id, name, amount, currency_code
+SELECT id AS option_id, name,
+       json_object('amount', amount, 'currency_code', currency_code) AS amount
 FROM shipping_options
 WHERE region_id = ?
-ORDER BY amount, id
+ORDER BY shipping_options.amount, id
 ''',
       [regionId],
-      const $ShippingOptionRowRowDeserializer().deserialize,
+      const $ShippingMethodResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<ShippingOptionRow?, SqlxError>> shippingOptionFor(String optionId, String regionId) {
-    return _db.fetchOptional<ShippingOptionRow>(
+  Future<Result<ShippingMethodResponse?, SqlxError>> shippingOptionFor(String optionId, String regionId) {
+    return _db.fetchOptional<ShippingMethodResponse>(
       r'''
-SELECT id, region_id, name, amount, currency_code
+SELECT id AS option_id, name,
+       json_object('amount', amount, 'currency_code', currency_code) AS amount
 FROM shipping_options
 WHERE id = ? AND region_id = ?
 ''',
       [optionId, regionId],
-      const $ShippingOptionRowRowDeserializer().deserialize,
+      const $ShippingMethodResponseRowDeserializer().deserialize,
     );
   }
 }

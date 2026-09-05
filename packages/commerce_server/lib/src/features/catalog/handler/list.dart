@@ -1,11 +1,11 @@
 import 'package:commerce_server/src/features/catalog/deps.dart';
+import 'package:commerce_server/src/features/catalog/model.dart';
 import 'package:commerce_server/src/features/catalog/service/service.dart';
 import 'package:commerce_server/src/http/http.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
 
 /// `GET /products` — a page of the published catalogue.
-Future<Result<ProductPageView, Rejection>> listProductsHandler(
+Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
   Request request,
 ) async {
   final state = await catalogDeps(request);
@@ -21,15 +21,7 @@ Future<Result<ProductPageView, Rejection>> listProductsHandler(
   );
 
   return switch (result) {
-    Ok(value: final page) => Ok(
-        ProductPageView(
-          products: page.products,
-          count: page.products.length,
-          total: page.total,
-          limit: page.limit,
-          offset: page.offset,
-        ),
-      ),
+    Ok(value: final page) => Ok(page),
     Err() => const Err(Rejection.internal()),
   };
 }

@@ -1,20 +1,20 @@
 import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/cart/deps.dart';
+import 'package:commerce_server/src/features/cart/model/cart.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
 import 'package:dust_server/server.dart';
 
 /// A path cart proven accessible to this customer or guest request.
 final class CartAccess {
   /// Creates the route-level cart capability.
-  const CartAccess({required this.cart, this.customer});
+  const CartAccess({required this.cart, required this.customer});
 
   /// The cart already loaded while enforcing access.
-  final Cart cart;
+  final CartResponse cart;
 
   /// The authenticated customer, when one was supplied.
-  final AuthenticatedCustomer? customer;
+  final Option<AuthenticatedCustomer> customer;
 }
 
 /// Loads a path cart and hides customer-owned carts from every other caller.
@@ -37,11 +37,16 @@ final class CartAccessExtractor implements FromRequestParts<CartAccess> {
     final loaded = await loadCart(deps.reads, id);
     if (loaded case Err()) return const Err(Rejection.internal());
 
-    final cart = (loaded as Ok<Cart?, SqlxError>).value;
+    final cartOption = (loaded as Ok<Option<CartResponse>, SqlxError>).value;
     final context = (auth as Ok<CustomerContext, Rejection>).value;
     final customer = context.authenticated;
-    if (cart == null ||
-        (cart.customerId != null && cart.customerId != customer?.customer.id)) {
+    if (cartOption case None()) return Err(Rejection.notFound('Cart "$id"'));
+    final cart = (cartOption as Some<CartResponse>).value;
+    final customerId = customer.match(
+      some: (actor) => actor.customer.id,
+      none: () => null,
+    );
+    if (cart.customerId != null && cart.customerId != customerId) {
       return Err(Rejection.notFound('Cart "$id"'));
     }
     return Ok(CartAccess(cart: cart, customer: customer));

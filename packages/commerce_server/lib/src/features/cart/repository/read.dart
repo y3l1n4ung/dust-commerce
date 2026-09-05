@@ -1,7 +1,3 @@
-// Row types are imported from the library that declares them rather than
-// through model/model.dart. Dust resolves a DAO's row type by looking in
-// the libraries a file imports and does not follow an export barrel, so a
-// barrel import fails the build with 'unsupported DAO result type'.
 import 'package:commerce_server/src/features/cart/model/cart.dart';
 import 'package:commerce_server/src/features/cart/model/promotion.dart';
 import 'package:commerce_server/src/features/cart/model/shipping.dart';
@@ -21,32 +17,96 @@ abstract final class CartReadRepository {
   /// total anything, so there is no useful state in which one is loaded
   /// without the other.
   @Query(r'''
-SELECT c.id, c.region_id, c.customer_id, c.email,
-       r.name AS region_name, r.currency_code, r.tax_rate,
-       r.tax_inclusive, r.countries
+SELECT c.id, c.customer_id, c.email,
+       json_object(
+         'id', r.id,
+         'name', r.name,
+         'currency_code', r.currency_code,
+         'tax_rate', r.tax_rate,
+         'tax_inclusive', r.tax_inclusive,
+         'countries', r.countries
+       ) AS region,
+       coalesce((
+         SELECT json_group_array(json(ordered.line_json))
+         FROM (
+           SELECT json_object(
+             'id', line.id,
+             'variant_id', line.variant_id,
+             'product_id', line.product_id,
+             'product_handle', line.product_handle,
+             'thumbnail', line.thumbnail,
+             'title', line.title,
+             'variant_title', line.variant_title,
+             'unit_price', json_object(
+               'amount', line.unit_amount,
+               'currency_code', line.currency_code
+             ),
+             'quantity', line.quantity
+           ) AS line_json
+           FROM line_items line
+           WHERE line.cart_id = c.id
+           ORDER BY line.rowid
+         ) ordered
+       ), '[]') AS items,
+       coalesce((
+         SELECT json_object(
+           'option_id', method.option_id,
+           'name', method.name,
+           'amount', json_object(
+             'amount', method.amount,
+             'currency_code', r.currency_code
+           )
+         )
+         FROM cart_shipping_methods method
+         WHERE method.cart_id = c.id
+       ), 'null') AS shipping_method,
+       coalesce((
+         SELECT json_object(
+           'amount', promotion.amount,
+           'currency_code', r.currency_code
+         )
+         FROM cart_promotions promotion
+         WHERE promotion.cart_id = c.id
+       ), 'null') AS discount,
+       (
+         SELECT promotion.code
+         FROM cart_promotions promotion
+         WHERE promotion.cart_id = c.id
+       ) AS promotion_code
 FROM carts c
 JOIN regions r ON r.id = c.region_id
 WHERE c.id = $1
 ''')
-  Future<Result<CartRow?, SqlxError>> findCart(String id);
+  Future<Result<CartResponse?, SqlxError>> findCart(String id);
 
   /// The lines of [cartId], in insertion order.
   @Query(r'''
 SELECT id, variant_id, product_id, product_handle, thumbnail, title,
-       variant_title, unit_amount, currency_code, quantity
+       variant_title,
+       json_object('amount', unit_amount, 'currency_code', currency_code)
+         AS unit_price,
+       quantity
 FROM line_items
 WHERE cart_id = $1
 ORDER BY rowid
 ''')
-  Future<Result<List<LineItemRow>, SqlxError>> linesOf(String cartId);
+  Future<Result<List<LineItemResponse>, SqlxError>> linesOf(String cartId);
 
   /// The method [cartId] chose, if it has chosen one.
   @Query(r'''
-SELECT option_id, name, amount
-FROM cart_shipping_methods
-WHERE cart_id = $1
+SELECT method.option_id, method.name,
+       json_object(
+         'amount', method.amount,
+         'currency_code', region.currency_code
+       ) AS amount
+FROM cart_shipping_methods method
+JOIN carts cart ON cart.id = method.cart_id
+JOIN regions region ON region.id = cart.region_id
+WHERE method.cart_id = $1
 ''')
-  Future<Result<ShippingMethodRow?, SqlxError>> shippingMethodOf(String cartId);
+  Future<Result<ShippingMethodResponse?, SqlxError>> shippingMethodOf(
+    String cartId,
+  );
 
   /// The promotion [cartId] has applied, if it has one.
   @Query(r'''
@@ -54,7 +114,7 @@ SELECT promotion_id, code, amount
 FROM cart_promotions
 WHERE cart_id = $1
 ''')
-  Future<Result<CartPromotionRow?, SqlxError>> promotionOn(String cartId);
+  Future<Result<AppliedPromotion?, SqlxError>> promotionOn(String cartId);
 
   /// One promotion by the code a customer typed.
   ///
@@ -66,16 +126,19 @@ SELECT id, code, type, value, currency_code, starts_at, ends_at,
 FROM promotions
 WHERE code = UPPER($1)
 ''')
-  Future<Result<PromotionRow?, SqlxError>> promotionByCode(String code);
+  Future<Result<PromotionPolicy?, SqlxError>> promotionByCode(String code);
 
   /// The line for [variantId] in [cartId], if the cart already holds one.
   @Query(r'''
 SELECT id, variant_id, product_id, product_handle, thumbnail, title,
-       variant_title, unit_amount, currency_code, quantity
+       variant_title,
+       json_object('amount', unit_amount, 'currency_code', currency_code)
+         AS unit_price,
+       quantity
 FROM line_items
 WHERE cart_id = $1 AND variant_id = $2
 ''')
-  Future<Result<LineItemRow?, SqlxError>> findLine(
+  Future<Result<LineItemResponse?, SqlxError>> findLine(
     String cartId,
     String variantId,
   );
@@ -83,11 +146,14 @@ WHERE cart_id = $1 AND variant_id = $2
   /// One line proven to belong to [cartId].
   @Query(r'''
 SELECT id, variant_id, product_id, product_handle, thumbnail, title,
-       variant_title, unit_amount, currency_code, quantity
+       variant_title,
+       json_object('amount', unit_amount, 'currency_code', currency_code)
+         AS unit_price,
+       quantity
 FROM line_items
 WHERE cart_id = $1 AND id = $2
 ''')
-  Future<Result<LineItemRow?, SqlxError>> findLineById(
+  Future<Result<LineItemResponse?, SqlxError>> findLineById(
     String cartId,
     String lineId,
   );

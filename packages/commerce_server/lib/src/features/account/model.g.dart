@@ -13,110 +13,77 @@
 
 part of 'model.dart';
 
-mixin _$AccountRow {
+mixin _$PasswordCredential {
   @override
   bool operator ==(Object other) {
-    final self = this as AccountRow;
+    final self = this as PasswordCredential;
     return identical(this, other) ||
-        other is AccountRow &&
+        other is PasswordCredential &&
             runtimeType == other.runtimeType &&
             other.authIdentityId == self.authIdentityId &&
-            other.customerId == self.customerId &&
-            other.email == self.email &&
-            other.firstName == self.firstName &&
-            other.lastName == self.lastName &&
-            other.passwordHash == self.passwordHash &&
-            other.phone == self.phone;
+            other.passwordHash == self.passwordHash;
   }
 
   @override
   int get hashCode {
-    final self = this as AccountRow;
+    final self = this as PasswordCredential;
     return Object.hashAll([
       runtimeType,
       self.authIdentityId,
-      self.customerId,
-      self.email,
-      self.firstName,
-      self.lastName,
       self.passwordHash,
-      self.phone,
     ]);
   }
 }
 
-mixin _$AuthenticatedCustomerRow {
-  @override
-  bool operator ==(Object other) {
-    final self = this as AuthenticatedCustomerRow;
-    return identical(this, other) ||
-        other is AuthenticatedCustomerRow &&
-            runtimeType == other.runtimeType &&
-            other.authIdentityId == self.authIdentityId &&
-            other.customerId == self.customerId &&
-            other.email == self.email &&
-            other.firstName == self.firstName &&
-            other.lastName == self.lastName &&
-            other.phone == self.phone;
-  }
+mixin _$CustomerResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$CustomerResponseSerialize(this as CustomerResponse);
 
-  @override
-  int get hashCode {
-    final self = this as AuthenticatedCustomerRow;
-    return Object.hashAll([
-      runtimeType,
-      self.authIdentityId,
-      self.customerId,
-      self.email,
-      self.firstName,
-      self.lastName,
-      self.phone,
-    ]);
-  }
+  Map<String, Object?> toJson() => serialize();
 }
 
-AccountRow _$AccountRowFromRow(Row row) {
-  return AccountRow(
+final class $CustomerResponseSerializer implements Serializer<CustomerResponse, Map<String, Object?>> {
+  const $CustomerResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(CustomerResponse value) => _$CustomerResponseSerialize(value);
+}
+PasswordCredential _$PasswordCredentialFromRow(Row row) {
+  return PasswordCredential(
     authIdentityId: row.read<String>('auth_identity_id'),
-    customerId: row.read<String>('customer_id'),
-    email: row.read<String>('email'),
     passwordHash: row.read<String>('password_hash'),
-    firstName: row.readNullable<String>('first_name'),
-    lastName: row.readNullable<String>('last_name'),
-    phone: row.readNullable<String>('phone'),
   );
 }
 
-/// Row deserializer for [AccountRow].
-final class $AccountRowRowDeserializer implements RowDeserializer<AccountRow> {
-  const $AccountRowRowDeserializer();
+/// Row deserializer for [PasswordCredential].
+final class $PasswordCredentialRowDeserializer implements RowDeserializer<PasswordCredential> {
+  const $PasswordCredentialRowDeserializer();
 
   @override
-  AccountRow deserialize(Row row) => _$AccountRowFromRow(row);
+  PasswordCredential deserialize(Row row) => _$PasswordCredentialFromRow(row);
 }
 
-/// Typed row query terminals for [AccountRow].
+/// Typed row query terminals for [PasswordCredential].
 ///
 /// Resolved from the static type of the receiver, so a row type with no
 /// `FromRow` has no terminals and the call does not compile.
-extension $AccountRowQuery on QueryAs<AccountRow> {
+extension $PasswordCredentialQuery on QueryAs<PasswordCredential> {
   /// Fetches exactly one row.
-  Future<AccountRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$AccountRowFromRow);
+  Future<PasswordCredential> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$PasswordCredentialFromRow);
 
   /// Fetches zero or one row.
-  Future<AccountRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$AccountRowFromRow);
+  Future<PasswordCredential?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$PasswordCredentialFromRow);
 
   /// Fetches every row.
-  Future<List<AccountRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$AccountRowFromRow);
+  Future<List<PasswordCredential>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$PasswordCredentialFromRow);
 }
 
-AuthenticatedCustomerRow _$AuthenticatedCustomerRowFromRow(Row row) {
-  return AuthenticatedCustomerRow(
-    authIdentityId: row.read<String>('auth_identity_id'),
-    customerId: row.read<String>('customer_id'),
+CustomerResponse _$CustomerResponseFromRow(Row row) {
+  return CustomerResponse(
+    id: row.read<String>('id'),
     email: row.read<String>('email'),
     firstName: row.readNullable<String>('first_name'),
     lastName: row.readNullable<String>('last_name'),
@@ -124,28 +91,41 @@ AuthenticatedCustomerRow _$AuthenticatedCustomerRowFromRow(Row row) {
   );
 }
 
-/// Row deserializer for [AuthenticatedCustomerRow].
-final class $AuthenticatedCustomerRowRowDeserializer implements RowDeserializer<AuthenticatedCustomerRow> {
-  const $AuthenticatedCustomerRowRowDeserializer();
+/// Row deserializer for [CustomerResponse].
+final class $CustomerResponseRowDeserializer implements RowDeserializer<CustomerResponse> {
+  const $CustomerResponseRowDeserializer();
 
   @override
-  AuthenticatedCustomerRow deserialize(Row row) => _$AuthenticatedCustomerRowFromRow(row);
+  CustomerResponse deserialize(Row row) => _$CustomerResponseFromRow(row);
 }
 
-/// Typed row query terminals for [AuthenticatedCustomerRow].
+/// Typed row query terminals for [CustomerResponse].
 ///
 /// Resolved from the static type of the receiver, so a row type with no
 /// `FromRow` has no terminals and the call does not compile.
-extension $AuthenticatedCustomerRowQuery on QueryAs<AuthenticatedCustomerRow> {
+extension $CustomerResponseQuery on QueryAs<CustomerResponse> {
   /// Fetches exactly one row.
-  Future<AuthenticatedCustomerRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$AuthenticatedCustomerRowFromRow);
+  Future<CustomerResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$CustomerResponseFromRow);
 
   /// Fetches zero or one row.
-  Future<AuthenticatedCustomerRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$AuthenticatedCustomerRowFromRow);
+  Future<CustomerResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$CustomerResponseFromRow);
 
   /// Fetches every row.
-  Future<List<AuthenticatedCustomerRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$AuthenticatedCustomerRowFromRow);
+  Future<List<CustomerResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$CustomerResponseFromRow);
 }
+
+Map<String, Object?> _$CustomerResponseSerialize(CustomerResponse instance) {
+  return <String, Object?>{
+    'email': instance.email,
+    'first_name': instance.firstName,
+    'id': instance.id,
+    'last_name': instance.lastName,
+    'phone': instance.phone,
+  };
+}
+
+Map<String, Object?> _$CustomerResponseToJson(CustomerResponse instance) =>
+    _$CustomerResponseSerialize(instance);

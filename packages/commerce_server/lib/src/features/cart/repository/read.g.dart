@@ -19,65 +19,127 @@ final class _$CartReadRepository implements CartReadRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<CartRow?, SqlxError>> findCart(String id) {
-    return _db.fetchOptional<CartRow>(
+  Future<Result<CartResponse?, SqlxError>> findCart(String id) {
+    return _db.fetchOptional<CartResponse>(
       r'''
-SELECT c.id, c.region_id, c.customer_id, c.email,
-       r.name AS region_name, r.currency_code, r.tax_rate,
-       r.tax_inclusive, r.countries
+SELECT c.id, c.customer_id, c.email,
+       json_object(
+         'id', r.id,
+         'name', r.name,
+         'currency_code', r.currency_code,
+         'tax_rate', r.tax_rate,
+         'tax_inclusive', r.tax_inclusive,
+         'countries', r.countries
+       ) AS region,
+       coalesce((
+         SELECT json_group_array(json(ordered.line_json))
+         FROM (
+           SELECT json_object(
+             'id', line.id,
+             'variant_id', line.variant_id,
+             'product_id', line.product_id,
+             'product_handle', line.product_handle,
+             'thumbnail', line.thumbnail,
+             'title', line.title,
+             'variant_title', line.variant_title,
+             'unit_price', json_object(
+               'amount', line.unit_amount,
+               'currency_code', line.currency_code
+             ),
+             'quantity', line.quantity
+           ) AS line_json
+           FROM line_items line
+           WHERE line.cart_id = c.id
+           ORDER BY line.rowid
+         ) ordered
+       ), '[]') AS items,
+       coalesce((
+         SELECT json_object(
+           'option_id', method.option_id,
+           'name', method.name,
+           'amount', json_object(
+             'amount', method.amount,
+             'currency_code', r.currency_code
+           )
+         )
+         FROM cart_shipping_methods method
+         WHERE method.cart_id = c.id
+       ), 'null') AS shipping_method,
+       coalesce((
+         SELECT json_object(
+           'amount', promotion.amount,
+           'currency_code', r.currency_code
+         )
+         FROM cart_promotions promotion
+         WHERE promotion.cart_id = c.id
+       ), 'null') AS discount,
+       (
+         SELECT promotion.code
+         FROM cart_promotions promotion
+         WHERE promotion.cart_id = c.id
+       ) AS promotion_code
 FROM carts c
 JOIN regions r ON r.id = c.region_id
 WHERE c.id = ?
 ''',
       [id],
-      const $CartRowRowDeserializer().deserialize,
+      const $CartResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<List<LineItemRow>, SqlxError>> linesOf(String cartId) {
-    return _db.fetchAll<LineItemRow>(
+  Future<Result<List<LineItemResponse>, SqlxError>> linesOf(String cartId) {
+    return _db.fetchAll<LineItemResponse>(
       r'''
 SELECT id, variant_id, product_id, product_handle, thumbnail, title,
-       variant_title, unit_amount, currency_code, quantity
+       variant_title,
+       json_object('amount', unit_amount, 'currency_code', currency_code)
+         AS unit_price,
+       quantity
 FROM line_items
 WHERE cart_id = ?
 ORDER BY rowid
 ''',
       [cartId],
-      const $LineItemRowRowDeserializer().deserialize,
+      const $LineItemResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<ShippingMethodRow?, SqlxError>> shippingMethodOf(String cartId) {
-    return _db.fetchOptional<ShippingMethodRow>(
+  Future<Result<ShippingMethodResponse?, SqlxError>> shippingMethodOf(String cartId) {
+    return _db.fetchOptional<ShippingMethodResponse>(
       r'''
-SELECT option_id, name, amount
-FROM cart_shipping_methods
-WHERE cart_id = ?
+SELECT method.option_id, method.name,
+       json_object(
+         'amount', method.amount,
+         'currency_code', region.currency_code
+       ) AS amount
+FROM cart_shipping_methods method
+JOIN carts cart ON cart.id = method.cart_id
+JOIN regions region ON region.id = cart.region_id
+WHERE method.cart_id = ?
 ''',
       [cartId],
-      const $ShippingMethodRowRowDeserializer().deserialize,
+      const $ShippingMethodResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<CartPromotionRow?, SqlxError>> promotionOn(String cartId) {
-    return _db.fetchOptional<CartPromotionRow>(
+  Future<Result<AppliedPromotion?, SqlxError>> promotionOn(String cartId) {
+    return _db.fetchOptional<AppliedPromotion>(
       r'''
 SELECT promotion_id, code, amount
 FROM cart_promotions
 WHERE cart_id = ?
 ''',
       [cartId],
-      const $CartPromotionRowRowDeserializer().deserialize,
+      const $AppliedPromotionRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<PromotionRow?, SqlxError>> promotionByCode(String code) {
-    return _db.fetchOptional<PromotionRow>(
+  Future<Result<PromotionPolicy?, SqlxError>> promotionByCode(String code) {
+    return _db.fetchOptional<PromotionPolicy>(
       r'''
 SELECT id, code, type, value, currency_code, starts_at, ends_at,
        usage_limit, usage_count
@@ -85,35 +147,41 @@ FROM promotions
 WHERE code = UPPER(?)
 ''',
       [code],
-      const $PromotionRowRowDeserializer().deserialize,
+      const $PromotionPolicyRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<LineItemRow?, SqlxError>> findLine(String cartId, String variantId) {
-    return _db.fetchOptional<LineItemRow>(
+  Future<Result<LineItemResponse?, SqlxError>> findLine(String cartId, String variantId) {
+    return _db.fetchOptional<LineItemResponse>(
       r'''
 SELECT id, variant_id, product_id, product_handle, thumbnail, title,
-       variant_title, unit_amount, currency_code, quantity
+       variant_title,
+       json_object('amount', unit_amount, 'currency_code', currency_code)
+         AS unit_price,
+       quantity
 FROM line_items
 WHERE cart_id = ? AND variant_id = ?
 ''',
       [cartId, variantId],
-      const $LineItemRowRowDeserializer().deserialize,
+      const $LineItemResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<LineItemRow?, SqlxError>> findLineById(String cartId, String lineId) {
-    return _db.fetchOptional<LineItemRow>(
+  Future<Result<LineItemResponse?, SqlxError>> findLineById(String cartId, String lineId) {
+    return _db.fetchOptional<LineItemResponse>(
       r'''
 SELECT id, variant_id, product_id, product_handle, thumbnail, title,
-       variant_title, unit_amount, currency_code, quantity
+       variant_title,
+       json_object('amount', unit_amount, 'currency_code', currency_code)
+         AS unit_price,
+       quantity
 FROM line_items
 WHERE cart_id = ? AND id = ?
 ''',
       [cartId, lineId],
-      const $LineItemRowRowDeserializer().deserialize,
+      const $LineItemResponseRowDeserializer().deserialize,
     );
   }
 }

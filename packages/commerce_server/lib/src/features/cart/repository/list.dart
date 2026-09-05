@@ -1,7 +1,3 @@
-// Row types are imported from the library that declares them rather than
-// through model/model.dart. Dust resolves a DAO's row type by looking in
-// the libraries a file imports and does not follow an export barrel, so a
-// barrel import fails the build with 'unsupported DAO result type'.
 import 'package:commerce_server/src/features/cart/model/shipping.dart';
 import 'package:dust_dart/db.dart';
 
@@ -19,22 +15,24 @@ abstract final class CartListRepository {
   /// be offered, and therefore cannot be chosen, without the handler having to
   /// remember to check.
   @Query(r'''
-SELECT id, region_id, name, amount, currency_code
+SELECT id AS option_id, name,
+       json_object('amount', amount, 'currency_code', currency_code) AS amount
 FROM shipping_options
 WHERE region_id = $1
-ORDER BY amount, id
+ORDER BY shipping_options.amount, id
 ''')
-  Future<Result<List<ShippingOptionRow>, SqlxError>> shippingOptionsOf(
+  Future<Result<List<ShippingMethodResponse>, SqlxError>> shippingOptionsOf(
     String regionId,
   );
 
   /// One option, checked against the region that is allowed to use it.
   @Query(r'''
-SELECT id, region_id, name, amount, currency_code
+SELECT id AS option_id, name,
+       json_object('amount', amount, 'currency_code', currency_code) AS amount
 FROM shipping_options
 WHERE id = $1 AND region_id = $2
 ''')
-  Future<Result<ShippingOptionRow?, SqlxError>> shippingOptionFor(
+  Future<Result<ShippingMethodResponse?, SqlxError>> shippingOptionFor(
     String optionId,
     String regionId,
   );

@@ -37,7 +37,7 @@ void main() {
 
   group('listPublished', () {
     test('returns only published products', () async {
-      final result = await lists.listPublished(10, 0);
+      final result = await lists.listPublished('usd', 10, 0);
       final handles = ok(result).map((row) => row.handle);
 
       expect(handles, ['mug', 't-shirt']);
@@ -45,8 +45,8 @@ void main() {
     });
 
     test('pages, so a large catalogue does not arrive at once', () async {
-      final first = await lists.listPublished(1, 0);
-      final second = await lists.listPublished(1, 1);
+      final first = await lists.listPublished('usd', 1, 0);
+      final second = await lists.listPublished('usd', 1, 1);
 
       expect(ok(first).single.handle, 'mug');
       expect(ok(second).single.handle, 't-shirt');
@@ -59,52 +59,31 @@ void main() {
 
   group('findByHandle', () {
     test('finds a published product', () async {
-      final row = ok(await reads.findByHandle('t-shirt'));
+      final row = ok(await reads.findByHandle('t-shirt', 'usd'));
 
       expect(row?.title, 'T-Shirt');
       expect(row?.status, 'published');
+      expect(row?.variants.map((variant) => variant.id), [
+        'var_large',
+        'var_small',
+      ]);
+      expect(
+        row?.variants.map((variant) => variant.prices.single.amount),
+        [2199, 1999],
+      );
+      expect(row?.images, [
+        'https://example.test/front.png',
+        'https://example.test/back.png',
+      ]);
     });
 
     test('does not leak a draft, even to a caller who knows the handle',
         () async {
-      expect(ok(await reads.findByHandle('secret-hoodie')), isNull);
+      expect(ok(await reads.findByHandle('secret-hoodie', 'usd')), isNull);
     });
 
     test('returns null for a handle nobody has', () async {
-      expect(ok(await reads.findByHandle('nothing')), isNull);
-    });
-  });
-
-  group('variantsOf', () {
-    test('returns the variants priced in the asked-for currency', () async {
-      final rows = ok(await lists.variantsOf('prod_shirt', 'usd'));
-
-      expect(rows, hasLength(2));
-      expect(rows.map((row) => row.id), ['var_large', 'var_small']);
-      expect(rows.map((row) => row.amount), [2199, 1999]);
-      expect(rows.every((row) => row.currencyCode == 'usd'), isTrue);
-    });
-
-    test('drops a variant with no price in that currency', () async {
-      final rows = ok(await lists.variantsOf('prod_shirt', 'eur'));
-
-      expect(rows, hasLength(1));
-      expect(rows.single.id, 'var_small');
-    });
-
-    test('returns nothing for a currency nobody is priced in', () async {
-      expect(ok(await lists.variantsOf('prod_shirt', 'gbp')), isEmpty);
-    });
-  });
-
-  group('imagesOf', () {
-    test('returns active product images in merchant order', () async {
-      final rows = ok(await lists.imagesOf('prod_shirt'));
-
-      expect(rows.map((row) => row.url), [
-        'https://example.test/front.png',
-        'https://example.test/back.png',
-      ]);
+      expect(ok(await reads.findByHandle('nothing', 'usd')), isNull);
     });
   });
 

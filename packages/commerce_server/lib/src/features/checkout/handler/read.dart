@@ -1,7 +1,7 @@
 import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/checkout/deps.dart';
+import 'package:commerce_server/src/features/checkout/model.dart';
 import 'package:commerce_server/src/features/checkout/service/service.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
 
 /// The guest email a caller supplies, or a rejection saying it is required.
@@ -21,7 +21,8 @@ Result<String, Rejection> emailOf(Request request) {
 /// travels in emails and browser history, would be enough to read somebody's
 /// address and what they bought. A mismatch answers 404, not 403: confirming
 /// that an id exists is itself the leak.
-Future<Result<Order, Rejection>> readOrderHandler(Request request) async {
+Future<Result<OrderResponse, Rejection>> readOrderHandler(
+    Request request) async {
   final actor = await request.extract(
     const Extension<AuthenticatedCustomer>(),
   );
@@ -41,8 +42,8 @@ Future<Result<Order, Rejection>> readOrderHandler(Request request) async {
   );
 
   return switch (result) {
-    Ok(value: final order?) => Ok(order),
-    Ok() => Err(Rejection.notFound('Order "$id"')),
+    Ok(value: Some(value: final order)) => Ok(order),
+    Ok(value: None()) => Err(Rejection.notFound('Order "$id"')),
     Err() => const Err(Rejection.internal()),
   };
 }

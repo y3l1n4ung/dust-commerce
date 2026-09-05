@@ -13,414 +13,108 @@
 
 part of 'model.dart';
 
-mixin _$ProductRow {
-  @override
-  String toString() {
-    final self = this as ProductRow;
-    return 'ProductRow('
-        'description: ${self.description}, '
-        'height: ${self.height}, '
-        'handle: ${self.handle}, '
-        'id: ${self.id}, '
-        'length: ${self.length}, '
-        'material: ${self.material}, '
-        'originCountry: ${self.originCountry}, '
-        'productType: ${self.productType}, '
-        'status: ${self.status}, '
-        'thumbnail: ${self.thumbnail}, '
-        'title: ${self.title}, '
-        'weight: ${self.weight}, '
-        'width: ${self.width}'
-        ')';
-  }
+mixin _$ProductResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$ProductResponseSerialize(this as ProductResponse);
 
-  @override
-  bool operator ==(Object other) {
-    final self = this as ProductRow;
-    return identical(this, other) ||
-        other is ProductRow &&
-            runtimeType == other.runtimeType &&
-            other.description == self.description &&
-            other.height == self.height &&
-            other.handle == self.handle &&
-            other.id == self.id &&
-            other.length == self.length &&
-            other.material == self.material &&
-            other.originCountry == self.originCountry &&
-            other.productType == self.productType &&
-            other.status == self.status &&
-            other.thumbnail == self.thumbnail &&
-            other.title == self.title &&
-            other.weight == self.weight &&
-            other.width == self.width;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ProductRow;
-    return Object.hashAll([
-      runtimeType,
-      self.description,
-      self.height,
-      self.handle,
-      self.id,
-      self.length,
-      self.material,
-      self.originCountry,
-      self.productType,
-      self.status,
-      self.thumbnail,
-      self.title,
-      self.weight,
-      self.width,
-    ]);
-  }
+  Map<String, Object?> toJson() => serialize();
 }
 
-mixin _$ProductImageRow {
-  @override
-  String toString() {
-    final self = this as ProductImageRow;
-    return 'ProductImageRow('
-        'id: ${self.id}, '
-        'productId: ${self.productId}, '
-        'rank: ${self.rank}, '
-        'url: ${self.url}'
-        ')';
-  }
+mixin _$ProductPageResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$ProductPageResponseSerialize(this as ProductPageResponse);
 
-  @override
-  bool operator ==(Object other) {
-    final self = this as ProductImageRow;
-    return identical(this, other) ||
-        other is ProductImageRow &&
-            runtimeType == other.runtimeType &&
-            other.id == self.id &&
-            other.productId == self.productId &&
-            other.rank == self.rank &&
-            other.url == self.url;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ProductImageRow;
-    return Object.hashAll([
-      runtimeType,
-      self.id,
-      self.productId,
-      self.rank,
-      self.url,
-    ]);
-  }
+  Map<String, Object?> toJson() => serialize();
 }
 
-mixin _$VariantRow {
-  @override
-  String toString() {
-    final self = this as VariantRow;
-    return 'VariantRow('
-        'allowBackorder: ${self.allowBackorder}, '
-        'amount: ${self.amount}, '
-        'currencyCode: ${self.currencyCode}, '
-        'id: ${self.id}, '
-        'inventoryQuantity: ${self.inventoryQuantity}, '
-        'manageInventory: ${self.manageInventory}, '
-        'productId: ${self.productId}, '
-        'sku: ${self.sku}, '
-        'title: ${self.title}'
-        ')';
-  }
+final class $ProductResponseSerializer implements Serializer<ProductResponse, Map<String, Object?>> {
+  const $ProductResponseSerializer();
 
   @override
-  bool operator ==(Object other) {
-    final self = this as VariantRow;
-    return identical(this, other) ||
-        other is VariantRow &&
-            runtimeType == other.runtimeType &&
-            other.allowBackorder == self.allowBackorder &&
-            other.amount == self.amount &&
-            other.currencyCode == self.currencyCode &&
-            other.id == self.id &&
-            other.inventoryQuantity == self.inventoryQuantity &&
-            other.manageInventory == self.manageInventory &&
-            other.productId == self.productId &&
-            other.sku == self.sku &&
-            other.title == self.title;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as VariantRow;
-    return Object.hashAll([
-      runtimeType,
-      self.allowBackorder,
-      self.amount,
-      self.currencyCode,
-      self.id,
-      self.inventoryQuantity,
-      self.manageInventory,
-      self.productId,
-      self.sku,
-      self.title,
-    ]);
-  }
+  Map<String, Object?> serialize(ProductResponse value) => _$ProductResponseSerialize(value);
 }
-
-mixin _$ProductOptionRow {
-  @override
-  String toString() {
-    final self = this as ProductOptionRow;
-    return 'ProductOptionRow('
-        'id: ${self.id}, '
-        'productId: ${self.productId}, '
-        'title: ${self.title}, '
-        'valuesCsv: ${self.valuesCsv}'
-        ')';
-  }
+final class $ProductPageResponseSerializer implements Serializer<ProductPageResponse, Map<String, Object?>> {
+  const $ProductPageResponseSerializer();
 
   @override
-  bool operator ==(Object other) {
-    final self = this as ProductOptionRow;
-    return identical(this, other) ||
-        other is ProductOptionRow &&
-            runtimeType == other.runtimeType &&
-            other.id == self.id &&
-            other.productId == self.productId &&
-            other.title == self.title &&
-            other.valuesCsv == self.valuesCsv;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as ProductOptionRow;
-    return Object.hashAll([
-      runtimeType,
-      self.id,
-      self.productId,
-      self.title,
-      self.valuesCsv,
-    ]);
-  }
+  Map<String, Object?> serialize(ProductPageResponse value) => _$ProductPageResponseSerialize(value);
 }
-
-mixin _$VariantOptionValueRow {
-  @override
-  String toString() {
-    final self = this as VariantOptionValueRow;
-    return 'VariantOptionValueRow('
-        'optionId: ${self.optionId}, '
-        'value: ${self.value}, '
-        'variantId: ${self.variantId}'
-        ')';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    final self = this as VariantOptionValueRow;
-    return identical(this, other) ||
-        other is VariantOptionValueRow &&
-            runtimeType == other.runtimeType &&
-            other.optionId == self.optionId &&
-            other.value == self.value &&
-            other.variantId == self.variantId;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as VariantOptionValueRow;
-    return Object.hashAll([
-      runtimeType,
-      self.optionId,
-      self.value,
-      self.variantId,
-    ]);
-  }
-}
-
-ProductRow _$ProductRowFromRow(Row row) {
-  return ProductRow(
+ProductResponse _$ProductResponseFromRow(Row row) {
+  return ProductResponse(
     id: row.read<String>('id'),
     title: row.read<String>('title'),
     handle: row.read<String>('handle'),
     status: row.read<String>('status'),
+    details: ProductDetailsFromJson().decode(row.read<String>('details')),
+    images: ProductImagesFromJson().decode(row.read<String>('images')),
+    options: ProductOptionsFromJson().decode(row.read<String>('options')),
+    variants: ProductVariantsFromJson().decode(row.read<String>('variants')),
     description: row.readNullable<String>('description'),
-    height: row.readNullable<int>('height'),
-    length: row.readNullable<int>('length'),
-    material: row.readNullable<String>('material'),
-    originCountry: row.readNullable<String>('origin_country'),
-    productType: row.readNullable<String>('product_type'),
     thumbnail: row.readNullable<String>('thumbnail'),
-    weight: row.readNullable<int>('weight'),
-    width: row.readNullable<int>('width'),
   );
 }
 
-/// Row deserializer for [ProductRow].
-final class $ProductRowRowDeserializer implements RowDeserializer<ProductRow> {
-  const $ProductRowRowDeserializer();
+/// Row deserializer for [ProductResponse].
+final class $ProductResponseRowDeserializer implements RowDeserializer<ProductResponse> {
+  const $ProductResponseRowDeserializer();
 
   @override
-  ProductRow deserialize(Row row) => _$ProductRowFromRow(row);
+  ProductResponse deserialize(Row row) => _$ProductResponseFromRow(row);
 }
 
-/// Typed row query terminals for [ProductRow].
+/// Typed row query terminals for [ProductResponse].
 ///
 /// Resolved from the static type of the receiver, so a row type with no
 /// `FromRow` has no terminals and the call does not compile.
-extension $ProductRowQuery on QueryAs<ProductRow> {
+extension $ProductResponseQuery on QueryAs<ProductResponse> {
   /// Fetches exactly one row.
-  Future<ProductRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$ProductRowFromRow);
+  Future<ProductResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$ProductResponseFromRow);
 
   /// Fetches zero or one row.
-  Future<ProductRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$ProductRowFromRow);
+  Future<ProductResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$ProductResponseFromRow);
 
   /// Fetches every row.
-  Future<List<ProductRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$ProductRowFromRow);
+  Future<List<ProductResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$ProductResponseFromRow);
 }
 
-ProductImageRow _$ProductImageRowFromRow(Row row) {
-  return ProductImageRow(
-    id: row.read<String>('id'),
-    productId: row.read<String>('product_id'),
-    url: row.read<String>('url'),
-    rank: row.read<int>('rank'),
-  );
+Map<String, Object?> _$ProductResponseSerialize(ProductResponse instance) {
+  return <String, Object?>{
+    'description': instance.description,
+    'details': instance.details.toJson(),
+    'handle': instance.handle,
+    'id': instance.id,
+    'images': instance.images
+        .map((item) => item)
+        .toList(),
+    'options': instance.options
+        .map((item) => item.toJson())
+        .toList(),
+    'status': instance.status,
+    'title': instance.title,
+    'thumbnail': instance.thumbnail,
+    'variants': instance.variants
+        .map((item) => item.toJson())
+        .toList(),
+  };
 }
 
-/// Row deserializer for [ProductImageRow].
-final class $ProductImageRowRowDeserializer implements RowDeserializer<ProductImageRow> {
-  const $ProductImageRowRowDeserializer();
+Map<String, Object?> _$ProductResponseToJson(ProductResponse instance) =>
+    _$ProductResponseSerialize(instance);
 
-  @override
-  ProductImageRow deserialize(Row row) => _$ProductImageRowFromRow(row);
+Map<String, Object?> _$ProductPageResponseSerialize(ProductPageResponse instance) {
+  return <String, Object?>{
+    'count': instance.count,
+    'limit': instance.limit,
+    'offset': instance.offset,
+    'products': instance.products
+        .map((item) => _$ProductResponseSerialize(item))
+        .toList(),
+    'total': instance.total,
+  };
 }
 
-/// Typed row query terminals for [ProductImageRow].
-///
-/// Resolved from the static type of the receiver, so a row type with no
-/// `FromRow` has no terminals and the call does not compile.
-extension $ProductImageRowQuery on QueryAs<ProductImageRow> {
-  /// Fetches exactly one row.
-  Future<ProductImageRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$ProductImageRowFromRow);
-
-  /// Fetches zero or one row.
-  Future<ProductImageRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$ProductImageRowFromRow);
-
-  /// Fetches every row.
-  Future<List<ProductImageRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$ProductImageRowFromRow);
-}
-
-VariantRow _$VariantRowFromRow(Row row) {
-  return VariantRow(
-    id: row.read<String>('id'),
-    productId: row.read<String>('product_id'),
-    title: row.read<String>('title'),
-    inventoryQuantity: row.read<int>('inventory_quantity'),
-    manageInventory: row.read<int>('manage_inventory'),
-    allowBackorder: row.read<int>('allow_backorder'),
-    currencyCode: row.read<String>('currency_code'),
-    amount: row.read<int>('amount'),
-    sku: row.readNullable<String>('sku'),
-  );
-}
-
-/// Row deserializer for [VariantRow].
-final class $VariantRowRowDeserializer implements RowDeserializer<VariantRow> {
-  const $VariantRowRowDeserializer();
-
-  @override
-  VariantRow deserialize(Row row) => _$VariantRowFromRow(row);
-}
-
-/// Typed row query terminals for [VariantRow].
-///
-/// Resolved from the static type of the receiver, so a row type with no
-/// `FromRow` has no terminals and the call does not compile.
-extension $VariantRowQuery on QueryAs<VariantRow> {
-  /// Fetches exactly one row.
-  Future<VariantRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$VariantRowFromRow);
-
-  /// Fetches zero or one row.
-  Future<VariantRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$VariantRowFromRow);
-
-  /// Fetches every row.
-  Future<List<VariantRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$VariantRowFromRow);
-}
-
-ProductOptionRow _$ProductOptionRowFromRow(Row row) {
-  return ProductOptionRow(
-    id: row.read<String>('id'),
-    productId: row.read<String>('product_id'),
-    title: row.read<String>('title'),
-    valuesCsv: row.read<String>('values_csv'),
-  );
-}
-
-/// Row deserializer for [ProductOptionRow].
-final class $ProductOptionRowRowDeserializer implements RowDeserializer<ProductOptionRow> {
-  const $ProductOptionRowRowDeserializer();
-
-  @override
-  ProductOptionRow deserialize(Row row) => _$ProductOptionRowFromRow(row);
-}
-
-/// Typed row query terminals for [ProductOptionRow].
-///
-/// Resolved from the static type of the receiver, so a row type with no
-/// `FromRow` has no terminals and the call does not compile.
-extension $ProductOptionRowQuery on QueryAs<ProductOptionRow> {
-  /// Fetches exactly one row.
-  Future<ProductOptionRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$ProductOptionRowFromRow);
-
-  /// Fetches zero or one row.
-  Future<ProductOptionRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$ProductOptionRowFromRow);
-
-  /// Fetches every row.
-  Future<List<ProductOptionRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$ProductOptionRowFromRow);
-}
-
-VariantOptionValueRow _$VariantOptionValueRowFromRow(Row row) {
-  return VariantOptionValueRow(
-    variantId: row.read<String>('variant_id'),
-    optionId: row.read<String>('option_id'),
-    value: row.read<String>('value'),
-  );
-}
-
-/// Row deserializer for [VariantOptionValueRow].
-final class $VariantOptionValueRowRowDeserializer implements RowDeserializer<VariantOptionValueRow> {
-  const $VariantOptionValueRowRowDeserializer();
-
-  @override
-  VariantOptionValueRow deserialize(Row row) => _$VariantOptionValueRowFromRow(row);
-}
-
-/// Typed row query terminals for [VariantOptionValueRow].
-///
-/// Resolved from the static type of the receiver, so a row type with no
-/// `FromRow` has no terminals and the call does not compile.
-extension $VariantOptionValueRowQuery on QueryAs<VariantOptionValueRow> {
-  /// Fetches exactly one row.
-  Future<VariantOptionValueRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$VariantOptionValueRowFromRow);
-
-  /// Fetches zero or one row.
-  Future<VariantOptionValueRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$VariantOptionValueRowFromRow);
-
-  /// Fetches every row.
-  Future<List<VariantOptionValueRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$VariantOptionValueRowFromRow);
-}
+Map<String, Object?> _$ProductPageResponseToJson(ProductPageResponse instance) =>
+    _$ProductPageResponseSerialize(instance);

@@ -2,6 +2,7 @@ import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_server/src/features/catalog/repository/repository.dart';
 import 'package:commerce_server/src/features/catalog/sellable_variant.dart';
+import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
 
 /// Why a line could not be added.
@@ -28,7 +29,7 @@ enum AddLineFailure {
 ///
 /// Adding a variant the cart already holds raises that line's quantity instead
 /// of appending a second one, keeping the earlier line's price.
-Future<Result<AddLineFailure?, SqlxError>> addLine(
+Future<Result<Option<AddLineFailure>, SqlxError>> addLine(
   CartReadRepository reads,
   CartUpdateRepository writes,
   CatalogReadRepository catalog, {
@@ -39,39 +40,53 @@ Future<Result<AddLineFailure?, SqlxError>> addLine(
 }) async {
   final found = await reads.findCart(cartId);
   if (found case Err(:final error)) return Err(error);
-  final cart = (found as Ok<CartRow?, SqlxError>).value;
-  if (cart == null) return const Ok(AddLineFailure.noCart);
+  final cartOption = optionOf((found as Ok<CartResponse?, SqlxError>).value);
+  if (cartOption case None()) return const Ok(Some(AddLineFailure.noCart));
+  final cart = (cartOption as Some<CartResponse>).value;
 
   final priced = await catalog.findVariant(variantId, cart.currencyCode);
   if (priced case Err(:final error)) return Err(error);
-  final variant = (priced as Ok<SellableVariant?, SqlxError>).value;
-  if (variant == null) return const Ok(AddLineFailure.noVariant);
+  final variantOption = optionOf(
+    (priced as Ok<SellableVariant?, SqlxError>).value,
+  );
+  if (variantOption case None()) {
+    return const Ok(Some(AddLineFailure.noVariant));
+  }
+  final variant = (variantOption as Some<SellableVariant>).value;
 
   final existing = await reads.findLine(cartId, variantId);
   if (existing case Err(:final error)) return Err(error);
-  final line = (existing as Ok<LineItemRow?, SqlxError>).value;
+  final line = optionOf(
+    (existing as Ok<LineItemResponse?, SqlxError>).value,
+  );
 
-  final wanted = (line?.quantity ?? 0) + quantity;
+  final wanted = line.match(
+        some: (value) => value.quantity,
+        none: () => 0,
+      ) +
+      quantity;
   if (!variant.canFulfil(wanted)) {
-    return const Ok(AddLineFailure.outOfStock);
+    return const Ok(Some(AddLineFailure.outOfStock));
   }
 
-  final written = line == null
-      ? await writes.insertLine(
-          nextId(),
-          cartId,
-          variant.id,
-          variant.productId,
-          variant.productHandle,
-          variant.thumbnail,
-          variant.productTitle,
-          variant.title,
-          variant.amount,
-          variant.currencyCode,
-          quantity,
-        )
-      : await writes.setLineQuantity(line.id, wanted, cartId);
+  final written = switch (line) {
+    None() => await writes.insertLine(
+        nextId(),
+        cartId,
+        variant.id,
+        variant.productId,
+        variant.productHandle,
+        variant.thumbnail,
+        variant.productTitle,
+        variant.title,
+        variant.amount,
+        variant.currencyCode,
+        quantity,
+      ),
+    Some(value: final existingLine) =>
+      await writes.setLineQuantity(existingLine.id, wanted, cartId),
+  };
 
   if (written case Err(:final error)) return Err(error);
-  return const Ok(null);
+  return const Ok(None<AddLineFailure>());
 }

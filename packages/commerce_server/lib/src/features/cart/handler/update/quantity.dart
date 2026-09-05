@@ -1,6 +1,7 @@
 import 'package:commerce_server/src/features/cart/deps.dart';
 import 'package:commerce_server/src/features/cart/extractor.dart';
 import 'package:commerce_server/src/features/cart/handler/read.dart';
+import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
@@ -9,7 +10,9 @@ const ValidatedExtractable<UpdateLineBody> _body =
     ValidatedExtractable(JsonExtractable(UpdateLineBody.fromJson));
 
 /// `PATCH /carts/{id}/line-items/{lineId}` — replace a line quantity.
-Future<Result<CartView, Rejection>> updateLineHandler(Request request) async {
+Future<Result<CartViewResponse, Rejection>> updateLineHandler(
+  Request request,
+) async {
   final access = await request.extract(const Extension<CartAccess>());
   final lineId = pathParametersOf(request)['lineId'];
   if (lineId == null || lineId.isEmpty) {
@@ -33,12 +36,12 @@ Future<Result<CartView, Rejection>> updateLineHandler(Request request) async {
   );
 
   return switch (result) {
-    Ok(value: null) => await cartViewOf(deps.reads, access.cart.id),
-    Ok(value: UpdateLineFailure.noLine) =>
+    Ok(value: None()) => await cartViewOf(deps.reads, access.cart.id),
+    Ok(value: Some(value: UpdateLineFailure.noLine)) =>
       Err(Rejection.notFound('Cart line "$lineId"')),
-    Ok(value: UpdateLineFailure.unavailable) =>
+    Ok(value: Some(value: UpdateLineFailure.unavailable)) =>
       Err(Rejection.conflict('This item is no longer available')),
-    Ok(value: UpdateLineFailure.outOfStock) =>
+    Ok(value: Some(value: UpdateLineFailure.outOfStock)) =>
       Err(Rejection.conflict('Not enough stock for this quantity')),
     Err() => const Err(Rejection.internal()),
   };

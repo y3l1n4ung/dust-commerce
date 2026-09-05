@@ -19,17 +19,16 @@ final class _$PaymentReadRepository implements PaymentReadRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<PaymentRow?, SqlxError>> forOrder(String orderId) {
-    return _db.fetchOptional<PaymentRow>(
+  Future<Result<String?, SqlxError>> forOrder(String orderId) {
+    return _db.fetchScalar<String?>(
       r'''
-SELECT id, order_id, provider, amount, currency_code, status, captured_at
+SELECT id
 FROM payment_collections
 WHERE order_id = ?
 ORDER BY created_at DESC
 LIMIT 1
 ''',
       [orderId],
-      const $PaymentRowRowDeserializer().deserialize,
     );
   }
 }

@@ -13,63 +13,11 @@
 
 part of 'promotion.dart';
 
-mixin _$PromotionRow {
+mixin _$AppliedPromotion {
   @override
   String toString() {
-    final self = this as PromotionRow;
-    return 'PromotionRow('
-        'code: ${self.code}, '
-        'currencyCode: ${self.currencyCode}, '
-        'endsAt: ${self.endsAt}, '
-        'id: ${self.id}, '
-        'startsAt: ${self.startsAt}, '
-        'type: ${self.type}, '
-        'usageCount: ${self.usageCount}, '
-        'usageLimit: ${self.usageLimit}, '
-        'value: ${self.value}'
-        ')';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    final self = this as PromotionRow;
-    return identical(this, other) ||
-        other is PromotionRow &&
-            runtimeType == other.runtimeType &&
-            other.code == self.code &&
-            other.currencyCode == self.currencyCode &&
-            other.endsAt == self.endsAt &&
-            other.id == self.id &&
-            other.startsAt == self.startsAt &&
-            other.type == self.type &&
-            other.usageCount == self.usageCount &&
-            other.usageLimit == self.usageLimit &&
-            other.value == self.value;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as PromotionRow;
-    return Object.hashAll([
-      runtimeType,
-      self.code,
-      self.currencyCode,
-      self.endsAt,
-      self.id,
-      self.startsAt,
-      self.type,
-      self.usageCount,
-      self.usageLimit,
-      self.value,
-    ]);
-  }
-}
-
-mixin _$CartPromotionRow {
-  @override
-  String toString() {
-    final self = this as CartPromotionRow;
-    return 'CartPromotionRow('
+    final self = this as AppliedPromotion;
+    return 'AppliedPromotion('
         'amount: ${self.amount}, '
         'code: ${self.code}, '
         'promotionId: ${self.promotionId}'
@@ -78,9 +26,9 @@ mixin _$CartPromotionRow {
 
   @override
   bool operator ==(Object other) {
-    final self = this as CartPromotionRow;
+    final self = this as AppliedPromotion;
     return identical(this, other) ||
-        other is CartPromotionRow &&
+        other is AppliedPromotion &&
             runtimeType == other.runtimeType &&
             other.amount == self.amount &&
             other.code == self.code &&
@@ -89,7 +37,7 @@ mixin _$CartPromotionRow {
 
   @override
   int get hashCode {
-    final self = this as CartPromotionRow;
+    final self = this as AppliedPromotion;
     return Object.hashAll([
       runtimeType,
       self.amount,
@@ -99,76 +47,76 @@ mixin _$CartPromotionRow {
   }
 }
 
-PromotionRow _$PromotionRowFromRow(Row row) {
-  return PromotionRow(
-    id: row.read<String>('id'),
-    code: row.read<String>('code'),
-    type: row.read<String>('type'),
-    value: row.read<int>('value'),
-    usageCount: row.read<int>('usage_count'),
-    currencyCode: row.readNullable<String>('currency_code'),
-    startsAt: row.readNullable<String>('starts_at'),
-    endsAt: row.readNullable<String>('ends_at'),
-    usageLimit: row.readNullable<int>('usage_limit'),
-  );
-}
-
-/// Row deserializer for [PromotionRow].
-final class $PromotionRowRowDeserializer implements RowDeserializer<PromotionRow> {
-  const $PromotionRowRowDeserializer();
-
-  @override
-  PromotionRow deserialize(Row row) => _$PromotionRowFromRow(row);
-}
-
-/// Typed row query terminals for [PromotionRow].
-///
-/// Resolved from the static type of the receiver, so a row type with no
-/// `FromRow` has no terminals and the call does not compile.
-extension $PromotionRowQuery on QueryAs<PromotionRow> {
-  /// Fetches exactly one row.
-  Future<PromotionRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$PromotionRowFromRow);
-
-  /// Fetches zero or one row.
-  Future<PromotionRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$PromotionRowFromRow);
-
-  /// Fetches every row.
-  Future<List<PromotionRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$PromotionRowFromRow);
-}
-
-CartPromotionRow _$CartPromotionRowFromRow(Row row) {
-  return CartPromotionRow(
+AppliedPromotion _$AppliedPromotionFromRow(Row row) {
+  return AppliedPromotion(
     promotionId: row.read<String>('promotion_id'),
     code: row.read<String>('code'),
     amount: row.read<int>('amount'),
   );
 }
 
-/// Row deserializer for [CartPromotionRow].
-final class $CartPromotionRowRowDeserializer implements RowDeserializer<CartPromotionRow> {
-  const $CartPromotionRowRowDeserializer();
+/// Row deserializer for [AppliedPromotion].
+final class $AppliedPromotionRowDeserializer implements RowDeserializer<AppliedPromotion> {
+  const $AppliedPromotionRowDeserializer();
 
   @override
-  CartPromotionRow deserialize(Row row) => _$CartPromotionRowFromRow(row);
+  AppliedPromotion deserialize(Row row) => _$AppliedPromotionFromRow(row);
 }
 
-/// Typed row query terminals for [CartPromotionRow].
+/// Typed row query terminals for [AppliedPromotion].
 ///
 /// Resolved from the static type of the receiver, so a row type with no
 /// `FromRow` has no terminals and the call does not compile.
-extension $CartPromotionRowQuery on QueryAs<CartPromotionRow> {
+extension $AppliedPromotionQuery on QueryAs<AppliedPromotion> {
   /// Fetches exactly one row.
-  Future<CartPromotionRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$CartPromotionRowFromRow);
+  Future<AppliedPromotion> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$AppliedPromotionFromRow);
 
   /// Fetches zero or one row.
-  Future<CartPromotionRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$CartPromotionRowFromRow);
+  Future<AppliedPromotion?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$AppliedPromotionFromRow);
 
   /// Fetches every row.
-  Future<List<CartPromotionRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$CartPromotionRowFromRow);
+  Future<List<AppliedPromotion>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$AppliedPromotionFromRow);
+}
+
+PromotionPolicy _$PromotionPolicyFromRow(Row row) {
+  return PromotionPolicy(
+    promotionId: row.read<String>('id'),
+    promotionCode: row.read<String>('code'),
+    storedType: row.read<String>('type'),
+    promotionValue: row.read<int>('value'),
+    promotionUsageCount: row.read<int>('usage_count'),
+    promotionCurrencyCode: row.readNullable<String>('currency_code'),
+    startsAtText: row.readNullable<String>('starts_at'),
+    endsAtText: row.readNullable<String>('ends_at'),
+    promotionUsageLimit: row.readNullable<int>('usage_limit'),
+  );
+}
+
+/// Row deserializer for [PromotionPolicy].
+final class $PromotionPolicyRowDeserializer implements RowDeserializer<PromotionPolicy> {
+  const $PromotionPolicyRowDeserializer();
+
+  @override
+  PromotionPolicy deserialize(Row row) => _$PromotionPolicyFromRow(row);
+}
+
+/// Typed row query terminals for [PromotionPolicy].
+///
+/// Resolved from the static type of the receiver, so a row type with no
+/// `FromRow` has no terminals and the call does not compile.
+extension $PromotionPolicyQuery on QueryAs<PromotionPolicy> {
+  /// Fetches exactly one row.
+  Future<PromotionPolicy> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$PromotionPolicyFromRow);
+
+  /// Fetches zero or one row.
+  Future<PromotionPolicy?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$PromotionPolicyFromRow);
+
+  /// Fetches every row.
+  Future<List<PromotionPolicy>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$PromotionPolicyFromRow);
 }

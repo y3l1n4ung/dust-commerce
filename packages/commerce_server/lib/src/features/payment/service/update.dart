@@ -1,8 +1,9 @@
 import 'package:commerce_server/src/features/checkout/repository/repository.dart';
+import 'package:commerce_server/src/features/checkout/model.dart';
 import 'package:commerce_server/src/features/checkout/service/service.dart';
-import 'package:commerce_server/src/features/payment/model.dart';
 import 'package:commerce_server/src/features/payment/repository/repository.dart';
 import 'package:commerce_server/src/infra/database.dart';
+import 'package:commerce_server/src/infra/option.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
 
@@ -29,11 +30,11 @@ enum CaptureFailure {
 ///
 /// Capture is conditional in SQL, so a second attempt affects no rows and is
 /// told so rather than taking the money again.
-Future<Result<(Order?, CaptureFailure?), SqlxError>> capturePayment(
+Future<Result<Result<OrderResponse, CaptureFailure>, SqlxError>> capturePayment(
   CommerceDatabase database, {
   required String orderId,
   required String email,
-  String? customerId,
+  required Option<String> customerId,
   required DateTime now,
 }) async {
   return database.transaction((tx) async {
@@ -44,37 +45,45 @@ Future<Result<(Order?, CaptureFailure?), SqlxError>> capturePayment(
     final loaded = await loadOrder(orders, orderId);
     if (loaded case Err(:final error)) return Err(error);
 
-    final order = (loaded as Ok<Order?, SqlxError>).value;
-    if (order == null ||
-        (order.customerId == null
-            ? order.email != email
-            : order.customerId != customerId)) {
-      return const Ok((null, CaptureFailure.noOrder));
+    final orderOption = (loaded as Ok<Option<OrderResponse>, SqlxError>).value;
+    if (orderOption case None()) {
+      return const Ok(Err(CaptureFailure.noOrder));
+    }
+    final order = (orderOption as Some<OrderResponse>).value;
+    final ownsOrder = switch (order.customerId) {
+      null => order.email == email,
+      final owner => customerId == Some(owner),
+    };
+    if (!ownsOrder) {
+      return const Ok(Err(CaptureFailure.noOrder));
     }
     if (order.status == OrderStatus.cancelled) {
-      return const Ok((null, CaptureFailure.cancelled));
+      return const Ok(Err(CaptureFailure.cancelled));
     }
 
     final found = await reads.forOrder(orderId);
     if (found case Err(:final error)) return Err(error);
-    final payment = (found as Ok<PaymentRow?, SqlxError>).value;
-    if (payment == null) return const Ok((null, CaptureFailure.noPayment));
+    final payment = optionOf((found as Ok<String?, SqlxError>).value);
+    if (payment case None()) {
+      return const Ok(Err(CaptureFailure.noPayment));
+    }
+    final paymentId = (payment as Some<String>).value;
 
     final captured = await writes.capture(
-      payment.id,
+      paymentId,
       now.toUtc().toIso8601String(),
     );
     if (captured case Err(:final error)) return Err(error);
     if ((captured as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
-      return const Ok((null, CaptureFailure.alreadyCaptured));
+      return const Ok(Err(CaptureFailure.alreadyCaptured));
     }
 
     final completed = await writes.completeOrder(orderId);
     if (completed case Err(:final error)) return Err(error);
 
     // The domain type says what the order became, rather than this rebuilding
-    // it: Order.captured() already refuses a cancelled order, and one rule in
+    // it: OrderResponse.captured() owns the explicit response transition.
     // one place is one rule to get wrong.
-    return Ok((order.captured(), null));
+    return Ok(Ok(order.captured()));
   });
 }

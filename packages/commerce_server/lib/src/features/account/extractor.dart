@@ -1,6 +1,6 @@
 import 'package:commerce_server/src/features/account/deps.dart';
+import 'package:commerce_server/src/features/account/model.dart';
 import 'package:commerce_server/src/features/account/service/service.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
 
 /// The customer identity proven by a bearer token.
@@ -12,7 +12,7 @@ final class AuthenticatedCustomer {
   const AuthenticatedCustomer({required this.customer, required this.token});
 
   /// The store customer making the request.
-  final Customer customer;
+  final CustomerResponse customer;
 
   /// The bearer token proven by this extraction.
   final String token;
@@ -23,8 +23,8 @@ final class CustomerContext {
   /// Creates a request context for either a customer or a guest.
   const CustomerContext(this.authenticated);
 
-  /// The proven customer, or `null` when no Authorization header was sent.
-  final AuthenticatedCustomer? authenticated;
+  /// The proven customer, or [None] when no Authorization header was sent.
+  final Option<AuthenticatedCustomer> authenticated;
 }
 
 /// Axum-style required authentication extracted from request parts.
@@ -46,9 +46,9 @@ final class CustomerAuth implements FromRequestParts<AuthenticatedCustomer> {
 
     return switch (
         await authenticateToken(deps.reads, token, deps.clock.now())) {
-      Ok(value: final row?) =>
-        Ok(AuthenticatedCustomer(customer: row.customer, token: token)),
-      Ok() => const Err(Rejection.unauthorized(
+      Ok(value: Some(value: final customer)) =>
+        Ok(AuthenticatedCustomer(customer: customer, token: token)),
+      Ok(value: None()) => const Err(Rejection.unauthorized(
           'Invalid or expired token',
           challenge: 'Bearer',
         )),
@@ -67,10 +67,10 @@ final class OptionalCustomerAuth implements FromRequestParts<CustomerContext> {
     Request request,
   ) async {
     if (Authorization.of(request) == null) {
-      return const Ok(CustomerContext(null));
+      return const Ok(CustomerContext(None<AuthenticatedCustomer>()));
     }
     return switch (await const CustomerAuth().extract(request)) {
-      Ok(:final value) => Ok(CustomerContext(value)),
+      Ok(:final value) => Ok(CustomerContext(Some(value))),
       Err(:final error) => Err(error),
     };
   }

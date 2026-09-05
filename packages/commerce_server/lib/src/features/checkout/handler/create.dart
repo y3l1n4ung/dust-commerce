@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/checkout/deps.dart';
+import 'package:commerce_server/src/features/checkout/model.dart';
 import 'package:commerce_server/src/features/checkout/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
@@ -16,7 +17,9 @@ const ValidatedExtractable<CheckoutRequest> _body = ValidatedExtractable(
 );
 
 /// `POST /checkout` — turn a cart into an order.
-Future<Result<Order, Rejection>> placeOrderHandler(Request request) async {
+Future<Result<OrderResponse, Rejection>> placeOrderHandler(
+  Request request,
+) async {
   final context = await request.extract(const Extension<CustomerContext>());
   final actor = context.authenticated;
   final decoded = await _body.extract(request);
@@ -31,8 +34,11 @@ Future<Result<Order, Rejection>> placeOrderHandler(Request request) async {
   final result = await placeOrder(
     deps.database,
     cartId: input.cartId,
-    email: actor?.customer.email ?? input.email,
-    customerId: actor?.customer.id,
+    email: actor.match(
+      some: (value) => value.customer.email,
+      none: () => input.email,
+    ),
+    customerId: actor.map((value) => value.customer.id),
     shippingAddress: shipping,
     billingAddress: input.billingAddress?.toAddress() ?? shipping,
     placedAt: deps.clock.now(),
@@ -40,17 +46,16 @@ Future<Result<Order, Rejection>> placeOrderHandler(Request request) async {
   );
 
   return switch (result) {
-    Ok(value: (final order?, _)) => Ok(order),
-    Ok(value: (_, CheckoutFailure.noCart)) =>
+    Ok(value: Ok(value: final order)) => Ok(order),
+    Ok(value: Err(error: CheckoutFailure.noCart)) =>
       Err(Rejection.notFound('Cart "${input.cartId}"')),
-    Ok(value: (_, CheckoutFailure.emptyCart)) =>
+    Ok(value: Err(error: CheckoutFailure.emptyCart)) =>
       const Err(Rejection.status(422, 'An empty cart cannot be ordered')),
-    Ok(value: (_, CheckoutFailure.outOfStock)) => const Err(
+    Ok(value: Err(error: CheckoutFailure.outOfStock)) => const Err(
         Rejection.conflict('Something in this cart sold out before checkout'),
       ),
-    Ok(value: (_, CheckoutFailure.wrongCustomer)) =>
+    Ok(value: Err(error: CheckoutFailure.wrongCustomer)) =>
       Err(Rejection.notFound('Cart "${input.cartId}"')),
-    Ok() => const Err(Rejection.internal()),
     Err() => const Err(Rejection.internal()),
   };
 }

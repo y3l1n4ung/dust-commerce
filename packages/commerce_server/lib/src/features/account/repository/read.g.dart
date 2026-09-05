@@ -19,15 +19,10 @@ final class _$AccountReadRepository implements AccountReadRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<AccountRow?, SqlxError>> accountByEmail(String email) {
-    return _db.fetchOptional<AccountRow>(
+  Future<Result<PasswordCredential?, SqlxError>> accountByEmail(String email) {
+    return _db.fetchOptional<PasswordCredential>(
       r'''
 SELECT a.id AS auth_identity_id,
-       c.id AS customer_id,
-       coalesce(c.email, '') AS email,
-       c.first_name,
-       c.last_name,
-       c.phone,
        coalesce(CAST(json_extract(p.provider_metadata, '$.password') AS TEXT),
                 '') AS password_hash
 FROM provider_identity p
@@ -41,16 +36,15 @@ WHERE p.provider = 'emailpass'
   AND c.deleted_at IS NULL
 ''',
       [email],
-      const $AccountRowRowDeserializer().deserialize,
+      const $PasswordCredentialRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<AuthenticatedCustomerRow?, SqlxError>> customerForToken(String tokenHash, String now) {
-    return _db.fetchOptional<AuthenticatedCustomerRow>(
+  Future<Result<CustomerResponse?, SqlxError>> customerForToken(String tokenHash, String now) {
+    return _db.fetchOptional<CustomerResponse>(
       r'''
-SELECT a.id AS auth_identity_id,
-       c.id AS customer_id,
+SELECT c.id,
        coalesce(c.email, '') AS email,
        c.first_name,
        c.last_name,
@@ -65,7 +59,7 @@ WHERE t.token_hash = ?
   AND c.deleted_at IS NULL
 ''',
       [tokenHash, now],
-      const $AuthenticatedCustomerRowRowDeserializer().deserialize,
+      const $CustomerResponseRowDeserializer().deserialize,
     );
   }
 }

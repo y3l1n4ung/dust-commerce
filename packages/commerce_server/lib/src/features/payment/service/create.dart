@@ -1,7 +1,8 @@
 import 'package:commerce_server/src/features/checkout/repository/repository.dart';
+import 'package:commerce_server/src/features/checkout/model.dart';
 import 'package:commerce_server/src/features/checkout/service/service.dart';
-import 'package:commerce_server/src/features/payment/model.dart';
 import 'package:commerce_server/src/features/payment/repository/repository.dart';
+import 'package:commerce_server/src/infra/option.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
 
@@ -21,34 +22,41 @@ enum AuthorizeFailure {
 ///
 /// The amount comes from the stored order total, never from the request. A
 /// client that could name the amount could name a smaller one.
-Future<Result<(Order?, AuthorizeFailure?), SqlxError>> authorizePayment(
+Future<Result<Result<OrderResponse, AuthorizeFailure>, SqlxError>>
+    authorizePayment(
   CheckoutReadRepository orders,
   PaymentReadRepository reads,
   PaymentCreateRepository writes, {
   required String orderId,
   required String email,
-  String? customerId,
+  required Option<String> customerId,
   required String id,
   String provider = 'manual',
 }) async {
   final loaded = await loadOrder(orders, orderId);
   if (loaded case Err(:final error)) return Err(error);
 
-  final order = (loaded as Ok<Order?, SqlxError>).value;
-  if (order == null ||
-      (order.customerId == null
-          ? order.email != email
-          : order.customerId != customerId)) {
-    return const Ok((null, AuthorizeFailure.noOrder));
+  final orderOption = (loaded as Ok<Option<OrderResponse>, SqlxError>).value;
+  if (orderOption case None()) {
+    return const Ok(Err(AuthorizeFailure.noOrder));
+  }
+  final order = (orderOption as Some<OrderResponse>).value;
+  final ownsOrder = switch (order.customerId) {
+    null => order.email == email,
+    final owner => customerId == Some(owner),
+  };
+  if (!ownsOrder) {
+    return const Ok(Err(AuthorizeFailure.noOrder));
   }
   if (order.status == OrderStatus.cancelled) {
-    return const Ok((null, AuthorizeFailure.cancelled));
+    return const Ok(Err(AuthorizeFailure.cancelled));
   }
 
   final existing = await reads.forOrder(orderId);
   if (existing case Err(:final error)) return Err(error);
-  if ((existing as Ok<PaymentRow?, SqlxError>).value != null) {
-    return const Ok((null, AuthorizeFailure.alreadyStarted));
+  final payment = optionOf((existing as Ok<String?, SqlxError>).value);
+  if (payment case Some()) {
+    return const Ok(Err(AuthorizeFailure.alreadyStarted));
   }
 
   final written = await writes.authorize(
@@ -60,5 +68,5 @@ Future<Result<(Order?, AuthorizeFailure?), SqlxError>> authorizePayment(
   );
   if (written case Err(:final error)) return Err(error);
 
-  return Ok((order, null));
+  return Ok(Ok(order));
 }

@@ -1,8 +1,8 @@
 import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/checkout/handler/read.dart';
+import 'package:commerce_server/src/features/checkout/model.dart';
 import 'package:commerce_server/src/features/payment/deps.dart';
 import 'package:commerce_server/src/features/payment/service/service.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
 
 /// `POST /orders/{id}/payments` — start paying for an order.
@@ -11,7 +11,7 @@ import 'package:dust_server/server.dart';
 /// dust_server's examples are written and what a generated route would emit.
 ///
 /// A customer order requires its owner; a guest order uses its email capability.
-Future<Result<Order, Rejection>> authorizePaymentHandler(
+Future<Result<OrderResponse, Rejection>> authorizePaymentHandler(
   Request request,
 ) async {
   final orderId = pathParametersOf(request)['id'];
@@ -21,9 +21,10 @@ Future<Result<Order, Rejection>> authorizePaymentHandler(
 
   final context = await request.extract(const Extension<CustomerContext>());
   final customer = context.authenticated;
-  final email = customer == null
-      ? emailOf(request)
-      : Ok<String, Rejection>(customer.customer.email);
+  final email = customer.match(
+    some: (value) => Ok<String, Rejection>(value.customer.email),
+    none: () => emailOf(request),
+  );
   if (email case Err(:final error)) return Err(error);
 
   final state = await paymentDeps(request);
@@ -36,19 +37,18 @@ Future<Result<Order, Rejection>> authorizePaymentHandler(
     deps.writes,
     orderId: orderId,
     email: (email as Ok<String, Rejection>).value,
-    customerId: customer?.customer.id,
+    customerId: customer.map((value) => value.customer.id),
     id: deps.clock.nextId(),
   );
 
   return switch (result) {
-    Ok(value: (final order?, _)) => Ok(order),
-    Ok(value: (_, AuthorizeFailure.noOrder)) =>
+    Ok(value: Ok(value: final order)) => Ok(order),
+    Ok(value: Err(error: AuthorizeFailure.noOrder)) =>
       Err(Rejection.notFound('Order "$orderId"')),
-    Ok(value: (_, AuthorizeFailure.cancelled)) =>
+    Ok(value: Err(error: AuthorizeFailure.cancelled)) =>
       const Err(Rejection.conflict('A cancelled order cannot be paid for')),
-    Ok(value: (_, AuthorizeFailure.alreadyStarted)) =>
+    Ok(value: Err(error: AuthorizeFailure.alreadyStarted)) =>
       const Err(Rejection.conflict('A payment has already been started')),
-    Ok() => const Err(Rejection.internal()),
     Err() => const Err(Rejection.internal()),
   };
 }

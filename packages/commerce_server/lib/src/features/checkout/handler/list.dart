@@ -1,13 +1,11 @@
 import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/checkout/deps.dart';
 import 'package:commerce_server/src/features/checkout/model.dart';
-import 'package:commerce_server/src/features/checkout/service/service.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
 import 'package:dust_server/server.dart';
 
 /// `GET /orders` — the authenticated customer's orders.
-Future<Result<OrderListView, Rejection>> listOrdersHandler(
+Future<Result<OrderListResponse, Rejection>> listOrdersHandler(
   Request request,
 ) async {
   final actor = await request.extract(
@@ -20,18 +18,6 @@ Future<Result<OrderListView, Rejection>> listOrdersHandler(
 
   final found = await deps.lists.ordersForCustomer(actor.customer.id);
   if (found case Err()) return const Err(Rejection.internal());
-
-  final orders = <Order>[];
-  for (final row in (found as Ok<List<OrderRow>, SqlxError>).value) {
-    final loaded = await loadCustomerOrder(
-      deps.reads,
-      row.id,
-      actor.customer.id,
-    );
-    if (loaded case Err()) return const Err(Rejection.internal());
-    final order = (loaded as Ok<Order?, SqlxError>).value;
-    if (order != null) orders.add(order);
-  }
-
-  return Ok(OrderListView.of(orders));
+  final orders = (found as Ok<List<OrderResponse>, SqlxError>).value;
+  return Ok(OrderListResponse.of(orders));
 }

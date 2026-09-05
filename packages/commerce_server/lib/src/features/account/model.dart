@@ -1,102 +1,56 @@
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
+import 'package:dust_dart/serde.dart';
 
 part 'model.g.dart';
 
-/// A customer account joined to its email/password provider identity.
+/// Direct credential-query response used only for password verification.
 ///
 /// It deliberately derives no serializer: a type containing a password hash
 /// must never become an HTTP response by accident.
 @Derive([Eq(), FromRow()])
-final class AccountRow with _$AccountRow {
-  /// Creates a row mapped by Dust SQLx.
-  const AccountRow({
+final class PasswordCredential with _$PasswordCredential {
+  /// Creates a credential query response.
+  const PasswordCredential({
     required this.authIdentityId,
-    required this.customerId,
-    required this.email,
     required this.passwordHash,
-    this.firstName,
-    this.lastName,
-    this.phone,
   });
 
   /// Medusa-style authentication identity owning this provider credential.
   @Sqlx(rename: 'auth_identity_id')
   final String authIdentityId;
 
-  /// Store customer linked through the identity metadata.
-  @Sqlx(rename: 'customer_id')
-  final String customerId;
-
-  /// Normalized sign-in email.
-  final String email;
-
-  /// Optional customer first name.
-  @Sqlx(rename: 'first_name')
-  final String? firstName;
-
-  /// Optional customer last name.
-  @Sqlx(rename: 'last_name')
-  final String? lastName;
-
   /// Argon2id PHC string; never returned by an HTTP handler.
   @Sqlx(rename: 'password_hash')
   final String passwordHash;
-
-  /// Optional customer phone number.
-  final String? phone;
-
-  /// The safe public projection.
-  Customer get customer => Customer(
-        id: customerId,
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-      );
 }
 
-/// A customer resolved from a valid, unexpired bearer token.
-@Derive([Eq(), FromRow()])
-final class AuthenticatedCustomerRow with _$AuthenticatedCustomerRow {
-  /// Creates a row mapped by Dust SQLx.
-  const AuthenticatedCustomerRow({
-    required this.authIdentityId,
-    required this.customerId,
+/// Explicit customer response populated directly from a customer row.
+@Derive([Serialize(), FromRow()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class CustomerResponse with _$CustomerResponse {
+  /// Constructs the allowlisted customer response.
+  const CustomerResponse({
+    required this.id,
     required this.email,
     this.firstName,
     this.lastName,
     this.phone,
   });
 
-  /// Authentication identity proven by the bearer token.
-  @Sqlx(rename: 'auth_identity_id')
-  final String authIdentityId;
-
-  /// Customer linked to the authenticated identity.
-  @Sqlx(rename: 'customer_id')
-  final String customerId;
-
-  /// Normalized customer email.
+  /// Email used for account communication and sign-in.
   final String email;
 
-  /// Optional customer first name.
+  /// Optional given name from the customer profile.
   @Sqlx(rename: 'first_name')
   final String? firstName;
 
-  /// Optional customer last name.
+  /// Stable customer identifier.
+  final String id;
+
+  /// Optional family name from the customer profile.
   @Sqlx(rename: 'last_name')
   final String? lastName;
 
-  /// Optional customer phone number.
+  /// Optional customer contact number.
   final String? phone;
-
-  /// The safe public projection.
-  Customer get customer => Customer(
-        id: customerId,
-        email: email,
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-      );
 }

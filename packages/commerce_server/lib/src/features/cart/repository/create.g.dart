@@ -30,29 +30,31 @@ VALUES (?, ?, ?, ?)
   }
 
   @override
-  Future<Result<RegionRow?, SqlxError>> regionById(String id) {
-    return _db.fetchOptional<RegionRow>(
+  Future<Result<RegionResponse?, SqlxError>> regionById(String id) {
+    return _db.fetchOptional<RegionResponse>(
       r'''
-SELECT id, name, currency_code, tax_rate, tax_inclusive, countries
+SELECT id, name, currency_code,
+       tax_rate, tax_inclusive, countries
 FROM regions
 WHERE id = ?
 ''',
       [id],
-      const $RegionRowRowDeserializer().deserialize,
+      const $RegionResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<RegionRow?, SqlxError>> firstRegion() {
-    return _db.fetchOptional<RegionRow>(
+  Future<Result<RegionResponse?, SqlxError>> firstRegion() {
+    return _db.fetchOptional<RegionResponse>(
       r'''
-SELECT id, name, currency_code, tax_rate, tax_inclusive, countries
+SELECT id, name, currency_code,
+       tax_rate, tax_inclusive, countries
 FROM regions
 ORDER BY id
 LIMIT 1
 ''',
       [],
-      const $RegionRowRowDeserializer().deserialize,
+      const $RegionResponseRowDeserializer().deserialize,
     );
   }
 }

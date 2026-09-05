@@ -13,230 +13,80 @@
 
 part of 'model.dart';
 
-mixin _$OrderRow {
-  @override
-  String toString() {
-    final self = this as OrderRow;
-    return 'OrderRow('
-        'countries: ${self.countries}, '
-        'currencyCode: ${self.currencyCode}, '
-        'customerId: ${self.customerId}, '
-        'email: ${self.email}, '
-        'id: ${self.id}, '
-        'paymentStatus: ${self.paymentStatus}, '
-        'placedAt: ${self.placedAt}, '
-        'regionId: ${self.regionId}, '
-        'regionName: ${self.regionName}, '
-        'status: ${self.status}, '
-        'discountTotal: ${self.discountTotal}, '
-        'shippingName: ${self.shippingName}, '
-        'shippingOptionId: ${self.shippingOptionId}, '
-        'shippingTotal: ${self.shippingTotal}, '
-        'subtotal: ${self.subtotal}, '
-        'tax: ${self.tax}, '
-        'taxInclusive: ${self.taxInclusive}, '
-        'taxRate: ${self.taxRate}, '
-        'total: ${self.total}'
-        ')';
-  }
+mixin _$OrderListResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$OrderListResponseSerialize(this as OrderListResponse);
 
-  @override
-  bool operator ==(Object other) {
-    final self = this as OrderRow;
-    return identical(this, other) ||
-        other is OrderRow &&
-            runtimeType == other.runtimeType &&
-            other.countries == self.countries &&
-            other.currencyCode == self.currencyCode &&
-            other.customerId == self.customerId &&
-            other.email == self.email &&
-            other.id == self.id &&
-            other.paymentStatus == self.paymentStatus &&
-            other.placedAt == self.placedAt &&
-            other.regionId == self.regionId &&
-            other.regionName == self.regionName &&
-            other.status == self.status &&
-            other.discountTotal == self.discountTotal &&
-            other.shippingName == self.shippingName &&
-            other.shippingOptionId == self.shippingOptionId &&
-            other.shippingTotal == self.shippingTotal &&
-            other.subtotal == self.subtotal &&
-            other.tax == self.tax &&
-            other.taxInclusive == self.taxInclusive &&
-            other.taxRate == self.taxRate &&
-            other.total == self.total;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as OrderRow;
-    return Object.hashAll([
-      runtimeType,
-      self.countries,
-      self.currencyCode,
-      self.customerId,
-      self.email,
-      self.id,
-      self.paymentStatus,
-      self.placedAt,
-      self.regionId,
-      self.regionName,
-      self.status,
-      self.discountTotal,
-      self.shippingName,
-      self.shippingOptionId,
-      self.shippingTotal,
-      self.subtotal,
-      self.tax,
-      self.taxInclusive,
-      self.taxRate,
-      self.total,
-    ]);
-  }
+  Map<String, Object?> toJson() => serialize();
 }
 
-mixin _$OrderAddressRow {
-  @override
-  String toString() {
-    final self = this as OrderAddressRow;
-    return 'OrderAddressRow('
-        'city: ${self.city}, '
-        'countryCode: ${self.countryCode}, '
-        'firstName: ${self.firstName}, '
-        'kind: ${self.kind}, '
-        'lastName: ${self.lastName}, '
-        'line1: ${self.line1}, '
-        'line2: ${self.line2}, '
-        'phone: ${self.phone}, '
-        'postalCode: ${self.postalCode}, '
-        'province: ${self.province}'
-        ')';
-  }
+final class $OrderListResponseSerializer implements Serializer<OrderListResponse, Map<String, Object?>> {
+  const $OrderListResponseSerializer();
 
   @override
-  bool operator ==(Object other) {
-    final self = this as OrderAddressRow;
-    return identical(this, other) ||
-        other is OrderAddressRow &&
-            runtimeType == other.runtimeType &&
-            other.city == self.city &&
-            other.countryCode == self.countryCode &&
-            other.firstName == self.firstName &&
-            other.kind == self.kind &&
-            other.lastName == self.lastName &&
-            other.line1 == self.line1 &&
-            other.line2 == self.line2 &&
-            other.phone == self.phone &&
-            other.postalCode == self.postalCode &&
-            other.province == self.province;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as OrderAddressRow;
-    return Object.hashAll([
-      runtimeType,
-      self.city,
-      self.countryCode,
-      self.firstName,
-      self.kind,
-      self.lastName,
-      self.line1,
-      self.line2,
-      self.phone,
-      self.postalCode,
-      self.province,
-    ]);
-  }
+  Map<String, Object?> serialize(OrderListResponse value) => _$OrderListResponseSerialize(value);
 }
-
-OrderRow _$OrderRowFromRow(Row row) {
-  return OrderRow(
-    id: row.read<String>('id'),
-    email: row.read<String>('email'),
+OrderResponse _$OrderResponseFromRow(Row row) {
+  return OrderResponse(
+    orderId: row.read<String>('id'),
+    orderEmail: row.read<String>('email'),
     currencyCode: row.read<String>('currency_code'),
-    subtotal: row.read<int>('subtotal'),
-    shippingTotal: row.read<int>('shipping_total'),
-    discountTotal: row.read<int>('discount_total'),
-    tax: row.read<int>('tax'),
-    total: row.read<int>('total'),
-    status: row.read<String>('status'),
-    paymentStatus: row.read<String>('payment_status'),
-    placedAt: row.read<String>('placed_at'),
+    orderSubtotal: row.read<int>('subtotal'),
+    orderShippingTotal: row.read<int>('shipping_total'),
+    orderDiscountTotal: row.read<int>('discount_total'),
+    orderTax: row.read<int>('tax'),
+    orderTotal: row.read<int>('total'),
+    storedStatus: row.read<String>('status'),
+    storedPaymentStatus: row.read<String>('payment_status'),
+    placedAtText: row.read<String>('placed_at'),
     regionId: row.read<String>('region_id'),
     regionName: row.read<String>('region_name'),
-    taxRate: row.read<int>('tax_rate'),
-    taxInclusive: row.read<int>('tax_inclusive'),
-    countries: row.read<String>('countries'),
-    customerId: row.readNullable<String>('customer_id'),
+    regionTaxRate: row.read<int>('tax_rate'),
+    regionTaxInclusive: row.read<int>('tax_inclusive'),
+    regionCountries: row.read<String>('countries'),
+    itemsJson: row.read<String>('items_json'),
+    shippingAddressJson: row.read<String>('shipping_address_json'),
+    billingAddressJson: row.read<String>('billing_address_json'),
+    orderCustomerId: row.readNullable<String>('customer_id'),
     shippingOptionId: row.readNullable<String>('shipping_option_id'),
     shippingName: row.readNullable<String>('shipping_name'),
   );
 }
 
-/// Row deserializer for [OrderRow].
-final class $OrderRowRowDeserializer implements RowDeserializer<OrderRow> {
-  const $OrderRowRowDeserializer();
+/// Row deserializer for [OrderResponse].
+final class $OrderResponseRowDeserializer implements RowDeserializer<OrderResponse> {
+  const $OrderResponseRowDeserializer();
 
   @override
-  OrderRow deserialize(Row row) => _$OrderRowFromRow(row);
+  OrderResponse deserialize(Row row) => _$OrderResponseFromRow(row);
 }
 
-/// Typed row query terminals for [OrderRow].
+/// Typed row query terminals for [OrderResponse].
 ///
 /// Resolved from the static type of the receiver, so a row type with no
 /// `FromRow` has no terminals and the call does not compile.
-extension $OrderRowQuery on QueryAs<OrderRow> {
+extension $OrderResponseQuery on QueryAs<OrderResponse> {
   /// Fetches exactly one row.
-  Future<OrderRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$OrderRowFromRow);
+  Future<OrderResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$OrderResponseFromRow);
 
   /// Fetches zero or one row.
-  Future<OrderRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$OrderRowFromRow);
+  Future<OrderResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$OrderResponseFromRow);
 
   /// Fetches every row.
-  Future<List<OrderRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$OrderRowFromRow);
+  Future<List<OrderResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$OrderResponseFromRow);
 }
 
-OrderAddressRow _$OrderAddressRowFromRow(Row row) {
-  return OrderAddressRow(
-    kind: row.read<String>('kind'),
-    firstName: row.read<String>('first_name'),
-    lastName: row.read<String>('last_name'),
-    line1: row.read<String>('line1'),
-    city: row.read<String>('city'),
-    postalCode: row.read<String>('postal_code'),
-    countryCode: row.read<String>('country_code'),
-    line2: row.readNullable<String>('line2'),
-    province: row.readNullable<String>('province'),
-    phone: row.readNullable<String>('phone'),
-  );
+Map<String, Object?> _$OrderListResponseSerialize(OrderListResponse instance) {
+  return <String, Object?>{
+    'count': instance.count,
+    'orders': instance.orders
+        .map((item) => item.toJson())
+        .toList(),
+  };
 }
 
-/// Row deserializer for [OrderAddressRow].
-final class $OrderAddressRowRowDeserializer implements RowDeserializer<OrderAddressRow> {
-  const $OrderAddressRowRowDeserializer();
-
-  @override
-  OrderAddressRow deserialize(Row row) => _$OrderAddressRowFromRow(row);
-}
-
-/// Typed row query terminals for [OrderAddressRow].
-///
-/// Resolved from the static type of the receiver, so a row type with no
-/// `FromRow` has no terminals and the call does not compile.
-extension $OrderAddressRowQuery on QueryAs<OrderAddressRow> {
-  /// Fetches exactly one row.
-  Future<OrderAddressRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$OrderAddressRowFromRow);
-
-  /// Fetches zero or one row.
-  Future<OrderAddressRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$OrderAddressRowFromRow);
-
-  /// Fetches every row.
-  Future<List<OrderAddressRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$OrderAddressRowFromRow);
-}
+Map<String, Object?> _$OrderListResponseToJson(OrderListResponse instance) =>
+    _$OrderListResponseSerialize(instance);

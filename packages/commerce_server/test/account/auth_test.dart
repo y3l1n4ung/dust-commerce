@@ -35,6 +35,13 @@ void main() {
           'email': 'ada@example.com',
           'first_name': 'Ada',
         });
+      expect((response.json! as Map<String, Object?>).keys.toSet(), {
+        'email',
+        'first_name',
+        'id',
+        'last_name',
+        'phone',
+      });
       final row = (await harness.raw(
         'SELECT c.has_account, c.created_at, c.updated_at, '
         'p.provider, p.provider_metadata '

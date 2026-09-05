@@ -1,63 +1,41 @@
+import 'dart:convert';
+
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
+import 'package:dust_dart/serde.dart';
 
 part 'shipping.g.dart';
 
-/// One row of `shipping_options`: what a region offers.
-@Derive([ToString(), Eq(), FromRow()])
-final class ShippingOptionRow with _$ShippingOptionRow {
-  /// Creates a [ShippingOptionRow].
-  const ShippingOptionRow({
-    required this.id,
-    required this.regionId,
-    required this.name,
-    required this.amount,
-    required this.currencyCode,
-  });
-
-  /// What it costs, in minor units.
-  final int amount;
-
-  /// The currency that amount is in.
-  @Sqlx(rename: 'currency_code')
-  final String currencyCode;
-
-  /// The primary key.
-  final String id;
-
-  /// The service name shown to a customer.
-  final String name;
-
-  /// The region that offers it.
-  @Sqlx(rename: 'region_id')
-  final String regionId;
-}
-
-/// One row of `cart_shipping_methods`: what a cart chose.
-@Derive([ToString(), Eq(), FromRow()])
-final class ShippingMethodRow with _$ShippingMethodRow {
-  /// Creates a [ShippingMethodRow].
-  const ShippingMethodRow({
+/// Explicit shipping-method response populated directly by SQLx.
+@Derive([Serialize(), FromRow()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class ShippingMethodResponse with _$ShippingMethodResponse {
+  /// Creates an allowlisted shipping method.
+  const ShippingMethodResponse({
     required this.optionId,
     required this.name,
     required this.amount,
   });
 
-  /// The price snapshotted when it was chosen.
-  final int amount;
+  /// Delivery price snapshot.
+  @Sqlx(tryFrom: ShippingMoneyFromJson())
+  final Money amount;
 
-  /// The service name at the time of choosing.
+  /// Delivery service display name.
   final String name;
 
-  /// The option it came from.
+  /// Stable shipping-option identifier.
   @Sqlx(rename: 'option_id')
   final String optionId;
 }
 
-/// Builds the domain [ShippingMethod] a row describes.
-ShippingMethod methodOf(ShippingMethodRow row, String currencyCode) =>
-    ShippingMethod(
-      optionId: row.optionId,
-      name: row.name,
-      amount: Money(amount: row.amount, currencyCode: currencyCode),
-    );
+/// Converts the shipping amount selected as a JSON object.
+final class ShippingMoneyFromJson implements SqlxTryFrom<Money, String> {
+  /// Creates the stateless converter.
+  const ShippingMoneyFromJson();
+
+  @override
+  Money decode(String value) => Money.fromJson(
+        jsonDecode(value) as Map<String, Object?>,
+      );
+}

@@ -19,67 +19,108 @@ final class _$CheckoutReadRepository implements CheckoutReadRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<OrderRow?, SqlxError>> findOrder(String id) {
-    return _db.fetchOptional<OrderRow>(
+  Future<Result<OrderResponse?, SqlxError>> findOrder(String id) {
+    return _db.fetchOptional<OrderResponse>(
       r'''
 SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
        o.shipping_total, o.discount_total, o.tax, o.total, o.status,
        o.payment_status, o.placed_at, o.region_id,
        o.shipping_option_id, o.shipping_name,
-       r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries
+       r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries,
+       coalesce((
+         SELECT json_group_array(json_object(
+           'id', i.id, 'variant_id', i.variant_id,
+           'product_id', i.product_id, 'product_handle', i.product_handle,
+           'thumbnail', i.thumbnail, 'title', i.title,
+           'variant_title', i.variant_title,
+           'unit_price', json_object(
+             'amount', i.unit_amount, 'currency_code', i.currency_code
+           ),
+           'quantity', i.quantity
+         ))
+         FROM order_items i WHERE i.order_id = o.id ORDER BY i.rowid
+       ), '[]') AS items_json,
+       json_object(
+         'first_name', shipping.first_name, 'last_name', shipping.last_name,
+         'line1', shipping.line1, 'line2', shipping.line2,
+         'city', shipping.city, 'province', shipping.province,
+         'postal_code', shipping.postal_code,
+         'country_code', shipping.country_code, 'phone', shipping.phone
+       ) AS shipping_address_json,
+       json_object(
+         'first_name', coalesce(billing.first_name, shipping.first_name),
+         'last_name', coalesce(billing.last_name, shipping.last_name),
+         'line1', coalesce(billing.line1, shipping.line1),
+         'line2', coalesce(billing.line2, shipping.line2),
+         'city', coalesce(billing.city, shipping.city),
+         'province', coalesce(billing.province, shipping.province),
+         'postal_code', coalesce(billing.postal_code, shipping.postal_code),
+         'country_code', coalesce(billing.country_code, shipping.country_code),
+         'phone', coalesce(billing.phone, shipping.phone)
+       ) AS billing_address_json
 FROM orders o
 JOIN regions r ON r.id = o.region_id
+JOIN order_addresses shipping
+  ON shipping.order_id = o.id AND shipping.kind = 'shipping'
+LEFT JOIN order_addresses billing
+  ON billing.order_id = o.id AND billing.kind = 'billing'
 WHERE o.id = ?
 ''',
       [id],
-      const $OrderRowRowDeserializer().deserialize,
+      const $OrderResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<OrderRow?, SqlxError>> findCustomerOrder(String id, String customerId) {
-    return _db.fetchOptional<OrderRow>(
+  Future<Result<OrderResponse?, SqlxError>> findCustomerOrder(String id, String customerId) {
+    return _db.fetchOptional<OrderResponse>(
       r'''
 SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
        o.shipping_total, o.discount_total, o.tax, o.total, o.status,
-       o.payment_status, o.shipping_option_id, o.shipping_name,
-       o.placed_at, o.region_id,
-       r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries
+       o.payment_status, o.placed_at, o.region_id,
+       o.shipping_option_id, o.shipping_name,
+       r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries,
+       coalesce((
+         SELECT json_group_array(json_object(
+           'id', i.id, 'variant_id', i.variant_id,
+           'product_id', i.product_id, 'product_handle', i.product_handle,
+           'thumbnail', i.thumbnail, 'title', i.title,
+           'variant_title', i.variant_title,
+           'unit_price', json_object(
+             'amount', i.unit_amount, 'currency_code', i.currency_code
+           ),
+           'quantity', i.quantity
+         ))
+         FROM order_items i WHERE i.order_id = o.id ORDER BY i.rowid
+       ), '[]') AS items_json,
+       json_object(
+         'first_name', shipping.first_name, 'last_name', shipping.last_name,
+         'line1', shipping.line1, 'line2', shipping.line2,
+         'city', shipping.city, 'province', shipping.province,
+         'postal_code', shipping.postal_code,
+         'country_code', shipping.country_code, 'phone', shipping.phone
+       ) AS shipping_address_json,
+       json_object(
+         'first_name', coalesce(billing.first_name, shipping.first_name),
+         'last_name', coalesce(billing.last_name, shipping.last_name),
+         'line1', coalesce(billing.line1, shipping.line1),
+         'line2', coalesce(billing.line2, shipping.line2),
+         'city', coalesce(billing.city, shipping.city),
+         'province', coalesce(billing.province, shipping.province),
+         'postal_code', coalesce(billing.postal_code, shipping.postal_code),
+         'country_code', coalesce(billing.country_code, shipping.country_code),
+         'phone', coalesce(billing.phone, shipping.phone)
+       ) AS billing_address_json
 FROM orders o
 JOIN regions r ON r.id = o.region_id
+JOIN order_addresses shipping
+  ON shipping.order_id = o.id AND shipping.kind = 'shipping'
+LEFT JOIN order_addresses billing
+  ON billing.order_id = o.id AND billing.kind = 'billing'
 WHERE o.id = ? AND o.customer_id = ?
 ''',
       [id, customerId],
-      const $OrderRowRowDeserializer().deserialize,
-    );
-  }
-
-  @override
-  Future<Result<List<LineItemRow>, SqlxError>> itemsOf(String orderId) {
-    return _db.fetchAll<LineItemRow>(
-      r'''
-SELECT id, variant_id, product_id, product_handle, thumbnail, title,
-       variant_title, unit_amount, currency_code, quantity
-FROM order_items
-WHERE order_id = ?
-ORDER BY rowid
-''',
-      [orderId],
-      const $LineItemRowRowDeserializer().deserialize,
-    );
-  }
-
-  @override
-  Future<Result<List<OrderAddressRow>, SqlxError>> addressesOf(String orderId) {
-    return _db.fetchAll<OrderAddressRow>(
-      r'''
-SELECT kind, first_name, last_name, line1, line2, city, province,
-       postal_code, country_code, phone
-FROM order_addresses
-WHERE order_id = ?
-''',
-      [orderId],
-      const $OrderAddressRowRowDeserializer().deserialize,
+      const $OrderResponseRowDeserializer().deserialize,
     );
   }
 }
