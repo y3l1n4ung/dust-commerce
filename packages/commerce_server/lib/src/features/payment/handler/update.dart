@@ -1,3 +1,4 @@
+import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/checkout/handler/read.dart';
 import 'package:commerce_server/src/features/payment/deps.dart';
 import 'package:commerce_server/src/features/payment/service/service.dart';
@@ -15,7 +16,11 @@ Future<Result<Order, Rejection>> capturePaymentHandler(Request request) async {
     return const Err(Rejection.badRequest('An order id is required'));
   }
 
-  final email = emailOf(request);
+  final context = await request.extract(const Extension<CustomerContext>());
+  final customer = context.authenticated;
+  final email = customer == null
+      ? emailOf(request)
+      : Ok<String, Rejection>(customer.customer.email);
   if (email case Err(:final error)) return Err(error);
 
   final state = await paymentDeps(request);
@@ -26,6 +31,7 @@ Future<Result<Order, Rejection>> capturePaymentHandler(Request request) async {
     deps.database,
     orderId: orderId,
     email: (email as Ok<String, Rejection>).value,
+    customerId: customer?.customer.id,
     now: deps.clock.now(),
   );
 

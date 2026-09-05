@@ -1,3 +1,4 @@
+import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/checkout/handler/read.dart';
 import 'package:commerce_server/src/features/payment/deps.dart';
 import 'package:commerce_server/src/features/payment/service/service.dart';
@@ -9,8 +10,7 @@ import 'package:dust_server/server.dart';
 /// A plain function, mounted as `post(authorizePaymentHandler)`, which is how
 /// dust_server's examples are written and what a generated route would emit.
 ///
-/// Scoped by the email the caller proves, like reading an order is: an order
-/// id alone must not be enough to attach a payment to somebody's order.
+/// A customer order requires its owner; a guest order uses its email capability.
 Future<Result<Order, Rejection>> authorizePaymentHandler(
   Request request,
 ) async {
@@ -19,7 +19,11 @@ Future<Result<Order, Rejection>> authorizePaymentHandler(
     return const Err(Rejection.badRequest('An order id is required'));
   }
 
-  final email = emailOf(request);
+  final context = await request.extract(const Extension<CustomerContext>());
+  final customer = context.authenticated;
+  final email = customer == null
+      ? emailOf(request)
+      : Ok<String, Rejection>(customer.customer.email);
   if (email case Err(:final error)) return Err(error);
 
   final state = await paymentDeps(request);
@@ -32,6 +36,7 @@ Future<Result<Order, Rejection>> authorizePaymentHandler(
     deps.writes,
     orderId: orderId,
     email: (email as Ok<String, Rejection>).value,
+    customerId: customer?.customer.id,
     id: deps.clock.nextId(),
   );
 

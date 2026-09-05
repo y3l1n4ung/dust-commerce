@@ -33,6 +33,7 @@ Future<Result<(Order?, CaptureFailure?), SqlxError>> capturePayment(
   CommerceDatabase database, {
   required String orderId,
   required String email,
+  String? customerId,
   required DateTime now,
 }) async {
   return database.transaction((tx) async {
@@ -44,7 +45,10 @@ Future<Result<(Order?, CaptureFailure?), SqlxError>> capturePayment(
     if (loaded case Err(:final error)) return Err(error);
 
     final order = (loaded as Ok<Order?, SqlxError>).value;
-    if (order == null || order.email != email) {
+    if (order == null ||
+        (order.customerId == null
+            ? order.email != email
+            : order.customerId != customerId)) {
       return const Ok((null, CaptureFailure.noOrder));
     }
     if (order.status == OrderStatus.cancelled) {

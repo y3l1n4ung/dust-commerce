@@ -130,8 +130,10 @@ extension instead of authenticating independently. `CustomerAuth` composes
 `BearerTokenExtractable` for standards-correct parsing, then fingerprints the
 token, checks expiry, and resolves the customer. Cart-id routes use one shared
 ownership extractor, so every read and mutation hides another customer's cart.
-Guest carts still work, but a malformed or invalid header is rejected instead
-of silently becoming a guest.
+Payment routes use the optional auth layer: customer-owned orders require their
+owner, while guest orders retain capability access. Guest carts still work,
+but a malformed or invalid header is rejected instead of silently becoming a
+guest.
 
 Argon2 admission is capped at two concurrent operations per server isolate.
 Excess registration or sign-in work receives `429` immediately instead of

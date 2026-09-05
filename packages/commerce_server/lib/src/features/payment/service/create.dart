@@ -27,6 +27,7 @@ Future<Result<(Order?, AuthorizeFailure?), SqlxError>> authorizePayment(
   PaymentCreateRepository writes, {
   required String orderId,
   required String email,
+  String? customerId,
   required String id,
   String provider = 'manual',
 }) async {
@@ -34,7 +35,10 @@ Future<Result<(Order?, AuthorizeFailure?), SqlxError>> authorizePayment(
   if (loaded case Err(:final error)) return Err(error);
 
   final order = (loaded as Ok<Order?, SqlxError>).value;
-  if (order == null || order.email != email) {
+  if (order == null ||
+      (order.customerId == null
+          ? order.email != email
+          : order.customerId != customerId)) {
     return const Ok((null, AuthorizeFailure.noOrder));
   }
   if (order.status == OrderStatus.cancelled) {
