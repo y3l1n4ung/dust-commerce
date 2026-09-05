@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:commerce_server/commerce_server.dart';
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/testing.dart';
 
 /// A running API with a seeded database, torn down after the test.
@@ -60,7 +61,8 @@ final class CheckoutHarness {
   /// Starts a cart holding [quantity] of [variantId].
   Future<String> cartWith(String variantId, {int quantity = 1}) async {
     final created = await client.post('/store/carts').send();
-    final cartId = (created.json! as Map<String, Object?>)['id']! as String;
+    final cartId =
+        CartView.fromJson(created.json! as Map<String, Object?>).cart.id;
     (await (client.post('/store/carts/$cartId/line-items')
               ..json({'variant_id': variantId, 'quantity': quantity}))
             .send())

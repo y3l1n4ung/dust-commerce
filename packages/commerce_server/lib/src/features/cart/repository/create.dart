@@ -1,4 +1,8 @@
-import 'package:commerce_server/src/features/cart/model.dart';
+// Row types are imported from the library that declares them rather than
+// through model/model.dart. Dust resolves a DAO's row type by looking in
+// the libraries a file imports and does not follow an export barrel, so a
+// barrel import fails the build with 'unsupported DAO result type'.
+import 'package:commerce_server/src/features/cart/model/cart.dart';
 import 'package:dust_dart/db.dart';
 
 part 'create.g.dart';

@@ -98,6 +98,7 @@ class CheckoutRequest with _$CheckoutRequest {
       _$CheckoutRequestFromJson(json);
 
   /// Where the invoice goes, when it differs from the shipping address.
+  @Validate(nested: true)
   final AddressInput? billingAddress;
 
   /// The cart being placed.
@@ -110,5 +111,6 @@ class CheckoutRequest with _$CheckoutRequest {
   final String email;
 
   /// Where the goods go.
+  @Validate(nested: true)
   final AddressInput shippingAddress;
 }

@@ -1,4 +1,4 @@
-import 'package:commerce_server/src/features/cart/model.dart';
+import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';

@@ -1,4 +1,4 @@
-import 'package:commerce_server/src/features/cart/model.dart';
+import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
@@ -26,6 +26,10 @@ Future<Result<Cart?, SqlxError>> loadCart(
   if (method case Err(:final error)) return Err(error);
   final chosen = (method as Ok<ShippingMethodRow?, SqlxError>).value;
 
+  final promotion = await reads.promotionOn(cartId);
+  if (promotion case Err(:final error)) return Err(error);
+  final applied = (promotion as Ok<CartPromotionRow?, SqlxError>).value;
+
   return Ok(
     Cart(
       id: row.id,
@@ -45,6 +49,9 @@ Future<Result<Cart?, SqlxError>> loadCart(
           .toList(growable: false),
       shippingMethod:
           chosen == null ? null : methodOf(chosen, row.currencyCode),
+      discount: applied == null
+          ? null
+          : Money(amount: applied.amount, currencyCode: row.currencyCode),
     ),
   );
 }

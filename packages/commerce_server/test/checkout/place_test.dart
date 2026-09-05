@@ -40,7 +40,8 @@ void main() {
       (await harness.checkout(cartId)).assertCreated();
 
       final response = await harness.client.get('/store/carts/$cartId').send();
-      final cart = Cart.fromJson(response.json! as Map<String, Object?>);
+      final cart =
+          CartView.fromJson(response.json! as Map<String, Object?>).cart;
 
       expect(cart.isEmpty, isTrue);
     });
@@ -78,7 +79,8 @@ void main() {
 
     test('an empty cart', () async {
       final created = await harness.client.post('/store/carts').send();
-      final cartId = (created.json! as Map<String, Object?>)['id']! as String;
+      final cartId =
+          CartView.fromJson(created.json! as Map<String, Object?>).cart.id;
 
       (await harness.checkout(cartId)).assertUnprocessable();
     });
@@ -88,18 +90,28 @@ void main() {
 
       (await harness.checkout(cartId, email: 'not-an-email'))
         ..assertUnprocessable()
-        ..assertTextContains('validation_failed')
-        ..assertTextContains('email');
+        ..assertJsonContains({
+          'error': 'Validation failed',
+          'fields': {
+            'email': ['Enter a valid email address'],
+          },
+        });
     });
 
-    test('a shipping address missing its recipient', () async {
+    test('a shipping address missing its recipient, named as nested', () async {
       final cartId = await harness.cartWith('var_small');
 
       (await harness.checkout(
         cartId,
         shipping: harness.address(firstName: ''),
       ))
-          .assertUnprocessable();
+        ..assertUnprocessable()
+        ..assertJsonContains({
+          'error': 'Validation failed',
+          'fields': {
+            'shippingAddress.firstName': ['Enter a first name'],
+          },
+        });
     });
   });
 }

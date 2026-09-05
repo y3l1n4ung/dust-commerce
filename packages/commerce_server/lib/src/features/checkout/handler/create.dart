@@ -1,52 +1,35 @@
-import 'dart:convert';
-
 import 'package:commerce_server/src/features/checkout/service/service.dart';
-import 'package:commerce_server/src/features/checkout/validation.dart';
-import 'package:commerce_server/src/http/http.dart';
 import 'package:commerce_server/src/infra/database.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
 
+/// Decodes and validates the checkout body in one step.
+///
+/// JsonExtractable rejects a non-JSON content type with 415, malformed syntax
+/// with 400, and a body it cannot build a CheckoutRequest from with 422 —
+/// each with its own message. ValidatedExtractable then runs the generated
+/// constraints, including the nested address, because the request marks it
+/// `@Validate(nested: true)`.
+///
+/// All of that used to be thirty lines of hand-rolled decoding in this file.
+const ValidatedExtractable<CheckoutRequest> _body = ValidatedExtractable(
+  JsonExtractable<CheckoutRequest>(CheckoutRequest.fromJson),
+);
+
 /// `POST /checkout` — turn a cart into an order.
 ///
-/// The request is validated with the generated validators on
-/// [CheckoutRequest], so the rules a Flutter form shows are the same rules the
-/// server enforces, from one definition.
-Handler placeOrderHandler(
+/// Returns the order rather than a Response: the router encodes an `Ok` and
+/// turns an `Err(Rejection)` into the status the rejection names, so this
+/// function says what happened and nothing about HTTP plumbing.
+Endpoint<Result<Order, Rejection>> placeOrderEndpoint(
   CommerceDatabase database, {
   required String Function() nextId,
   required DateTime Function() now,
 }) {
   return (Request request) async {
-    final CheckoutRequest input;
-    try {
-      final decoded = jsonDecode(await request.readAsString());
-      if (decoded is! Map<String, Object?>) {
-        return badRequest('Expected a JSON object');
-      }
-      input = CheckoutRequest.fromJson(decoded);
-    } on FormatException {
-      return badRequest('Expected a JSON object');
-    } on ArgumentError catch (error) {
-      return unprocessable(error.message.toString());
-    }
-
-    final failures = validateCheckout(input);
-    if (failures.isNotEmpty) {
-      return jsonResponse(
-        {
-          'error': {
-            'code': 'validation_failed',
-            'message': 'The request is not valid',
-            'fields': [
-              for (final failure in failures)
-                {'field': failure.field, 'message': failure.message},
-            ],
-          },
-        },
-        status: 422,
-      );
-    }
+    final decoded = await _body.extract(request);
+    if (decoded case Err(:final error)) return Err(error);
+    final input = (decoded as Ok<CheckoutRequest, Rejection>).value;
 
     final shipping = input.shippingAddress.toAddress();
     final result = await placeOrder(
@@ -60,18 +43,17 @@ Handler placeOrderHandler(
     );
 
     return switch (result) {
-      Ok(value: (final order?, _)) => jsonResponse(order.toJson(), status: 201),
+      Ok(value: (final order?, _)) => Ok(order),
       Ok(value: (_, CheckoutFailure.noCart)) =>
-        notFound('Cart "${input.cartId}"'),
-      Ok(value: (_, CheckoutFailure.emptyCart)) =>
-        unprocessable('An empty cart cannot be ordered'),
-      Ok(value: (_, CheckoutFailure.outOfStock)) => errorResponse(
-          409,
-          code: 'out_of_stock',
-          message: 'Something in this cart sold out before checkout',
+        Err(Rejection.notFound('Cart "${input.cartId}"')),
+      Ok(value: (_, CheckoutFailure.emptyCart)) => const Err(
+          Rejection.status(422, 'An empty cart cannot be ordered'),
         ),
-      Ok() => internalError(),
-      Err() => internalError(),
+      Ok(value: (_, CheckoutFailure.outOfStock)) => const Err(
+          Rejection.conflict('Something in this cart sold out before checkout'),
+        ),
+      Ok() => const Err(Rejection.internal()),
+      Err() => const Err(Rejection.internal()),
     };
   };
 }

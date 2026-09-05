@@ -1,33 +1,32 @@
+import 'package:commerce_server/src/features/checkout/handler/read.dart';
 import 'package:commerce_server/src/features/checkout/model.dart';
 import 'package:commerce_server/src/features/checkout/repository/repository.dart';
 import 'package:commerce_server/src/features/checkout/service/service.dart';
-import 'package:commerce_server/src/http/http.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
 import 'package:dust_server/server.dart';
 
 /// `GET /orders` — the orders placed by one email address.
-Handler listOrdersHandler(
+Endpoint<Result<OrderListView, Rejection>> listOrdersEndpoint(
   CheckoutListRepository lists,
   CheckoutReadRepository reads,
 ) {
   return (Request request) async {
-    final email = request.requestedUri.queryParameters['email'];
-    if (email == null || email.isEmpty) {
-      return badRequest('An email is required to list orders');
-    }
+    final email = emailOf(request);
+    if (email case Err(:final error)) return Err(error);
+    final asked = (email as Ok<String, Rejection>).value;
 
-    final found = await lists.ordersFor(email);
-    if (found case Err()) return internalError();
+    final found = await lists.ordersFor(asked);
+    if (found case Err()) return const Err(Rejection.internal());
 
-    final orders = <Map<String, Object?>>[];
+    final orders = <Order>[];
     for (final row in (found as Ok<List<OrderRow>, SqlxError>).value) {
       final loaded = await loadOrder(reads, row.id);
-      if (loaded case Err()) return internalError();
+      if (loaded case Err()) return const Err(Rejection.internal());
       final order = (loaded as Ok<Order?, SqlxError>).value;
-      if (order != null) orders.add(order.toJson());
+      if (order != null) orders.add(order);
     }
 
-    return jsonResponse({'orders': orders, 'count': orders.length});
+    return Ok(OrderListView.of(orders));
   };
 }

@@ -62,6 +62,29 @@ SET option_id = excluded.option_id,
   }
 
   @override
+  Future<Result<ExecResult, SqlxError>> setPromotion(String cartId, String promotionId, String code, int amount) {
+    return _db.execute(
+      r'''
+INSERT INTO cart_promotions (cart_id, promotion_id, code, amount)
+VALUES (?, ?, ?, ?)
+ON CONFLICT (cart_id) DO UPDATE
+SET promotion_id = excluded.promotion_id,
+    code = excluded.code,
+    amount = excluded.amount
+''',
+      [cartId, promotionId, code, amount],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> clearPromotion(String cartId) {
+    return _db.execute(
+      r'''DELETE FROM cart_promotions WHERE cart_id = ?''',
+      [cartId],
+    );
+  }
+
+  @override
   Future<Result<ExecResult, SqlxError>> setCartEmail(String cartId, String email) {
     return _db.execute(
       r'''UPDATE carts SET email = ? WHERE id = ?''',

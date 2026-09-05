@@ -59,7 +59,7 @@ final class _$CommerceApi implements CommerceApi {
   final String? _baseUrl;
 
   @override
-  Future<ProductPageResponse> products({
+  Future<ProductPageView> products({
     String? currency,
     int? limit,
     int? offset,
@@ -79,7 +79,7 @@ final class _$CommerceApi implements CommerceApi {
       contentType: null,
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(
-      _setStreamType<ProductPageResponse>(
+      _setStreamType<ProductPageView>(
         _options
             .compose(
               _dio.options,
@@ -98,7 +98,7 @@ final class _$CommerceApi implements CommerceApi {
             ),
       ),
     );
-    return ProductPageResponse.fromJson(_result.data as Map<String, dynamic>);
+    return ProductPageView.fromJson(_result.data as Map<String, dynamic>);
   }
 
   @override
@@ -139,7 +139,7 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
-  Future<Cart> createCart() async {
+  Future<CartView> createCart() async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
@@ -152,7 +152,7 @@ final class _$CommerceApi implements CommerceApi {
       contentType: null,
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(
-      _setStreamType<Cart>(
+      _setStreamType<CartView>(
         _options
             .compose(
               _dio.options,
@@ -171,11 +171,11 @@ final class _$CommerceApi implements CommerceApi {
             ),
       ),
     );
-    return Cart.fromJson(_result.data as Map<String, dynamic>);
+    return CartView.fromJson(_result.data as Map<String, dynamic>);
   }
 
   @override
-  Future<CartResponse> cart(String id) async {
+  Future<CartView> cart(String id) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
@@ -188,7 +188,7 @@ final class _$CommerceApi implements CommerceApi {
       contentType: null,
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(
-      _setStreamType<CartResponse>(
+      _setStreamType<CartView>(
         _options
             .compose(
               _dio.options,
@@ -207,11 +207,11 @@ final class _$CommerceApi implements CommerceApi {
             ),
       ),
     );
-    return CartResponse.fromJson(_result.data as Map<String, dynamic>);
+    return CartView.fromJson(_result.data as Map<String, dynamic>);
   }
 
   @override
-  Future<CartResponse> addLine(String id, AddLineRequest body) async {
+  Future<CartView> addLine(String id, AddLineBody body) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
@@ -224,7 +224,7 @@ final class _$CommerceApi implements CommerceApi {
       contentType: null,
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(
-      _setStreamType<CartResponse>(
+      _setStreamType<CartView>(
         _options
             .compose(
               _dio.options,
@@ -243,7 +243,7 @@ final class _$CommerceApi implements CommerceApi {
             ),
       ),
     );
-    return CartResponse.fromJson(_result.data as Map<String, dynamic>);
+    return CartView.fromJson(_result.data as Map<String, dynamic>);
   }
 
   @override
@@ -283,7 +283,7 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
-  Future<OrderListResponse> orders({required String email}) async {
+  Future<OrderListView> orders({required String email}) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
@@ -297,7 +297,7 @@ final class _$CommerceApi implements CommerceApi {
       contentType: null,
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(
-      _setStreamType<OrderListResponse>(
+      _setStreamType<OrderListView>(
         _options
             .compose(
               _dio.options,
@@ -316,7 +316,7 @@ final class _$CommerceApi implements CommerceApi {
             ),
       ),
     );
-    return OrderListResponse.fromJson(_result.data as Map<String, dynamic>);
+    return OrderListView.fromJson(_result.data as Map<String, dynamic>);
   }
 
   @override

@@ -37,7 +37,7 @@ void main() {
   Future<String> newCart() async {
     final response = await client.post('/store/carts').send();
     response.assertCreated();
-    return (response.json! as Map<String, Object?>)['id']! as String;
+    return CartView.fromJson(response.json! as Map<String, Object?>).cart.id;
   }
 
   Future<TestResponse> addLine(
@@ -58,7 +58,8 @@ void main() {
       final response = await client.post('/store/carts').send();
 
       response.assertCreated();
-      final cart = Cart.fromJson(response.json! as Map<String, Object?>);
+      final cart =
+          CartView.fromJson(response.json! as Map<String, Object?>).cart;
 
       expect(cart.isEmpty, isTrue);
       expect(cart.region.currencyCode, 'usd');
@@ -95,7 +96,8 @@ void main() {
       final response = await addLine(cartId, 'var_small', quantity: 2);
 
       response.assertOk();
-      final cart = Cart.fromJson(response.json! as Map<String, Object?>);
+      final cart =
+          CartView.fromJson(response.json! as Map<String, Object?>).cart;
 
       expect(cart.items, hasLength(1));
       expect(cart.items.single.quantity, 2);
@@ -106,7 +108,8 @@ void main() {
       final cartId = await newCart();
 
       final response = await addLine(cartId, 'var_small');
-      final cart = Cart.fromJson(response.json! as Map<String, Object?>);
+      final cart =
+          CartView.fromJson(response.json! as Map<String, Object?>).cart;
 
       expect(cart.items.single.quantity, 1);
     });
@@ -116,7 +119,8 @@ void main() {
       await addLine(cartId, 'var_small', quantity: 1);
 
       final response = await addLine(cartId, 'var_small', quantity: 2);
-      final cart = Cart.fromJson(response.json! as Map<String, Object?>);
+      final cart =
+          CartView.fromJson(response.json! as Map<String, Object?>).cart;
 
       expect(cart.items, hasLength(1));
       expect(cart.items.single.quantity, 3);
@@ -134,7 +138,8 @@ void main() {
       ).execute(database.executor);
 
       final response = await client.get('/store/carts/$cartId').send();
-      final cart = Cart.fromJson(response.json! as Map<String, Object?>);
+      final cart =
+          CartView.fromJson(response.json! as Map<String, Object?>).cart;
 
       expect(cart.items.single.unitPrice, Money.of(1999, 'usd'));
       expect(cart.subtotal, Money.of(1999, 'usd'));
@@ -147,12 +152,7 @@ void main() {
 
       response
         ..assertConflict()
-        ..assertJsonContains({
-          'error': {
-            'code': 'out_of_stock',
-            'message': 'Not enough stock for variant "var_large"',
-          },
-        });
+        ..assertJsonContains({'error': 'Not enough stock for "var_large"'});
     });
 
     test('counts what is already in the cart against the stock', () async {
@@ -185,12 +185,14 @@ void main() {
       (await addLine(cartId, 'var_small', quantity: 0)).assertUnprocessable();
     });
 
-    test('answers 400 for a body that is not JSON', () async {
+    test('answers 415 for a body that is not JSON at all', () async {
       final cartId = await newCart();
 
+      // text/plain to a JSON endpoint is the wrong media type, not a malformed
+      // body, and the runtime says so rather than collapsing both into 400.
       (await (client.post('/store/carts/$cartId/line-items')..text('not json'))
               .send())
-          .assertBadRequest();
+          .assertUnsupportedMediaType();
     });
   });
 }

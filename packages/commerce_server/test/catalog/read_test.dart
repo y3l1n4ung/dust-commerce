@@ -109,12 +109,7 @@ void main() {
     test('answers 404 for a draft, not 403, so nothing leaks', () async {
       (await client.get('/store/products/secret-hoodie').send())
         ..assertNotFound()
-        ..assertJsonContains({
-          'error': {
-            'code': 'not_found',
-            'message': 'Product "secret-hoodie" was not found',
-          },
-        });
+        ..assertJsonContains({'error': 'Product "secret-hoodie"'});
     });
 
     test('answers 404 for a handle nobody has', () async {

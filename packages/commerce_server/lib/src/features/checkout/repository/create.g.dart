@@ -71,6 +71,16 @@ WHERE id = ?
   }
 
   @override
+  Future<Result<ExecResult, SqlxError>> countRedemption(String code) {
+    return _db.execute(
+      r'''
+UPDATE promotions SET usage_count = usage_count + 1 WHERE code = ?
+''',
+      [code],
+    );
+  }
+
+  @override
   Future<Result<ExecResult, SqlxError>> clearCart(String cartId) {
     return _db.execute(
       r'''DELETE FROM line_items WHERE cart_id = ?''',

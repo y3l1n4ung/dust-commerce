@@ -184,8 +184,10 @@ mixin _$CheckoutRequest implements Validatable, Serializable {
   ValidationResult validate() {
     final self = this as CheckoutRequest;
     final errors = <ValidationError>[];
+    _CheckoutRequestValidation._validateBillingAddress(self.billingAddress, errors);
     _CheckoutRequestValidation._validateCartId(self.cartId, errors);
     _CheckoutRequestValidation._validateEmail(self.email, errors);
+    _CheckoutRequestValidation._validateShippingAddress(self.shippingAddress, errors);
     return errors.isEmpty ? const Valid() : Invalid(errors);
   }
 
@@ -372,6 +374,17 @@ final class _$CheckoutRequestCopyWithImpl<$Res> implements _$CheckoutRequestCopy
   }
 }
 extension _CheckoutRequestValidation on CheckoutRequest {
+  static void _validateBillingAddress(AddressInput? billingAddress, List<ValidationError> errors) {
+    if (billingAddress != null) {
+      final billingAddressValidation = billingAddress.validate();
+      if (billingAddressValidation case Invalid(errors: final nestedErrors)) {
+        for (final error in nestedErrors) {
+          errors.add(ValidationError(field: 'billingAddress.${error.field}', message: error.message));
+        }
+      }
+    }
+  }
+
   static void _validateCartId(String cartId, List<ValidationError> errors) {
     if (cartId.length < 1) {
       errors.add(ValidationError(field: 'cartId', message: 'A checkout needs a cart'));
@@ -384,6 +397,15 @@ extension _CheckoutRequestValidation on CheckoutRequest {
     }
     if (!ValidationHelper.isEmail(email)) {
       errors.add(ValidationError(field: 'email', message: 'Enter a valid email address'));
+    }
+  }
+
+  static void _validateShippingAddress(AddressInput shippingAddress, List<ValidationError> errors) {
+    final shippingAddressValidation = shippingAddress.validate();
+    if (shippingAddressValidation case Invalid(errors: final nestedErrors)) {
+      for (final error in nestedErrors) {
+        errors.add(ValidationError(field: 'shippingAddress.${error.field}', message: error.message));
+      }
     }
   }
 

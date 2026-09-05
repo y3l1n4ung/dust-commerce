@@ -7,8 +7,11 @@ set -euo pipefail
 # and no others, plus the barrel named after the folder. A rule written down and
 # never checked is a rule that lasts until the first hurry.
 #
-# An operation that outgrows the line budget becomes a folder of the same name,
-# so a directory named after an operation is allowed too.
+# Only the layer's immediate children are checked. An operation that outgrows
+# the line budget becomes a folder of the same name, and the files inside it are
+# that operation's breakdown — they are named for what they hold, because they
+# are not operations. update/line.dart, update/shipping.dart and
+# update/promotion.dart are the three things a cart update can be.
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
@@ -29,10 +32,11 @@ for layer in handler service repository; do
     esac
   done < <(
     find packages/commerce_server/lib/src/features \
-      -path "*/$layer/*" \
-      \( -name '*.dart' -o -type d \) \
-      ! -name '*.g.dart' \
-      ! -path '*/.dart_tool/*' \
+      -type d -name "$layer" \
+      -exec find {} -mindepth 1 -maxdepth 1 \
+        \( -name '*.dart' -o -type d \) \
+        ! -name '*.g.dart' \
+        \; \
       | sort
   )
 done

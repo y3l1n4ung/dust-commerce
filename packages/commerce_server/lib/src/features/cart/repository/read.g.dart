@@ -63,6 +63,33 @@ WHERE cart_id = ?
   }
 
   @override
+  Future<Result<CartPromotionRow?, SqlxError>> promotionOn(String cartId) {
+    return _db.fetchOptional<CartPromotionRow>(
+      r'''
+SELECT promotion_id, code, amount
+FROM cart_promotions
+WHERE cart_id = ?
+''',
+      [cartId],
+      const $CartPromotionRowRowDeserializer().deserialize,
+    );
+  }
+
+  @override
+  Future<Result<PromotionRow?, SqlxError>> promotionByCode(String code) {
+    return _db.fetchOptional<PromotionRow>(
+      r'''
+SELECT id, code, type, value, currency_code, starts_at, ends_at,
+       usage_limit, usage_count
+FROM promotions
+WHERE code = UPPER(?)
+''',
+      [code],
+      const $PromotionRowRowDeserializer().deserialize,
+    );
+  }
+
+  @override
   Future<Result<LineItemRow?, SqlxError>> findLine(String cartId, String variantId) {
     return _db.fetchOptional<LineItemRow>(
       r'''

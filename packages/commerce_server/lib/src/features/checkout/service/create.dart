@@ -1,3 +1,4 @@
+import 'package:commerce_server/src/features/cart/model/promotion.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
 import 'package:commerce_server/src/features/checkout/repository/repository.dart';
@@ -110,6 +111,18 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
         address.phone,
       );
       if (recorded case Err(:final error)) return Err(error);
+    }
+
+    // Counted before the cart is emptied, and inside the same transaction, so
+    // a promotion cannot be redeemed by an order that then fails to write.
+    if (cart.discount != null && !cart.discount!.isZero) {
+      final promotion = await carts.promotionOn(cartId);
+      if (promotion case Err(:final error)) return Err(error);
+      final applied = (promotion as Ok<CartPromotionRow?, SqlxError>).value;
+      if (applied != null) {
+        final counted = await orders.countRedemption(applied.code);
+        if (counted case Err(:final error)) return Err(error);
+      }
     }
 
     final emptied = await orders.clearCart(cartId);

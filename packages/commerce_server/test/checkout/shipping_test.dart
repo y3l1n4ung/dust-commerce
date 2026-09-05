@@ -40,7 +40,8 @@ void main() {
     final created = await (client.post('/store/carts')
           ..json({'region_id': 'reg_us'}))
         .send();
-    final cartId = (created.json! as Map<String, Object?>)['id']! as String;
+    final cartId =
+        CartView.fromJson(created.json! as Map<String, Object?>).cart.id;
 
     (await (client.post('/store/carts/$cartId/line-items')
               ..json({'variant_id': 'var_small', 'quantity': 1}))

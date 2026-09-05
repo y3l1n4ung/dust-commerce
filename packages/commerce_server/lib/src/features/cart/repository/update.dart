@@ -60,6 +60,30 @@ SET option_id = excluded.option_id,
     int amount,
   );
 
+  /// Applies a promotion, replacing any earlier one.
+  ///
+  /// One promotion per cart, so this is an upsert on the cart id. Stacking is
+  /// a decision with rules of its own — which combine, which exclude — and a
+  /// schema that allowed two without those rules would be a bug waiting.
+  @Query(r'''
+INSERT INTO cart_promotions (cart_id, promotion_id, code, amount)
+VALUES ($1, $2, $3, $4)
+ON CONFLICT (cart_id) DO UPDATE
+SET promotion_id = excluded.promotion_id,
+    code = excluded.code,
+    amount = excluded.amount
+''')
+  Future<Result<ExecResult, SqlxError>> setPromotion(
+    String cartId,
+    String promotionId,
+    String code,
+    int amount,
+  );
+
+  /// Removes whatever promotion the cart had.
+  @Query(r'DELETE FROM cart_promotions WHERE cart_id = $1')
+  Future<Result<ExecResult, SqlxError>> clearPromotion(String cartId);
+
   /// Records the email a guest checkout collected.
   @Query(r'UPDATE carts SET email = $2 WHERE id = $1')
   Future<Result<ExecResult, SqlxError>> setCartEmail(

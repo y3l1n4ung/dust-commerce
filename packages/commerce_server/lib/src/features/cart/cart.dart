@@ -2,7 +2,7 @@
 library;
 
 export 'handler/handler.dart';
-export 'model.dart';
+export 'model/model.dart';
 export 'repository/repository.dart';
 export 'router.dart';
 export 'service/service.dart';

@@ -14,8 +14,8 @@ Router checkoutRoutes(
   return Router()
     ..route(
       '/checkout',
-      post(placeOrderHandler(database, nextId: nextId, now: now)),
+      post(placeOrderEndpoint(database, nextId: nextId, now: now), status: 201),
     )
-    ..route('/orders', get(listOrdersHandler(lists, reads)))
-    ..route('/orders/{id}', get(readOrderHandler(reads)));
+    ..route('/orders', get(listOrdersEndpoint(lists, reads)))
+    ..route('/orders/{id}', get(readOrderEndpoint(reads)));
 }

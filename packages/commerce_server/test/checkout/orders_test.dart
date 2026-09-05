@@ -13,7 +13,7 @@ void main() {
     final cartId = await harness.cartWith('var_small');
     final placed = await harness.checkout(cartId, email: email);
     placed.assertCreated();
-    return (placed.json! as Map<String, Object?>)['id']! as String;
+    return Order.fromJson(placed.json! as Map<String, Object?>).id;
   }
 
   group('GET /store/orders', () {

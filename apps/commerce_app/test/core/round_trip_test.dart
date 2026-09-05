@@ -82,15 +82,15 @@ void main() {
   group('the cart', () {
     test('is created, added to, and totalled by the server', () async {
       final created = await api.createCart();
-      expect(created.isEmpty, isTrue);
+      expect(created.cart.isEmpty, isTrue);
 
       final withLine = await api.addLine(
-        created.id,
-        const AddLineRequest(variantId: 'var_small', quantity: 2),
+        created.cart.id,
+        const AddLineBody(variantId: 'var_small', quantity: 2),
       );
 
       expect(withLine.itemCount, 2);
-      expect(withLine.items.single.unitPrice, Money.of(1999, 'usd'));
+      expect(withLine.cart.items.single.unitPrice, Money.of(1999, 'usd'));
       expect(withLine.subtotal, Money.of(3998, 'usd'));
       expect(withLine.tax, Money.of(400, 'usd'));
       expect(withLine.total, Money.of(4398, 'usd'));
@@ -99,14 +99,14 @@ void main() {
     test('agrees with the domain model computing the same totals', () async {
       final created = await api.createCart();
       final response = await api.addLine(
-        created.id,
-        const AddLineRequest(variantId: 'var_small', quantity: 3),
+        created.cart.id,
+        const AddLineBody(variantId: 'var_small', quantity: 3),
       );
 
       final locally = Cart.of(
-        id: response.id,
-        region: response.region,
-        items: response.items,
+        id: response.cart.id,
+        region: response.cart.region,
+        items: response.cart.items,
       );
 
       expect(locally.subtotal, response.subtotal);
@@ -119,13 +119,13 @@ void main() {
     test('places an order the client decodes as the shared Order', () async {
       final cart = await api.createCart();
       await api.addLine(
-        cart.id,
-        const AddLineRequest(variantId: 'var_small', quantity: 2),
+        cart.cart.id,
+        const AddLineBody(variantId: 'var_small', quantity: 2),
       );
 
       final order = await api.checkout(
         CheckoutRequest(
-          cartId: cart.id,
+          cartId: cart.cart.id,
           email: 'ada@example.com',
           shippingAddress: const AddressInput(
             firstName: 'Ada',
@@ -150,12 +150,12 @@ void main() {
     test('reads the order back, and lists it for that email', () async {
       final cart = await api.createCart();
       await api.addLine(
-        cart.id,
-        const AddLineRequest(variantId: 'var_small'),
+        cart.cart.id,
+        const AddLineBody(variantId: 'var_small'),
       );
       final placed = await api.checkout(
         CheckoutRequest(
-          cartId: cart.id,
+          cartId: cart.cart.id,
           email: 'ada@example.com',
           shippingAddress: const AddressInput(
             firstName: 'Ada',

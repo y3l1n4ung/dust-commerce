@@ -11,6 +11,6 @@ Router catalogRoutes(
   CatalogListRepository lists,
 ) {
   return Router()
-    ..route('/products', get(listProductsHandler(lists)))
-    ..route('/products/{handle}', get(readProductHandler(reads, lists)));
+    ..route('/products', get(listProductsEndpoint(lists)))
+    ..route('/products/{handle}', get(readProductEndpoint(reads, lists)));
 }

@@ -88,6 +88,15 @@ WHERE id = $1
     int quantity,
   );
 
+  /// Counts a redemption, so a limited promotion runs out.
+  ///
+  /// Incremented in SQL rather than read-then-written: two checkouts redeeming
+  /// the last use of a code would otherwise both read the same count.
+  @Query(r'''
+UPDATE promotions SET usage_count = usage_count + 1 WHERE code = $1
+''')
+  Future<Result<ExecResult, SqlxError>> countRedemption(String code);
+
   /// Empties the cart once its lines have been copied onto the order.
   @Query(r'DELETE FROM line_items WHERE cart_id = $1')
   Future<Result<ExecResult, SqlxError>> clearCart(String cartId);
