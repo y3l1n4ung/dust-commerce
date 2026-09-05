@@ -56,47 +56,52 @@ class ProductListingView extends StatelessWidget {
     }
 
     return SingleChildScrollView(
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1440),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 96),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final desktop = constraints.maxWidth >= 976;
-                final refinements = ListingRefinements(
-                  selected: state.sortBy,
-                  onChanged: onSortChanged,
-                  options: state.optionFilters,
-                  selectedOptionValueIds: state.selectedOptionValueIds,
-                  onOptionValuesChanged: onOptionValuesChanged,
-                );
-                final products = _ListingProducts(
-                  state: state,
-                  onPageChanged: onPageChanged,
-                  onCategorySelected: onCategorySelected,
-                );
-                return desktop
-                    ? Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(width: 250, child: refinements),
-                          const SizedBox(width: 24),
-                          Expanded(child: products),
-                        ],
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          refinements,
-                          const SizedBox(height: 32),
-                          products,
-                        ],
-                      );
-              },
+      child: Column(
+        children: [
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1440),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 96),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final desktop = constraints.maxWidth >= 976;
+                    final refinements = ListingRefinements(
+                      selected: state.sortBy,
+                      onChanged: onSortChanged,
+                      options: state.optionFilters,
+                      selectedOptionValueIds: state.selectedOptionValueIds,
+                      onOptionValuesChanged: onOptionValuesChanged,
+                    );
+                    final products = _ListingProducts(
+                      state: state,
+                      onPageChanged: onPageChanged,
+                      onCategorySelected: onCategorySelected,
+                    );
+                    return desktop
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(width: 250, child: refinements),
+                              const SizedBox(width: 24),
+                              Expanded(child: products),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              refinements,
+                              const SizedBox(height: 32),
+                              products,
+                            ],
+                          );
+                  },
+                ),
+              ),
             ),
           ),
-        ),
+          const StoreFooter(),
+        ],
       ),
     );
   }

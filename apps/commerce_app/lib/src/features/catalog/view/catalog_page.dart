@@ -61,6 +61,7 @@ class _CatalogPageState extends State<CatalogPage> {
                 ),
               ),
           },
+          const SliverToBoxAdapter(child: StoreFooter()),
         ],
       ),
     );

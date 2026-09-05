@@ -36,41 +36,47 @@ class _AccountOrdersPageState extends State<AccountOrdersPage> {
       body: customer == null
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1024),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 48,
+              child: Column(
+                children: [
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1024),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 48,
+                        ),
+                        child: MediaQuery.sizeOf(context).width >= 1024
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 240,
+                                    child: AccountNavigation(
+                                      state: account,
+                                      ordersActive: true,
+                                    ),
+                                  ),
+                                  Expanded(
+                                      child: _OrdersContent(state: orders)),
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  MobileAccountNavigation(
+                                    customer: customer,
+                                    state: account,
+                                  ),
+                                  const SizedBox(height: 32),
+                                  _OrdersContent(state: orders),
+                                ],
+                              ),
+                      ),
                     ),
-                    child: MediaQuery.sizeOf(context).width >= 1024
-                        ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 240,
-                                child: AccountNavigation(
-                                  state: account,
-                                  ordersActive: true,
-                                ),
-                              ),
-                              Expanded(child: _OrdersContent(state: orders)),
-                            ],
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              MobileAccountNavigation(
-                                customer: customer,
-                                state: account,
-                              ),
-                              const SizedBox(height: 32),
-                              _OrdersContent(state: orders),
-                            ],
-                          ),
                   ),
-                ),
+                  const StoreFooter(),
+                ],
               ),
             ),
     );

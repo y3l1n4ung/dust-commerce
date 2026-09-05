@@ -21,6 +21,7 @@ dependencies:
   flutter_secure_storage: ^11.0.0
   flutter_web_plugins:
     sdk: flutter
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   # Test-only: the round-trip test runs the real API and points the generated

@@ -1,3 +1,4 @@
+import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +10,19 @@ class CartEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1440),
-            child: const Padding(
-              padding: EdgeInsets.fromLTRB(24, 240, 24, 240),
-              child: _CartEmptyContent(),
+        child: Column(
+          children: [
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1440),
+                child: const Padding(
+                  padding: EdgeInsets.fromLTRB(24, 240, 24, 240),
+                  child: _CartEmptyContent(),
+                ),
+              ),
             ),
-          ),
+            const StoreFooter(),
+          ],
         ),
       );
 }

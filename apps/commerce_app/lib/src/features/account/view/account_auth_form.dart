@@ -44,72 +44,79 @@ class _AccountAuthFormState extends State<AccountAuthForm> {
         state.operation ==
             (registering ? AccountOperation.register : AccountOperation.signIn);
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(32),
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 384),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  registering
-                      ? context.tr(
-                          'shop_account_register_title',
-                          defaultText: 'Become a Morrow Member',
-                        )
-                      : context.tr(
-                          'shop_account_welcome_back',
-                          defaultText: 'Welcome back',
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(32),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 384),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        registering
+                            ? context.tr(
+                                'shop_account_register_title',
+                                defaultText: 'Become a Morrow Member',
+                              )
+                            : context.tr(
+                                'shop_account_welcome_back',
+                                defaultText: 'Welcome back',
+                              ),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
                         ),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        registering
+                            ? context.tr(
+                                'shop_account_register_body',
+                                defaultText:
+                                    'Create your Morrow Member profile, and get '
+                                    'access to an enhanced shopping experience.',
+                              )
+                            : context.tr(
+                                'shop_account_sign_in_body',
+                                defaultText:
+                                    'Sign in to access an enhanced shopping experience.',
+                              ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: registering ? 16 : 32),
+                      _AccountFormFields(
+                        registering: registering,
+                        email: _email,
+                        password: _password,
+                        firstName: _firstName,
+                        lastName: _lastName,
+                        phone: _phone,
+                        showPassword: _showPassword,
+                        onTogglePassword: () => setState(
+                          () => _showPassword = !_showPassword,
+                        ),
+                      ),
+                      _AccountFormActions(
+                        registering: registering,
+                        busy: state.isBusy,
+                        error: matchingFailure ? state.message : null,
+                        onSubmit: _submit,
+                        onToggle: _toggle,
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 24),
-                Text(
-                  registering
-                      ? context.tr(
-                          'shop_account_register_body',
-                          defaultText:
-                              'Create your Morrow Member profile, and get '
-                              'access to an enhanced shopping experience.',
-                        )
-                      : context.tr(
-                          'shop_account_sign_in_body',
-                          defaultText:
-                              'Sign in to access an enhanced shopping experience.',
-                        ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: registering ? 16 : 32),
-                _AccountFormFields(
-                  registering: registering,
-                  email: _email,
-                  password: _password,
-                  firstName: _firstName,
-                  lastName: _lastName,
-                  phone: _phone,
-                  showPassword: _showPassword,
-                  onTogglePassword: () => setState(
-                    () => _showPassword = !_showPassword,
-                  ),
-                ),
-                _AccountFormActions(
-                  registering: registering,
-                  busy: state.isBusy,
-                  error: matchingFailure ? state.message : null,
-                  onSubmit: _submit,
-                  onToggle: _toggle,
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          const StoreFooter(),
+        ],
       ),
     );
   }

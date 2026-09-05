@@ -578,6 +578,31 @@
   "@fast_delivery_body": {
     "description": "Fast-delivery policy detail."
   },
+  "footer_categories": "အမျိုးအစားများ",
+  "@footer_categories": {
+    "description": "Footer category-navigation heading."
+  },
+  "footer_collections": "စုစည်းမှုများ",
+  "@footer_collections": {
+    "description": "Footer collection-navigation heading."
+  },
+  "footer_documentation": "စာရွက်စာတမ်းများ",
+  "@footer_documentation": {
+    "description": "Footer link to Dust documentation."
+  },
+  "footer_rights": "© {year} Morrow။ မူပိုင်ခွင့်အားလုံး ထိန်းသိမ်းထားသည်။",
+  "@footer_rights": {
+    "description": "Current-year storefront copyright line.",
+    "placeholders": {
+      "year": {
+        "example": "2026"
+      }
+    }
+  },
+  "footer_source_code": "မူရင်းကုဒ်",
+  "@footer_source_code": {
+    "description": "Footer link to this storefront source."
+  },
   "from_price": "မှစ၍ ",
   "@from_price": {
     "description": "Prefix shown before the cheapest unselected variant price."

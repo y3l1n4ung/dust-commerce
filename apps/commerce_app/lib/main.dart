@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/i18n/app_i18n.g.dart';
 import 'package:commerce_app/route.dart';
@@ -66,6 +68,7 @@ class _CommerceAppState extends State<CommerceApp> {
   late final AccountViewModel _account;
   late final CartViewModel _cart;
   late final CheckoutViewModel _checkout;
+  late final StoreShellViewModel _shell;
   late final CommerceRouter _router;
   late final RouterConfig<CommerceRoute> _routerConfig;
   bool _routerReady = false;
@@ -87,6 +90,8 @@ class _CommerceAppState extends State<CommerceApp> {
         currentCustomer: () => _account.state.customer,
       ),
     );
+    _shell = StoreShellViewModel(StoreShellViewModelArgs(api: widget.api));
+    unawaited(_shell.load());
     _router = CommerceRouter(
       initialLocation: widget.initialLocation,
       account: _account,
@@ -102,6 +107,7 @@ class _CommerceAppState extends State<CommerceApp> {
   @override
   void dispose() {
     _checkout.dispose();
+    _shell.dispose();
     _cart.dispose();
     _account.dispose();
     super.dispose();
@@ -142,7 +148,10 @@ class _CommerceAppState extends State<CommerceApp> {
                 child: ProductListingViewModelScope(
                   args: (_) => ProductListingViewModelArgs(api: widget.api),
                   create: (_, args) => ProductListingViewModel(args),
-                  child: app,
+                  child: StoreShellViewModelScope.value(
+                    value: _shell,
+                    child: app,
+                  ),
                 ),
               ),
             ),

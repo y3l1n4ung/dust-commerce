@@ -578,6 +578,31 @@
   "@fast_delivery_body": {
     "description": "Fast-delivery policy detail."
   },
+  "footer_categories": "Categories",
+  "@footer_categories": {
+    "description": "Footer category-navigation heading."
+  },
+  "footer_collections": "Collections",
+  "@footer_collections": {
+    "description": "Footer collection-navigation heading."
+  },
+  "footer_documentation": "Documentation",
+  "@footer_documentation": {
+    "description": "Footer link to Dust documentation."
+  },
+  "footer_rights": "© {year} Morrow. All rights reserved.",
+  "@footer_rights": {
+    "description": "Current-year storefront copyright line.",
+    "placeholders": {
+      "year": {
+        "example": "2026"
+      }
+    }
+  },
+  "footer_source_code": "Source code",
+  "@footer_source_code": {
+    "description": "Footer link to this storefront source."
+  },
   "from_price": "From ",
   "@from_price": {
     "description": "Prefix shown before the cheapest unselected variant price."

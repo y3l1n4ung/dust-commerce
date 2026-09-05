@@ -12,3 +12,4 @@ export 'src/features/cart/cart.dart';
 export 'src/features/catalog/catalog.dart';
 export 'src/features/checkout/checkout.dart';
 export 'src/features/product/product.dart';
+export 'src/features/shell/shell.dart';

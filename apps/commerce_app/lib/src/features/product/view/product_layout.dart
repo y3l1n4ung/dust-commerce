@@ -73,6 +73,7 @@ class _ProductLayoutState extends State<ProductLayout> {
                       child: RelatedProducts(state: widget.state),
                     ),
                   ),
+                  const SliverToBoxAdapter(child: StoreFooter()),
                   if (!_wide)
                     const SliverToBoxAdapter(child: SizedBox(height: 144)),
                 ],

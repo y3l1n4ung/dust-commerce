@@ -14,7 +14,7 @@ and the `Medusa DTC storefront parity` milestone.
 
 | Medusa source | Flutter/Dust owner | Status |
 | :--- | :--- | :--- |
-| `layout/templates/nav` | shared storefront shell | partial in #19; nav/menu/cart count work, footer remains |
+| `layout/templates/nav` and `footer` | shared storefront shell | implemented in #19 with nav, menu, cart count, API-backed footer taxonomy, Morrow branding, and only `Powered by dust`; rendered QA remains |
 | `home/components/hero` | home hero | implemented in #19 |
 | `featured-products/product-rail` | featured product grid | implemented in #18 with source-ordered, API-backed collection rails; rendered QA remains |
 | `products/components/product-preview` | product card | implemented in #19 |
@@ -66,6 +66,13 @@ only when a private admin-setup cookie is present and links to Medusa's local
 admin onboarding flow; it is not a customer storefront capability or a valid
 Morrow production destination.
 
+The shared footer preserves the source structure and limits: the Morrow brand,
+up to six API-backed root categories with direct children, up to six
+collections, project-resource links, a current-year copyright line, and the
+requested lowercase `Powered by dust` attribution. Category and collection
+discovery fail independently so footer data cannot take down working page
+content.
+
 Medusa declares categories as a catch-all route so a full hierarchical handle
 stays readable (`/categories/clothing/shirts`). Dust Flutter 0.1.4 currently
 supports one segment per typed path parameter, so the generated route preserves
@@ -89,3 +96,4 @@ screen.
 A row becomes complete only when its primary interactions use the real API,
 its loading, empty, failure and success states are covered, and the generated
 Dust output, analyzer and tests pass. A static look-alike does not count.
+The current rendered comparison gate is recorded in `design-qa.md`.

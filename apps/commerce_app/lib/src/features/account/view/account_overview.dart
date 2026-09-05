@@ -23,51 +23,56 @@ class AccountOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SingleChildScrollView(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1024),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 48),
-                    child: MediaQuery.sizeOf(context).width >= 1024
-                        ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 240,
-                                child: AccountNavigation(state: state),
+        child: Column(
+          children: [
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1024),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 48),
+                        child: MediaQuery.sizeOf(context).width >= 1024
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 240,
+                                    child: AccountNavigation(state: state),
+                                  ),
+                                  Expanded(
+                                    child: AccountProfileOverview(
+                                      customer: customer,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  MobileAccountNavigation(
+                                    customer: customer,
+                                    state: state,
+                                  ),
+                                  const SizedBox(height: 32),
+                                  AccountProfileOverview(customer: customer),
+                                ],
                               ),
-                              Expanded(
-                                child: AccountProfileOverview(
-                                  customer: customer,
-                                ),
-                              ),
-                            ],
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              MobileAccountNavigation(
-                                customer: customer,
-                                state: state,
-                              ),
-                              const SizedBox(height: 32),
-                              AccountProfileOverview(customer: customer),
-                            ],
-                          ),
+                      ),
+                      const Divider(),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 48),
+                        child: AccountSupport(),
+                      ),
+                    ],
                   ),
-                  const Divider(),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 48),
-                    child: AccountSupport(),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
+            const StoreFooter(),
+          ],
         ),
       );
 }
