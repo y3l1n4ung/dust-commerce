@@ -101,7 +101,7 @@ class _PinnedColumnDelegate extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) =>
-      ColoredBox(
+      Material(
         color: StoreColors.base,
         child: Align(
           alignment: Alignment.topCenter,
