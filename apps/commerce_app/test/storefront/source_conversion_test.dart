@@ -158,6 +158,9 @@ final class _RelatedFailureApi implements CommerceApi {
   @override
   Future<ProductPageView> products({
     String? currency,
+    String? collection,
+    String? category,
+    String? tag,
     int? limit,
     int? offset,
   }) =>

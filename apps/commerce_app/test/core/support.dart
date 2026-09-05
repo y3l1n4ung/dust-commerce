@@ -1,4 +1,5 @@
 import 'package:commerce_app/commerce_app.dart';
+import 'package:commerce_server/commerce_server.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/testing.dart';
 
@@ -76,3 +77,52 @@ CartViewModel testCart(CommerceApi api, {MemoryCartIdStore? storage}) =>
         cartIds: storage ?? MemoryCartIdStore(),
       ),
     );
+
+/// Seeds the generated-client round-trip catalogue and its public taxonomy.
+Future<void> seedRoundTripCatalog(CommerceDatabase database) async {
+  Future<void> run(String sql) =>
+      queryExecute(sql, []).execute(database.executor);
+
+  await run(
+    r"INSERT INTO regions (id, name, currency_code, tax_rate, countries) "
+    r"VALUES ('reg_us', 'United States', 'usd', 1000, 'us')",
+  );
+  await run(
+    r"INSERT INTO product_collections (id, title, handle) VALUES "
+    r"('col_summer', 'Summer', 'summer')",
+  );
+  await run(
+    r"INSERT INTO products (id, collection_id, title, handle, status) VALUES "
+    r"('prod_shirt', 'col_summer', 'T-Shirt', 't-shirt', 'published')",
+  );
+  await run(
+    r"INSERT INTO product_categories "
+    r"(id, name, handle, parent_category_id) VALUES "
+    r"('cat_root', 'Clothing', 'clothing', NULL), "
+    r"('cat_shirts', 'Shirts', 'clothing/shirts', 'cat_root')",
+  );
+  await run(
+    r"INSERT INTO product_category_products (product_id, category_id) VALUES "
+    r"('prod_shirt', 'cat_shirts')",
+  );
+  await run(
+    r"INSERT INTO product_tags (id, value) VALUES "
+    r"('tag_cotton', 'Cotton')",
+  );
+  await run(
+    r"INSERT INTO product_tag_products (product_id, tag_id) VALUES "
+    r"('prod_shirt', 'tag_cotton')",
+  );
+  await run(
+    r"INSERT INTO product_variants "
+    r"(id, product_id, title, inventory_quantity) VALUES "
+    r"('var_small', 'prod_shirt', 'Small', 50), "
+    r"('var_large', 'prod_shirt', 'Large', 20)",
+  );
+  await run(
+    r"INSERT INTO variant_prices (variant_id, currency_code, amount) VALUES "
+    r"('var_small', 'usd', 1999), "
+    r"('var_large', 'usd', 2199), "
+    r"('var_small', 'eur', 1799)",
+  );
+}

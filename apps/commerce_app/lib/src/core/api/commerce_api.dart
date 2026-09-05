@@ -41,6 +41,25 @@ abstract interface class CommerceApi {
   @GET('/store/products')
   Future<ProductPageView> products({
     @Query('currency') String? currency,
+    @Query('collection') String? collection,
+    @Query('category') String? category,
+    @Query('tag') String? tag,
+    @Query('limit') int? limit,
+    @Query('offset') int? offset,
+  });
+
+  /// Public collections used by featured rails and collection routes.
+  @GET('/store/collections')
+  Future<ProductCollectionListView> collections({
+    @Query('handle') String? handle,
+    @Query('limit') int? limit,
+    @Query('offset') int? offset,
+  });
+
+  /// Public active category nodes used by nested category routes.
+  @GET('/store/product-categories')
+  Future<ProductCategoryListView> categories({
+    @Query('handle') String? handle,
     @Query('limit') int? limit,
     @Query('offset') int? offset,
   });

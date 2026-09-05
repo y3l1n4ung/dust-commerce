@@ -205,6 +205,9 @@ final class _$CommerceApi implements CommerceApi {
   @override
   Future<ProductPageView> products({
     String? currency,
+    String? collection,
+    String? category,
+    String? tag,
     int? limit,
     int? offset,
   }) async {
@@ -213,6 +216,9 @@ final class _$CommerceApi implements CommerceApi {
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
     if (currency != null) _queryParameters['currency'] = currency;
+    if (collection != null) _queryParameters['collection'] = collection;
+    if (category != null) _queryParameters['category'] = category;
+    if (tag != null) _queryParameters['tag'] = tag;
     if (limit != null) _queryParameters['limit'] = limit;
     if (offset != null) _queryParameters['offset'] = offset;
     final Object? _data = null;
@@ -243,6 +249,92 @@ final class _$CommerceApi implements CommerceApi {
       ),
     );
     return ProductPageView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<ProductCollectionListView> collections({
+    String? handle,
+    int? limit,
+    int? offset,
+  }) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    if (handle != null) _queryParameters['handle'] = handle;
+    if (limit != null) _queryParameters['limit'] = limit;
+    if (offset != null) _queryParameters['offset'] = offset;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<ProductCollectionListView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/collections',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return ProductCollectionListView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<ProductCategoryListView> categories({
+    String? handle,
+    int? limit,
+    int? offset,
+  }) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    if (handle != null) _queryParameters['handle'] = handle;
+    if (limit != null) _queryParameters['limit'] = limit;
+    if (offset != null) _queryParameters['offset'] = offset;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<ProductCategoryListView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/product-categories',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return ProductCategoryListView.fromJson(_result.data as Map<String, dynamic>);
   }
 
   @override

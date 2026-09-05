@@ -31,7 +31,7 @@ void main() {
       '${directory.path}/commerce.db',
       options: commerceOptions,
     );
-    await _seed(database);
+    await seedRoundTripCatalog(database);
 
     server = await TestClient.serve(
       buildApp(
@@ -62,6 +62,9 @@ void main() {
       expect(product.handle, 't-shirt');
       expect(product.cheapestIn('usd'), Money.of(1999, 'usd'));
       expect(product.isPurchasable, isTrue);
+      expect(product.collection?.handle, 'summer');
+      expect(product.categories.single.handle, 'clothing/shirts');
+      expect(product.tags.single.value, 'Cotton');
     });
 
     test('decodes one product, keeping money as integer minor units', () async {
@@ -80,6 +83,16 @@ void main() {
 
       expect(product.cheapestIn('eur'), Money.of(1799, 'eur'));
       expect(product.cheapestIn('usd'), isNull);
+    });
+
+    test('decodes taxonomy endpoints and product filters', () async {
+      final collections = await api.collections(handle: 'summer');
+      final categories = await api.categories(handle: 'clothing/shirts');
+      final filtered = await api.products(tag: 'cotton');
+
+      expect(collections.collections.single.title, 'Summer');
+      expect(categories.categories.single.name, 'Shirts');
+      expect(filtered.products.single.handle, 't-shirt');
     });
   });
 
@@ -183,30 +196,4 @@ void main() {
       expect(history.orders.single.id, placed.id);
     });
   });
-}
-
-Future<void> _seed(CommerceDatabase database) async {
-  Future<void> run(String sql) =>
-      queryExecute(sql, []).execute(database.executor);
-
-  await run(
-    r"INSERT INTO regions (id, name, currency_code, tax_rate, countries) "
-    r"VALUES ('reg_us', 'United States', 'usd', 1000, 'us')",
-  );
-  await run(
-    r"INSERT INTO products (id, title, handle, status) VALUES "
-    r"('prod_shirt', 'T-Shirt', 't-shirt', 'published')",
-  );
-  await run(
-    r"INSERT INTO product_variants "
-    r"(id, product_id, title, inventory_quantity) VALUES "
-    r"('var_small', 'prod_shirt', 'Small', 50), "
-    r"('var_large', 'prod_shirt', 'Large', 20)",
-  );
-  await run(
-    r"INSERT INTO variant_prices (variant_id, currency_code, amount) VALUES "
-    r"('var_small', 'usd', 1999), "
-    r"('var_large', 'usd', 2199), "
-    r"('var_small', 'eur', 1799)",
-  );
 }
