@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/cart/cart.dart';
 import 'package:commerce_server/src/features/catalog/catalog.dart';
+import 'package:commerce_server/src/features/checkout/checkout.dart';
 import 'package:commerce_server/src/infra/database.dart';
 import 'package:dust_dart/db.dart';
 import 'package:dust_server/server.dart';
@@ -20,12 +21,17 @@ Router buildApp(
   final executor = database.executor;
   final catalog = CatalogRepository(executor);
   final carts = CartRepository(executor);
+  final orders = CheckoutRepository(executor);
   final identify = nextId ?? _randomId;
   final clock = now ?? DateTime.now;
 
   return Router()
     ..nest('/store', catalogRoutes(catalog))
     ..nest('/store', cartRoutes(carts, catalog, nextId: identify, now: clock))
+    ..nest(
+      '/store',
+      checkoutRoutes(database, orders, nextId: identify, now: clock),
+    )
     ..route('/health', get((_) async => jsonResponse({'status': 'ok'})));
 }
 
