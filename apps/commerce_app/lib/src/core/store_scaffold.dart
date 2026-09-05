@@ -13,7 +13,6 @@ class StoreScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final count = context.watchCartViewModel().value.itemCount;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 64,
@@ -35,16 +34,7 @@ class StoreScaffold extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => context.navigator.cart().push(),
-            child: Text(
-              context.tr(
-                'shop_cart_count',
-                defaultText: 'Cart ({count})',
-                args: {'count': count},
-              ),
-            ),
-          ),
+          const CartPreview(),
           const SizedBox(width: 12),
         ],
       ),

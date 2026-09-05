@@ -154,7 +154,8 @@ class _QuantityControl extends StatelessWidget {
                 : null,
             icon: const Icon(Icons.delete_outline, size: 18),
             tooltip: context.tr('shop_cart_remove', defaultText: 'Remove'),
-            visualDensity: VisualDensity.compact,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints.tightFor(width: 32, height: 40),
           ),
           Container(
             width: 56,

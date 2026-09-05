@@ -106,6 +106,27 @@
   "@cart_remove_promotion": {
     "description": "Accessible label for removing the applied promotion."
   },
+  "cart_preview_subtotal": "အခွန်မပါ ကြားဖြတ်စုစုပေါင်း",
+  "@cart_preview_subtotal": {
+    "description": "Goods subtotal label in the navigation cart preview."
+  },
+  "cart_go_to_cart": "စျေးခြင်းတောင်းသို့ သွားရန်",
+  "@cart_go_to_cart": {
+    "description": "Opens the full cart from its navigation preview."
+  },
+  "cart_preview_quantity": "အရေအတွက်: {count}",
+  "@cart_preview_quantity": {
+    "description": "Line quantity in the navigation cart preview.",
+    "placeholders": {
+      "count": {
+        "example": "2"
+      }
+    }
+  },
+  "cart_preview_empty": "သင့်စျေးခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိပါ။",
+  "@cart_preview_empty": {
+    "description": "Empty state in the navigation cart preview."
+  },
   "add_to_cart": "စျေးခြင်းတောင်းထဲ ထည့်ရန်",
   "@add_to_cart": {
     "description": "Adds the selected variant to the cart."
