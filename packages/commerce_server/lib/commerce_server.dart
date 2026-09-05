@@ -3,5 +3,5 @@ library;
 
 export 'package:dust_dart/db.dart';
 
-export 'src/features/catalog/repository/product_row.dart';
+export 'src/features/catalog/repository/repository.dart';
 export 'src/infra/database.dart';
