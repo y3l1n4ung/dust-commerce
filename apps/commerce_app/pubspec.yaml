@@ -16,6 +16,9 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  # Test-only: the round-trip test runs the real API and points the generated
+  # client at it. The dependency goes this way and never the other.
+  commerce_server: ^0.1.0
   flutter_test:
     sdk: flutter
   very_good_analysis: ^10.3.0
