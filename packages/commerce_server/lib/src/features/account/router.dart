@@ -17,7 +17,18 @@ Router accountAuthRoutes() {
 Router accountStoreRoutes() {
   final protected = Router()
     ..routeLayer(fromExtractor(const CustomerAuth()))
-    ..route('/customers/me', get(readCurrentCustomerHandler));
+    ..route(
+      '/customers/me',
+      get(readCurrentCustomerHandler).patch(updateCustomerHandler),
+    )
+    ..route(
+      '/customers/me/addresses',
+      get(listAddressesHandler).post(createAddressHandler, status: 201),
+    )
+    ..route(
+      '/customers/me/addresses/{addressId}',
+      patch(updateAddressHandler).delete(deleteAddressHandler),
+    );
 
   return Router()
     ..route('/customers', post(registerAccountHandler, status: 201))

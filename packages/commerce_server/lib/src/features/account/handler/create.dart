@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/account/crypto.dart';
 import 'package:commerce_server/src/features/account/deps.dart';
+import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/account/model.dart';
 import 'package:commerce_server/src/features/account/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -12,6 +13,10 @@ const ValidatedExtractable<RegisterAccountBody> _registerBody =
 );
 const ValidatedExtractable<Credentials> _credentialsBody = ValidatedExtractable(
   JsonExtractable<Credentials>(Credentials.fromJson),
+);
+const ValidatedExtractable<CustomerAddressInput> _addressBody =
+    ValidatedExtractable(
+  JsonExtractable<CustomerAddressInput>(CustomerAddressInput.fromJson),
 );
 
 /// `POST /store/customers` — create a customer account.
@@ -73,6 +78,31 @@ Future<Result<IssuedToken, Rejection>> signInHandler(Request request) async {
     Ok(value: Some(value: final token)) => Ok(token),
     Ok(value: None()) =>
       const Err(Rejection.unauthorized('Invalid email or password')),
+    Err() => const Err(Rejection.internal()),
+  };
+}
+
+/// `POST /store/customers/me/addresses` — create an owned address.
+Future<Result<CustomerAddressResponse, Rejection>> createAddressHandler(
+  Request request,
+) async {
+  final actor = await request.extract(
+    const Extension<AuthenticatedCustomer>(),
+  );
+  final decoded = await _addressBody.extract(request);
+  if (decoded case Err(:final error)) return Err(error);
+  final depsResult = await accountDeps(request);
+  if (depsResult case Err(:final error)) return Err(error);
+  final deps = (depsResult as Ok<AccountDeps, Rejection>).value;
+
+  final result = await createCustomerAddress(
+    deps.writes,
+    actor.customer.id,
+    (decoded as Ok<CustomerAddressInput, Rejection>).value,
+    nextId: deps.clock.nextId,
+  );
+  return switch (result) {
+    Ok(:final value) => Ok(value),
     Err() => const Err(Rejection.internal()),
   };
 }

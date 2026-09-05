@@ -10,7 +10,9 @@ final class AccountDeps {
   AccountDeps({
     required this.database,
     required this.reads,
+    required this.lists,
     required this.writes,
+    required this.updates,
     required this.deletes,
     required this.clock,
     PasswordWorkLimiter? passwordWork,
@@ -30,6 +32,9 @@ final class AccountDeps {
   /// Account token revocation queries.
   final AccountDeleteRepository deletes;
 
+  /// Customer address-book listing queries.
+  final AccountListRepository lists;
+
   /// Precomputed dummy hash used to equalize unknown-account sign-in work.
   late final Future<String> dummyPasswordHash;
 
@@ -38,6 +43,9 @@ final class AccountDeps {
 
   /// Account lookup queries.
   final AccountReadRepository reads;
+
+  /// Customer profile and address mutation queries.
+  final AccountUpdateRepository updates;
 
   /// Account creation and token issuance queries.
   final AccountCreateRepository writes;

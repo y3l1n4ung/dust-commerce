@@ -62,4 +62,22 @@ VALUES (?, ?, ?)
       [tokenHash, authIdentityId, expiresAt],
     );
   }
+
+  @override
+  Future<Result<CustomerAddressResponse, SqlxError>> insertAddress(String id, String customerId, String firstName, String lastName, String? company, String? phone, String line1, String? line2, String city, String? province, String postalCode, String countryCode, int isDefaultShipping, int isDefaultBilling) {
+    return _db.fetchOne<CustomerAddressResponse>(
+      r'''
+INSERT INTO customer_addresses
+  (id, customer_id, first_name, last_name, company, phone, address_1,
+   address_2, city, province, postal_code, country_code,
+   is_default_shipping, is_default_billing)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+RETURNING id, first_name, last_name, company, phone, address_1, address_2,
+          city, province, postal_code, country_code,
+          is_default_shipping, is_default_billing
+''',
+      [id, customerId, firstName, lastName, company, phone, line1, line2, city, province, postalCode, countryCode, isDefaultShipping, isDefaultBilling],
+      const $CustomerAddressResponseRowDeserializer().deserialize,
+    );
+  }
 }

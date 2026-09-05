@@ -3,7 +3,9 @@
 library;
 
 export 'account.dart';
+export 'account_profile.dart';
 export 'cart_request.dart';
 export 'cart_view.dart';
 export 'catalog_view.dart';
+export 'customer_address.dart';
 export 'option_filter_view.dart';

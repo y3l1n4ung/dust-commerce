@@ -42,11 +42,37 @@ mixin _$CustomerResponse implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$CustomerAddressResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$CustomerAddressResponseSerialize(this as CustomerAddressResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$CustomerAddressListResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$CustomerAddressListResponseSerialize(this as CustomerAddressListResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 final class $CustomerResponseSerializer implements Serializer<CustomerResponse, Map<String, Object?>> {
   const $CustomerResponseSerializer();
 
   @override
   Map<String, Object?> serialize(CustomerResponse value) => _$CustomerResponseSerialize(value);
+}
+final class $CustomerAddressResponseSerializer implements Serializer<CustomerAddressResponse, Map<String, Object?>> {
+  const $CustomerAddressResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(CustomerAddressResponse value) => _$CustomerAddressResponseSerialize(value);
+}
+final class $CustomerAddressListResponseSerializer implements Serializer<CustomerAddressListResponse, Map<String, Object?>> {
+  const $CustomerAddressListResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(CustomerAddressListResponse value) => _$CustomerAddressListResponseSerialize(value);
 }
 PasswordCredential _$PasswordCredentialFromRow(Row row) {
   return PasswordCredential(
@@ -117,6 +143,50 @@ extension $CustomerResponseQuery on QueryAs<CustomerResponse> {
       fetchAllWith(db, _$CustomerResponseFromRow);
 }
 
+CustomerAddressResponse _$CustomerAddressResponseFromRow(Row row) {
+  return CustomerAddressResponse(
+    id: row.read<String>('id'),
+    firstName: row.read<String>('first_name'),
+    lastName: row.read<String>('last_name'),
+    line1: row.read<String>('address_1'),
+    city: row.read<String>('city'),
+    postalCode: row.read<String>('postal_code'),
+    countryCode: row.read<String>('country_code'),
+    isDefaultShipping: AccountBoolFromInt().decode(row.read<int>('is_default_shipping')),
+    isDefaultBilling: AccountBoolFromInt().decode(row.read<int>('is_default_billing')),
+    company: row.readNullable<String>('company'),
+    line2: row.readNullable<String>('address_2'),
+    province: row.readNullable<String>('province'),
+    phone: row.readNullable<String>('phone'),
+  );
+}
+
+/// Row deserializer for [CustomerAddressResponse].
+final class $CustomerAddressResponseRowDeserializer implements RowDeserializer<CustomerAddressResponse> {
+  const $CustomerAddressResponseRowDeserializer();
+
+  @override
+  CustomerAddressResponse deserialize(Row row) => _$CustomerAddressResponseFromRow(row);
+}
+
+/// Typed row query terminals for [CustomerAddressResponse].
+///
+/// Resolved from the static type of the receiver, so a row type with no
+/// `FromRow` has no terminals and the call does not compile.
+extension $CustomerAddressResponseQuery on QueryAs<CustomerAddressResponse> {
+  /// Fetches exactly one row.
+  Future<CustomerAddressResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$CustomerAddressResponseFromRow);
+
+  /// Fetches zero or one row.
+  Future<CustomerAddressResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$CustomerAddressResponseFromRow);
+
+  /// Fetches every row.
+  Future<List<CustomerAddressResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$CustomerAddressResponseFromRow);
+}
+
 Map<String, Object?> _$CustomerResponseSerialize(CustomerResponse instance) {
   return <String, Object?>{
     'email': instance.email,
@@ -129,3 +199,36 @@ Map<String, Object?> _$CustomerResponseSerialize(CustomerResponse instance) {
 
 Map<String, Object?> _$CustomerResponseToJson(CustomerResponse instance) =>
     _$CustomerResponseSerialize(instance);
+
+Map<String, Object?> _$CustomerAddressResponseSerialize(CustomerAddressResponse instance) {
+  return <String, Object?>{
+    'address_1': instance.line1,
+    'address_2': instance.line2,
+    'city': instance.city,
+    'company': instance.company,
+    'country_code': instance.countryCode,
+    'first_name': instance.firstName,
+    'id': instance.id,
+    'is_default_billing': instance.isDefaultBilling,
+    'is_default_shipping': instance.isDefaultShipping,
+    'last_name': instance.lastName,
+    'phone': instance.phone,
+    'postal_code': instance.postalCode,
+    'province': instance.province,
+  };
+}
+
+Map<String, Object?> _$CustomerAddressResponseToJson(CustomerAddressResponse instance) =>
+    _$CustomerAddressResponseSerialize(instance);
+
+Map<String, Object?> _$CustomerAddressListResponseSerialize(CustomerAddressListResponse instance) {
+  return <String, Object?>{
+    'addresses': instance.addresses
+        .map((item) => _$CustomerAddressResponseSerialize(item))
+        .toList(),
+    'count': instance.count,
+  };
+}
+
+Map<String, Object?> _$CustomerAddressListResponseToJson(CustomerAddressListResponse instance) =>
+    _$CustomerAddressListResponseSerialize(instance);

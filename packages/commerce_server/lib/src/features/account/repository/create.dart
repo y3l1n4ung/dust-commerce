@@ -1,3 +1,4 @@
+import 'package:commerce_server/src/features/account/model.dart';
 import 'package:dust_dart/db.dart';
 
 part 'create.g.dart';
@@ -54,5 +55,33 @@ VALUES ($1, $2, $3)
     String tokenHash,
     String authIdentityId,
     String expiresAt,
+  );
+
+  /// Creates one customer-owned reusable address and returns its public row.
+  @Query(r'''
+INSERT INTO customer_addresses
+  (id, customer_id, first_name, last_name, company, phone, address_1,
+   address_2, city, province, postal_code, country_code,
+   is_default_shipping, is_default_billing)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+RETURNING id, first_name, last_name, company, phone, address_1, address_2,
+          city, province, postal_code, country_code,
+          is_default_shipping, is_default_billing
+''')
+  Future<Result<CustomerAddressResponse, SqlxError>> insertAddress(
+    String id,
+    String customerId,
+    String firstName,
+    String lastName,
+    String? company,
+    String? phone,
+    String line1,
+    String? line2,
+    String city,
+    String? province,
+    String postalCode,
+    String countryCode,
+    int isDefaultShipping,
+    int isDefaultBilling,
   );
 }

@@ -16,3 +16,30 @@ Future<Result<SessionDeleted, Rejection>> signOutHandler(
   if (revoked case Err()) return const Err(Rejection.internal());
   return const Ok(SessionDeleted(success: true));
 }
+
+/// `DELETE /store/customers/me/addresses/{addressId}` — remove an owned row.
+Future<Result<CustomerAddressDeleted, Rejection>> deleteAddressHandler(
+  Request request,
+) async {
+  final addressId = pathParametersOf(request)['addressId'];
+  if (addressId == null || addressId.isEmpty) {
+    return const Err(Rejection.badRequest('An address id is required'));
+  }
+  final deps = await request.state<AccountDeps>();
+  final actor = await request.extract(
+    const Extension<AuthenticatedCustomer>(),
+  );
+  final result = await deleteCustomerAddress(
+    deps.deletes,
+    addressId,
+    actor.customer.id,
+  );
+  return switch (result) {
+    Ok(value: true) => Ok(CustomerAddressDeleted(
+        id: addressId,
+        success: true,
+      )),
+    Ok(value: false) => const Err(Rejection.notFound('Address')),
+    Err() => const Err(Rejection.internal()),
+  };
+}

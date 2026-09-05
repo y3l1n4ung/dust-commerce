@@ -111,3 +111,27 @@ Future<Result<Option<IssuedToken>, SqlxError>> signIn(
 
   return Ok(Some(IssuedToken(token: token, expiresAt: expiresAt)));
 }
+
+/// Creates one reusable address for the authenticated customer.
+Future<Result<CustomerAddressResponse, SqlxError>> createCustomerAddress(
+  AccountCreateRepository writes,
+  String customerId,
+  CustomerAddressInput input, {
+  required String Function() nextId,
+}) =>
+    writes.insertAddress(
+      nextId(),
+      customerId,
+      input.firstName,
+      input.lastName,
+      input.company,
+      input.phone,
+      input.line1,
+      input.line2,
+      input.city,
+      input.province,
+      input.postalCode,
+      input.countryCode,
+      input.isDefaultShipping ? 1 : 0,
+      input.isDefaultBilling ? 1 : 0,
+    );

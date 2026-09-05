@@ -51,7 +51,9 @@ Router buildApp(
       AccountDeps(
         database: database,
         reads: AccountReadRepository(executor),
+        lists: AccountListRepository(executor),
         writes: AccountCreateRepository(executor),
+        updates: AccountUpdateRepository(executor),
         deletes: AccountDeleteRepository(executor),
         clock: clock,
         passwordWork: passwordWork,
