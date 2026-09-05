@@ -1,0 +1,110 @@
+import 'dart:io';
+
+import 'package:commerce_server/commerce_server.dart';
+import 'package:commerce_shared/commerce_shared.dart';
+import 'package:dust_server/testing.dart';
+import 'package:test/test.dart';
+
+/// Checkout with a delivery method chosen, which is the ordinary path and the
+/// one where the totals have every term in them.
+void main() {
+  late Directory directory;
+  late CommerceDatabase database;
+  late TestClient client;
+  var counter = 0;
+
+  setUp(() async {
+    counter = 0;
+    directory = await Directory.systemTemp.createTemp('commerce_co_ship');
+    database = CommerceDatabase.open(
+      '${directory.path}/commerce.db',
+      options: commerceOptions,
+    );
+    await _seed(database);
+    client = TestClient(
+      buildApp(
+        database,
+        nextId: () => 'id_${++counter}',
+        now: () => DateTime.utc(2026, 9, 5),
+      ),
+    );
+  });
+
+  tearDown(() async {
+    await client.close();
+    await database.close();
+    await directory.delete(recursive: true);
+  });
+
+  test('freezes the shipping it was quoted', () async {
+    final created = await (client.post('/store/carts')
+          ..json({'region_id': 'reg_us'}))
+        .send();
+    final cartId = (created.json! as Map<String, Object?>)['id']! as String;
+
+    (await (client.post('/store/carts/$cartId/line-items')
+              ..json({'variant_id': 'var_small', 'quantity': 1}))
+            .send())
+        .assertOk();
+    (await (client.post('/store/carts/$cartId/shipping-method')
+              ..json({'option_id': 'so_standard'}))
+            .send())
+        .assertOk();
+
+    final placed = await (client.post('/store/checkout')
+          ..json({
+            'cart_id': cartId,
+            'email': 'ada@example.com',
+            'shipping_address': {
+              'first_name': 'Ada',
+              'last_name': 'Lovelace',
+              'line1': '12 Analytical Way',
+              'city': 'London',
+              'postal_code': 'EC1A',
+              'country_code': 'gb',
+            },
+          }))
+        .send();
+
+    placed.assertCreated();
+    final order = Order.fromJson(placed.json! as Map<String, Object?>);
+
+    expect(order.subtotal, Money.of(1999, 'usd'));
+    expect(order.shippingTotal, Money.of(500, 'usd'));
+    expect(order.discountTotal, Money.zero('usd'));
+    expect(order.tax, Money.of(250, 'usd'));
+    expect(order.total, Money.of(2749, 'usd'));
+    expect(order.shippingMethod?.name, 'Standard');
+  });
+}
+
+Future<void> _seed(CommerceDatabase database) async {
+  Future<void> run(String sql) =>
+      queryExecute(sql, []).execute(database.executor);
+
+  await run(
+    r"INSERT INTO regions (id, name, currency_code, tax_rate, countries) "
+    r"VALUES ('reg_us', 'United States', 'usd', 1000, 'us'), "
+    r"('reg_eu', 'Europe', 'eur', 2000, 'de')",
+  );
+  await run(
+    r"INSERT INTO shipping_options (id, region_id, name, amount, currency_code)"
+    r" VALUES "
+    r"('so_standard', 'reg_us', 'Standard', 500, 'usd'), "
+    r"('so_express', 'reg_us', 'Express', 1500, 'usd'), "
+    r"('so_eu_only', 'reg_eu', 'EU post', 400, 'eur')",
+  );
+  await run(
+    r"INSERT INTO products (id, title, handle, status) VALUES "
+    r"('prod_shirt', 'T-Shirt', 't-shirt', 'published')",
+  );
+  await run(
+    r"INSERT INTO product_variants "
+    r"(id, product_id, title, inventory_quantity) VALUES "
+    r"('var_small', 'prod_shirt', 'Small', 50)",
+  );
+  await run(
+    r"INSERT INTO variant_prices (variant_id, currency_code, amount) VALUES "
+    r"('var_small', 'usd', 1999)",
+  );
+}

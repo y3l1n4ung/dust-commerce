@@ -1,5 +1,6 @@
 import 'package:commerce_shared/src/money.dart';
 import 'package:commerce_shared/src/ordering/line_item.dart';
+import 'package:commerce_shared/src/ordering/shipping_method.dart';
 import 'package:commerce_shared/src/region.dart';
 import 'package:dust_dart/serde.dart';
 
@@ -21,6 +22,8 @@ class Cart with _$Cart {
     required this.items,
     this.email,
     this.customerId,
+    this.shippingMethod,
+    this.discount,
   });
 
   /// Creates a [Cart], rejecting lines that do not belong in it.
@@ -33,6 +36,8 @@ class Cart with _$Cart {
     List<LineItem> items = const [],
     String? email,
     String? customerId,
+    ShippingMethod? shippingMethod,
+    Money? discount,
   }) {
     final ids = items.map((item) => item.id).toList();
     if (ids.toSet().length != ids.length) {
@@ -47,12 +52,38 @@ class Cart with _$Cart {
         );
       }
     }
+    if (shippingMethod != null &&
+        shippingMethod.amount.currencyCode != region.currencyCode) {
+      throw ArgumentError.value(
+        shippingMethod.amount.currencyCode,
+        'shippingMethod',
+        'shipping is not priced in ${region.currencyCode}',
+      );
+    }
+    if (discount != null) {
+      if (discount.currencyCode != region.currencyCode) {
+        throw ArgumentError.value(
+          discount.currencyCode,
+          'discount',
+          'a discount is not priced in ${region.currencyCode}',
+        );
+      }
+      if (discount.isNegative) {
+        throw ArgumentError.value(
+          discount,
+          'discount',
+          'a negative discount is a surcharge, which this is not',
+        );
+      }
+    }
     return Cart(
       id: id,
       region: region,
       items: items,
       email: email,
       customerId: customerId,
+      shippingMethod: shippingMethod,
+      discount: discount,
     );
   }
 
@@ -71,8 +102,14 @@ class Cart with _$Cart {
   /// The chosen lines.
   final List<LineItem> items;
 
+  /// What has been taken off, before tax. Never more than the goods.
+  final Money? discount;
+
   /// The selling territory, fixing currency and tax.
   final Region region;
+
+  /// How the goods are to be delivered, once chosen.
+  final ShippingMethod? shippingMethod;
 
   /// Whether this cart holds nothing.
   bool get isEmpty => items.isEmpty;
@@ -86,11 +123,34 @@ class Cart with _$Cart {
         (running, item) => running + item.subtotal,
       );
 
-  /// The tax on [subtotal], under the region's rule.
-  Money get tax => region.taxOn(subtotal);
+  /// What has actually been taken off the goods.
+  ///
+  /// A discount worth more than the cart holds is capped at the cart. Handing
+  /// back the difference as a negative total would be paying the customer to
+  /// shop, and the shipping is a cost the courier charges regardless — so a
+  /// discount reduces the goods and stops there.
+  Money get discountTotal {
+    final asked = discount;
+    if (asked == null) return Money.zero(region.currencyCode);
+    return asked > subtotal ? subtotal : asked;
+  }
+
+  /// What delivery adds.
+  Money get shippingTotal =>
+      shippingMethod?.amount ?? Money.zero(region.currencyCode);
+
+  /// The amount tax is worked out on: goods plus shipping, less the discount.
+  ///
+  /// Shipping is taxed with the goods, which is what most jurisdictions do and
+  /// what Medusa does. The discount comes off before tax rather than after, so
+  /// a customer is not taxed on money they did not pay.
+  Money get taxableTotal => subtotal + shippingTotal - discountTotal;
+
+  /// The tax on [taxableTotal], under the region's rule.
+  Money get tax => region.taxOn(taxableTotal);
 
   /// What the customer pays.
-  Money get total => region.withTax(subtotal);
+  Money get total => region.withTax(taxableTotal);
 
   /// This cart with [line] added.
   ///

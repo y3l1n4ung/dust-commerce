@@ -7,6 +7,7 @@ import 'package:dust_server/server.dart';
 Router cartRoutes(
   CartCreateRepository creates,
   CartReadRepository reads,
+  CartListRepository lists,
   CartUpdateRepository writes,
   CatalogReadRepository catalog, {
   required String Function() nextId,
@@ -21,5 +22,13 @@ Router cartRoutes(
     ..route(
       '/carts/{id}/line-items',
       post(addLineHandler(reads, writes, catalog, nextId: nextId)),
+    )
+    ..route(
+      '/carts/{id}/shipping-options',
+      get(listShippingOptionsHandler(reads, lists)),
+    )
+    ..route(
+      '/carts/{id}/shipping-method',
+      post(chooseShippingHandler(reads, lists, writes)),
     );
 }

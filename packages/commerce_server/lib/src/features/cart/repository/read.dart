@@ -34,6 +34,14 @@ ORDER BY rowid
 ''')
   Future<Result<List<LineItemRow>, SqlxError>> linesOf(String cartId);
 
+  /// The method [cartId] chose, if it has chosen one.
+  @Query(r'''
+SELECT option_id, name, amount
+FROM cart_shipping_methods
+WHERE cart_id = $1
+''')
+  Future<Result<ShippingMethodRow?, SqlxError>> shippingMethodOf(String cartId);
+
   /// The line for [variantId] in [cartId], if the cart already holds one.
   @Query(r'''
 SELECT id, variant_id, product_id, title, variant_title,

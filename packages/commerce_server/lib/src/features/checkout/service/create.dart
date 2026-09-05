@@ -67,8 +67,12 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
       email,
       cart.region.currencyCode,
       cart.subtotal.amount,
+      cart.shippingTotal.amount,
+      cart.discountTotal.amount,
       cart.tax.amount,
       cart.total.amount,
+      cart.shippingMethod?.optionId,
+      cart.shippingMethod?.name,
       placedAt.toUtc().toIso8601String(),
     );
     if (written case Err(:final error)) return Err(error);
@@ -119,6 +123,9 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
         region: cart.region,
         items: cart.items,
         subtotal: cart.subtotal,
+        shippingTotal: cart.shippingTotal,
+        discountTotal: cart.discountTotal,
+        shippingMethod: cart.shippingMethod,
         tax: cart.tax,
         total: cart.total,
         shippingAddress: shippingAddress,

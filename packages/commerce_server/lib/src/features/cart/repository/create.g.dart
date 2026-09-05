@@ -30,6 +30,19 @@ VALUES (?, ?, ?, ?, ?)
   }
 
   @override
+  Future<Result<RegionRow?, SqlxError>> regionById(String id) {
+    return _db.fetchOptional<RegionRow>(
+      r'''
+SELECT id, name, currency_code, tax_rate, tax_inclusive, countries
+FROM regions
+WHERE id = ?
+''',
+      [id],
+      const $RegionRowRowDeserializer().deserialize,
+    );
+  }
+
+  @override
   Future<Result<RegionRow?, SqlxError>> firstRegion() {
     return _db.fetchOptional<RegionRow>(
       r'''

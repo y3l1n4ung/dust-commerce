@@ -2,6 +2,7 @@ import 'package:commerce_shared/src/customers/address.dart';
 import 'package:commerce_shared/src/money.dart';
 import 'package:commerce_shared/src/ordering/cart.dart';
 import 'package:commerce_shared/src/ordering/line_item.dart';
+import 'package:commerce_shared/src/ordering/shipping_method.dart';
 import 'package:commerce_shared/src/region.dart';
 import 'package:dust_dart/serde.dart';
 
@@ -51,12 +52,15 @@ class Order with _$Order {
     required this.region,
     required this.items,
     required this.subtotal,
+    required this.shippingTotal,
+    required this.discountTotal,
     required this.tax,
     required this.total,
     required this.shippingAddress,
     required this.billingAddress,
     required this.placedAt,
     this.customerId,
+    this.shippingMethod,
     this.status = OrderStatus.pending,
     this.paymentStatus = PaymentStatus.awaiting,
   });
@@ -90,6 +94,9 @@ class Order with _$Order {
       region: cart.region,
       items: List<LineItem>.unmodifiable(cart.items),
       subtotal: cart.subtotal,
+      shippingTotal: cart.shippingTotal,
+      discountTotal: cart.discountTotal,
+      shippingMethod: cart.shippingMethod,
       tax: cart.tax,
       total: cart.total,
       shippingAddress: shippingAddress,
@@ -131,7 +138,16 @@ class Order with _$Order {
   /// Lifecycle state.
   final OrderStatus status;
 
-  /// The frozen sum of the lines, before tax.
+  /// The frozen amount taken off the goods.
+  final Money discountTotal;
+
+  /// The delivery service chosen, under the name it had.
+  final ShippingMethod? shippingMethod;
+
+  /// The frozen cost of delivery.
+  final Money shippingTotal;
+
+  /// The frozen sum of the lines, before shipping, discount and tax.
   final Money subtotal;
 
   /// The frozen tax.

@@ -23,6 +23,7 @@ Router buildApp(
   final catalogLists = CatalogListRepository(executor);
   final cartCreates = CartCreateRepository(executor);
   final cartReads = CartReadRepository(executor);
+  final cartLists = CartListRepository(executor);
   final cartWrites = CartUpdateRepository(executor);
   final orderReads = CheckoutReadRepository(executor);
   final orderLists = CheckoutListRepository(executor);
@@ -36,6 +37,7 @@ Router buildApp(
       cartRoutes(
         cartCreates,
         cartReads,
+        cartLists,
         cartWrites,
         catalogReads,
         nextId: identify,

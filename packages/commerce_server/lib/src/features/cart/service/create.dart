@@ -3,20 +3,26 @@ import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
 
-/// Starts an empty cart in the default region.
+/// Starts an empty cart, in [regionId] when one is named.
 ///
-/// A storefront that has not asked for a region still needs a cart, so one is
-/// chosen rather than the request being refused. Returns `Ok(null)` when no
-/// region exists at all, which is a misconfigured shop rather than a bad
-/// request.
+/// A storefront that has not asked for a region still needs a cart, so the
+/// default is used rather than the request being refused. Naming a region
+/// matters as soon as there is more than one: without it the cart's currency
+/// depends on which region sorts first, which is not a decision anybody made.
+///
+/// Returns `Ok(null)` when the named region does not exist, or when the shop
+/// has no regions at all.
 Future<Result<Cart?, SqlxError>> createCart(
   CartCreateRepository writes, {
   required String id,
   required DateTime now,
+  String? regionId,
   String? email,
   String? customerId,
 }) async {
-  final regions = await writes.firstRegion();
+  final regions = regionId == null
+      ? await writes.firstRegion()
+      : await writes.regionById(regionId);
   if (regions case Err(:final error)) return Err(error);
 
   final region = (regions as Ok<RegionRow?, SqlxError>).value;

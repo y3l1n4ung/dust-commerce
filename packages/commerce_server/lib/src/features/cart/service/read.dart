@@ -22,6 +22,10 @@ Future<Result<Cart?, SqlxError>> loadCart(
   final lines = await reads.linesOf(cartId);
   if (lines case Err(:final error)) return Err(error);
 
+  final method = await reads.shippingMethodOf(cartId);
+  if (method case Err(:final error)) return Err(error);
+  final chosen = (method as Ok<ShippingMethodRow?, SqlxError>).value;
+
   return Ok(
     Cart(
       id: row.id,
@@ -39,6 +43,8 @@ Future<Result<Cart?, SqlxError>> loadCart(
           .value
           .map(lineOf)
           .toList(growable: false),
+      shippingMethod:
+          chosen == null ? null : methodOf(chosen, row.currencyCode),
     ),
   );
 }

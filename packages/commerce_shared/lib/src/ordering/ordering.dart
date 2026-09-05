@@ -5,3 +5,4 @@ export 'cart.dart';
 export 'checkout_request.dart';
 export 'line_item.dart';
 export 'order.dart';
+export 'shipping_method.dart';

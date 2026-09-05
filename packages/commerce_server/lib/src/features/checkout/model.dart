@@ -13,6 +13,8 @@ final class OrderRow with _$OrderRow {
     required this.email,
     required this.currencyCode,
     required this.subtotal,
+    required this.shippingTotal,
+    required this.discountTotal,
     required this.tax,
     required this.total,
     required this.status,
@@ -24,6 +26,8 @@ final class OrderRow with _$OrderRow {
     required this.taxInclusive,
     required this.countries,
     this.customerId,
+    this.shippingOptionId,
+    this.shippingName,
   });
 
   /// The countries the region serves, comma separated.
@@ -62,7 +66,23 @@ final class OrderRow with _$OrderRow {
   /// Lifecycle state.
   final String status;
 
-  /// The frozen sum of the lines, before tax.
+  /// The frozen amount taken off the goods.
+  @Sqlx(rename: 'discount_total')
+  final int discountTotal;
+
+  /// The delivery service name at the time of ordering.
+  @Sqlx(rename: 'shipping_name')
+  final String? shippingName;
+
+  /// The option the delivery method came from.
+  @Sqlx(rename: 'shipping_option_id')
+  final String? shippingOptionId;
+
+  /// The frozen cost of delivery.
+  @Sqlx(rename: 'shipping_total')
+  final int shippingTotal;
+
+  /// The frozen sum of the lines, before shipping, discount and tax.
   final int subtotal;
 
   /// The frozen tax.
@@ -173,6 +193,20 @@ Order orderOf(
     ),
     items: items.map(lineOf).toList(growable: false),
     subtotal: Money(amount: row.subtotal, currencyCode: row.currencyCode),
+    shippingTotal:
+        Money(amount: row.shippingTotal, currencyCode: row.currencyCode),
+    discountTotal:
+        Money(amount: row.discountTotal, currencyCode: row.currencyCode),
+    shippingMethod: row.shippingOptionId == null
+        ? null
+        : ShippingMethod(
+            optionId: row.shippingOptionId!,
+            name: row.shippingName ?? 'Delivery',
+            amount: Money(
+              amount: row.shippingTotal,
+              currencyCode: row.currencyCode,
+            ),
+          ),
     tax: Money(amount: row.tax, currencyCode: row.currencyCode),
     total: Money(amount: row.total, currencyCode: row.currencyCode),
     shippingAddress: addressOf(shipping),

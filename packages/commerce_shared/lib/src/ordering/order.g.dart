@@ -35,6 +35,9 @@ mixin _$Order implements Serializable {
         'region: ${self.region}, '
         'shippingAddress: ${self.shippingAddress}, '
         'status: ${self.status}, '
+        'discountTotal: ${self.discountTotal}, '
+        'shippingMethod: ${self.shippingMethod}, '
+        'shippingTotal: ${self.shippingTotal}, '
         'subtotal: ${self.subtotal}, '
         'tax: ${self.tax}, '
         'total: ${self.total}'
@@ -57,6 +60,9 @@ mixin _$Order implements Serializable {
             other.region == self.region &&
             other.shippingAddress == self.shippingAddress &&
             other.status == self.status &&
+            other.discountTotal == self.discountTotal &&
+            other.shippingMethod == self.shippingMethod &&
+            other.shippingTotal == self.shippingTotal &&
             other.subtotal == self.subtotal &&
             other.tax == self.tax &&
             other.total == self.total;
@@ -77,6 +83,9 @@ mixin _$Order implements Serializable {
       self.region,
       self.shippingAddress,
       self.status,
+      self.discountTotal,
+      self.shippingMethod,
+      self.shippingTotal,
       self.subtotal,
       self.tax,
       self.total,
@@ -113,6 +122,9 @@ abstract class _$OrderCopyWith<$Res> {
     Region? region,
     Address? shippingAddress,
     OrderStatus? status,
+    Money? discountTotal,
+    ShippingMethod? shippingMethod,
+    Money? shippingTotal,
     Money? subtotal,
     Money? tax,
     Money? total,
@@ -139,6 +151,9 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
     Object? region = null,
     Object? shippingAddress = null,
     Object? status = null,
+    Object? discountTotal = null,
+    Object? shippingMethod = _orderCopyWithUnset,
+    Object? shippingTotal = null,
     Object? subtotal = null,
     Object? tax = null,
     Object? total = null,
@@ -150,6 +165,8 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
         region: region == null ? _self.region : region as Region,
         items: items == null ? _self.items : items as List<LineItem>,
         subtotal: subtotal == null ? _self.subtotal : subtotal as Money,
+        shippingTotal: shippingTotal == null ? _self.shippingTotal : shippingTotal as Money,
+        discountTotal: discountTotal == null ? _self.discountTotal : discountTotal as Money,
         tax: tax == null ? _self.tax : tax as Money,
         total: total == null ? _self.total : total as Money,
         shippingAddress: shippingAddress == null ? _self.shippingAddress : shippingAddress as Address,
@@ -158,6 +175,9 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
         customerId: identical(customerId, _orderCopyWithUnset)
             ? _self.customerId
             : customerId as String?,
+        shippingMethod: identical(shippingMethod, _orderCopyWithUnset)
+            ? _self.shippingMethod
+            : shippingMethod as ShippingMethod?,
         status: status == null ? _self.status : status as OrderStatus,
         paymentStatus: paymentStatus == null ? _self.paymentStatus : paymentStatus as PaymentStatus,
       )
@@ -215,6 +235,11 @@ Map<String, Object?> _$OrderSerialize(Order instance) {
     'region': instance.region.toJson(),
     'shipping_address': instance.shippingAddress.toJson(),
     'status': _$OrderStatusSerialize(instance.status),
+    'discount_total': instance.discountTotal.toJson(),
+    'shipping_method': instance.shippingMethod == null
+        ? null
+        : (instance.shippingMethod!).toJson(),
+    'shipping_total': instance.shippingTotal.toJson(),
     'subtotal': instance.subtotal.toJson(),
     'tax': instance.tax.toJson(),
     'total': instance.total.toJson(),
@@ -248,6 +273,15 @@ Order _$OrderDeserialize(Map<String, Object?> json) {
     JsonHelper.asMap(json['shipping_address'], 'shipping_address'),
   );
   final statusValue = _$OrderStatusDeserialize(json['status'], 'status');
+  final discountTotalValue = Money.fromJson(
+    JsonHelper.asMap(json['discount_total'], 'discount_total'),
+  );
+  final shippingMethodValue = json['shipping_method'] == null
+      ? null
+      : ShippingMethod.fromJson(JsonHelper.asMap(json['shipping_method'], 'shipping_method'));
+  final shippingTotalValue = Money.fromJson(
+    JsonHelper.asMap(json['shipping_total'], 'shipping_total'),
+  );
   final subtotalValue = Money.fromJson(
     JsonHelper.asMap(json['subtotal'], 'subtotal'),
   );
@@ -260,12 +294,15 @@ Order _$OrderDeserialize(Map<String, Object?> json) {
     region: regionValue,
     items: itemsValue,
     subtotal: subtotalValue,
+    shippingTotal: shippingTotalValue,
+    discountTotal: discountTotalValue,
     tax: taxValue,
     total: totalValue,
     shippingAddress: shippingAddressValue,
     billingAddress: billingAddressValue,
     placedAt: placedAtValue,
     customerId: customerIdValue,
+    shippingMethod: shippingMethodValue,
     status: statusValue,
     paymentStatus: paymentStatusValue,
   );

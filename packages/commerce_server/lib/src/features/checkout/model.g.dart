@@ -28,6 +28,10 @@ mixin _$OrderRow {
         'regionId: ${self.regionId}, '
         'regionName: ${self.regionName}, '
         'status: ${self.status}, '
+        'discountTotal: ${self.discountTotal}, '
+        'shippingName: ${self.shippingName}, '
+        'shippingOptionId: ${self.shippingOptionId}, '
+        'shippingTotal: ${self.shippingTotal}, '
         'subtotal: ${self.subtotal}, '
         'tax: ${self.tax}, '
         'taxInclusive: ${self.taxInclusive}, '
@@ -52,6 +56,10 @@ mixin _$OrderRow {
             other.regionId == self.regionId &&
             other.regionName == self.regionName &&
             other.status == self.status &&
+            other.discountTotal == self.discountTotal &&
+            other.shippingName == self.shippingName &&
+            other.shippingOptionId == self.shippingOptionId &&
+            other.shippingTotal == self.shippingTotal &&
             other.subtotal == self.subtotal &&
             other.tax == self.tax &&
             other.taxInclusive == self.taxInclusive &&
@@ -74,6 +82,10 @@ mixin _$OrderRow {
       self.regionId,
       self.regionName,
       self.status,
+      self.discountTotal,
+      self.shippingName,
+      self.shippingOptionId,
+      self.shippingTotal,
       self.subtotal,
       self.tax,
       self.taxInclusive,
@@ -144,6 +156,8 @@ OrderRow _$OrderRowFromRow(Row row) {
     email: row.read<String>('email'),
     currencyCode: row.read<String>('currency_code'),
     subtotal: row.read<int>('subtotal'),
+    shippingTotal: row.read<int>('shipping_total'),
+    discountTotal: row.read<int>('discount_total'),
     tax: row.read<int>('tax'),
     total: row.read<int>('total'),
     status: row.read<String>('status'),
@@ -155,6 +169,8 @@ OrderRow _$OrderRowFromRow(Row row) {
     taxInclusive: row.read<int>('tax_inclusive'),
     countries: row.read<String>('countries'),
     customerId: row.readNullable<String>('customer_id'),
+    shippingOptionId: row.readNullable<String>('shipping_option_id'),
+    shippingName: row.readNullable<String>('shipping_name'),
   );
 }
 

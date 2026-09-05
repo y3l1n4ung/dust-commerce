@@ -50,6 +50,19 @@ ORDER BY rowid
   }
 
   @override
+  Future<Result<ShippingMethodRow?, SqlxError>> shippingMethodOf(String cartId) {
+    return _db.fetchOptional<ShippingMethodRow>(
+      r'''
+SELECT option_id, name, amount
+FROM cart_shipping_methods
+WHERE cart_id = ?
+''',
+      [cartId],
+      const $ShippingMethodRowRowDeserializer().deserialize,
+    );
+  }
+
+  @override
   Future<Result<LineItemRow?, SqlxError>> findLine(String cartId, String variantId) {
     return _db.fetchOptional<LineItemRow>(
       r'''

@@ -23,6 +23,14 @@ VALUES ($1, $2, $3, $4, $5)
     String createdAt,
   );
 
+  /// One region by id, for a storefront that has chosen one.
+  @Query(r'''
+SELECT id, name, currency_code, tax_rate, tax_inclusive, countries
+FROM regions
+WHERE id = $1
+''')
+  Future<Result<RegionRow?, SqlxError>> regionById(String id);
+
   /// The default region, for a storefront that has not chosen one.
   @Query(r'''
 SELECT id, name, currency_code, tax_rate, tax_inclusive, countries

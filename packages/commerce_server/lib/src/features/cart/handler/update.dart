@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
+import 'package:commerce_server/src/features/cart/handler/read.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
 import 'package:commerce_server/src/features/catalog/repository/repository.dart';
 import 'package:commerce_server/src/http/http.dart';
@@ -77,14 +78,58 @@ Future<Response> _reload(CartReadRepository reads, String cartId) async {
   final reloaded = await loadCart(reads, cartId);
 
   return switch (reloaded) {
-    Ok(value: final cart?) => jsonResponse({
-        ...cart.toJson(),
-        'subtotal': cart.subtotal.toJson(),
-        'tax': cart.tax.toJson(),
-        'total': cart.total.toJson(),
-        'item_count': cart.itemCount,
-      }),
+    Ok(value: final cart?) => jsonResponse(cartBody(cart)),
     Ok() => notFound('Cart "$cartId"'),
     Err() => internalError(),
+  };
+}
+
+/// `POST /carts/{id}/shipping-method` — choose how the goods travel.
+///
+/// A 422 rather than a 404 for an unknown option: the cart in the path exists,
+/// it is the body that names something this region does not offer.
+Handler chooseShippingHandler(
+  CartReadRepository reads,
+  CartListRepository lists,
+  CartUpdateRepository writes,
+) {
+  return (Request request) async {
+    final cartId = pathParametersOf(request)['id'];
+    if (cartId == null || cartId.isEmpty) {
+      return badRequest('A cart id is required');
+    }
+
+    final Map<String, Object?> body;
+    try {
+      final decoded = jsonDecode(await request.readAsString());
+      if (decoded is! Map<String, Object?>) {
+        return badRequest('Expected a JSON object');
+      }
+      body = decoded;
+    } on FormatException {
+      return badRequest('Expected a JSON object');
+    }
+
+    final optionId = body['option_id'];
+    if (optionId is! String || optionId.isEmpty) {
+      return unprocessable('option_id is required');
+    }
+
+    final result = await chooseShipping(
+      reads,
+      lists,
+      writes,
+      cartId: cartId,
+      optionId: optionId,
+    );
+
+    return switch (result) {
+      Ok(value: null) => await _reload(reads, cartId),
+      Ok(value: ChooseShippingFailure.noCart) => notFound('Cart "$cartId"'),
+      Ok(value: ChooseShippingFailure.noOption) => unprocessable(
+          'Shipping option "$optionId" is not offered in this region',
+        ),
+      Err() => internalError(),
+    };
   };
 }

@@ -47,6 +47,21 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   }
 
   @override
+  Future<Result<ExecResult, SqlxError>> setShippingMethod(String cartId, String optionId, String name, int amount) {
+    return _db.execute(
+      r'''
+INSERT INTO cart_shipping_methods (cart_id, option_id, name, amount)
+VALUES (?, ?, ?, ?)
+ON CONFLICT (cart_id) DO UPDATE
+SET option_id = excluded.option_id,
+    name = excluded.name,
+    amount = excluded.amount
+''',
+      [cartId, optionId, name, amount],
+    );
+  }
+
+  @override
   Future<Result<ExecResult, SqlxError>> setCartEmail(String cartId, String email) {
     return _db.execute(
       r'''UPDATE carts SET email = ? WHERE id = ?''',

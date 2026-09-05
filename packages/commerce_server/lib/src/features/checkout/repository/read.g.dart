@@ -22,8 +22,10 @@ final class _$CheckoutReadRepository implements CheckoutReadRepository {
   Future<Result<OrderRow?, SqlxError>> findOrder(String id) {
     return _db.fetchOptional<OrderRow>(
       r'''
-SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal, o.tax,
-       o.total, o.status, o.payment_status, o.placed_at, o.region_id,
+SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
+       o.shipping_total, o.discount_total, o.tax, o.total, o.status,
+       o.payment_status, o.placed_at, o.region_id,
+       o.shipping_option_id, o.shipping_name,
        r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries
 FROM orders o
 JOIN regions r ON r.id = o.region_id
