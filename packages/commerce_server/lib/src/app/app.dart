@@ -1,6 +1,7 @@
+import 'package:commerce_server/src/features/cart/cart.dart';
 import 'package:commerce_server/src/features/catalog/catalog.dart';
-import 'package:dust_dart/db.dart';
 import 'package:commerce_server/src/infra/database.dart';
+import 'package:dust_dart/db.dart';
 import 'package:dust_server/server.dart';
 
 /// Mounts every feature's routes onto one router.
@@ -9,12 +10,26 @@ import 'package:dust_server/server.dart';
 /// knows nothing about what any handler does. A feature is added here in one
 /// line or it is not reachable.
 ///
-/// Repositories wrap the database's connection rather than owning it, so
-/// building one is free and the application closes the database exactly once.
-Router buildApp(CommerceDatabase database) {
-  final catalog = CatalogRepository(database.executor);
+/// Identifiers and the clock are injected rather than reached for. A test that
+/// cannot choose them has to assert around them instead of on them.
+Router buildApp(
+  CommerceDatabase database, {
+  String Function()? nextId,
+  DateTime Function()? now,
+}) {
+  final executor = database.executor;
+  final catalog = CatalogRepository(executor);
+  final carts = CartRepository(executor);
+  final identify = nextId ?? _randomId;
+  final clock = now ?? DateTime.now;
 
   return Router()
     ..nest('/store', catalogRoutes(catalog))
+    ..nest('/store', cartRoutes(carts, catalog, nextId: identify, now: clock))
     ..route('/health', get((_) async => jsonResponse({'status': 'ok'})));
 }
+
+int _counter = 0;
+
+String _randomId() =>
+    'id_${DateTime.now().microsecondsSinceEpoch}_${_counter++}';
