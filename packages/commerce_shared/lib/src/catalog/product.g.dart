@@ -13,6 +13,7 @@
 
 part of 'product.dart';
 
+const DeepCollectionEquality _productImagesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productOptionsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productVariantsEquality = DeepCollectionEquality();
 final class _ProductCopyWithUnset {
@@ -27,8 +28,10 @@ mixin _$Product implements Serializable {
     final self = this as Product;
     return 'Product('
         'description: ${self.description}, '
+        'details: ${self.details}, '
         'handle: ${self.handle}, '
         'id: ${self.id}, '
+        'images: ${self.images}, '
         'options: ${self.options}, '
         'status: ${self.status}, '
         'title: ${self.title}, '
@@ -44,8 +47,10 @@ mixin _$Product implements Serializable {
         other is Product &&
             runtimeType == other.runtimeType &&
             other.description == self.description &&
+            other.details == self.details &&
             other.handle == self.handle &&
             other.id == self.id &&
+            _productImagesEquality.equals(other.images, self.images) &&
             _productOptionsEquality.equals(other.options, self.options) &&
             other.status == self.status &&
             other.title == self.title &&
@@ -59,8 +64,10 @@ mixin _$Product implements Serializable {
     return Object.hashAll([
       runtimeType,
       self.description,
+      self.details,
       self.handle,
       self.id,
+      _productImagesEquality.hash(self.images),
       _productOptionsEquality.hash(self.options),
       self.status,
       self.title,
@@ -90,8 +97,10 @@ mixin _$Product implements Serializable {
 abstract class _$ProductCopyWith<$Res> {
   $Res call({
     String? description,
+    ProductDetails? details,
     String? handle,
     String? id,
+    List<String>? images,
     List<ProductOption>? options,
     ProductStatus? status,
     String? title,
@@ -111,8 +120,10 @@ final class _$ProductCopyWithImpl<$Res> implements _$ProductCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? description = _productCopyWithUnset,
+    Object? details = null,
     Object? handle = null,
     Object? id = null,
+    Object? images = null,
     Object? options = null,
     Object? status = null,
     Object? title = null,
@@ -127,9 +138,11 @@ final class _$ProductCopyWithImpl<$Res> implements _$ProductCopyWith<$Res> {
         status: status == null ? _self.status : status as ProductStatus,
         options: options == null ? _self.options : options as List<ProductOption>,
         variants: variants == null ? _self.variants : variants as List<ProductVariant>,
+        details: details == null ? _self.details : details as ProductDetails,
         description: identical(description, _productCopyWithUnset)
             ? _self.description
             : description as String?,
+        images: images == null ? _self.images : images as List<String>,
         thumbnail: identical(thumbnail, _productCopyWithUnset)
             ? _self.thumbnail
             : thumbnail as String?,
@@ -165,8 +178,12 @@ final class $ProductStatusDeserializer implements Deserializer<ProductStatus, Ob
 Map<String, Object?> _$ProductSerialize(Product instance) {
   return <String, Object?>{
     'description': instance.description,
+    'details': instance.details.toJson(),
     'handle': instance.handle,
     'id': instance.id,
+    'images': instance.images
+        .map((item) => item)
+        .toList(),
     'options': instance.options
         .map((item) => item.toJson())
         .toList(),
@@ -187,8 +204,13 @@ Product _$ProductDeserialize(Map<String, Object?> json) {
   final descriptionValue = json['description'] == null
       ? null
       : JsonHelper.as<String>(json['description'], 'description', 'String');
+  final detailsValue = ProductDetails.fromJson(
+    JsonHelper.asMap(json['details'], 'details'),
+  );
   final handleValue = JsonHelper.as<String>(json['handle'], 'handle', 'String');
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final imagesValue = JsonHelper.decodeList(json['images'], 'images',
+      (item, itemKey) => JsonHelper.as<String>(item, itemKey, 'String'));
   final optionsValue = JsonHelper.decodeList(json['options'], 'options',
       (item, itemKey) => ProductOption.fromJson(JsonHelper.asMap(item, itemKey)));
   final statusValue = _$ProductStatusDeserialize(json['status'], 'status');
@@ -206,7 +228,9 @@ Product _$ProductDeserialize(Map<String, Object?> json) {
     status: statusValue,
     options: optionsValue,
     variants: variantsValue,
+    details: detailsValue,
     description: descriptionValue,
+    images: imagesValue,
     thumbnail: thumbnailValue,
   );
 }

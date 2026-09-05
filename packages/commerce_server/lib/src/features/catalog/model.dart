@@ -18,17 +18,41 @@ final class ProductRow with _$ProductRow {
     required this.handle,
     required this.status,
     this.description,
+    this.height,
+    this.length,
+    this.material,
+    this.originCountry,
+    this.productType,
     this.thumbnail,
+    this.weight,
+    this.width,
   });
 
   /// Long-form copy.
   final String? description;
+
+  /// Height in the merchant's configured unit.
+  final int? height;
 
   /// URL-safe identifier.
   final String handle;
 
   /// The primary key.
   final String id;
+
+  /// Length in the merchant's configured unit.
+  final int? length;
+
+  /// Merchant-facing composition.
+  final String? material;
+
+  /// ISO 3166-1 alpha-2 country code.
+  @Sqlx(rename: 'origin_country')
+  final String? originCountry;
+
+  /// Simple product classification.
+  @Sqlx(rename: 'product_type')
+  final String? productType;
 
   /// Publishing state, as stored.
   final String status;
@@ -38,6 +62,37 @@ final class ProductRow with _$ProductRow {
 
   /// Display name.
   final String title;
+
+  /// Weight in the merchant's configured unit.
+  final int? weight;
+
+  /// Width in the merchant's configured unit.
+  final int? width;
+}
+
+/// One ordered gallery entry from `product_images`.
+@Derive([ToString(), Eq(), FromRow()])
+final class ProductImageRow with _$ProductImageRow {
+  /// Creates a [ProductImageRow].
+  const ProductImageRow({
+    required this.id,
+    required this.productId,
+    required this.url,
+    required this.rank,
+  });
+
+  /// Stable image identity.
+  final String id;
+
+  /// Product that owns this asset.
+  @Sqlx(rename: 'product_id')
+  final String productId;
+
+  /// Position in the product gallery.
+  final int rank;
+
+  /// Remote merchant asset.
+  final String url;
 }
 
 /// One row of `product_variants`, joined with its price in one currency.
@@ -155,12 +210,23 @@ Product assembleProduct(
   List<VariantRow> variants, {
   List<ProductOptionRow> options = const [],
   List<VariantOptionValueRow> optionValues = const [],
+  List<ProductImageRow> images = const [],
 }) {
   return Product(
     id: product.id,
     title: product.title,
     handle: product.handle,
     description: product.description,
+    details: ProductDetails(
+      material: product.material,
+      originCountry: product.originCountry,
+      productType: product.productType,
+      weight: product.weight,
+      length: product.length,
+      width: product.width,
+      height: product.height,
+    ),
+    images: images.map((image) => image.url).toList(growable: false),
     thumbnail: product.thumbnail,
     status: _status(product.status),
     options: options.map(assembleOption).toList(growable: false),

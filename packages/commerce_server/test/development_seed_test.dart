@@ -19,8 +19,9 @@ void main() {
     await seedDevelopmentStore(database);
 
     expect(await _count(database, 'products'), 4);
-    expect(await _count(database, 'product_variants'), 10);
-    expect(await _count(database, 'variant_option_values'), 10);
+    expect(await _count(database, 'product_variants'), 14);
+    expect(await _count(database, 'variant_option_values'), 22);
+    expect(await _count(database, 'product_images'), 10);
     expect(await _count(database, 'shipping_options'), 2);
     expect(await _count(database, 'promotions'), 1);
 
@@ -29,6 +30,12 @@ void main() {
       ['https://%'],
     ).fetchOne(database.executor);
     expect(thumbnails, 4);
+
+    final images = await queryScalar<int>(
+      "SELECT COUNT(*) FROM product_images WHERE product_id = 'prod_tshirt'",
+      const [],
+    ).fetchOne(database.executor);
+    expect(images, 4);
   });
 }
 

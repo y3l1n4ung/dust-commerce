@@ -19,11 +19,18 @@ mixin _$ProductRow {
     final self = this as ProductRow;
     return 'ProductRow('
         'description: ${self.description}, '
+        'height: ${self.height}, '
         'handle: ${self.handle}, '
         'id: ${self.id}, '
+        'length: ${self.length}, '
+        'material: ${self.material}, '
+        'originCountry: ${self.originCountry}, '
+        'productType: ${self.productType}, '
         'status: ${self.status}, '
         'thumbnail: ${self.thumbnail}, '
-        'title: ${self.title}'
+        'title: ${self.title}, '
+        'weight: ${self.weight}, '
+        'width: ${self.width}'
         ')';
   }
 
@@ -34,11 +41,18 @@ mixin _$ProductRow {
         other is ProductRow &&
             runtimeType == other.runtimeType &&
             other.description == self.description &&
+            other.height == self.height &&
             other.handle == self.handle &&
             other.id == self.id &&
+            other.length == self.length &&
+            other.material == self.material &&
+            other.originCountry == self.originCountry &&
+            other.productType == self.productType &&
             other.status == self.status &&
             other.thumbnail == self.thumbnail &&
-            other.title == self.title;
+            other.title == self.title &&
+            other.weight == self.weight &&
+            other.width == self.width;
   }
 
   @override
@@ -47,11 +61,55 @@ mixin _$ProductRow {
     return Object.hashAll([
       runtimeType,
       self.description,
+      self.height,
       self.handle,
       self.id,
+      self.length,
+      self.material,
+      self.originCountry,
+      self.productType,
       self.status,
       self.thumbnail,
       self.title,
+      self.weight,
+      self.width,
+    ]);
+  }
+}
+
+mixin _$ProductImageRow {
+  @override
+  String toString() {
+    final self = this as ProductImageRow;
+    return 'ProductImageRow('
+        'id: ${self.id}, '
+        'productId: ${self.productId}, '
+        'rank: ${self.rank}, '
+        'url: ${self.url}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ProductImageRow;
+    return identical(this, other) ||
+        other is ProductImageRow &&
+            runtimeType == other.runtimeType &&
+            other.id == self.id &&
+            other.productId == self.productId &&
+            other.rank == self.rank &&
+            other.url == self.url;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as ProductImageRow;
+    return Object.hashAll([
+      runtimeType,
+      self.id,
+      self.productId,
+      self.rank,
+      self.url,
     ]);
   }
 }
@@ -186,7 +244,14 @@ ProductRow _$ProductRowFromRow(Row row) {
     handle: row.read<String>('handle'),
     status: row.read<String>('status'),
     description: row.readNullable<String>('description'),
+    height: row.readNullable<int>('height'),
+    length: row.readNullable<int>('length'),
+    material: row.readNullable<String>('material'),
+    originCountry: row.readNullable<String>('origin_country'),
+    productType: row.readNullable<String>('product_type'),
     thumbnail: row.readNullable<String>('thumbnail'),
+    weight: row.readNullable<int>('weight'),
+    width: row.readNullable<int>('width'),
   );
 }
 
@@ -214,6 +279,41 @@ extension $ProductRowQuery on QueryAs<ProductRow> {
   /// Fetches every row.
   Future<List<ProductRow>> fetchAll(DatabaseExecutor db) =>
       fetchAllWith(db, _$ProductRowFromRow);
+}
+
+ProductImageRow _$ProductImageRowFromRow(Row row) {
+  return ProductImageRow(
+    id: row.read<String>('id'),
+    productId: row.read<String>('product_id'),
+    url: row.read<String>('url'),
+    rank: row.read<int>('rank'),
+  );
+}
+
+/// Row deserializer for [ProductImageRow].
+final class $ProductImageRowRowDeserializer implements RowDeserializer<ProductImageRow> {
+  const $ProductImageRowRowDeserializer();
+
+  @override
+  ProductImageRow deserialize(Row row) => _$ProductImageRowFromRow(row);
+}
+
+/// Typed row query terminals for [ProductImageRow].
+///
+/// Resolved from the static type of the receiver, so a row type with no
+/// `FromRow` has no terminals and the call does not compile.
+extension $ProductImageRowQuery on QueryAs<ProductImageRow> {
+  /// Fetches exactly one row.
+  Future<ProductImageRow> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$ProductImageRowFromRow);
+
+  /// Fetches zero or one row.
+  Future<ProductImageRow?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$ProductImageRowFromRow);
+
+  /// Fetches every row.
+  Future<List<ProductImageRow>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$ProductImageRowFromRow);
 }
 
 VariantRow _$VariantRowFromRow(Row row) {

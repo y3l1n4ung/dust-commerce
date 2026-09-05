@@ -20,7 +20,8 @@ abstract final class CatalogListRepository {
   /// Draft and rejected products are excluded in SQL rather than in Dart. A
   /// filter that lives in the query cannot be forgotten by a caller.
   @Query(r'''
-SELECT id, title, handle, description, thumbnail, status
+SELECT id, title, handle, description, thumbnail, material, origin_country,
+       product_type, weight, length, width, height, status
 FROM products
 WHERE status = 'published'
 ORDER BY handle
@@ -58,6 +59,15 @@ WHERE product_id = $1
 ORDER BY id
 ''')
   Future<Result<List<ProductOptionRow>, SqlxError>> optionsOf(String productId);
+
+  /// Ordered gallery images for [productId].
+  @Query(r'''
+SELECT id, product_id, url, rank
+FROM product_images
+WHERE product_id = $1 AND deleted_at IS NULL
+ORDER BY rank
+''')
+  Future<Result<List<ProductImageRow>, SqlxError>> imagesOf(String productId);
 
   /// The option values every variant of [productId] was built from.
   ///

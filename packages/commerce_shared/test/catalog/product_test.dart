@@ -20,6 +20,8 @@ void main() {
         title: 'T-Shirt',
         handle: 'T-Shirt',
         status: status,
+        details: const ProductDetails(weight: 400),
+        images: const ['https://example.test/shirt.png'],
         options: [
           ProductOption.of(
             id: 'opt_size',
@@ -107,6 +109,13 @@ void main() {
 
     test('encodes status as its wire name', () {
       expect(product().toJson()['status'], 'published');
+    });
+
+    test('preserves gallery and product information', () {
+      final decoded = Product.fromJson(product().toJson());
+
+      expect(decoded.images, ['https://example.test/shirt.png']);
+      expect(decoded.details.weight, 400);
     });
   });
 }

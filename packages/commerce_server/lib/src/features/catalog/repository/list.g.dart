@@ -22,7 +22,8 @@ final class _$CatalogListRepository implements CatalogListRepository {
   Future<Result<List<ProductRow>, SqlxError>> listPublished(int limit, int offset) {
     return _db.fetchAll<ProductRow>(
       r'''
-SELECT id, title, handle, description, thumbnail, status
+SELECT id, title, handle, description, thumbnail, material, origin_country,
+       product_type, weight, length, width, height, status
 FROM products
 WHERE status = 'published'
 ORDER BY handle
@@ -61,6 +62,20 @@ ORDER BY id
 ''',
       [productId],
       const $ProductOptionRowRowDeserializer().deserialize,
+    );
+  }
+
+  @override
+  Future<Result<List<ProductImageRow>, SqlxError>> imagesOf(String productId) {
+    return _db.fetchAll<ProductImageRow>(
+      r'''
+SELECT id, product_id, url, rank
+FROM product_images
+WHERE product_id = ? AND deleted_at IS NULL
+ORDER BY rank
+''',
+      [productId],
+      const $ProductImageRowRowDeserializer().deserialize,
     );
   }
 

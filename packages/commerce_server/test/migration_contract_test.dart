@@ -18,7 +18,7 @@ void main() {
     final downs =
         files.where((file) => file.path.endsWith('.down.sql')).toList();
 
-    expect(ups, hasLength(20));
+    expect(ups, hasLength(21));
     expect(downs, hasLength(ups.length));
 
     for (final up in ups) {

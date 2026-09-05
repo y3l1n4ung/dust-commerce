@@ -104,6 +104,7 @@ void main() {
       expect(product.variants, hasLength(2));
       expect(product.cheapestIn('usd'), Money.of(1999, 'usd'));
       expect(product.isPurchasable, isTrue);
+      expect(product.images, ['https://example.test/shirt-front.png']);
     });
 
     test('answers 404 for a draft, not 403, so nothing leaks', () async {
@@ -180,10 +181,14 @@ Future<void> _seed(CommerceDatabase database) async {
       queryExecute(sql, []).execute(database.executor);
 
   await run(
-    r"INSERT INTO products (id, title, handle, status) VALUES "
-    r"('prod_shirt', 'T-Shirt', 't-shirt', 'published'), "
-    r"('prod_mug', 'Mug', 'mug', 'published'), "
-    r"('prod_secret', 'Hoodie', 'secret-hoodie', 'draft')",
+    r"INSERT INTO products (id, title, handle, weight, status) VALUES "
+    r"('prod_shirt', 'T-Shirt', 't-shirt', 400, 'published'), "
+    r"('prod_mug', 'Mug', 'mug', NULL, 'published'), "
+    r"('prod_secret', 'Hoodie', 'secret-hoodie', NULL, 'draft')",
+  );
+  await run(
+    r"INSERT INTO product_images (id, product_id, url, rank) VALUES "
+    r"('img_shirt', 'prod_shirt', 'https://example.test/shirt-front.png', 0)",
   );
   await run(
     r"INSERT INTO product_variants "

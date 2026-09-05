@@ -12,7 +12,8 @@ abstract final class CatalogReadRepository {
 
   /// One published product by the handle the storefront routed on.
   @Query(r'''
-SELECT id, title, handle, description, thumbnail, status
+SELECT id, title, handle, description, thumbnail, material, origin_country,
+       product_type, weight, length, width, height, status
 FROM products
 WHERE handle = $1 AND status = 'published'
 ''')

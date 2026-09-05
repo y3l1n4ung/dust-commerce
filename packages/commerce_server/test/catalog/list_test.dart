@@ -97,6 +97,17 @@ void main() {
     });
   });
 
+  group('imagesOf', () {
+    test('returns active product images in merchant order', () async {
+      final rows = ok(await lists.imagesOf('prod_shirt'));
+
+      expect(rows.map((row) => row.url), [
+        'https://example.test/front.png',
+        'https://example.test/back.png',
+      ]);
+    });
+  });
+
   group('findVariant', () {
     test('finds one variant with its price', () async {
       final row = ok(await reads.findVariant('var_small', 'usd'));
@@ -127,6 +138,11 @@ Future<void> _seed(CommerceDatabase database) async {
     r"(id, product_id, title, inventory_quantity) VALUES "
     r"('var_small', 'prod_shirt', 'Small', 5), "
     r"('var_large', 'prod_shirt', 'Large', 2)",
+  );
+  await run(
+    r"INSERT INTO product_images (id, product_id, url, rank) VALUES "
+    r"('img_back', 'prod_shirt', 'https://example.test/back.png', 1), "
+    r"('img_front', 'prod_shirt', 'https://example.test/front.png', 0)",
   );
   await run(
     r"INSERT INTO variant_prices (variant_id, currency_code, amount) VALUES "

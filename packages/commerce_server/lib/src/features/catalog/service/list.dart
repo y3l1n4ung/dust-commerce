@@ -85,6 +85,9 @@ Future<Result<Product, SqlxError>> _assemble(
   final chosen = await lists.optionValuesOf(row.id);
   if (chosen case Err(:final error)) return Err(error);
 
+  final images = await lists.imagesOf(row.id);
+  if (images case Err(:final error)) return Err(error);
+
   return Ok(
     assembleProduct(
       row,
@@ -92,6 +95,7 @@ Future<Result<Product, SqlxError>> _assemble(
       options: (options as Ok<List<ProductOptionRow>, SqlxError>).value,
       optionValues:
           (chosen as Ok<List<VariantOptionValueRow>, SqlxError>).value,
+      images: (images as Ok<List<ProductImageRow>, SqlxError>).value,
     ),
   );
 }

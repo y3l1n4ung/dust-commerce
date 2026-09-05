@@ -1,3 +1,4 @@
+import 'package:commerce_shared/src/catalog/details.dart';
 import 'package:commerce_shared/src/catalog/option.dart';
 import 'package:commerce_shared/src/catalog/variant.dart';
 import 'package:commerce_shared/src/money.dart';
@@ -44,7 +45,9 @@ class Product with _$Product {
     required this.status,
     required this.options,
     required this.variants,
+    this.details = const ProductDetails(),
     this.description,
+    this.images = const [],
     this.thumbnail,
   });
 
@@ -58,7 +61,9 @@ class Product with _$Product {
     required String title,
     required String handle,
     ProductStatus status = ProductStatus.draft,
+    ProductDetails details = const ProductDetails(),
     String? description,
+    List<String> images = const [],
     String? thumbnail,
     List<ProductOption> options = const [],
     List<ProductVariant> variants = const [],
@@ -75,7 +80,9 @@ class Product with _$Product {
       title: title,
       handle: _slugify(handle),
       status: status,
+      details: details,
       description: description,
+      images: images,
       thumbnail: thumbnail,
       options: options,
       variants: variants,
@@ -89,11 +96,17 @@ class Product with _$Product {
   /// Long-form copy.
   final String? description;
 
+  /// Physical and merchandising facts shown below the description.
+  final ProductDetails details;
+
   /// URL-safe identifier the storefront routes on.
   final String handle;
 
   /// Unique identifier.
   final String id;
+
+  /// Ordered gallery image URLs.
+  final List<String> images;
 
   /// The axes the variants vary along.
   final List<ProductOption> options;

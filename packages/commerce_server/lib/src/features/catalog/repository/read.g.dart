@@ -22,7 +22,8 @@ final class _$CatalogReadRepository implements CatalogReadRepository {
   Future<Result<ProductRow?, SqlxError>> findByHandle(String handle) {
     return _db.fetchOptional<ProductRow>(
       r'''
-SELECT id, title, handle, description, thumbnail, status
+SELECT id, title, handle, description, thumbnail, material, origin_country,
+       product_type, weight, length, width, height, status
 FROM products
 WHERE handle = ? AND status = 'published'
 ''',

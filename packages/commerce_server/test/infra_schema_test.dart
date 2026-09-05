@@ -56,6 +56,7 @@ void main() {
           'order_items',
           'orders',
           'product_options',
+          'product_images',
           'product_variants',
           'products',
           'promotions',
@@ -98,6 +99,22 @@ void main() {
       final columns = await columnsOf('orders');
 
       expect(columns, containsAll(<String>['subtotal', 'tax', 'total']));
+    });
+
+    test('product facts and gallery order are explicit columns', () async {
+      expect(
+        await columnsOf('products'),
+        containsAll(<String>[
+          'material',
+          'origin_country',
+          'product_type',
+          'weight',
+          'length',
+          'width',
+          'height',
+        ]),
+      );
+      expect(await columnsOf('product_images'), containsAll(['url', 'rank']));
     });
   });
 

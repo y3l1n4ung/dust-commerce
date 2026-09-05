@@ -7,6 +7,20 @@ CREATE TABLE products (
   handle      TEXT NOT NULL CHECK (length(handle) > 0),
   description TEXT,
   thumbnail   TEXT,
+  -- Merchant-facing composition shown in product information.
+  material    TEXT,
+  -- ISO 3166-1 alpha-2 country where the product was made.
+  origin_country TEXT CHECK (
+    origin_country IS NULL OR
+    (length(origin_country) = 2 AND origin_country = lower(origin_country))
+  ),
+  -- Simple storefront classification; category hierarchy is separate.
+  product_type TEXT,
+  -- Physical values use the units configured for this store.
+  weight      INTEGER CHECK (weight IS NULL OR weight >= 0),
+  length      INTEGER CHECK (length IS NULL OR length >= 0),
+  width       INTEGER CHECK (width IS NULL OR width >= 0),
+  height      INTEGER CHECK (height IS NULL OR height >= 0),
   status      TEXT NOT NULL DEFAULT 'draft'
               CHECK (status IN ('draft', 'published', 'rejected', 'proposed')),
   -- Validated JSON supports merchant extensions without schema-free core data.
