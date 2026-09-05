@@ -3,4 +3,5 @@ library;
 
 export 'src/catalog/catalog.dart';
 export 'src/money.dart';
+export 'src/ordering/ordering.dart';
 export 'src/region.dart';
