@@ -26,6 +26,9 @@ final class CatalogRoute extends CommerceRoute<void> {
       uriExtras: generatedRouteUriExtrasOf(this),
     );
   }
+
+  @override
+  bool get requiresAuth => false;
 }
 
 /// Typed route data for `NotFoundRoute`.
@@ -36,6 +39,40 @@ final class NotFoundRoute extends CommerceRoute<void> {
   String get location {
     return generatedRoutePath(
       ['404'],
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+
+  @override
+  bool get requiresAuth => false;
+}
+
+/// Typed route data for `CartRoute`.
+final class CartRoute extends CommerceRoute<void> {
+  const CartRoute();
+
+  @override
+  String get location {
+    return generatedRoutePath(
+      ['cart'],
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+
+  @override
+  bool get requiresAuth => false;
+}
+
+/// Typed route data for `ProductRoute`.
+final class ProductRoute extends CommerceRoute<void> {
+  const ProductRoute({required this.handle});
+
+  final String handle;
+
+  @override
+  String get location {
+    return generatedRoutePath(
+      ['products', handle],
       uriExtras: generatedRouteUriExtrasOf(this),
     );
   }
@@ -55,6 +92,15 @@ CommerceRoute parseCommerceRoute(Uri uri) {
   }
   if (segments.length == 1 && segments[0] == '404') {
     final route = NotFoundRoute();
+    return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (segments.length == 1 && segments[0] == 'cart') {
+    final route = CartRoute();
+    return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (segments.length == 2 && segments[0] == 'products') {
+    final handle = segments[1];
+    final route = ProductRoute(handle: handle);
     return withGeneratedRouteUriExtras(route, uri, const <String>{});
   }
   return _$notFoundRoute(uri);

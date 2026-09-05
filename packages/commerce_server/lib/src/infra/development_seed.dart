@@ -51,9 +51,9 @@ INSERT OR IGNORE INTO product_options
   (id, product_id, title, values_csv)
 VALUES
   ('opt_tshirt_size', 'prod_tshirt', 'Size', 'S,M,L,XL'),
-  ('opt_sweatshirt_size', 'prod_sweatshirt', 'Size', 'S,M,L,XL'),
-  ('opt_sweatpants_size', 'prod_sweatpants', 'Size', 'S,M,L,XL'),
-  ('opt_shorts_size', 'prod_shorts', 'Size', 'S,M,L,XL')
+  ('opt_sweatshirt_size', 'prod_sweatshirt', 'Size', 'S,M'),
+  ('opt_sweatpants_size', 'prod_sweatpants', 'Size', 'S,M'),
+  ('opt_shorts_size', 'prod_shorts', 'Size', 'S,M')
 '''),
   const _Statement(r'''
 INSERT OR IGNORE INTO product_variants

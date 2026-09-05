@@ -2,6 +2,7 @@ import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/i18n/app_i18n.g.dart';
 import 'package:commerce_app/route.dart';
 import 'package:dust_dart/http.dart';
+import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 /// Runs the storefront.
@@ -32,13 +33,61 @@ class CommerceApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CatalogViewModelScope(
-      args: (_) => CatalogViewModelArgs(api: api),
-      create: (_, args) => CatalogViewModel(args),
-      child: MaterialApp.router(
-        title: 'Commerce',
-        theme: ThemeData(colorSchemeSeed: Colors.indigo),
-        routerConfig: CommerceRouter().config,
+    final i18n = I18nScope.of(context);
+    final app = MaterialApp.router(
+      onGenerateTitle: (context) => context.tr(
+        'shop_brand',
+        defaultText: 'Dust Store',
+      ),
+      debugShowCheckedModeBanner: false,
+      locale: appI18nLocaleOf(i18n.locale),
+      supportedLocales: appI18nSupportedLocales,
+      localizationsDelegates: appI18nLocalizationsDelegates,
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xff111827),
+          surface: Colors.white,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Color(0xff52525b),
+          centerTitle: true,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          shape: Border(
+            bottom: BorderSide(color: Color(0xffe5e5e5)),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(foregroundColor: const Color(0xff52525b)),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            backgroundColor: const Color(0xff18181b),
+            foregroundColor: Colors.white,
+            minimumSize: const Size(48, 44),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+          ),
+        ),
+      ),
+      routerConfig: CommerceRouter().config,
+    );
+
+    return CartViewModelScope(
+      args: (_) => CartViewModelArgs(api: api),
+      create: (_, args) => CartViewModel(args),
+      child: ProductViewModelScope(
+        args: (_) => ProductViewModelArgs(api: api),
+        create: (_, args) => ProductViewModel(args),
+        child: CatalogViewModelScope(
+          args: (_) => CatalogViewModelArgs(api: api),
+          create: (_, args) => CatalogViewModel(args),
+          child: app,
+        ),
       ),
     );
   }

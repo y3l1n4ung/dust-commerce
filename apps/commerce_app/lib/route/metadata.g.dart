@@ -9,8 +9,10 @@ import 'package:dust_flutter/route.dart';
 
 import 'paths.g.dart';
 import '../route.dart';
+import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
+import 'package:commerce_app/src/features/product/view/product_page.dart';
 
 const List<GeneratedRoute> $commerceRoutes = [
   GeneratedRoute(
@@ -18,12 +20,32 @@ const List<GeneratedRoute> $commerceRoutes = [
     page: CatalogPage,
     name: 'catalog',
     resultType: 'void',
+    guards: [],
   ),
   GeneratedRoute(
     '/404',
     page: NotFoundPage,
     name: 'notFound',
     resultType: 'void',
+  ),
+  GeneratedRoute(
+    '/cart',
+    page: CartPage,
+    name: 'cart',
+    resultType: 'void',
+    guards: [],
+  ),
+  GeneratedRoute(
+    '/products',
+    routes: [
+      GeneratedRoute(
+        ':handle',
+        page: ProductPage,
+        name: 'product',
+        resultType: 'void',
+        guards: [],
+      ),
+    ],
   ),
 ];
 
@@ -39,6 +61,8 @@ RouteDebugInfo commerceRouteDebugInfo(CommerceRoute route) {
   return switch (route) {
     CatalogRoute() => const RouteDebugInfo(name: 'catalog', shell: null, branch: null, resultType: 'void'),
     NotFoundRoute() => const RouteDebugInfo(name: 'notFound', shell: null, branch: null, resultType: 'void'),
+    CartRoute() => const RouteDebugInfo(name: 'cart', shell: null, branch: null, resultType: 'void'),
+    ProductRoute(handle: _) => const RouteDebugInfo(name: 'product', shell: null, branch: null, resultType: 'void'),
   };
 }
 

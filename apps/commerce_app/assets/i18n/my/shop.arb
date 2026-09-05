@@ -5,6 +5,109 @@
   "@empty": {
     "description": "Translation for `shop_empty`."
   },
+  "back_to_store": "ဆိုင်သို့ ပြန်သွားရန်",
+  "@back_to_store": {
+    "description": "Link from a failed detail route to the store."
+  },
+  "browse_products": "ကုန်ပစ္စည်းများ ကြည့်ရန်",
+  "@browse_products": {
+    "description": "Call to action shown when the cart is empty."
+  },
+  "cart_empty": "သင့်စျေးခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိပါ",
+  "@cart_empty": {
+    "description": "Empty-cart message."
+  },
+  "cart_title": "စျေးခြင်းတောင်း",
+  "@cart_title": {
+    "description": "Cart page title."
+  },
+  "add_to_cart": "စျေးခြင်းတောင်းထဲ ထည့်ရန်",
+  "@add_to_cart": {
+    "description": "Adds the selected variant to the cart."
+  },
+  "add_to_cart_failed": "စျေးခြင်းတောင်းထဲ မထည့်နိုင်ပါ",
+  "@add_to_cart_failed": {
+    "description": "Shown when an add-to-cart request fails."
+  },
+  "added_to_cart": "စျေးခြင်းတောင်းထဲ ထည့်ပြီးပါပြီ",
+  "@added_to_cart": {
+    "description": "Confirms a successful add-to-cart request."
+  },
+  "brand": "ဒတ်စ် စတိုး",
+  "@brand": {
+    "description": "Storefront wordmark."
+  },
+  "cart_count": "စျေးခြင်းတောင်း ({count})",
+  "@cart_count": {
+    "description": "Navigation cart label with total quantity.",
+    "placeholders": {
+      "count": {
+        "example": "2"
+      }
+    }
+  },
+  "featured_products": "အထူးရွေးချယ်ထားသော ကုန်ပစ္စည်းများ",
+  "@featured_products": {
+    "description": "Heading above the home product grid."
+  },
+  "hero_subtitle": "Dart နှင့် Dust ဖြင့် တည်ဆောက်ထားသည်",
+  "@hero_subtitle": {
+    "description": "Home hero supporting line."
+  },
+  "hero_title": "ကုန်သွယ်ရေး စတင်နမူနာ",
+  "@hero_title": {
+    "description": "Home hero heading."
+  },
+  "home": "ပင်မစာမျက်နှာ",
+  "@home": {
+    "description": "Home navigation link."
+  },
+  "menu": "မီနူး",
+  "@menu": {
+    "description": "Opens storefront navigation."
+  },
+  "out_of_stock": "ပစ္စည်းကုန်နေပါသည်",
+  "@out_of_stock": {
+    "description": "Unavailable selected variant label."
+  },
+  "product_count": "ကုန်ပစ္စည်း {count} ခု",
+  "@product_count": {
+    "description": "Number of products in the catalogue.",
+    "placeholders": {
+      "count": {
+        "example": "4"
+      }
+    }
+  },
+  "products_action": "ကုန်ပစ္စည်းများ ဝယ်ယူရန်",
+  "@products_action": {
+    "description": "Scrolls from the hero to the product grid."
+  },
+  "select_option": "{name} ရွေးချယ်ပါ",
+  "@select_option": {
+    "description": "Prompts for a named product option.",
+    "placeholders": {
+      "name": {
+        "example": "Size"
+      }
+    }
+  },
+  "select_variant": "အမျိုးအစား ရွေးချယ်ပါ",
+  "@select_variant": {
+    "description": "Prompts for a complete option selection."
+  },
+  "subtotal": "ကြားဖြတ်စုစုပေါင်း",
+  "@subtotal": {
+    "description": "Cart subtotal label."
+  },
+  "tax": "အခွန်",
+  "@tax": {
+    "description": "Cart tax label."
+  },
+  "total": "စုစုပေါင်း",
+  "@total": {
+    "description": "Cart final total label."
+  },
   "not_found": "ဤစာမျက်နှာ မရှိပါ",
   "@not_found": {
     "description": "Translation for `shop_not_found`."

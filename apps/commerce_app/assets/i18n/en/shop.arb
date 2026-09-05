@@ -5,6 +5,109 @@
   "@empty": {
     "description": "Translation for `shop_empty`."
   },
+  "back_to_store": "Back to store",
+  "@back_to_store": {
+    "description": "Link from a failed detail route to the store."
+  },
+  "browse_products": "Browse products",
+  "@browse_products": {
+    "description": "Call to action shown when the cart is empty."
+  },
+  "cart_empty": "Your cart is empty",
+  "@cart_empty": {
+    "description": "Empty-cart message."
+  },
+  "cart_title": "Cart",
+  "@cart_title": {
+    "description": "Cart page title."
+  },
+  "add_to_cart": "Add to cart",
+  "@add_to_cart": {
+    "description": "Adds the selected variant to the cart."
+  },
+  "add_to_cart_failed": "Could not add to cart",
+  "@add_to_cart_failed": {
+    "description": "Shown when an add-to-cart request fails."
+  },
+  "added_to_cart": "Added to cart",
+  "@added_to_cart": {
+    "description": "Confirms a successful add-to-cart request."
+  },
+  "brand": "DUST STORE",
+  "@brand": {
+    "description": "Storefront wordmark."
+  },
+  "cart_count": "Cart ({count})",
+  "@cart_count": {
+    "description": "Navigation cart label with total quantity.",
+    "placeholders": {
+      "count": {
+        "example": "2"
+      }
+    }
+  },
+  "featured_products": "Featured products",
+  "@featured_products": {
+    "description": "Heading above the home product grid."
+  },
+  "hero_subtitle": "Powered by Dart and Dust",
+  "@hero_subtitle": {
+    "description": "Home hero supporting line."
+  },
+  "hero_title": "Commerce Starter Template",
+  "@hero_title": {
+    "description": "Home hero heading."
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Home navigation link."
+  },
+  "menu": "Menu",
+  "@menu": {
+    "description": "Opens storefront navigation."
+  },
+  "out_of_stock": "Out of stock",
+  "@out_of_stock": {
+    "description": "Unavailable selected variant label."
+  },
+  "product_count": "{count} products",
+  "@product_count": {
+    "description": "Number of products in the catalogue.",
+    "placeholders": {
+      "count": {
+        "example": "4"
+      }
+    }
+  },
+  "products_action": "Shop products",
+  "@products_action": {
+    "description": "Scrolls from the hero to the product grid."
+  },
+  "select_option": "Select {name}",
+  "@select_option": {
+    "description": "Prompts for a named product option.",
+    "placeholders": {
+      "name": {
+        "example": "Size"
+      }
+    }
+  },
+  "select_variant": "Select variant",
+  "@select_variant": {
+    "description": "Prompts for a complete option selection."
+  },
+  "subtotal": "Subtotal",
+  "@subtotal": {
+    "description": "Cart subtotal label."
+  },
+  "tax": "Tax",
+  "@tax": {
+    "description": "Cart tax label."
+  },
+  "total": "Total",
+  "@total": {
+    "description": "Cart final total label."
+  },
   "not_found": "That page does not exist",
   "@not_found": {
     "description": "Translation for `shop_not_found`."

@@ -91,6 +91,7 @@ Start a local API with the deterministic development catalogue:
 
 ```bash
 COMMERCE_SEED=true \
+  COMMERCE_ALLOWED_ORIGINS=http://127.0.0.1:3000 \
   COMMERCE_DATABASE_PATH=.data/commerce.db \
   dart run packages/commerce_server/bin/server.dart
 ```
@@ -99,6 +100,15 @@ The seed is opt-in and idempotent. Production startup never creates merchant or
 customer records. Bind address, port, database path, and browser origins are
 configured with `COMMERCE_BIND`, `COMMERCE_PORT`, `COMMERCE_DATABASE_PATH`, and
 comma-separated `COMMERCE_ALLOWED_ORIGINS`.
+
+In a second terminal, start the Flutter web storefront:
+
+```bash
+flutter run -d web-server \
+  --web-hostname 127.0.0.1 \
+  --web-port 3000 \
+  --dart-define=API_BASE_URL=http://127.0.0.1:8080
+```
 
 Then the same checks CI runs:
 

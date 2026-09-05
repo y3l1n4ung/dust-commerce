@@ -10,8 +10,10 @@ import 'package:dust_flutter/route.dart';
 import 'paths.g.dart';
 import 'metadata.g.dart';
 import '../route.dart';
+import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
+import 'package:commerce_app/src/features/product/view/product_page.dart';
 
 abstract class $CommerceRouter extends RouterBase<CommerceRoute> {
 
@@ -60,12 +62,22 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const CatalogRoute(),
       route,
     ],
+    CartRoute() => [
+      const CatalogRoute(),
+      route,
+    ],
+    ProductRoute(handle: _) => [
+      const CatalogRoute(),
+      route,
+    ],
   };
 }
 
 const Map<Type, Type?> _$appliedShellsByPage = {
   CatalogPage: null,
   NotFoundPage: null,
+  CartPage: null,
+  ProductPage: null,
 };
 
 Page<dynamic> buildCommerceRoutePage(
@@ -95,6 +107,24 @@ Page<dynamic> buildCommerceRoutePage(
       fullscreenDialog: false,
       maintainState: true,
       child: const NotFoundPage(),
+    ),
+    CartRoute() => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'cart',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: const CartPage(),
+    ),
+    ProductRoute(handle: final handle) => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'product',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: ProductPage(handle: handle),
     ),
   };
 }
