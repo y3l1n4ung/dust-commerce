@@ -94,11 +94,12 @@ final class CartRoute extends CommerceRoute<void> {
 
 /// Typed route data for `CategoryRoute`.
 final class CategoryRoute extends CommerceRoute<void> {
-  const CategoryRoute({required this.handle, this.page = 1, this.sortBy = 'created_at'});
+  const CategoryRoute({required this.handle, this.page = 1, this.sortBy = 'created_at', this.optionValueIds = const []});
 
   final String handle;
   final int page;
   final String sortBy;
+  final List<String> optionValueIds;
 
   @override
   String get location {
@@ -108,6 +109,9 @@ final class CategoryRoute extends CommerceRoute<void> {
     }
     if (sortBy != 'created_at') {
       query['sortBy'] = sortBy;
+    }
+    if (!generatedRouteListEquals(optionValueIds, const [])) {
+      query['optionValueIds'] = optionValueIds;
     }
     return generatedRoutePath(
       ['categories', handle],
@@ -135,11 +139,12 @@ final class CheckoutRoute extends CommerceRoute<void> {
 
 /// Typed route data for `CollectionRoute`.
 final class CollectionRoute extends CommerceRoute<void> {
-  const CollectionRoute({required this.handle, this.page = 1, this.sortBy = 'created_at'});
+  const CollectionRoute({required this.handle, this.page = 1, this.sortBy = 'created_at', this.optionValueIds = const []});
 
   final String handle;
   final int page;
   final String sortBy;
+  final List<String> optionValueIds;
 
   @override
   String get location {
@@ -149,6 +154,9 @@ final class CollectionRoute extends CommerceRoute<void> {
     }
     if (sortBy != 'created_at') {
       query['sortBy'] = sortBy;
+    }
+    if (!generatedRouteListEquals(optionValueIds, const [])) {
+      query['optionValueIds'] = optionValueIds;
     }
     return generatedRoutePath(
       ['collections', handle],
@@ -199,10 +207,11 @@ final class ProductRoute extends CommerceRoute<void> {
 
 /// Typed route data for `StoreRoute`.
 final class StoreRoute extends CommerceRoute<void> {
-  const StoreRoute({this.page = 1, this.sortBy = 'created_at'});
+  const StoreRoute({this.page = 1, this.sortBy = 'created_at', this.optionValueIds = const []});
 
   final int page;
   final String sortBy;
+  final List<String> optionValueIds;
 
   @override
   String get location {
@@ -212,6 +221,9 @@ final class StoreRoute extends CommerceRoute<void> {
     }
     if (sortBy != 'created_at') {
       query['sortBy'] = sortBy;
+    }
+    if (!generatedRouteListEquals(optionValueIds, const [])) {
+      query['optionValueIds'] = optionValueIds;
     }
     return generatedRoutePath(
       ['store'],
@@ -253,11 +265,17 @@ CommerceRoute parseCommerceRoute(Uri uri) {
     final handle = segments[1];
     final page = uri.queryParameters.containsKey('page') ? int.tryParse(uri.queryParameters['page'] ?? '') : 1;
     final sortBy = uri.queryParameters['sortBy'] ?? 'created_at';
+    final optionValueIds = uri.queryParametersAll['optionValueIds'] ?? const [];
     if (page == null) {
       return _$notFoundRoute(uri);
     }
-    final route = CategoryRoute(handle: handle, page: page, sortBy: sortBy);
-    return withGeneratedRouteUriExtras(route, uri, const <String>{'page', 'sortBy'});
+    final route = CategoryRoute(
+      handle: handle,
+      page: page,
+      sortBy: sortBy,
+      optionValueIds: optionValueIds,
+    );
+    return withGeneratedRouteUriExtras(route, uri, const <String>{'page', 'sortBy', 'optionValueIds'});
   }
   if (segments.length == 1 && segments[0] == 'checkout') {
     final route = CheckoutRoute();
@@ -267,11 +285,17 @@ CommerceRoute parseCommerceRoute(Uri uri) {
     final handle = segments[1];
     final page = uri.queryParameters.containsKey('page') ? int.tryParse(uri.queryParameters['page'] ?? '') : 1;
     final sortBy = uri.queryParameters['sortBy'] ?? 'created_at';
+    final optionValueIds = uri.queryParametersAll['optionValueIds'] ?? const [];
     if (page == null) {
       return _$notFoundRoute(uri);
     }
-    final route = CollectionRoute(handle: handle, page: page, sortBy: sortBy);
-    return withGeneratedRouteUriExtras(route, uri, const <String>{'page', 'sortBy'});
+    final route = CollectionRoute(
+      handle: handle,
+      page: page,
+      sortBy: sortBy,
+      optionValueIds: optionValueIds,
+    );
+    return withGeneratedRouteUriExtras(route, uri, const <String>{'page', 'sortBy', 'optionValueIds'});
   }
   if (segments.length == 3 && segments[0] == 'order' && segments[2] == 'confirmed') {
     final id = segments[1];
@@ -286,11 +310,16 @@ CommerceRoute parseCommerceRoute(Uri uri) {
   if (segments.length == 1 && segments[0] == 'store') {
     final page = uri.queryParameters.containsKey('page') ? int.tryParse(uri.queryParameters['page'] ?? '') : 1;
     final sortBy = uri.queryParameters['sortBy'] ?? 'created_at';
+    final optionValueIds = uri.queryParametersAll['optionValueIds'] ?? const [];
     if (page == null) {
       return _$notFoundRoute(uri);
     }
-    final route = StoreRoute(page: page, sortBy: sortBy);
-    return withGeneratedRouteUriExtras(route, uri, const <String>{'page', 'sortBy'});
+    final route = StoreRoute(
+      page: page,
+      sortBy: sortBy,
+      optionValueIds: optionValueIds,
+    );
+    return withGeneratedRouteUriExtras(route, uri, const <String>{'page', 'sortBy', 'optionValueIds'});
   }
   return _$notFoundRoute(uri);
 }

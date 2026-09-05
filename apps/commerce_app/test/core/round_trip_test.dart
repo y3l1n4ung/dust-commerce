@@ -88,10 +88,15 @@ void main() {
     test('decodes taxonomy endpoints and product filters', () async {
       final collections = await api.collections(handle: 'summer');
       final categories = await api.categories(handle: 'clothing/shirts');
-      final filtered = await api.products(tag: 'cotton');
+      final options = await api.productOptions();
+      final filtered = await api.products(
+        tag: 'cotton',
+        optionValueIds: const ['optval_small'],
+      );
 
       expect(collections.collections.single.title, 'Summer');
       expect(categories.categories.single.name, 'Shirts');
+      expect(options.productOptions.single.values.first.id, 'optval_small');
       expect(filtered.products.single.handle, 't-shirt');
     });
   });

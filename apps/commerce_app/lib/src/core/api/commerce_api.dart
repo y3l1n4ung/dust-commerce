@@ -44,6 +44,14 @@ abstract interface class CommerceApi {
     @Query('collection') String? collection,
     @Query('category') String? category,
     @Query('tag') String? tag,
+    @Query('optionValueIds') List<String> optionValueIds = const [],
+    @Query('limit') int? limit,
+    @Query('offset') int? offset,
+  });
+
+  /// Active stable option values used by the store refinement sidebar.
+  @GET('/store/product-options')
+  Future<ProductOptionFilterListView> productOptions({
     @Query('limit') int? limit,
     @Query('offset') int? offset,
   });

@@ -12,11 +12,15 @@ class CollectionPage extends StatelessWidget {
     required this.handle,
     this.page = 1,
     this.sortBy = 'created_at',
+    this.optionValueIds = const [],
     super.key,
   });
 
   /// Stable collection handle from the URL.
   final String handle;
+
+  /// Hidden source-compatible option values retained in the URL.
+  final List<String> optionValueIds;
 
   /// One-based page query.
   final int page;
@@ -28,11 +32,13 @@ class CollectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentPage = page < 1 ? 1 : page;
     final currentSort = normalizedProductSort(sortBy);
+    final selected = normalizedOptionValueIds(optionValueIds);
     final requestKey = listingRequestKey(
       'collection',
       handle,
       currentPage,
       currentSort,
+      selected,
     );
     return ProductListingRoute(
       key: ValueKey(requestKey),
@@ -41,12 +47,24 @@ class CollectionPage extends StatelessWidget {
         handle,
         page: currentPage,
         sortBy: currentSort,
+        optionValueIds: selected,
       ),
-      onSortChanged: (value) =>
-          context.navigator.collection(handle: handle, sortBy: value).go(),
-      onPageChanged: (value) => context.navigator
-          .collection(handle: handle, page: value, sortBy: currentSort)
+      onSortChanged: (value) => context.navigator
+          .collection(
+            handle: handle,
+            sortBy: value,
+            optionValueIds: selected,
+          )
           .go(),
+      onPageChanged: (value) => context.navigator
+          .collection(
+            handle: handle,
+            page: value,
+            sortBy: currentSort,
+            optionValueIds: selected,
+          )
+          .go(),
+      onOptionValuesChanged: (_) {},
       onCategorySelected: (categoryHandle) =>
           context.navigator.category(handle: categoryHandle).go(),
     );

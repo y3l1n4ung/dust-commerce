@@ -208,6 +208,7 @@ final class _$CommerceApi implements CommerceApi {
     String? collection,
     String? category,
     String? tag,
+    List<String> optionValueIds = const [],
     int? limit,
     int? offset,
   }) async {
@@ -219,6 +220,7 @@ final class _$CommerceApi implements CommerceApi {
     if (collection != null) _queryParameters['collection'] = collection;
     if (category != null) _queryParameters['category'] = category;
     if (tag != null) _queryParameters['tag'] = tag;
+    _queryParameters['optionValueIds'] = optionValueIds;
     if (limit != null) _queryParameters['limit'] = limit;
     if (offset != null) _queryParameters['offset'] = offset;
     final Object? _data = null;
@@ -249,6 +251,44 @@ final class _$CommerceApi implements CommerceApi {
       ),
     );
     return ProductPageView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<ProductOptionFilterListView> productOptions({int? limit, int? offset}) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    if (limit != null) _queryParameters['limit'] = limit;
+    if (offset != null) _queryParameters['offset'] = offset;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<ProductOptionFilterListView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/product-options',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return ProductOptionFilterListView.fromJson(_result.data as Map<String, dynamic>);
   }
 
   @override

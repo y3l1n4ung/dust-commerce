@@ -15,7 +15,9 @@ part of 'product_listing_state.dart';
 
 const DeepCollectionEquality _productListingStateChildrenEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productListingStateParentsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _productListingStateOptionFiltersEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productListingStateProductsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _productListingStateSelectedOptionValueIdsEquality = DeepCollectionEquality();
 
 mixin _$ProductListingState {
   @override
@@ -27,8 +29,10 @@ mixin _$ProductListingState {
         'currencyCode: ${self.currencyCode}, '
         'description: ${self.description}, '
         'parents: ${self.parents}, '
+        'optionFilters: ${self.optionFilters}, '
         'products: ${self.products}, '
         'requestKey: ${self.requestKey}, '
+        'selectedOptionValueIds: ${self.selectedOptionValueIds}, '
         'sortBy: ${self.sortBy}, '
         'status: ${self.status}, '
         'title: ${self.title}, '
@@ -47,8 +51,10 @@ mixin _$ProductListingState {
             other.currencyCode == self.currencyCode &&
             other.description == self.description &&
             _productListingStateParentsEquality.equals(other.parents, self.parents) &&
+            _productListingStateOptionFiltersEquality.equals(other.optionFilters, self.optionFilters) &&
             _productListingStateProductsEquality.equals(other.products, self.products) &&
             other.requestKey == self.requestKey &&
+            _productListingStateSelectedOptionValueIdsEquality.equals(other.selectedOptionValueIds, self.selectedOptionValueIds) &&
             other.sortBy == self.sortBy &&
             other.status == self.status &&
             other.title == self.title &&
@@ -65,8 +71,10 @@ mixin _$ProductListingState {
       self.currencyCode,
       self.description,
       _productListingStateParentsEquality.hash(self.parents),
+      _productListingStateOptionFiltersEquality.hash(self.optionFilters),
       _productListingStateProductsEquality.hash(self.products),
       self.requestKey,
+      _productListingStateSelectedOptionValueIdsEquality.hash(self.selectedOptionValueIds),
       self.sortBy,
       self.status,
       self.title,
@@ -94,8 +102,10 @@ abstract class _$ProductListingStateCopyWith<$Res> {
     String? currencyCode,
     String? description,
     List<ProductCategory>? parents,
+    List<ProductOptionFilterView>? optionFilters,
     List<Product>? products,
     String? requestKey,
+    List<String>? selectedOptionValueIds,
     String? sortBy,
     ProductListingStatus? status,
     String? title,
@@ -118,8 +128,10 @@ final class _$ProductListingStateCopyWithImpl<$Res> implements _$ProductListingS
     Object? currencyCode = null,
     Object? description = null,
     Object? parents = null,
+    Object? optionFilters = null,
     Object? products = null,
     Object? requestKey = null,
+    Object? selectedOptionValueIds = null,
     Object? sortBy = null,
     Object? status = null,
     Object? title = null,
@@ -133,6 +145,8 @@ final class _$ProductListingStateCopyWithImpl<$Res> implements _$ProductListingS
         description: description == null ? _self.description : description as String,
         parents: parents == null ? _self.parents : parents as List<ProductCategory>,
         children: children == null ? _self.children : children as List<ProductCategory>,
+        optionFilters: optionFilters == null ? _self.optionFilters : optionFilters as List<ProductOptionFilterView>,
+        selectedOptionValueIds: selectedOptionValueIds == null ? _self.selectedOptionValueIds : selectedOptionValueIds as List<String>,
         products: products == null ? _self.products : products as List<Product>,
         sortBy: sortBy == null ? _self.sortBy : sortBy as String,
         currentPage: currentPage == null ? _self.currentPage : currentPage as int,

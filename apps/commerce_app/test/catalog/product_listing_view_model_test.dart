@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_server/commerce_server.dart';
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/http.dart';
 import 'package:dust_server/testing.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -76,6 +77,30 @@ void main() {
     );
   });
 
+  test('store exposes stable options and filters by selected values', () async {
+    await viewModel.loadStore(optionValueIds: const ['optval_small']);
+
+    expect(viewModel.state.status, ProductListingStatus.ready);
+    expect(viewModel.state.selectedOptionValueIds, ['optval_small']);
+    expect(viewModel.state.optionFilters.single.id, 'opt_size');
+    expect(viewModel.state.products.map((product) => product.handle), [
+      't-shirt',
+    ]);
+  });
+
+  test('option discovery failure does not take down products', () async {
+    final resilient = ProductListingViewModel(
+      ProductListingViewModelArgs(api: _OptionFailureApi(viewModel.args.api)),
+    );
+    addTearDown(resilient.dispose);
+
+    await resilient.loadStore();
+
+    expect(resilient.state.status, ProductListingStatus.ready);
+    expect(resilient.state.products, isNotEmpty);
+    expect(resilient.state.optionFilters, isEmpty);
+  });
+
   test('unknown taxonomy becomes missing without exposing an exception',
       () async {
     await viewModel.loadCollection('unknown');
@@ -84,6 +109,43 @@ void main() {
     await viewModel.loadCategory('unknown');
     expect(viewModel.state.status, ProductListingStatus.missing);
   });
+}
+
+final class _OptionFailureApi implements CommerceApi {
+  const _OptionFailureApi(this.delegate);
+
+  final CommerceApi delegate;
+
+  @override
+  Future<ProductOptionFilterListView> productOptions({
+    int? limit,
+    int? offset,
+  }) =>
+      Future.error(StateError('option discovery unavailable'));
+
+  @override
+  Future<ProductPageView> products({
+    String? currency,
+    String? collection,
+    String? category,
+    String? tag,
+    List<String> optionValueIds = const [],
+    int? limit,
+    int? offset,
+  }) =>
+      delegate.products(
+        currency: currency,
+        collection: collection,
+        category: category,
+        tag: tag,
+        optionValueIds: optionValueIds,
+        limit: limit,
+        offset: offset,
+      );
+
+  @override
+  Object? noSuchMethod(Invocation invocation) =>
+      throw UnsupportedError('unused API method');
 }
 
 Future<void> _seedPage(CommerceDatabase database) async {

@@ -28,22 +28,31 @@ void main() {
 
   test('generated listing routes retain sort and page queries', () {
     final store = parseCommerceRoute(
-      Uri.parse('/store?page=2&sortBy=price_asc'),
+      Uri.parse(
+        '/store?page=2&sortBy=price_asc&optionValueIds=small&optionValueIds=blue',
+      ),
     );
     final collection = parseCommerceRoute(
-      Uri.parse('/collections/featured?sortBy=price_desc'),
+      Uri.parse(
+        '/collections/featured?sortBy=price_desc&optionValueIds=small',
+      ),
     );
     final category = parseCommerceRoute(
       Uri.parse('/categories/clothing%2Fshirts?page=3'),
     );
 
     expect(store, isA<StoreRoute>());
-    expect(store.location, '/store?page=2&sortBy=price_asc');
+    expect(
+      store.location,
+      '/store?page=2&sortBy=price_asc&optionValueIds=small&optionValueIds=blue',
+    );
+    expect((store as StoreRoute).optionValueIds, ['small', 'blue']);
     expect(collection, isA<CollectionRoute>());
     expect(
       collection.location,
-      '/collections/featured?sortBy=price_desc',
+      '/collections/featured?sortBy=price_desc&optionValueIds=small',
     );
+    expect((collection as CollectionRoute).optionValueIds, ['small']);
     expect(category, isA<CategoryRoute>());
     expect(category.location, '/categories/clothing%2Fshirts?page=3');
   });

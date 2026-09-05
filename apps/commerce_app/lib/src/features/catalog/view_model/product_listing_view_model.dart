@@ -27,14 +27,25 @@ class ProductListingViewModel extends $ProductListingViewModel {
   int _revision = 0;
 
   /// Loads the source `/store` route.
-  Future<void> loadStore({int page = 1, String sortBy = 'created_at'}) async {
+  Future<void> loadStore({
+    int page = 1,
+    String sortBy = 'created_at',
+    List<String> optionValueIds = const [],
+  }) async {
+    final selected = normalizedOptionValueIds(optionValueIds);
     final meta = _ListingMeta(
-      requestKey: listingRequestKey('store', '', page, sortBy),
+      requestKey: listingRequestKey('store', '', page, sortBy, selected),
       title: 'All products',
       page: page < 1 ? 1 : page,
       sortBy: normalizedProductSort(sortBy),
+      selectedOptionValueIds: selected,
     );
-    await _loadProducts(meta, _begin(meta));
+    final revision = _begin(meta);
+    await _loadProducts(
+      meta,
+      revision,
+      optionFilters: _optionalOptionFilters(args.api, _sourceFetchLimit),
+    );
   }
 
   /// Resolves [handle] before loading its products.
@@ -42,13 +53,22 @@ class ProductListingViewModel extends $ProductListingViewModel {
     String handle, {
     int page = 1,
     String sortBy = 'created_at',
+    List<String> optionValueIds = const [],
   }) async {
+    final selected = normalizedOptionValueIds(optionValueIds);
     final meta = _ListingMeta(
-      requestKey: listingRequestKey('collection', handle, page, sortBy),
+      requestKey: listingRequestKey(
+        'collection',
+        handle,
+        page,
+        sortBy,
+        selected,
+      ),
       title: '',
       page: page < 1 ? 1 : page,
       sortBy: normalizedProductSort(sortBy),
       collection: Some(handle),
+      selectedOptionValueIds: selected,
     );
     final revision = _begin(meta);
     try {
@@ -69,13 +89,22 @@ class ProductListingViewModel extends $ProductListingViewModel {
     String handle, {
     int page = 1,
     String sortBy = 'created_at',
+    List<String> optionValueIds = const [],
   }) async {
+    final selected = normalizedOptionValueIds(optionValueIds);
     final meta = _ListingMeta(
-      requestKey: listingRequestKey('category', handle, page, sortBy),
+      requestKey: listingRequestKey(
+        'category',
+        handle,
+        page,
+        sortBy,
+        selected,
+      ),
       title: '',
       page: page < 1 ? 1 : page,
       sortBy: normalizedProductSort(sortBy),
       category: Some(handle),
+      selectedOptionValueIds: selected,
     );
     final revision = _begin(meta);
     try {
@@ -103,26 +132,34 @@ class ProductListingViewModel extends $ProductListingViewModel {
     }
   }
 
-  Future<void> _loadProducts(_ListingMeta meta, int revision) async {
+  Future<void> _loadProducts(
+    _ListingMeta meta,
+    int revision, {
+    Future<List<ProductOptionFilterView>>? optionFilters,
+  }) async {
     try {
-      final result = await args.api.products(
+      final productRequest = args.api.products(
         currency: meta.currencyCode,
         collection: _nullable(meta.collection),
         category: _nullable(meta.category),
+        optionValueIds: meta.selectedOptionValueIds,
         limit: _sourceFetchLimit,
       );
+      final (result, resolvedMeta) = optionFilters == null
+          ? (await productRequest, meta)
+          : await _withOptionFilters(productRequest, optionFilters, meta);
       if (!_active(revision)) return;
       final sorted = _sorted(
         result.products,
-        meta.sortBy,
-        meta.currencyCode,
+        resolvedMeta.sortBy,
+        resolvedMeta.currencyCode,
       );
-      final start = (meta.page - 1) * _limit;
+      final start = (resolvedMeta.page - 1) * _limit;
       final end = (start + _limit).clamp(0, sorted.length);
       final products = start >= sorted.length
           ? const <Product>[]
           : sorted.sublist(start, end);
-      emit(meta.toState(
+      emit(resolvedMeta.toState(
         status: ProductListingStatus.ready,
         products: products,
         totalPages: (sorted.length + _limit - 1) ~/ _limit,

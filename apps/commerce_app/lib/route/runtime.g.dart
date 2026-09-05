@@ -83,7 +83,7 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const CatalogRoute(),
       route,
     ],
-    CategoryRoute(handle: _, page: _, sortBy: _) => [
+    CategoryRoute(handle: _, page: _, sortBy: _, optionValueIds: _) => [
       const CatalogRoute(),
       route,
     ],
@@ -91,7 +91,7 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const CatalogRoute(),
       route,
     ],
-    CollectionRoute(handle: _, page: _, sortBy: _) => [
+    CollectionRoute(handle: _, page: _, sortBy: _, optionValueIds: _) => [
       const CatalogRoute(),
       route,
     ],
@@ -103,7 +103,7 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const CatalogRoute(),
       route,
     ],
-    StoreRoute(page: _, sortBy: _) => [
+    StoreRoute(page: _, sortBy: _, optionValueIds: _) => [
       const CatalogRoute(),
       route,
     ],
@@ -179,14 +179,24 @@ Page<dynamic> buildCommerceRoutePage(
       maintainState: true,
       child: const CartPage(),
     ),
-    CategoryRoute(handle: final handle, page: final page, sortBy: final sortBy) => generatedPage(
+    CategoryRoute(
+      handle: final handle,
+      page: final page,
+      sortBy: final sortBy,
+      optionValueIds: final optionValueIds,
+    ) => generatedPage(
       key: key,
       location: route.location,
       name: 'category',
       onPopInvoked: onPopInvoked,
       fullscreenDialog: false,
       maintainState: true,
-      child: CategoryPage(handle: handle, page: page, sortBy: sortBy),
+      child: CategoryPage(
+        handle: handle,
+        page: page,
+        sortBy: sortBy,
+        optionValueIds: optionValueIds,
+      ),
     ),
     CheckoutRoute() => generatedPage(
       key: key,
@@ -201,6 +211,7 @@ Page<dynamic> buildCommerceRoutePage(
       handle: final handle,
       page: final page,
       sortBy: final sortBy,
+      optionValueIds: final optionValueIds,
     ) => generatedPage(
       key: key,
       location: route.location,
@@ -208,7 +219,12 @@ Page<dynamic> buildCommerceRoutePage(
       onPopInvoked: onPopInvoked,
       fullscreenDialog: false,
       maintainState: true,
-      child: CollectionPage(handle: handle, page: page, sortBy: sortBy),
+      child: CollectionPage(
+        handle: handle,
+        page: page,
+        sortBy: sortBy,
+        optionValueIds: optionValueIds,
+      ),
     ),
     OrderConfirmedRoute(id: final id) => generatedPage(
       key: key,
@@ -228,14 +244,18 @@ Page<dynamic> buildCommerceRoutePage(
       maintainState: true,
       child: ProductPage(handle: handle),
     ),
-    StoreRoute(page: final page, sortBy: final sortBy) => generatedPage(
+    StoreRoute(
+      page: final page,
+      sortBy: final sortBy,
+      optionValueIds: final optionValueIds,
+    ) => generatedPage(
       key: key,
       location: route.location,
       name: 'store',
       onPopInvoked: onPopInvoked,
       fullscreenDialog: false,
       maintainState: true,
-      child: StorePage(page: page, sortBy: sortBy),
+      child: StorePage(page: page, sortBy: sortBy, optionValueIds: optionValueIds),
     ),
   };
 }

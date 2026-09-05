@@ -32,6 +32,8 @@ final class ProductListingState with _$ProductListingState {
     this.description = '',
     this.parents = const [],
     this.children = const [],
+    this.optionFilters = const [],
+    this.selectedOptionValueIds = const [],
     this.products = const [],
     this.sortBy = 'created_at',
     this.currentPage = 1,
@@ -54,11 +56,17 @@ final class ProductListingState with _$ProductListingState {
   /// Root-to-leaf ancestors rendered as category breadcrumbs.
   final List<ProductCategory> parents;
 
+  /// Store-only refinement axes; empty on routes that hide the picker.
+  final List<ProductOptionFilterView> optionFilters;
+
   /// Products on the requested page.
   final List<Product> products;
 
   /// Identifies the route/query combination that owns this state.
   final String requestKey;
+
+  /// Stable option-value identifiers active in the browser query.
+  final List<String> selectedOptionValueIds;
 
   /// Medusa-compatible sort query value.
   final String sortBy;

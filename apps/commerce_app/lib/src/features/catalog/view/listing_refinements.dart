@@ -1,6 +1,9 @@
 import 'package:commerce_app/src/core/store_theme.dart';
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
+
+import 'listing_option_filters.dart';
 
 /// Source-matched three-choice SortProducts control.
 class ListingRefinements extends StatelessWidget {
@@ -8,14 +11,26 @@ class ListingRefinements extends StatelessWidget {
   const ListingRefinements({
     required this.selected,
     required this.onChanged,
+    required this.options,
+    required this.selectedOptionValueIds,
+    required this.onOptionValuesChanged,
     super.key,
   });
 
   /// Receives one Medusa sort query value.
   final ValueChanged<String> onChanged;
 
+  /// Replaces the repeated option-value query.
+  final ValueChanged<List<String>> onOptionValuesChanged;
+
+  /// Store-only option axes discovered from the backend.
+  final List<ProductOptionFilterView> options;
+
   /// Current Medusa sort query value.
   final String selected;
+
+  /// Stable option-value identifiers currently selected.
+  final List<String> selectedOptionValueIds;
 
   static const _choices = <String>[
     'created_at',
@@ -29,28 +44,23 @@ class ListingRefinements extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const TranslatedText(
-              'shop_sort_by',
-              defaultText: 'Sort by',
-              style: TextStyle(
-                color: StoreColors.foregroundMuted,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
+            _SortProducts(
+              selected: selected,
+              onChanged: onChanged,
             ),
-            const SizedBox(height: 12),
-            for (final value in _choices)
-              _SortChoice(
-                value: value,
-                label: _label(context, value),
-                selected: selected == value,
-                onChanged: onChanged,
+            if (options.isNotEmpty) ...[
+              const SizedBox(height: 48),
+              ListingOptionFilters(
+                options: options,
+                selectedValueIds: selectedOptionValueIds,
+                onChanged: onOptionValuesChanged,
               ),
+            ],
           ],
         ),
       );
 
-  String _label(BuildContext context, String value) => switch (value) {
+  static String _label(BuildContext context, String value) => switch (value) {
         'price_asc' => context.tr(
             'shop_sort_price_asc',
             defaultText: 'Price: Low -> High',
@@ -64,6 +74,37 @@ class ListingRefinements extends StatelessWidget {
             defaultText: 'Latest Arrivals',
           ),
       };
+}
+
+class _SortProducts extends StatelessWidget {
+  const _SortProducts({required this.selected, required this.onChanged});
+
+  final ValueChanged<String> onChanged;
+  final String selected;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const TranslatedText(
+            'shop_sort_by',
+            defaultText: 'Sort by',
+            style: TextStyle(
+              color: StoreColors.foregroundMuted,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          for (final value in ListingRefinements._choices)
+            _SortChoice(
+              value: value,
+              label: ListingRefinements._label(context, value),
+              selected: selected == value,
+              onChanged: onChanged,
+            ),
+        ],
+      );
 }
 
 class _SortChoice extends StatelessWidget {

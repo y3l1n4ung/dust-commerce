@@ -120,6 +120,21 @@ Future<void> seedRoundTripCatalog(CommerceDatabase database) async {
     r"('var_large', 'prod_shirt', 'Large', 20)",
   );
   await run(
+    r"INSERT INTO product_options (id, product_id, title) VALUES "
+    r"('opt_size', 'prod_shirt', 'Size')",
+  );
+  await run(
+    r"INSERT INTO product_option_values (id, option_id, value, rank) VALUES "
+    r"('optval_small', 'opt_size', 'Small', 0), "
+    r"('optval_large', 'opt_size', 'Large', 1)",
+  );
+  await run(
+    r"INSERT INTO variant_option_values "
+    r"(variant_id, option_id, option_value_id) VALUES "
+    r"('var_small', 'opt_size', 'optval_small'), "
+    r"('var_large', 'opt_size', 'optval_large')",
+  );
+  await run(
     r"INSERT INTO variant_prices (variant_id, currency_code, amount) VALUES "
     r"('var_small', 'usd', 1999), "
     r"('var_large', 'usd', 2199), "

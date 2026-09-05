@@ -161,6 +161,7 @@ final class _RelatedFailureApi implements CommerceApi {
     String? collection,
     String? category,
     String? tag,
+    List<String> optionValueIds = const [],
     int? limit,
     int? offset,
   }) =>

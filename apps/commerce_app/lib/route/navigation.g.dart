@@ -32,14 +32,14 @@ final class CommerceRoutesNavigator {
 
   CommerceRouteAction<void> cart() => CommerceRouteAction(_router, CartRoute());
 
-  CommerceRouteAction<void> category({required String handle, int page = 1, String sortBy = 'created_at'}) =>
-      CommerceRouteAction(_router, CategoryRoute(handle: handle, page: page, sortBy: sortBy));
+  CommerceRouteAction<void> category({required String handle, int page = 1, String sortBy = 'created_at', List<String> optionValueIds = const []}) =>
+      CommerceRouteAction(_router, CategoryRoute(handle: handle, page: page, sortBy: sortBy, optionValueIds: optionValueIds));
 
   CommerceRouteAction<void> checkout() =>
       CommerceRouteAction(_router, CheckoutRoute());
 
-  CommerceRouteAction<void> collection({required String handle, int page = 1, String sortBy = 'created_at'}) =>
-      CommerceRouteAction(_router, CollectionRoute(handle: handle, page: page, sortBy: sortBy));
+  CommerceRouteAction<void> collection({required String handle, int page = 1, String sortBy = 'created_at', List<String> optionValueIds = const []}) =>
+      CommerceRouteAction(_router, CollectionRoute(handle: handle, page: page, sortBy: sortBy, optionValueIds: optionValueIds));
 
   CommerceRouteAction<void> orderConfirmed({required String id}) =>
       CommerceRouteAction(_router, OrderConfirmedRoute(id: id));
@@ -47,8 +47,8 @@ final class CommerceRoutesNavigator {
   CommerceRouteAction<void> product({required String handle}) =>
       CommerceRouteAction(_router, ProductRoute(handle: handle));
 
-  CommerceRouteAction<void> store({int page = 1, String sortBy = 'created_at'}) =>
-      CommerceRouteAction(_router, StoreRoute(page: page, sortBy: sortBy));
+  CommerceRouteAction<void> store({int page = 1, String sortBy = 'created_at', List<String> optionValueIds = const []}) =>
+      CommerceRouteAction(_router, StoreRoute(page: page, sortBy: sortBy, optionValueIds: optionValueIds));
 
   bool pop<R>([R? result]) => _router.pop<R>(result);
 }

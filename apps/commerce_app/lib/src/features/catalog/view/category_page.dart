@@ -12,11 +12,15 @@ class CategoryPage extends StatelessWidget {
     required this.handle,
     this.page = 1,
     this.sortBy = 'created_at',
+    this.optionValueIds = const [],
     super.key,
   });
 
   /// Full category handle from the URL.
   final String handle;
+
+  /// Hidden source-compatible option values retained in the URL.
+  final List<String> optionValueIds;
 
   /// One-based page query.
   final int page;
@@ -28,11 +32,13 @@ class CategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentPage = page < 1 ? 1 : page;
     final currentSort = normalizedProductSort(sortBy);
+    final selected = normalizedOptionValueIds(optionValueIds);
     final requestKey = listingRequestKey(
       'category',
       handle,
       currentPage,
       currentSort,
+      selected,
     );
     return ProductListingRoute(
       key: ValueKey(requestKey),
@@ -41,12 +47,24 @@ class CategoryPage extends StatelessWidget {
         handle,
         page: currentPage,
         sortBy: currentSort,
+        optionValueIds: selected,
       ),
-      onSortChanged: (value) =>
-          context.navigator.category(handle: handle, sortBy: value).go(),
-      onPageChanged: (value) => context.navigator
-          .category(handle: handle, page: value, sortBy: currentSort)
+      onSortChanged: (value) => context.navigator
+          .category(
+            handle: handle,
+            sortBy: value,
+            optionValueIds: selected,
+          )
           .go(),
+      onPageChanged: (value) => context.navigator
+          .category(
+            handle: handle,
+            page: value,
+            sortBy: currentSort,
+            optionValueIds: selected,
+          )
+          .go(),
+      onOptionValuesChanged: (_) {},
       onCategorySelected: (categoryHandle) =>
           context.navigator.category(handle: categoryHandle).go(),
     );

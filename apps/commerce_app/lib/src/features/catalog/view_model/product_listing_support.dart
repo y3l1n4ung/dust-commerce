@@ -1,8 +1,53 @@
 part of 'product_listing_view_model.dart';
 
 /// Stable key used to suppress stale listing state between routes.
-String listingRequestKey(String kind, String handle, int page, String sortBy) =>
-    '$kind:$handle:${page < 1 ? 1 : page}:${normalizedProductSort(sortBy)}';
+String listingRequestKey(
+  String kind,
+  String handle,
+  int page,
+  String sortBy, [
+  List<String> optionValueIds = const [],
+]) =>
+    '$kind:$handle:${page < 1 ? 1 : page}:${normalizedProductSort(sortBy)}:'
+    '${normalizedOptionValueIds(optionValueIds).join(',')}';
+
+/// Removes empty and duplicate option values while preserving URL order.
+List<String> normalizedOptionValueIds(Iterable<String> values) {
+  final result = <String>[];
+  final seen = <String>{};
+  for (final raw in values) {
+    final value = raw.trim();
+    if (value.isNotEmpty && seen.add(value)) result.add(value);
+  }
+  return List.unmodifiable(result);
+}
+
+Future<List<ProductOptionFilterView>> _optionalOptionFilters(
+  CommerceApi api,
+  int limit,
+) async {
+  try {
+    final result = await api.productOptions(limit: limit);
+    return result.productOptions;
+  } on Object {
+    // Medusa treats refinement discovery as optional: products still render.
+    return const [];
+  }
+}
+
+Future<(ProductPageView, _ListingMeta)> _withOptionFilters(
+  Future<ProductPageView> products,
+  Future<List<ProductOptionFilterView>> filters,
+  _ListingMeta meta,
+) async {
+  final values = await Future.wait<Object>([products, filters]);
+  return (
+    values.first as ProductPageView,
+    meta.copyWith(
+      optionFilters: values.last as List<ProductOptionFilterView>,
+    ),
+  );
+}
 
 /// Restricts public sort query values to the source-supported set.
 String normalizedProductSort(String value) =>
@@ -60,6 +105,8 @@ final class _ListingMeta {
     this.description = '',
     this.parents = const [],
     this.children = const [],
+    this.optionFilters = const [],
+    this.selectedOptionValueIds = const [],
     this.collection = const None(),
     this.category = const None(),
     this.currencyCode = 'usd',
@@ -70,9 +117,11 @@ final class _ListingMeta {
   final Option<String> collection;
   final String currencyCode;
   final String description;
+  final List<ProductOptionFilterView> optionFilters;
   final int page;
   final List<ProductCategory> parents;
   final String requestKey;
+  final List<String> selectedOptionValueIds;
   final String sortBy;
   final String title;
 
@@ -81,6 +130,7 @@ final class _ListingMeta {
     String? description,
     List<ProductCategory>? parents,
     List<ProductCategory>? children,
+    List<ProductOptionFilterView>? optionFilters,
   }) =>
       _ListingMeta(
         requestKey: requestKey,
@@ -90,6 +140,8 @@ final class _ListingMeta {
         sortBy: sortBy,
         parents: parents ?? this.parents,
         children: children ?? this.children,
+        optionFilters: optionFilters ?? this.optionFilters,
+        selectedOptionValueIds: selectedOptionValueIds,
         collection: collection,
         category: category,
         currencyCode: currencyCode,
@@ -107,6 +159,8 @@ final class _ListingMeta {
         description: description,
         parents: parents,
         children: children,
+        optionFilters: optionFilters,
+        selectedOptionValueIds: selectedOptionValueIds,
         products: products,
         sortBy: sortBy,
         currentPage: page,

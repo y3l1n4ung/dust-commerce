@@ -691,6 +691,14 @@
   "@sold_out": {
     "description": "Translation for `shop_sold_out`."
   },
+  "option_fallback": "ရွေးချယ်စရာ",
+  "@option_fallback": {
+    "description": "Fallback heading for a merchant option without a title."
+  },
+  "options": "ရွေးချယ်စရာများ",
+  "@options": {
+    "description": "Heading above store-wide option filters."
+  },
   "sort_by": "အစီအစဉ်",
   "@sort_by": {
     "description": "Heading above product sort choices."

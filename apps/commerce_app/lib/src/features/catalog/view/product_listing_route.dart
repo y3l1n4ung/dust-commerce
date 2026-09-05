@@ -12,6 +12,7 @@ class ProductListingRoute extends StatefulWidget {
     required this.load,
     required this.onSortChanged,
     required this.onPageChanged,
+    required this.onOptionValuesChanged,
     required this.onCategorySelected,
     super.key,
   });
@@ -24,6 +25,9 @@ class ProductListingRoute extends StatefulWidget {
 
   /// Changes the route page query.
   final ValueChanged<int> onPageChanged;
+
+  /// Replaces the repeated option-value query and resets pagination.
+  final ValueChanged<List<String>> onOptionValuesChanged;
 
   /// Changes the route sort query.
   final ValueChanged<String> onSortChanged;
@@ -65,6 +69,7 @@ class _ProductListingRouteState extends State<ProductListingRoute> {
           onRetry: _loadAfterFrame,
           onSortChanged: widget.onSortChanged,
           onPageChanged: widget.onPageChanged,
+          onOptionValuesChanged: widget.onOptionValuesChanged,
           onCategorySelected: widget.onCategorySelected,
         ),
       );

@@ -142,12 +142,12 @@ RouteDebugInfo commerceRouteDebugInfo(CommerceRoute route) {
     AccountRoute() => const RouteDebugInfo(name: 'account', shell: null, branch: null, resultType: 'void'),
     AccountOrdersRoute() => const RouteDebugInfo(name: 'accountOrders', shell: null, branch: null, resultType: 'void'),
     CartRoute() => const RouteDebugInfo(name: 'cart', shell: null, branch: null, resultType: 'void'),
-    CategoryRoute(handle: _, page: _, sortBy: _) => const RouteDebugInfo(name: 'category', shell: null, branch: null, resultType: 'void'),
+    CategoryRoute(handle: _, page: _, sortBy: _, optionValueIds: _) => const RouteDebugInfo(name: 'category', shell: null, branch: null, resultType: 'void'),
     CheckoutRoute() => const RouteDebugInfo(name: 'checkout', shell: null, branch: null, resultType: 'void'),
-    CollectionRoute(handle: _, page: _, sortBy: _) => const RouteDebugInfo(name: 'collection', shell: null, branch: null, resultType: 'void'),
+    CollectionRoute(handle: _, page: _, sortBy: _, optionValueIds: _) => const RouteDebugInfo(name: 'collection', shell: null, branch: null, resultType: 'void'),
     OrderConfirmedRoute(id: _) => const RouteDebugInfo(name: 'orderConfirmed', shell: null, branch: null, resultType: 'void'),
     ProductRoute(handle: _) => const RouteDebugInfo(name: 'product', shell: null, branch: null, resultType: 'void'),
-    StoreRoute(page: _, sortBy: _) => const RouteDebugInfo(name: 'store', shell: null, branch: null, resultType: 'void'),
+    StoreRoute(page: _, sortBy: _, optionValueIds: _) => const RouteDebugInfo(name: 'store', shell: null, branch: null, resultType: 'void'),
   };
 }
 

@@ -15,6 +15,7 @@ class ProductListingView extends StatelessWidget {
     required this.onRetry,
     required this.onSortChanged,
     required this.onPageChanged,
+    required this.onOptionValuesChanged,
     required this.onCategorySelected,
     super.key,
   });
@@ -24,6 +25,9 @@ class ProductListingView extends StatelessWidget {
 
   /// Changes the one-based page query.
   final ValueChanged<int> onPageChanged;
+
+  /// Changes the stable option-value selections.
+  final ValueChanged<List<String>> onOptionValuesChanged;
 
   /// Retries the current route request.
   final VoidCallback onRetry;
@@ -63,6 +67,9 @@ class ProductListingView extends StatelessWidget {
                 final refinements = ListingRefinements(
                   selected: state.sortBy,
                   onChanged: onSortChanged,
+                  options: state.optionFilters,
+                  selectedOptionValueIds: state.selectedOptionValueIds,
+                  onOptionValuesChanged: onOptionValuesChanged,
                 );
                 final products = _ListingProducts(
                   state: state,

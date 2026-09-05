@@ -18,7 +18,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `home/components/hero` | home hero | implemented in #19 |
 | `featured-products/product-rail` | featured product grid | implemented in #18 with source-ordered, API-backed collection rails; rendered QA remains |
 | `products/components/product-preview` | product card | implemented in #19 |
-| `store/templates` | catalogue | partial in #18 and #19; source sorting and 12-item paging implemented, option-value filtering remains |
+| `store/templates` | catalogue | partial in #18 and #19; source sorting, 12-item paging, stable option-value filtering, and optional filter discovery implemented; rendered QA remains |
 | `products/templates` | product detail route | implemented in #22; source-ordered mobile and sticky desktop composition |
 | `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations and sticky mobile actions |
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
@@ -53,6 +53,13 @@ each value is an equal-width 40px rectangle on the subtle background, the
 selected value changes only to the interactive border, and an unselected
 hover receives the Medusa card-rest shadow treatment. Invalid combinations are
 disabled by the product state before an interaction reaches the API.
+
+The store refinement sidebar also follows Medusa's `OptionsPicker`: filters
+come from `/store/product-options`, every group starts expanded, selections use
+stable value identifiers in repeated `optionValueIds` query keys, and changing
+a selection removes the current page. Option discovery is intentionally
+non-fatal, while collection and category routes retain incoming selections but
+hide the picker exactly as the source templates do.
 
 The Medusa-only `ProductOnboardingCta` is intentionally excluded. It appears
 only when a private admin-setup cookie is present and links to Medusa's local
