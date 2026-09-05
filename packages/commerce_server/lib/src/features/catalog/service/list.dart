@@ -50,14 +50,9 @@ Future<Result<ProductPage, SqlxError>> listProducts(
 
   final products = <Product>[];
   for (final row in (page as Ok<List<ProductRow>, SqlxError>).value) {
-    final variants = await lists.variantsOf(row.id, currencyCode);
-    if (variants case Err(:final error)) return Err(error);
-    products.add(
-      assembleProduct(
-        row,
-        (variants as Ok<List<VariantRow>, SqlxError>).value,
-      ),
-    );
+    final assembled = await _assemble(lists, row, currencyCode);
+    if (assembled case Err(:final error)) return Err(error);
+    products.add((assembled as Ok<Product, SqlxError>).value);
   }
 
   return Ok(
@@ -66,6 +61,37 @@ Future<Result<ProductPage, SqlxError>> listProducts(
       total: (total as Ok<int, SqlxError>).value,
       limit: limit,
       offset: offset,
+    ),
+  );
+}
+
+/// One product with its variants, options, and the values they chose.
+///
+/// Three queries per product on the page. That is N+1 and it is deliberate at
+/// this size: the alternative is a join returning the product columns once per
+/// variant per option, and unpicking that in Dart costs more than it saves
+/// until the catalogue is large enough to measure.
+Future<Result<Product, SqlxError>> _assemble(
+  CatalogListRepository lists,
+  ProductRow row,
+  String currencyCode,
+) async {
+  final variants = await lists.variantsOf(row.id, currencyCode);
+  if (variants case Err(:final error)) return Err(error);
+
+  final options = await lists.optionsOf(row.id);
+  if (options case Err(:final error)) return Err(error);
+
+  final chosen = await lists.optionValuesOf(row.id);
+  if (chosen case Err(:final error)) return Err(error);
+
+  return Ok(
+    assembleProduct(
+      row,
+      (variants as Ok<List<VariantRow>, SqlxError>).value,
+      options: (options as Ok<List<ProductOptionRow>, SqlxError>).value,
+      optionValues:
+          (chosen as Ok<List<VariantOptionValueRow>, SqlxError>).value,
     ),
   );
 }

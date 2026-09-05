@@ -122,6 +122,52 @@ void main() {
     });
   });
 
+  group('the option matrix', () {
+    test('a product carries the axes its variants vary along', () async {
+      final response = await client.get('/store/products/t-shirt').send();
+      final product = Product.fromJson(response.json! as Map<String, Object?>);
+
+      expect(product.options, hasLength(1));
+      expect(product.options.single.id, 'opt_size');
+      expect(product.options.single.title, 'Size');
+      expect(product.options.single.values, ['Small', 'Large']);
+    });
+
+    test('each variant carries the values it was built from', () async {
+      final response = await client.get('/store/products/t-shirt').send();
+      final product = Product.fromJson(response.json! as Map<String, Object?>);
+
+      expect(
+        product.variantById('var_small')!.optionValues,
+        {'opt_size': 'Small'},
+      );
+      expect(
+        product.variantById('var_large')!.optionValues,
+        {'opt_size': 'Large'},
+      );
+    });
+
+    test('a size selector can find its variant, which is the point', () async {
+      final response = await client.get('/store/products/t-shirt').send();
+      final product = Product.fromJson(response.json! as Map<String, Object?>);
+
+      expect(product.variantFor({'opt_size': 'Large'})?.id, 'var_large');
+      expect(product.variantFor({'opt_size': 'Tiny'}), isNull);
+    });
+
+    test('a listed product carries them too, not only a fetched one', () async {
+      final response = await client.get('/store/products').send();
+      final body = response.json! as Map<String, Object?>;
+      final products = (body['products']! as List<Object?>)
+          .map((it) => Product.fromJson(it! as Map<String, Object?>))
+          .toList();
+      final shirt = products.firstWhere((it) => it.handle == 't-shirt');
+
+      expect(shirt.options, hasLength(1));
+      expect(shirt.variantById('var_small')!.optionValues, isNotEmpty);
+    });
+  });
+
   group('over real HTTP', () {
     test('answers the same as it does in process', () async {
       final served = await TestClient.serve(buildApp(database));
@@ -149,6 +195,15 @@ Future<void> _seed(CommerceDatabase database) async {
     r"(id, product_id, title, inventory_quantity) VALUES "
     r"('var_small', 'prod_shirt', 'Small', 5), "
     r"('var_large', 'prod_shirt', 'Large', 2)",
+  );
+  await run(
+    r"INSERT INTO product_options (id, product_id, title, values_csv) VALUES "
+    r"('opt_size', 'prod_shirt', 'Size', 'Small,Large')",
+  );
+  await run(
+    r"INSERT INTO variant_option_values (variant_id, option_id, value) VALUES "
+    r"('var_small', 'opt_size', 'Small'), "
+    r"('var_large', 'opt_size', 'Large')",
   );
   await run(
     r"INSERT INTO variant_prices (variant_id, currency_code, amount) VALUES "

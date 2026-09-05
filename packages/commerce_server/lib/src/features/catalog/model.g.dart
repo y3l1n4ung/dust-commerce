@@ -108,6 +108,77 @@ mixin _$VariantRow {
   }
 }
 
+mixin _$ProductOptionRow {
+  @override
+  String toString() {
+    final self = this as ProductOptionRow;
+    return 'ProductOptionRow('
+        'id: ${self.id}, '
+        'productId: ${self.productId}, '
+        'title: ${self.title}, '
+        'valuesCsv: ${self.valuesCsv}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ProductOptionRow;
+    return identical(this, other) ||
+        other is ProductOptionRow &&
+            runtimeType == other.runtimeType &&
+            other.id == self.id &&
+            other.productId == self.productId &&
+            other.title == self.title &&
+            other.valuesCsv == self.valuesCsv;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as ProductOptionRow;
+    return Object.hashAll([
+      runtimeType,
+      self.id,
+      self.productId,
+      self.title,
+      self.valuesCsv,
+    ]);
+  }
+}
+
+mixin _$VariantOptionValueRow {
+  @override
+  String toString() {
+    final self = this as VariantOptionValueRow;
+    return 'VariantOptionValueRow('
+        'optionId: ${self.optionId}, '
+        'value: ${self.value}, '
+        'variantId: ${self.variantId}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as VariantOptionValueRow;
+    return identical(this, other) ||
+        other is VariantOptionValueRow &&
+            runtimeType == other.runtimeType &&
+            other.optionId == self.optionId &&
+            other.value == self.value &&
+            other.variantId == self.variantId;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as VariantOptionValueRow;
+    return Object.hashAll([
+      runtimeType,
+      self.optionId,
+      self.value,
+      self.variantId,
+    ]);
+  }
+}
+
 ProductRow _$ProductRowFromRow(Row row) {
   return ProductRow(
     id: row.read<String>('id'),
@@ -183,4 +254,73 @@ extension $VariantRowQuery on QueryAs<VariantRow> {
   /// Fetches every row.
   Future<List<VariantRow>> fetchAll(DatabaseExecutor db) =>
       fetchAllWith(db, _$VariantRowFromRow);
+}
+
+ProductOptionRow _$ProductOptionRowFromRow(Row row) {
+  return ProductOptionRow(
+    id: row.read<String>('id'),
+    productId: row.read<String>('product_id'),
+    title: row.read<String>('title'),
+    valuesCsv: row.read<String>('values_csv'),
+  );
+}
+
+/// Row deserializer for [ProductOptionRow].
+final class $ProductOptionRowRowDeserializer implements RowDeserializer<ProductOptionRow> {
+  const $ProductOptionRowRowDeserializer();
+
+  @override
+  ProductOptionRow deserialize(Row row) => _$ProductOptionRowFromRow(row);
+}
+
+/// Typed row query terminals for [ProductOptionRow].
+///
+/// Resolved from the static type of the receiver, so a row type with no
+/// `FromRow` has no terminals and the call does not compile.
+extension $ProductOptionRowQuery on QueryAs<ProductOptionRow> {
+  /// Fetches exactly one row.
+  Future<ProductOptionRow> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$ProductOptionRowFromRow);
+
+  /// Fetches zero or one row.
+  Future<ProductOptionRow?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$ProductOptionRowFromRow);
+
+  /// Fetches every row.
+  Future<List<ProductOptionRow>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$ProductOptionRowFromRow);
+}
+
+VariantOptionValueRow _$VariantOptionValueRowFromRow(Row row) {
+  return VariantOptionValueRow(
+    variantId: row.read<String>('variant_id'),
+    optionId: row.read<String>('option_id'),
+    value: row.read<String>('value'),
+  );
+}
+
+/// Row deserializer for [VariantOptionValueRow].
+final class $VariantOptionValueRowRowDeserializer implements RowDeserializer<VariantOptionValueRow> {
+  const $VariantOptionValueRowRowDeserializer();
+
+  @override
+  VariantOptionValueRow deserialize(Row row) => _$VariantOptionValueRowFromRow(row);
+}
+
+/// Typed row query terminals for [VariantOptionValueRow].
+///
+/// Resolved from the static type of the receiver, so a row type with no
+/// `FromRow` has no terminals and the call does not compile.
+extension $VariantOptionValueRowQuery on QueryAs<VariantOptionValueRow> {
+  /// Fetches exactly one row.
+  Future<VariantOptionValueRow> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$VariantOptionValueRowFromRow);
+
+  /// Fetches zero or one row.
+  Future<VariantOptionValueRow?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$VariantOptionValueRowFromRow);
+
+  /// Fetches every row.
+  Future<List<VariantOptionValueRow>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$VariantOptionValueRowFromRow);
 }

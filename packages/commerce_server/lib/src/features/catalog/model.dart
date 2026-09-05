@@ -93,12 +93,69 @@ final class VariantRow with _$VariantRow {
   final String title;
 }
 
+/// One row of `product_options`.
+///
+/// The permitted values are stored as one comma-separated column rather than a
+/// child table. An option's values are read and written together, never
+/// queried individually, so a join would buy nothing and cost a table.
+@Derive([ToString(), Eq(), FromRow()])
+final class ProductOptionRow with _$ProductOptionRow {
+  /// Creates a [ProductOptionRow].
+  const ProductOptionRow({
+    required this.id,
+    required this.productId,
+    required this.title,
+    required this.valuesCsv,
+  });
+
+  /// The primary key.
+  final String id;
+
+  /// The product this option belongs to.
+  @Sqlx(rename: 'product_id')
+  final String productId;
+
+  /// Display name, such as `Size`.
+  final String title;
+
+  /// The permitted values, comma separated.
+  @Sqlx(rename: 'values_csv')
+  final String valuesCsv;
+}
+
+/// One row of `variant_option_values`: the value a variant chose.
+@Derive([ToString(), Eq(), FromRow()])
+final class VariantOptionValueRow with _$VariantOptionValueRow {
+  /// Creates a [VariantOptionValueRow].
+  const VariantOptionValueRow({
+    required this.variantId,
+    required this.optionId,
+    required this.value,
+  });
+
+  /// The option this value answers.
+  @Sqlx(rename: 'option_id')
+  final String optionId;
+
+  /// The chosen value.
+  final String value;
+
+  /// The variant that chose it.
+  @Sqlx(rename: 'variant_id')
+  final String variantId;
+}
+
 /// Builds the domain [Product] a client sees from the rows a query returned.
 ///
 /// This is the seam the row types exist for. A row is the table's shape; a
 /// Product is the contract. Assembling here means a column rename touches this
 /// function and stops, rather than travelling to the client.
-Product assembleProduct(ProductRow product, List<VariantRow> variants) {
+Product assembleProduct(
+  ProductRow product,
+  List<VariantRow> variants, {
+  List<ProductOptionRow> options = const [],
+  List<VariantOptionValueRow> optionValues = const [],
+}) {
   return Product(
     id: product.id,
     title: product.title,
@@ -106,8 +163,17 @@ Product assembleProduct(ProductRow product, List<VariantRow> variants) {
     description: product.description,
     thumbnail: product.thumbnail,
     status: _status(product.status),
-    options: const [],
-    variants: variants.map(assembleVariant).toList(growable: false),
+    options: options.map(assembleOption).toList(growable: false),
+    variants: [
+      for (final variant in variants)
+        assembleVariant(
+          variant,
+          optionValues: {
+            for (final chosen in optionValues)
+              if (chosen.variantId == variant.id) chosen.optionId: chosen.value,
+          },
+        ),
+    ],
   );
 }
 
@@ -115,7 +181,10 @@ Product assembleProduct(ProductRow product, List<VariantRow> variants) {
 ///
 /// SQLite has no boolean, so the flags arrive as integers and are converted
 /// here rather than being exposed as ints on the domain type.
-ProductVariant assembleVariant(VariantRow row) {
+ProductVariant assembleVariant(
+  VariantRow row, {
+  Map<String, String> optionValues = const {},
+}) {
   return ProductVariant(
     id: row.id,
     title: row.title,
@@ -124,7 +193,19 @@ ProductVariant assembleVariant(VariantRow row) {
     inventoryQuantity: row.inventoryQuantity,
     manageInventory: row.manageInventory != 0,
     allowBackorder: row.allowBackorder != 0,
-    optionValues: const {},
+    optionValues: optionValues,
+  );
+}
+
+/// Builds the domain [ProductOption] a row describes.
+///
+/// An empty value is dropped rather than kept: a trailing comma in the column
+/// would otherwise become an option a storefront renders as a blank choice.
+ProductOption assembleOption(ProductOptionRow row) {
+  return ProductOption(
+    id: row.id,
+    title: row.title,
+    values: row.valuesCsv.split(',').where((it) => it.isNotEmpty).toList(),
   );
 }
 

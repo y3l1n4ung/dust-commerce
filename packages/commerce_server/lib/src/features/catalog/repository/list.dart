@@ -50,6 +50,31 @@ ORDER BY v.id
     String currencyCode,
   );
 
+  /// The axes [productId] varies along.
+  @Query(r'''
+SELECT id, product_id, title, values_csv
+FROM product_options
+WHERE product_id = $1
+ORDER BY id
+''')
+  Future<Result<List<ProductOptionRow>, SqlxError>> optionsOf(String productId);
+
+  /// The option values every variant of [productId] was built from.
+  ///
+  /// One query for the whole product rather than one per variant. A size
+  /// selector needs all of them to render, so fetching them per variant would
+  /// be N+1 for data that is always wanted together.
+  @Query(r'''
+SELECT v.id AS variant_id, o.option_id, o.value
+FROM variant_option_values o
+JOIN product_variants v ON v.id = o.variant_id
+WHERE v.product_id = $1
+ORDER BY v.id, o.option_id
+''')
+  Future<Result<List<VariantOptionValueRow>, SqlxError>> optionValuesOf(
+    String productId,
+  );
+
   /// How many published products there are, for a paged listing.
   @Query(r'''
 SELECT COUNT(*) AS total

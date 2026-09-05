@@ -51,6 +51,35 @@ ORDER BY v.id
   }
 
   @override
+  Future<Result<List<ProductOptionRow>, SqlxError>> optionsOf(String productId) {
+    return _db.fetchAll<ProductOptionRow>(
+      r'''
+SELECT id, product_id, title, values_csv
+FROM product_options
+WHERE product_id = ?
+ORDER BY id
+''',
+      [productId],
+      const $ProductOptionRowRowDeserializer().deserialize,
+    );
+  }
+
+  @override
+  Future<Result<List<VariantOptionValueRow>, SqlxError>> optionValuesOf(String productId) {
+    return _db.fetchAll<VariantOptionValueRow>(
+      r'''
+SELECT v.id AS variant_id, o.option_id, o.value
+FROM variant_option_values o
+JOIN product_variants v ON v.id = o.variant_id
+WHERE v.product_id = ?
+ORDER BY v.id, o.option_id
+''',
+      [productId],
+      const $VariantOptionValueRowRowDeserializer().deserialize,
+    );
+  }
+
+  @override
   Future<Result<int, SqlxError>> countPublished() {
     return _db.fetchScalar<int>(
       r'''
