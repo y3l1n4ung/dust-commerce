@@ -11,12 +11,12 @@ MIT-licensed headless commerce platform written in TypeScript. Medusa was chosen
 because its model is the one most commerce projects converge on, it is widely
 used, and its licence puts no constraints on studying it.
 
-**This is a reimplementation, not a port.** No Medusa code, schema dump, asset,
-or piece of branding was copied. What is borrowed is the shape of the domain —
-that a product owns variants, that a variant rather than a product carries price
-and stock, that a cart holds line items which snapshot their price at the time
-of adding, that an order is a frozen cart. Those are ideas, and ideas are what
-you are allowed to learn from.
+**This is a source-guided reimplementation, not a runtime port.** The Flutter
+storefront translates the MIT-licensed Medusa DTC Starter screen structure and
+interaction flow into Dust patterns; it does not embed React, Next.js, or the
+Medusa SDK. The backend remains an independent Dart and SQLite implementation.
+See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for the pinned source and
+attribution.
 
 This project is not affiliated with, endorsed by, or derived from Medusa.
 
@@ -86,6 +86,19 @@ dust build --root packages/commerce_shared
 dust build --root packages/commerce_server && dust db build --root packages/commerce_server
 dust build --root apps/commerce_app
 ```
+
+Start a local API with the deterministic development catalogue:
+
+```bash
+COMMERCE_SEED=true \
+  COMMERCE_DATABASE_PATH=.data/commerce.db \
+  dart run packages/commerce_server/bin/server.dart
+```
+
+The seed is opt-in and idempotent. Production startup never creates merchant or
+customer records. Bind address, port, database path, and browser origins are
+configured with `COMMERCE_BIND`, `COMMERCE_PORT`, `COMMERCE_DATABASE_PATH`, and
+comma-separated `COMMERCE_ALLOWED_ORIGINS`.
 
 Then the same checks CI runs:
 

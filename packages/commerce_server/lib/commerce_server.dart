@@ -11,3 +11,4 @@ export 'src/features/checkout/checkout.dart';
 export 'src/features/payment/payment.dart';
 export 'src/http/http.dart';
 export 'src/infra/database.dart';
+export 'src/infra/development_seed.dart';
