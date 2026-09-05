@@ -32,14 +32,15 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertOrderItem(String id, String orderId, String variantId, String productId, String title, String? variantTitle, int unitAmount, String currencyCode, int quantity) {
+  Future<Result<ExecResult, SqlxError>> insertOrderItem(String id, String orderId, String variantId, String productId, String productHandle, String? thumbnail, String title, String? variantTitle, int unitAmount, String currencyCode, int quantity) {
     return _db.execute(
       r'''
-INSERT INTO order_items (id, order_id, variant_id, product_id, title,
-                         variant_title, unit_amount, currency_code, quantity)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO order_items (id, order_id, variant_id, product_id, product_handle,
+                         thumbnail, title, variant_title, unit_amount,
+                         currency_code, quantity)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ''',
-      [id, orderId, variantId, productId, title, variantTitle, unitAmount, currencyCode, quantity],
+      [id, orderId, variantId, productId, productHandle, thumbnail, title, variantTitle, unitAmount, currencyCode, quantity],
     );
   }
 

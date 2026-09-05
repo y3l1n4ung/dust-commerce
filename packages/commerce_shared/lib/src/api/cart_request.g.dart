@@ -144,6 +144,68 @@ mixin _$AddLineBody implements Validatable, Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$UpdateLineBody implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as UpdateLineBody;
+    return 'UpdateLineBody('
+        'quantity: ${self.quantity}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as UpdateLineBody;
+    return identical(this, other) ||
+        other is UpdateLineBody &&
+            runtimeType == other.runtimeType &&
+            other.quantity == self.quantity;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as UpdateLineBody;
+    return Object.hashAll([
+      runtimeType,
+      self.quantity,
+    ]);
+  }
+
+  /// Validates this `UpdateLineBody`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as UpdateLineBody;
+    final errors = <ValidationError>[];
+    _UpdateLineBodyValidation._validateQuantity(self.quantity, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `UpdateLineBody` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$UpdateLineBodySerialize(this as UpdateLineBody);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$ChooseShippingBody implements Validatable, Serializable {
   @override
   String toString() {
@@ -292,6 +354,14 @@ extension _AddLineBodyValidation on AddLineBody {
   }
 
 }
+extension _UpdateLineBodyValidation on UpdateLineBody {
+  static void _validateQuantity(int quantity, List<ValidationError> errors) {
+    if (quantity < 1) {
+      errors.add(ValidationError(field: 'quantity', message: 'Order at least one'));
+    }
+  }
+
+}
 extension _ChooseShippingBodyValidation on ChooseShippingBody {
   static void _validateOptionId(String optionId, List<ValidationError> errors) {
     if (optionId.length < 1) {
@@ -331,6 +401,18 @@ final class $AddLineBodyDeserializer implements Deserializer<AddLineBody, Map<St
 
   @override
   AddLineBody deserialize(Map<String, Object?> json) => _$AddLineBodyDeserialize(json);
+}
+final class $UpdateLineBodySerializer implements Serializer<UpdateLineBody, Map<String, Object?>> {
+  const $UpdateLineBodySerializer();
+
+  @override
+  Map<String, Object?> serialize(UpdateLineBody value) => _$UpdateLineBodySerialize(value);
+}
+final class $UpdateLineBodyDeserializer implements Deserializer<UpdateLineBody, Map<String, Object?>> {
+  const $UpdateLineBodyDeserializer();
+
+  @override
+  UpdateLineBody deserialize(Map<String, Object?> json) => _$UpdateLineBodyDeserialize(json);
 }
 final class $ChooseShippingBodySerializer implements Serializer<ChooseShippingBody, Map<String, Object?>> {
   const $ChooseShippingBodySerializer();
@@ -408,6 +490,25 @@ AddLineBody _$AddLineBodyDeserialize(Map<String, Object?> json) {
 
 AddLineBody _$AddLineBodyFromJson(Map<String, Object?> json) =>
     _$AddLineBodyDeserialize(json);
+
+Map<String, Object?> _$UpdateLineBodySerialize(UpdateLineBody instance) {
+  return <String, Object?>{
+    'quantity': instance.quantity,
+  };
+}
+
+Map<String, Object?> _$UpdateLineBodyToJson(UpdateLineBody instance) =>
+    _$UpdateLineBodySerialize(instance);
+
+// factory UpdateLineBody.fromJson(Map<String, Object?> json) => _$UpdateLineBodyFromJson(json);
+UpdateLineBody _$UpdateLineBodyDeserialize(Map<String, Object?> json) {
+  final quantityValue = JsonHelper.as<int>(json['quantity'], 'quantity', 'int');
+
+  return UpdateLineBody(quantity: quantityValue);
+}
+
+UpdateLineBody _$UpdateLineBodyFromJson(Map<String, Object?> json) =>
+    _$UpdateLineBodyDeserialize(json);
 
 Map<String, Object?> _$ChooseShippingBodySerialize(ChooseShippingBody instance) {
   return <String, Object?>{

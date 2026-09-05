@@ -30,6 +30,7 @@ mixin _$Cart implements Serializable {
         'id: ${self.id}, '
         'items: ${self.items}, '
         'discount: ${self.discount}, '
+        'promotionCode: ${self.promotionCode}, '
         'region: ${self.region}, '
         'shippingMethod: ${self.shippingMethod}'
         ')';
@@ -46,6 +47,7 @@ mixin _$Cart implements Serializable {
             other.id == self.id &&
             _cartItemsEquality.equals(other.items, self.items) &&
             other.discount == self.discount &&
+            other.promotionCode == self.promotionCode &&
             other.region == self.region &&
             other.shippingMethod == self.shippingMethod;
   }
@@ -60,6 +62,7 @@ mixin _$Cart implements Serializable {
       self.id,
       _cartItemsEquality.hash(self.items),
       self.discount,
+      self.promotionCode,
       self.region,
       self.shippingMethod,
     ]);
@@ -90,6 +93,7 @@ abstract class _$CartCopyWith<$Res> {
     String? id,
     List<LineItem>? items,
     Money? discount,
+    String? promotionCode,
     Region? region,
     ShippingMethod? shippingMethod,
   });
@@ -110,6 +114,7 @@ final class _$CartCopyWithImpl<$Res> implements _$CartCopyWith<$Res> {
     Object? id = null,
     Object? items = null,
     Object? discount = _cartCopyWithUnset,
+    Object? promotionCode = _cartCopyWithUnset,
     Object? region = null,
     Object? shippingMethod = _cartCopyWithUnset,
   }) {
@@ -130,6 +135,9 @@ final class _$CartCopyWithImpl<$Res> implements _$CartCopyWith<$Res> {
         discount: identical(discount, _cartCopyWithUnset)
             ? _self.discount
             : discount as Money?,
+        promotionCode: identical(promotionCode, _cartCopyWithUnset)
+            ? _self.promotionCode
+            : promotionCode as String?,
       )
     );
   }
@@ -158,6 +166,7 @@ Map<String, Object?> _$CartSerialize(Cart instance) {
     'discount': instance.discount == null
         ? null
         : (instance.discount!).toJson(),
+    'promotion_code': instance.promotionCode,
     'region': instance.region.toJson(),
     'shipping_method': instance.shippingMethod == null
         ? null
@@ -182,6 +191,9 @@ Cart _$CartDeserialize(Map<String, Object?> json) {
   final discountValue = json['discount'] == null
       ? null
       : Money.fromJson(JsonHelper.asMap(json['discount'], 'discount'));
+  final promotionCodeValue = json['promotion_code'] == null
+      ? null
+      : JsonHelper.as<String>(json['promotion_code'], 'promotion_code', 'String');
   final regionValue = Region.fromJson(
     JsonHelper.asMap(json['region'], 'region'),
   );
@@ -197,6 +209,7 @@ Cart _$CartDeserialize(Map<String, Object?> json) {
     customerId: customerIdValue,
     shippingMethod: shippingMethodValue,
     discount: discountValue,
+    promotionCode: promotionCodeValue,
   );
 }
 

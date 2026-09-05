@@ -34,15 +34,18 @@ VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
 
   /// Copies one cart line onto the order.
   @Query(r'''
-INSERT INTO order_items (id, order_id, variant_id, product_id, title,
-                         variant_title, unit_amount, currency_code, quantity)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+INSERT INTO order_items (id, order_id, variant_id, product_id, product_handle,
+                         thumbnail, title, variant_title, unit_amount,
+                         currency_code, quantity)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 ''')
   Future<Result<ExecResult, SqlxError>> insertOrderItem(
     String id,
     String orderId,
     String variantId,
     String productId,
+    String productHandle,
+    String? thumbnail,
     String title,
     String? variantTitle,
     int unitAmount,

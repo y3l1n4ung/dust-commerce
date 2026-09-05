@@ -3,4 +3,6 @@ library;
 
 export 'line.dart';
 export 'promotion.dart';
+export 'quantity.dart';
+export 'remove.dart';
 export 'shipping.dart';

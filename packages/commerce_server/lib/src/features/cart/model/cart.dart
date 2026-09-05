@@ -61,11 +61,13 @@ final class LineItemRow with _$LineItemRow {
     required this.id,
     required this.variantId,
     required this.productId,
+    required this.productHandle,
     required this.title,
     required this.unitAmount,
     required this.currencyCode,
     required this.quantity,
     this.variantTitle,
+    this.thumbnail,
   });
 
   /// The currency the snapshot is in.
@@ -79,11 +81,18 @@ final class LineItemRow with _$LineItemRow {
   @Sqlx(rename: 'product_id')
   final String productId;
 
+  /// URL-safe product route captured on the line.
+  @Sqlx(rename: 'product_handle')
+  final String productHandle;
+
   /// Units ordered.
   final int quantity;
 
   /// The product name when the line was added.
   final String title;
+
+  /// Primary product image captured on the line.
+  final String? thumbnail;
 
   /// The price of one unit when the line was added, in minor units.
   @Sqlx(rename: 'unit_amount')
@@ -157,8 +166,10 @@ LineItem lineOf(LineItemRow row) => LineItem(
       id: row.id,
       variantId: row.variantId,
       productId: row.productId,
+      productHandle: row.productHandle,
       title: row.title,
       variantTitle: row.variantTitle,
+      thumbnail: row.thumbnail,
       unitPrice: Money(
         amount: row.unitAmount,
         currencyCode: row.currencyCode,

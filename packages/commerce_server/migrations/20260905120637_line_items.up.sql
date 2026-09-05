@@ -5,6 +5,9 @@ CREATE TABLE line_items (
   cart_id       TEXT NOT NULL REFERENCES carts (id) ON DELETE CASCADE,
   variant_id    TEXT NOT NULL REFERENCES product_variants (id),
   product_id    TEXT NOT NULL REFERENCES products (id),
+  -- Handle and thumbnail keep historical cart lines navigable and recognisable.
+  product_handle TEXT NOT NULL,
+  thumbnail      TEXT,
   title         TEXT NOT NULL,
   variant_title TEXT,
   -- Integer minor units snapshot the selected price without float errors.

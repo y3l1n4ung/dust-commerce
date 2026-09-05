@@ -11,15 +11,18 @@ abstract final class CartUpdateRepository {
 
   /// Adds a line, with the price snapshot taken by the caller.
   @Query(r'''
-INSERT INTO line_items (id, cart_id, variant_id, product_id, title,
-                        variant_title, unit_amount, currency_code, quantity)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+INSERT INTO line_items (id, cart_id, variant_id, product_id, product_handle,
+                        thumbnail, title, variant_title, unit_amount,
+                        currency_code, quantity)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 ''')
   Future<Result<ExecResult, SqlxError>> insertLine(
     String id,
     String cartId,
     String variantId,
     String productId,
+    String productHandle,
+    String? thumbnail,
     String title,
     String? variantTitle,
     int unitAmount,
@@ -28,10 +31,13 @@ VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
   );
 
   /// Sets the quantity of an existing line, keeping its price snapshot.
-  @Query(r'UPDATE line_items SET quantity = $2 WHERE id = $1')
+  @Query(
+    r'UPDATE line_items SET quantity = $2 WHERE id = $1 AND cart_id = $3',
+  )
   Future<Result<ExecResult, SqlxError>> setLineQuantity(
     String lineId,
     int quantity,
+    String cartId,
   );
 
   /// Removes a line.

@@ -19,22 +19,23 @@ final class _$CartUpdateRepository implements CartUpdateRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertLine(String id, String cartId, String variantId, String productId, String title, String? variantTitle, int unitAmount, String currencyCode, int quantity) {
+  Future<Result<ExecResult, SqlxError>> insertLine(String id, String cartId, String variantId, String productId, String productHandle, String? thumbnail, String title, String? variantTitle, int unitAmount, String currencyCode, int quantity) {
     return _db.execute(
       r'''
-INSERT INTO line_items (id, cart_id, variant_id, product_id, title,
-                        variant_title, unit_amount, currency_code, quantity)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO line_items (id, cart_id, variant_id, product_id, product_handle,
+                        thumbnail, title, variant_title, unit_amount,
+                        currency_code, quantity)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ''',
-      [id, cartId, variantId, productId, title, variantTitle, unitAmount, currencyCode, quantity],
+      [id, cartId, variantId, productId, productHandle, thumbnail, title, variantTitle, unitAmount, currencyCode, quantity],
     );
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> setLineQuantity(String lineId, int quantity) {
+  Future<Result<ExecResult, SqlxError>> setLineQuantity(String lineId, int quantity, String cartId) {
     return _db.execute(
-      r'''UPDATE line_items SET quantity = ? WHERE id = ?''',
-      [quantity, lineId],
+      r'''UPDATE line_items SET quantity = ? WHERE id = ? AND cart_id = ?''',
+      [quantity, lineId, cartId],
     );
   }
 

@@ -15,6 +15,10 @@ Router cartRoutes() {
     ..routeLayer(fromExtractor(const CartAccessExtractor()))
     ..route('/carts/{id}', get(readCartHandler))
     ..route('/carts/{id}/line-items', post(addLineHandler))
+    ..route(
+      '/carts/{id}/line-items/{lineId}',
+      patch(updateLineHandler).delete(removeLineHandler),
+    )
     ..route('/carts/{id}/shipping-options', get(listShippingOptionsHandler))
     ..route('/carts/{id}/shipping-method', post(chooseShippingHandler))
     ..route(

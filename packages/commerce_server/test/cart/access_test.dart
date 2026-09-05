@@ -34,7 +34,31 @@ void main() {
     final ownerWrite = harness.client.post('/store/carts/$cartId/line-items')
       ..bearer(owner.token)
       ..json({'variant_id': 'var_small'});
-    (await ownerWrite.send()).assertOk();
+    final added = await ownerWrite.send();
+    added.assertOk();
+    final lineId = CartView.fromJson(
+      added.json! as Map<String, Object?>,
+    ).cart.items.single.id;
+
+    final anonymousQuantity = harness.client
+        .patch('/store/carts/$cartId/line-items/$lineId')
+      ..json({'quantity': 2});
+    (await anonymousQuantity.send()).assertNotFound();
+    final wrongQuantity =
+        harness.client.patch('/store/carts/$cartId/line-items/$lineId')
+          ..bearer(stranger.token)
+          ..json({'quantity': 2});
+    (await wrongQuantity.send()).assertNotFound();
+
+    final wrongRemoval = harness.client
+        .delete('/store/carts/$cartId/line-items/$lineId')
+      ..bearer(stranger.token);
+    (await wrongRemoval.send()).assertNotFound();
+    final ownerQuantity =
+        harness.client.patch('/store/carts/$cartId/line-items/$lineId')
+          ..bearer(owner.token)
+          ..json({'quantity': 2});
+    (await ownerQuantity.send()).assertOk();
   });
 
   test('guest carts remain capability-addressed and accept no token', () async {

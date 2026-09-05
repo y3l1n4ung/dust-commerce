@@ -52,6 +52,7 @@ Future<Result<Cart?, SqlxError>> loadCart(
       discount: applied == null
           ? null
           : Money(amount: applied.amount, currencyCode: row.currencyCode),
+      promotionCode: applied?.code,
     ),
   );
 }

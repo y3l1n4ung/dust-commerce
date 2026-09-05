@@ -6,6 +6,8 @@ CREATE TABLE order_items (
   -- IDs intentionally have no FK so deleting catalog data cannot erase history.
   variant_id    TEXT NOT NULL,
   product_id    TEXT NOT NULL,
+  product_handle TEXT NOT NULL,
+  thumbnail      TEXT,
   title         TEXT NOT NULL,
   variant_title TEXT,
   -- Integer minor units preserve exact historical pricing.

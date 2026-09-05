@@ -54,6 +54,22 @@ class AddLineBody with _$AddLineBody {
   final String variantId;
 }
 
+/// The body of `PATCH /carts/{id}/line-items/{lineId}`.
+@Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+class UpdateLineBody with _$UpdateLineBody {
+  /// Creates an [UpdateLineBody].
+  const UpdateLineBody({required this.quantity});
+
+  /// Creates an [UpdateLineBody] from JSON.
+  factory UpdateLineBody.fromJson(Map<String, Object?> json) =>
+      _$UpdateLineBodyFromJson(json);
+
+  /// The complete replacement quantity, rather than an increment.
+  @Validate(range: Range(min: 1), message: 'Order at least one')
+  final int quantity;
+}
+
 /// The body of `POST /carts/{id}/shipping-method`.
 @Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)

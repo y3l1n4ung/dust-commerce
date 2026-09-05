@@ -26,8 +26,10 @@ mixin _$LineItem implements Serializable {
     return 'LineItem('
         'id: ${self.id}, '
         'productId: ${self.productId}, '
+        'productHandle: ${self.productHandle}, '
         'quantity: ${self.quantity}, '
         'title: ${self.title}, '
+        'thumbnail: ${self.thumbnail}, '
         'unitPrice: ${self.unitPrice}, '
         'variantId: ${self.variantId}, '
         'variantTitle: ${self.variantTitle}'
@@ -42,8 +44,10 @@ mixin _$LineItem implements Serializable {
             runtimeType == other.runtimeType &&
             other.id == self.id &&
             other.productId == self.productId &&
+            other.productHandle == self.productHandle &&
             other.quantity == self.quantity &&
             other.title == self.title &&
+            other.thumbnail == self.thumbnail &&
             other.unitPrice == self.unitPrice &&
             other.variantId == self.variantId &&
             other.variantTitle == self.variantTitle;
@@ -56,8 +60,10 @@ mixin _$LineItem implements Serializable {
       runtimeType,
       self.id,
       self.productId,
+      self.productHandle,
       self.quantity,
       self.title,
+      self.thumbnail,
       self.unitPrice,
       self.variantId,
       self.variantTitle,
@@ -69,7 +75,7 @@ mixin _$LineItem implements Serializable {
   /// Usage:
   /// ```dart
   /// final updated = lineItem.copyWith(id: 'John');
-  /// final cleared = lineItem.copyWith(variantTitle: null);
+  /// final cleared = lineItem.copyWith(thumbnail: null);
   /// ```
   @pragma('vm:prefer-inline')
   _$LineItemCopyWith<LineItem> get copyWith => _$LineItemCopyWithImpl<LineItem>(this as LineItem, (value) => value);
@@ -86,8 +92,10 @@ abstract class _$LineItemCopyWith<$Res> {
   $Res call({
     String? id,
     String? productId,
+    String? productHandle,
     int? quantity,
     String? title,
+    String? thumbnail,
     Money? unitPrice,
     String? variantId,
     String? variantTitle,
@@ -106,8 +114,10 @@ final class _$LineItemCopyWithImpl<$Res> implements _$LineItemCopyWith<$Res> {
   $Res call({
     Object? id = null,
     Object? productId = null,
+    Object? productHandle = null,
     Object? quantity = null,
     Object? title = null,
+    Object? thumbnail = _lineItemCopyWithUnset,
     Object? unitPrice = null,
     Object? variantId = null,
     Object? variantTitle = _lineItemCopyWithUnset,
@@ -117,12 +127,16 @@ final class _$LineItemCopyWithImpl<$Res> implements _$LineItemCopyWith<$Res> {
         id: id == null ? _self.id : id as String,
         variantId: variantId == null ? _self.variantId : variantId as String,
         productId: productId == null ? _self.productId : productId as String,
+        productHandle: productHandle == null ? _self.productHandle : productHandle as String,
         title: title == null ? _self.title : title as String,
         unitPrice: unitPrice == null ? _self.unitPrice : unitPrice as Money,
         quantity: quantity == null ? _self.quantity : quantity as int,
         variantTitle: identical(variantTitle, _lineItemCopyWithUnset)
             ? _self.variantTitle
             : variantTitle as String?,
+        thumbnail: identical(thumbnail, _lineItemCopyWithUnset)
+            ? _self.thumbnail
+            : thumbnail as String?,
       )
     );
   }
@@ -144,8 +158,10 @@ Map<String, Object?> _$LineItemSerialize(LineItem instance) {
   return <String, Object?>{
     'id': instance.id,
     'product_id': instance.productId,
+    'product_handle': instance.productHandle,
     'quantity': instance.quantity,
     'title': instance.title,
+    'thumbnail': instance.thumbnail,
     'unit_price': instance.unitPrice.toJson(),
     'variant_id': instance.variantId,
     'variant_title': instance.variantTitle,
@@ -163,8 +179,16 @@ LineItem _$LineItemDeserialize(Map<String, Object?> json) {
     'product_id',
     'String',
   );
+  final productHandleValue = JsonHelper.as<String>(
+    json['product_handle'],
+    'product_handle',
+    'String',
+  );
   final quantityValue = JsonHelper.as<int>(json['quantity'], 'quantity', 'int');
   final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
+  final thumbnailValue = json['thumbnail'] == null
+      ? null
+      : JsonHelper.as<String>(json['thumbnail'], 'thumbnail', 'String');
   final unitPriceValue = Money.fromJson(
     JsonHelper.asMap(json['unit_price'], 'unit_price'),
   );
@@ -181,10 +205,12 @@ LineItem _$LineItemDeserialize(Map<String, Object?> json) {
     id: idValue,
     variantId: variantIdValue,
     productId: productIdValue,
+    productHandle: productHandleValue,
     title: titleValue,
     unitPrice: unitPriceValue,
     quantity: quantityValue,
     variantTitle: variantTitleValue,
+    thumbnail: thumbnailValue,
   );
 }
 

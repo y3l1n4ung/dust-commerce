@@ -73,8 +73,10 @@ mixin _$LineItemRow {
         'currencyCode: ${self.currencyCode}, '
         'id: ${self.id}, '
         'productId: ${self.productId}, '
+        'productHandle: ${self.productHandle}, '
         'quantity: ${self.quantity}, '
         'title: ${self.title}, '
+        'thumbnail: ${self.thumbnail}, '
         'unitAmount: ${self.unitAmount}, '
         'variantId: ${self.variantId}, '
         'variantTitle: ${self.variantTitle}'
@@ -90,8 +92,10 @@ mixin _$LineItemRow {
             other.currencyCode == self.currencyCode &&
             other.id == self.id &&
             other.productId == self.productId &&
+            other.productHandle == self.productHandle &&
             other.quantity == self.quantity &&
             other.title == self.title &&
+            other.thumbnail == self.thumbnail &&
             other.unitAmount == self.unitAmount &&
             other.variantId == self.variantId &&
             other.variantTitle == self.variantTitle;
@@ -105,8 +109,10 @@ mixin _$LineItemRow {
       self.currencyCode,
       self.id,
       self.productId,
+      self.productHandle,
       self.quantity,
       self.title,
+      self.thumbnail,
       self.unitAmount,
       self.variantId,
       self.variantTitle,
@@ -202,11 +208,13 @@ LineItemRow _$LineItemRowFromRow(Row row) {
     id: row.read<String>('id'),
     variantId: row.read<String>('variant_id'),
     productId: row.read<String>('product_id'),
+    productHandle: row.read<String>('product_handle'),
     title: row.read<String>('title'),
     unitAmount: row.read<int>('unit_amount'),
     currencyCode: row.read<String>('currency_code'),
     quantity: row.read<int>('quantity'),
     variantTitle: row.readNullable<String>('variant_title'),
+    thumbnail: row.readNullable<String>('thumbnail'),
   );
 }
 

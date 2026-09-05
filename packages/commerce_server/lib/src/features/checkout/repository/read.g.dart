@@ -58,8 +58,8 @@ WHERE o.id = ? AND o.customer_id = ?
   Future<Result<List<LineItemRow>, SqlxError>> itemsOf(String orderId) {
     return _db.fetchAll<LineItemRow>(
       r'''
-SELECT id, variant_id, product_id, title, variant_title,
-       unit_amount, currency_code, quantity
+SELECT id, variant_id, product_id, product_handle, thumbnail, title,
+       variant_title, unit_amount, currency_code, quantity
 FROM order_items
 WHERE order_id = ?
 ORDER BY rowid

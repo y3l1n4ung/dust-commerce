@@ -32,8 +32,8 @@ WHERE c.id = $1
 
   /// The lines of [cartId], in insertion order.
   @Query(r'''
-SELECT id, variant_id, product_id, title, variant_title,
-       unit_amount, currency_code, quantity
+SELECT id, variant_id, product_id, product_handle, thumbnail, title,
+       variant_title, unit_amount, currency_code, quantity
 FROM line_items
 WHERE cart_id = $1
 ORDER BY rowid
@@ -70,13 +70,25 @@ WHERE code = UPPER($1)
 
   /// The line for [variantId] in [cartId], if the cart already holds one.
   @Query(r'''
-SELECT id, variant_id, product_id, title, variant_title,
-       unit_amount, currency_code, quantity
+SELECT id, variant_id, product_id, product_handle, thumbnail, title,
+       variant_title, unit_amount, currency_code, quantity
 FROM line_items
 WHERE cart_id = $1 AND variant_id = $2
 ''')
   Future<Result<LineItemRow?, SqlxError>> findLine(
     String cartId,
     String variantId,
+  );
+
+  /// One line proven to belong to [cartId].
+  @Query(r'''
+SELECT id, variant_id, product_id, product_handle, thumbnail, title,
+       variant_title, unit_amount, currency_code, quantity
+FROM line_items
+WHERE cart_id = $1 AND id = $2
+''')
+  Future<Result<LineItemRow?, SqlxError>> findLineById(
+    String cartId,
+    String lineId,
   );
 }

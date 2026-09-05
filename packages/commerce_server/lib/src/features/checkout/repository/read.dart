@@ -46,8 +46,8 @@ WHERE o.id = $1 AND o.customer_id = $2
 
   /// The lines of an order.
   @Query(r'''
-SELECT id, variant_id, product_id, title, variant_title,
-       unit_amount, currency_code, quantity
+SELECT id, variant_id, product_id, product_handle, thumbnail, title,
+       variant_title, unit_amount, currency_code, quantity
 FROM order_items
 WHERE order_id = $1
 ORDER BY rowid

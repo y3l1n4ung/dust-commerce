@@ -23,6 +23,7 @@ void main() {
         id: 'item_1',
         variantId: 'variant_1',
         productId: 'prod_1',
+        productHandle: 't-shirt',
         title: 'T-Shirt',
         unitPrice: Money.of(unitPrice, 'eur'),
         quantity: quantity,

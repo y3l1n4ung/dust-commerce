@@ -91,6 +91,8 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
         orderId,
         line.variantId,
         line.productId,
+        line.productHandle,
+        line.thumbnail,
         line.title,
         line.variantTitle,
         line.unitPrice.amount,

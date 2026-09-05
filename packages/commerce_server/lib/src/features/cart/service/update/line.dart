@@ -1,7 +1,7 @@
 import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
-import 'package:commerce_server/src/features/catalog/model.dart';
 import 'package:commerce_server/src/features/catalog/repository/repository.dart';
+import 'package:commerce_server/src/features/catalog/sellable_variant.dart';
 import 'package:dust_dart/db.dart';
 
 /// Why a line could not be added.
@@ -44,7 +44,7 @@ Future<Result<AddLineFailure?, SqlxError>> addLine(
 
   final priced = await catalog.findVariant(variantId, cart.currencyCode);
   if (priced case Err(:final error)) return Err(error);
-  final variant = (priced as Ok<VariantRow?, SqlxError>).value;
+  final variant = (priced as Ok<SellableVariantRow?, SqlxError>).value;
   if (variant == null) return const Ok(AddLineFailure.noVariant);
 
   final existing = await reads.findLine(cartId, variantId);
@@ -52,7 +52,7 @@ Future<Result<AddLineFailure?, SqlxError>> addLine(
   final line = (existing as Ok<LineItemRow?, SqlxError>).value;
 
   final wanted = (line?.quantity ?? 0) + quantity;
-  if (!assembleVariant(variant).canFulfil(wanted)) {
+  if (!assembleSellableVariant(variant).canFulfil(wanted)) {
     return const Ok(AddLineFailure.outOfStock);
   }
 
@@ -62,13 +62,15 @@ Future<Result<AddLineFailure?, SqlxError>> addLine(
           cartId,
           variant.id,
           variant.productId,
-          variant.title,
+          variant.productHandle,
+          variant.thumbnail,
+          variant.productTitle,
           variant.title,
           variant.amount,
           variant.currencyCode,
           quantity,
         )
-      : await writes.setLineQuantity(line.id, wanted);
+      : await writes.setLineQuantity(line.id, wanted, cartId);
 
   if (written case Err(:final error)) return Err(error);
   return const Ok(null);

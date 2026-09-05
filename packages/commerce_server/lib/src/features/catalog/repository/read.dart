@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/catalog/model.dart';
+import 'package:commerce_server/src/features/catalog/sellable_variant.dart';
 import 'package:dust_dart/db.dart';
 
 part 'read.g.dart';
@@ -23,12 +24,14 @@ WHERE handle = $1 AND status = 'published'
   @Query(r'''
 SELECT v.id, v.product_id, v.title, v.sku, v.inventory_quantity,
        v.manage_inventory, v.allow_backorder,
-       p.currency_code, p.amount
+       p.currency_code, p.amount, product.title AS product_title,
+       product.handle AS product_handle, product.thumbnail
 FROM product_variants v
 JOIN variant_prices p ON p.variant_id = v.id
-WHERE v.id = $1 AND p.currency_code = $2
+JOIN products product ON product.id = v.product_id
+WHERE v.id = $1 AND p.currency_code = $2 AND product.status = 'published'
 ''')
-  Future<Result<VariantRow?, SqlxError>> findVariant(
+  Future<Result<SellableVariantRow?, SqlxError>> findVariant(
     String variantId,
     String currencyCode,
   );

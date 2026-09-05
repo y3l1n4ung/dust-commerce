@@ -38,8 +38,8 @@ WHERE c.id = ?
   Future<Result<List<LineItemRow>, SqlxError>> linesOf(String cartId) {
     return _db.fetchAll<LineItemRow>(
       r'''
-SELECT id, variant_id, product_id, title, variant_title,
-       unit_amount, currency_code, quantity
+SELECT id, variant_id, product_id, product_handle, thumbnail, title,
+       variant_title, unit_amount, currency_code, quantity
 FROM line_items
 WHERE cart_id = ?
 ORDER BY rowid
@@ -93,12 +93,26 @@ WHERE code = UPPER(?)
   Future<Result<LineItemRow?, SqlxError>> findLine(String cartId, String variantId) {
     return _db.fetchOptional<LineItemRow>(
       r'''
-SELECT id, variant_id, product_id, title, variant_title,
-       unit_amount, currency_code, quantity
+SELECT id, variant_id, product_id, product_handle, thumbnail, title,
+       variant_title, unit_amount, currency_code, quantity
 FROM line_items
 WHERE cart_id = ? AND variant_id = ?
 ''',
       [cartId, variantId],
+      const $LineItemRowRowDeserializer().deserialize,
+    );
+  }
+
+  @override
+  Future<Result<LineItemRow?, SqlxError>> findLineById(String cartId, String lineId) {
+    return _db.fetchOptional<LineItemRow>(
+      r'''
+SELECT id, variant_id, product_id, product_handle, thumbnail, title,
+       variant_title, unit_amount, currency_code, quantity
+FROM line_items
+WHERE cart_id = ? AND id = ?
+''',
+      [cartId, lineId],
       const $LineItemRowRowDeserializer().deserialize,
     );
   }

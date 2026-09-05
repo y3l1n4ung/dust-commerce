@@ -24,6 +24,7 @@ class Cart with _$Cart {
     this.customerId,
     this.shippingMethod,
     this.discount,
+    this.promotionCode,
   });
 
   /// Creates a [Cart], rejecting lines that do not belong in it.
@@ -38,6 +39,7 @@ class Cart with _$Cart {
     String? customerId,
     ShippingMethod? shippingMethod,
     Money? discount,
+    String? promotionCode,
   }) {
     final ids = items.map((item) => item.id).toList();
     if (ids.toSet().length != ids.length) {
@@ -84,6 +86,7 @@ class Cart with _$Cart {
       customerId: customerId,
       shippingMethod: shippingMethod,
       discount: discount,
+      promotionCode: promotionCode,
     );
   }
 
@@ -104,6 +107,9 @@ class Cart with _$Cart {
 
   /// What has been taken off, before tax. Never more than the goods.
   final Money? discount;
+
+  /// Applied promotion code snapshot, when the cart has one.
+  final String? promotionCode;
 
   /// The selling territory, fixing currency and tax.
   final Region region;
