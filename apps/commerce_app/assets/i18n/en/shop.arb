@@ -9,17 +9,102 @@
   "@back_to_store": {
     "description": "Link from a failed detail route to the store."
   },
-  "browse_products": "Browse products",
-  "@browse_products": {
-    "description": "Call to action shown when the cart is empty."
-  },
-  "cart_empty": "Your cart is empty",
-  "@cart_empty": {
-    "description": "Empty-cart message."
-  },
   "cart_title": "Cart",
   "@cart_title": {
     "description": "Cart page title."
+  },
+  "cart_load_failed": "Could not load your cart.",
+  "@cart_load_failed": {
+    "description": "Display-safe failure shown when cart restoration fails."
+  },
+  "cart_empty_body": "You don't have anything in your cart. Let's change that, use the link below to start browsing our products.",
+  "@cart_empty_body": {
+    "description": "Body copy for the empty cart state."
+  },
+  "explore_products": "Explore products",
+  "@explore_products": {
+    "description": "Link from the empty cart to the catalogue."
+  },
+  "cart_item": "Item",
+  "@cart_item": {
+    "description": "Product column heading in the cart table."
+  },
+  "cart_quantity": "Quantity",
+  "@cart_quantity": {
+    "description": "Quantity column heading in the cart table."
+  },
+  "cart_price": "Price",
+  "@cart_price": {
+    "description": "Unit-price column heading in the cart table."
+  },
+  "cart_total": "Total",
+  "@cart_total": {
+    "description": "Line and order total label."
+  },
+  "cart_variant": "Variant: {name}",
+  "@cart_variant": {
+    "description": "Selected variant shown under a cart line title.",
+    "placeholders": {
+      "name": {
+        "example": "Medium / White"
+      }
+    }
+  },
+  "cart_remove": "Remove",
+  "@cart_remove": {
+    "description": "Accessible label for removing one cart line."
+  },
+  "cart_update_failed": "Could not update this item.",
+  "@cart_update_failed": {
+    "description": "Fallback failure shown below a cart line."
+  },
+  "cart_summary": "Summary",
+  "@cart_summary": {
+    "description": "Cart totals section heading."
+  },
+  "cart_subtotal_excl": "Subtotal (excl. shipping and taxes)",
+  "@cart_subtotal_excl": {
+    "description": "Cart goods subtotal before delivery and tax."
+  },
+  "cart_shipping": "Shipping",
+  "@cart_shipping": {
+    "description": "Cart delivery total label."
+  },
+  "cart_discount": "Discount",
+  "@cart_discount": {
+    "description": "Cart discount total label."
+  },
+  "cart_taxes": "Taxes",
+  "@cart_taxes": {
+    "description": "Cart tax total label."
+  },
+  "cart_checkout": "Go to checkout",
+  "@cart_checkout": {
+    "description": "Primary action from cart to checkout."
+  },
+  "cart_add_promotion_codes": "Add Promotion Code(s)",
+  "@cart_add_promotion_codes": {
+    "description": "Opens the promotion-code form."
+  },
+  "cart_promotion_code": "Promotion code",
+  "@cart_promotion_code": {
+    "description": "Promotion-code field hint."
+  },
+  "cart_apply": "Apply",
+  "@cart_apply": {
+    "description": "Submits a promotion code."
+  },
+  "cart_promotion_failed": "Could not apply this code.",
+  "@cart_promotion_failed": {
+    "description": "Fallback failure shown by the promotion form."
+  },
+  "cart_promotions_applied": "Promotion(s) applied:",
+  "@cart_promotions_applied": {
+    "description": "Heading above applied promotion codes."
+  },
+  "cart_remove_promotion": "Remove promotion",
+  "@cart_remove_promotion": {
+    "description": "Accessible label for removing the applied promotion."
   },
   "add_to_cart": "Add to cart",
   "@add_to_cart": {
@@ -171,18 +256,6 @@
   "price_separator": "—",
   "@price_separator": {
     "description": "Separator between product title and price."
-  },
-  "subtotal": "Subtotal",
-  "@subtotal": {
-    "description": "Cart subtotal label."
-  },
-  "tax": "Tax",
-  "@tax": {
-    "description": "Cart tax label."
-  },
-  "total": "Total",
-  "@total": {
-    "description": "Cart final total label."
   },
   "not_found": "That page does not exist",
   "@not_found": {

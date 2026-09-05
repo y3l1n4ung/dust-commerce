@@ -9,17 +9,102 @@
   "@back_to_store": {
     "description": "Link from a failed detail route to the store."
   },
-  "browse_products": "ကုန်ပစ္စည်းများ ကြည့်ရန်",
-  "@browse_products": {
-    "description": "Call to action shown when the cart is empty."
-  },
-  "cart_empty": "သင့်စျေးခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိပါ",
-  "@cart_empty": {
-    "description": "Empty-cart message."
-  },
   "cart_title": "စျေးခြင်းတောင်း",
   "@cart_title": {
     "description": "Cart page title."
+  },
+  "cart_load_failed": "စျေးခြင်းတောင်းကို မဖွင့်နိုင်ပါ။",
+  "@cart_load_failed": {
+    "description": "Display-safe failure shown when cart restoration fails."
+  },
+  "cart_empty_body": "သင့်စျေးခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။ အောက်ပါလင့်ခ်မှ ကုန်ပစ္စည်းများကို စတင်ကြည့်ရှုနိုင်ပါသည်။",
+  "@cart_empty_body": {
+    "description": "Body copy for the empty cart state."
+  },
+  "explore_products": "ကုန်ပစ္စည်းများ ကြည့်ရန်",
+  "@explore_products": {
+    "description": "Link from the empty cart to the catalogue."
+  },
+  "cart_item": "ပစ္စည်း",
+  "@cart_item": {
+    "description": "Product column heading in the cart table."
+  },
+  "cart_quantity": "အရေအတွက်",
+  "@cart_quantity": {
+    "description": "Quantity column heading in the cart table."
+  },
+  "cart_price": "ဈေးနှုန်း",
+  "@cart_price": {
+    "description": "Unit-price column heading in the cart table."
+  },
+  "cart_total": "စုစုပေါင်း",
+  "@cart_total": {
+    "description": "Line and order total label."
+  },
+  "cart_variant": "ရွေးချယ်မှု: {name}",
+  "@cart_variant": {
+    "description": "Selected variant shown under a cart line title.",
+    "placeholders": {
+      "name": {
+        "example": "Medium / White"
+      }
+    }
+  },
+  "cart_remove": "ဖယ်ရှားရန်",
+  "@cart_remove": {
+    "description": "Accessible label for removing one cart line."
+  },
+  "cart_update_failed": "ဤပစ္စည်းကို ပြင်ဆင်၍မရပါ။",
+  "@cart_update_failed": {
+    "description": "Fallback failure shown below a cart line."
+  },
+  "cart_summary": "အကျဉ်းချုပ်",
+  "@cart_summary": {
+    "description": "Cart totals section heading."
+  },
+  "cart_subtotal_excl": "ပို့ဆောင်ခနှင့် အခွန်မပါ ကြားဖြတ်စုစုပေါင်း",
+  "@cart_subtotal_excl": {
+    "description": "Cart goods subtotal before delivery and tax."
+  },
+  "cart_shipping": "ပို့ဆောင်ခ",
+  "@cart_shipping": {
+    "description": "Cart delivery total label."
+  },
+  "cart_discount": "လျှော့ဈေး",
+  "@cart_discount": {
+    "description": "Cart discount total label."
+  },
+  "cart_taxes": "အခွန်များ",
+  "@cart_taxes": {
+    "description": "Cart tax total label."
+  },
+  "cart_checkout": "ငွေရှင်းရန်",
+  "@cart_checkout": {
+    "description": "Primary action from cart to checkout."
+  },
+  "cart_add_promotion_codes": "ပရိုမိုးရှင်းကုဒ် ထည့်ရန်",
+  "@cart_add_promotion_codes": {
+    "description": "Opens the promotion-code form."
+  },
+  "cart_promotion_code": "ပရိုမိုးရှင်းကုဒ်",
+  "@cart_promotion_code": {
+    "description": "Promotion-code field hint."
+  },
+  "cart_apply": "အသုံးပြုရန်",
+  "@cart_apply": {
+    "description": "Submits a promotion code."
+  },
+  "cart_promotion_failed": "ဤကုဒ်ကို အသုံးပြု၍မရပါ။",
+  "@cart_promotion_failed": {
+    "description": "Fallback failure shown by the promotion form."
+  },
+  "cart_promotions_applied": "အသုံးပြုထားသော ပရိုမိုးရှင်းများ:",
+  "@cart_promotions_applied": {
+    "description": "Heading above applied promotion codes."
+  },
+  "cart_remove_promotion": "ပရိုမိုးရှင်း ဖယ်ရှားရန်",
+  "@cart_remove_promotion": {
+    "description": "Accessible label for removing the applied promotion."
   },
   "add_to_cart": "စျေးခြင်းတောင်းထဲ ထည့်ရန်",
   "@add_to_cart": {
@@ -171,18 +256,6 @@
   "price_separator": "—",
   "@price_separator": {
     "description": "Separator between product title and price."
-  },
-  "subtotal": "ကြားဖြတ်စုစုပေါင်း",
-  "@subtotal": {
-    "description": "Cart subtotal label."
-  },
-  "tax": "အခွန်",
-  "@tax": {
-    "description": "Cart tax label."
-  },
-  "total": "စုစုပေါင်း",
-  "@total": {
-    "description": "Cart final total label."
   },
   "not_found": "ဤစာမျက်နှာ မရှိပါ",
   "@not_found": {
