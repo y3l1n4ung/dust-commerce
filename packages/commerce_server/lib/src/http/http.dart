@@ -4,5 +4,6 @@
 /// dust_server, which carries its own status and encodes to one JSON shape.
 library;
 
+export 'cors.dart';
 export 'paging.dart';
 export 'state.dart';

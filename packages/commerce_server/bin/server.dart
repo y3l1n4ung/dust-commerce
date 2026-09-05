@@ -18,14 +18,7 @@ Future<void> main() async {
       ..layer(const SecurityHeaders())
       ..layer(const RequestId());
     if (config.allowedOrigins.isNotEmpty) {
-      app.layer(
-        Cors(
-          origins: AllowedOrigins.only(config.allowedOrigins),
-          methods: const {'GET', 'POST', 'DELETE', 'OPTIONS'},
-          headers: const {'accept', 'authorization', 'content-type'},
-          maxAge: const Duration(minutes: 10),
-        ),
-      );
+      app.layer(storefrontCors(config.allowedOrigins));
     }
 
     final server = await serve(app, config.address, config.port);
