@@ -33,6 +33,37 @@ abstract interface class CommerceApi {
   @GET('/store/customers/me')
   Future<Customer> currentCustomer();
 
+  /// Replaces editable fields on the authenticated customer profile.
+  @PATCH('/store/customers/me')
+  Future<Customer> updateCustomerProfile(
+    @Body() UpdateCustomerProfileBody body,
+  );
+
+  /// Lists the authenticated customer's active saved addresses.
+  @GET('/store/customers/me/addresses')
+  Future<CustomerAddressListView> customerAddresses();
+
+  /// Adds one reusable address to the authenticated customer.
+  @POST('/store/customers/me/addresses')
+  Future<CustomerAddressView> createCustomerAddress(
+    @Body() CustomerAddressInput body,
+  );
+
+  /// Replaces one reusable address owned by the authenticated customer.
+  @PATCH('/store/customers/me/addresses/{id}')
+  Future<CustomerAddressView> updateCustomerAddress(
+    @Path() String id,
+    @Body() CustomerAddressInput body,
+  );
+
+  /// Soft-deletes one reusable address owned by the authenticated customer.
+  @DELETE('/store/customers/me/addresses/{id}')
+  Future<CustomerAddressDeleted> deleteCustomerAddress(@Path() String id);
+
+  /// Lists active selling regions for account country selectors.
+  @GET('/store/regions')
+  Future<SellingRegionListView> regions();
+
   /// Revokes the bearer token configured on the Dio client.
   @DELETE('/auth/session')
   Future<SessionDeleted> signOut();

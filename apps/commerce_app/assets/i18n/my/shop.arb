@@ -167,6 +167,115 @@
   "@account_welcome_back": {
     "description": "Customer sign-in heading."
   },
+  "account_addresses": "လိပ်စာများ",
+  "@account_addresses": {
+    "description": "Account address-book navigation label."
+  },
+  "account_addresses_body": "ပို့ဆောင်ရေးလိပ်စာများကို ကြည့်ရှုပြင်ဆင်နိုင်ပြီး ငွေရှင်းချိန်တွင် အသုံးပြုရန် လိုသလောက် ထည့်နိုင်ပါသည်။",
+  "@account_addresses_body": {
+    "description": "Customer address-book supporting copy."
+  },
+  "account_add_address": "လိပ်စာထည့်ရန်",
+  "@account_add_address": {
+    "description": "New customer-address dialog title."
+  },
+  "account_address": "လိပ်စာ",
+  "@account_address": {
+    "description": "Primary street-address field label."
+  },
+  "account_address_error": "လိပ်စာစာရင်းကို မဖွင့်နိုင်ပါ။",
+  "@account_address_error": {
+    "description": "Customer address-book load failure."
+  },
+  "account_address_line_2": "တိုက်ခန်း၊ အခန်း စသည်",
+  "@account_address_line_2": {
+    "description": "Secondary street-address field label."
+  },
+  "account_billing_address": "ငွေတောင်းခံလိပ်စာ",
+  "@account_billing_address": {
+    "description": "Customer default billing-address label."
+  },
+  "account_city": "မြို့",
+  "@account_city": {
+    "description": "Customer-address city field label."
+  },
+  "account_company": "ကုမ္ပဏီ",
+  "@account_company": {
+    "description": "Customer-address company field label."
+  },
+  "account_country": "နိုင်ငံ",
+  "@account_country": {
+    "description": "Customer-address country field label."
+  },
+  "account_edit_address": "လိပ်စာပြင်ရန်",
+  "@account_edit_address": {
+    "description": "Existing customer-address dialog title."
+  },
+  "account_name": "အမည်",
+  "@account_name": {
+    "description": "Customer full-name profile label."
+  },
+  "account_new_address": "လိပ်စာအသစ်",
+  "@account_new_address": {
+    "description": "Adds a customer address."
+  },
+  "account_no_billing_address": "ငွေတောင်းခံလိပ်စာ မရှိသေးပါ",
+  "@account_no_billing_address": {
+    "description": "Empty customer billing-address state."
+  },
+  "account_not_set": "မသတ်မှတ်ရသေးပါ",
+  "@account_not_set": {
+    "description": "Missing optional profile value."
+  },
+  "account_postal_code": "စာပို့သင်္ကေတ",
+  "@account_postal_code": {
+    "description": "Customer-address postal-code field label."
+  },
+  "account_profile_body": "အမည်၊ အီးမေးလ်နှင့် ဖုန်းနံပါတ်အပါအဝင် ပရိုဖိုင်အချက်အလက်များကို ကြည့်ရှုပြင်ဆင်နိုင်ပြီး ငွေတောင်းခံလိပ်စာကိုလည်း ပြင်နိုင်ပါသည်။",
+  "@account_profile_body": {
+    "description": "Customer profile supporting copy."
+  },
+  "account_province": "တိုင်း / ပြည်နယ်",
+  "@account_province": {
+    "description": "Customer-address province field label."
+  },
+  "account_shipping_addresses": "ပို့ဆောင်ရေးလိပ်စာများ",
+  "@account_shipping_addresses": {
+    "description": "Customer address-book heading."
+  },
+  "account_sign_in_email": "အကောင့်ဝင် အီးမေးလ်",
+  "@account_sign_in_email": {
+    "description": "Explains that the profile email identifies sign-in."
+  },
+  "account_updated": "{label} ကို အောင်မြင်စွာ ပြင်ဆင်ပြီးပါပြီ",
+  "@account_updated": {
+    "description": "Confirms one profile field update.",
+    "placeholders": {
+      "label": {
+        "example": "အမည်"
+      }
+    }
+  },
+  "cancel": "မလုပ်တော့ပါ",
+  "@cancel": {
+    "description": "Cancels the current form."
+  },
+  "edit": "ပြင်ရန်",
+  "@edit": {
+    "description": "Edits an existing value."
+  },
+  "remove": "ဖယ်ရှားရန်",
+  "@remove": {
+    "description": "Removes a saved item."
+  },
+  "save": "သိမ်းရန်",
+  "@save": {
+    "description": "Saves the current form."
+  },
+  "save_changes": "ပြင်ဆင်ချက်များ သိမ်းရန်",
+  "@save_changes": {
+    "description": "Saves profile changes."
+  },
   "add_to_cart": "စျေးခြင်းတောင်းထဲ ထည့်ရန်",
   "@add_to_cart": {
     "description": "Adds the selected variant to the cart."

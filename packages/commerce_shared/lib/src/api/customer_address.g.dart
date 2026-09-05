@@ -13,6 +13,12 @@
 
 part of 'customer_address.dart';
 
+final class _CustomerAddressViewCopyWithUnset {
+  const _CustomerAddressViewCopyWithUnset();
+}
+
+const _customerAddressViewCopyWithUnset = _CustomerAddressViewCopyWithUnset();
+
 mixin _$CustomerAddressInput implements Validatable, Serializable {
   @override
   String toString() {
@@ -180,6 +186,16 @@ mixin _$CustomerAddressView implements Serializable {
     ]);
   }
 
+  /// Creates a copy of this `CustomerAddressView` with selected fields replaced.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final updated = customerAddressView.copyWith(line1: 'John');
+  /// final cleared = customerAddressView.copyWith(line2: null);
+  /// ```
+  @pragma('vm:prefer-inline')
+  _$CustomerAddressViewCopyWith<CustomerAddressView> get copyWith => _$CustomerAddressViewCopyWithImpl<CustomerAddressView>(this as CustomerAddressView, (value) => value);
+
   Map<String, Object?> serialize() =>
       _$CustomerAddressViewSerialize(this as CustomerAddressView);
 
@@ -287,6 +303,78 @@ extension _CustomerAddressInputValidation on CustomerAddressInput {
     }
   }
 
+}
+// CopyWith API inspired by Freezed.
+
+/// @nodoc
+abstract class _$CustomerAddressViewCopyWith<$Res> {
+  $Res call({
+    String? line1,
+    String? line2,
+    String? city,
+    String? company,
+    String? countryCode,
+    String? firstName,
+    String? id,
+    bool? isDefaultBilling,
+    bool? isDefaultShipping,
+    String? lastName,
+    String? phone,
+    String? postalCode,
+    String? province,
+  });
+}
+
+/// @nodoc
+final class _$CustomerAddressViewCopyWithImpl<$Res> implements _$CustomerAddressViewCopyWith<$Res> {
+  const _$CustomerAddressViewCopyWithImpl(this._self, this._then);
+
+  final CustomerAddressView _self;
+  final $Res Function(CustomerAddressView) _then;
+
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? line1 = null,
+    Object? line2 = _customerAddressViewCopyWithUnset,
+    Object? city = null,
+    Object? company = _customerAddressViewCopyWithUnset,
+    Object? countryCode = null,
+    Object? firstName = null,
+    Object? id = null,
+    Object? isDefaultBilling = null,
+    Object? isDefaultShipping = null,
+    Object? lastName = null,
+    Object? phone = _customerAddressViewCopyWithUnset,
+    Object? postalCode = null,
+    Object? province = _customerAddressViewCopyWithUnset,
+  }) {
+    return _then(
+      CustomerAddressView(
+        id: id == null ? _self.id : id as String,
+        firstName: firstName == null ? _self.firstName : firstName as String,
+        lastName: lastName == null ? _self.lastName : lastName as String,
+        line1: line1 == null ? _self.line1 : line1 as String,
+        city: city == null ? _self.city : city as String,
+        postalCode: postalCode == null ? _self.postalCode : postalCode as String,
+        countryCode: countryCode == null ? _self.countryCode : countryCode as String,
+        isDefaultShipping: isDefaultShipping == null ? _self.isDefaultShipping : isDefaultShipping as bool,
+        isDefaultBilling: isDefaultBilling == null ? _self.isDefaultBilling : isDefaultBilling as bool,
+        company: identical(company, _customerAddressViewCopyWithUnset)
+            ? _self.company
+            : company as String?,
+        line2: identical(line2, _customerAddressViewCopyWithUnset)
+            ? _self.line2
+            : line2 as String?,
+        province: identical(province, _customerAddressViewCopyWithUnset)
+            ? _self.province
+            : province as String?,
+        phone: identical(phone, _customerAddressViewCopyWithUnset)
+            ? _self.phone
+            : phone as String?,
+      )
+    );
+  }
 }
 final class $CustomerAddressInputSerializer implements Serializer<CustomerAddressInput, Map<String, Object?>> {
   const $CustomerAddressInputSerializer();

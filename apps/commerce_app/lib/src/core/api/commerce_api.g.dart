@@ -167,6 +167,225 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
+  Future<Customer> updateCustomerProfile(UpdateCustomerProfileBody body) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<Customer>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/customers/me',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return Customer.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<CustomerAddressListView> customerAddresses() async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<CustomerAddressListView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/customers/me/addresses',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return CustomerAddressListView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<CustomerAddressView> createCustomerAddress(CustomerAddressInput body) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<CustomerAddressView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/customers/me/addresses',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return CustomerAddressView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<CustomerAddressView> updateCustomerAddress(
+    String id,
+    CustomerAddressInput body,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<CustomerAddressView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/customers/me/addresses/' + Uri.encodeComponent(id.toString()),
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return CustomerAddressView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<CustomerAddressDeleted> deleteCustomerAddress(String id) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = null;
+    final _options = Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<CustomerAddressDeleted>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/customers/me/addresses/' + Uri.encodeComponent(id.toString()),
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return CustomerAddressDeleted.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<SellingRegionListView> regions() async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<SellingRegionListView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/regions',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return SellingRegionListView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<SessionDeleted> signOut() async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

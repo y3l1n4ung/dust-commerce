@@ -10,8 +10,10 @@ import 'package:dust_flutter/route.dart';
 import 'paths.g.dart';
 import 'metadata.g.dart';
 import '../route.dart';
+import 'package:commerce_app/src/features/account/view/account_addresses_page.dart';
 import 'package:commerce_app/src/features/account/view/account_orders_page.dart';
 import 'package:commerce_app/src/features/account/view/account_page.dart';
+import 'package:commerce_app/src/features/account/view/account_profile_page.dart';
 import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/category_page.dart';
@@ -74,7 +76,17 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const CatalogRoute(),
       route,
     ],
+    AccountAddressesRoute() => [
+      const CatalogRoute(),
+      const AccountRoute(),
+      route,
+    ],
     AccountOrdersRoute() => [
+      const CatalogRoute(),
+      const AccountRoute(),
+      route,
+    ],
+    AccountProfileRoute() => [
       const CatalogRoute(),
       const AccountRoute(),
       route,
@@ -114,7 +126,9 @@ const Map<Type, Type?> _$appliedShellsByPage = {
   CatalogPage: null,
   NotFoundPage: null,
   AccountPage: null,
+  AccountAddressesPage: null,
   AccountOrdersPage: null,
+  AccountProfilePage: null,
   CartPage: null,
   CategoryPage: null,
   CheckoutPage: null,
@@ -161,6 +175,15 @@ Page<dynamic> buildCommerceRoutePage(
       maintainState: true,
       child: const AccountPage(),
     ),
+    AccountAddressesRoute() => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'accountAddresses',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: const AccountAddressesPage(),
+    ),
     AccountOrdersRoute() => generatedPage(
       key: key,
       location: route.location,
@@ -169,6 +192,15 @@ Page<dynamic> buildCommerceRoutePage(
       fullscreenDialog: false,
       maintainState: true,
       child: const AccountOrdersPage(),
+    ),
+    AccountProfileRoute() => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'accountProfile',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: const AccountProfilePage(),
     ),
     CartRoute() => generatedPage(
       key: key,

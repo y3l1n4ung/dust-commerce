@@ -27,8 +27,14 @@ final class CommerceRoutesNavigator {
   CommerceRouteAction<void> account() =>
       CommerceRouteAction(_router, AccountRoute());
 
+  CommerceRouteAction<void> accountAddresses() =>
+      CommerceRouteAction(_router, AccountAddressesRoute());
+
   CommerceRouteAction<void> accountOrders() =>
       CommerceRouteAction(_router, AccountOrdersRoute());
+
+  CommerceRouteAction<void> accountProfile() =>
+      CommerceRouteAction(_router, AccountProfileRoute());
 
   CommerceRouteAction<void> cart() => CommerceRouteAction(_router, CartRoute());
 

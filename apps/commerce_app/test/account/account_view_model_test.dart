@@ -143,4 +143,28 @@ void main() {
       ),
     );
   });
+
+  test('profile update replaces the public customer without exposing auth',
+      () async {
+    final account = model();
+    await account.register(
+      email: 'ada@example.com',
+      password: 'correct horse battery staple',
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+    );
+
+    expect(
+      await account.updateProfile(
+        firstName: 'Grace',
+        lastName: 'Hopper',
+        phone: '+1 555 0100',
+      ),
+      isTrue,
+    );
+    expect(account.state.status, AccountStatus.signedIn);
+    expect(account.state.customer?.displayName, 'Grace Hopper');
+    expect(account.state.customer?.phone, '+1 555 0100');
+    expect(account.state.toString(), isNot(contains(sessions.value!.token)));
+  });
 }

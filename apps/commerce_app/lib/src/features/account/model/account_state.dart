@@ -34,6 +34,9 @@ enum AccountOperation {
 
   /// Revoking the active session.
   signOut,
+
+  /// Replacing editable customer profile fields.
+  updateProfile,
 }
 
 /// Public account UI state; bearer credentials never enter this object.

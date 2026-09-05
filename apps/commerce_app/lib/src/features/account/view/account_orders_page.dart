@@ -5,8 +5,9 @@ import 'package:commerce_app/route.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
-import 'account_navigation.dart';
 import 'account_order_card.dart';
+import 'account_route_layout.dart';
+import 'account_section.dart';
 
 /// Authenticated Medusa order-history route.
 @AppRoute('/account/orders', name: 'accountOrders', guards: [CustomerGuard])
@@ -35,49 +36,11 @@ class _AccountOrdersPageState extends State<AccountOrdersPage> {
     return StoreScaffold(
       body: customer == null
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 1024),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 48,
-                        ),
-                        child: MediaQuery.sizeOf(context).width >= 1024
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: 240,
-                                    child: AccountNavigation(
-                                      state: account,
-                                      ordersActive: true,
-                                    ),
-                                  ),
-                                  Expanded(
-                                      child: _OrdersContent(state: orders)),
-                                ],
-                              )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  MobileAccountNavigation(
-                                    customer: customer,
-                                    state: account,
-                                  ),
-                                  const SizedBox(height: 32),
-                                  _OrdersContent(state: orders),
-                                ],
-                              ),
-                      ),
-                    ),
-                  ),
-                  const StoreFooter(),
-                ],
-              ),
+          : AccountRouteLayout(
+              customer: customer,
+              state: account,
+              active: AccountSection.orders,
+              child: _OrdersContent(state: orders),
             ),
     );
   }

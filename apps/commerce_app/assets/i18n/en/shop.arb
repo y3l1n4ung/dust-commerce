@@ -167,6 +167,115 @@
   "@account_welcome_back": {
     "description": "Customer sign-in heading."
   },
+  "account_addresses": "Addresses",
+  "@account_addresses": {
+    "description": "Account address-book navigation label."
+  },
+  "account_addresses_body": "View and update your shipping addresses. Add as many as you like to make them available during checkout.",
+  "@account_addresses_body": {
+    "description": "Customer address-book supporting copy."
+  },
+  "account_add_address": "Add address",
+  "@account_add_address": {
+    "description": "New customer-address dialog title."
+  },
+  "account_address": "Address",
+  "@account_address": {
+    "description": "Primary street-address field label."
+  },
+  "account_address_error": "We could not load your address book.",
+  "@account_address_error": {
+    "description": "Customer address-book load failure."
+  },
+  "account_address_line_2": "Apartment, suite, etc.",
+  "@account_address_line_2": {
+    "description": "Secondary street-address field label."
+  },
+  "account_billing_address": "Billing address",
+  "@account_billing_address": {
+    "description": "Customer default billing-address label."
+  },
+  "account_city": "City",
+  "@account_city": {
+    "description": "Customer-address city field label."
+  },
+  "account_company": "Company",
+  "@account_company": {
+    "description": "Customer-address company field label."
+  },
+  "account_country": "Country",
+  "@account_country": {
+    "description": "Customer-address country field label."
+  },
+  "account_edit_address": "Edit address",
+  "@account_edit_address": {
+    "description": "Existing customer-address dialog title."
+  },
+  "account_name": "Name",
+  "@account_name": {
+    "description": "Customer full-name profile label."
+  },
+  "account_new_address": "New address",
+  "@account_new_address": {
+    "description": "Adds a customer address."
+  },
+  "account_no_billing_address": "No billing address",
+  "@account_no_billing_address": {
+    "description": "Empty customer billing-address state."
+  },
+  "account_not_set": "Not set",
+  "@account_not_set": {
+    "description": "Missing optional profile value."
+  },
+  "account_postal_code": "Postal code",
+  "@account_postal_code": {
+    "description": "Customer-address postal-code field label."
+  },
+  "account_profile_body": "View and update your profile information, including your name, email, and phone number. You can also update your billing address.",
+  "@account_profile_body": {
+    "description": "Customer profile supporting copy."
+  },
+  "account_province": "Province / State",
+  "@account_province": {
+    "description": "Customer-address province field label."
+  },
+  "account_shipping_addresses": "Shipping Addresses",
+  "@account_shipping_addresses": {
+    "description": "Customer address-book heading."
+  },
+  "account_sign_in_email": "Sign-in email",
+  "@account_sign_in_email": {
+    "description": "Explains that the profile email identifies sign-in."
+  },
+  "account_updated": "{label} updated successfully",
+  "@account_updated": {
+    "description": "Confirms one profile field update.",
+    "placeholders": {
+      "label": {
+        "example": "Name"
+      }
+    }
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancels the current form."
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edits an existing value."
+  },
+  "remove": "Remove",
+  "@remove": {
+    "description": "Removes a saved item."
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Saves the current form."
+  },
+  "save_changes": "Save changes",
+  "@save_changes": {
+    "description": "Saves profile changes."
+  },
   "add_to_cart": "Add to cart",
   "@add_to_cart": {
     "description": "Adds the selected variant to the cart."

@@ -9,8 +9,10 @@ import 'package:dust_flutter/route.dart';
 
 import 'paths.g.dart';
 import '../route.dart';
+import 'package:commerce_app/src/features/account/view/account_addresses_page.dart';
 import 'package:commerce_app/src/features/account/view/account_orders_page.dart';
 import 'package:commerce_app/src/features/account/view/account_page.dart';
+import 'package:commerce_app/src/features/account/view/account_profile_page.dart';
 import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/category_page.dart';
@@ -43,9 +45,23 @@ const List<GeneratedRoute> $commerceRoutes = [
     guards: [],
     routes: [
       GeneratedRoute(
+        'addresses',
+        page: AccountAddressesPage,
+        name: 'accountAddresses',
+        resultType: 'void',
+        guards: [CustomerGuard],
+      ),
+      GeneratedRoute(
         'orders',
         page: AccountOrdersPage,
         name: 'accountOrders',
+        resultType: 'void',
+        guards: [CustomerGuard],
+      ),
+      GeneratedRoute(
+        'profile',
+        page: AccountProfilePage,
+        name: 'accountProfile',
         resultType: 'void',
         guards: [CustomerGuard],
       ),
@@ -140,7 +156,9 @@ RouteDebugInfo commerceRouteDebugInfo(CommerceRoute route) {
     CatalogRoute() => const RouteDebugInfo(name: 'catalog', shell: null, branch: null, resultType: 'void'),
     NotFoundRoute() => const RouteDebugInfo(name: 'notFound', shell: null, branch: null, resultType: 'void'),
     AccountRoute() => const RouteDebugInfo(name: 'account', shell: null, branch: null, resultType: 'void'),
+    AccountAddressesRoute() => const RouteDebugInfo(name: 'accountAddresses', shell: null, branch: null, resultType: 'void'),
     AccountOrdersRoute() => const RouteDebugInfo(name: 'accountOrders', shell: null, branch: null, resultType: 'void'),
+    AccountProfileRoute() => const RouteDebugInfo(name: 'accountProfile', shell: null, branch: null, resultType: 'void'),
     CartRoute() => const RouteDebugInfo(name: 'cart', shell: null, branch: null, resultType: 'void'),
     CategoryRoute(handle: _, page: _, sortBy: _, optionValueIds: _) => const RouteDebugInfo(name: 'category', shell: null, branch: null, resultType: 'void'),
     CheckoutRoute() => const RouteDebugInfo(name: 'checkout', shell: null, branch: null, resultType: 'void'),
@@ -156,7 +174,9 @@ List<RouteGuardBase<CommerceRoute>> commerceRouteGuards(
   Object router,
 ) {
   return switch (route) {
+    AccountAddressesRoute() => [CustomerGuard((router as dynamic).customerSession)],
     AccountOrdersRoute() => [CustomerGuard((router as dynamic).customerSession)],
+    AccountProfileRoute() => [CustomerGuard((router as dynamic).customerSession)],
     CheckoutRoute() => [CheckoutGuard((router as dynamic).cartSession)],
     _ => const [],
   };

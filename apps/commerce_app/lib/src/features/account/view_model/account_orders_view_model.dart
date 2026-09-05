@@ -20,20 +20,31 @@ class AccountOrdersViewModel extends $AccountOrdersViewModel {
   /// Creates the order-history view model.
   AccountOrdersViewModel(super.args);
 
+  var _generation = 0;
+
+  /// Clears customer-owned data when the authenticated identity changes.
+  void reset() {
+    _generation++;
+    emit(const AccountOrdersState());
+  }
+
   /// Loads all orders owned by the current authenticated customer.
   Future<void> load() async {
     if (state.status == AccountOrdersStatus.loading) return;
+    final generation = _generation;
     emit(AccountOrdersState(
       status: AccountOrdersStatus.loading,
       orders: state.orders,
     ));
     try {
       final view = await args.api.orders();
+      if (generation != _generation) return;
       emit(AccountOrdersState(
         status: AccountOrdersStatus.ready,
         orders: view.orders,
       ));
     } on DioException catch (error) {
+      if (generation != _generation) return;
       final message = error.response?.statusCode == 401
           ? 'Your session has expired. Please sign in again.'
           : 'We could not load your orders. Please try again.';
@@ -43,6 +54,7 @@ class AccountOrdersViewModel extends $AccountOrdersViewModel {
         message: message,
       ));
     } on Object {
+      if (generation != _generation) return;
       emit(AccountOrdersState(
         status: AccountOrdersStatus.failed,
         orders: state.orders,

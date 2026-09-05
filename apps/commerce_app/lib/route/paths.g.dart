@@ -63,6 +63,19 @@ final class AccountRoute extends CommerceRoute<void> {
   bool get requiresAuth => false;
 }
 
+/// Typed route data for `AccountAddressesRoute`.
+final class AccountAddressesRoute extends CommerceRoute<void> {
+  const AccountAddressesRoute();
+
+  @override
+  String get location {
+    return generatedRoutePath(
+      ['account', 'addresses'],
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+}
+
 /// Typed route data for `AccountOrdersRoute`.
 final class AccountOrdersRoute extends CommerceRoute<void> {
   const AccountOrdersRoute();
@@ -71,6 +84,19 @@ final class AccountOrdersRoute extends CommerceRoute<void> {
   String get location {
     return generatedRoutePath(
       ['account', 'orders'],
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+}
+
+/// Typed route data for `AccountProfileRoute`.
+final class AccountProfileRoute extends CommerceRoute<void> {
+  const AccountProfileRoute();
+
+  @override
+  String get location {
+    return generatedRoutePath(
+      ['account', 'profile'],
       uriExtras: generatedRouteUriExtrasOf(this),
     );
   }
@@ -253,8 +279,20 @@ CommerceRoute parseCommerceRoute(Uri uri) {
     final route = AccountRoute();
     return withGeneratedRouteUriExtras(route, uri, const <String>{});
   }
+  if (
+    segments.length == 2 &&
+    segments[0] == 'account' &&
+    segments[1] == 'addresses'
+  ) {
+    final route = AccountAddressesRoute();
+    return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
   if (segments.length == 2 && segments[0] == 'account' && segments[1] == 'orders') {
     final route = AccountOrdersRoute();
+    return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (segments.length == 2 && segments[0] == 'account' && segments[1] == 'profile') {
+    final route = AccountProfileRoute();
     return withGeneratedRouteUriExtras(route, uri, const <String>{});
   }
   if (segments.length == 1 && segments[0] == 'cart') {

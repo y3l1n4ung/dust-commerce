@@ -7,21 +7,25 @@ import '../core/support.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('order history uses a typed route-level customer guard', () async {
+  test('all private account routes use a typed customer guard', () async {
     final account = testAccount(const _UnusedApi());
     final router = CommerceRouter(
       initialLocation: Uri.parse('/account/orders'),
       account: account,
       cart: testCart(const _UnusedApi()),
     );
-    const route = AccountOrdersRoute();
-    final guards = commerceRouteGuards(route, router);
-
-    expect(guards.single, isA<CustomerGuard>());
-    expect(
-      await RouteGuardChain<CommerceRoute>(guards).canActivate(route),
-      isA<AccountRoute>(),
-    );
+    for (final route in const <CommerceRoute>[
+      AccountAddressesRoute(),
+      AccountOrdersRoute(),
+      AccountProfileRoute(),
+    ]) {
+      final guards = commerceRouteGuards(route, router);
+      expect(guards.single, isA<CustomerGuard>());
+      expect(
+        await RouteGuardChain<CommerceRoute>(guards).canActivate(route),
+        isA<AccountRoute>(),
+      );
+    }
   });
 
   test('the shared sign-in account route remains public', () {

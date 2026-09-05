@@ -78,7 +78,7 @@ final class CustomerAddressInput with _$CustomerAddressInput {
 }
 
 /// One public customer address returned by the store API.
-@Derive([ToString(), Eq(), Serialize(), Deserialize()])
+@Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)
 final class CustomerAddressView with _$CustomerAddressView {
   /// Creates an explicitly allowlisted customer address.

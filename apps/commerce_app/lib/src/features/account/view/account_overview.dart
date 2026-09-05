@@ -2,9 +2,9 @@ import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:flutter/material.dart';
 
-import 'account_navigation.dart';
 import 'account_profile_overview.dart';
-import 'account_support.dart';
+import 'account_route_layout.dart';
+import 'account_section.dart';
 
 /// Authenticated Medusa account overview for the currently supported profile.
 class AccountOverview extends StatelessWidget {
@@ -22,57 +22,10 @@ class AccountOverview extends StatelessWidget {
   final AccountState state;
 
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1024),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 48),
-                        child: MediaQuery.sizeOf(context).width >= 1024
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: 240,
-                                    child: AccountNavigation(state: state),
-                                  ),
-                                  Expanded(
-                                    child: AccountProfileOverview(
-                                      customer: customer,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  MobileAccountNavigation(
-                                    customer: customer,
-                                    state: state,
-                                  ),
-                                  const SizedBox(height: 32),
-                                  AccountProfileOverview(customer: customer),
-                                ],
-                              ),
-                      ),
-                      const Divider(),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 48),
-                        child: AccountSupport(),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const StoreFooter(),
-          ],
-        ),
+  Widget build(BuildContext context) => AccountRouteLayout(
+        customer: customer,
+        state: state,
+        active: AccountSection.overview,
+        child: AccountProfileOverview(customer: customer),
       );
 }
