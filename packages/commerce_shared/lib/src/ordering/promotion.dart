@@ -169,8 +169,9 @@ Map<String, Money> allocateDiscount(Money discount, List<LineItem> lines) {
     0,
     (running, line) => running + line.subtotal.amount,
   );
-  if (total == 0)
+  if (total == 0) {
     return {for (final line in lines) line.id: Money.zero(currency)};
+  }
 
   final allocated = <String, int>{};
   var handed = 0;

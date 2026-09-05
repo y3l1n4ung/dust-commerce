@@ -68,7 +68,7 @@ void main() {
       expect(subject.total, Money.of(1760, 'usd'));
     });
 
-    test('all four together, in Medusa\'s order', () {
+    test("all four together, in Medusa's order", () {
       final subject = cart(shipping: standard, discount: Money.of(400, 'usd'));
 
       // taxable = 2000 + 500 - 400 = 2100, tax = 210
