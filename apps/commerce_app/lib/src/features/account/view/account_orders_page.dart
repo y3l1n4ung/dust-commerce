@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
+import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
@@ -72,7 +73,7 @@ class _OrdersContent extends StatelessWidget {
               const Center(child: CircularProgressIndicator()),
             AccountOrdersStatus.failed => Column(
                 children: [
-                  Text(state.message ?? 'Could not load your orders.'),
+                  Text(_ordersFailureMessage(context, state.failure)),
                   const SizedBox(height: 16),
                   OutlinedButton(
                     onPressed: context.readAccountOrdersViewModel().load,
@@ -99,6 +100,21 @@ class _OrdersContent extends StatelessWidget {
         ],
       );
 }
+
+String _ordersFailureMessage(
+  BuildContext context,
+  Option<AccountOrdersFailure> failure,
+) =>
+    switch (failure) {
+      Some(value: AccountOrdersFailure.unauthorized) => context.tr(
+          'shop_account_order_session_expired',
+          defaultText: 'Your session has expired. Please sign in again.',
+        ),
+      _ => context.tr(
+          'shop_account_orders_load_failed',
+          defaultText: 'We could not load your orders. Please try again.',
+        ),
+    };
 
 class _EmptyOrders extends StatelessWidget {
   const _EmptyOrders();

@@ -24,7 +24,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
 | `layout/components/cart-dropdown` | cart preview | implemented in #21 with hover, timed add feedback, live removal, subtotal and empty state |
 | `cart/templates` | cart route | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, promotion UI, authoritative totals, session-aware sign-in prompt and checkout handoff; rendered QA remains |
-| `account/templates` | account shell and session | implemented in #20 and #26 with secure session, overview, profile name/phone/billing/password editing, API-backed address book, source-shaped navigation, order list and guarded order detail; rendered QA remains |
+| `account/templates` | account shell and session | implemented in #20 and #26 with secure session, source-exact four-part overview completion, saved-address count, latest-five order links, profile name/phone/billing/password editing, API-backed address book, source-shaped navigation, order list and guarded order detail; rendered QA remains |
 | `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, delivery, manual-payment, review and confirmation steps; rendered QA remains |
 | `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards and guarded frozen order detail metadata, lines, delivery and totals implemented; contact, transfer and return flows remain |
 | `regions` store API | account and checkout country selection | implemented with explicit SQLx response allowlists; address-book selectors use active backend regions rather than hard-coded countries |
@@ -40,6 +40,7 @@ names so components do not invent close-but-different greys.
 | :--- | :--- | :--- |
 | `bg-ui-bg-base` | `#FFFFFF` | `StoreColors.base` |
 | `bg-ui-bg-subtle` | `#FAFAFA` | `StoreColors.subtle` |
+| account `bg-gray-50` | `#F9FAFB` | `StoreColors.neutral50` |
 | `border-ui-border-base` | `#E4E4E7` | `StoreColors.border` |
 | `border-ui-border-interactive` | `#3B82F6` | `StoreColors.interactive` |
 | `text-ui-fg-base` | `#18181B` | `StoreColors.foreground` |
@@ -102,6 +103,11 @@ Password rotation completes the TODO in the pinned Medusa profile source: it
 requires the current secret, writes a fresh Argon2id PHC value with
 compare-and-swap protection, atomically revokes every session, and signs the
 Flutter customer out. The confirmation value never crosses the API boundary.
+The overview loads address and order capabilities independently, does not
+report unknown data as zero, computes the same email/name/phone/default-billing
+quarters as Medusa, and links at most the five newest server-ordered purchases.
+Order-history absence and failure use Dust `Option` state rather than nullable
+display strings.
 
 ## Parity rule
 

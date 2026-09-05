@@ -23,6 +23,7 @@ mixin _$AddressBookState {
     return 'AddressBookState('
         'addresses: ${self.addresses}, '
         'regions: ${self.regions}, '
+        'hasLoaded: ${self.hasLoaded}, '
         'message: ${self.message}, '
         'operation: ${self.operation}, '
         'status: ${self.status}'
@@ -37,6 +38,7 @@ mixin _$AddressBookState {
             runtimeType == other.runtimeType &&
             _addressBookStateAddressesEquality.equals(other.addresses, self.addresses) &&
             _addressBookStateRegionsEquality.equals(other.regions, self.regions) &&
+            other.hasLoaded == self.hasLoaded &&
             other.message == self.message &&
             other.operation == self.operation &&
             other.status == self.status;
@@ -49,6 +51,7 @@ mixin _$AddressBookState {
       runtimeType,
       _addressBookStateAddressesEquality.hash(self.addresses),
       _addressBookStateRegionsEquality.hash(self.regions),
+      self.hasLoaded,
       self.message,
       self.operation,
       self.status,
@@ -59,7 +62,7 @@ mixin _$AddressBookState {
   ///
   /// Usage:
   /// ```dart
-  /// final updated = addressBookState.copyWith();
+  /// final updated = addressBookState.copyWith(hasLoaded: true);
   /// ```
   @pragma('vm:prefer-inline')
   _$AddressBookStateCopyWith<AddressBookState> get copyWith => _$AddressBookStateCopyWithImpl<AddressBookState>(this as AddressBookState, (value) => value);
@@ -72,6 +75,7 @@ abstract class _$AddressBookStateCopyWith<$Res> {
   $Res call({
     List<CustomerAddressView>? addresses,
     List<Region>? regions,
+    bool? hasLoaded,
     Option<String>? message,
     Option<AddressBookOperation>? operation,
     AddressBookStatus? status,
@@ -90,6 +94,7 @@ final class _$AddressBookStateCopyWithImpl<$Res> implements _$AddressBookStateCo
   $Res call({
     Object? addresses = null,
     Object? regions = null,
+    Object? hasLoaded = null,
     Object? message = null,
     Object? operation = null,
     Object? status = null,
@@ -98,6 +103,7 @@ final class _$AddressBookStateCopyWithImpl<$Res> implements _$AddressBookStateCo
       AddressBookState(
         addresses: addresses == null ? _self.addresses : addresses as List<CustomerAddressView>,
         regions: regions == null ? _self.regions : regions as List<Region>,
+        hasLoaded: hasLoaded == null ? _self.hasLoaded : hasLoaded as bool,
         status: status == null ? _self.status : status as AddressBookStatus,
         operation: operation == null ? _self.operation : operation as Option<AddressBookOperation>,
         message: message == null ? _self.message : message as Option<String>,

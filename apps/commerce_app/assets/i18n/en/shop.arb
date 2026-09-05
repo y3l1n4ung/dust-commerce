@@ -9,6 +9,10 @@
   "@account_completed": {
     "description": "Profile completion suffix."
   },
+  "account_date_placed": "Date placed",
+  "@account_date_placed": {
+    "description": "Recent-order placement-date label."
+  },
   "account_continue_shopping": "Continue shopping",
   "@account_continue_shopping": {
     "description": "Returns from empty order history to the store."
@@ -76,6 +80,19 @@
     "placeholders": {
       "count": {
         "example": "2"
+      }
+    }
+  },
+  "account_order_number": "Order number",
+  "@account_order_number": {
+    "description": "Recent-order identifier label."
+  },
+  "account_open_order": "Go to order #{id}",
+  "@account_open_order": {
+    "description": "Accessible recent-order link label.",
+    "placeholders": {
+      "id": {
+        "example": "order_123"
       }
     }
   },
@@ -199,6 +216,10 @@
   "@account_recent_orders": {
     "description": "Recent customer orders heading."
   },
+  "account_saved": "SAVED",
+  "@account_saved": {
+    "description": "Saved-address count suffix."
+  },
   "account_see_details": "See details",
   "@account_see_details": {
     "description": "Opens one customer order."
@@ -238,6 +259,14 @@
   "account_terms": "By creating an account, you agree to our Privacy Policy and Terms of Use.",
   "@account_terms": {
     "description": "Registration legal acknowledgement."
+  },
+  "account_total_amount": "Total amount",
+  "@account_total_amount": {
+    "description": "Recent-order total label."
+  },
+  "account_orders_load_failed": "We could not load your orders. Please try again.",
+  "@account_orders_load_failed": {
+    "description": "Retryable order-history failure."
   },
   "account_title": "Account",
   "@account_title": {

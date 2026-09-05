@@ -9,6 +9,10 @@
   "@account_completed": {
     "description": "Profile completion suffix."
   },
+  "account_date_placed": "အော်ဒါတင်သည့်ရက်",
+  "@account_date_placed": {
+    "description": "Recent-order placement-date label."
+  },
   "account_continue_shopping": "ဆက်လက်စျေးဝယ်ရန်",
   "@account_continue_shopping": {
     "description": "Returns from empty order history to the store."
@@ -76,6 +80,19 @@
     "placeholders": {
       "count": {
         "example": "2"
+      }
+    }
+  },
+  "account_order_number": "အော်ဒါနံပါတ်",
+  "@account_order_number": {
+    "description": "Recent-order identifier label."
+  },
+  "account_open_order": "အော်ဒါ #{id} သို့ သွားရန်",
+  "@account_open_order": {
+    "description": "Accessible recent-order link label.",
+    "placeholders": {
+      "id": {
+        "example": "order_123"
       }
     }
   },
@@ -199,6 +216,10 @@
   "@account_recent_orders": {
     "description": "Recent customer orders heading."
   },
+  "account_saved": "သိမ်းထားသည်",
+  "@account_saved": {
+    "description": "Saved-address count suffix."
+  },
   "account_see_details": "အသေးစိတ် ကြည့်ရန်",
   "@account_see_details": {
     "description": "Opens one customer order."
@@ -238,6 +259,14 @@
   "account_terms": "အကောင့်ဖန်တီးခြင်းဖြင့် ကျွန်ုပ်တို့၏ ကိုယ်ရေးအချက်အလက်မူဝါဒနှင့် အသုံးပြုမှုစည်းမျဉ်းများကို သဘောတူပါသည်။",
   "@account_terms": {
     "description": "Registration legal acknowledgement."
+  },
+  "account_total_amount": "စုစုပေါင်းငွေ",
+  "@account_total_amount": {
+    "description": "Recent-order total label."
+  },
+  "account_orders_load_failed": "သင့်အော်ဒါများကို မတင်နိုင်ပါ။ ထပ်ကြိုးစားပါ။",
+  "@account_orders_load_failed": {
+    "description": "Retryable order-history failure."
   },
   "account_title": "အကောင့်",
   "@account_title": {

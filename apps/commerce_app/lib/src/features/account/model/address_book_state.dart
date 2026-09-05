@@ -43,6 +43,7 @@ final class AddressBookState with _$AddressBookState {
   const AddressBookState({
     this.addresses = const [],
     this.regions = const [],
+    this.hasLoaded = false,
     this.status = AddressBookStatus.idle,
     this.operation = const None(),
     this.message = const None(),
@@ -53,6 +54,9 @@ final class AddressBookState with _$AddressBookState {
 
   /// Active selling regions available to new and edited addresses.
   final List<Region> regions;
+
+  /// Whether at least one complete server response has been accepted.
+  final bool hasLoaded;
 
   /// Display-safe failure, when present.
   final Option<String> message;

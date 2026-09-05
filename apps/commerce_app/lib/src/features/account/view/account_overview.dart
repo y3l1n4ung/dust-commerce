@@ -12,11 +12,19 @@ class AccountOverview extends StatelessWidget {
   const AccountOverview({
     required this.customer,
     required this.state,
+    required this.addresses,
+    required this.orders,
     super.key,
   });
 
+  /// Server-backed address data used by profile completion and count.
+  final AddressBookState addresses;
+
   /// Server-proven customer.
   final Customer customer;
+
+  /// Server-backed order data used by the latest-purchases summary.
+  final AccountOrdersState orders;
 
   /// Session state, including sign-out progress and failure.
   final AccountState state;
@@ -26,6 +34,10 @@ class AccountOverview extends StatelessWidget {
         customer: customer,
         state: state,
         active: AccountSection.overview,
-        child: AccountProfileOverview(customer: customer),
+        child: AccountProfileOverview(
+          customer: customer,
+          addresses: addresses,
+          orders: orders,
+        ),
       );
 }

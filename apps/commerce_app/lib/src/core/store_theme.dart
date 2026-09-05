@@ -8,6 +8,9 @@ abstract final class StoreColors {
   /// Quiet surfaces such as product images and option controls.
   static const subtle = Color(0xfffafafa);
 
+  /// Tailwind gray-50 used by the pinned account order-summary cards.
+  static const neutral50 = Color(0xfff9fafb);
+
   /// Hover state for quiet surfaces.
   static const subtleHover = Color(0xfff4f4f5);
 

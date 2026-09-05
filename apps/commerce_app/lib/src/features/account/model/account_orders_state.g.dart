@@ -14,18 +14,14 @@
 part of 'account_orders_state.dart';
 
 const DeepCollectionEquality _accountOrdersStateOrdersEquality = DeepCollectionEquality();
-final class _AccountOrdersStateCopyWithUnset {
-  const _AccountOrdersStateCopyWithUnset();
-}
-
-const _accountOrdersStateCopyWithUnset = _AccountOrdersStateCopyWithUnset();
 
 mixin _$AccountOrdersState {
   @override
   String toString() {
     final self = this as AccountOrdersState;
     return 'AccountOrdersState('
-        'message: ${self.message}, '
+        'failure: ${self.failure}, '
+        'hasLoaded: ${self.hasLoaded}, '
         'orders: ${self.orders}, '
         'status: ${self.status}'
         ')';
@@ -37,7 +33,8 @@ mixin _$AccountOrdersState {
     return identical(this, other) ||
         other is AccountOrdersState &&
             runtimeType == other.runtimeType &&
-            other.message == self.message &&
+            other.failure == self.failure &&
+            other.hasLoaded == self.hasLoaded &&
             _accountOrdersStateOrdersEquality.equals(other.orders, self.orders) &&
             other.status == self.status;
   }
@@ -47,7 +44,8 @@ mixin _$AccountOrdersState {
     final self = this as AccountOrdersState;
     return Object.hashAll([
       runtimeType,
-      self.message,
+      self.failure,
+      self.hasLoaded,
       _accountOrdersStateOrdersEquality.hash(self.orders),
       self.status,
     ]);
@@ -57,8 +55,7 @@ mixin _$AccountOrdersState {
   ///
   /// Usage:
   /// ```dart
-  /// final updated = accountOrdersState.copyWith();
-  /// final cleared = accountOrdersState.copyWith(message: null);
+  /// final updated = accountOrdersState.copyWith(hasLoaded: true);
   /// ```
   @pragma('vm:prefer-inline')
   _$AccountOrdersStateCopyWith<AccountOrdersState> get copyWith => _$AccountOrdersStateCopyWithImpl<AccountOrdersState>(this as AccountOrdersState, (value) => value);
@@ -69,7 +66,8 @@ mixin _$AccountOrdersState {
 /// @nodoc
 abstract class _$AccountOrdersStateCopyWith<$Res> {
   $Res call({
-    String? message,
+    Option<AccountOrdersFailure>? failure,
+    bool? hasLoaded,
     List<Order>? orders,
     AccountOrdersStatus? status,
   });
@@ -85,7 +83,8 @@ final class _$AccountOrdersStateCopyWithImpl<$Res> implements _$AccountOrdersSta
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? message = _accountOrdersStateCopyWithUnset,
+    Object? failure = null,
+    Object? hasLoaded = null,
     Object? orders = null,
     Object? status = null,
   }) {
@@ -93,9 +92,8 @@ final class _$AccountOrdersStateCopyWithImpl<$Res> implements _$AccountOrdersSta
       AccountOrdersState(
         status: status == null ? _self.status : status as AccountOrdersStatus,
         orders: orders == null ? _self.orders : orders as List<Order>,
-        message: identical(message, _accountOrdersStateCopyWithUnset)
-            ? _self.message
-            : message as String?,
+        hasLoaded: hasLoaded == null ? _self.hasLoaded : hasLoaded as bool,
+        failure: failure == null ? _self.failure : failure as Option<AccountOrdersFailure>,
       )
     );
   }

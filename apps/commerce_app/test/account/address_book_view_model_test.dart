@@ -60,6 +60,7 @@ void main() {
   test('loads and mutates the owned address book with server responses',
       () async {
     await addresses.load();
+    expect(addresses.state.hasLoaded, isTrue);
     expect(addresses.state.addresses, isEmpty);
     expect(addresses.state.countries, ['us', 'ca']);
 
@@ -95,6 +96,7 @@ void main() {
 
     addresses.reset();
     expect(addresses.state.status, AddressBookStatus.idle);
+    expect(addresses.state.hasLoaded, isFalse);
     expect(addresses.state.countries, isEmpty);
   });
 
@@ -124,6 +126,7 @@ void main() {
     await loading;
 
     expect(model.state.status, AddressBookStatus.idle);
+    expect(model.state.hasLoaded, isFalse);
     expect(model.state.addresses, isEmpty);
     expect(model.state.countries, isEmpty);
     model.dispose();

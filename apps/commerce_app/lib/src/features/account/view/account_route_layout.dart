@@ -65,12 +65,15 @@ final class AccountRouteLayout extends StatelessWidget {
                                     state: state,
                                     active: active,
                                   ),
-                                  const SizedBox(height: 32),
-                                  child,
+                                  if (active != AccountSection.overview) ...[
+                                    const SizedBox(height: 32),
+                                    child,
+                                  ],
                                 ],
                               ),
                       ),
-                      const Divider(),
+                      if (MediaQuery.sizeOf(context).width >= 1024)
+                        const Divider(),
                       const Padding(
                         padding: EdgeInsets.symmetric(vertical: 48),
                         child: AccountSupport(),

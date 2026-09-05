@@ -43,13 +43,16 @@ final class MobileAccountNavigation extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          context.tr(
-            'shop_account_hello',
-            defaultText: 'Hello {name}',
-            args: {'name': customer.firstName ?? customer.displayName},
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Text(
+            context.tr(
+              'shop_account_hello',
+              defaultText: 'Hello {name}',
+              args: {'name': customer.firstName ?? customer.displayName},
+            ),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           ),
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 16),
         _item(
@@ -86,7 +89,7 @@ final class MobileAccountNavigation extends StatelessWidget {
       Column(
         children: [
           ListTile(
-            contentPadding: EdgeInsets.zero,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 32),
             leading: Icon(icon, size: 20),
             title: Text(label),
             trailing: const Icon(Icons.chevron_right, size: 20),

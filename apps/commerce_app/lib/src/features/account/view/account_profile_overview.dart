@@ -3,74 +3,155 @@ import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
-/// Customer identity and recent activity summary.
-class AccountProfileOverview extends StatelessWidget {
-  /// Creates the profile overview.
-  const AccountProfileOverview({required this.customer, super.key});
+import 'account_recent_orders.dart';
+
+/// Customer identity, completion, addresses, and recent-order summary.
+final class AccountProfileOverview extends StatelessWidget {
+  /// Creates the source-shaped desktop overview.
+  const AccountProfileOverview({
+    required this.customer,
+    required this.addresses,
+    required this.orders,
+    super.key,
+  });
+
+  /// Customer-owned address state.
+  final AddressBookState addresses;
 
   /// Server-proven customer.
   final Customer customer;
 
-  int get _completion {
-    var completed = 1;
-    if ((customer.firstName?.isNotEmpty ?? false) &&
-        (customer.lastName?.isNotEmpty ?? false)) {
-      completed++;
-    }
-    if (customer.phone?.isNotEmpty ?? false) completed++;
-    return (completed / 3 * 100).round();
+  /// Customer-owned order state.
+  final AccountOrdersState orders;
+
+  @override
+  Widget build(BuildContext context) {
+    final summary = AccountOverviewSummary.from(
+      customer: customer,
+      addresses: addresses.addresses,
+      orders: orders.orders,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Wrap(
+          alignment: WrapAlignment.spaceBetween,
+          runSpacing: 8,
+          children: [
+            Text(
+              context.tr(
+                'shop_account_hello',
+                defaultText: 'Hello {name}',
+                args: {'name': customer.firstName ?? customer.displayName},
+              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
+            Text.rich(
+              TextSpan(
+                text: context.tr(
+                  'shop_account_signed_in_as',
+                  defaultText: 'Signed in as: ',
+                ),
+                children: [
+                  TextSpan(
+                    text: customer.email,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        const Divider(),
+        const SizedBox(height: 32),
+        Wrap(
+          spacing: 64,
+          runSpacing: 24,
+          children: [
+            _OverviewMetric(
+              label: context.tr(
+                'shop_account_profile',
+                defaultText: 'Profile',
+              ),
+              value:
+                  addresses.hasLoaded ? '${summary.profileCompletion}%' : '—',
+              suffix: context.tr(
+                'shop_account_completed',
+                defaultText: 'COMPLETED',
+              ),
+            ),
+            _OverviewMetric(
+              label: context.tr(
+                'shop_account_addresses',
+                defaultText: 'Addresses',
+              ),
+              value: addresses.hasLoaded ? '${summary.addressCount}' : '—',
+              suffix: context.tr(
+                'shop_account_saved',
+                defaultText: 'SAVED',
+              ),
+            ),
+          ],
+        ),
+        if (!addresses.hasLoaded &&
+            addresses.status == AddressBookStatus.failed) ...[
+          const SizedBox(height: 16),
+          Text(context.tr(
+            'shop_account_address_error',
+            defaultText: 'We could not load your address book.',
+          )),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              onPressed: context.readAddressBookViewModel().load,
+              child: const TranslatedText(
+                'shop_retry',
+                defaultText: 'Try again',
+              ),
+            ),
+          ),
+        ],
+        const SizedBox(height: 32),
+        const TranslatedText(
+          'shop_account_recent_orders',
+          defaultText: 'Recent orders',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 16),
+        AccountRecentOrders(state: orders, orders: summary.recentOrders),
+      ],
+    );
   }
+}
+
+final class _OverviewMetric extends StatelessWidget {
+  const _OverviewMetric({
+    required this.label,
+    required this.value,
+    required this.suffix,
+  });
+
+  final String label;
+  final String suffix;
+  final String value;
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            runSpacing: 8,
-            children: [
-              Text(
-                context.tr(
-                  'shop_account_hello',
-                  defaultText: 'Hello {name}',
-                  args: {'name': customer.firstName ?? customer.displayName},
-                ),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text.rich(
-                TextSpan(
-                  text: context.tr(
-                    'shop_account_signed_in_as',
-                    defaultText: 'Signed in as: ',
-                  ),
-                  children: [
-                    TextSpan(
-                      text: customer.email,
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-                style: const TextStyle(fontSize: 12),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Divider(),
-          const SizedBox(height: 32),
-          const TranslatedText(
-            'shop_account_profile',
-            defaultText: 'Profile',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 16),
           Row(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '$_completion%',
+                value,
                 style: const TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w600,
@@ -78,26 +159,14 @@ class AccountProfileOverview extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              const TranslatedText(
-                'shop_account_completed',
-                defaultText: 'COMPLETED',
-                style: TextStyle(
+              Text(
+                suffix,
+                style: const TextStyle(
                   color: StoreColors.foregroundSubtle,
                   fontSize: 14,
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 32),
-          const TranslatedText(
-            'shop_account_recent_orders',
-            defaultText: 'Recent orders',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 16),
-          const TranslatedText(
-            'shop_account_no_orders',
-            defaultText: 'No recent orders',
           ),
         ],
       );

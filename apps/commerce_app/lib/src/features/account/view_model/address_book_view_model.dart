@@ -138,6 +138,7 @@ class AddressBookViewModel extends $AddressBookViewModel {
       emit(AddressBookState(
         addresses: addresses,
         regions: regions ?? state.regions,
+        hasLoaded: true,
         status: AddressBookStatus.ready,
       ));
 

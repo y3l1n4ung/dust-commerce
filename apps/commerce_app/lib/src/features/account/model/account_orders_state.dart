@@ -18,6 +18,15 @@ enum AccountOrdersStatus {
   failed,
 }
 
+/// Display-safe reasons an order-history request failed.
+enum AccountOrdersFailure {
+  /// The stored customer session is no longer accepted.
+  unauthorized,
+
+  /// The service could not return order history.
+  unavailable,
+}
+
 /// Customer order-history UI state.
 @Derive([ToString(), Eq(), CopyWith()])
 class AccountOrdersState with _$AccountOrdersState {
@@ -25,11 +34,15 @@ class AccountOrdersState with _$AccountOrdersState {
   const AccountOrdersState({
     this.status = AccountOrdersStatus.idle,
     this.orders = const [],
-    this.message,
+    this.hasLoaded = false,
+    this.failure = const None(),
   });
 
-  /// Display-safe loading failure.
-  final String? message;
+  /// Failure classification for localized presentation.
+  final Option<AccountOrdersFailure> failure;
+
+  /// Whether at least one complete server response has been accepted.
+  final bool hasLoaded;
 
   /// Server-owned previous orders.
   final List<Order> orders;

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
 import 'package:dust_flutter/i18n.dart';
@@ -15,11 +17,18 @@ class AccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watchAccountViewModel().value;
+    final addresses = context.watchAddressBookViewModel().value;
+    final orders = context.watchAccountOrdersViewModel().value;
+    if (state.customer != null) {
+      _queueOverviewLoads(context, addresses, orders);
+    }
     return StoreScaffold(
       body: switch (state) {
         AccountState(customer: final customer?) => AccountOverview(
             customer: customer,
             state: state,
+            addresses: addresses,
+            orders: orders,
           ),
         AccountState(
           status: AccountStatus.loading,
@@ -34,6 +43,25 @@ class AccountPage extends StatelessWidget {
           _RestoreFailure(message: state.message),
         _ => const AccountAuthForm(),
       },
+    );
+  }
+}
+
+void _queueOverviewLoads(
+  BuildContext context,
+  AddressBookState addresses,
+  AccountOrdersState orders,
+) {
+  final addressBook = context.readAddressBookViewModel();
+  final orderHistory = context.readAccountOrdersViewModel();
+  if (addresses.status == AddressBookStatus.idle) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => unawaited(addressBook.load()),
+    );
+  }
+  if (orders.status == AccountOrdersStatus.idle) {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => unawaited(orderHistory.load()),
     );
   }
 }

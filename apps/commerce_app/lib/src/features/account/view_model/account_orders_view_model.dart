@@ -1,6 +1,7 @@
 import 'package:commerce_app/src/core/api/api.dart';
 import 'package:commerce_app/src/features/account/model/account_orders_state.dart';
 import 'package:dio/dio.dart';
+import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'account_orders_view_model.g.dart';
@@ -35,6 +36,8 @@ class AccountOrdersViewModel extends $AccountOrdersViewModel {
     emit(AccountOrdersState(
       status: AccountOrdersStatus.loading,
       orders: state.orders,
+      hasLoaded: state.hasLoaded,
+      failure: const None(),
     ));
     try {
       final view = await args.api.orders();
@@ -42,23 +45,26 @@ class AccountOrdersViewModel extends $AccountOrdersViewModel {
       emit(AccountOrdersState(
         status: AccountOrdersStatus.ready,
         orders: view.orders,
+        hasLoaded: true,
       ));
     } on DioException catch (error) {
       if (generation != _generation) return;
-      final message = error.response?.statusCode == 401
-          ? 'Your session has expired. Please sign in again.'
-          : 'We could not load your orders. Please try again.';
+      final failure = error.response?.statusCode == 401
+          ? AccountOrdersFailure.unauthorized
+          : AccountOrdersFailure.unavailable;
       emit(AccountOrdersState(
         status: AccountOrdersStatus.failed,
         orders: state.orders,
-        message: message,
+        hasLoaded: state.hasLoaded,
+        failure: Some(failure),
       ));
     } on Object {
       if (generation != _generation) return;
       emit(AccountOrdersState(
         status: AccountOrdersStatus.failed,
         orders: state.orders,
-        message: 'We could not load your orders. Please try again.',
+        hasLoaded: state.hasLoaded,
+        failure: const Some(AccountOrdersFailure.unavailable),
       ));
     }
   }
