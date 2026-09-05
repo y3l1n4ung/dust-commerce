@@ -17,7 +17,8 @@ const ValidatedExtractable<CheckoutRequest> _body = ValidatedExtractable(
 
 /// `POST /checkout` — turn a cart into an order.
 Future<Result<Order, Rejection>> placeOrderHandler(Request request) async {
-  final actor = await request.extract(const OptionalCustomerAuth());
+  final context = await request.extract(const Extension<CustomerContext>());
+  final actor = context.authenticated;
   final decoded = await _body.extract(request);
   if (decoded case Err(:final error)) return Err(error);
   final input = (decoded as Ok<CheckoutRequest, Rejection>).value;

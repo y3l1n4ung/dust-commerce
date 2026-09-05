@@ -20,6 +20,7 @@ void main() {
   late Directory directory;
   late CommerceDatabase database;
   late TestClient server;
+  late Dio dio;
   late CommerceApi api;
   var counter = 0;
 
@@ -39,7 +40,8 @@ void main() {
         now: () => DateTime.utc(2026, 9, 5, 12),
       ),
     );
-    api = CommerceApi(Dio(), baseUrl: server.origin);
+    dio = Dio();
+    api = CommerceApi(dio, baseUrl: server.origin);
   });
 
   tearDown(() async {
@@ -151,7 +153,8 @@ void main() {
 
     test('reads and lists only the authenticated customer order', () async {
       final authorization = 'Bearer ${await server.customerToken()}';
-      final cart = await api.createCart(authorization: authorization);
+      dio.options.headers['authorization'] = authorization;
+      final cart = await api.createCart();
       await api.addLine(
         cart.cart.id,
         const AddLineBody(variantId: 'var_small'),
@@ -169,17 +172,13 @@ void main() {
             countryCode: 'gb',
           ),
         ),
-        authorization: authorization,
       );
 
-      final fetched = await api.order(
-        placed.id,
-        authorization: authorization,
-      );
+      final fetched = await api.order(placed.id);
       expect(fetched.id, placed.id);
       expect(fetched.total, placed.total);
 
-      final history = await api.orders(authorization: authorization);
+      final history = await api.orders();
       expect(history.count, 1);
       expect(history.orders.single.id, placed.id);
     });

@@ -2,6 +2,7 @@
 /// answers with, declared once and generated for both ends.
 library;
 
+export 'account.dart';
 export 'cart_request.dart';
 export 'cart_view.dart';
 export 'catalog_view.dart';

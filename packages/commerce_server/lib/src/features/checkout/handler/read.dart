@@ -22,7 +22,9 @@ Result<String, Rejection> emailOf(Request request) {
 /// address and what they bought. A mismatch answers 404, not 403: confirming
 /// that an id exists is itself the leak.
 Future<Result<Order, Rejection>> readOrderHandler(Request request) async {
-  final actor = await request.extract(const CustomerAuth());
+  final actor = await request.extract(
+    const Extension<AuthenticatedCustomer>(),
+  );
   final id = pathParametersOf(request)['id'];
   if (id == null || id.isEmpty) {
     return const Err(Rejection.badRequest('An order id is required'));

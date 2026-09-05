@@ -124,12 +124,20 @@ fingerprint is stored, so reading the database cannot replay a live session;
 sign-out deletes the fingerprint. Unknown-email and wrong-password sign-in do
 the same Argon2 work and return the same response.
 
-Handlers use an Axum-style `CustomerAuth` request-parts extractor. It composes
-Dust Server's `BearerTokenExtractable` for standards-correct header parsing,
-then fingerprints the token, checks expiry, and resolves the customer. Order
-queries are scoped by that customer id in SQL; an `?email=` value is never
-treated as identity. Guest cart and checkout routes accept no header, but a
-malformed or invalid header is rejected instead of silently becoming a guest.
+Required account and order routers use Dust Server's Axum-style
+`routeLayer(fromExtractor(CustomerAuth()))`; handlers read the resulting typed
+extension instead of authenticating independently. `CustomerAuth` composes
+`BearerTokenExtractable` for standards-correct parsing, then fingerprints the
+token, checks expiry, and resolves the customer. Cart-id routes use one shared
+ownership extractor, so every read and mutation hides another customer's cart.
+Guest carts still work, but a malformed or invalid header is rejected instead
+of silently becoming a guest.
+
+Argon2 admission is capped at two concurrent operations per server isolate.
+Excess registration or sign-in work receives `429` immediately instead of
+building an attacker-controlled memory queue. The generated Flutter client
+keeps authorization at the Dio layer, so one default header or interceptor
+covers every protected request without token parameters in each API method.
 
 ### PostgreSQL timestamps become explicit SQLite UTC text
 

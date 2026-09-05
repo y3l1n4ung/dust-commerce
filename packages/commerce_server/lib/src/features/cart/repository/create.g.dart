@@ -19,13 +19,13 @@ final class _$CartCreateRepository implements CartCreateRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<ExecResult, SqlxError>> createCart(String id, String regionId, String? customerId, String? email, String createdAt) {
+  Future<Result<ExecResult, SqlxError>> createCart(String id, String regionId, String? customerId, String? email) {
     return _db.execute(
       r'''
-INSERT INTO carts (id, region_id, customer_id, email, created_at)
-VALUES (?, ?, ?, ?, ?)
+INSERT INTO carts (id, region_id, customer_id, email)
+VALUES (?, ?, ?, ?)
 ''',
-      [id, regionId, customerId, email, createdAt],
+      [id, regionId, customerId, email],
     );
   }
 

@@ -13,7 +13,13 @@ final class AccountDeps {
     required this.writes,
     required this.deletes,
     required this.clock,
-  }) : dummyPasswordHash = Passwords.hash('not a real customer password');
+    PasswordWorkLimiter? passwordWork,
+  }) : passwordWork = passwordWork ?? PasswordWorkLimiter() {
+    dummyPasswordHash = Passwords.hash(
+      'not a real customer password',
+      limiter: this.passwordWork,
+    );
+  }
 
   /// Clock and identifier source shared with the application.
   final Clock clock;
@@ -25,7 +31,10 @@ final class AccountDeps {
   final AccountDeleteRepository deletes;
 
   /// Precomputed dummy hash used to equalize unknown-account sign-in work.
-  final Future<String> dummyPasswordHash;
+  late final Future<String> dummyPasswordHash;
+
+  /// Admission control shared by registration and sign-in.
+  final PasswordWorkLimiter passwordWork;
 
   /// Account lookup queries.
   final AccountReadRepository reads;

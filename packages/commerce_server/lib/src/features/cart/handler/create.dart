@@ -20,7 +20,8 @@ const OptionalExtractable<CreateCartBody> _body = OptionalExtractable(
 /// Answers with a [CartView] like every other cart endpoint, so a client has
 /// one shape to decode whether it created the cart or fetched it.
 Future<Result<CartView, Rejection>> createCartHandler(Request request) async {
-  final actor = await request.extract(const OptionalCustomerAuth());
+  final context = await request.extract(const Extension<CustomerContext>());
+  final actor = context.authenticated;
   final decoded = await _body.extract(request);
   if (decoded case Err(:final error)) return Err(error);
 
@@ -37,7 +38,6 @@ Future<Result<CartView, Rejection>> createCartHandler(Request request) async {
   final result = await createCart(
     deps.creates,
     id: deps.clock.nextId(),
-    now: deps.clock.now(),
     regionId: body.regionId,
     email: actor?.customer.email ?? body.email,
     customerId: actor?.customer.id,

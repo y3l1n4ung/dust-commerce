@@ -10,7 +10,9 @@ import 'package:dust_server/server.dart';
 Future<Result<OrderListView, Rejection>> listOrdersHandler(
   Request request,
 ) async {
-  final actor = await request.extract(const CustomerAuth());
+  final actor = await request.extract(
+    const Extension<AuthenticatedCustomer>(),
+  );
 
   final state = await checkoutDeps(request);
   if (state case Err(:final error)) return Err(error);

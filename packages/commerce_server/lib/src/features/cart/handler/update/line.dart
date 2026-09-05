@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/cart/deps.dart';
+import 'package:commerce_server/src/features/cart/extractor.dart';
 import 'package:commerce_server/src/features/cart/handler/read.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -14,9 +15,8 @@ const ValidatedExtractable<AddLineBody> _body =
 /// body; running out of stock is a 409, because somebody buying the last one
 /// is an ordinary outcome of a shop rather than a malformed request.
 Future<Result<CartView, Rejection>> addLineHandler(Request request) async {
-  final id = cartIdOf(request);
-  if (id case Err(:final error)) return Err(error);
-  final cartId = (id as Ok<String, Rejection>).value;
+  final access = await request.extract(const Extension<CartAccess>());
+  final cartId = access.cart.id;
 
   final decoded = await _body.extract(request);
   if (decoded case Err(:final error)) return Err(error);

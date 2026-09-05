@@ -15,7 +15,6 @@ import 'package:dust_dart/db.dart';
 Future<Result<Cart?, SqlxError>> createCart(
   CartCreateRepository writes, {
   required String id,
-  required DateTime now,
   String? regionId,
   String? email,
   String? customerId,
@@ -33,7 +32,6 @@ Future<Result<Cart?, SqlxError>> createCart(
     region.id,
     customerId,
     email,
-    now.toUtc().toIso8601String(),
   );
   if (written case Err(:final error)) return Err(error);
 

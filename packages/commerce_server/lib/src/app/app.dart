@@ -27,6 +27,7 @@ Router buildApp(
   CommerceDatabase database, {
   String Function()? nextId,
   DateTime Function()? now,
+  PasswordWorkLimiter? passwordWork,
 }) {
   final executor = database.executor;
   final clock = Clock(now: now ?? DateTime.now, nextId: nextId ?? _randomId);
@@ -49,6 +50,7 @@ Router buildApp(
         writes: AccountCreateRepository(executor),
         deletes: AccountDeleteRepository(executor),
         clock: clock,
+        passwordWork: passwordWork,
       ),
     )
     ..withState(
@@ -89,7 +91,4 @@ Router buildApp(
 /// `GET /health` — the shallowest possible answer that the process is up.
 Map<String, Object?> _health(Request request) => const {'status': 'ok'};
 
-int _counter = 0;
-
-String _randomId() =>
-    'id_${DateTime.now().microsecondsSinceEpoch}_${_counter++}';
+String _randomId() => 'id_${Tokens.issue()}';

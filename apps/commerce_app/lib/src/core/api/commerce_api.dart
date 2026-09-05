@@ -21,6 +21,22 @@ abstract interface class CommerceApi {
   /// Binds the client to [dio], optionally against another [baseUrl].
   factory CommerceApi(Dio dio, {String? baseUrl}) = _$CommerceApi;
 
+  /// Registers a customer account.
+  @POST('/store/customers')
+  Future<Customer> registerAccount(@Body() RegisterAccountBody body);
+
+  /// Exchanges email/password credentials for a bearer token.
+  @POST('/auth/customer/emailpass')
+  Future<IssuedToken> signIn(@Body() Credentials body);
+
+  /// Reads the customer proven by the bearer configured on the Dio client.
+  @GET('/store/customers/me')
+  Future<Customer> currentCustomer();
+
+  /// Revokes the bearer token configured on the Dio client.
+  @DELETE('/auth/session')
+  Future<SessionDeleted> signOut();
+
   /// A page of the published catalogue.
   @GET('/store/products')
   Future<ProductPageView> products({
@@ -38,9 +54,7 @@ abstract interface class CommerceApi {
 
   /// Starts an empty cart.
   @POST('/store/carts')
-  Future<CartView> createCart({
-    @Header('authorization') String? authorization,
-  });
+  Future<CartView> createCart();
 
   /// One cart with the totals the server computed.
   @GET('/store/carts/{id}')
@@ -55,21 +69,13 @@ abstract interface class CommerceApi {
 
   /// Turns a cart into an order.
   @POST('/store/checkout')
-  Future<Order> checkout(
-    @Body() CheckoutRequest body, {
-    @Header('authorization') String? authorization,
-  });
+  Future<Order> checkout(@Body() CheckoutRequest body);
 
   /// The authenticated customer's orders.
   @GET('/store/orders')
-  Future<OrderListView> orders({
-    @Header('authorization') required String authorization,
-  });
+  Future<OrderListView> orders();
 
   /// One order owned by the authenticated customer.
   @GET('/store/orders/{id}')
-  Future<Order> order(
-    @Path() String id, {
-    @Header('authorization') required String authorization,
-  });
+  Future<Order> order(@Path() String id);
 }

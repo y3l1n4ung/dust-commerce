@@ -69,10 +69,10 @@ final class CheckoutHarness {
     final created = await request.send();
     final cartId =
         CartView.fromJson(created.json! as Map<String, Object?>).cart.id;
-    (await (client.post('/store/carts/$cartId/line-items')
-              ..json({'variant_id': variantId, 'quantity': quantity}))
-            .send())
-        .assertOk();
+    final add = client.post('/store/carts/$cartId/line-items')
+      ..json({'variant_id': variantId, 'quantity': quantity});
+    if (token != null) add.bearer(token);
+    (await add.send()).assertOk();
     return cartId;
   }
 

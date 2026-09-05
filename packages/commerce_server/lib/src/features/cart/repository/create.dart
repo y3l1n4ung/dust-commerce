@@ -16,15 +16,14 @@ abstract final class CartCreateRepository {
 
   /// Starts a cart in [regionId].
   @Query(r'''
-INSERT INTO carts (id, region_id, customer_id, email, created_at)
-VALUES ($1, $2, $3, $4, $5)
+INSERT INTO carts (id, region_id, customer_id, email)
+VALUES ($1, $2, $3, $4)
 ''')
   Future<Result<ExecResult, SqlxError>> createCart(
     String id,
     String regionId,
     String? customerId,
     String? email,
-    String createdAt,
   );
 
   /// One region by id, for a storefront that has chosen one.

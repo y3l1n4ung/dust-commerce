@@ -18,9 +18,13 @@ Future<Result<(Customer?, RegisterFailure?), SqlxError>> registerAccount(
   CommerceDatabase database,
   RegisterAccountBody input, {
   required String Function() nextId,
+  required PasswordWorkLimiter passwordWork,
 }) async {
   final email = input.email.trim().toLowerCase();
-  final passwordHash = await Passwords.hash(input.password);
+  final passwordHash = await Passwords.hash(
+    input.password,
+    limiter: passwordWork,
+  );
   final customerId = nextId();
   final authIdentityId = nextId();
   final providerIdentityId = nextId();
@@ -73,6 +77,7 @@ Future<Result<(IssuedToken?, bool invalid), SqlxError>> signIn(
   Credentials input, {
   required DateTime now,
   required Future<String> dummyPasswordHash,
+  required PasswordWorkLimiter passwordWork,
   Duration lifetime = const Duration(days: 7),
 }) async {
   final found = await reads.accountByEmail(input.email.trim().toLowerCase());
@@ -80,7 +85,11 @@ Future<Result<(IssuedToken?, bool invalid), SqlxError>> signIn(
 
   final account = (found as Ok<AccountRow?, SqlxError>).value;
   final expected = account?.passwordHash ?? await dummyPasswordHash;
-  final valid = await Passwords.verify(input.password, expected);
+  final valid = await Passwords.verify(
+    input.password,
+    expected,
+    limiter: passwordWork,
+  );
   if (account == null || !valid) return const Ok((null, true));
 
   final token = Tokens.issue();

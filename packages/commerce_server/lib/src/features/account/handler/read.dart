@@ -6,6 +6,8 @@ import 'package:dust_server/server.dart';
 Future<Result<Customer, Rejection>> readCurrentCustomerHandler(
   Request request,
 ) async {
-  final actor = await request.extract(const CustomerAuth());
+  final actor = await request.extract(
+    const Extension<AuthenticatedCustomer>(),
+  );
   return Ok(actor.customer);
 }

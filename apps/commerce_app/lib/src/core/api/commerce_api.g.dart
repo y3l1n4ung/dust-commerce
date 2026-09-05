@@ -59,6 +59,150 @@ final class _$CommerceApi implements CommerceApi {
   final String? _baseUrl;
 
   @override
+  Future<Customer> registerAccount(RegisterAccountBody body) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<Customer>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/customers',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return Customer.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<IssuedToken> signIn(Credentials body) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<IssuedToken>(
+        _options
+            .compose(
+              _dio.options,
+              '/auth/customer/emailpass',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return IssuedToken.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<Customer> currentCustomer() async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<Customer>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/customers/me',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return Customer.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<SessionDeleted> signOut() async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = null;
+    final _options = Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<SessionDeleted>(
+        _options
+            .compose(
+              _dio.options,
+              '/auth/session',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return SessionDeleted.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<ProductPageView> products({
     String? currency,
     int? limit,
@@ -139,12 +283,11 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
-  Future<CartView> createCart({String? authorization}) async {
+  Future<CartView> createCart() async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
-    if (authorization != null) _headers['authorization'] = authorization.toString();
     final Object? _data = null;
     final _options = Options(
       method: 'POST',
@@ -248,12 +391,11 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
-  Future<Order> checkout(CheckoutRequest body, {String? authorization}) async {
+  Future<Order> checkout(CheckoutRequest body) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
-    if (authorization != null) _headers['authorization'] = authorization.toString();
     final Object? _data = body.toJson();
     final _options = Options(
       method: 'POST',
@@ -285,12 +427,11 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
-  Future<OrderListView> orders({required String authorization}) async {
+  Future<OrderListView> orders() async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
-    _headers['authorization'] = authorization.toString();
     final Object? _data = null;
     final _options = Options(
       method: 'GET',
@@ -322,12 +463,11 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
-  Future<Order> order(String id, {required String authorization}) async {
+  Future<Order> order(String id) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
-    _headers['authorization'] = authorization.toString();
     final Object? _data = null;
     final _options = Options(
       method: 'GET',

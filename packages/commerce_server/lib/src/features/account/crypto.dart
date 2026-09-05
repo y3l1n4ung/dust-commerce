@@ -4,6 +4,38 @@ import 'dart:typed_data';
 import 'package:cryptography/cryptography.dart';
 import 'package:cryptography/helpers.dart';
 
+/// Raised when the server is already doing its safe amount of password work.
+final class PasswordCapacityException implements Exception {
+  /// Creates the admission-control signal.
+  const PasswordCapacityException();
+}
+
+/// Bounds memory-hard password work instead of building an unbounded queue.
+final class PasswordWorkLimiter {
+  /// Creates a limiter for at most [maxConcurrent] Argon2 operations.
+  PasswordWorkLimiter({this.maxConcurrent = 2})
+      : assert(maxConcurrent > 0, 'maxConcurrent must be positive');
+
+  /// Maximum Argon2 operations held in memory at once per server isolate.
+  final int maxConcurrent;
+
+  int _active = 0;
+
+  /// Whether no password operation currently owns capacity.
+  bool get isIdle => _active == 0;
+
+  /// Runs admitted work, or rejects immediately so callers can return 429.
+  Future<T> run<T>(Future<T> Function() work) async {
+    if (_active >= maxConcurrent) throw const PasswordCapacityException();
+    _active++;
+    try {
+      return await work();
+    } finally {
+      _active--;
+    }
+  }
+}
+
 /// Argon2id password hashing with a self-describing PHC value.
 abstract final class Passwords {
   /// OWASP's minimum Argon2id memory cost: 19 MiB.
@@ -25,16 +57,30 @@ abstract final class Passwords {
     parallelism: parallelism,
     hashLength: _hashLength,
   );
+  static final PasswordWorkLimiter _work = PasswordWorkLimiter();
 
   /// Hashes [password] with a fresh cryptographic salt.
-  static Future<String> hash(String password) async {
+  static Future<String> hash(
+    String password, {
+    PasswordWorkLimiter? limiter,
+  }) =>
+      (limiter ?? _work).run(() => _hash(password));
+
+  static Future<String> _hash(String password) async {
     final salt = SecretKeyData.random(length: _saltLength).bytes;
     final derived = await _derive(password, salt);
     return '$_prefix${_encode(salt)}\$${_encode(derived)}';
   }
 
   /// Verifies [password] without data-dependent comparison timing.
-  static Future<bool> verify(String password, String encoded) async {
+  static Future<bool> verify(
+    String password,
+    String encoded, {
+    PasswordWorkLimiter? limiter,
+  }) =>
+      (limiter ?? _work).run(() => _verify(password, encoded));
+
+  static Future<bool> _verify(String password, String encoded) async {
     if (!encoded.startsWith(_prefix)) return false;
     final parts = encoded.split(r'$');
     if (parts.length != 6) return false;
