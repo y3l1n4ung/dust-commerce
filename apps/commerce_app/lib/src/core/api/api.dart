@@ -4,4 +4,5 @@
 /// server encodes is the class this decodes.
 library;
 
+export 'authorization_interceptor.dart';
 export 'commerce_api.dart';

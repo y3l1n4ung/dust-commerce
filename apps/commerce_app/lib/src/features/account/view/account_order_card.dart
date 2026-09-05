@@ -1,0 +1,73 @@
+import 'package:commerce_app/commerce_app.dart';
+import 'package:commerce_shared/commerce_shared.dart';
+import 'package:dust_flutter/i18n.dart';
+import 'package:flutter/material.dart';
+
+/// Source-shaped summary for one completed or pending customer order.
+class AccountOrderCard extends StatelessWidget {
+  /// Creates an order card.
+  const AccountOrderCard({required this.order, super.key});
+
+  /// Frozen server order.
+  final Order order;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            '#${order.id}',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            children: [
+              Text(
+                MaterialLocalizations.of(context).formatMediumDate(
+                  order.placedAt.toLocal(),
+                ),
+                style: const TextStyle(fontSize: 12),
+              ),
+              Text(formatMoney(order.total),
+                  style: const TextStyle(fontSize: 12)),
+              Text(
+                context.tr(
+                  'shop_account_order_items',
+                  defaultText: '{count} items',
+                  args: {'count': order.itemCount},
+                ),
+                style: const TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 16,
+            runSpacing: 16,
+            children: [
+              for (final item in order.items.take(3))
+                SizedBox(
+                  width: 144,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ProductImage(url: item.thumbnail, aspectRatio: 1),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${item.title} × ${item.quantity}',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ],
+      );
+}

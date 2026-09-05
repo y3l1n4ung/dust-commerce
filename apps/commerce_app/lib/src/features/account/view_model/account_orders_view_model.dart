@@ -1,0 +1,53 @@
+import 'package:commerce_app/src/core/api/api.dart';
+import 'package:commerce_app/src/features/account/model/account_orders_state.dart';
+import 'package:dio/dio.dart';
+import 'package:dust_flutter/state.dart';
+
+part 'account_orders_view_model.g.dart';
+
+/// Dependencies for customer order history.
+final class AccountOrdersViewModelArgs extends ViewModelArgs {
+  /// Creates order-history dependencies.
+  const AccountOrdersViewModelArgs({required this.api, super.observer});
+
+  /// Generated storefront client with Dio-level authorization.
+  final CommerceApi api;
+}
+
+/// Loads authenticated customer orders without exposing bearer credentials.
+@ViewModel(state: AccountOrdersState, args: AccountOrdersViewModelArgs)
+class AccountOrdersViewModel extends $AccountOrdersViewModel {
+  /// Creates the order-history view model.
+  AccountOrdersViewModel(super.args);
+
+  /// Loads all orders owned by the current authenticated customer.
+  Future<void> load() async {
+    if (state.status == AccountOrdersStatus.loading) return;
+    emit(AccountOrdersState(
+      status: AccountOrdersStatus.loading,
+      orders: state.orders,
+    ));
+    try {
+      final view = await args.api.orders();
+      emit(AccountOrdersState(
+        status: AccountOrdersStatus.ready,
+        orders: view.orders,
+      ));
+    } on DioException catch (error) {
+      final message = error.response?.statusCode == 401
+          ? 'Your session has expired. Please sign in again.'
+          : 'We could not load your orders. Please try again.';
+      emit(AccountOrdersState(
+        status: AccountOrdersStatus.failed,
+        orders: state.orders,
+        message: message,
+      ));
+    } on Object {
+      emit(AccountOrdersState(
+        status: AccountOrdersStatus.failed,
+        orders: state.orders,
+        message: 'We could not load your orders. Please try again.',
+      ));
+    }
+  }
+}

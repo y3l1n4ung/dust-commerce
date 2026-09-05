@@ -24,6 +24,12 @@ final class CommerceRoutesNavigator {
   CommerceRouteAction<void> notFound() =>
       CommerceRouteAction(_router, NotFoundRoute());
 
+  CommerceRouteAction<void> account() =>
+      CommerceRouteAction(_router, AccountRoute());
+
+  CommerceRouteAction<void> accountOrders() =>
+      CommerceRouteAction(_router, AccountOrdersRoute());
+
   CommerceRouteAction<void> cart() => CommerceRouteAction(_router, CartRoute());
 
   CommerceRouteAction<void> product({required String handle}) =>

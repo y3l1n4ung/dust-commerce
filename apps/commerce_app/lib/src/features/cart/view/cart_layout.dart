@@ -26,7 +26,19 @@ class CartLayout extends StatelessWidget {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final wide = MediaQuery.sizeOf(context).width >= 1024;
-                  final items = CartItems(view: view, state: state);
+                  final account = context.watchAccountViewModel().value;
+                  final items = Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (!account.isAuthenticated) ...[
+                        const CartSignInPrompt(),
+                        const SizedBox(height: 24),
+                        const Divider(),
+                        const SizedBox(height: 24),
+                      ],
+                      CartItems(view: view, state: state),
+                    ],
+                  );
                   final summary = CartSummary(view: view, state: state);
                   if (!wide) {
                     return Column(

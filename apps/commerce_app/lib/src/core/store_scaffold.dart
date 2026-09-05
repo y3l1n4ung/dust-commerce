@@ -34,6 +34,16 @@ class StoreScaffold extends StatelessWidget {
           ),
         ),
         actions: [
+          if (MediaQuery.sizeOf(context).width >= 1024)
+            TextButton(
+              onPressed: () => context.navigator.account().go(),
+              child: const TranslatedText(
+                'shop_account_title',
+                defaultText: 'Account',
+              ),
+            ),
+          if (MediaQuery.sizeOf(context).width >= 1024)
+            const SizedBox(width: 12),
           const CartPreview(),
           const SizedBox(width: 12),
         ],
@@ -77,6 +87,16 @@ class _StoreMenu extends StatelessWidget {
                   onPressed: () => _go(
                     context,
                     () => context.navigator.catalog().go(),
+                  ),
+                ),
+                _MenuLink(
+                  label: context.tr(
+                    'shop_account_title',
+                    defaultText: 'Account',
+                  ),
+                  onPressed: () => _go(
+                    context,
+                    () => context.navigator.account().go(),
                   ),
                 ),
                 _MenuLink(

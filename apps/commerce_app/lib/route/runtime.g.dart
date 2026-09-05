@@ -10,6 +10,8 @@ import 'package:dust_flutter/route.dart';
 import 'paths.g.dart';
 import 'metadata.g.dart';
 import '../route.dart';
+import 'package:commerce_app/src/features/account/view/account_orders_page.dart';
+import 'package:commerce_app/src/features/account/view/account_page.dart';
 import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
@@ -62,6 +64,15 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const CatalogRoute(),
       route,
     ],
+    AccountRoute() => [
+      const CatalogRoute(),
+      route,
+    ],
+    AccountOrdersRoute() => [
+      const CatalogRoute(),
+      const AccountRoute(),
+      route,
+    ],
     CartRoute() => [
       const CatalogRoute(),
       route,
@@ -76,6 +87,8 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
 const Map<Type, Type?> _$appliedShellsByPage = {
   CatalogPage: null,
   NotFoundPage: null,
+  AccountPage: null,
+  AccountOrdersPage: null,
   CartPage: null,
   ProductPage: null,
 };
@@ -107,6 +120,24 @@ Page<dynamic> buildCommerceRoutePage(
       fullscreenDialog: false,
       maintainState: true,
       child: const NotFoundPage(),
+    ),
+    AccountRoute() => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'account',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: const AccountPage(),
+    ),
+    AccountOrdersRoute() => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'accountOrders',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: const AccountOrdersPage(),
     ),
     CartRoute() => generatedPage(
       key: key,

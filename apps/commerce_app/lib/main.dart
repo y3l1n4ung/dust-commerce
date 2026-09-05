@@ -20,10 +20,15 @@ void main() {
     defaultValue: 'http://localhost:8080',
   );
 
+  final sessions = SecureAuthSessionStore();
+  final dio = Dio()
+    ..interceptors.add(AuthorizationInterceptor(sessions: sessions));
+
   runApp(
     AppI18n(
       child: CommerceApp(
-        api: CommerceApi(Dio(), baseUrl: baseUrl),
+        api: CommerceApi(dio, baseUrl: baseUrl),
+        sessions: sessions,
         initialLocation: kIsWeb
             ? Uri.base
             : Uri.parse(
@@ -39,12 +44,16 @@ class CommerceApp extends StatefulWidget {
   /// Creates a [CommerceApp].
   const CommerceApp({
     required this.api,
+    required this.sessions,
     required this.initialLocation,
     super.key,
   });
 
   /// The storefront API every view model is given.
   final CommerceApi api;
+
+  /// Secure customer-session persistence shared with Dio authorization.
+  final AuthSessionStore sessions;
 
   /// Browser or platform location captured before the router can normalize it.
   final Uri initialLocation;
@@ -54,16 +63,37 @@ class CommerceApp extends StatefulWidget {
 }
 
 class _CommerceAppState extends State<CommerceApp> {
+  late final AccountViewModel _account;
   late final CommerceRouter _router;
+  late final RouterConfig<CommerceRoute> _routerConfig;
+  bool _routerReady = false;
 
   @override
   void initState() {
     super.initState();
-    _router = CommerceRouter(initialLocation: widget.initialLocation);
+    _account = AccountViewModel(
+      AccountViewModelArgs(api: widget.api, sessions: widget.sessions),
+    );
+    _router = CommerceRouter(
+      initialLocation: widget.initialLocation,
+      account: _account,
+    );
+    // Let Dust's initial refresh settle before an async deep-link guard runs.
+    _routerConfig = _router.config;
+    Future<void>.microtask(() {
+      if (mounted) setState(() => _routerReady = true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _account.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_routerReady) return const SizedBox.shrink();
     final i18n = I18nScope.of(context);
     final app = MaterialApp.router(
       onGenerateTitle: (context) => context.tr(
@@ -75,22 +105,29 @@ class _CommerceAppState extends State<CommerceApp> {
       supportedLocales: appI18nSupportedLocales,
       localizationsDelegates: appI18nLocalizationsDelegates,
       theme: StoreTheme.light,
-      routerConfig: _router.config,
+      routerConfig: _routerConfig,
     );
 
-    return CartViewModelScope(
-      args: (_) => CartViewModelArgs(
-        api: widget.api,
-        cartIds: SecureCartIdStore(),
-      ),
-      create: (_, args) => CartViewModel(args),
-      child: ProductViewModelScope(
-        args: (_) => ProductViewModelArgs(api: widget.api),
-        create: (_, args) => ProductViewModel(args),
-        child: CatalogViewModelScope(
-          args: (_) => CatalogViewModelArgs(api: widget.api),
-          create: (_, args) => CatalogViewModel(args),
-          child: app,
+    return AccountViewModelScope.value(
+      value: _account,
+      child: AccountOrdersViewModelScope(
+        args: (_) => AccountOrdersViewModelArgs(api: widget.api),
+        create: (_, args) => AccountOrdersViewModel(args),
+        child: CartViewModelScope(
+          args: (_) => CartViewModelArgs(
+            api: widget.api,
+            cartIds: SecureCartIdStore(),
+          ),
+          create: (_, args) => CartViewModel(args),
+          child: ProductViewModelScope(
+            args: (_) => ProductViewModelArgs(api: widget.api),
+            create: (_, args) => ProductViewModel(args),
+            child: CatalogViewModelScope(
+              args: (_) => CatalogViewModelArgs(api: widget.api),
+              create: (_, args) => CatalogViewModel(args),
+              child: app,
+            ),
+          ),
         ),
       ),
     );

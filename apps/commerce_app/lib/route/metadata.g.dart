@@ -9,6 +9,8 @@ import 'package:dust_flutter/route.dart';
 
 import 'paths.g.dart';
 import '../route.dart';
+import 'package:commerce_app/src/features/account/view/account_orders_page.dart';
+import 'package:commerce_app/src/features/account/view/account_page.dart';
 import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
@@ -27,6 +29,22 @@ const List<GeneratedRoute> $commerceRoutes = [
     page: NotFoundPage,
     name: 'notFound',
     resultType: 'void',
+  ),
+  GeneratedRoute(
+    '/account',
+    page: AccountPage,
+    name: 'account',
+    resultType: 'void',
+    guards: [],
+    routes: [
+      GeneratedRoute(
+        'orders',
+        page: AccountOrdersPage,
+        name: 'accountOrders',
+        resultType: 'void',
+        guards: [CustomerGuard],
+      ),
+    ],
   ),
   GeneratedRoute(
     '/cart',
@@ -61,6 +79,8 @@ RouteDebugInfo commerceRouteDebugInfo(CommerceRoute route) {
   return switch (route) {
     CatalogRoute() => const RouteDebugInfo(name: 'catalog', shell: null, branch: null, resultType: 'void'),
     NotFoundRoute() => const RouteDebugInfo(name: 'notFound', shell: null, branch: null, resultType: 'void'),
+    AccountRoute() => const RouteDebugInfo(name: 'account', shell: null, branch: null, resultType: 'void'),
+    AccountOrdersRoute() => const RouteDebugInfo(name: 'accountOrders', shell: null, branch: null, resultType: 'void'),
     CartRoute() => const RouteDebugInfo(name: 'cart', shell: null, branch: null, resultType: 'void'),
     ProductRoute(handle: _) => const RouteDebugInfo(name: 'product', shell: null, branch: null, resultType: 'void'),
   };
@@ -71,6 +91,7 @@ List<RouteGuardBase<CommerceRoute>> commerceRouteGuards(
   Object router,
 ) {
   return switch (route) {
+    AccountOrdersRoute() => [CustomerGuard((router as dynamic).customerSession)],
     _ => const [],
   };
 }

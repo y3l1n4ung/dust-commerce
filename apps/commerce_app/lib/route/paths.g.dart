@@ -47,6 +47,35 @@ final class NotFoundRoute extends CommerceRoute<void> {
   bool get requiresAuth => false;
 }
 
+/// Typed route data for `AccountRoute`.
+final class AccountRoute extends CommerceRoute<void> {
+  const AccountRoute();
+
+  @override
+  String get location {
+    return generatedRoutePath(
+      ['account'],
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+
+  @override
+  bool get requiresAuth => false;
+}
+
+/// Typed route data for `AccountOrdersRoute`.
+final class AccountOrdersRoute extends CommerceRoute<void> {
+  const AccountOrdersRoute();
+
+  @override
+  String get location {
+    return generatedRoutePath(
+      ['account', 'orders'],
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+}
+
 /// Typed route data for `CartRoute`.
 final class CartRoute extends CommerceRoute<void> {
   const CartRoute();
@@ -92,6 +121,14 @@ CommerceRoute parseCommerceRoute(Uri uri) {
   }
   if (segments.length == 1 && segments[0] == '404') {
     final route = NotFoundRoute();
+    return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (segments.length == 1 && segments[0] == 'account') {
+    final route = AccountRoute();
+    return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (segments.length == 2 && segments[0] == 'account' && segments[1] == 'orders') {
+    final route = AccountOrdersRoute();
     return withGeneratedRouteUriExtras(route, uri, const <String>{});
   }
   if (segments.length == 1 && segments[0] == 'cart') {

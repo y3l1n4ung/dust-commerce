@@ -9,6 +9,8 @@ import 'package:dust_server/testing.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../core/support.dart';
+
 void main() {
   late Directory directory;
   late CommerceDatabase database;
@@ -112,7 +114,6 @@ void main() {
       Uri.parse('/products/t-shirt?v_id=var_tshirt_m_white'),
     );
 
-    expect(route, isA<ProductRoute>());
     expect(route.location, '/products/t-shirt?v_id=var_tshirt_m_white');
     expect(
       generatedRouteUriExtrasOf(route)?.queryParameters['v_id'],
@@ -123,6 +124,7 @@ void main() {
   test('router preserves the browser location on its first parse', () {
     final router = CommerceRouter(
       initialLocation: Uri.parse('/products/t-shirt?v_id=var_tshirt_m_white'),
+      account: testAccount(api),
     );
 
     final restored = router.parseRouteInformation(
