@@ -15,10 +15,13 @@ import 'package:commerce_app/src/features/account/view/account_page.dart';
 import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
+import 'package:commerce_app/src/features/checkout/view/checkout_page.dart';
+import 'package:commerce_app/src/features/checkout/view/order_confirmation_page.dart';
 import 'package:commerce_app/src/features/product/view/product_page.dart';
 
 abstract class $CommerceRouter extends RouterBase<CommerceRoute> {
-
+  @override
+  Listenable? get refreshListenable => (this as dynamic).cartSession as Listenable?;
   late final RouterConfig<CommerceRoute> config = _buildConfig();
 
   RouterConfig<CommerceRoute> _buildConfig() {
@@ -77,6 +80,14 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const CatalogRoute(),
       route,
     ],
+    CheckoutRoute() => [
+      const CatalogRoute(),
+      route,
+    ],
+    OrderConfirmedRoute(id: _) => [
+      const CatalogRoute(),
+      route,
+    ],
     ProductRoute(handle: _) => [
       const CatalogRoute(),
       route,
@@ -90,6 +101,8 @@ const Map<Type, Type?> _$appliedShellsByPage = {
   AccountPage: null,
   AccountOrdersPage: null,
   CartPage: null,
+  CheckoutPage: null,
+  OrderConfirmationPage: null,
   ProductPage: null,
 };
 
@@ -147,6 +160,24 @@ Page<dynamic> buildCommerceRoutePage(
       fullscreenDialog: false,
       maintainState: true,
       child: const CartPage(),
+    ),
+    CheckoutRoute() => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'checkout',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: const CheckoutPage(),
+    ),
+    OrderConfirmedRoute(id: final id) => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'orderConfirmed',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: OrderConfirmationPage(id: id),
     ),
     ProductRoute(handle: final handle) => generatedPage(
       key: key,

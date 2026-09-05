@@ -64,6 +64,8 @@ class CommerceApp extends StatefulWidget {
 
 class _CommerceAppState extends State<CommerceApp> {
   late final AccountViewModel _account;
+  late final CartViewModel _cart;
+  late final CheckoutViewModel _checkout;
   late final CommerceRouter _router;
   late final RouterConfig<CommerceRoute> _routerConfig;
   bool _routerReady = false;
@@ -74,9 +76,21 @@ class _CommerceAppState extends State<CommerceApp> {
     _account = AccountViewModel(
       AccountViewModelArgs(api: widget.api, sessions: widget.sessions),
     );
+    _cart = CartViewModel(
+      CartViewModelArgs(api: widget.api, cartIds: SecureCartIdStore()),
+    );
+    _checkout = CheckoutViewModel(
+      CheckoutViewModelArgs(
+        api: widget.api,
+        cart: _cart,
+        receipts: SecureOrderReceiptStore(),
+        currentCustomer: () => _account.state.customer,
+      ),
+    );
     _router = CommerceRouter(
       initialLocation: widget.initialLocation,
       account: _account,
+      cart: _cart,
     );
     // Let Dust's initial refresh settle before an async deep-link guard runs.
     _routerConfig = _router.config;
@@ -87,6 +101,8 @@ class _CommerceAppState extends State<CommerceApp> {
 
   @override
   void dispose() {
+    _checkout.dispose();
+    _cart.dispose();
     _account.dispose();
     super.dispose();
   }
@@ -113,19 +129,18 @@ class _CommerceAppState extends State<CommerceApp> {
       child: AccountOrdersViewModelScope(
         args: (_) => AccountOrdersViewModelArgs(api: widget.api),
         create: (_, args) => AccountOrdersViewModel(args),
-        child: CartViewModelScope(
-          args: (_) => CartViewModelArgs(
-            api: widget.api,
-            cartIds: SecureCartIdStore(),
-          ),
-          create: (_, args) => CartViewModel(args),
-          child: ProductViewModelScope(
-            args: (_) => ProductViewModelArgs(api: widget.api),
-            create: (_, args) => ProductViewModel(args),
-            child: CatalogViewModelScope(
-              args: (_) => CatalogViewModelArgs(api: widget.api),
-              create: (_, args) => CatalogViewModel(args),
-              child: app,
+        child: CartViewModelScope.value(
+          value: _cart,
+          child: CheckoutViewModelScope.value(
+            value: _checkout,
+            child: ProductViewModelScope(
+              args: (_) => ProductViewModelArgs(api: widget.api),
+              create: (_, args) => ProductViewModel(args),
+              child: CatalogViewModelScope(
+                args: (_) => CatalogViewModelArgs(api: widget.api),
+                create: (_, args) => CatalogViewModel(args),
+                child: app,
+              ),
             ),
           ),
         ),

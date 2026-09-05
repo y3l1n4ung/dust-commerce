@@ -1,4 +1,5 @@
 import 'package:commerce_app/commerce_app.dart';
+import 'package:commerce_app/route.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,9 @@ class CartSummary extends StatelessWidget {
           const Divider(),
           const SizedBox(height: 16),
           FilledButton(
-            onPressed: null,
+            onPressed: state.status == CartStatus.loading
+                ? null
+                : () => context.navigator.checkout().go(),
             child: const TranslatedText(
               'shop_cart_checkout',
               defaultText: 'Go to checkout',

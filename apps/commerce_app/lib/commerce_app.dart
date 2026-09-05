@@ -10,4 +10,5 @@ export 'src/core/storage/storage.dart';
 export 'src/features/account/account.dart';
 export 'src/features/cart/cart.dart';
 export 'src/features/catalog/catalog.dart';
+export 'src/features/checkout/checkout.dart';
 export 'src/features/product/product.dart';

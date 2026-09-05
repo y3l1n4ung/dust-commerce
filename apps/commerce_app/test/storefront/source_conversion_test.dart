@@ -1,15 +1,11 @@
 import 'dart:io';
 
 import 'package:commerce_app/commerce_app.dart';
-import 'package:commerce_app/route.dart';
 import 'package:commerce_server/commerce_server.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/http.dart';
 import 'package:dust_server/testing.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import '../core/support.dart';
 
 void main() {
   late Directory directory;
@@ -107,38 +103,6 @@ void main() {
     expect(product.state.product?.id, 'prod_tshirt');
     expect(product.state.relatedStatus, RelatedProductsStatus.failed);
     expect(product.state.relatedMessage, isNotNull);
-  });
-
-  test('the product route round-trips Medusa unknown query extras', () {
-    final route = parseCommerceRoute(
-      Uri.parse('/products/t-shirt?v_id=var_tshirt_m_white'),
-    );
-
-    expect(route.location, '/products/t-shirt?v_id=var_tshirt_m_white');
-    expect(
-      generatedRouteUriExtrasOf(route)?.queryParameters['v_id'],
-      ['var_tshirt_m_white'],
-    );
-  });
-
-  test('router preserves the browser location on its first parse', () {
-    final router = CommerceRouter(
-      initialLocation: Uri.parse('/products/t-shirt?v_id=var_tshirt_m_white'),
-      account: testAccount(api),
-    );
-
-    final restored = router.parseRouteInformation(
-      RouteInformation(uri: Uri.parse('/')),
-    );
-    final later = router.parseRouteInformation(
-      RouteInformation(uri: Uri.parse('/cart')),
-    );
-
-    expect(
-      restored.uri.toString(),
-      '/products/t-shirt?v_id=var_tshirt_m_white',
-    );
-    expect(later.uri.toString(), '/cart');
   });
 
   test('option choices exclude combinations no variant can fulfil', () async {

@@ -67,6 +67,17 @@ void main() {
     expect(storage.values, isNot(contains('guest')));
   });
 
+  test('a failed restore can be retried', () async {
+    storage.readError = StateError('secure storage temporarily unavailable');
+    final restarted = model();
+
+    await restarted.restore();
+    expect(restarted.state.status, CartStatus.failed);
+
+    await restarted.restore();
+    expect(restarted.state.status, CartStatus.ready);
+  });
+
   test('quantity and removal always take totals from server responses',
       () async {
     final cart = model();
@@ -116,12 +127,18 @@ void main() {
 
 final class _MemoryCartIdStore implements CartIdStore {
   final Map<String, String> values = {};
+  Object? readError;
 
   @override
   Future<void> clear(String scope) async => values.remove(scope);
 
   @override
-  Future<String?> read(String scope) async => values[scope];
+  Future<String?> read(String scope) async {
+    final error = readError;
+    readError = null;
+    if (error != null) throw error;
+    return values[scope];
+  }
 
   @override
   Future<void> write(String scope, String cartId) async {

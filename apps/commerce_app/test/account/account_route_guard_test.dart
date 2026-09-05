@@ -12,6 +12,7 @@ void main() {
     final router = CommerceRouter(
       initialLocation: Uri.parse('/account/orders'),
       account: account,
+      cart: testCart(const _UnusedApi()),
     );
     const route = AccountOrdersRoute();
     final guards = commerceRouteGuards(route, router);
@@ -27,6 +28,7 @@ void main() {
     final router = CommerceRouter(
       initialLocation: Uri.parse('/account'),
       account: testAccount(const _UnusedApi()),
+      cart: testCart(const _UnusedApi()),
     );
 
     expect(commerceRouteGuards(const AccountRoute(), router), isEmpty);
@@ -36,6 +38,7 @@ void main() {
     final router = CommerceRouter(
       initialLocation: Uri.parse('/account/orders'),
       account: testAccount(const _UnusedApi()),
+      cart: testCart(const _UnusedApi()),
     );
     final delegate =
         router.config.routerDelegate as GeneratedRouterDelegate<CommerceRoute>;

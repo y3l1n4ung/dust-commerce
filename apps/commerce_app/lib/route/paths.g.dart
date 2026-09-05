@@ -92,6 +92,37 @@ final class CartRoute extends CommerceRoute<void> {
   bool get requiresAuth => false;
 }
 
+/// Typed route data for `CheckoutRoute`.
+final class CheckoutRoute extends CommerceRoute<void> {
+  const CheckoutRoute();
+
+  @override
+  String get location {
+    return generatedRoutePath(
+      ['checkout'],
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+}
+
+/// Typed route data for `OrderConfirmedRoute`.
+final class OrderConfirmedRoute extends CommerceRoute<void> {
+  const OrderConfirmedRoute({required this.id});
+
+  final String id;
+
+  @override
+  String get location {
+    return generatedRoutePath(
+      ['order', id, 'confirmed'],
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+
+  @override
+  bool get requiresAuth => false;
+}
+
 /// Typed route data for `ProductRoute`.
 final class ProductRoute extends CommerceRoute<void> {
   const ProductRoute({required this.handle});
@@ -133,6 +164,15 @@ CommerceRoute parseCommerceRoute(Uri uri) {
   }
   if (segments.length == 1 && segments[0] == 'cart') {
     final route = CartRoute();
+    return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (segments.length == 1 && segments[0] == 'checkout') {
+    final route = CheckoutRoute();
+    return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (segments.length == 3 && segments[0] == 'order' && segments[2] == 'confirmed') {
+    final id = segments[1];
+    final route = OrderConfirmedRoute(id: id);
     return withGeneratedRouteUriExtras(route, uri, const <String>{});
   }
   if (segments.length == 2 && segments[0] == 'products') {

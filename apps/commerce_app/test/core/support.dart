@@ -50,3 +50,29 @@ final class MemoryAuthSessionStore implements AuthSessionStore {
 AccountViewModel testAccount(CommerceApi api) => AccountViewModel(
       AccountViewModelArgs(api: api, sessions: MemoryAuthSessionStore()),
     );
+
+/// In-memory cart capability persistence for non-widget application tests.
+final class MemoryCartIdStore implements CartIdStore {
+  /// Stored capabilities by account scope.
+  final Map<String, String> values = {};
+
+  @override
+  Future<void> clear(String scope) async => values.remove(scope);
+
+  @override
+  Future<String?> read(String scope) async => values[scope];
+
+  @override
+  Future<void> write(String scope, String cartId) async {
+    values[scope] = cartId;
+  }
+}
+
+/// Creates an empty cart model for routing tests.
+CartViewModel testCart(CommerceApi api, {MemoryCartIdStore? storage}) =>
+    CartViewModel(
+      CartViewModelArgs(
+        api: api,
+        cartIds: storage ?? MemoryCartIdStore(),
+      ),
+    );

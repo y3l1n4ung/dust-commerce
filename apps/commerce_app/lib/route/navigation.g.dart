@@ -32,6 +32,12 @@ final class CommerceRoutesNavigator {
 
   CommerceRouteAction<void> cart() => CommerceRouteAction(_router, CartRoute());
 
+  CommerceRouteAction<void> checkout() =>
+      CommerceRouteAction(_router, CheckoutRoute());
+
+  CommerceRouteAction<void> orderConfirmed({required String id}) =>
+      CommerceRouteAction(_router, OrderConfirmedRoute(id: id));
+
   CommerceRouteAction<void> product({required String handle}) =>
       CommerceRouteAction(_router, ProductRoute(handle: handle));
 

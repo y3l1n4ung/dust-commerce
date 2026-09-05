@@ -34,11 +34,26 @@ class CartViewModel extends $CartViewModel {
   /// Creates the cart view model.
   CartViewModel(super.args);
 
+  Future<void>? _restoreTask;
+
   @override
   Future<void> onInit() => restore();
 
   /// Restores the cart capability and refreshes it from the server.
-  Future<void> restore() async {
+  Future<void> restore({bool force = false}) {
+    final active = _restoreTask;
+    if (active != null) return active;
+    if (!force &&
+        (state.status == CartStatus.loading ||
+            state.status == CartStatus.ready)) {
+      return Future<void>.value();
+    }
+    final task = _restore();
+    _restoreTask = task;
+    return task.whenComplete(() => _restoreTask = null);
+  }
+
+  Future<void> _restore() async {
     emit(const CartState(
       status: CartStatus.loading,
       operation: CartOperation.restore,
@@ -59,6 +74,15 @@ class CartViewModel extends $CartViewModel {
       _fail(CartOperation.restore, error);
     } on Object catch (error) {
       _fail(CartOperation.restore, error);
+    }
+  }
+
+  /// Clears the completed cart locally without making order success fragile.
+  Future<void> finishCheckout() async {
+    try {
+      await args.cartIds.clear(args.storageScope);
+    } finally {
+      emit(const CartState(status: CartStatus.ready));
     }
   }
 

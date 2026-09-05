@@ -2,6 +2,7 @@ import 'package:dust_flutter/route.dart';
 import 'package:flutter/widgets.dart';
 
 import 'src/features/account/view_model/account_view_model.dart';
+import 'src/features/cart/view_model/cart_view_model.dart';
 import 'route/routes.g.dart';
 
 export 'package:dust_flutter/route.dart';
@@ -15,8 +16,11 @@ export 'route/routes.g.dart';
 final class CommerceRouter extends $CommerceRouter {
   /// Creates a [CommerceRouter].
   CommerceRouter(
-      {required Uri initialLocation, required AccountViewModel account})
+      {required Uri initialLocation,
+      required AccountViewModel account,
+      required CartViewModel cart})
       : customerSession = CustomerSessionRouterRefresh(account),
+        cartSession = cart,
         _initialLocation = Uri(
           path: initialLocation.path,
           query: initialLocation.hasQuery ? initialLocation.query : null,
@@ -26,6 +30,9 @@ final class CommerceRouter extends $CommerceRouter {
 
   /// Customer-session access and router refresh boundary.
   final CustomerSessionRouterRefresh customerSession;
+
+  /// Cart capability used by the public checkout route guard.
+  final CartViewModel cartSession;
   final Uri _initialLocation;
   bool _initialLocationRead = false;
 
@@ -37,6 +44,22 @@ final class CommerceRouter extends $CommerceRouter {
     if (_initialLocationRead) return information;
     _initialLocationRead = true;
     return RouteInformation(uri: _initialLocation);
+  }
+}
+
+/// Allows checkout only while a non-empty cart capability is valid.
+final class CheckoutGuard implements AsyncRouteGuard<CommerceRoute> {
+  /// Creates the cart-level checkout guard.
+  const CheckoutGuard(this.cart);
+
+  /// Shared cart state injected from [CommerceRouter].
+  final CartViewModel cart;
+
+  @override
+  Future<CommerceRoute?> canActivate(CommerceRoute route) async {
+    await cart.restore();
+    final view = cart.state.cart;
+    return view != null && !view.cart.isEmpty ? null : const CartRoute();
   }
 }
 
@@ -102,6 +125,32 @@ extension CommerceProductRouteContext on BuildContext {
       pathSegments: ['products', handle],
       queryParameters: variantId == null ? null : {'v_id': variantId},
     );
+    RouterController.of<CommerceRoute>(this).replace(parseCommerceRoute(uri));
+  }
+}
+
+/// Medusa-compatible checkout step query behavior.
+extension CommerceCheckoutRouteContext on BuildContext {
+  /// Active `step` value; address is the safe default.
+  String get checkoutStep {
+    final route = RouterController.of<CommerceRoute>(this).currentRoute;
+    if (route is! CheckoutRoute) return 'address';
+    final values = generatedRouteUriExtrasOf(route)?.queryParameters['step'];
+    final value = values == null || values.isEmpty ? null : values.first;
+    return const {'address', 'delivery', 'payment', 'review'}.contains(value)
+        ? value!
+        : 'address';
+  }
+
+  /// Pushes the same checkout route with a source-compatible step query.
+  void pushCheckoutStep(String step) {
+    final uri = Uri(path: '/checkout', queryParameters: {'step': step});
+    RouterController.of<CommerceRoute>(this).push(parseCommerceRoute(uri));
+  }
+
+  /// Replaces an inaccessible step without adding a broken history entry.
+  void replaceCheckoutStep(String step) {
+    final uri = Uri(path: '/checkout', queryParameters: {'step': step});
     RouterController.of<CommerceRoute>(this).replace(parseCommerceRoute(uri));
   }
 }

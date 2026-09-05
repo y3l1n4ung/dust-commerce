@@ -3,3 +3,4 @@ library;
 
 export 'auth_session_store.dart';
 export 'cart_id_store.dart';
+export 'order_receipt_store.dart';

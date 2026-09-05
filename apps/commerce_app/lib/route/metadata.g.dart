@@ -14,6 +14,8 @@ import 'package:commerce_app/src/features/account/view/account_page.dart';
 import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
+import 'package:commerce_app/src/features/checkout/view/checkout_page.dart';
+import 'package:commerce_app/src/features/checkout/view/order_confirmation_page.dart';
 import 'package:commerce_app/src/features/product/view/product_page.dart';
 
 const List<GeneratedRoute> $commerceRoutes = [
@@ -54,6 +56,30 @@ const List<GeneratedRoute> $commerceRoutes = [
     guards: [],
   ),
   GeneratedRoute(
+    '/checkout',
+    page: CheckoutPage,
+    name: 'checkout',
+    resultType: 'void',
+    guards: [CheckoutGuard],
+  ),
+  GeneratedRoute(
+    '/order',
+    routes: [
+      GeneratedRoute(
+        ':id',
+        routes: [
+          GeneratedRoute(
+            'confirmed',
+            page: OrderConfirmationPage,
+            name: 'orderConfirmed',
+            resultType: 'void',
+            guards: [],
+          ),
+        ],
+      ),
+    ],
+  ),
+  GeneratedRoute(
     '/products',
     routes: [
       GeneratedRoute(
@@ -82,6 +108,8 @@ RouteDebugInfo commerceRouteDebugInfo(CommerceRoute route) {
     AccountRoute() => const RouteDebugInfo(name: 'account', shell: null, branch: null, resultType: 'void'),
     AccountOrdersRoute() => const RouteDebugInfo(name: 'accountOrders', shell: null, branch: null, resultType: 'void'),
     CartRoute() => const RouteDebugInfo(name: 'cart', shell: null, branch: null, resultType: 'void'),
+    CheckoutRoute() => const RouteDebugInfo(name: 'checkout', shell: null, branch: null, resultType: 'void'),
+    OrderConfirmedRoute(id: _) => const RouteDebugInfo(name: 'orderConfirmed', shell: null, branch: null, resultType: 'void'),
     ProductRoute(handle: _) => const RouteDebugInfo(name: 'product', shell: null, branch: null, resultType: 'void'),
   };
 }
@@ -92,6 +120,7 @@ List<RouteGuardBase<CommerceRoute>> commerceRouteGuards(
 ) {
   return switch (route) {
     AccountOrdersRoute() => [CustomerGuard((router as dynamic).customerSession)],
+    CheckoutRoute() => [CheckoutGuard((router as dynamic).cartSession)],
     _ => const [],
   };
 }
