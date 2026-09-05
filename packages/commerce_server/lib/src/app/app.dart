@@ -1,6 +1,8 @@
 import 'package:commerce_server/src/features/cart/cart.dart';
 import 'package:commerce_server/src/features/catalog/catalog.dart';
 import 'package:commerce_server/src/features/checkout/checkout.dart';
+import 'package:commerce_server/src/features/payment/payment.dart';
+import 'package:commerce_server/src/http/http.dart';
 import 'package:commerce_server/src/infra/database.dart';
 import 'package:dust_dart/db.dart';
 import 'package:dust_server/server.dart';
@@ -27,6 +29,8 @@ Router buildApp(
   final cartWrites = CartUpdateRepository(executor);
   final orderReads = CheckoutReadRepository(executor);
   final orderLists = CheckoutListRepository(executor);
+  final paymentReads = PaymentReadRepository(executor);
+  final paymentWrites = PaymentCreateRepository(executor);
   final identify = nextId ?? _randomId;
   final clock = now ?? DateTime.now;
 
@@ -52,6 +56,19 @@ Router buildApp(
         orderLists,
         nextId: identify,
         now: clock,
+      ),
+    )
+    ..nest(
+      '/store',
+      paymentRoutes(),
+    )
+    ..withState(
+      PaymentDeps(
+        database: database,
+        orders: orderReads,
+        reads: paymentReads,
+        writes: paymentWrites,
+        clock: Clock(now: clock, nextId: identify),
       ),
     )
     ..route('/health', get((_) async => jsonResponse({'status': 'ok'})));
