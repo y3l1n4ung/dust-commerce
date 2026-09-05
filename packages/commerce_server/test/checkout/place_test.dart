@@ -79,6 +79,29 @@ void main() {
 
       expect(cart.isEmpty, isTrue);
     });
+
+    test('returns the same order when checkout is retried', () async {
+      final cartId = await harness.cartWith('var_small', quantity: 2);
+
+      final first = await harness.checkout(cartId);
+      final retried = await harness.checkout(cartId);
+
+      first.assertCreated();
+      retried.assertCreated();
+      final firstOrder = Order.fromJson(first.json! as Map<String, Object?>);
+      final retriedOrder =
+          Order.fromJson(retried.json! as Map<String, Object?>);
+      expect(retriedOrder.id, firstOrder.id);
+      expect(await harness.stockOf('var_small'), 48);
+
+      final rows = await queryRaw(
+        'SELECT COUNT(orders.id), completed_at FROM carts '
+        'LEFT JOIN orders ON orders.cart_id = carts.id WHERE carts.id = ?',
+        [cartId],
+      ).fetch(harness.database.connection as Executor);
+      expect(rows.single.readIndex<int>(0), 1);
+      expect(rows.single.readIndex<String?>(1), isNotNull);
+    });
   });
 
   group('when somebody else got there first', () {

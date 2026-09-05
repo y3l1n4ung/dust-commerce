@@ -2,7 +2,8 @@
 -- UTC timestamps use ISO-8601 TEXT because SQLite has no native TIMESTAMPTZ.
 CREATE TABLE payment_collections (
   id            TEXT PRIMARY KEY,
-  order_id      TEXT NOT NULL REFERENCES orders (id) ON DELETE CASCADE,
+  -- One order has one collection; retries must reuse it, never double charge.
+  order_id      TEXT NOT NULL UNIQUE REFERENCES orders (id) ON DELETE CASCADE,
   -- Identifies the external adapter; provider-specific state belongs in metadata.
   provider      TEXT NOT NULL CHECK (length(provider) > 0),
   -- Integer minor units avoid floating-point money errors.

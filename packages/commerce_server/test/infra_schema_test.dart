@@ -98,7 +98,10 @@ void main() {
     test('an order stores its totals rather than deriving them', () async {
       final columns = await columnsOf('orders');
 
-      expect(columns, containsAll(<String>['subtotal', 'tax', 'total']));
+      expect(
+        columns,
+        containsAll(<String>['cart_id', 'subtotal', 'tax', 'total']),
+      );
     });
 
     test('product facts and gallery order are explicit columns', () async {

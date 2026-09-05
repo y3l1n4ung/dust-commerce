@@ -2,6 +2,8 @@
 -- UTC timestamps use ISO-8601 TEXT because SQLite has no native TIMESTAMPTZ.
 CREATE TABLE orders (
   id                 TEXT PRIMARY KEY,
+  -- One cart can become one order; this is the checkout idempotency boundary.
+  cart_id            TEXT NOT NULL UNIQUE REFERENCES carts (id),
   region_id          TEXT NOT NULL REFERENCES regions (id),
   customer_id        TEXT REFERENCES customers (id),
   email              TEXT NOT NULL COLLATE NOCASE,

@@ -72,6 +72,16 @@ WHERE o.id = ?
   }
 
   @override
+  Future<Result<String?, SqlxError>> orderIdForCart(String cartId) {
+    return _db.fetchScalar<String?>(
+      r'''
+SELECT id FROM orders WHERE cart_id = ? AND deleted_at IS NULL
+''',
+      [cartId],
+    );
+  }
+
+  @override
   Future<Result<OrderResponse?, SqlxError>> findCustomerOrder(String id, String customerId) {
     return _db.fetchOptional<OrderResponse>(
       r'''

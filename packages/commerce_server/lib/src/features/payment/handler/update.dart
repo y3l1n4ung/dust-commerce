@@ -7,9 +7,8 @@ import 'package:dust_server/server.dart';
 
 /// `POST /orders/{id}/payments/capture` — take the money.
 ///
-/// Capturing twice is a 409 rather than a quiet success. A client retrying a
-/// timed-out request deserves to be told the first one worked, and a silent
-/// second capture is how somebody gets charged twice.
+/// Repeating a completed capture returns the completed order without moving
+/// money again, so a timeout can be retried safely.
 Future<Result<OrderResponse, Rejection>> capturePaymentHandler(
   Request request,
 ) async {
@@ -44,8 +43,6 @@ Future<Result<OrderResponse, Rejection>> capturePaymentHandler(
       Err(Rejection.notFound('Order "$orderId"')),
     Ok(value: Err(error: CaptureFailure.noPayment)) =>
       const Err(Rejection.conflict('No payment has been started')),
-    Ok(value: Err(error: CaptureFailure.alreadyCaptured)) =>
-      const Err(Rejection.conflict('This payment has already been captured')),
     Ok(value: Err(error: CaptureFailure.cancelled)) =>
       const Err(Rejection.conflict('A cancelled order cannot be paid for')),
     Err() => const Err(Rejection.internal()),

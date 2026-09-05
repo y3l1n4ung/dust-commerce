@@ -11,13 +11,14 @@ abstract final class CheckoutCreateRepository {
 
   /// Writes the order header with its totals already computed.
   @Query(r'''
-INSERT INTO orders (id, region_id, customer_id, email, currency_code,
+INSERT INTO orders (id, cart_id, region_id, customer_id, email, currency_code,
                     subtotal, shipping_total, discount_total, tax, total,
                     shipping_option_id, shipping_name, placed_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
 ''')
   Future<Result<ExecResult, SqlxError>> insertOrder(
     String id,
+    String cartId,
     String regionId,
     String? customerId,
     String email,
@@ -103,4 +104,13 @@ UPDATE promotions SET usage_count = usage_count + 1 WHERE code = $1
   /// Empties the cart once its lines have been copied onto the order.
   @Query(r'DELETE FROM line_items WHERE cart_id = $1')
   Future<Result<ExecResult, SqlxError>> clearCart(String cartId);
+
+  /// Marks the cart terminal inside the same transaction as its order.
+  @Query(r'''
+UPDATE carts SET completed_at = $2 WHERE id = $1 AND completed_at IS NULL
+''')
+  Future<Result<ExecResult, SqlxError>> completeCart(
+    String cartId,
+    String completedAt,
+  );
 }

@@ -80,9 +80,6 @@ Router buildApp(
     ..withState(
       PaymentDeps(
         database: database,
-        orders: orderReads,
-        reads: PaymentReadRepository(executor),
-        writes: PaymentCreateRepository(executor),
         clock: clock,
       ),
     );

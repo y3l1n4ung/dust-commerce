@@ -58,6 +58,12 @@ WHERE o.id = $1
 ''')
   Future<Result<OrderResponse?, SqlxError>> findOrder(String id);
 
+  /// Existing order id for a cart, used to make checkout retry-safe.
+  @Query(r'''
+SELECT id FROM orders WHERE cart_id = $1 AND deleted_at IS NULL
+''')
+  Future<Result<String?, SqlxError>> orderIdForCart(String cartId);
+
   /// One complete order only when it belongs to [customerId].
   @Query(r'''
 SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,

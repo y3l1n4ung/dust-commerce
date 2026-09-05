@@ -90,11 +90,16 @@ void main() {
       expect(rows.single.readIndex<String>(1), 'authorized');
     });
 
-    test('refuses a second payment on the same order', () async {
+    test('reuses a payment when authorization is retried', () async {
       final orderId = await placedOrder();
       (await authorize(orderId)).assertCreated();
 
-      (await authorize(orderId)).assertConflict();
+      (await authorize(orderId)).assertCreated();
+      final rows = await queryRaw(
+        'SELECT COUNT(*) FROM payment_collections WHERE order_id = ?',
+        [orderId],
+      ).fetch(database.connection as Executor);
+      expect(rows.single.readIndex<int>(0), 1);
     });
 
     test('will not let somebody else pay for an order they know the id of',
@@ -140,12 +145,16 @@ void main() {
       expect(rows.single.readIndex<String>(1), 'captured');
     });
 
-    test('refuses to capture twice, rather than charging twice', () async {
+    test('returns the completed order when capture is retried', () async {
       final orderId = await placedOrder();
       await authorize(orderId);
       (await capture(orderId)).assertOk();
 
-      (await capture(orderId)).assertConflict();
+      final retried = await capture(orderId);
+      retried.assertOk();
+      final order = Order.fromJson(retried.json! as Map<String, Object?>);
+      expect(order.paymentStatus, PaymentStatus.captured);
+      expect(order.status, OrderStatus.completed);
     });
 
     test('refuses to capture what was never authorised', () async {

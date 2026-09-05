@@ -64,6 +64,21 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
     if (cart.customerId case final owner? when customerId != Some(owner)) {
       return const Ok(Err(CheckoutFailure.wrongCustomer));
     }
+
+    final previousId = await reads.orderIdForCart(cartId);
+    if (previousId case Err(:final error)) return Err(error);
+    final previous = optionOf(
+      (previousId as Ok<String?, SqlxError>).value,
+    );
+    if (previous case Some(value: final orderId)) {
+      final response = await reads.findOrder(orderId);
+      if (response case Err(:final error)) return Err(error);
+      final order = optionOf(
+        (response as Ok<OrderResponse?, SqlxError>).value,
+      );
+      if (order case Some(value: final existing)) return Ok(Ok(existing));
+      return Err(SqlxError.decode('Existing cart order could not be read'));
+    }
     if (cart.isEmpty) return const Ok(Err(CheckoutFailure.emptyCart));
 
     for (final line in cart.items) {
@@ -77,6 +92,7 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
     final orderId = nextId();
     final written = await orders.insertOrder(
       orderId,
+      cartId,
       cart.region.id,
       customerId.match<String?>(
         some: (value) => value,
@@ -145,6 +161,12 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
         if (counted case Err(:final error)) return Err(error);
       }
     }
+
+    final completed = await orders.completeCart(
+      cartId,
+      placedAt.toUtc().toIso8601String(),
+    );
+    if (completed case Err(:final error)) return Err(error);
 
     final emptied = await orders.clearCart(cartId);
     if (emptied case Err(:final error)) return Err(error);

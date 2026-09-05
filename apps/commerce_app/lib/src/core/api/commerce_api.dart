@@ -108,6 +108,20 @@ abstract interface class CommerceApi {
   @POST('/store/checkout')
   Future<Order> checkout(@Body() CheckoutRequest body);
 
+  /// Starts the server-owned manual payment for an order.
+  @POST('/store/orders/{id}/payments')
+  Future<Order> authorizePayment(
+    @Path() String id, {
+    @Query('email') String? guestEmail,
+  });
+
+  /// Captures an authorized manual payment exactly once.
+  @POST('/store/orders/{id}/payments/capture')
+  Future<Order> capturePayment(
+    @Path() String id, {
+    @Query('email') String? guestEmail,
+  });
+
   /// The authenticated customer's orders.
   @GET('/store/orders')
   Future<OrderListView> orders();

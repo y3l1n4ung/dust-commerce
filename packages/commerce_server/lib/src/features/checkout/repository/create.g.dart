@@ -19,15 +19,15 @@ final class _$CheckoutCreateRepository implements CheckoutCreateRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertOrder(String id, String regionId, String? customerId, String email, String currencyCode, int subtotal, int shippingTotal, int discountTotal, int tax, int total, String? shippingOptionId, String? shippingName, String placedAt) {
+  Future<Result<ExecResult, SqlxError>> insertOrder(String id, String cartId, String regionId, String? customerId, String email, String currencyCode, int subtotal, int shippingTotal, int discountTotal, int tax, int total, String? shippingOptionId, String? shippingName, String placedAt) {
     return _db.execute(
       r'''
-INSERT INTO orders (id, region_id, customer_id, email, currency_code,
+INSERT INTO orders (id, cart_id, region_id, customer_id, email, currency_code,
                     subtotal, shipping_total, discount_total, tax, total,
                     shipping_option_id, shipping_name, placed_at)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ''',
-      [id, regionId, customerId, email, currencyCode, subtotal, shippingTotal, discountTotal, tax, total, shippingOptionId, shippingName, placedAt],
+      [id, cartId, regionId, customerId, email, currencyCode, subtotal, shippingTotal, discountTotal, tax, total, shippingOptionId, shippingName, placedAt],
     );
   }
 
@@ -86,6 +86,16 @@ UPDATE promotions SET usage_count = usage_count + 1 WHERE code = ?
     return _db.execute(
       r'''DELETE FROM line_items WHERE cart_id = ?''',
       [cartId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> completeCart(String cartId, String completedAt) {
+    return _db.execute(
+      r'''
+UPDATE carts SET completed_at = ? WHERE id = ? AND completed_at IS NULL
+''',
+      [completedAt, cartId],
     );
   }
 }

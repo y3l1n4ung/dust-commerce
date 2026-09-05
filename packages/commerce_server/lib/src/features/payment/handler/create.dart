@@ -32,9 +32,7 @@ Future<Result<OrderResponse, Rejection>> authorizePaymentHandler(
   final deps = (state as Ok<PaymentDeps, Rejection>).value;
 
   final result = await authorizePayment(
-    deps.orders,
-    deps.reads,
-    deps.writes,
+    deps.database,
     orderId: orderId,
     email: (email as Ok<String, Rejection>).value,
     customerId: customer.map((value) => value.customer.id),
@@ -47,8 +45,6 @@ Future<Result<OrderResponse, Rejection>> authorizePaymentHandler(
       Err(Rejection.notFound('Order "$orderId"')),
     Ok(value: Err(error: AuthorizeFailure.cancelled)) =>
       const Err(Rejection.conflict('A cancelled order cannot be paid for')),
-    Ok(value: Err(error: AuthorizeFailure.alreadyStarted)) =>
-      const Err(Rejection.conflict('A payment has already been started')),
     Err() => const Err(Rejection.internal()),
   };
 }

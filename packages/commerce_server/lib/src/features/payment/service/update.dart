@@ -15,9 +15,6 @@ enum CaptureFailure {
   /// No payment has been started for it.
   noPayment,
 
-  /// The payment was already captured.
-  alreadyCaptured,
-
   /// The order was cancelled before the money moved.
   cancelled,
 }
@@ -28,8 +25,8 @@ enum CaptureFailure {
 /// row still says authorised, or the reverse, is a reconciliation problem
 /// somebody discovers a month later.
 ///
-/// Capture is conditional in SQL, so a second attempt affects no rows and is
-/// told so rather than taking the money again.
+/// Capture is conditional in SQL, so a second attempt affects no rows and
+/// returns the already-completed order rather than moving money again.
 Future<Result<Result<OrderResponse, CaptureFailure>, SqlxError>> capturePayment(
   CommerceDatabase database, {
   required String orderId,
@@ -75,15 +72,13 @@ Future<Result<Result<OrderResponse, CaptureFailure>, SqlxError>> capturePayment(
     );
     if (captured case Err(:final error)) return Err(error);
     if ((captured as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
-      return const Ok(Err(CaptureFailure.alreadyCaptured));
+      return Ok(Ok(order));
     }
 
     final completed = await writes.completeOrder(orderId);
     if (completed case Err(:final error)) return Err(error);
 
-    // The domain type says what the order became, rather than this rebuilding
-    // it: OrderResponse.captured() owns the explicit response transition.
-    // one place is one rule to get wrong.
+    // The explicit response owns its public captured transition in one place.
     return Ok(Ok(order.captured()));
   });
 }
