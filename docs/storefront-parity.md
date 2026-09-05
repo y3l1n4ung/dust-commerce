@@ -22,8 +22,8 @@ and the `Medusa DTC storefront parity` milestone.
 | `products/templates` | product detail route | implemented in #22; source-ordered mobile and sticky desktop composition |
 | `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations and sticky mobile actions |
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
-| `layout/components/cart-dropdown` | cart preview | queued in #21 |
-| `cart/templates` | cart route | partial in #21; responsive source layout, empty state, line controls, promotion UI and authoritative totals implemented; sign-in prompt, header preview and checkout handoff remain |
+| `layout/components/cart-dropdown` | cart preview | implemented in #21 with hover, timed add feedback, live removal, subtotal and empty state |
+| `cart/templates` | cart route | partial in #21; responsive source layout, empty state, line controls, promotion UI and authoritative totals implemented; sign-in prompt and checkout handoff remain |
 | `account/templates` | account shell and session | queued in #26 |
 | `checkout/templates` | checkout and payment | queued in #28 |
 | `order/templates` | confirmation and order details | queued in #20 and #28 |
