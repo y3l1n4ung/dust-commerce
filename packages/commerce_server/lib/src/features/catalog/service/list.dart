@@ -1,6 +1,5 @@
-import 'package:commerce_server/src/features/catalog/repository/catalog_repository.dart';
-import 'package:commerce_server/src/features/catalog/repository/product_row.dart';
-import 'package:commerce_server/src/features/catalog/service/assemble.dart';
+import 'package:commerce_server/src/features/catalog/model.dart';
+import 'package:commerce_server/src/features/catalog/repository/repository.dart';
 import 'package:dust_dart/db.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 
@@ -38,20 +37,20 @@ final class ProductPage {
 /// the product columns once per variant, and reassembling that in Dart costs
 /// more than it saves until the catalogue is large enough to measure.
 Future<Result<ProductPage, SqlxError>> listProducts(
-  CatalogRepository repository, {
+  CatalogListRepository lists, {
   required String currencyCode,
   int limit = 20,
   int offset = 0,
 }) async {
-  final page = await repository.listPublished(limit, offset);
+  final page = await lists.listPublished(limit, offset);
   if (page case Err(:final error)) return Err(error);
 
-  final total = await repository.countPublished();
+  final total = await lists.countPublished();
   if (total case Err(:final error)) return Err(error);
 
   final products = <Product>[];
   for (final row in (page as Ok<List<ProductRow>, SqlxError>).value) {
-    final variants = await repository.variantsOf(row.id, currencyCode);
+    final variants = await lists.variantsOf(row.id, currencyCode);
     if (variants case Err(:final error)) return Err(error);
     products.add(
       assembleProduct(

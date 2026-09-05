@@ -1,5 +1,6 @@
-/// Reading and writing orders.
+/// Checkout's SQL, one file per operation.
 library;
 
-export 'checkout_repository.dart';
-export 'order_row.dart';
+export 'create.dart';
+export 'list.dart';
+export 'read.dart';

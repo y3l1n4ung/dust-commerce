@@ -1,5 +1,5 @@
-import 'package:commerce_server/src/features/catalog/repository/catalog_repository.dart';
-import 'package:commerce_server/src/features/catalog/service/get.dart';
+import 'package:commerce_server/src/features/catalog/repository/repository.dart';
+import 'package:commerce_server/src/features/catalog/service/service.dart';
 import 'package:commerce_server/src/http/http.dart';
 import 'package:dust_server/server.dart';
 
@@ -8,7 +8,10 @@ import 'package:dust_server/server.dart';
 /// A draft answers 404 rather than 403. Telling an anonymous caller that a
 /// handle exists but is not theirs to see leaks the catalogue before launch,
 /// and the service returning null for both is what makes that automatic.
-Handler getProductHandler(CatalogRepository repository) {
+Handler readProductHandler(
+  CatalogReadRepository reads,
+  CatalogListRepository lists,
+) {
   return (Request request) async {
     final handle = pathParametersOf(request)['handle'];
     if (handle == null || handle.isEmpty) {
@@ -16,7 +19,8 @@ Handler getProductHandler(CatalogRepository repository) {
     }
 
     final result = await findProduct(
-      repository,
+      reads,
+      lists,
       handle: handle,
       currencyCode: currencyOf(request),
     );

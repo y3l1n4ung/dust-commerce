@@ -1,5 +1,5 @@
-/// Reading the catalogue.
+/// The catalogue's SQL, one file per operation.
 library;
 
-export 'catalog_repository.dart';
-export 'product_row.dart';
+export 'list.dart';
+export 'read.dart';

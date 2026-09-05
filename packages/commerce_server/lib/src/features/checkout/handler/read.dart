@@ -8,7 +8,7 @@ import 'package:dust_server/server.dart';
 /// Scoped by the email the caller proves with `?email=`. Without that an order
 /// id, which travels in emails and browser history, would be enough to read
 /// somebody's address and what they bought.
-Handler getOrderHandler(CheckoutRepository repository) {
+Handler readOrderHandler(CheckoutReadRepository reads) {
   return (Request request) async {
     final id = pathParametersOf(request)['id'];
     if (id == null || id.isEmpty) return badRequest('An order id is required');
@@ -18,7 +18,7 @@ Handler getOrderHandler(CheckoutRepository repository) {
       return badRequest('An email is required to read an order');
     }
 
-    final result = await loadOrder(repository, id);
+    final result = await loadOrder(reads, id);
 
     return switch (result) {
       Ok(value: final order?) when order.email == email =>

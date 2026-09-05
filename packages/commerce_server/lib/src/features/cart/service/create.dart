@@ -1,3 +1,4 @@
+import 'package:commerce_server/src/features/cart/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
@@ -9,19 +10,19 @@ import 'package:dust_dart/db.dart';
 /// region exists at all, which is a misconfigured shop rather than a bad
 /// request.
 Future<Result<Cart?, SqlxError>> createCart(
-  CartRepository repository, {
+  CartCreateRepository writes, {
   required String id,
   required DateTime now,
   String? email,
   String? customerId,
 }) async {
-  final regions = await repository.firstRegion();
+  final regions = await writes.firstRegion();
   if (regions case Err(:final error)) return Err(error);
 
   final region = (regions as Ok<RegionRow?, SqlxError>).value;
   if (region == null) return const Ok(null);
 
-  final written = await repository.createCart(
+  final written = await writes.createCart(
     id,
     region.id,
     customerId,

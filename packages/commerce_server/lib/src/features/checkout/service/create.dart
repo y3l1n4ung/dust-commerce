@@ -41,8 +41,8 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
   required String Function() nextId,
 }) async {
   return database.transaction((tx) async {
-    final carts = CartRepository(tx);
-    final orders = CheckoutRepository(tx);
+    final carts = CartReadRepository(tx);
+    final orders = CheckoutCreateRepository(tx);
 
     final loaded = await loadCart(carts, cartId);
     if (loaded case Err(:final error)) return Err(error);

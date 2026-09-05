@@ -6,7 +6,8 @@ import 'package:dust_server/server.dart';
 /// Checkout's routes, mounted by the application under a prefix.
 Router checkoutRoutes(
   CommerceDatabase database,
-  CheckoutRepository orders, {
+  CheckoutReadRepository reads,
+  CheckoutListRepository lists, {
   required String Function() nextId,
   required DateTime Function() now,
 }) {
@@ -15,6 +16,6 @@ Router checkoutRoutes(
       '/checkout',
       post(placeOrderHandler(database, nextId: nextId, now: now)),
     )
-    ..route('/orders', get(listOrdersHandler(orders)))
-    ..route('/orders/{id}', get(getOrderHandler(orders)));
+    ..route('/orders', get(listOrdersHandler(lists, reads)))
+    ..route('/orders/{id}', get(readOrderHandler(reads)));
 }

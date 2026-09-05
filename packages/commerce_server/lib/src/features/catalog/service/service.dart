@@ -1,6 +1,5 @@
-/// Reading the catalogue: assembling rows into the domain.
+/// Catalogue use cases, one file per operation.
 library;
 
-export 'assemble.dart';
-export 'get.dart';
 export 'list.dart';
+export 'read.dart';

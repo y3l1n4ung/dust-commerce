@@ -1,6 +1,7 @@
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
 
-part 'cart_row.g.dart';
+part 'model.g.dart';
 
 /// One row of `carts`, joined with the region that fixes its currency.
 @Derive([ToString(), Eq(), FromRow()])
@@ -131,3 +132,36 @@ final class RegionRow with _$RegionRow {
   @Sqlx(rename: 'tax_rate')
   final int taxRate;
 }
+
+/// Builds the domain [Region] a row describes.
+Region regionOf({
+  required String id,
+  required String name,
+  required String currencyCode,
+  required int taxRate,
+  required int taxInclusive,
+  required String countries,
+}) {
+  return Region(
+    id: id,
+    name: name,
+    currencyCode: currencyCode,
+    taxRate: taxRate,
+    taxInclusive: taxInclusive != 0,
+    countries: countries.split(',').where((it) => it.isNotEmpty).toList(),
+  );
+}
+
+/// Builds the domain [LineItem] a row describes.
+LineItem lineOf(LineItemRow row) => LineItem(
+      id: row.id,
+      variantId: row.variantId,
+      productId: row.productId,
+      title: row.title,
+      variantTitle: row.variantTitle,
+      unitPrice: Money(
+        amount: row.unitAmount,
+        currencyCode: row.currencyCode,
+      ),
+      quantity: row.quantity,
+    );

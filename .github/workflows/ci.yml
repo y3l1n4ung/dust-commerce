@@ -80,3 +80,9 @@ jobs:
       # Generated files are exempt: they are output, not source.
       - name: File size budget
         run: ./scripts/check_file_size.sh
+
+      # Handler, service and repository files are named for the operation they
+      # serve and nothing else. A rule written down and never checked is a rule
+      # that lasts until the first hurry.
+      - name: Backend structure
+        run: ./scripts/check_structure.sh

@@ -1,6 +1,5 @@
-import 'package:commerce_server/src/features/catalog/repository/catalog_repository.dart';
-import 'package:commerce_server/src/features/catalog/repository/product_row.dart';
-import 'package:commerce_server/src/features/catalog/service/assemble.dart';
+import 'package:commerce_server/src/features/catalog/model.dart';
+import 'package:commerce_server/src/features/catalog/repository/repository.dart';
 import 'package:dust_dart/db.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 
@@ -10,17 +9,18 @@ import 'package:commerce_shared/commerce_shared.dart';
 /// answer to a question, not a failure of the query, and the handler decides
 /// it is a 404.
 Future<Result<Product?, SqlxError>> findProduct(
-  CatalogRepository repository, {
+  CatalogReadRepository reads,
+  CatalogListRepository lists, {
   required String handle,
   required String currencyCode,
 }) async {
-  final found = await repository.findByHandle(handle);
+  final found = await reads.findByHandle(handle);
   if (found case Err(:final error)) return Err(error);
 
   final row = (found as Ok<ProductRow?, SqlxError>).value;
   if (row == null) return const Ok(null);
 
-  final variants = await repository.variantsOf(row.id, currencyCode);
+  final variants = await lists.variantsOf(row.id, currencyCode);
   if (variants case Err(:final error)) return Err(error);
 
   return Ok(

@@ -1,6 +1,7 @@
+import 'package:commerce_server/src/features/cart/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
+import 'package:commerce_server/src/features/catalog/model.dart';
 import 'package:commerce_server/src/features/catalog/repository/repository.dart';
-import 'package:commerce_server/src/features/catalog/service/assemble.dart';
 import 'package:dust_dart/db.dart';
 
 /// Why a line could not be added.
@@ -28,14 +29,15 @@ enum AddLineFailure {
 /// Adding a variant the cart already holds raises that line's quantity instead
 /// of appending a second one, keeping the earlier line's price.
 Future<Result<AddLineFailure?, SqlxError>> addLine(
-  CartRepository carts,
-  CatalogRepository catalog, {
+  CartReadRepository reads,
+  CartUpdateRepository writes,
+  CatalogReadRepository catalog, {
   required String cartId,
   required String variantId,
   required int quantity,
   required String Function() nextId,
 }) async {
-  final found = await carts.findCart(cartId);
+  final found = await reads.findCart(cartId);
   if (found case Err(:final error)) return Err(error);
   final cart = (found as Ok<CartRow?, SqlxError>).value;
   if (cart == null) return const Ok(AddLineFailure.noCart);
@@ -45,7 +47,7 @@ Future<Result<AddLineFailure?, SqlxError>> addLine(
   final variant = (priced as Ok<VariantRow?, SqlxError>).value;
   if (variant == null) return const Ok(AddLineFailure.noVariant);
 
-  final existing = await carts.findLine(cartId, variantId);
+  final existing = await reads.findLine(cartId, variantId);
   if (existing case Err(:final error)) return Err(error);
   final line = (existing as Ok<LineItemRow?, SqlxError>).value;
 
@@ -55,7 +57,7 @@ Future<Result<AddLineFailure?, SqlxError>> addLine(
   }
 
   final written = line == null
-      ? await carts.insertLine(
+      ? await writes.insertLine(
           nextId(),
           cartId,
           variant.id,
@@ -66,7 +68,7 @@ Future<Result<AddLineFailure?, SqlxError>> addLine(
           variant.currencyCode,
           quantity,
         )
-      : await carts.setLineQuantity(line.id, wanted);
+      : await writes.setLineQuantity(line.id, wanted);
 
   if (written case Err(:final error)) return Err(error);
   return const Ok(null);

@@ -15,8 +15,9 @@ import 'package:dust_server/server.dart';
 /// request. A client that shows all three the same way is losing information
 /// the server took care to distinguish.
 Handler addLineHandler(
-  CartRepository carts,
-  CatalogRepository catalog, {
+  CartReadRepository reads,
+  CartUpdateRepository writes,
+  CatalogReadRepository catalog, {
   required String Function() nextId,
 }) {
   return (Request request) async {
@@ -47,7 +48,8 @@ Handler addLineHandler(
     }
 
     final result = await addLine(
-      carts,
+      reads,
+      writes,
       catalog,
       cartId: cartId,
       variantId: variantId,
@@ -56,7 +58,7 @@ Handler addLineHandler(
     );
 
     return switch (result) {
-      Ok(value: null) => await _reload(carts, cartId),
+      Ok(value: null) => await _reload(reads, cartId),
       Ok(value: AddLineFailure.noCart) => notFound('Cart "$cartId"'),
       Ok(value: AddLineFailure.noVariant) => unprocessable(
           'Variant "$variantId" is not on sale in this cart\'s currency',
@@ -71,8 +73,8 @@ Handler addLineHandler(
   };
 }
 
-Future<Response> _reload(CartRepository carts, String cartId) async {
-  final reloaded = await loadCart(carts, cartId);
+Future<Response> _reload(CartReadRepository reads, String cartId) async {
+  final reloaded = await loadCart(reads, cartId);
 
   return switch (reloaded) {
     Ok(value: final cart?) => jsonResponse({

@@ -1,5 +1,5 @@
-import 'package:commerce_server/src/features/catalog/repository/catalog_repository.dart';
-import 'package:commerce_server/src/features/catalog/service/list.dart';
+import 'package:commerce_server/src/features/catalog/repository/repository.dart';
+import 'package:commerce_server/src/features/catalog/service/service.dart';
 import 'package:commerce_server/src/http/http.dart';
 import 'package:dust_server/server.dart';
 
@@ -7,13 +7,13 @@ import 'package:dust_server/server.dart';
 ///
 /// The handler parses the request, calls one service, and shapes the answer.
 /// It holds no product rules, which is why it stays this short.
-Handler listProductsHandler(CatalogRepository repository) {
+Handler listProductsHandler(CatalogListRepository lists) {
   return (Request request) async {
     final paging = pagingOf(request);
     final currency = currencyOf(request);
 
     final result = await listProducts(
-      repository,
+      lists,
       currencyCode: currency,
       limit: paging.limit,
       offset: paging.offset,

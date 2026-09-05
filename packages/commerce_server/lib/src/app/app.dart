@@ -19,18 +19,38 @@ Router buildApp(
   DateTime Function()? now,
 }) {
   final executor = database.executor;
-  final catalog = CatalogRepository(executor);
-  final carts = CartRepository(executor);
-  final orders = CheckoutRepository(executor);
+  final catalogReads = CatalogReadRepository(executor);
+  final catalogLists = CatalogListRepository(executor);
+  final cartCreates = CartCreateRepository(executor);
+  final cartReads = CartReadRepository(executor);
+  final cartWrites = CartUpdateRepository(executor);
+  final orderReads = CheckoutReadRepository(executor);
+  final orderLists = CheckoutListRepository(executor);
   final identify = nextId ?? _randomId;
   final clock = now ?? DateTime.now;
 
   return Router()
-    ..nest('/store', catalogRoutes(catalog))
-    ..nest('/store', cartRoutes(carts, catalog, nextId: identify, now: clock))
+    ..nest('/store', catalogRoutes(catalogReads, catalogLists))
     ..nest(
       '/store',
-      checkoutRoutes(database, orders, nextId: identify, now: clock),
+      cartRoutes(
+        cartCreates,
+        cartReads,
+        cartWrites,
+        catalogReads,
+        nextId: identify,
+        now: clock,
+      ),
+    )
+    ..nest(
+      '/store',
+      checkoutRoutes(
+        database,
+        orderReads,
+        orderLists,
+        nextId: identify,
+        now: clock,
+      ),
     )
     ..route('/health', get((_) async => jsonResponse({'status': 'ok'})));
 }

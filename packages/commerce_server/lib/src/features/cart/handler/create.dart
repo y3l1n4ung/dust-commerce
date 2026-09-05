@@ -5,13 +5,13 @@ import 'package:dust_server/server.dart';
 
 /// `POST /carts` — start an empty cart.
 Handler createCartHandler(
-  CartRepository repository, {
+  CartCreateRepository writes, {
   required String Function() nextId,
   required DateTime Function() now,
 }) {
   return (Request request) async {
     final result = await createCart(
-      repository,
+      writes,
       id: nextId(),
       now: now(),
     );

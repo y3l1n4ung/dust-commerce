@@ -66,7 +66,7 @@ is about an external system.
 features/<feature>/
 ├── <feature>.dart   # feature exports and internal wiring
 ├── error.dart       # feature error mapping, when it needs its own
-├── model.dart       # domain types, not HTTP DTOs
+├── model.dart       # domain types and row types, not HTTP DTOs
 ├── router.dart      # route definitions and handler mounting
 ├── validation.dart  # structural and domain validation of inputs
 ├── dto/
@@ -76,9 +76,10 @@ features/<feature>/
 ├── handler/         # thin HTTP adapters, one file per operation
 │   ├── handler.dart
 │   ├── create.dart
-│   ├── get.dart
+│   ├── read.dart
 │   ├── list.dart
-│   └── update.dart
+│   ├── update.dart
+│   └── delete.dart
 ├── repository/      # SQL only, one file per operation
 │   └── ...
 └── service/         # use cases and transaction orchestration
@@ -87,14 +88,51 @@ features/<feature>/
 
 The dependency direction is `router → handler → service → repository`.
 
+## Operation names
+
+Inside `handler/`, `service/` and `repository/` there are **five permitted file
+names and no others**:
+
+```text
+create.dart   read.dart   update.dart   delete.dart   list.dart
+```
+
+plus the barrel named after the folder. A name outside that set is not allowed,
+however descriptive it seems — `place.dart`, `add_line.dart` and `load.dart` all
+existed here once and all of them made a reader guess which layer and which
+operation they belonged to. `read` rather than `get`, consistently.
+
 Only the operations a feature actually serves get a file. A feature with no
-delete route has no `delete.dart`.
+delete route has no `delete.dart`; an empty file implying a route we do not
+serve is worse than no file.
+
+When an operation outgrows 180 lines it becomes a **folder of the same name**,
+never a differently-named sibling:
+
+```text
+repository/
+├── repository.dart
+├── create/
+│   ├── create.dart   # exports
+│   ├── insert.dart
+│   └── validate.dart
+└── read.dart
+```
 
 ## Row models
 
 Dust requires database row classes to live in libraries separate from the
-`@SqlxDatabase` root. Row classes belong in `repository/`, beside the SQL that
-produces them; the database root lives in `infra/`.
+`@SqlxDatabase` root. They live in the feature's `model.dart`, beside the
+functions that turn them into domain types — `repository/` may hold only
+operation files, and a row class is not an operation.
+
+## One DAO per operation
+
+Dust generates one DAO per annotated class, and a class lives in one file. An
+operation-shaped file therefore means an operation-shaped DAO:
+`CatalogListRepository`, `CatalogReadRepository`, `CartUpdateRepository`. That
+is also the smallest thing a caller has to depend on — a handler that only
+reads never sees the writes.
 
 ## Tests
 

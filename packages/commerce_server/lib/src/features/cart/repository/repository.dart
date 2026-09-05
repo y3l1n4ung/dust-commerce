@@ -1,5 +1,6 @@
-/// Reading and writing carts.
+/// The cart's SQL, one file per operation.
 library;
 
-export 'cart_repository.dart';
-export 'cart_row.dart';
+export 'create.dart';
+export 'read.dart';
+export 'update.dart';

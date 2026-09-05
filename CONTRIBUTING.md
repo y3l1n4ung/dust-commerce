@@ -10,7 +10,11 @@
    responsibility, never by line count.
 3. **A folder is not scaffolded before an issue needs code in it.** An empty
    directory implying a route we do not serve is worse than no directory.
-4. **Generated output is committed.** CI runs `dust check` and `dust check --db`
+4. **Backend operations are named `create`, `read`, `update`, `delete`,
+   `list`.** Nothing else, in `handler/`, `service/` or `repository/`. One that
+   outgrows the budget becomes a folder of the same name. See
+   [the backend structure](docs/architecture/backend-structure.md).
+5. **Generated output is committed.** CI runs `dust check` and `dust check --db`
    to prove the committed files match their sources.
 
 ## Splitting
@@ -51,7 +55,7 @@ dust build --root apps/commerce_app
 ```
 
 ```bash
-./scripts/format.sh && ./scripts/check_file_size.sh
+./scripts/format.sh && ./scripts/check_file_size.sh && ./scripts/check_structure.sh
 ```
 
 Never run `dart format` across a package. It rewrites generated files into

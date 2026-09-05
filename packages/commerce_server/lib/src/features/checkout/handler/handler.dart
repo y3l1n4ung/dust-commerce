@@ -1,6 +1,6 @@
 /// HTTP adapters for checkout, one file per operation.
 library;
 
-export 'get.dart';
+export 'create.dart';
 export 'list.dart';
-export 'place.dart';
+export 'read.dart';
