@@ -1,0 +1,19 @@
+name: commerce_server
+description: HTTP API for the commerce showcase, on dust_server and SQLite.
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  commerce_shared: ^0.1.0
+  dust_dart: ^0.1.4
+  dust_db_sqlite3: ^0.1.4
+  dust_server: ^0.1.0-beta.3
+
+dev_dependencies:
+  test: ^1.26.0
+  very_good_analysis: ^10.3.0

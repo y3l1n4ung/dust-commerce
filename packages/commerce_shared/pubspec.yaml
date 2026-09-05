@@ -1,0 +1,16 @@
+name: commerce_shared
+description: Domain models shared by the commerce server and its Flutter client.
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  dust_dart: ^0.1.4
+
+dev_dependencies:
+  test: ^1.26.0
+  very_good_analysis: ^10.3.0

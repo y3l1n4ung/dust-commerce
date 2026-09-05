@@ -1,0 +1,24 @@
+name: commerce_app
+description: Flutter storefront for the commerce showcase.
+publish_to: none
+version: 0.1.0
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  commerce_shared: ^0.1.0
+  dust_dart: ^0.1.4
+  dust_flutter: ^0.1.4
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.3.0
+
+flutter:
+  uses-material-design: true
