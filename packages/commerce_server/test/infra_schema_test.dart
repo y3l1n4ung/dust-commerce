@@ -56,7 +56,12 @@ void main() {
           'order_items',
           'orders',
           'product_options',
+          'product_collections',
+          'product_categories',
+          'product_category_products',
           'product_images',
+          'product_tags',
+          'product_tag_products',
           'product_variants',
           'products',
           'promotions',
@@ -109,6 +114,7 @@ void main() {
         await columnsOf('products'),
         containsAll(<String>[
           'material',
+          'collection_id',
           'origin_country',
           'product_type',
           'weight',
@@ -118,6 +124,10 @@ void main() {
         ]),
       );
       expect(await columnsOf('product_images'), containsAll(['url', 'rank']));
+      expect(
+        await columnsOf('product_categories'),
+        containsAll(['handle', 'parent_category_id', 'is_active', 'rank']),
+      );
     });
   });
 

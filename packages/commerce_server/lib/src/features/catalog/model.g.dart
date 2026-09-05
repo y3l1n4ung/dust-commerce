@@ -45,10 +45,13 @@ ProductResponse _$ProductResponseFromRow(Row row) {
     title: row.read<String>('title'),
     handle: row.read<String>('handle'),
     status: row.read<String>('status'),
-    details: ProductDetailsFromJson().decode(row.read<String>('details')),
-    images: ProductImagesFromJson().decode(row.read<String>('images')),
-    options: ProductOptionsFromJson().decode(row.read<String>('options')),
-    variants: ProductVariantsFromJson().decode(row.read<String>('variants')),
+    details: ProductDetailsFromJson().decode(row.read<Object?>('details')),
+    categories: ProductCategoriesFromJson().decode(row.read<Object?>('categories')),
+    images: ProductImagesFromJson().decode(row.read<Object?>('images')),
+    options: ProductOptionsFromJson().decode(row.read<Object?>('options')),
+    tags: ProductTagsFromJson().decode(row.read<Object?>('tags')),
+    variants: ProductVariantsFromJson().decode(row.read<Object?>('variants')),
+    collection: ProductCollectionFromJson().decode(row.read<Object?>('collection')),
     description: row.readNullable<String>('description'),
     thumbnail: row.readNullable<String>('thumbnail'),
   );
@@ -83,6 +86,12 @@ extension $ProductResponseQuery on QueryAs<ProductResponse> {
 Map<String, Object?> _$ProductResponseSerialize(ProductResponse instance) {
   return <String, Object?>{
     'description': instance.description,
+    'categories': instance.categories
+        .map((item) => item.toJson())
+        .toList(),
+    'collection': instance.collection == null
+        ? null
+        : (instance.collection!).toJson(),
     'details': instance.details.toJson(),
     'handle': instance.handle,
     'id': instance.id,
@@ -93,6 +102,9 @@ Map<String, Object?> _$ProductResponseSerialize(ProductResponse instance) {
         .map((item) => item.toJson())
         .toList(),
     'status': instance.status,
+    'tags': instance.tags
+        .map((item) => item.toJson())
+        .toList(),
     'title': instance.title,
     'thumbnail': instance.thumbnail,
     'variants': instance.variants

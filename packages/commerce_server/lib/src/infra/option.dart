@@ -9,3 +9,9 @@ Option<T> optionOf<T extends Object>(T? value) => switch (value) {
       final present? => Some<T>(present),
       null => None<T>(),
     };
+
+/// Converts an explicit optional value only at a nullable persistence boundary.
+T? nullableOf<T extends Object>(Option<T> value) => switch (value) {
+      Some(value: final present) => present,
+      None() => null,
+    };

@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:commerce_server/src/features/catalog/json_converters.dart';
 import 'package:commerce_server/src/features/catalog/option_response.dart';
 import 'package:commerce_server/src/features/catalog/variant_response.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -22,15 +21,26 @@ final class ProductResponse with _$ProductResponse {
     required this.handle,
     required this.status,
     required this.details,
+    required this.categories,
     required this.images,
     required this.options,
+    required this.tags,
     required this.variants,
+    this.collection,
     this.description,
     this.thumbnail,
   });
 
   /// Long-form storefront copy.
   final String? description;
+
+  /// Explicit public categories attached to the product.
+  @Sqlx(tryFrom: ProductCategoriesFromJson())
+  final List<ProductCategory> categories;
+
+  /// Explicit public collection, absent when the product is ungrouped.
+  @Sqlx(tryFrom: ProductCollectionFromJson())
+  final ProductCollection? collection;
 
   /// Physical and merchandising facts approved for the storefront.
   @Sqlx(tryFrom: ProductDetailsFromJson())
@@ -52,6 +62,10 @@ final class ProductResponse with _$ProductResponse {
 
   /// Public lifecycle status as its stable wire value.
   final String status;
+
+  /// Explicit public discovery labels attached to the product.
+  @Sqlx(tryFrom: ProductTagsFromJson())
+  final List<ProductTag> tags;
 
   /// Customer-facing product name.
   final String title;
@@ -92,85 +106,3 @@ final class ProductPageResponse with _$ProductPageResponse {
   /// Number of published products in the catalogue.
   final int total;
 }
-
-/// Decodes the public detail object selected as JSON.
-final class ProductDetailsFromJson
-    implements SqlxTryFrom<ProductDetails, String> {
-  /// Creates the stateless converter.
-  const ProductDetailsFromJson();
-
-  @override
-  ProductDetails decode(String value) =>
-      ProductDetails.fromJson(_object(value));
-}
-
-/// Decodes ordered product image URLs selected as JSON.
-final class ProductImagesFromJson implements SqlxTryFrom<List<String>, String> {
-  /// Creates the stateless converter.
-  const ProductImagesFromJson();
-
-  @override
-  List<String> decode(String value) => [
-        for (final item in _array(value)) item! as String,
-      ];
-}
-
-/// Decodes explicit public product options selected as JSON.
-final class ProductOptionsFromJson
-    implements SqlxTryFrom<List<ProductOptionResponse>, String> {
-  /// Creates the stateless converter.
-  const ProductOptionsFromJson();
-
-  @override
-  List<ProductOptionResponse> decode(String value) => [
-        for (final item in _array(value))
-          _option(item! as Map<String, Object?>),
-      ];
-
-  static ProductOptionResponse _option(Map<String, Object?> item) =>
-      ProductOptionResponse(
-        id: item['id']! as String,
-        title: item['title']! as String,
-        values: (item['values_csv']! as String)
-            .split(',')
-            .where((choice) => choice.isNotEmpty)
-            .toList(growable: false),
-      );
-}
-
-/// Decodes currency-scoped public variants selected as JSON.
-final class ProductVariantsFromJson
-    implements SqlxTryFrom<List<ProductVariantResponse>, String> {
-  /// Creates the stateless converter.
-  const ProductVariantsFromJson();
-
-  @override
-  List<ProductVariantResponse> decode(String value) => [
-        for (final item in _array(value))
-          _variant(item! as Map<String, Object?>),
-      ];
-
-  static ProductVariantResponse _variant(Map<String, Object?> value) =>
-      ProductVariantResponse(
-        id: value['id']! as String,
-        title: value['title']! as String,
-        sku: value['sku'] as String?,
-        prices: [
-          Money(
-            amount: value['amount']! as int,
-            currencyCode: value['currency_code']! as String,
-          ),
-        ],
-        inventoryQuantity: value['inventory_quantity']! as int,
-        manageInventory: value['manage_inventory']! as int != 0,
-        allowBackorder: value['allow_backorder']! as int != 0,
-        optionValues: (value['option_values']! as Map<String, Object?>).map(
-          (key, choice) => MapEntry(key, choice! as String),
-        ),
-      );
-}
-
-List<Object?> _array(String value) => jsonDecode(value) as List<Object?>;
-
-Map<String, Object?> _object(String value) =>
-    jsonDecode(value) as Map<String, Object?>;

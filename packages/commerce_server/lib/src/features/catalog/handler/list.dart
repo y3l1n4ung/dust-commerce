@@ -16,6 +16,9 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
   final result = await listProducts(
     deps.lists,
     currencyCode: currencyOf(request),
+    collection: queryOptionOf(request, 'collection'),
+    category: queryOptionOf(request, 'category'),
+    tag: queryOptionOf(request, 'tag'),
     limit: paging.limit,
     offset: paging.offset,
   );

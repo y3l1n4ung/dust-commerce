@@ -13,8 +13,82 @@
 
 part of 'catalog_view.dart';
 
+const DeepCollectionEquality _productCollectionListViewCollectionsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _productCategoryListViewCategoriesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productPageViewProductsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _orderListViewOrdersEquality = DeepCollectionEquality();
+
+mixin _$ProductCollectionListView implements Serializable {
+  @override
+  String toString() {
+    final self = this as ProductCollectionListView;
+    return 'ProductCollectionListView('
+        'count: ${self.count}, '
+        'collections: ${self.collections}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ProductCollectionListView;
+    return identical(this, other) ||
+        other is ProductCollectionListView &&
+            runtimeType == other.runtimeType &&
+            other.count == self.count &&
+            _productCollectionListViewCollectionsEquality.equals(other.collections, self.collections);
+  }
+
+  @override
+  int get hashCode {
+    final self = this as ProductCollectionListView;
+    return Object.hashAll([
+      runtimeType,
+      self.count,
+      _productCollectionListViewCollectionsEquality.hash(self.collections),
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$ProductCollectionListViewSerialize(this as ProductCollectionListView);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$ProductCategoryListView implements Serializable {
+  @override
+  String toString() {
+    final self = this as ProductCategoryListView;
+    return 'ProductCategoryListView('
+        'categories: ${self.categories}, '
+        'count: ${self.count}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ProductCategoryListView;
+    return identical(this, other) ||
+        other is ProductCategoryListView &&
+            runtimeType == other.runtimeType &&
+            _productCategoryListViewCategoriesEquality.equals(other.categories, self.categories) &&
+            other.count == self.count;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as ProductCategoryListView;
+    return Object.hashAll([
+      runtimeType,
+      _productCategoryListViewCategoriesEquality.hash(self.categories),
+      self.count,
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$ProductCategoryListViewSerialize(this as ProductCategoryListView);
+
+  Map<String, Object?> toJson() => serialize();
+}
 
 mixin _$ProductPageView implements Serializable {
   @override
@@ -97,6 +171,30 @@ mixin _$OrderListView implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+final class $ProductCollectionListViewSerializer implements Serializer<ProductCollectionListView, Map<String, Object?>> {
+  const $ProductCollectionListViewSerializer();
+
+  @override
+  Map<String, Object?> serialize(ProductCollectionListView value) => _$ProductCollectionListViewSerialize(value);
+}
+final class $ProductCollectionListViewDeserializer implements Deserializer<ProductCollectionListView, Map<String, Object?>> {
+  const $ProductCollectionListViewDeserializer();
+
+  @override
+  ProductCollectionListView deserialize(Map<String, Object?> json) => _$ProductCollectionListViewDeserialize(json);
+}
+final class $ProductCategoryListViewSerializer implements Serializer<ProductCategoryListView, Map<String, Object?>> {
+  const $ProductCategoryListViewSerializer();
+
+  @override
+  Map<String, Object?> serialize(ProductCategoryListView value) => _$ProductCategoryListViewSerialize(value);
+}
+final class $ProductCategoryListViewDeserializer implements Deserializer<ProductCategoryListView, Map<String, Object?>> {
+  const $ProductCategoryListViewDeserializer();
+
+  @override
+  ProductCategoryListView deserialize(Map<String, Object?> json) => _$ProductCategoryListViewDeserialize(json);
+}
 final class $ProductPageViewSerializer implements Serializer<ProductPageView, Map<String, Object?>> {
   const $ProductPageViewSerializer();
 
@@ -121,6 +219,60 @@ final class $OrderListViewDeserializer implements Deserializer<OrderListView, Ma
   @override
   OrderListView deserialize(Map<String, Object?> json) => _$OrderListViewDeserialize(json);
 }
+
+Map<String, Object?> _$ProductCollectionListViewSerialize(ProductCollectionListView instance) {
+  return <String, Object?>{
+    'count': instance.count,
+    'collections': instance.collections
+        .map((item) => item.toJson())
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$ProductCollectionListViewToJson(ProductCollectionListView instance) =>
+    _$ProductCollectionListViewSerialize(instance);
+
+// factory ProductCollectionListView.fromJson(Map<String, Object?> json) => _$ProductCollectionListViewFromJson(json);
+ProductCollectionListView _$ProductCollectionListViewDeserialize(Map<String, Object?> json) {
+  final countValue = JsonHelper.as<int>(json['count'], 'count', 'int');
+  final collectionsValue = JsonHelper.decodeList(json['collections'], 'collections',
+      (item, itemKey) => ProductCollection.fromJson(JsonHelper.asMap(item, itemKey)));
+
+  return ProductCollectionListView(
+    collections: collectionsValue,
+    count: countValue,
+  );
+}
+
+ProductCollectionListView _$ProductCollectionListViewFromJson(Map<String, Object?> json) =>
+    _$ProductCollectionListViewDeserialize(json);
+
+Map<String, Object?> _$ProductCategoryListViewSerialize(ProductCategoryListView instance) {
+  return <String, Object?>{
+    'categories': instance.categories
+        .map((item) => item.toJson())
+        .toList(),
+    'count': instance.count,
+  };
+}
+
+Map<String, Object?> _$ProductCategoryListViewToJson(ProductCategoryListView instance) =>
+    _$ProductCategoryListViewSerialize(instance);
+
+// factory ProductCategoryListView.fromJson(Map<String, Object?> json) => _$ProductCategoryListViewFromJson(json);
+ProductCategoryListView _$ProductCategoryListViewDeserialize(Map<String, Object?> json) {
+  final categoriesValue = JsonHelper.decodeList(json['categories'], 'categories',
+      (item, itemKey) => ProductCategory.fromJson(JsonHelper.asMap(item, itemKey)));
+  final countValue = JsonHelper.as<int>(json['count'], 'count', 'int');
+
+  return ProductCategoryListView(
+    categories: categoriesValue,
+    count: countValue,
+  );
+}
+
+ProductCategoryListView _$ProductCategoryListViewFromJson(Map<String, Object?> json) =>
+    _$ProductCategoryListViewDeserialize(json);
 
 Map<String, Object?> _$ProductPageViewSerialize(ProductPageView instance) {
   return <String, Object?>{

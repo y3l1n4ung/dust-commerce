@@ -24,6 +24,11 @@ final class _$CatalogReadRepository implements CatalogReadRepository {
       r'''
 SELECT product.id, product.title, product.handle, product.description,
        product.thumbnail, product.status,
+       CASE WHEN collection.id IS NULL THEN 'null' ELSE json_object(
+         'id', collection.id,
+         'title', collection.title,
+         'handle', collection.handle
+       ) END AS collection,
        json_object(
          'material', product.material,
          'origin_country', product.origin_country,
@@ -42,6 +47,34 @@ SELECT product.id, product.title, product.handle, product.description,
            ORDER BY image.rank
          ) ordered
        ), '[]') AS images,
+       coalesce((
+         SELECT json_group_array(json(ordered.category_json))
+         FROM (
+           SELECT json_object(
+             'id', category.id,
+             'name', category.name,
+             'description', category.description,
+             'handle', category.handle,
+             'parent_id', category.parent_category_id
+           ) AS category_json
+           FROM product_category_products link
+           JOIN product_categories category ON category.id = link.category_id
+           WHERE link.product_id = product.id
+             AND category.is_active = 1
+             AND category.deleted_at IS NULL
+           ORDER BY link.rank, category.handle
+         ) ordered
+       ), '[]') AS categories,
+       coalesce((
+         SELECT json_group_array(json(ordered.tag_json))
+         FROM (
+           SELECT json_object('id', tag.id, 'value', tag.value) AS tag_json
+           FROM product_tag_products link
+           JOIN product_tags tag ON tag.id = link.tag_id
+           WHERE link.product_id = product.id AND tag.deleted_at IS NULL
+           ORDER BY tag.value
+         ) ordered
+       ), '[]') AS tags,
        coalesce((
          SELECT json_group_array(json(ordered.option_json))
          FROM (
@@ -82,6 +115,8 @@ SELECT product.id, product.title, product.handle, product.description,
          ) ordered
        ), '[]') AS variants
 FROM products product
+LEFT JOIN product_collections collection
+  ON collection.id = product.collection_id AND collection.deleted_at IS NULL
 WHERE product.handle = ?
   AND product.status = 'published'
   AND product.deleted_at IS NULL

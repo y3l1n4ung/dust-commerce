@@ -34,3 +34,11 @@ String currencyOf(Request request, {String fallback = 'usd'}) {
   if (asked == null || asked.length != 3) return fallback;
   return asked.toLowerCase();
 }
+
+/// A trimmed non-empty query value represented explicitly rather than null.
+Option<String> queryOptionOf(Request request, String name) {
+  final value = request.requestedUri.queryParameters[name]?.trim();
+  return value == null || value.isEmpty
+      ? const None<String>()
+      : Some<String>(value);
+}

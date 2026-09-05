@@ -1,5 +1,8 @@
+import 'package:commerce_shared/src/catalog/category.dart';
+import 'package:commerce_shared/src/catalog/collection.dart';
 import 'package:commerce_shared/src/catalog/details.dart';
 import 'package:commerce_shared/src/catalog/option.dart';
+import 'package:commerce_shared/src/catalog/tag.dart';
 import 'package:commerce_shared/src/catalog/variant.dart';
 import 'package:commerce_shared/src/money.dart';
 import 'package:dust_dart/serde.dart';
@@ -45,10 +48,13 @@ class Product with _$Product {
     required this.status,
     required this.options,
     required this.variants,
+    this.categories = const [],
+    this.collection,
     this.details = const ProductDetails(),
     this.description,
     this.images = const [],
     this.thumbnail,
+    this.tags = const [],
   });
 
   /// Creates a [Product], checking every variant against the declared options.
@@ -62,9 +68,12 @@ class Product with _$Product {
     required String handle,
     ProductStatus status = ProductStatus.draft,
     ProductDetails details = const ProductDetails(),
+    List<ProductCategory> categories = const [],
+    ProductCollection? collection,
     String? description,
     List<String> images = const [],
     String? thumbnail,
+    List<ProductTag> tags = const [],
     List<ProductOption> options = const [],
     List<ProductVariant> variants = const [],
   }) {
@@ -80,10 +89,13 @@ class Product with _$Product {
       title: title,
       handle: _slugify(handle),
       status: status,
+      categories: categories,
+      collection: collection,
       details: details,
       description: description,
       images: images,
       thumbnail: thumbnail,
+      tags: tags,
       options: options,
       variants: variants,
     );
@@ -95,6 +107,12 @@ class Product with _$Product {
 
   /// Long-form copy.
   final String? description;
+
+  /// Public categories this product appears in.
+  final List<ProductCategory> categories;
+
+  /// Curated collection this product belongs to, when any.
+  final ProductCollection? collection;
 
   /// Physical and merchandising facts shown below the description.
   final ProductDetails details;
@@ -119,6 +137,9 @@ class Product with _$Product {
 
   /// Primary image.
   final String? thumbnail;
+
+  /// Public discovery labels attached to this product.
+  final List<ProductTag> tags;
 
   /// The buyable configurations.
   final List<ProductVariant> variants;

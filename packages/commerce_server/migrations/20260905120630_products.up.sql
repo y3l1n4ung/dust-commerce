@@ -2,6 +2,8 @@
 -- UTC timestamps use ISO-8601 TEXT because SQLite has no native TIMESTAMPTZ.
 CREATE TABLE products (
   id          TEXT PRIMARY KEY,
+  -- A product belongs to at most one curated collection, matching Medusa.
+  collection_id TEXT REFERENCES product_collections (id) ON DELETE SET NULL,
   title       TEXT NOT NULL CHECK (length(title) > 0),
   -- Stable human-readable lookup key used by storefront URLs.
   handle      TEXT NOT NULL CHECK (length(handle) > 0),
@@ -37,6 +39,8 @@ CREATE UNIQUE INDEX idx_products_handle ON products (handle)
 WHERE deleted_at IS NULL;
 CREATE INDEX idx_products_status ON products (status)
 WHERE deleted_at IS NULL;
+CREATE INDEX idx_products_collection ON products (collection_id)
+WHERE deleted_at IS NULL AND collection_id IS NOT NULL;
 
 -- SQLite has no automatic ON UPDATE timestamp, so this maintains updated_at.
 CREATE TRIGGER products_touch_updated_at AFTER UPDATE ON products

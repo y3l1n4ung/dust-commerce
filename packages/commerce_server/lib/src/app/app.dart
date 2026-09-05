@@ -1,7 +1,9 @@
 import 'package:commerce_server/src/features/account/account.dart';
 import 'package:commerce_server/src/features/cart/cart.dart';
+import 'package:commerce_server/src/features/category/category.dart';
 import 'package:commerce_server/src/features/catalog/catalog.dart';
 import 'package:commerce_server/src/features/checkout/checkout.dart';
+import 'package:commerce_server/src/features/collection/collection.dart';
 import 'package:commerce_server/src/features/payment/payment.dart';
 import 'package:commerce_server/src/http/http.dart';
 import 'package:commerce_server/src/infra/database.dart';
@@ -38,7 +40,9 @@ Router buildApp(
   return Router()
     ..nest('/auth', accountAuthRoutes())
     ..nest('/store', accountStoreRoutes())
+    ..nest('/store', categoryRoutes())
     ..nest('/store', catalogRoutes())
+    ..nest('/store', collectionRoutes())
     ..nest('/store', cartRoutes())
     ..nest('/store', checkoutRoutes())
     ..nest('/store', paymentRoutes())
@@ -58,6 +62,12 @@ Router buildApp(
         reads: catalogReads,
         lists: CatalogListRepository(executor),
       ),
+    )
+    ..withState(
+      CategoryDeps(categories: ProductCategoryRepository(executor)),
+    )
+    ..withState(
+      CollectionDeps(collections: ProductCollectionRepository(executor)),
     )
     ..withState(
       CartDeps(

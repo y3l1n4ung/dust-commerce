@@ -13,8 +13,10 @@
 
 part of 'product.dart';
 
+const DeepCollectionEquality _productCategoriesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productImagesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productOptionsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _productTagsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productVariantsEquality = DeepCollectionEquality();
 final class _ProductCopyWithUnset {
   const _ProductCopyWithUnset();
@@ -28,6 +30,8 @@ mixin _$Product implements Serializable {
     final self = this as Product;
     return 'Product('
         'description: ${self.description}, '
+        'categories: ${self.categories}, '
+        'collection: ${self.collection}, '
         'details: ${self.details}, '
         'handle: ${self.handle}, '
         'id: ${self.id}, '
@@ -36,6 +40,7 @@ mixin _$Product implements Serializable {
         'status: ${self.status}, '
         'title: ${self.title}, '
         'thumbnail: ${self.thumbnail}, '
+        'tags: ${self.tags}, '
         'variants: ${self.variants}'
         ')';
   }
@@ -47,6 +52,8 @@ mixin _$Product implements Serializable {
         other is Product &&
             runtimeType == other.runtimeType &&
             other.description == self.description &&
+            _productCategoriesEquality.equals(other.categories, self.categories) &&
+            other.collection == self.collection &&
             other.details == self.details &&
             other.handle == self.handle &&
             other.id == self.id &&
@@ -55,6 +62,7 @@ mixin _$Product implements Serializable {
             other.status == self.status &&
             other.title == self.title &&
             other.thumbnail == self.thumbnail &&
+            _productTagsEquality.equals(other.tags, self.tags) &&
             _productVariantsEquality.equals(other.variants, self.variants);
   }
 
@@ -64,6 +72,8 @@ mixin _$Product implements Serializable {
     return Object.hashAll([
       runtimeType,
       self.description,
+      _productCategoriesEquality.hash(self.categories),
+      self.collection,
       self.details,
       self.handle,
       self.id,
@@ -72,6 +82,7 @@ mixin _$Product implements Serializable {
       self.status,
       self.title,
       self.thumbnail,
+      _productTagsEquality.hash(self.tags),
       _productVariantsEquality.hash(self.variants),
     ]);
   }
@@ -97,6 +108,8 @@ mixin _$Product implements Serializable {
 abstract class _$ProductCopyWith<$Res> {
   $Res call({
     String? description,
+    List<ProductCategory>? categories,
+    ProductCollection? collection,
     ProductDetails? details,
     String? handle,
     String? id,
@@ -105,6 +118,7 @@ abstract class _$ProductCopyWith<$Res> {
     ProductStatus? status,
     String? title,
     String? thumbnail,
+    List<ProductTag>? tags,
     List<ProductVariant>? variants,
   });
 }
@@ -120,6 +134,8 @@ final class _$ProductCopyWithImpl<$Res> implements _$ProductCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? description = _productCopyWithUnset,
+    Object? categories = null,
+    Object? collection = _productCopyWithUnset,
     Object? details = null,
     Object? handle = null,
     Object? id = null,
@@ -128,6 +144,7 @@ final class _$ProductCopyWithImpl<$Res> implements _$ProductCopyWith<$Res> {
     Object? status = null,
     Object? title = null,
     Object? thumbnail = _productCopyWithUnset,
+    Object? tags = null,
     Object? variants = null,
   }) {
     return _then(
@@ -138,6 +155,10 @@ final class _$ProductCopyWithImpl<$Res> implements _$ProductCopyWith<$Res> {
         status: status == null ? _self.status : status as ProductStatus,
         options: options == null ? _self.options : options as List<ProductOption>,
         variants: variants == null ? _self.variants : variants as List<ProductVariant>,
+        categories: categories == null ? _self.categories : categories as List<ProductCategory>,
+        collection: identical(collection, _productCopyWithUnset)
+            ? _self.collection
+            : collection as ProductCollection?,
         details: details == null ? _self.details : details as ProductDetails,
         description: identical(description, _productCopyWithUnset)
             ? _self.description
@@ -146,6 +167,7 @@ final class _$ProductCopyWithImpl<$Res> implements _$ProductCopyWith<$Res> {
         thumbnail: identical(thumbnail, _productCopyWithUnset)
             ? _self.thumbnail
             : thumbnail as String?,
+        tags: tags == null ? _self.tags : tags as List<ProductTag>,
       )
     );
   }
@@ -178,6 +200,12 @@ final class $ProductStatusDeserializer implements Deserializer<ProductStatus, Ob
 Map<String, Object?> _$ProductSerialize(Product instance) {
   return <String, Object?>{
     'description': instance.description,
+    'categories': instance.categories
+        .map((item) => item.toJson())
+        .toList(),
+    'collection': instance.collection == null
+        ? null
+        : (instance.collection!).toJson(),
     'details': instance.details.toJson(),
     'handle': instance.handle,
     'id': instance.id,
@@ -190,6 +218,9 @@ Map<String, Object?> _$ProductSerialize(Product instance) {
     'status': _$ProductStatusSerialize(instance.status),
     'title': instance.title,
     'thumbnail': instance.thumbnail,
+    'tags': instance.tags
+        .map((item) => item.toJson())
+        .toList(),
     'variants': instance.variants
         .map((item) => item.toJson())
         .toList(),
@@ -204,6 +235,11 @@ Product _$ProductDeserialize(Map<String, Object?> json) {
   final descriptionValue = json['description'] == null
       ? null
       : JsonHelper.as<String>(json['description'], 'description', 'String');
+  final categoriesValue = JsonHelper.decodeList(json['categories'], 'categories',
+      (item, itemKey) => ProductCategory.fromJson(JsonHelper.asMap(item, itemKey)));
+  final collectionValue = json['collection'] == null
+      ? null
+      : ProductCollection.fromJson(JsonHelper.asMap(json['collection'], 'collection'));
   final detailsValue = ProductDetails.fromJson(
     JsonHelper.asMap(json['details'], 'details'),
   );
@@ -218,6 +254,8 @@ Product _$ProductDeserialize(Map<String, Object?> json) {
   final thumbnailValue = json['thumbnail'] == null
       ? null
       : JsonHelper.as<String>(json['thumbnail'], 'thumbnail', 'String');
+  final tagsValue = JsonHelper.decodeList(json['tags'], 'tags',
+      (item, itemKey) => ProductTag.fromJson(JsonHelper.asMap(item, itemKey)));
   final variantsValue = JsonHelper.decodeList(json['variants'], 'variants',
       (item, itemKey) => ProductVariant.fromJson(JsonHelper.asMap(item, itemKey)));
 
@@ -228,10 +266,13 @@ Product _$ProductDeserialize(Map<String, Object?> json) {
     status: statusValue,
     options: optionsValue,
     variants: variantsValue,
+    categories: categoriesValue,
+    collection: collectionValue,
     details: detailsValue,
     description: descriptionValue,
     images: imagesValue,
     thumbnail: thumbnailValue,
+    tags: tagsValue,
   );
 }
 

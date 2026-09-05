@@ -37,7 +37,7 @@ void main() {
 
   group('listPublished', () {
     test('returns only published products', () async {
-      final result = await lists.listPublished('usd', 10, 0);
+      final result = await lists.listPublished('usd', 10, 0, null, null, null);
       final handles = ok(result).map((row) => row.handle);
 
       expect(handles, ['mug', 't-shirt']);
@@ -45,15 +45,28 @@ void main() {
     });
 
     test('pages, so a large catalogue does not arrive at once', () async {
-      final first = await lists.listPublished('usd', 1, 0);
-      final second = await lists.listPublished('usd', 1, 1);
+      final first = await lists.listPublished('usd', 1, 0, null, null, null);
+      final second = await lists.listPublished('usd', 1, 1, null, null, null);
 
       expect(ok(first).single.handle, 'mug');
       expect(ok(second).single.handle, 't-shirt');
     });
 
     test('counts what it would page through', () async {
-      expect(ok(await lists.countPublished()), 2);
+      expect(ok(await lists.countPublished(null, null, null)), 2);
+    });
+
+    test('filters by collection, category and tag', () async {
+      final byCollection =
+          await lists.listPublished('usd', 10, 0, 'summer', null, null);
+      final byCategory =
+          await lists.listPublished('usd', 10, 0, null, 'shirts', null);
+      final byTag =
+          await lists.listPublished('usd', 10, 0, null, null, 'Cotton');
+
+      expect(ok(byCollection).map((row) => row.handle), ['t-shirt']);
+      expect(ok(byCategory).map((row) => row.handle), ['t-shirt']);
+      expect(ok(byTag).map((row) => row.handle), ['t-shirt']);
     });
   });
 
@@ -107,10 +120,30 @@ Future<void> _seed(CommerceDatabase database) async {
       queryExecute(sql, []).execute(database.executor);
 
   await run(
-    r"INSERT INTO products (id, title, handle, status) VALUES "
-    r"('prod_shirt', 'T-Shirt', 't-shirt', 'published'), "
-    r"('prod_mug', 'Mug', 'mug', 'published'), "
-    r"('prod_secret', 'Hoodie', 'secret-hoodie', 'draft')",
+    r"INSERT INTO product_collections (id, title, handle) VALUES "
+    r"('col_summer', 'Summer', 'summer')",
+  );
+  await run(
+    r"INSERT INTO products (id, collection_id, title, handle, status) VALUES "
+    r"('prod_shirt', 'col_summer', 'T-Shirt', 't-shirt', 'published'), "
+    r"('prod_mug', NULL, 'Mug', 'mug', 'published'), "
+    r"('prod_secret', NULL, 'Hoodie', 'secret-hoodie', 'draft')",
+  );
+  await run(
+    r"INSERT INTO product_categories (id, name, handle) VALUES "
+    r"('cat_shirts', 'Shirts', 'shirts')",
+  );
+  await run(
+    r"INSERT INTO product_category_products (product_id, category_id) VALUES "
+    r"('prod_shirt', 'cat_shirts')",
+  );
+  await run(
+    r"INSERT INTO product_tags (id, value) VALUES "
+    r"('tag_cotton', 'Cotton')",
+  );
+  await run(
+    r"INSERT INTO product_tag_products (product_id, tag_id) VALUES "
+    r"('prod_shirt', 'tag_cotton')",
   );
   await run(
     r"INSERT INTO product_variants "

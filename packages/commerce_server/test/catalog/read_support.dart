@@ -6,10 +6,36 @@ Future<void> seedCatalogRead(CommerceDatabase database) async {
       queryExecute(sql, []).execute(database.executor);
 
   await run(
-    r"INSERT INTO products (id, title, handle, weight, status) VALUES "
-    r"('prod_shirt', 'T-Shirt', 't-shirt', 400, 'published'), "
-    r"('prod_mug', 'Mug', 'mug', NULL, 'published'), "
-    r"('prod_secret', 'Hoodie', 'secret-hoodie', NULL, 'draft')",
+    r"INSERT INTO product_collections (id, title, handle) VALUES "
+    r"('col_summer', 'Summer', 'summer')",
+  );
+  await run(
+    r"INSERT INTO products "
+    r"(id, collection_id, title, handle, weight, status) VALUES "
+    r"('prod_shirt', 'col_summer', 'T-Shirt', 't-shirt', 400, 'published'), "
+    r"('prod_mug', NULL, 'Mug', 'mug', NULL, 'published'), "
+    r"('prod_secret', NULL, 'Hoodie', 'secret-hoodie', NULL, 'draft')",
+  );
+  await run(
+    r"INSERT INTO product_categories (id, name, handle) VALUES "
+    r"('cat_clothing', 'Clothing', 'clothing'), "
+    r"('cat_shirts', 'Shirts', 'clothing/shirts')",
+  );
+  await run(
+    r"UPDATE product_categories SET parent_category_id = 'cat_clothing' "
+    r"WHERE id = 'cat_shirts'",
+  );
+  await run(
+    r"INSERT INTO product_category_products (product_id, category_id) VALUES "
+    r"('prod_shirt', 'cat_shirts')",
+  );
+  await run(
+    r"INSERT INTO product_tags (id, value) VALUES "
+    r"('tag_cotton', 'Cotton')",
+  );
+  await run(
+    r"INSERT INTO product_tag_products (product_id, tag_id) VALUES "
+    r"('prod_shirt', 'tag_cotton')",
   );
   await run(
     r"INSERT INTO product_images (id, product_id, url, rank) VALUES "

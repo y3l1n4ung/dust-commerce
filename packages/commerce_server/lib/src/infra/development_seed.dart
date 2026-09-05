@@ -1,5 +1,7 @@
 import 'package:dust_dart/db.dart';
 
+part 'development_taxonomy_seed.dart';
+
 /// Inserts the deterministic catalogue used for local storefront development.
 ///
 /// Every statement ignores its known primary keys, so starting the server with
@@ -25,27 +27,29 @@ INSERT OR IGNORE INTO regions
   (id, name, currency_code, tax_rate, countries)
 VALUES ('reg_us', 'United States', 'usd', 1000, 'us')
 '''),
+  ..._taxonomyBeforeProducts,
   const _Statement(r'''
 INSERT OR IGNORE INTO products
-  (id, title, handle, description, thumbnail, weight, status)
+  (id, collection_id, title, handle, description, thumbnail, weight, status)
 VALUES
-  ('prod_tshirt', 'Essential T-Shirt', 't-shirt',
+  ('prod_tshirt', 'pcol_featured', 'Essential T-Shirt', 't-shirt',
    'A soft cotton essential for building typed storefronts.',
    'https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-black-front.png',
    400, 'published'),
-  ('prod_sweatshirt', 'Vintage Sweatshirt', 'sweatshirt',
+  ('prod_sweatshirt', 'pcol_featured', 'Vintage Sweatshirt', 'sweatshirt',
    'A heavyweight layer for long code-generation sessions.',
    'https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatshirt-vintage-front.png',
    400, 'published'),
-  ('prod_sweatpants', 'Relaxed Sweatpants', 'sweatpants',
+  ('prod_sweatpants', 'pcol_featured', 'Relaxed Sweatpants', 'sweatpants',
    'Relaxed everyday sweatpants in soft brushed cotton.',
    'https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatpants-gray-front.png',
    400, 'published'),
-  ('prod_shorts', 'Everyday Shorts', 'shorts',
+  ('prod_shorts', 'pcol_featured', 'Everyday Shorts', 'shorts',
    'Easy cotton shorts for warm days and fast builds.',
    'https://medusa-public-images.s3.eu-west-1.amazonaws.com/shorts-vintage-front.png',
    400, 'published')
 '''),
+  ..._taxonomyAfterProducts,
   const _Statement(r'''
 INSERT OR IGNORE INTO product_images (id, product_id, url, rank)
 VALUES

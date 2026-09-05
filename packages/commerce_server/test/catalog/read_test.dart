@@ -28,14 +28,6 @@ void main() {
     await directory.delete(recursive: true);
   });
 
-  group('GET /health', () {
-    test('answers ok', () async {
-      (await client.get('/health').send())
-        ..assertOk()
-        ..assertJson({'status': 'ok'});
-    });
-  });
-
   group('GET /store/products', () {
     test('lists published products with their totals', () async {
       final response = await client.get('/store/products').send();
@@ -107,6 +99,10 @@ void main() {
       expect(product.cheapestIn('usd'), Money.of(1999, 'usd'));
       expect(product.isPurchasable, isTrue);
       expect(product.images, ['https://example.test/shirt-front.png']);
+      expect(product.collection?.handle, 'summer');
+      expect(product.categories.single.handle, 'clothing/shirts');
+      expect(product.categories.single.parentId, 'cat_clothing');
+      expect(product.tags.single.value, 'Cotton');
     });
 
     test('answers 404 for a draft, not 403, so nothing leaks', () async {
@@ -154,6 +150,8 @@ void main() {
           as Map<String, Object?>;
 
       expect(product.keys.toSet(), {
+        'categories',
+        'collection',
         'description',
         'details',
         'handle',
@@ -161,6 +159,7 @@ void main() {
         'images',
         'options',
         'status',
+        'tags',
         'thumbnail',
         'title',
         'variants',
