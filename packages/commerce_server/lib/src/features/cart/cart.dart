@@ -1,6 +1,7 @@
 /// The cart feature: starting a cart and putting things in it.
 library;
 
+export 'deps.dart';
 export 'handler/handler.dart';
 export 'model/model.dart';
 export 'repository/repository.dart';

@@ -1,12 +1,10 @@
+import 'package:commerce_server/src/features/cart/deps.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
 
 /// The cart id in the path, or a rejection naming what was missing.
-///
-/// Every cart endpoint needs it, and a rejection rather than a thrown error
-/// keeps the failure in the same shape as every other refusal.
 Result<String, Rejection> cartIdOf(Request request) {
   final id = pathParametersOf(request)['id'];
   if (id == null || id.isEmpty) {
@@ -33,13 +31,15 @@ Future<Result<CartView, Rejection>> cartViewOf(
 }
 
 /// `GET /carts/{id}` — the cart and its totals.
-Endpoint<Result<CartView, Rejection>> readCartEndpoint(
-  CartReadRepository reads,
-) {
-  return (Request request) async {
-    final id = cartIdOf(request);
-    if (id case Err(:final error)) return Err(error);
+Future<Result<CartView, Rejection>> readCartHandler(Request request) async {
+  final id = cartIdOf(request);
+  if (id case Err(:final error)) return Err(error);
 
-    return cartViewOf(reads, (id as Ok<String, Rejection>).value);
-  };
+  final state = await cartDeps(request);
+  if (state case Err(:final error)) return Err(error);
+
+  return cartViewOf(
+    (state as Ok<CartDeps, Rejection>).value.reads,
+    (id as Ok<String, Rejection>).value,
+  );
 }

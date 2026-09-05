@@ -1,6 +1,7 @@
 /// The catalogue feature: reading products and their variants.
 library;
 
+export 'deps.dart';
 export 'handler/handler.dart';
 export 'model.dart';
 export 'repository/repository.dart';
