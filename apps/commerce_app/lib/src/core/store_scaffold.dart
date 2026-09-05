@@ -31,7 +31,7 @@ class StoreScaffold extends StatelessWidget {
           onPressed: () => context.navigator.catalog().go(),
           child: const TranslatedText(
             'shop_brand',
-            defaultText: 'DUST STORE',
+            defaultText: 'MORROW',
           ),
         ),
         actions: [
@@ -59,7 +59,7 @@ class _StoreMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Drawer(
-        backgroundColor: const Color(0xee111827),
+        backgroundColor: StoreColors.inverted.withValues(alpha: 0.96),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -98,7 +98,7 @@ class _StoreMenu extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '© ${DateTime.now().year} Dust Store',
+                  '© ${DateTime.now().year} Morrow',
                   style: const TextStyle(color: Colors.white70),
                 ),
               ],

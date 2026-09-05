@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +36,12 @@ class _ProductPageState extends State<ProductPage> {
   void _loadAfterFrame() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        unawaited(context.readProductViewModel().load(widget.handle));
+        unawaited(
+          context.readProductViewModel().load(
+                widget.handle,
+                variantId: context.productVariantId,
+              ),
+        );
       }
     });
   }
@@ -65,32 +69,35 @@ class _ProductBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = state.product!;
-    final wide = MediaQuery.sizeOf(context).width >= 900;
-    final info = _ProductInfo(product: product, state: state);
-    final image = ProductImage(url: product.thumbnail, aspectRatio: 4 / 5);
+    final wide = MediaQuery.sizeOf(context).width >= 1024;
+    final info = ProductInfo(product: product);
+    final gallery = ProductGallery(
+      urls: product.images,
+      fallbackUrl: product.thumbnail,
+    );
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(24, 32, 24, 96),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1240),
+          constraints: const BoxConstraints(maxWidth: 1440),
           child: wide
               ? Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(width: 280, child: info),
-                    const SizedBox(width: 32),
-                    Expanded(child: image),
-                    const SizedBox(width: 32),
-                    SizedBox(width: 280, child: ProductActions(state: state)),
+                    SizedBox(width: 300, child: info),
+                    const SizedBox(width: 24),
+                    Expanded(child: gallery),
+                    const SizedBox(width: 24),
+                    SizedBox(width: 300, child: ProductActions(state: state)),
                   ],
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    image,
-                    const SizedBox(height: 32),
                     info,
+                    const SizedBox(height: 32),
+                    gallery,
                     const SizedBox(height: 32),
                     ProductActions(state: state),
                   ],
@@ -99,25 +106,6 @@ class _ProductBody extends StatelessWidget {
       ),
     );
   }
-}
-
-class _ProductInfo extends StatelessWidget {
-  const _ProductInfo({required this.product, required this.state});
-
-  final Product product;
-  final ProductDetailState state;
-
-  @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(product.title,
-              style: Theme.of(context).textTheme.headlineMedium),
-          const SizedBox(height: 16),
-          Text(product.description ?? '',
-              style: Theme.of(context).textTheme.bodyLarge),
-        ],
-      );
 }
 
 class _Failure extends StatelessWidget {

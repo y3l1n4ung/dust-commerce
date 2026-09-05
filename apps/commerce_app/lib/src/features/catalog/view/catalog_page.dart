@@ -85,9 +85,9 @@ class _Hero extends StatelessWidget {
         height: MediaQuery.sizeOf(context).height * 0.72,
         constraints: const BoxConstraints(minHeight: 440),
         decoration: const BoxDecoration(
-          color: Color(0xfff7f7f7),
+          color: StoreColors.subtle,
           border: Border(
-            bottom: BorderSide(color: Color(0xffe5e5e5)),
+            bottom: BorderSide(color: StoreColors.border),
           ),
         ),
         child: Center(
@@ -96,18 +96,18 @@ class _Hero extends StatelessWidget {
             children: [
               const TranslatedText(
                 'shop_hero_title',
-                defaultText: 'Commerce Starter Template',
+                defaultText: 'Everyday essentials, considered.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 30, height: 1.3),
               ),
               const TranslatedText(
                 'shop_hero_subtitle',
-                defaultText: 'Powered by Dart and Dust',
+                defaultText: 'Powered by dust',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 30,
                   height: 1.3,
-                  color: Color(0xff52525b),
+                  color: StoreColors.foregroundSubtle,
                 ),
               ),
               const SizedBox(height: 24),
@@ -150,7 +150,7 @@ class _CatalogHeader extends StatelessWidget {
                 defaultText: '{count} products',
                 args: {'count': total},
               ),
-              style: const TextStyle(color: Color(0xff71717a)),
+              style: const TextStyle(color: StoreColors.foregroundMuted),
             ),
           ],
         ),

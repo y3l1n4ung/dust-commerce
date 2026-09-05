@@ -33,7 +33,7 @@
   "@added_to_cart": {
     "description": "Confirms a successful add-to-cart request."
   },
-  "brand": "ဒတ်စ် စတိုး",
+  "brand": "MORROW",
   "@brand": {
     "description": "Storefront wordmark."
   },
@@ -50,11 +50,11 @@
   "@featured_products": {
     "description": "Heading above the home product grid."
   },
-  "hero_subtitle": "Dart နှင့် Dust ဖြင့် တည်ဆောက်ထားသည်",
+  "hero_subtitle": "Powered by dust",
   "@hero_subtitle": {
     "description": "Home hero supporting line."
   },
-  "hero_title": "ကုန်သွယ်ရေး စတင်နမူနာ",
+  "hero_title": "နေ့စဉ်သုံးပစ္စည်းများကို သေချာစွာ ရွေးချယ်ထားသည်။",
   "@hero_title": {
     "description": "Home hero heading."
   },
@@ -95,6 +95,62 @@
   "select_variant": "အမျိုးအစား ရွေးချယ်ပါ",
   "@select_variant": {
     "description": "Prompts for a complete option selection."
+  },
+  "from_price": "မှစ၍ ",
+  "@from_price": {
+    "description": "Prefix shown before the cheapest unselected variant price."
+  },
+  "product_information": "ကုန်ပစ္စည်း အချက်အလက်",
+  "@product_information": {
+    "description": "Product facts accordion title."
+  },
+  "shipping_returns": "ပို့ဆောင်မှုနှင့် ပြန်အပ်မှု",
+  "@shipping_returns": {
+    "description": "Delivery policy accordion title."
+  },
+  "material": "ပစ္စည်းအမျိုးအစား",
+  "@material": {
+    "description": "Product material fact label."
+  },
+  "origin_country": "ထုတ်လုပ်သည့်နိုင်ငံ",
+  "@origin_country": {
+    "description": "Product origin fact label."
+  },
+  "product_type": "အမျိုးအစား",
+  "@product_type": {
+    "description": "Product type fact label."
+  },
+  "weight": "အလေးချိန်",
+  "@weight": {
+    "description": "Product weight fact label."
+  },
+  "dimensions": "အတိုင်းအတာ",
+  "@dimensions": {
+    "description": "Product dimensions fact label."
+  },
+  "fast_delivery": "မြန်ဆန်သော ပို့ဆောင်မှု",
+  "@fast_delivery": {
+    "description": "Fast-delivery policy title."
+  },
+  "fast_delivery_body": "သင့်ပစ္စည်းကို လုပ်ငန်းရက် ၃ ရက်မှ ၅ ရက်အတွင်း လက်ခံရရှိပါမည်။",
+  "@fast_delivery_body": {
+    "description": "Fast-delivery policy detail."
+  },
+  "simple_exchanges": "လွယ်ကူသော လဲလှယ်မှု",
+  "@simple_exchanges": {
+    "description": "Exchange policy title."
+  },
+  "simple_exchanges_body": "အရွယ်အစား မကိုက်ညီပါက ကုန်ပစ္စည်းအသစ်ဖြင့် လဲပေးပါမည်။",
+  "@simple_exchanges_body": {
+    "description": "Exchange policy detail."
+  },
+  "easy_returns": "လွယ်ကူသော ပြန်အပ်မှု",
+  "@easy_returns": {
+    "description": "Return policy title."
+  },
+  "easy_returns_body": "ကုန်ပစ္စည်းကို ပြန်အပ်ပြီး ငွေပြန်လည်ရယူနိုင်ပါသည်။",
+  "@easy_returns_body": {
+    "description": "Return policy detail."
   },
   "subtotal": "ကြားဖြတ်စုစုပေါင်း",
   "@subtotal": {

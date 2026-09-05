@@ -33,7 +33,7 @@
   "@added_to_cart": {
     "description": "Confirms a successful add-to-cart request."
   },
-  "brand": "DUST STORE",
+  "brand": "MORROW",
   "@brand": {
     "description": "Storefront wordmark."
   },
@@ -50,11 +50,11 @@
   "@featured_products": {
     "description": "Heading above the home product grid."
   },
-  "hero_subtitle": "Powered by Dart and Dust",
+  "hero_subtitle": "Powered by dust",
   "@hero_subtitle": {
     "description": "Home hero supporting line."
   },
-  "hero_title": "Commerce Starter Template",
+  "hero_title": "Everyday essentials, considered.",
   "@hero_title": {
     "description": "Home hero heading."
   },
@@ -95,6 +95,62 @@
   "select_variant": "Select variant",
   "@select_variant": {
     "description": "Prompts for a complete option selection."
+  },
+  "from_price": "From ",
+  "@from_price": {
+    "description": "Prefix shown before the cheapest unselected variant price."
+  },
+  "product_information": "Product Information",
+  "@product_information": {
+    "description": "Product facts accordion title."
+  },
+  "shipping_returns": "Shipping & Returns",
+  "@shipping_returns": {
+    "description": "Delivery policy accordion title."
+  },
+  "material": "Material",
+  "@material": {
+    "description": "Product material fact label."
+  },
+  "origin_country": "Country of origin",
+  "@origin_country": {
+    "description": "Product origin fact label."
+  },
+  "product_type": "Type",
+  "@product_type": {
+    "description": "Product type fact label."
+  },
+  "weight": "Weight",
+  "@weight": {
+    "description": "Product weight fact label."
+  },
+  "dimensions": "Dimensions",
+  "@dimensions": {
+    "description": "Product dimensions fact label."
+  },
+  "fast_delivery": "Fast delivery",
+  "@fast_delivery": {
+    "description": "Fast-delivery policy title."
+  },
+  "fast_delivery_body": "Your package will arrive in 3-5 business days at your pick up location or at home.",
+  "@fast_delivery_body": {
+    "description": "Fast-delivery policy detail."
+  },
+  "simple_exchanges": "Simple exchanges",
+  "@simple_exchanges": {
+    "description": "Exchange policy title."
+  },
+  "simple_exchanges_body": "If the fit is not right, we'll exchange your product for a new one.",
+  "@simple_exchanges_body": {
+    "description": "Exchange policy detail."
+  },
+  "easy_returns": "Easy returns",
+  "@easy_returns": {
+    "description": "Return policy title."
+  },
+  "easy_returns_body": "Return your product for a refund. We'll make the process hassle-free.",
+  "@easy_returns_body": {
+    "description": "Return policy detail."
   },
   "subtotal": "Subtotal",
   "@subtotal": {

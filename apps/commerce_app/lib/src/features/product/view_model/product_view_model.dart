@@ -20,12 +20,21 @@ class ProductViewModel extends $ProductViewModel {
   ProductViewModel(super.args);
 
   /// Loads the product addressed by [handle].
-  Future<void> load(String handle, {String currency = 'usd'}) async {
+  Future<void> load(
+    String handle, {
+    String currency = 'usd',
+    String? variantId,
+  }) async {
     emit(const ProductDetailState(status: ProductDetailStatus.loading));
     try {
       final product = await args.api.product(handle, currency: currency);
-      emit(ProductDetailState(
-          status: ProductDetailStatus.ready, product: product));
+      emit(
+        ProductDetailState(
+          status: ProductDetailStatus.ready,
+          product: product,
+          selection: product.variantById(variantId ?? '')?.optionValues ?? {},
+        ),
+      );
     } on Object {
       emit(
         const ProductDetailState(
@@ -38,6 +47,7 @@ class ProductViewModel extends $ProductViewModel {
 
   /// Selects one value for a product option.
   void select(String optionId, String value) {
+    if (!state.canSelect(optionId, value)) return;
     emit(state.copyWith(selection: {...state.selection, optionId: value}));
   }
 }

@@ -40,13 +40,13 @@ class ProductCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     product.title,
-                    style: const TextStyle(color: Color(0xff52525b)),
+                    style: const TextStyle(color: StoreColors.foregroundSubtle),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   price == null ? '—' : formatMoney(price),
-                  style: const TextStyle(color: Color(0xff71717a)),
+                  style: const TextStyle(color: StoreColors.foregroundMuted),
                 ),
               ],
             ),
@@ -56,7 +56,7 @@ class ProductCard extends StatelessWidget {
                 child: TranslatedText(
                   'shop_sold_out',
                   defaultText: 'Sold out',
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color: StoreColors.foregroundMuted),
                 ),
               ),
           ],

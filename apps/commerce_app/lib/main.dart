@@ -3,6 +3,7 @@ import 'package:commerce_app/i18n/app_i18n.g.dart';
 import 'package:commerce_app/route.dart';
 import 'package:dust_dart/http.dart';
 import 'package:dust_flutter/i18n.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
@@ -12,6 +13,7 @@ import 'package:flutter_web_plugins/url_strategy.dart';
 /// at a local server or a deployed one without a code change:
 /// `flutter run --dart-define=API_BASE_URL=https://…`.
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
   const baseUrl = String.fromEnvironment(
     'API_BASE_URL',
@@ -20,7 +22,14 @@ void main() {
 
   runApp(
     AppI18n(
-      child: CommerceApp(api: CommerceApi(Dio(), baseUrl: baseUrl)),
+      child: CommerceApp(
+        api: CommerceApi(Dio(), baseUrl: baseUrl),
+        initialLocation: kIsWeb
+            ? Uri.base
+            : Uri.parse(
+                WidgetsBinding.instance.platformDispatcher.defaultRouteName,
+              ),
+      ),
     ),
   );
 }
@@ -28,17 +37,30 @@ void main() {
 /// The storefront.
 class CommerceApp extends StatefulWidget {
   /// Creates a [CommerceApp].
-  const CommerceApp({required this.api, super.key});
+  const CommerceApp({
+    required this.api,
+    required this.initialLocation,
+    super.key,
+  });
 
   /// The storefront API every view model is given.
   final CommerceApi api;
+
+  /// Browser or platform location captured before the router can normalize it.
+  final Uri initialLocation;
 
   @override
   State<CommerceApp> createState() => _CommerceAppState();
 }
 
 class _CommerceAppState extends State<CommerceApp> {
-  final CommerceRouter _router = CommerceRouter();
+  late final CommerceRouter _router;
+
+  @override
+  void initState() {
+    super.initState();
+    _router = CommerceRouter(initialLocation: widget.initialLocation);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,43 +68,13 @@ class _CommerceAppState extends State<CommerceApp> {
     final app = MaterialApp.router(
       onGenerateTitle: (context) => context.tr(
         'shop_brand',
-        defaultText: 'Dust Store',
+        defaultText: 'Morrow',
       ),
       debugShowCheckedModeBanner: false,
       locale: appI18nLocaleOf(i18n.locale),
       supportedLocales: appI18nSupportedLocales,
       localizationsDelegates: appI18nLocalizationsDelegates,
-      theme: ThemeData(
-        useMaterial3: true,
-        scaffoldBackgroundColor: Colors.white,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xff111827),
-          surface: Colors.white,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: Color(0xff52525b),
-          centerTitle: true,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          shape: Border(
-            bottom: BorderSide(color: Color(0xffe5e5e5)),
-          ),
-        ),
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(foregroundColor: const Color(0xff52525b)),
-        ),
-        filledButtonTheme: FilledButtonThemeData(
-          style: FilledButton.styleFrom(
-            backgroundColor: const Color(0xff18181b),
-            foregroundColor: Colors.white,
-            minimumSize: const Size(48, 44),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ),
-        ),
-      ),
+      theme: StoreTheme.light,
       routerConfig: _router.config,
     );
 

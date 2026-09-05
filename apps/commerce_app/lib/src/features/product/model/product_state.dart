@@ -49,4 +49,16 @@ class ProductDetailState with _$ProductDetailState {
     if (selection.length != current.options.length) return null;
     return current.variantFor(selection);
   }
+
+  /// Whether [value] can still produce a real variant with current choices.
+  bool canSelect(String optionId, String value) {
+    final current = product;
+    if (current == null) return false;
+    final candidate = {...selection, optionId: value};
+    return current.variants.any(
+      (variant) => candidate.entries.every(
+        (choice) => variant.optionValues[choice.key] == choice.value,
+      ),
+    );
+  }
 }

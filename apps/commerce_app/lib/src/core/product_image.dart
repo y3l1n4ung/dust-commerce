@@ -1,3 +1,4 @@
+import 'package:commerce_app/src/core/store_theme.dart';
 import 'package:flutter/material.dart';
 
 /// A source-backed product image with explicit loading and failure states.
@@ -22,8 +23,8 @@ class ProductImage extends StatelessWidget {
       aspectRatio: aspectRatio,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: const Color(0xfff7f7f7),
-          border: Border.all(color: const Color(0xffe5e5e5)),
+          color: StoreColors.subtle,
+          border: Border.all(color: StoreColors.border),
           borderRadius: BorderRadius.circular(8),
         ),
         child: ClipRRect(
