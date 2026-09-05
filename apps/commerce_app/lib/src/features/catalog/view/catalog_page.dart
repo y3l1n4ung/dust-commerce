@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:commerce_app/src/features/catalog/model/catalog_state.dart';
 import 'package:commerce_app/src/features/catalog/view_model/catalog_view_model.dart';
 import 'package:commerce_shared/commerce_shared.dart';
+import 'package:dust_flutter/i18n.dart';
 import 'package:dust_flutter/route.dart';
 import 'package:flutter/material.dart';
 
@@ -34,14 +35,14 @@ class _CatalogPageState extends State<CatalogPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Shop'),
+        title: const TranslatedText('shop_title', defaultText: 'Shop'),
         actions: [
           PopupMenuButton<String>(
             onSelected: (currency) =>
                 context.readCatalogViewModel().changeCurrency(currency),
-            itemBuilder: (_) => const [
-              PopupMenuItem(value: 'usd', child: Text('USD')),
-              PopupMenuItem(value: 'eur', child: Text('EUR')),
+            itemBuilder: (_) => [
+              for (final code in sellingCurrencies)
+                PopupMenuItem(value: code, child: Text(code.toUpperCase())),
             ],
             child: Center(
               child: Text(state.currencyCode.toUpperCase()),
@@ -57,8 +58,12 @@ class _CatalogPageState extends State<CatalogPage> {
             message: state.message ?? 'Something went wrong',
             onRetry: () => context.readCatalogViewModel().load(),
           ),
-        CatalogStatus.ready when state.isEmpty =>
-          const Center(child: Text('Nothing for sale yet')),
+        CatalogStatus.ready when state.isEmpty => const Center(
+            child: TranslatedText(
+              'shop_empty',
+              defaultText: 'Nothing for sale yet',
+            ),
+          ),
         CatalogStatus.ready => _ProductList(products: state.products),
       },
     );
@@ -88,7 +93,11 @@ class _ProductList extends StatelessWidget {
           subtitle: Text(price == null ? '—' : formatMoney(price)),
           trailing: product.isPurchasable
               ? null
-              : const Text('Sold out', style: TextStyle(color: Colors.grey)),
+              : const TranslatedText(
+                  'shop_sold_out',
+                  defaultText: 'Sold out',
+                  style: TextStyle(color: Colors.grey),
+                ),
         );
       },
     );
@@ -109,12 +118,25 @@ class _Failed extends StatelessWidget {
         children: [
           Text(message, textAlign: TextAlign.center),
           const SizedBox(height: 12),
-          FilledButton(onPressed: onRetry, child: const Text('Try again')),
+          FilledButton(
+            onPressed: onRetry,
+            child: const TranslatedText(
+              'shop_retry',
+              defaultText: 'Try again',
+            ),
+          ),
         ],
       ),
     );
   }
 }
+
+/// The currencies the storefront offers.
+///
+/// Currency codes are data, not copy: `USD` is `USD` in every language, so
+/// these are rendered from the list rather than written as literals a
+/// translator would be asked to translate.
+const sellingCurrencies = <String>['usd', 'eur'];
 
 /// Renders [amount] the way a price is written.
 ///

@@ -1,0 +1,24 @@
+{
+  "@@locale": "my",
+  "@@context": "Translations for `shop` namespace.",
+  "empty": "ရောင်းစရာ မရှိသေးပါ",
+  "@empty": {
+    "description": "Translation for `shop_empty`."
+  },
+  "not_found": "ဤစာမျက်နှာ မရှိပါ",
+  "@not_found": {
+    "description": "Translation for `shop_not_found`."
+  },
+  "retry": "ထပ်ကြိုးစားပါ",
+  "@retry": {
+    "description": "Translation for `shop_retry`."
+  },
+  "sold_out": "ကုန်သွားပါပြီ",
+  "@sold_out": {
+    "description": "Translation for `shop_sold_out`."
+  },
+  "title": "ဆိုင်",
+  "@title": {
+    "description": "Translation for `shop_title`."
+  }
+}

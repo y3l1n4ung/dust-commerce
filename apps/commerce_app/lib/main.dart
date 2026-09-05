@@ -1,4 +1,5 @@
 import 'package:commerce_app/commerce_app.dart';
+import 'package:commerce_app/i18n/app_i18n.g.dart';
 import 'package:commerce_app/route.dart';
 import 'package:dust_dart/http.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,11 @@ void main() {
     defaultValue: 'http://localhost:8080',
   );
 
-  runApp(CommerceApp(api: CommerceApi(Dio(), baseUrl: baseUrl)));
+  runApp(
+    AppI18n(
+      child: CommerceApp(api: CommerceApi(Dio(), baseUrl: baseUrl)),
+    ),
+  );
 }
 
 /// The storefront.

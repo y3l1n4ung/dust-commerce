@@ -1,3 +1,4 @@
+import 'package:dust_flutter/i18n.dart';
 import 'package:dust_flutter/route.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,12 @@ class NotFoundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: Text('That page does not exist')),
+      body: Center(
+        child: TranslatedText(
+          'shop_not_found',
+          defaultText: 'That page does not exist',
+        ),
+      ),
     );
   }
 }

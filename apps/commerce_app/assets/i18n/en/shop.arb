@@ -1,0 +1,24 @@
+{
+  "@@locale": "en",
+  "@@context": "Translations for `shop` namespace.",
+  "empty": "Nothing for sale yet",
+  "@empty": {
+    "description": "Translation for `shop_empty`."
+  },
+  "not_found": "That page does not exist",
+  "@not_found": {
+    "description": "Translation for `shop_not_found`."
+  },
+  "retry": "Try again",
+  "@retry": {
+    "description": "Translation for `shop_retry`."
+  },
+  "sold_out": "Sold out",
+  "@sold_out": {
+    "description": "Translation for `shop_sold_out`."
+  },
+  "title": "Shop",
+  "@title": {
+    "description": "Translation for `shop_title`."
+  }
+}
