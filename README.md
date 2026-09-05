@@ -20,6 +20,11 @@ you are allowed to learn from.
 
 This project is not affiliated with, endorsed by, or derived from Medusa.
 
+[docs/comparison.md](docs/comparison.md) sets the two side by side, starting
+with how much of Medusa this does not attempt: they ship 16 commerce modules
+and 7 infrastructure modules, this implements one storefront path across parts
+of six and has no admin surface at all.
+
 ### What is modelled
 
 | Concept | Follows Medusa in | Deliberately simplified |
