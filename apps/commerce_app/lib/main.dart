@@ -4,6 +4,7 @@ import 'package:commerce_app/route.dart';
 import 'package:dust_dart/http.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 /// Runs the storefront.
 ///
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 /// at a local server or a deployed one without a code change:
 /// `flutter run --dart-define=API_BASE_URL=https://…`.
 void main() {
+  usePathUrlStrategy();
   const baseUrl = String.fromEnvironment(
     'API_BASE_URL',
     defaultValue: 'http://localhost:8080',
@@ -24,12 +26,19 @@ void main() {
 }
 
 /// The storefront.
-class CommerceApp extends StatelessWidget {
+class CommerceApp extends StatefulWidget {
   /// Creates a [CommerceApp].
   const CommerceApp({required this.api, super.key});
 
   /// The storefront API every view model is given.
   final CommerceApi api;
+
+  @override
+  State<CommerceApp> createState() => _CommerceAppState();
+}
+
+class _CommerceAppState extends State<CommerceApp> {
+  final CommerceRouter _router = CommerceRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -74,17 +83,17 @@ class CommerceApp extends StatelessWidget {
           ),
         ),
       ),
-      routerConfig: CommerceRouter().config,
+      routerConfig: _router.config,
     );
 
     return CartViewModelScope(
-      args: (_) => CartViewModelArgs(api: api),
+      args: (_) => CartViewModelArgs(api: widget.api),
       create: (_, args) => CartViewModel(args),
       child: ProductViewModelScope(
-        args: (_) => ProductViewModelArgs(api: api),
+        args: (_) => ProductViewModelArgs(api: widget.api),
         create: (_, args) => ProductViewModel(args),
         child: CatalogViewModelScope(
-          args: (_) => CatalogViewModelArgs(api: api),
+          args: (_) => CatalogViewModelArgs(api: widget.api),
           create: (_, args) => CatalogViewModel(args),
           child: app,
         ),

@@ -14,3 +14,6 @@ flutter run -d web-server \
 
 The UI is a source-guided reimplementation. It does not bundle the Medusa
 React application or depend on the Medusa runtime.
+
+Production hosting must serve `index.html` for unknown application paths so
+cold links such as `/products/t-shirt` reach the Dust route parser.
