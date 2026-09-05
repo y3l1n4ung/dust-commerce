@@ -20,21 +20,21 @@ you are allowed to learn from.
 
 This project is not affiliated with, endorsed by, or derived from Medusa.
 
-[docs/comparison.md](docs/comparison.md) sets the two side by side, starting
-with how much of Medusa this does not attempt: they ship 16 commerce modules
-and 7 infrastructure modules, this implements one storefront path across parts
-of six and has no admin surface at all.
+[docs/comparison.md](docs/comparison.md) sets the two side by side against a
+pinned Medusa source commit. This project implements one narrow storefront path
+and has no admin surface, workflow engine, or plugin platform.
 
 ### What is modelled
 
 | Concept | Follows Medusa in | Deliberately simplified |
 | :--- | :--- | :--- |
-| `Product` / `ProductVariant` | variants carry price and stock, not the product | no attribute/option matrix |
+| `Product` / `ProductVariant` | variants carry price and stock, not the product | one simple option matrix |
 | `Money` | integer minor units plus currency, never a float | single currency per region |
-| `Cart` / `LineItem` | line items snapshot unit price when added | no promotions engine |
+| `Cart` / `LineItem` | line items snapshot unit price when added | one shipping method and promotion per cart |
 | `Order` | an immutable snapshot of a cart at checkout | no fulfilment or returns |
 | `Region` | currency and tax rate scope | no multi-warehouse |
-| `Customer` / `Address` | separate addressable entities | no saved payment methods |
+| `Customer` / `AuthIdentity` | customer data is separate from provider credentials | email/password only; no reset, MFA, or OAuth |
+| `PaymentCollection` | payment state belongs to the order | manual provider only; no card data |
 
 Prices are integer minor units throughout. Storing money in a floating point
 type is the most common bug in commerce code and it is not reproduced here.
@@ -92,6 +92,37 @@ Then the same checks CI runs:
 ```bash
 ./scripts/format.sh --check && ./scripts/check_file_size.sh
 ```
+
+### Database migrations
+
+The server uses SQLite, so UTC instants are stored as sortable ISO-8601 `TEXT`
+with database defaults and update triggers. SQLite has no native PostgreSQL
+`TIMESTAMPTZ`; no timestamp column is generated.
+
+The baseline is intentionally one final table per timestamped reversible SQLx
+pair. Create another pair with:
+
+```bash
+sqlx migrate add <table_name> -r --timestamp \
+  --source packages/commerce_server/migrations
+```
+
+This is a migration-history reset from the former `0001`-`0005` files. Do not
+point it at a database that already recorded those versions: rebuild a backed-up
+pre-release database, or ship a separately designed bridge migration instead.
+
+Use SQLx for explicit forward/reverse operation:
+
+```bash
+DATABASE_URL=sqlite://commerce.db sqlx migrate run \
+  --source packages/commerce_server/migrations
+DATABASE_URL=sqlite://commerce.db sqlx migrate revert \
+  --source packages/commerce_server/migrations
+```
+
+Dust embeds and applies the `.up.sql` files at server startup. It does not run
+down migrations automatically. The baseline contains no appended `ALTER TABLE`
+steps: each table's up file is its complete initial definition.
 
 ## Licence
 

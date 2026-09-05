@@ -4,30 +4,23 @@ What this project takes from [Medusa](https://github.com/medusajs/medusa), what
 it does differently, and — first, because it is the part a comparison usually
 hides — how much of Medusa it does not attempt.
 
-Checked against Medusa's documentation in September 2026. Where a claim about
-Medusa is made here, it comes from their docs rather than recollection.
+Checked head to head against Medusa source commit
+`bda24b9725ac697ec5e8f706b503013e20babf12` from 2026-09-04. The comparison
+uses the customer and auth models/migrations, email/password provider, and
+registration flow at that commit rather than relying on recollection.
 
 ## Scale, before anything else
 
-Medusa ships **16 commerce modules and 7 infrastructure modules**:
-
-> Cart · Payment · Customer · Pricing · Promotion · Product · Order · Inventory
-> · Fulfillment · Stock Location · Region · Sales Channel · Tax · Currency · API
-> Keys · User · Auth
->
-> Analytics · Caching · Event · File · Locking · Notification · Workflow Engine
-
-This project implements one storefront path across parts of six of them, and
-has an admin surface of zero. It is a **showcase of Dust code generation built
-on a Medusa-shaped domain**, not an alternative to Medusa, and the gap is three
-orders of magnitude of product rather than a few missing endpoints.
+Medusa is a modular commerce platform. This project is a **showcase of Dust
+code generation built on a Medusa-shaped domain**, not an alternative to
+Medusa. It implements only the path from catalog to cart, checkout, manual
+payment, and a basic customer account.
 
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
-| Commerce modules | 16 | parts of 6 |
-| Infrastructure modules | 7 | 0 |
+| Schema | modular PostgreSQL schemas | 20 SQLite tables |
 | Admin API | yes | none |
-| Storefront endpoints | dozens | 8 |
+| Store operations | broad Store API | 18 method/path operations |
 | Workflow engine, plugins, dashboard | yes | none |
 
 ## Where the model genuinely agrees
@@ -64,6 +57,18 @@ every variant to discover the sizes, and `Product.variantFor({'opt_size':
 A cart belongs to a region, and that decides the currency every line must be
 priced in and the rule the total is computed under — rather than being looked
 up at checkout, where it could disagree with what was displayed.
+
+### Customer data and provider credentials are separate
+
+Both schemas keep the customer profile apart from authentication. The account
+path creates `customers`, `auth_identity`, and `provider_identity` records in
+one transaction. The customer has Medusa's `has_account` distinction and its
+active uniqueness rule on `(email, has_account)`, so one guest and one account
+record may share an email without permitting two active accounts.
+
+`provider_identity` owns the provider-scoped identifier and provider metadata;
+`auth_identity.app_metadata` links the authenticated actor to the customer.
+That keeps a later provider from forcing credential columns onto `customers`.
 
 ## Where this project deliberately differs
 
@@ -103,23 +108,50 @@ something was already shipped. Medusa denormalises heavily too; this project
 takes it further by storing `subtotal`, `tax` and `total` rather than deriving
 them, and the assembler reads them back rather than recomputing.
 
+### Password hashing is Argon2id, not Medusa's current scrypt provider
+
+At the pinned commit, Medusa's email/password provider imports `scrypt-kdf`.
+This project deliberately uses `cryptography`'s Argon2id with 19 MiB memory,
+two iterations, one lane, a fresh 16-byte secure salt, and a 32-byte result. It
+stores the self-describing PHC string in provider metadata and never stores or
+serializes the plaintext password.
+
+### Sessions are small and revocable
+
+Instead of Medusa's wider token/session machinery, this service issues a
+256-bit opaque bearer token with a seven-day expiry. Only its SHA-256
+fingerprint is stored, so reading the database cannot replay a live session;
+sign-out deletes the fingerprint. Unknown-email and wrong-password sign-in do
+the same Argon2 work and return the same response.
+
+### PostgreSQL timestamps become explicit SQLite UTC text
+
+Medusa's PostgreSQL migrations use `timestamptz not null default now()`.
+SQLite has no native `TIMESTAMPTZ`, so every automatic timestamp here is a
+stored ISO-8601 UTC `TEXT` value ending in `Z`, supplied by a database default;
+mutable root tables use triggers for `updated_at`. They are not generated
+columns. A PostgreSQL port should replace them with real `TIMESTAMPTZ` rather
+than copying this SQLite representation.
+
 ## Not attempted
 
-Payments, fulfilment and shipping options, promotions and discounts, tax
-providers, inventory locations, sales channels, collections and categories,
-product types and tags, search, customer accounts and authentication, API keys,
-the admin API, the workflow engine, the plugin system, notifications, file
-storage, and the admin dashboard.
+Fulfilment and returns, real payment providers or saved payment methods,
+provider-driven taxes, inventory locations, sales channels, collections and
+categories, product types and tags, search, password reset, email verification,
+MFA, OAuth providers, API keys, the admin API, workflow engine, plugin system,
+notifications, file storage, and the admin dashboard.
 
-Guest checkout works — an email and an address are enough — because there is no
-auth to work around, not because guest checkout was designed.
+Shipping is one regional flat-price option, promotions are one fixed or
+percentage code, payment is a manual state transition, and authentication is
+email/password plus opaque sessions. Those are tested vertical slices, not the
+corresponding Medusa modules in miniature.
 
 ## The honest summary
 
-On the eight endpoints it serves, the domain modelling holds up against
-Medusa's and the reasons behind it are the same reasons. On everything else,
-Medusa is a commerce platform and this is a demonstration that Dust can
-generate one end of a wire and decode it at the other.
+Across its 18 method/path operations, the domain modelling follows the same
+core boundaries where they fit. On everything else, Medusa is a commerce
+platform and this is a demonstration that Dust can generate one end of a wire,
+decode it at the other, and statically validate SQL against a real schema.
 
 If you want to sell something, use Medusa. If you want to see what a Dart
 codebase looks like when the models on both sides of the network are generated
