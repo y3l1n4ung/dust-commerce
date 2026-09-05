@@ -31,6 +31,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget build(BuildContext context) {
     final checkout = context.watchCheckoutViewModel().value;
     final cart = context.watchCartViewModel().value;
+    final account = context.watchAccountViewModel().value;
+    final addresses = context.watchAddressBookViewModel().value;
+    if (account.customer != null &&
+        addresses.status == AddressBookStatus.idle) {
+      _scheduleAddressLoad();
+    }
+    if (checkout.status == CheckoutStatus.idle) _schedulePrepare();
     final view = cart.cart;
     if (view == null || checkout.status == CheckoutStatus.idle) {
       return const CheckoutScaffold(
@@ -50,8 +57,30 @@ class _CheckoutPageState extends State<CheckoutPage> {
       _scheduleDeliveryLoad();
     }
     return CheckoutScaffold(
-      body: CheckoutLayout(step: step, checkout: checkout, cart: cart),
+      body: CheckoutLayout(
+        step: step,
+        checkout: checkout,
+        cart: cart,
+        customer: account.customer,
+        addressBook: addresses,
+      ),
     );
+  }
+
+  void _schedulePrepare() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.readCheckoutViewModel().prepare();
+    });
+  }
+
+  void _scheduleAddressLoad() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final addresses = context.readAddressBookViewModel();
+      if (addresses.state.status == AddressBookStatus.idle) {
+        addresses.load();
+      }
+    });
   }
 
   void _scheduleDeliveryLoad() {

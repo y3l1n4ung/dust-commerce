@@ -73,4 +73,16 @@ final class AddressBookState with _$AddressBookState {
   List<String> get countries => {
         for (final region in regions) ...region.countries,
       }.toList(growable: false);
+
+  /// Saved destinations accepted by the cart's selling region.
+  List<CustomerAddressView> shippingAddressesFor(
+    Iterable<String> countryCodes,
+  ) {
+    final allowed = {
+      for (final country in countryCodes) country.trim().toLowerCase(),
+    };
+    return addresses
+        .where((address) => allowed.contains(address.countryCode.toLowerCase()))
+        .toList(growable: false);
+  }
 }

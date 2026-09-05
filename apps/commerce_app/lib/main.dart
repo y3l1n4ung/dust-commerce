@@ -88,7 +88,6 @@ class _CommerceAppState extends State<CommerceApp> {
     _orders = AccountOrdersViewModel(
       AccountOrdersViewModelArgs(api: widget.api),
     );
-    _account.addListener(_onAccountIdentityChanged);
     _cart = CartViewModel(
       CartViewModelArgs(api: widget.api, cartIds: SecureCartIdStore()),
     );
@@ -100,6 +99,7 @@ class _CommerceAppState extends State<CommerceApp> {
         currentCustomer: () => _account.state.customer,
       ),
     );
+    _account.addListener(_onAccountIdentityChanged);
     _shell = StoreShellViewModel(StoreShellViewModelArgs(api: widget.api));
     unawaited(_shell.load());
     _router = CommerceRouter(
@@ -182,5 +182,6 @@ class _CommerceAppState extends State<CommerceApp> {
     _accountOwnerId = ownerId;
     _addresses.reset();
     _orders.reset();
+    _checkout.reset();
   }
 }

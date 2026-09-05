@@ -459,6 +459,10 @@
   "@checkout_choose_country": {
     "description": "Translation for `shop_checkout_choose_country`."
   },
+  "checkout_choose_saved_address": "လိပ်စာတစ်ခု ရွေးပါ",
+  "@checkout_choose_saved_address": {
+    "description": "Translation for `shop_checkout_choose_saved_address`."
+  },
   "checkout_city": "မြို့",
   "@checkout_city": {
     "description": "Translation for `shop_checkout_city`."
@@ -626,6 +630,19 @@
   "checkout_same_billing_summary": "ငွေတောင်းခံလိပ်စာနှင့် ပို့ဆောင်မည့်လိပ်စာ တူညီပါသည်။",
   "@checkout_same_billing_summary": {
     "description": "Translation for `shop_checkout_same_billing_summary`."
+  },
+  "checkout_saved_address_prompt": "မင်္ဂလာပါ {name}၊ သိမ်းထားသောလိပ်စာတစ်ခုကို အသုံးပြုလိုပါသလား။",
+  "@checkout_saved_address_prompt": {
+    "description": "Translation for `shop_checkout_saved_address_prompt`.",
+    "placeholders": {
+      "name": {
+        "example": "Ada"
+      }
+    }
+  },
+  "checkout_saved_addresses_unavailable": "သိမ်းထားသောလိပ်စာများကို မရနိုင်ပါ။ အောက်တွင် လိပ်စာထည့်ပါ။",
+  "@checkout_saved_addresses_unavailable": {
+    "description": "Translation for `shop_checkout_saved_addresses_unavailable`."
   },
   "checkout_shipping": "ပို့ဆောင်ခ",
   "@checkout_shipping": {

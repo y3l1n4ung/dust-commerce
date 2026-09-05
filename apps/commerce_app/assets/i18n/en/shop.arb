@@ -459,6 +459,10 @@
   "@checkout_choose_country": {
     "description": "Translation for `shop_checkout_choose_country`."
   },
+  "checkout_choose_saved_address": "Choose an address",
+  "@checkout_choose_saved_address": {
+    "description": "Translation for `shop_checkout_choose_saved_address`."
+  },
   "checkout_city": "City",
   "@checkout_city": {
     "description": "Translation for `shop_checkout_city`."
@@ -626,6 +630,19 @@
   "checkout_same_billing_summary": "Billing and delivery address are the same.",
   "@checkout_same_billing_summary": {
     "description": "Translation for `shop_checkout_same_billing_summary`."
+  },
+  "checkout_saved_address_prompt": "Hi {name}, do you want to use one of your saved addresses?",
+  "@checkout_saved_address_prompt": {
+    "description": "Translation for `shop_checkout_saved_address_prompt`.",
+    "placeholders": {
+      "name": {
+        "example": "Ada"
+      }
+    }
+  },
+  "checkout_saved_addresses_unavailable": "Saved addresses are unavailable. Enter one below.",
+  "@checkout_saved_addresses_unavailable": {
+    "description": "Translation for `shop_checkout_saved_addresses_unavailable`."
   },
   "checkout_shipping": "Shipping",
   "@checkout_shipping": {

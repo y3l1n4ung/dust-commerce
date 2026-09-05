@@ -1,11 +1,13 @@
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'checkout_address_fields.dart';
 import 'checkout_address_controllers.dart';
 import 'checkout_address_summary.dart';
+import 'checkout_saved_address_selector.dart';
 import 'checkout_step_header.dart';
 
 /// Shipping and optional billing form translated from Medusa Addresses.
@@ -15,11 +17,19 @@ final class CheckoutAddressSection extends StatefulWidget {
     required this.open,
     required this.state,
     required this.countries,
+    required this.customer,
+    required this.addressBook,
     super.key,
   });
 
+  /// Current authenticated customer's separately loaded address book.
+  final AddressBookState addressBook;
+
   /// Region countries available in the address select.
   final List<String> countries;
+
+  /// Server-proven customer, absent for guest checkout.
+  final Customer? customer;
 
   /// Whether the address form is expanded.
   final bool open;
@@ -81,6 +91,20 @@ class _CheckoutAddressSectionState extends State<CheckoutAddressSection> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (widget.customer case final customer?) ...[
+              CheckoutSavedAddressSelector(
+                customer: customer,
+                state: widget.addressBook,
+                countries: widget.countries,
+                draft: _shipping.draft,
+                onSelected: _selectSavedAddress,
+              ),
+              if (widget.addressBook.status != AddressBookStatus.ready ||
+                  widget.addressBook
+                      .shippingAddressesFor(widget.countries)
+                      .isNotEmpty)
+                const SizedBox(height: 24),
+            ],
             CheckoutAddressFields(
               controllers: _shipping,
               countries: widget.countries,
@@ -133,6 +157,11 @@ class _CheckoutAddressSectionState extends State<CheckoutAddressSection> {
           ],
         ),
       );
+
+  void _selectSavedAddress(CustomerAddressView address) {
+    _shipping.replace(CheckoutAddressDraft.fromSavedAddress(address));
+    setState(() {});
+  }
 
   Future<void> _continue() async {
     if (!_form.currentState!.validate()) return;

@@ -92,6 +92,15 @@ void main() {
     expect(model.state.order!.id, placedId);
     expect(model.state.order!.paymentStatus, PaymentStatus.captured);
   });
+
+  test('identity reset clears customer-derived checkout input', () {
+    final model = checkout()..prepare();
+    _saveAddress(model);
+
+    model.reset();
+
+    expect(model.state, const CheckoutState());
+  });
 }
 
 bool _saveAddress(CheckoutViewModel model) => model.saveAddresses(

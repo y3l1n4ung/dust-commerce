@@ -55,6 +55,19 @@ final class CheckoutAddressControllers {
         phone: phone.text,
       );
 
+  /// Replaces the form with a customer-selected saved destination.
+  void replace(CheckoutAddressDraft draft) {
+    firstName.text = draft.firstName;
+    lastName.text = draft.lastName;
+    line1.text = draft.line1;
+    line2.text = draft.line2;
+    city.text = draft.city;
+    province.text = draft.province;
+    postalCode.text = draft.postalCode;
+    countryCode.text = draft.countryCode;
+    phone.text = draft.phone;
+  }
+
   /// Releases all text-editing resources.
   void dispose() {
     for (final controller in [

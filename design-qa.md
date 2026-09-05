@@ -10,8 +10,9 @@ Viewport: desktop and `390 x 844` mobile captures are required but unavailable.
 Pixel dimensions, CSS size, and density normalization: not measured because no
 valid source or implementation capture could be produced.
 
-State: `/store` with the shared footer visible, plus the equivalent Medusa DTC
-store state pinned in `docs/storefront-parity.md`.
+State: `/store` with the shared footer visible and authenticated `/checkout`
+with a saved address available, plus the equivalent Medusa DTC states pinned
+in `docs/storefront-parity.md`.
 
 **Findings**
 
@@ -20,7 +21,7 @@ store state pinned in `docs/storefront-parity.md`.
   Evidence: source code and local runtime are available, but the locked Mac
   prevents both required browser captures and a combined comparison.
   Impact: typography, responsive spacing, link wrapping, image treatment, and
-  footer placement remain visually unverified.
+  footer placement and the saved-address selector remain visually unverified.
   Fix: unlock the Mac, capture both sites at matching desktop and mobile
   viewports, combine the captures, and run the comparison loop.
 
@@ -31,8 +32,9 @@ store state pinned in `docs/storefront-parity.md`.
 - Colors and visual tokens: source tokens are mapped in the parity ledger, but
   their rendered result remains blocked.
 - Image quality and asset fidelity: blocked pending rendered comparison.
-- Copy and content: source and implementation code have been compared; rendered
-  wrapping and truncation remain blocked.
+- Copy and content: source and implementation code have been compared,
+  including the saved-address greeting and selector; rendered wrapping and
+  truncation remain blocked.
 
 **Full-view comparison evidence**
 
@@ -53,6 +55,7 @@ checkout controls require focused captures after the full-view comparison.
 
 - Capture matching desktop store views with the footer visible.
 - Capture matching `390 x 844` store views and interactive menu/filter states.
+- Capture authenticated checkout with the saved-address menu closed and open.
 - Compare combined images and fix every P0/P1/P2 difference.
 - Repeat captures after fixes and record post-fix evidence here.
 

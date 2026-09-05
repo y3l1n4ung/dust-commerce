@@ -42,6 +42,9 @@ final class CheckoutViewModel extends $CheckoutViewModel {
   /// Creates the checkout view model.
   CheckoutViewModel(super.args);
 
+  /// Clears customer-derived checkout input when account ownership changes.
+  void reset() => emit(const CheckoutState());
+
   /// Prefills a new checkout from the current customer and selling region.
   void prepare() {
     if (state.status != CheckoutStatus.idle) return;

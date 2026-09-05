@@ -19,6 +19,20 @@ final class CheckoutAddressDraft with _$CheckoutAddressDraft {
     this.phone = '',
   });
 
+  /// Creates editable checkout values from a customer-owned saved address.
+  factory CheckoutAddressDraft.fromSavedAddress(CustomerAddressView address) =>
+      CheckoutAddressDraft(
+        firstName: address.firstName,
+        lastName: address.lastName,
+        line1: address.line1,
+        line2: _savedSecondaryLine(address),
+        city: address.city,
+        province: address.province ?? '',
+        postalCode: address.postalCode,
+        countryCode: address.countryCode.toLowerCase(),
+        phone: address.phone ?? '',
+      );
+
   /// Town or city field value.
   final String city;
 
@@ -58,6 +72,16 @@ final class CheckoutAddressDraft with _$CheckoutAddressDraft {
         countryCode: countryCode.trim().toLowerCase(),
         phone: _optional(phone),
       );
+
+  /// Whether the editable form still represents this saved address.
+  bool matchesSavedAddress(CustomerAddressView address) =>
+      this == CheckoutAddressDraft.fromSavedAddress(address);
+
+  static String _savedSecondaryLine(CustomerAddressView address) {
+    final line2 = address.line2?.trim();
+    if (line2 != null && line2.isNotEmpty) return line2;
+    return address.company?.trim() ?? '';
+  }
 
   static String? _optional(String value) {
     final normalized = value.trim();

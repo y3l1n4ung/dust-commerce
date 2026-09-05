@@ -25,7 +25,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `layout/components/cart-dropdown` | cart preview | implemented in #21 with hover, timed add feedback, live removal, subtotal and empty state |
 | `cart/templates` | cart route | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, promotion UI, authoritative totals, session-aware sign-in prompt and checkout handoff; rendered QA remains |
 | `account/templates` | account shell and session | partial in #20 and #26; secure session, overview, profile name/phone/billing editing, API-backed address book, source-shaped navigation and order list implemented; password and order-detail flows remain |
-| `checkout/templates` | checkout and payment | implemented in #28 with real address, delivery, manual-payment, review and confirmation steps; rendered QA remains |
+| `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, delivery, manual-payment, review and confirmation steps; rendered QA remains |
 | `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list and source-shaped cards implemented; order detail, transfer and return flows remain |
 | `regions` store API | account and checkout country selection | implemented with explicit SQLx response allowlists; address-book selectors use active backend regions rather than hard-coded countries |
 | categories and collections routes | product organisation | implemented in #18 with real API metadata, filtering, hierarchy, sorting and paging; exact nested category paths wait on `dust#542`, rendered QA remains |
@@ -92,7 +92,10 @@ parameters and ViewModel state. The `/account/orders` route uses a typed Dust
 guard and redirects a signed-out deep link to the shared `/account` sign-in
 screen. The profile and address routes use the same guard. Address and order
 state is cleared whenever the authenticated customer identity changes, and
-in-flight responses from a previous identity are ignored.
+in-flight responses from a previous identity are ignored. Checkout form state
+is cleared on the same boundary, while authenticated customers can copy a
+saved address into the editable form only when its country belongs to the
+cart's active region.
 
 ## Parity rule
 

@@ -1,4 +1,5 @@
 import 'package:commerce_app/commerce_app.dart';
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:flutter/material.dart';
 
 import 'checkout_address_section.dart';
@@ -14,11 +15,19 @@ final class CheckoutLayout extends StatelessWidget {
     required this.step,
     required this.checkout,
     required this.cart,
+    required this.customer,
+    required this.addressBook,
     super.key,
   });
 
+  /// Separately loaded saved destinations for authenticated checkout.
+  final AddressBookState addressBook;
+
   /// Server-authoritative cart rendered by the summary.
   final CartState cart;
+
+  /// Server-proven customer, absent for guest checkout.
+  final Customer? customer;
 
   /// Retained checkout workflow state.
   final CheckoutState checkout;
@@ -33,9 +42,14 @@ final class CheckoutLayout extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CheckoutAddressSection(
+          key: ValueKey(
+            '${view.cart.id}:${customer?.id ?? 'guest'}',
+          ),
           open: step == 'address',
           state: checkout,
           countries: view.cart.region.countries,
+          customer: customer,
+          addressBook: addressBook,
         ),
         CheckoutDeliverySection(
           open: step == 'delivery',
