@@ -4,8 +4,7 @@ CREATE TABLE product_options (
   id         TEXT PRIMARY KEY,
   product_id TEXT NOT NULL REFERENCES products (id) ON DELETE CASCADE,
   title      TEXT NOT NULL CHECK (length(title) > 0),
-  -- Compact CSV matches the current API; variant_option_values stores selection.
-  values_csv TEXT NOT NULL,
+  -- Merchant-only extension data stays outside the public response allowlist.
   metadata   TEXT CHECK (metadata IS NULL OR json_valid(metadata)),
   created_at TEXT NOT NULL DEFAULT
              (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),

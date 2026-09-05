@@ -56,6 +56,7 @@ void main() {
           'order_items',
           'orders',
           'product_options',
+          'product_option_values',
           'product_collections',
           'product_categories',
           'product_category_products',
@@ -124,6 +125,15 @@ void main() {
         ]),
       );
       expect(await columnsOf('product_images'), containsAll(['url', 'rank']));
+      expect(await columnsOf('product_options'), isNot(contains('values_csv')));
+      expect(
+        await columnsOf('product_option_values'),
+        containsAll(['id', 'option_id', 'value', 'rank']),
+      );
+      expect(
+        await columnsOf('variant_option_values'),
+        containsAll(['option_id', 'option_value_id']),
+      );
       expect(
         await columnsOf('product_categories'),
         containsAll(['handle', 'parent_category_id', 'is_active', 'rank']),

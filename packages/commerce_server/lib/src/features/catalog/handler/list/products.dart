@@ -15,10 +15,12 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
   final paging = pagingOf(request);
   final result = await listProducts(
     deps.lists,
+    deps.counts,
     currencyCode: currencyOf(request),
     collection: queryOptionOf(request, 'collection'),
     category: queryOptionOf(request, 'category'),
     tag: queryOptionOf(request, 'tag'),
+    optionValueIds: queryValuesOf(request, 'optionValueIds'),
     limit: paging.limit,
     offset: paging.offset,
   );

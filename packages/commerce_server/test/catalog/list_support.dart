@@ -1,7 +1,13 @@
 import 'package:commerce_server/commerce_server.dart';
 
-/// Seeds the catalogue states exercised by the storefront read tests.
-Future<void> seedCatalogRead(CommerceDatabase database) async {
+/// The value of a successful query, or a failure naming the error.
+T ok<T>(Result<T, SqlxError> result) => switch (result) {
+      Ok(:final value) => value,
+      Err(:final error) => throw StateError('query failed: $error'),
+    };
+
+/// Seeds product-list filters and complete response relationships.
+Future<void> seedCatalogList(CommerceDatabase database) async {
   Future<void> run(String sql) =>
       queryExecute(sql, []).execute(database.executor);
 
@@ -10,20 +16,14 @@ Future<void> seedCatalogRead(CommerceDatabase database) async {
     r"('col_summer', 'Summer', 'summer')",
   );
   await run(
-    r"INSERT INTO products "
-    r"(id, collection_id, title, handle, weight, status) VALUES "
-    r"('prod_shirt', 'col_summer', 'T-Shirt', 't-shirt', 400, 'published'), "
-    r"('prod_mug', NULL, 'Mug', 'mug', NULL, 'published'), "
-    r"('prod_secret', NULL, 'Hoodie', 'secret-hoodie', NULL, 'draft')",
+    r"INSERT INTO products (id, collection_id, title, handle, status) VALUES "
+    r"('prod_shirt', 'col_summer', 'T-Shirt', 't-shirt', 'published'), "
+    r"('prod_mug', NULL, 'Mug', 'mug', 'published'), "
+    r"('prod_secret', NULL, 'Hoodie', 'secret-hoodie', 'draft')",
   );
   await run(
     r"INSERT INTO product_categories (id, name, handle) VALUES "
-    r"('cat_clothing', 'Clothing', 'clothing'), "
-    r"('cat_shirts', 'Shirts', 'clothing/shirts')",
-  );
-  await run(
-    r"UPDATE product_categories SET parent_category_id = 'cat_clothing' "
-    r"WHERE id = 'cat_shirts'",
+    r"('cat_shirts', 'Shirts', 'shirts')",
   );
   await run(
     r"INSERT INTO product_category_products (product_id, category_id) VALUES "
@@ -36,10 +36,6 @@ Future<void> seedCatalogRead(CommerceDatabase database) async {
   await run(
     r"INSERT INTO product_tag_products (product_id, tag_id) VALUES "
     r"('prod_shirt', 'tag_cotton')",
-  );
-  await run(
-    r"INSERT INTO product_images (id, product_id, url, rank) VALUES "
-    r"('img_shirt', 'prod_shirt', 'https://example.test/shirt-front.png', 0)",
   );
   await run(
     r"INSERT INTO product_variants "
@@ -61,6 +57,11 @@ Future<void> seedCatalogRead(CommerceDatabase database) async {
     r"(variant_id, option_id, option_value_id) VALUES "
     r"('var_small', 'opt_size', 'optval_small'), "
     r"('var_large', 'opt_size', 'optval_large')",
+  );
+  await run(
+    r"INSERT INTO product_images (id, product_id, url, rank) VALUES "
+    r"('img_back', 'prod_shirt', 'https://example.test/back.png', 1), "
+    r"('img_front', 'prod_shirt', 'https://example.test/front.png', 0)",
   );
   await run(
     r"INSERT INTO variant_prices (variant_id, currency_code, amount) VALUES "

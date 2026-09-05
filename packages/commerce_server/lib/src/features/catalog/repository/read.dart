@@ -72,7 +72,16 @@ SELECT product.id, product.title, product.handle, product.description,
            SELECT json_object(
              'id', option.id,
              'title', option.title,
-             'values_csv', option.values_csv
+             'values', json(coalesce((
+               SELECT json_group_array(ordered_value.value)
+               FROM (
+                 SELECT option_value.value
+                 FROM product_option_values option_value
+                 WHERE option_value.option_id = option.id
+                   AND option_value.deleted_at IS NULL
+                 ORDER BY option_value.rank, option_value.id
+               ) ordered_value
+             ), '[]'))
            ) AS option_json
            FROM product_options option
            WHERE option.product_id = product.id AND option.deleted_at IS NULL
@@ -92,9 +101,13 @@ SELECT product.id, product.title, product.handle, product.description,
              'amount', price.amount,
              'currency_code', price.currency_code,
              'option_values', json(coalesce((
-               SELECT json_group_object(choice.option_id, choice.value)
+               SELECT json_group_object(choice.option_id, option_value.value)
                FROM variant_option_values choice
+               JOIN product_option_values option_value
+                 ON option_value.id = choice.option_value_id
+                AND option_value.option_id = choice.option_id
                WHERE choice.variant_id = variant.id
+                 AND option_value.deleted_at IS NULL
              ), '{}'))
            ) AS variant_json
            FROM product_variants variant

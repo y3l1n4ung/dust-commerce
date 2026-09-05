@@ -18,9 +18,9 @@ payment, and a basic customer account.
 
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
-| Schema | modular PostgreSQL schemas | 20 SQLite tables |
+| Schema | modular PostgreSQL schemas | 27 SQLite tables |
 | Admin API | yes | none |
-| Store operations | broad Store API | 18 method/path operations |
+| Store operations | broad Store API | 23 method/path operations |
 | Workflow engine, plugins, dashboard | yes | none |
 
 ## Where the model genuinely agrees
@@ -153,8 +153,8 @@ than copying this SQLite representation.
 ## Not attempted
 
 Fulfilment and returns, real payment providers or saved payment methods,
-provider-driven taxes, inventory locations, sales channels, collections and
-categories, product types and tags, search, password reset, email verification,
+provider-driven taxes, inventory locations, sales channels, product types,
+search, password reset, email verification,
 MFA, OAuth providers, API keys, the admin API, workflow engine, plugin system,
 notifications, file storage, and the admin dashboard.
 
@@ -165,7 +165,7 @@ corresponding Medusa modules in miniature.
 
 ## The honest summary
 
-Across its 18 method/path operations, the domain modelling follows the same
+Across its 23 method/path operations, the domain modelling follows the same
 core boundaries where they fit. On everything else, Medusa is a commerce
 platform and this is a demonstration that Dust can generate one end of a wire,
 decode it at the other, and statically validate SQL against a real schema.

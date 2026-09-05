@@ -85,10 +85,10 @@ final class ProductOptionsFromJson
       ProductOptionResponse(
         id: item['id']! as String,
         title: item['title']! as String,
-        values: (item['values_csv']! as String)
-            .split(',')
-            .where((choice) => choice.isNotEmpty)
-            .toList(growable: false),
+        values: [
+          for (final value in item['values']! as List<Object?>)
+            value! as String,
+        ],
       );
 }
 

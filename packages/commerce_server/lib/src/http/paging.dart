@@ -42,3 +42,17 @@ Option<String> queryOptionOf(Request request, String name) {
       ? const None<String>()
       : Some<String>(value);
 }
+
+/// Distinct, non-empty repeated query values, capped against request abuse.
+List<String> queryValuesOf(Request request, String name) {
+  final values = request.requestedUri.queryParametersAll[name] ?? const [];
+  final normalized = <String>{};
+  for (final raw in values) {
+    for (final part in raw.split(',')) {
+      final value = part.trim();
+      if (value.isNotEmpty) normalized.add(value);
+      if (normalized.length == maxLimit) return normalized.toList();
+    }
+  }
+  return normalized.toList();
+}

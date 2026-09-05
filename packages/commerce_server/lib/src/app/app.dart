@@ -61,6 +61,8 @@ Router buildApp(
       CatalogDeps(
         reads: catalogReads,
         lists: CatalogListRepository(executor),
+        counts: CatalogCountRepository(executor),
+        options: CatalogOptionRepository(executor),
       ),
     )
     ..withState(

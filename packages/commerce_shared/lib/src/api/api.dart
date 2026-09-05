@@ -6,3 +6,4 @@ export 'account.dart';
 export 'cart_request.dart';
 export 'cart_view.dart';
 export 'catalog_view.dart';
+export 'option_filter_view.dart';

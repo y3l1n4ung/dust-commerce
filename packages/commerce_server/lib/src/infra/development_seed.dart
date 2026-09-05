@@ -76,13 +76,30 @@ VALUES
 '''),
   const _Statement(r'''
 INSERT OR IGNORE INTO product_options
-  (id, product_id, title, values_csv)
+  (id, product_id, title)
 VALUES
-  ('opt_tshirt_size', 'prod_tshirt', 'Size', 'S,M,L,XL'),
-  ('opt_tshirt_color', 'prod_tshirt', 'Color', 'Black,White'),
-  ('opt_sweatshirt_size', 'prod_sweatshirt', 'Size', 'S,M'),
-  ('opt_sweatpants_size', 'prod_sweatpants', 'Size', 'S,M'),
-  ('opt_shorts_size', 'prod_shorts', 'Size', 'S,M')
+  ('opt_tshirt_size', 'prod_tshirt', 'Size'),
+  ('opt_tshirt_color', 'prod_tshirt', 'Color'),
+  ('opt_sweatshirt_size', 'prod_sweatshirt', 'Size'),
+  ('opt_sweatpants_size', 'prod_sweatpants', 'Size'),
+  ('opt_shorts_size', 'prod_shorts', 'Size')
+'''),
+  const _Statement(r'''
+INSERT OR IGNORE INTO product_option_values
+  (id, option_id, value, rank)
+VALUES
+  ('optval_tshirt_size_s', 'opt_tshirt_size', 'S', 0),
+  ('optval_tshirt_size_m', 'opt_tshirt_size', 'M', 1),
+  ('optval_tshirt_size_l', 'opt_tshirt_size', 'L', 2),
+  ('optval_tshirt_size_xl', 'opt_tshirt_size', 'XL', 3),
+  ('optval_tshirt_color_black', 'opt_tshirt_color', 'Black', 0),
+  ('optval_tshirt_color_white', 'opt_tshirt_color', 'White', 1),
+  ('optval_sweatshirt_size_s', 'opt_sweatshirt_size', 'S', 0),
+  ('optval_sweatshirt_size_m', 'opt_sweatshirt_size', 'M', 1),
+  ('optval_sweatpants_size_s', 'opt_sweatpants_size', 'S', 0),
+  ('optval_sweatpants_size_m', 'opt_sweatpants_size', 'M', 1),
+  ('optval_shorts_size_s', 'opt_shorts_size', 'S', 0),
+  ('optval_shorts_size_m', 'opt_shorts_size', 'M', 1)
 '''),
   const _Statement(r'''
 INSERT OR IGNORE INTO product_variants
@@ -121,30 +138,30 @@ VALUES
 '''),
   const _Statement(r'''
 INSERT OR IGNORE INTO variant_option_values
-  (variant_id, option_id, value)
+  (variant_id, option_id, option_value_id)
 VALUES
-  ('var_tshirt_s_black', 'opt_tshirt_size', 'S'),
-  ('var_tshirt_s_black', 'opt_tshirt_color', 'Black'),
-  ('var_tshirt_s_white', 'opt_tshirt_size', 'S'),
-  ('var_tshirt_s_white', 'opt_tshirt_color', 'White'),
-  ('var_tshirt_m_black', 'opt_tshirt_size', 'M'),
-  ('var_tshirt_m_black', 'opt_tshirt_color', 'Black'),
-  ('var_tshirt_m_white', 'opt_tshirt_size', 'M'),
-  ('var_tshirt_m_white', 'opt_tshirt_color', 'White'),
-  ('var_tshirt_l_black', 'opt_tshirt_size', 'L'),
-  ('var_tshirt_l_black', 'opt_tshirt_color', 'Black'),
-  ('var_tshirt_l_white', 'opt_tshirt_size', 'L'),
-  ('var_tshirt_l_white', 'opt_tshirt_color', 'White'),
-  ('var_tshirt_xl_black', 'opt_tshirt_size', 'XL'),
-  ('var_tshirt_xl_black', 'opt_tshirt_color', 'Black'),
-  ('var_tshirt_xl_white', 'opt_tshirt_size', 'XL'),
-  ('var_tshirt_xl_white', 'opt_tshirt_color', 'White'),
-  ('var_sweatshirt_s', 'opt_sweatshirt_size', 'S'),
-  ('var_sweatshirt_m', 'opt_sweatshirt_size', 'M'),
-  ('var_sweatpants_s', 'opt_sweatpants_size', 'S'),
-  ('var_sweatpants_m', 'opt_sweatpants_size', 'M'),
-  ('var_shorts_s', 'opt_shorts_size', 'S'),
-  ('var_shorts_m', 'opt_shorts_size', 'M')
+  ('var_tshirt_s_black', 'opt_tshirt_size', 'optval_tshirt_size_s'),
+  ('var_tshirt_s_black', 'opt_tshirt_color', 'optval_tshirt_color_black'),
+  ('var_tshirt_s_white', 'opt_tshirt_size', 'optval_tshirt_size_s'),
+  ('var_tshirt_s_white', 'opt_tshirt_color', 'optval_tshirt_color_white'),
+  ('var_tshirt_m_black', 'opt_tshirt_size', 'optval_tshirt_size_m'),
+  ('var_tshirt_m_black', 'opt_tshirt_color', 'optval_tshirt_color_black'),
+  ('var_tshirt_m_white', 'opt_tshirt_size', 'optval_tshirt_size_m'),
+  ('var_tshirt_m_white', 'opt_tshirt_color', 'optval_tshirt_color_white'),
+  ('var_tshirt_l_black', 'opt_tshirt_size', 'optval_tshirt_size_l'),
+  ('var_tshirt_l_black', 'opt_tshirt_color', 'optval_tshirt_color_black'),
+  ('var_tshirt_l_white', 'opt_tshirt_size', 'optval_tshirt_size_l'),
+  ('var_tshirt_l_white', 'opt_tshirt_color', 'optval_tshirt_color_white'),
+  ('var_tshirt_xl_black', 'opt_tshirt_size', 'optval_tshirt_size_xl'),
+  ('var_tshirt_xl_black', 'opt_tshirt_color', 'optval_tshirt_color_black'),
+  ('var_tshirt_xl_white', 'opt_tshirt_size', 'optval_tshirt_size_xl'),
+  ('var_tshirt_xl_white', 'opt_tshirt_color', 'optval_tshirt_color_white'),
+  ('var_sweatshirt_s', 'opt_sweatshirt_size', 'optval_sweatshirt_size_s'),
+  ('var_sweatshirt_m', 'opt_sweatshirt_size', 'optval_sweatshirt_size_m'),
+  ('var_sweatpants_s', 'opt_sweatpants_size', 'optval_sweatpants_size_s'),
+  ('var_sweatpants_m', 'opt_sweatpants_size', 'optval_sweatpants_size_m'),
+  ('var_shorts_s', 'opt_shorts_size', 'optval_shorts_size_s'),
+  ('var_shorts_m', 'opt_shorts_size', 'optval_shorts_size_m')
 '''),
   const _Statement(r'''
 INSERT OR IGNORE INTO shipping_options

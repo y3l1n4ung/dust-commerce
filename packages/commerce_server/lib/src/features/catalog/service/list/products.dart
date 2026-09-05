@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:commerce_server/src/features/catalog/model.dart';
 import 'package:commerce_server/src/features/catalog/repository/repository.dart';
 import 'package:commerce_server/src/infra/option.dart';
@@ -5,11 +7,13 @@ import 'package:dust_dart/db.dart';
 
 /// Lists complete published product responses in [currencyCode].
 Future<Result<ProductPageResponse, SqlxError>> listProducts(
-  CatalogListRepository lists, {
+  CatalogListRepository lists,
+  CatalogCountRepository counts, {
   required String currencyCode,
   Option<String> collection = const None(),
   Option<String> category = const None(),
   Option<String> tag = const None(),
+  List<String> optionValueIds = const [],
   int limit = 20,
   int offset = 0,
 }) async {
@@ -20,13 +24,15 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
     nullableOf(collection),
     nullableOf(category),
     nullableOf(tag),
+    jsonEncode(optionValueIds),
   );
   if (page case Err(:final error)) return Err(error);
 
-  final total = await lists.countPublished(
+  final total = await counts.countPublished(
     nullableOf(collection),
     nullableOf(category),
     nullableOf(tag),
+    jsonEncode(optionValueIds),
   );
   if (total case Err(:final error)) return Err(error);
 
