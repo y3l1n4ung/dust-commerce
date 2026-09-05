@@ -34,6 +34,13 @@ jobs:
             dust_cli
           dust --version
 
+      - name: Install the SQLx CLI
+        run: |
+          set -euo pipefail
+          cargo install sqlx-cli --locked --version 0.8.6 \
+            --no-default-features --features sqlite
+          sqlx --version
+
       - name: Resolve dependencies
         run: flutter pub get
 
@@ -52,6 +59,22 @@ jobs:
       # fails this step with `no such column` and a non-zero exit.
       - name: SQL matches the schema
         run: dust check --db --root packages/commerce_server
+
+      # Dust embeds ups for application startup. SQLx remains the operator tool
+      # and must also prove that every reversible pair runs in both directions.
+      - name: SQLx migrations run up and down
+        run: |
+          set -euo pipefail
+          export DATABASE_URL="sqlite://$RUNNER_TEMP/reversible.db"
+          sqlx database create
+          sqlx migrate run --source packages/commerce_server/migrations
+          for _migration in packages/commerce_server/migrations/*.down.sql; do
+            sqlx migrate revert --source packages/commerce_server/migrations
+          done
+          remaining="$(sqlite3 "$RUNNER_TEMP/reversible.db" \
+            "SELECT count(*) FROM sqlite_master WHERE type = 'table' \
+             AND name != '_sqlx_migrations';")"
+          test "$remaining" = "0"
 
       - name: Translations are current
         run: dust i18n check --root apps/commerce_app

@@ -46,7 +46,11 @@ void main() {
         tables,
         containsAll(<String>[
           'carts',
+          'cart_promotions',
+          'cart_shipping_methods',
           'customers',
+          'auth_identity',
+          'auth_tokens',
           'line_items',
           'order_addresses',
           'order_items',
@@ -54,9 +58,13 @@ void main() {
           'product_options',
           'product_variants',
           'products',
+          'promotions',
+          'provider_identity',
           'regions',
+          'shipping_options',
           'variant_option_values',
           'variant_prices',
+          'payment_collections',
         ]),
       );
     });
