@@ -67,6 +67,43 @@ abstract interface class CommerceApi {
     @Body() AddLineBody body,
   );
 
+  /// Replaces one line's quantity after the server rechecks stock.
+  @PATCH('/store/carts/{id}/line-items/{lineId}')
+  Future<CartView> updateLine(
+    @Path() String id,
+    @Path() String lineId,
+    @Body() UpdateLineBody body,
+  );
+
+  /// Removes one line and returns the server's new totals.
+  @DELETE('/store/carts/{id}/line-items/{lineId}')
+  Future<CartView> removeLine(
+    @Path() String id,
+    @Path() String lineId,
+  );
+
+  /// Delivery choices currently available to a cart.
+  @GET('/store/carts/{id}/shipping-options')
+  Future<ShippingOptionsView> shippingOptions(@Path() String id);
+
+  /// Selects one delivery choice and returns authoritative totals.
+  @POST('/store/carts/{id}/shipping-method')
+  Future<CartView> chooseShipping(
+    @Path() String id,
+    @Body() ChooseShippingBody body,
+  );
+
+  /// Applies one promotion code and returns authoritative totals.
+  @POST('/store/carts/{id}/promotions')
+  Future<CartView> applyPromotion(
+    @Path() String id,
+    @Body() ApplyPromotionBody body,
+  );
+
+  /// Removes the cart's promotion and returns authoritative totals.
+  @DELETE('/store/carts/{id}/promotions')
+  Future<CartView> removePromotion(@Path() String id);
+
   /// Turns a cart into an order.
   @POST('/store/checkout')
   Future<Order> checkout(@Body() CheckoutRequest body);

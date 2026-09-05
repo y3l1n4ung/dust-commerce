@@ -11,12 +11,14 @@ resolution: workspace
 dependencies:
   commerce_shared: ^0.1.0
   cupertino_icons: ^1.0.8
+  dio: ^5.11.1
   dust_dart: ^0.1.4
   dust_flutter: ^0.1.4
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  flutter_secure_storage: ^11.0.0
   flutter_web_plugins:
     sdk: flutter
 

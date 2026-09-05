@@ -13,6 +13,7 @@
 
 part of 'cart_state.dart';
 
+const DeepCollectionEquality _cartStateShippingOptionsEquality = DeepCollectionEquality();
 final class _CartStateCopyWithUnset {
   const _CartStateCopyWithUnset();
 }
@@ -25,7 +26,10 @@ mixin _$CartState {
     final self = this as CartState;
     return 'CartState('
         'cart: ${self.cart}, '
+        'activeLineId: ${self.activeLineId}, '
         'message: ${self.message}, '
+        'operation: ${self.operation}, '
+        'shippingOptions: ${self.shippingOptions}, '
         'status: ${self.status}'
         ')';
   }
@@ -37,7 +41,10 @@ mixin _$CartState {
         other is CartState &&
             runtimeType == other.runtimeType &&
             other.cart == self.cart &&
+            other.activeLineId == self.activeLineId &&
             other.message == self.message &&
+            other.operation == self.operation &&
+            _cartStateShippingOptionsEquality.equals(other.shippingOptions, self.shippingOptions) &&
             other.status == self.status;
   }
 
@@ -47,7 +54,10 @@ mixin _$CartState {
     return Object.hashAll([
       runtimeType,
       self.cart,
+      self.activeLineId,
       self.message,
+      self.operation,
+      _cartStateShippingOptionsEquality.hash(self.shippingOptions),
       self.status,
     ]);
   }
@@ -69,7 +79,10 @@ mixin _$CartState {
 abstract class _$CartStateCopyWith<$Res> {
   $Res call({
     CartView? cart,
+    String? activeLineId,
     String? message,
+    CartOperation? operation,
+    List<ShippingMethod>? shippingOptions,
     CartStatus? status,
   });
 }
@@ -85,7 +98,10 @@ final class _$CartStateCopyWithImpl<$Res> implements _$CartStateCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? cart = _cartStateCopyWithUnset,
+    Object? activeLineId = _cartStateCopyWithUnset,
     Object? message = _cartStateCopyWithUnset,
+    Object? operation = _cartStateCopyWithUnset,
+    Object? shippingOptions = null,
     Object? status = null,
   }) {
     return _then(
@@ -97,6 +113,13 @@ final class _$CartStateCopyWithImpl<$Res> implements _$CartStateCopyWith<$Res> {
         message: identical(message, _cartStateCopyWithUnset)
             ? _self.message
             : message as String?,
+        operation: identical(operation, _cartStateCopyWithUnset)
+            ? _self.operation
+            : operation as CartOperation?,
+        activeLineId: identical(activeLineId, _cartStateCopyWithUnset)
+            ? _self.activeLineId
+            : activeLineId as String?,
+        shippingOptions: shippingOptions == null ? _self.shippingOptions : shippingOptions as List<ShippingMethod>,
       )
     );
   }

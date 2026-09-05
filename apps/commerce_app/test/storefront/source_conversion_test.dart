@@ -160,7 +160,9 @@ void main() {
 
   test('selected variant creates a server cart and line item', () async {
     final product = await api.product('t-shirt', currency: 'usd');
-    final cart = CartViewModel(CartViewModelArgs(api: api));
+    final cart = CartViewModel(
+      CartViewModelArgs(api: api, cartIds: _MemoryCartIdStore()),
+    );
     final small = product.variants.firstWhere(
       (variant) => variant.id == 'var_tshirt_s_black',
     );
@@ -198,4 +200,19 @@ final class _RelatedFailureApi implements CommerceApi {
   @override
   Object? noSuchMethod(Invocation invocation) =>
       throw UnsupportedError('unused API method');
+}
+
+final class _MemoryCartIdStore implements CartIdStore {
+  final Map<String, String> _values = {};
+
+  @override
+  Future<void> clear(String scope) async => _values.remove(scope);
+
+  @override
+  Future<String?> read(String scope) async => _values[scope];
+
+  @override
+  Future<void> write(String scope, String cartId) async {
+    _values[scope] = cartId;
+  }
 }

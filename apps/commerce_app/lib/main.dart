@@ -79,7 +79,10 @@ class _CommerceAppState extends State<CommerceApp> {
     );
 
     return CartViewModelScope(
-      args: (_) => CartViewModelArgs(api: widget.api),
+      args: (_) => CartViewModelArgs(
+        api: widget.api,
+        cartIds: SecureCartIdStore(),
+      ),
       create: (_, args) => CartViewModel(args),
       child: ProductViewModelScope(
         args: (_) => ProductViewModelArgs(api: widget.api),
