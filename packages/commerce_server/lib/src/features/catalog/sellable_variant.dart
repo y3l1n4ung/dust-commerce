@@ -1,13 +1,16 @@
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
 
 part 'sellable_variant.g.dart';
 
-/// One sellable variant plus the product snapshots a cart line needs.
+/// Direct result of the sellable-variant join used by cart mutations.
+///
+/// This is a query response, not an ORM entity. `FromRow` constructs it from
+/// the join once; cart services consume it directly without translating it
+/// through the public product-variant API model first.
 @Derive([ToString(), Eq(), FromRow()])
-final class SellableVariantRow with _$SellableVariantRow {
-  /// Creates a [SellableVariantRow].
-  const SellableVariantRow({
+final class SellableVariant with _$SellableVariant {
+  /// Creates a [SellableVariant].
+  const SellableVariant({
     required this.id,
     required this.productId,
     required this.productHandle,
@@ -64,17 +67,13 @@ final class SellableVariantRow with _$SellableVariantRow {
 
   /// Customer-facing variant name.
   final String title;
-}
 
-/// Builds the stock behavior shared by add and quantity operations.
-ProductVariant assembleSellableVariant(SellableVariantRow row) =>
-    ProductVariant(
-      id: row.id,
-      title: row.title,
-      sku: row.sku,
-      prices: [Money(amount: row.amount, currencyCode: row.currencyCode)],
-      inventoryQuantity: row.inventoryQuantity,
-      manageInventory: row.manageInventory != 0,
-      allowBackorder: row.allowBackorder != 0,
-      optionValues: const {},
-    );
+  /// Whether current inventory can satisfy [quantity].
+  bool canFulfil(int quantity) {
+    if (quantity < 1) {
+      throw ArgumentError.value(quantity, 'quantity', 'expected at least one');
+    }
+    if (manageInventory == 0 || allowBackorder != 0) return true;
+    return inventoryQuantity >= quantity;
+  }
+}

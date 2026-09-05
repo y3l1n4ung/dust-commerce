@@ -31,7 +31,7 @@ JOIN variant_prices p ON p.variant_id = v.id
 JOIN products product ON product.id = v.product_id
 WHERE v.id = $1 AND p.currency_code = $2 AND product.status = 'published'
 ''')
-  Future<Result<SellableVariantRow?, SqlxError>> findVariant(
+  Future<Result<SellableVariant?, SqlxError>> findVariant(
     String variantId,
     String currencyCode,
   );

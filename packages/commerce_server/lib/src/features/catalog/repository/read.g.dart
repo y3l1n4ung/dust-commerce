@@ -33,8 +33,8 @@ WHERE handle = ? AND status = 'published'
   }
 
   @override
-  Future<Result<SellableVariantRow?, SqlxError>> findVariant(String variantId, String currencyCode) {
-    return _db.fetchOptional<SellableVariantRow>(
+  Future<Result<SellableVariant?, SqlxError>> findVariant(String variantId, String currencyCode) {
+    return _db.fetchOptional<SellableVariant>(
       r'''
 SELECT v.id, v.product_id, v.title, v.sku, v.inventory_quantity,
        v.manage_inventory, v.allow_backorder,
@@ -46,7 +46,7 @@ JOIN products product ON product.id = v.product_id
 WHERE v.id = ? AND p.currency_code = ? AND product.status = 'published'
 ''',
       [variantId, currencyCode],
-      const $SellableVariantRowRowDeserializer().deserialize,
+      const $SellableVariantRowDeserializer().deserialize,
     );
   }
 }

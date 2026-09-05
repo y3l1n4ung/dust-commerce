@@ -37,9 +37,9 @@ Future<Result<UpdateLineFailure?, SqlxError>> updateLineQuantity(
 
   final priced = await catalog.findVariant(line.variantId, cart.currencyCode);
   if (priced case Err(:final error)) return Err(error);
-  final variant = (priced as Ok<SellableVariantRow?, SqlxError>).value;
+  final variant = (priced as Ok<SellableVariant?, SqlxError>).value;
   if (variant == null) return const Ok(UpdateLineFailure.unavailable);
-  if (!assembleSellableVariant(variant).canFulfil(quantity)) {
+  if (!variant.canFulfil(quantity)) {
     return const Ok(UpdateLineFailure.outOfStock);
   }
 

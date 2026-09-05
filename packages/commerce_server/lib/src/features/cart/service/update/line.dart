@@ -44,7 +44,7 @@ Future<Result<AddLineFailure?, SqlxError>> addLine(
 
   final priced = await catalog.findVariant(variantId, cart.currencyCode);
   if (priced case Err(:final error)) return Err(error);
-  final variant = (priced as Ok<SellableVariantRow?, SqlxError>).value;
+  final variant = (priced as Ok<SellableVariant?, SqlxError>).value;
   if (variant == null) return const Ok(AddLineFailure.noVariant);
 
   final existing = await reads.findLine(cartId, variantId);
@@ -52,7 +52,7 @@ Future<Result<AddLineFailure?, SqlxError>> addLine(
   final line = (existing as Ok<LineItemRow?, SqlxError>).value;
 
   final wanted = (line?.quantity ?? 0) + quantity;
-  if (!assembleSellableVariant(variant).canFulfil(wanted)) {
+  if (!variant.canFulfil(wanted)) {
     return const Ok(AddLineFailure.outOfStock);
   }
 

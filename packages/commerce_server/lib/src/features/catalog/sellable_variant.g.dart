@@ -13,11 +13,11 @@
 
 part of 'sellable_variant.dart';
 
-mixin _$SellableVariantRow {
+mixin _$SellableVariant {
   @override
   String toString() {
-    final self = this as SellableVariantRow;
-    return 'SellableVariantRow('
+    final self = this as SellableVariant;
+    return 'SellableVariant('
         'allowBackorder: ${self.allowBackorder}, '
         'amount: ${self.amount}, '
         'currencyCode: ${self.currencyCode}, '
@@ -35,9 +35,9 @@ mixin _$SellableVariantRow {
 
   @override
   bool operator ==(Object other) {
-    final self = this as SellableVariantRow;
+    final self = this as SellableVariant;
     return identical(this, other) ||
-        other is SellableVariantRow &&
+        other is SellableVariant &&
             runtimeType == other.runtimeType &&
             other.allowBackorder == self.allowBackorder &&
             other.amount == self.amount &&
@@ -55,7 +55,7 @@ mixin _$SellableVariantRow {
 
   @override
   int get hashCode {
-    final self = this as SellableVariantRow;
+    final self = this as SellableVariant;
     return Object.hashAll([
       runtimeType,
       self.allowBackorder,
@@ -74,8 +74,8 @@ mixin _$SellableVariantRow {
   }
 }
 
-SellableVariantRow _$SellableVariantRowFromRow(Row row) {
-  return SellableVariantRow(
+SellableVariant _$SellableVariantFromRow(Row row) {
+  return SellableVariant(
     id: row.read<String>('id'),
     productId: row.read<String>('product_id'),
     productHandle: row.read<String>('product_handle'),
@@ -91,28 +91,28 @@ SellableVariantRow _$SellableVariantRowFromRow(Row row) {
   );
 }
 
-/// Row deserializer for [SellableVariantRow].
-final class $SellableVariantRowRowDeserializer implements RowDeserializer<SellableVariantRow> {
-  const $SellableVariantRowRowDeserializer();
+/// Row deserializer for [SellableVariant].
+final class $SellableVariantRowDeserializer implements RowDeserializer<SellableVariant> {
+  const $SellableVariantRowDeserializer();
 
   @override
-  SellableVariantRow deserialize(Row row) => _$SellableVariantRowFromRow(row);
+  SellableVariant deserialize(Row row) => _$SellableVariantFromRow(row);
 }
 
-/// Typed row query terminals for [SellableVariantRow].
+/// Typed row query terminals for [SellableVariant].
 ///
 /// Resolved from the static type of the receiver, so a row type with no
 /// `FromRow` has no terminals and the call does not compile.
-extension $SellableVariantRowQuery on QueryAs<SellableVariantRow> {
+extension $SellableVariantQuery on QueryAs<SellableVariant> {
   /// Fetches exactly one row.
-  Future<SellableVariantRow> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$SellableVariantRowFromRow);
+  Future<SellableVariant> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$SellableVariantFromRow);
 
   /// Fetches zero or one row.
-  Future<SellableVariantRow?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$SellableVariantRowFromRow);
+  Future<SellableVariant?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$SellableVariantFromRow);
 
   /// Fetches every row.
-  Future<List<SellableVariantRow>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$SellableVariantRowFromRow);
+  Future<List<SellableVariant>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$SellableVariantFromRow);
 }
