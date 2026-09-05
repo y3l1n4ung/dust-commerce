@@ -1,0 +1,77 @@
+import 'package:dust_dart/db.dart';
+import 'package:dust_dart/serde.dart';
+
+part 'model.g.dart';
+
+/// Explicit public selling-region response populated directly from SQLx.
+@Derive([Serialize(), FromRow()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class SellingRegionResponse with _$SellingRegionResponse {
+  /// Creates an explicitly allowlisted selling region.
+  const SellingRegionResponse({
+    required this.id,
+    required this.name,
+    required this.currencyCode,
+    required this.taxRate,
+    required this.countries,
+    required this.taxInclusive,
+  });
+
+  /// ISO country codes served by the region.
+  @Sqlx(tryFrom: RegionCountriesFromCsv())
+  final List<String> countries;
+
+  /// ISO currency code used by regional prices.
+  @Sqlx(rename: 'currency_code')
+  final String currencyCode;
+
+  /// Stable region identifier.
+  final String id;
+
+  /// Customer-facing region name.
+  final String name;
+
+  /// Whether displayed prices already contain tax.
+  @Sqlx(rename: 'tax_inclusive', tryFrom: RegionBoolFromInt())
+  final bool taxInclusive;
+
+  /// Tax rate in basis points.
+  @Sqlx(rename: 'tax_rate')
+  final int taxRate;
+}
+
+/// Explicit public region-list response.
+@Derive([Serialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class SellingRegionListResponse with _$SellingRegionListResponse {
+  /// Creates a complete region listing.
+  const SellingRegionListResponse({required this.regions, required this.count});
+
+  /// Number of active regions returned.
+  final int count;
+
+  /// Explicit public region allowlists.
+  final List<SellingRegionResponse> regions;
+}
+
+/// Converts SQLite's region boolean representation.
+final class RegionBoolFromInt implements SqlxTryFrom<bool, int> {
+  /// Creates the stateless converter.
+  const RegionBoolFromInt();
+
+  @override
+  bool decode(int value) => value != 0;
+}
+
+/// Converts compact persisted country codes into a public list.
+final class RegionCountriesFromCsv
+    implements SqlxTryFrom<List<String>, String> {
+  /// Creates the stateless converter.
+  const RegionCountriesFromCsv();
+
+  @override
+  List<String> decode(String value) => value
+      .split(',')
+      .where((country) => country.isNotEmpty)
+      .toList(growable: false);
+}

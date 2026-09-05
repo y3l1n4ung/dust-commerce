@@ -19,6 +19,15 @@ void main() {
       options: commerceOptions,
     );
     await seedCatalogRead(database);
+    await queryExecute(
+      r"INSERT INTO regions "
+      r"(id, name, currency_code, tax_rate, tax_inclusive, countries, deleted_at) "
+      r"VALUES "
+      r"('reg_us', 'United States', 'usd', 0, 0, 'us,ca', NULL), "
+      r"('reg_old', 'Retired', 'usd', 0, 0, 'gb', "
+      r"'2026-09-05T00:00:00.000Z')",
+      const [],
+    ).execute(database.executor);
     client = TestClient(buildApp(database));
   });
 
@@ -52,6 +61,24 @@ void main() {
     expect(view.count, 1);
     expect(view.categories.single.name, 'Shirts');
     expect(view.categories.single.parentId, 'cat_clothing');
+  });
+
+  test('lists only the explicit active selling-region allowlist', () async {
+    final response = await client.get('/store/regions').send();
+
+    response.assertOk();
+    final json = response.json! as Map<String, Object?>;
+    final view = SellingRegionListView.fromJson(json);
+    expect(view.count, 1);
+    expect(view.regions.single.countries, ['us', 'ca']);
+    expect((json['regions']! as List<Object?>).single, {
+      'countries': ['us', 'ca'],
+      'currency_code': 'usd',
+      'id': 'reg_us',
+      'name': 'United States',
+      'tax_inclusive': false,
+      'tax_rate': 0,
+    });
   });
 
   test('filters product pages by collection, category and tag', () async {

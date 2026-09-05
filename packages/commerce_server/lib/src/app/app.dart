@@ -5,6 +5,7 @@ import 'package:commerce_server/src/features/catalog/catalog.dart';
 import 'package:commerce_server/src/features/checkout/checkout.dart';
 import 'package:commerce_server/src/features/collection/collection.dart';
 import 'package:commerce_server/src/features/payment/payment.dart';
+import 'package:commerce_server/src/features/region/region.dart';
 import 'package:commerce_server/src/http/http.dart';
 import 'package:commerce_server/src/infra/database.dart';
 import 'package:dust_dart/db.dart';
@@ -46,6 +47,7 @@ Router buildApp(
     ..nest('/store', cartRoutes())
     ..nest('/store', checkoutRoutes())
     ..nest('/store', paymentRoutes())
+    ..nest('/store', regionRoutes())
     ..route('/health', get(_health))
     ..withState(
       AccountDeps(
@@ -96,7 +98,8 @@ Router buildApp(
         database: database,
         clock: clock,
       ),
-    );
+    )
+    ..withState(RegionDeps(regions: SellingRegionRepository(executor)));
 }
 
 /// `GET /health` — the shallowest possible answer that the process is up.
