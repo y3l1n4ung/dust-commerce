@@ -64,6 +64,9 @@ packages/commerce_server   dust_server API on SQLite
 apps/commerce_app          Flutter storefront
 ```
 
+[docs/architecture](docs/architecture/) traces one request from widget to row
+and records the decisions that would be expensive to reverse.
+
 ## Running it
 
 Requires the Dust CLI at 0.1.4 or newer:
@@ -73,7 +76,16 @@ dust --version
 ```
 
 ```bash
-flutter pub get && dust build && dust db build && dust check && dust check --db
+flutter pub get
+dust build --root packages/commerce_shared
+dust build --root packages/commerce_server && dust db build --root packages/commerce_server
+dust build --root apps/commerce_app
+```
+
+Then the same checks CI runs:
+
+```bash
+./scripts/format.sh --check && ./scripts/check_file_size.sh
 ```
 
 ## Licence
