@@ -23,10 +23,10 @@ and the `Medusa DTC storefront parity` milestone.
 | `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations and sticky mobile actions |
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
 | `layout/components/cart-dropdown` | cart preview | implemented in #21 with hover, timed add feedback, live removal, subtotal and empty state |
-| `cart/templates` | cart route | partial in #21; responsive source layout, empty state, line controls, promotion UI and authoritative totals implemented; sign-in prompt and checkout handoff remain |
-| `account/templates` | account shell and session | queued in #26 |
+| `cart/templates` | cart route | partial in #21 and #26; responsive source layout, empty state, line controls, promotion UI, authoritative totals and session-aware sign-in prompt implemented; checkout handoff remains |
+| `account/templates` | account shell and session | partial in #26; register, sign in, sign out, secure restore, overview, navigation and order list implemented; profile and address editing remain |
 | `checkout/templates` | checkout and payment | queued in #28 |
-| `order/templates` | confirmation and order details | queued in #20 and #28 |
+| `order/templates` | confirmation and order details | partial in #26; authenticated order list and source-shaped cards implemented; confirmation, detail, transfer and return flows remain in #20 and #28 |
 | categories and collections routes | product organisation | queued in #18 and #24 |
 
 ## Theme and selection map
@@ -58,6 +58,16 @@ The Medusa-only `ProductOnboardingCta` is intentionally excluded. It appears
 only when a private admin-setup cookie is present and links to Medusa's local
 admin onboarding flow; it is not a customer storefront capability or a valid
 Morrow production destination.
+
+## Customer session boundary
+
+Account responses and UI state are explicit field allowlists. They do not
+inherit from database or domain models, so adding an internal field cannot
+silently widen the storefront API. Bearer credentials are stored as one atomic
+secure-storage value, attached only by Dio, and excluded from generated method
+parameters and ViewModel state. The `/account/orders` route uses a typed Dust
+guard and redirects a signed-out deep link to the shared `/account` sign-in
+screen.
 
 ## Parity rule
 
