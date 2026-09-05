@@ -29,19 +29,19 @@ VALUES ('reg_us', 'United States', 'usd', 1000, 'us')
 INSERT OR IGNORE INTO products
   (id, title, handle, description, thumbnail, weight, status)
 VALUES
-  ('prod_tshirt', 'Dust T-Shirt', 't-shirt',
+  ('prod_tshirt', 'Essential T-Shirt', 't-shirt',
    'A soft cotton essential for building typed storefronts.',
    'https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-black-front.png',
    400, 'published'),
-  ('prod_sweatshirt', 'Dust Sweatshirt', 'sweatshirt',
+  ('prod_sweatshirt', 'Vintage Sweatshirt', 'sweatshirt',
    'A heavyweight layer for long code-generation sessions.',
    'https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatshirt-vintage-front.png',
    400, 'published'),
-  ('prod_sweatpants', 'Dust Sweatpants', 'sweatpants',
+  ('prod_sweatpants', 'Relaxed Sweatpants', 'sweatpants',
    'Relaxed everyday sweatpants in soft brushed cotton.',
    'https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatpants-gray-front.png',
    400, 'published'),
-  ('prod_shorts', 'Dust Shorts', 'shorts',
+  ('prod_shorts', 'Everyday Shorts', 'shorts',
    'Easy cotton shorts for warm days and fast builds.',
    'https://medusa-public-images.s3.eu-west-1.amazonaws.com/shorts-vintage-front.png',
    400, 'published')
