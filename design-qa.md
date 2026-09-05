@@ -10,9 +10,9 @@ Viewport: desktop and `390 x 844` mobile captures are required but unavailable.
 Pixel dimensions, CSS size, and density normalization: not measured because no
 valid source or implementation capture could be produced.
 
-State: `/store` with the shared footer visible and authenticated `/checkout`
-with a saved address available, plus the equivalent Medusa DTC states pinned
-in `docs/storefront-parity.md`.
+State: `/store` with the shared footer visible, authenticated `/checkout` with
+a saved address available, and `/account/orders/details/:id`, plus the
+equivalent Medusa DTC states pinned in `docs/storefront-parity.md`.
 
 **Findings**
 
@@ -21,7 +21,8 @@ in `docs/storefront-parity.md`.
   Evidence: source code and local runtime are available, but the locked Mac
   prevents both required browser captures and a combined comparison.
   Impact: typography, responsive spacing, link wrapping, image treatment, and
-  footer placement and the saved-address selector remain visually unverified.
+  footer placement, the saved-address selector, and order detail remain
+  visually unverified.
   Fix: unlock the Mac, capture both sites at matching desktop and mobile
   viewports, combine the captures, and run the comparison loop.
 
@@ -56,6 +57,8 @@ checkout controls require focused captures after the full-view comparison.
 - Capture matching desktop store views with the footer visible.
 - Capture matching `390 x 844` store views and interactive menu/filter states.
 - Capture authenticated checkout with the saved-address menu closed and open.
+- Capture the same authenticated order-detail state at desktop and compact
+  widths.
 - Compare combined images and fix every P0/P1/P2 difference.
 - Repeat captures after fixes and record post-fix evidence here.
 

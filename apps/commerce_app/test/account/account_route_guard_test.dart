@@ -16,6 +16,7 @@ void main() {
     );
     for (final route in const <CommerceRoute>[
       AccountAddressesRoute(),
+      AccountOrderDetailRoute(id: 'order_1'),
       AccountOrdersRoute(),
       AccountProfileRoute(),
     ]) {
@@ -36,6 +37,15 @@ void main() {
     );
 
     expect(commerceRouteGuards(const AccountRoute(), router), isEmpty);
+  });
+
+  test('order details preserve the source route and opaque id', () {
+    const route = AccountOrderDetailRoute(id: 'order_1');
+
+    expect(route.location, '/account/orders/details/order_1');
+    final parsed = parseCommerceRoute(Uri.parse(route.location));
+    expect(parsed, isA<AccountOrderDetailRoute>());
+    expect((parsed as AccountOrderDetailRoute).id, route.id);
   });
 
   test('signed-out guarded navigation settles on the account route', () async {

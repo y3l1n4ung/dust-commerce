@@ -33,6 +33,9 @@ final class CommerceRoutesNavigator {
   CommerceRouteAction<void> accountOrders() =>
       CommerceRouteAction(_router, AccountOrdersRoute());
 
+  CommerceRouteAction<void> accountOrderDetail({required String id}) =>
+      CommerceRouteAction(_router, AccountOrderDetailRoute(id: id));
+
   CommerceRouteAction<void> accountProfile() =>
       CommerceRouteAction(_router, AccountProfileRoute());
 

@@ -62,6 +62,10 @@
   "@account_no_orders": {
     "description": "Empty recent-order state."
   },
+  "account_back_overview": "အော်ဒါစာရင်းသို့ ပြန်သွားရန်",
+  "@account_back_overview": {
+    "description": "Returns from one order to order history."
+  },
   "account_not_member": "အဖွဲ့ဝင် မဖြစ်သေးဘူးလား။",
   "@account_not_member": {
     "description": "Prompt shown below sign-in."
@@ -74,6 +78,46 @@
         "example": "2"
       }
     }
+  },
+  "account_order_details": "အော်ဒါ အသေးစိတ်",
+  "@account_order_details": {
+    "description": "Customer order-detail heading."
+  },
+  "account_order_load_failed": "ဤအော်ဒါကို မဖွင့်နိုင်ပါ။ ထပ်ကြိုးစားပါ။",
+  "@account_order_load_failed": {
+    "description": "Retryable customer order-detail failure."
+  },
+  "account_order_session_expired": "အကောင့်ဝင်ထားမှု သက်တမ်းကုန်သွားပါပြီ။ ထပ်မံအကောင့်ဝင်ပါ။",
+  "@account_order_session_expired": {
+    "description": "Expired-session order-detail failure."
+  },
+  "account_order_status": "အော်ဒါ အခြေအနေ",
+  "@account_order_status": {
+    "description": "Order lifecycle label."
+  },
+  "account_order_summary": "အော်ဒါ အကျဉ်းချုပ်",
+  "@account_order_summary": {
+    "description": "Frozen order totals heading."
+  },
+  "account_order_unavailable": "ထိုအော်ဒါကို ရှာမတွေ့ပါ။",
+  "@account_order_unavailable": {
+    "description": "Missing or unowned order-detail state."
+  },
+  "account_payment_status": "ငွေပေးချေမှု အခြေအနေ",
+  "@account_payment_status": {
+    "description": "Order payment lifecycle label."
+  },
+  "account_payment_awaiting": "ငွေပေးချေရန် စောင့်ဆိုင်းနေသည်",
+  "@account_payment_awaiting": {
+    "description": "Payment has not been captured."
+  },
+  "account_payment_captured": "ငွေလက်ခံပြီး",
+  "@account_payment_captured": {
+    "description": "Payment has been captured."
+  },
+  "account_payment_refunded": "ငွေပြန်အမ်းပြီး",
+  "@account_payment_refunded": {
+    "description": "Payment has been returned."
   },
   "account_orders": "အော်ဒါများ",
   "@account_orders": {
@@ -122,6 +166,10 @@
   "account_recent_orders": "မကြာသေးမီ အော်ဒါများ",
   "@account_recent_orders": {
     "description": "Recent customer orders heading."
+  },
+  "account_see_details": "အသေးစိတ် ကြည့်ရန်",
+  "@account_see_details": {
+    "description": "Opens one customer order."
   },
   "account_register_body": "Morrow အဖွဲ့ဝင်ပရိုဖိုင် ဖန်တီးပြီး ပိုမိုကောင်းမွန်သော စျေးဝယ်အတွေ့အကြုံကို ရယူပါ။",
   "@account_register_body": {
@@ -246,6 +294,18 @@
   "account_sign_in_email": "အကောင့်ဝင် အီးမေးလ်",
   "@account_sign_in_email": {
     "description": "Explains that the profile email identifies sign-in."
+  },
+  "account_status_cancelled": "ပယ်ဖျက်ပြီး",
+  "@account_status_cancelled": {
+    "description": "Cancelled order status."
+  },
+  "account_status_completed": "ပြီးစီးပြီး",
+  "@account_status_completed": {
+    "description": "Completed order status."
+  },
+  "account_status_pending": "စောင့်ဆိုင်းနေသည်",
+  "@account_status_pending": {
+    "description": "Pending order status."
   },
   "account_updated": "{label} ကို အောင်မြင်စွာ ပြင်ဆင်ပြီးပါပြီ",
   "@account_updated": {
@@ -841,6 +901,10 @@
   "sold_out": "ကုန်သွားပါပြီ",
   "@sold_out": {
     "description": "Translation for `shop_sold_out`."
+  },
+  "more": "ထပ်ရှိသည်",
+  "@more": {
+    "description": "Completes the hidden order-item count."
   },
   "option_fallback": "ရွေးချယ်စရာ",
   "@option_fallback": {

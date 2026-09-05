@@ -62,6 +62,10 @@
   "@account_no_orders": {
     "description": "Empty recent-order state."
   },
+  "account_back_overview": "Back to overview",
+  "@account_back_overview": {
+    "description": "Returns from one order to order history."
+  },
   "account_not_member": "Not a member?",
   "@account_not_member": {
     "description": "Prompt shown below sign-in."
@@ -74,6 +78,46 @@
         "example": "2"
       }
     }
+  },
+  "account_order_details": "Order details",
+  "@account_order_details": {
+    "description": "Customer order-detail heading."
+  },
+  "account_order_load_failed": "We could not load this order. Please try again.",
+  "@account_order_load_failed": {
+    "description": "Retryable customer order-detail failure."
+  },
+  "account_order_session_expired": "Your session has expired. Please sign in again.",
+  "@account_order_session_expired": {
+    "description": "Expired-session order-detail failure."
+  },
+  "account_order_status": "Order status",
+  "@account_order_status": {
+    "description": "Order lifecycle label."
+  },
+  "account_order_summary": "Order Summary",
+  "@account_order_summary": {
+    "description": "Frozen order totals heading."
+  },
+  "account_order_unavailable": "We could not find that order.",
+  "@account_order_unavailable": {
+    "description": "Missing or unowned order-detail state."
+  },
+  "account_payment_status": "Payment status",
+  "@account_payment_status": {
+    "description": "Order payment lifecycle label."
+  },
+  "account_payment_awaiting": "Awaiting",
+  "@account_payment_awaiting": {
+    "description": "Payment has not been captured."
+  },
+  "account_payment_captured": "Captured",
+  "@account_payment_captured": {
+    "description": "Payment has been captured."
+  },
+  "account_payment_refunded": "Refunded",
+  "@account_payment_refunded": {
+    "description": "Payment has been returned."
   },
   "account_orders": "Orders",
   "@account_orders": {
@@ -122,6 +166,10 @@
   "account_recent_orders": "Recent orders",
   "@account_recent_orders": {
     "description": "Recent customer orders heading."
+  },
+  "account_see_details": "See details",
+  "@account_see_details": {
+    "description": "Opens one customer order."
   },
   "account_register_body": "Create your Morrow Member profile, and get access to an enhanced shopping experience.",
   "@account_register_body": {
@@ -246,6 +294,18 @@
   "account_sign_in_email": "Sign-in email",
   "@account_sign_in_email": {
     "description": "Explains that the profile email identifies sign-in."
+  },
+  "account_status_cancelled": "Cancelled",
+  "@account_status_cancelled": {
+    "description": "Cancelled order status."
+  },
+  "account_status_completed": "Completed",
+  "@account_status_completed": {
+    "description": "Completed order status."
+  },
+  "account_status_pending": "Pending",
+  "@account_status_pending": {
+    "description": "Pending order status."
   },
   "account_updated": "{label} updated successfully",
   "@account_updated": {
@@ -841,6 +901,10 @@
   "sold_out": "Sold out",
   "@sold_out": {
     "description": "Translation for `shop_sold_out`."
+  },
+  "more": "more",
+  "@more": {
+    "description": "Completes the hidden order-item count."
   },
   "option_fallback": "Option",
   "@option_fallback": {

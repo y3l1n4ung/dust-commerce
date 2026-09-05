@@ -67,6 +67,7 @@ class CommerceApp extends StatefulWidget {
 class _CommerceAppState extends State<CommerceApp> {
   late final AccountViewModel _account;
   late final AddressBookViewModel _addresses;
+  late final AccountOrderDetailViewModel _orderDetail;
   late final AccountOrdersViewModel _orders;
   late final CartViewModel _cart;
   late final CheckoutViewModel _checkout;
@@ -87,6 +88,9 @@ class _CommerceAppState extends State<CommerceApp> {
     );
     _orders = AccountOrdersViewModel(
       AccountOrdersViewModelArgs(api: widget.api),
+    );
+    _orderDetail = AccountOrderDetailViewModel(
+      AccountOrderDetailViewModelArgs(api: widget.api),
     );
     _cart = CartViewModel(
       CartViewModelArgs(api: widget.api, cartIds: SecureCartIdStore()),
@@ -121,6 +125,7 @@ class _CommerceAppState extends State<CommerceApp> {
     _shell.dispose();
     _cart.dispose();
     _addresses.dispose();
+    _orderDetail.dispose();
     _orders.dispose();
     _account.dispose();
     super.dispose();
@@ -147,24 +152,27 @@ class _CommerceAppState extends State<CommerceApp> {
       value: _account,
       child: AddressBookViewModelScope.value(
         value: _addresses,
-        child: AccountOrdersViewModelScope.value(
-          value: _orders,
-          child: CartViewModelScope.value(
-            value: _cart,
-            child: CheckoutViewModelScope.value(
-              value: _checkout,
-              child: ProductViewModelScope(
-                args: (_) => ProductViewModelArgs(api: widget.api),
-                create: (_, args) => ProductViewModel(args),
-                child: CatalogViewModelScope(
-                  args: (_) => CatalogViewModelArgs(api: widget.api),
-                  create: (_, args) => CatalogViewModel(args),
-                  child: ProductListingViewModelScope(
-                    args: (_) => ProductListingViewModelArgs(api: widget.api),
-                    create: (_, args) => ProductListingViewModel(args),
-                    child: StoreShellViewModelScope.value(
-                      value: _shell,
-                      child: app,
+        child: AccountOrderDetailViewModelScope.value(
+          value: _orderDetail,
+          child: AccountOrdersViewModelScope.value(
+            value: _orders,
+            child: CartViewModelScope.value(
+              value: _cart,
+              child: CheckoutViewModelScope.value(
+                value: _checkout,
+                child: ProductViewModelScope(
+                  args: (_) => ProductViewModelArgs(api: widget.api),
+                  create: (_, args) => ProductViewModel(args),
+                  child: CatalogViewModelScope(
+                    args: (_) => CatalogViewModelArgs(api: widget.api),
+                    create: (_, args) => CatalogViewModel(args),
+                    child: ProductListingViewModelScope(
+                      args: (_) => ProductListingViewModelArgs(api: widget.api),
+                      create: (_, args) => ProductListingViewModel(args),
+                      child: StoreShellViewModelScope.value(
+                        value: _shell,
+                        child: app,
+                      ),
                     ),
                   ),
                 ),
@@ -181,6 +189,7 @@ class _CommerceAppState extends State<CommerceApp> {
     if (ownerId == _accountOwnerId) return;
     _accountOwnerId = ownerId;
     _addresses.reset();
+    _orderDetail.reset();
     _orders.reset();
     _checkout.reset();
   }

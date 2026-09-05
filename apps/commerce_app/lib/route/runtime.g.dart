@@ -11,6 +11,7 @@ import 'paths.g.dart';
 import 'metadata.g.dart';
 import '../route.dart';
 import 'package:commerce_app/src/features/account/view/account_addresses_page.dart';
+import 'package:commerce_app/src/features/account/view/account_order_detail_page.dart';
 import 'package:commerce_app/src/features/account/view/account_orders_page.dart';
 import 'package:commerce_app/src/features/account/view/account_page.dart';
 import 'package:commerce_app/src/features/account/view/account_profile_page.dart';
@@ -86,6 +87,12 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const AccountRoute(),
       route,
     ],
+    AccountOrderDetailRoute(id: _) => [
+      const CatalogRoute(),
+      const AccountRoute(),
+      const AccountOrdersRoute(),
+      route,
+    ],
     AccountProfileRoute() => [
       const CatalogRoute(),
       const AccountRoute(),
@@ -128,6 +135,7 @@ const Map<Type, Type?> _$appliedShellsByPage = {
   AccountPage: null,
   AccountAddressesPage: null,
   AccountOrdersPage: null,
+  AccountOrderDetailPage: null,
   AccountProfilePage: null,
   CartPage: null,
   CategoryPage: null,
@@ -192,6 +200,15 @@ Page<dynamic> buildCommerceRoutePage(
       fullscreenDialog: false,
       maintainState: true,
       child: const AccountOrdersPage(),
+    ),
+    AccountOrderDetailRoute(id: final id) => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'accountOrderDetail',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: AccountOrderDetailPage(id: id),
     ),
     AccountProfileRoute() => generatedPage(
       key: key,

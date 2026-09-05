@@ -89,6 +89,21 @@ final class AccountOrdersRoute extends CommerceRoute<void> {
   }
 }
 
+/// Typed route data for `AccountOrderDetailRoute`.
+final class AccountOrderDetailRoute extends CommerceRoute<void> {
+  const AccountOrderDetailRoute({required this.id});
+
+  final String id;
+
+  @override
+  String get location {
+    return generatedRoutePath(
+      ['account', 'orders', 'details', id],
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+}
+
 /// Typed route data for `AccountProfileRoute`.
 final class AccountProfileRoute extends CommerceRoute<void> {
   const AccountProfileRoute();
@@ -289,6 +304,16 @@ CommerceRoute parseCommerceRoute(Uri uri) {
   }
   if (segments.length == 2 && segments[0] == 'account' && segments[1] == 'orders') {
     final route = AccountOrdersRoute();
+    return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (
+    segments.length == 4 &&
+    segments[0] == 'account' &&
+    segments[1] == 'orders' &&
+    segments[2] == 'details'
+  ) {
+    final id = segments[3];
+    final route = AccountOrderDetailRoute(id: id);
     return withGeneratedRouteUriExtras(route, uri, const <String>{});
   }
   if (segments.length == 2 && segments[0] == 'account' && segments[1] == 'profile') {

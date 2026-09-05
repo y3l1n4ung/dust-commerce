@@ -1,4 +1,5 @@
 import 'package:commerce_app/commerce_app.dart';
+import 'package:commerce_app/route.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,40 @@ class AccountOrderCard extends StatelessWidget {
                     ],
                   ),
                 ),
+              if (order.items.length > 4)
+                SizedBox(
+                  width: 144,
+                  height: 144,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '+ ${order.itemCount - 4}',
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        const TranslatedText(
+                          'shop_more',
+                          defaultText: 'more',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
+          ),
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerRight,
+            child: OutlinedButton(
+              onPressed: () =>
+                  context.navigator.accountOrderDetail(id: order.id).go(),
+              child: const TranslatedText(
+                'shop_account_see_details',
+                defaultText: 'See details',
+              ),
+            ),
           ),
         ],
       );

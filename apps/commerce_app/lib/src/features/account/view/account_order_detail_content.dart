@@ -1,0 +1,158 @@
+import 'package:commerce_app/commerce_app.dart';
+import 'package:commerce_app/route.dart';
+import 'package:commerce_shared/commerce_shared.dart';
+import 'package:dust_flutter/i18n.dart';
+import 'package:flutter/material.dart';
+
+import '../../checkout/view/order_receipt_details.dart';
+import '../../checkout/view/order_receipt_items.dart';
+import 'account_order_items.dart';
+
+/// Medusa order-detail template rendered from immutable order snapshots.
+final class AccountOrderDetailContent extends StatelessWidget {
+  /// Creates the detail content for [order].
+  const AccountOrderDetailContent({required this.order, super.key});
+
+  /// Frozen customer-owned order.
+  final Order order;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              const Expanded(
+                child: TranslatedText(
+                  'shop_account_order_details',
+                  defaultText: 'Order details',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                ),
+              ),
+              TextButton.icon(
+                onPressed: () => context.navigator.accountOrders().go(),
+                icon: const Icon(Icons.close, size: 18),
+                label: const TranslatedText(
+                  'shop_account_back_overview',
+                  defaultText: 'Back to overview',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(context.tr(
+            'shop_checkout_confirmation_sent',
+            defaultText:
+                'We have sent the order confirmation details to {email}.',
+            args: {'email': order.email},
+          )),
+          const SizedBox(height: 8),
+          Text(context.tr(
+            'shop_checkout_order_date',
+            defaultText: 'Order date: {date}',
+            args: {
+              'date': MaterialLocalizations.of(context)
+                  .formatMediumDate(order.placedAt.toLocal()),
+            },
+          )),
+          const SizedBox(height: 8),
+          Text(
+            context.tr(
+              'shop_checkout_order_number',
+              defaultText: 'Order number: {id}',
+              args: {'id': order.id},
+            ),
+            style: const TextStyle(color: StoreColors.interactive),
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 24,
+            runSpacing: 8,
+            children: [
+              _status(
+                context.tr(
+                  'shop_account_order_status',
+                  defaultText: 'Order status',
+                ),
+                _orderStatus(context),
+              ),
+              _status(
+                context.tr(
+                  'shop_account_payment_status',
+                  defaultText: 'Payment status',
+                ),
+                _paymentStatus(context),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          const Divider(height: 1),
+          AccountOrderItems(order: order),
+          const SizedBox(height: 32),
+          OrderShippingDetails(order: order),
+          const SizedBox(height: 32),
+          const Divider(height: 1),
+          const SizedBox(height: 32),
+          const TranslatedText(
+            'shop_account_order_summary',
+            defaultText: 'Order Summary',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8),
+          OrderReceiptTotals(order: order),
+          const SizedBox(height: 40),
+          const TranslatedText(
+            'shop_checkout_need_help',
+            defaultText: 'Need help?',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8),
+          const TranslatedText(
+            'shop_checkout_help_body',
+            defaultText:
+                'If you have questions about your order, contact our customer service team.',
+            style: TextStyle(color: StoreColors.foregroundSubtle),
+          ),
+        ],
+      );
+
+  Widget _status(String title, String value) => Text.rich(
+        TextSpan(children: [
+          TextSpan(text: '$title: '),
+          TextSpan(
+            text: value,
+            style: const TextStyle(color: StoreColors.foregroundSubtle),
+          ),
+        ]),
+      );
+
+  String _orderStatus(BuildContext context) => switch (order.status) {
+        OrderStatus.pending => context.tr(
+            'shop_account_status_pending',
+            defaultText: 'Pending',
+          ),
+        OrderStatus.completed => context.tr(
+            'shop_account_status_completed',
+            defaultText: 'Completed',
+          ),
+        OrderStatus.cancelled => context.tr(
+            'shop_account_status_cancelled',
+            defaultText: 'Cancelled',
+          ),
+      };
+
+  String _paymentStatus(BuildContext context) => switch (order.paymentStatus) {
+        PaymentStatus.awaiting => context.tr(
+            'shop_account_payment_awaiting',
+            defaultText: 'Awaiting',
+          ),
+        PaymentStatus.captured => context.tr(
+            'shop_account_payment_captured',
+            defaultText: 'Captured',
+          ),
+        PaymentStatus.refunded => context.tr(
+            'shop_account_payment_refunded',
+            defaultText: 'Refunded',
+          ),
+      };
+}
