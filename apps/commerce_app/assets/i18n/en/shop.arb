@@ -152,6 +152,26 @@
   "@easy_returns_body": {
     "description": "Return policy detail."
   },
+  "select_options": "Select options",
+  "@select_options": {
+    "description": "Opens product options from the sticky mobile purchase bar."
+  },
+  "related_products": "Related products",
+  "@related_products": {
+    "description": "Recommendation section label."
+  },
+  "related_products_body": "You might also want to check out these products.",
+  "@related_products_body": {
+    "description": "Recommendation section heading."
+  },
+  "related_products_failed": "Could not load related products.",
+  "@related_products_failed": {
+    "description": "Display-safe recommendation failure."
+  },
+  "price_separator": "—",
+  "@price_separator": {
+    "description": "Separator between product title and price."
+  },
   "subtotal": "Subtotal",
   "@subtotal": {
     "description": "Cart subtotal label."

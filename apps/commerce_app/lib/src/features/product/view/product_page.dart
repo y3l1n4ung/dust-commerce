@@ -55,55 +55,8 @@ class _ProductPageState extends State<ProductPage> {
         ProductDetailStatus.loading =>
           const Center(child: CircularProgressIndicator()),
         ProductDetailStatus.failed => _Failure(message: state.message!),
-        ProductDetailStatus.ready => _ProductBody(state: state),
+        ProductDetailStatus.ready => ProductLayout(state: state),
       },
-    );
-  }
-}
-
-class _ProductBody extends StatelessWidget {
-  const _ProductBody({required this.state});
-
-  final ProductDetailState state;
-
-  @override
-  Widget build(BuildContext context) {
-    final product = state.product!;
-    final wide = MediaQuery.sizeOf(context).width >= 1024;
-    final info = ProductInfo(product: product);
-    final gallery = ProductGallery(
-      urls: product.images,
-      fallbackUrl: product.thumbnail,
-    );
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(24, 32, 24, 96),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1440),
-          child: wide
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 300, child: info),
-                    const SizedBox(width: 24),
-                    Expanded(child: gallery),
-                    const SizedBox(width: 24),
-                    SizedBox(width: 300, child: ProductActions(state: state)),
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    info,
-                    const SizedBox(height: 32),
-                    gallery,
-                    const SizedBox(height: 32),
-                    ProductActions(state: state),
-                  ],
-                ),
-        ),
-      ),
     );
   }
 }

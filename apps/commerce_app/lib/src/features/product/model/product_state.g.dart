@@ -13,6 +13,7 @@
 
 part of 'product_state.dart';
 
+const DeepCollectionEquality _productDetailStateRelatedProductsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productDetailStateSelectionEquality = DeepCollectionEquality();
 final class _ProductDetailStateCopyWithUnset {
   const _ProductDetailStateCopyWithUnset();
@@ -25,8 +26,12 @@ mixin _$ProductDetailState {
   String toString() {
     final self = this as ProductDetailState;
     return 'ProductDetailState('
+        'currencyCode: ${self.currencyCode}, '
         'message: ${self.message}, '
         'product: ${self.product}, '
+        'relatedProducts: ${self.relatedProducts}, '
+        'relatedMessage: ${self.relatedMessage}, '
+        'relatedStatus: ${self.relatedStatus}, '
         'selection: ${self.selection}, '
         'status: ${self.status}'
         ')';
@@ -38,8 +43,12 @@ mixin _$ProductDetailState {
     return identical(this, other) ||
         other is ProductDetailState &&
             runtimeType == other.runtimeType &&
+            other.currencyCode == self.currencyCode &&
             other.message == self.message &&
             other.product == self.product &&
+            _productDetailStateRelatedProductsEquality.equals(other.relatedProducts, self.relatedProducts) &&
+            other.relatedMessage == self.relatedMessage &&
+            other.relatedStatus == self.relatedStatus &&
             _productDetailStateSelectionEquality.equals(other.selection, self.selection) &&
             other.status == self.status;
   }
@@ -49,8 +58,12 @@ mixin _$ProductDetailState {
     final self = this as ProductDetailState;
     return Object.hashAll([
       runtimeType,
+      self.currencyCode,
       self.message,
       self.product,
+      _productDetailStateRelatedProductsEquality.hash(self.relatedProducts),
+      self.relatedMessage,
+      self.relatedStatus,
       _productDetailStateSelectionEquality.hash(self.selection),
       self.status,
     ]);
@@ -60,7 +73,7 @@ mixin _$ProductDetailState {
   ///
   /// Usage:
   /// ```dart
-  /// final updated = productDetailState.copyWith();
+  /// final updated = productDetailState.copyWith(currencyCode: 'John');
   /// final cleared = productDetailState.copyWith(message: null);
   /// ```
   @pragma('vm:prefer-inline')
@@ -72,8 +85,12 @@ mixin _$ProductDetailState {
 /// @nodoc
 abstract class _$ProductDetailStateCopyWith<$Res> {
   $Res call({
+    String? currencyCode,
     String? message,
     Product? product,
+    List<Product>? relatedProducts,
+    String? relatedMessage,
+    RelatedProductsStatus? relatedStatus,
     Map<String, String>? selection,
     ProductDetailStatus? status,
   });
@@ -89,21 +106,31 @@ final class _$ProductDetailStateCopyWithImpl<$Res> implements _$ProductDetailSta
   @override
   @pragma('vm:prefer-inline')
   $Res call({
+    Object? currencyCode = null,
     Object? message = _productDetailStateCopyWithUnset,
     Object? product = _productDetailStateCopyWithUnset,
+    Object? relatedProducts = null,
+    Object? relatedMessage = _productDetailStateCopyWithUnset,
+    Object? relatedStatus = null,
     Object? selection = null,
     Object? status = null,
   }) {
     return _then(
       ProductDetailState(
         status: status == null ? _self.status : status as ProductDetailStatus,
+        relatedStatus: relatedStatus == null ? _self.relatedStatus : relatedStatus as RelatedProductsStatus,
         selection: selection == null ? _self.selection : selection as Map<String, String>,
+        relatedProducts: relatedProducts == null ? _self.relatedProducts : relatedProducts as List<Product>,
+        currencyCode: currencyCode == null ? _self.currencyCode : currencyCode as String,
         product: identical(product, _productDetailStateCopyWithUnset)
             ? _self.product
             : product as Product?,
         message: identical(message, _productDetailStateCopyWithUnset)
             ? _self.message
             : message as String?,
+        relatedMessage: identical(relatedMessage, _productDetailStateCopyWithUnset)
+            ? _self.relatedMessage
+            : relatedMessage as String?,
       )
     );
   }

@@ -1,5 +1,6 @@
 import 'package:commerce_app/src/core/api/api.dart';
 import 'package:commerce_app/src/features/product/model/product_state.dart';
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'product_view_model.g.dart';
@@ -19,26 +20,40 @@ class ProductViewModel extends $ProductViewModel {
   /// Creates the product view model.
   ProductViewModel(super.args);
 
+  var _revision = 0;
+
   /// Loads the product addressed by [handle].
   Future<void> load(
     String handle, {
     String currency = 'usd',
     String? variantId,
   }) async {
-    emit(const ProductDetailState(status: ProductDetailStatus.loading));
+    final revision = ++_revision;
+    emit(
+      ProductDetailState(
+        status: ProductDetailStatus.loading,
+        currencyCode: currency,
+      ),
+    );
     try {
       final product = await args.api.product(handle, currency: currency);
+      if (revision != _revision) return;
       emit(
         ProductDetailState(
           status: ProductDetailStatus.ready,
+          relatedStatus: RelatedProductsStatus.loading,
           product: product,
+          currencyCode: currency,
           selection: product.variantById(variantId ?? '')?.optionValues ?? {},
         ),
       );
+      await _loadRelated(product, currency, revision);
     } on Object {
+      if (revision != _revision) return;
       emit(
-        const ProductDetailState(
+        ProductDetailState(
           status: ProductDetailStatus.failed,
+          currencyCode: currency,
           message: 'Could not load this product. Please try again.',
         ),
       );
@@ -49,5 +64,50 @@ class ProductViewModel extends $ProductViewModel {
   void select(String optionId, String value) {
     if (!state.canSelect(optionId, value)) return;
     emit(state.copyWith(selection: {...state.selection, optionId: value}));
+  }
+
+  /// Retries recommendations without disrupting the usable main product.
+  Future<void> loadRelated() async {
+    final product = state.product;
+    if (product == null) return;
+    final revision = _revision;
+    emit(
+      state.copyWith(
+        relatedStatus: RelatedProductsStatus.loading,
+        relatedMessage: null,
+      ),
+    );
+    await _loadRelated(product, state.currencyCode, revision);
+  }
+
+  Future<void> _loadRelated(
+    Product product,
+    String currency,
+    int revision,
+  ) async {
+    try {
+      final page = await args.api.products(currency: currency, limit: 5);
+      if (revision != _revision) return;
+      final related = page.products
+          .where((candidate) => candidate.id != product.id)
+          .take(4)
+          .toList(growable: false);
+      emit(
+        state.copyWith(
+          relatedStatus: RelatedProductsStatus.ready,
+          relatedProducts: related,
+          relatedMessage: null,
+        ),
+      );
+    } on Object {
+      if (revision != _revision) return;
+      emit(
+        state.copyWith(
+          relatedStatus: RelatedProductsStatus.failed,
+          relatedProducts: const [],
+          relatedMessage: 'Could not load related products.',
+        ),
+      );
+    }
   }
 }

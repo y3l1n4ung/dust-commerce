@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
 import 'package:commerce_server/commerce_server.dart';
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/http.dart';
 import 'package:dust_server/testing.dart';
 import 'package:flutter/widgets.dart';
@@ -57,6 +58,53 @@ void main() {
       'opt_tshirt_size': 'L',
     });
     expect(product.state.selectedVariant?.id, 'var_tshirt_l_black');
+  });
+
+  test('related products come from the API and exclude the current item',
+      () async {
+    final product = ProductViewModel(ProductViewModelArgs(api: api));
+
+    await product.load('t-shirt');
+
+    expect(product.state.relatedStatus, RelatedProductsStatus.ready);
+    expect(product.state.relatedProducts, hasLength(3));
+    expect(
+      product.state.relatedProducts.map((item) => item.id),
+      isNot(contains('prod_tshirt')),
+    );
+    expect(
+      product.state.relatedProducts.every(
+        (item) => item.cheapestIn(product.state.currencyCode) != null,
+      ),
+      isTrue,
+    );
+  });
+
+  test('an empty related result does not hide the main product', () async {
+    await queryExecute(
+      "DELETE FROM products WHERE id <> 'prod_tshirt'",
+      const [],
+    ).execute(database.executor);
+    final product = ProductViewModel(ProductViewModelArgs(api: api));
+
+    await product.load('t-shirt');
+
+    expect(product.state.status, ProductDetailStatus.ready);
+    expect(product.state.relatedStatus, RelatedProductsStatus.ready);
+    expect(product.state.relatedProducts, isEmpty);
+  });
+
+  test('a related-products failure leaves the main product usable', () async {
+    final product = ProductViewModel(
+      ProductViewModelArgs(api: _RelatedFailureApi(api)),
+    );
+
+    await product.load('t-shirt');
+
+    expect(product.state.status, ProductDetailStatus.ready);
+    expect(product.state.product?.id, 'prod_tshirt');
+    expect(product.state.relatedStatus, RelatedProductsStatus.failed);
+    expect(product.state.relatedMessage, isNotNull);
   });
 
   test('the product route round-trips Medusa unknown query extras', () {
@@ -128,4 +176,26 @@ void main() {
     );
     expect(cart.state.cart?.total.amount, greaterThan(0));
   });
+}
+
+final class _RelatedFailureApi implements CommerceApi {
+  const _RelatedFailureApi(this.delegate);
+
+  final CommerceApi delegate;
+
+  @override
+  Future<Product> product(String handle, {String? currency}) =>
+      delegate.product(handle, currency: currency);
+
+  @override
+  Future<ProductPageView> products({
+    String? currency,
+    int? limit,
+    int? offset,
+  }) =>
+      Future.error(StateError('recommendations unavailable'));
+
+  @override
+  Object? noSuchMethod(Invocation invocation) =>
+      throw UnsupportedError('unused API method');
 }

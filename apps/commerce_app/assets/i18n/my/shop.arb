@@ -152,6 +152,26 @@
   "@easy_returns_body": {
     "description": "Return policy detail."
   },
+  "select_options": "ရွေးချယ်စရာများ ရွေးရန်",
+  "@select_options": {
+    "description": "Opens product options from the sticky mobile purchase bar."
+  },
+  "related_products": "ဆက်စပ်ကုန်ပစ္စည်းများ",
+  "@related_products": {
+    "description": "Recommendation section label."
+  },
+  "related_products_body": "ဤကုန်ပစ္စည်းများကိုလည်း ကြည့်ရှုနိုင်ပါသည်။",
+  "@related_products_body": {
+    "description": "Recommendation section heading."
+  },
+  "related_products_failed": "ဆက်စပ်ကုန်ပစ္စည်းများကို မဖွင့်နိုင်ပါ။",
+  "@related_products_failed": {
+    "description": "Display-safe recommendation failure."
+  },
+  "price_separator": "—",
+  "@price_separator": {
+    "description": "Separator between product title and price."
+  },
   "subtotal": "ကြားဖြတ်စုစုပေါင်း",
   "@subtotal": {
     "description": "Cart subtotal label."
