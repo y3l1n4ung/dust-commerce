@@ -11,3 +11,11 @@ CREATE TABLE cart_shipping_methods (
   updated_at TEXT NOT NULL DEFAULT
              (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
+
+-- Upserts change the quote in place, so the database advances updated_at.
+CREATE TRIGGER cart_shipping_touch_updated_at AFTER UPDATE ON cart_shipping_methods
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE cart_shipping_methods
+  SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE cart_id = NEW.cart_id;
+END;

@@ -19,14 +19,14 @@ final class _$PaymentCreateRepository implements PaymentCreateRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<ExecResult, SqlxError>> authorize(String id, String orderId, String provider, int amount, String currencyCode, String createdAt) {
+  Future<Result<ExecResult, SqlxError>> authorize(String id, String orderId, String provider, int amount, String currencyCode) {
     return _db.execute(
       r'''
 INSERT INTO payment_collections (id, order_id, provider, amount,
-                                 currency_code, status, created_at)
-VALUES (?, ?, ?, ?, ?, 'authorized', ?)
+                                 currency_code, status)
+VALUES (?, ?, ?, ?, ?, 'authorized')
 ''',
-      [id, orderId, provider, amount, currencyCode, createdAt],
+      [id, orderId, provider, amount, currencyCode],
     );
   }
 }

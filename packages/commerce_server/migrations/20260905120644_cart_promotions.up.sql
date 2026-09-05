@@ -11,3 +11,11 @@ CREATE TABLE cart_promotions (
   updated_at   TEXT NOT NULL DEFAULT
                (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
 );
+
+-- Upserts change the applied discount in place, so updated_at must advance.
+CREATE TRIGGER cart_promotions_touch_updated_at AFTER UPDATE ON cart_promotions
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE cart_promotions
+  SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE cart_id = NEW.cart_id;
+END;

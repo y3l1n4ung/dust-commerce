@@ -44,6 +44,14 @@ void main() {
       expect(down.existsSync(), isTrue, reason: name);
       expect(down.readAsStringSync().trimLeft(), startsWith('--'),
           reason: name);
+
+      if (sql.contains('updated_at')) {
+        expect(
+          sql,
+          matches(RegExp(r'\bCREATE\s+TRIGGER\b', caseSensitive: false)),
+          reason: '$name must maintain updated_at inside its table migration',
+        );
+      }
     }
   });
 }

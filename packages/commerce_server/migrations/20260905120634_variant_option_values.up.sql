@@ -11,3 +11,11 @@ CREATE TABLE variant_option_values (
   -- One row per pair prevents a variant selecting two values for one option.
   PRIMARY KEY (variant_id, option_id)
 );
+
+-- Composite keys identify the exact selection whose timestamp must advance.
+CREATE TRIGGER variant_values_touch_updated_at AFTER UPDATE ON variant_option_values
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE variant_option_values
+  SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE variant_id = NEW.variant_id AND option_id = NEW.option_id;
+END;

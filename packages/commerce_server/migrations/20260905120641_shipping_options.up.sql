@@ -20,3 +20,11 @@ CREATE TABLE shipping_options (
 
 CREATE INDEX idx_shipping_options_region ON shipping_options (region_id)
 WHERE deleted_at IS NULL;
+
+-- SQLite has no automatic ON UPDATE timestamp, so this maintains updated_at.
+CREATE TRIGGER shipping_options_touch_updated_at AFTER UPDATE ON shipping_options
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE shipping_options
+  SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE id = NEW.id;
+END;

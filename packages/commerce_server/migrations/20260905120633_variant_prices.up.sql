@@ -15,3 +15,11 @@ CREATE TABLE variant_prices (
   -- A variant cannot have two competing prices for the same currency.
   PRIMARY KEY (variant_id, currency_code)
 );
+
+-- Composite keys identify the exact price whose timestamp must advance.
+CREATE TRIGGER variant_prices_touch_updated_at AFTER UPDATE ON variant_prices
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE variant_prices
+  SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE variant_id = NEW.variant_id AND currency_code = NEW.currency_code;
+END;

@@ -24,3 +24,10 @@ CREATE TABLE line_items (
 
 CREATE INDEX idx_line_items_cart ON line_items (cart_id)
 WHERE deleted_at IS NULL;
+
+-- SQLite has no automatic ON UPDATE timestamp, so this maintains updated_at.
+CREATE TRIGGER line_items_touch_updated_at AFTER UPDATE ON line_items
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE line_items SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE id = NEW.id;
+END;

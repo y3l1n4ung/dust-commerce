@@ -22,3 +22,11 @@ CREATE TABLE order_addresses (
                (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
   PRIMARY KEY (order_id, kind)
 );
+
+-- Composite keys identify the exact address whose timestamp must advance.
+CREATE TRIGGER order_addresses_touch_updated_at AFTER UPDATE ON order_addresses
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE order_addresses
+  SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE order_id = NEW.order_id AND kind = NEW.kind;
+END;

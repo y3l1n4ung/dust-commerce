@@ -28,7 +28,6 @@ Future<Result<(Order?, AuthorizeFailure?), SqlxError>> authorizePayment(
   required String orderId,
   required String email,
   required String id,
-  required DateTime now,
   String provider = 'manual',
 }) async {
   final loaded = await loadOrder(orders, orderId);
@@ -54,7 +53,6 @@ Future<Result<(Order?, AuthorizeFailure?), SqlxError>> authorizePayment(
     provider,
     order.total.amount,
     order.total.currencyCode,
-    now.toUtc().toIso8601String(),
   );
   if (written case Err(:final error)) return Err(error);
 

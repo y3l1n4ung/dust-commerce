@@ -20,3 +20,11 @@ WHERE deleted_at IS NULL;
 CREATE UNIQUE INDEX idx_options_product_title
 ON product_options (product_id, title)
 WHERE deleted_at IS NULL;
+
+-- SQLite has no automatic ON UPDATE timestamp, so this maintains updated_at.
+CREATE TRIGGER product_options_touch_updated_at AFTER UPDATE ON product_options
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE product_options
+  SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE id = NEW.id;
+END;

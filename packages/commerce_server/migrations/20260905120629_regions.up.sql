@@ -23,3 +23,10 @@ CREATE TABLE regions (
   -- Soft deletion preserves references and historical order meaning.
   deleted_at      TEXT
 );
+
+-- SQLite has no automatic ON UPDATE timestamp, so this maintains updated_at.
+CREATE TRIGGER regions_touch_updated_at AFTER UPDATE ON regions
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE regions SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE id = NEW.id;
+END;

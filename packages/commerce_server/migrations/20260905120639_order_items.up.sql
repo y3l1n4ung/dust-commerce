@@ -22,3 +22,10 @@ CREATE TABLE order_items (
 );
 
 CREATE INDEX idx_order_items_order ON order_items (order_id);
+
+-- Maintains audit timestamps if administrative correction is ever required.
+CREATE TRIGGER order_items_touch_updated_at AFTER UPDATE ON order_items
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE order_items SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE id = NEW.id;
+END;

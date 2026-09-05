@@ -33,7 +33,6 @@ Future<Result<Order, Rejection>> authorizePaymentHandler(
     orderId: orderId,
     email: (email as Ok<String, Rejection>).value,
     id: deps.clock.nextId(),
-    now: deps.clock.now(),
   );
 
   return switch (result) {
