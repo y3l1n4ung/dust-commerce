@@ -19,8 +19,9 @@ and the `Medusa DTC storefront parity` milestone.
 | `featured-products/product-rail` | featured product grid | partial in #19; collection rails wait on #18 |
 | `products/components/product-preview` | product card | implemented in #19 |
 | `store/templates` | catalogue | partial in #19; dedicated store filters and paging remain |
-| `products/templates` | product detail route | partial in #22; source-ordered info, gallery, tabs and actions work; related products and sticky columns remain |
-| `products/components/product-actions` | variant state and add to cart | partial in #22; combinations, stock state, `v_id`, price and add-to-cart work; sticky mobile actions remain |
+| `products/templates` | product detail route | implemented in #22; source-ordered mobile and sticky desktop composition |
+| `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations and sticky mobile actions |
+| `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
 | `layout/components/cart-dropdown` | cart preview | queued in #21 |
 | `cart/templates` | cart route | partial in #21; persistence and mutations remain |
 | `account/templates` | account shell and session | queued in #26 |
@@ -52,6 +53,11 @@ each value is an equal-width 40px rectangle on the subtle background, the
 selected value changes only to the interactive border, and an unselected
 hover receives the Medusa card-rest shadow treatment. Invalid combinations are
 disabled by the product state before an interaction reaches the API.
+
+The Medusa-only `ProductOnboardingCta` is intentionally excluded. It appears
+only when a private admin-setup cookie is present and links to Medusa's local
+admin onboarding flow; it is not a customer storefront capability or a valid
+Morrow production destination.
 
 ## Parity rule
 
