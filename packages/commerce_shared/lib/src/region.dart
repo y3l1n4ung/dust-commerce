@@ -10,6 +10,7 @@ part 'region.g.dart';
 /// depending on where the customer is buying from, and the region is where
 /// that context lives.
 @Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
 class Region with _$Region {
   /// Creates a [Region] from already-normalised values.
   ///

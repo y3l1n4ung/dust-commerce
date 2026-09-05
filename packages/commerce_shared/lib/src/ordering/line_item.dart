@@ -14,6 +14,7 @@ part 'line_item.g.dart';
 /// The titles are copied for the same reason: an item renamed after it was
 /// added should still show, in the cart, the name it was added under.
 @Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
 class LineItem with _$LineItem {
   /// Creates a [LineItem] from already-validated values.
   const LineItem({

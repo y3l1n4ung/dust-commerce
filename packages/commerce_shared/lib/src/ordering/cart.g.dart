@@ -135,7 +135,7 @@ final class $CartDeserializer
 
 Map<String, Object?> _$CartSerialize(Cart instance) {
   return <String, Object?>{
-    'customerId': instance.customerId,
+    'customer_id': instance.customerId,
     'email': instance.email,
     'id': instance.id,
     'items': instance.items.map((item) => item.toJson()).toList(),
@@ -147,9 +147,9 @@ Map<String, Object?> _$CartToJson(Cart instance) => _$CartSerialize(instance);
 
 // factory Cart.fromJson(Map<String, Object?> json) => _$CartFromJson(json);
 Cart _$CartDeserialize(Map<String, Object?> json) {
-  final customerIdValue = json['customerId'] == null
+  final customerIdValue = json['customer_id'] == null
       ? null
-      : JsonHelper.as<String>(json['customerId'], 'customerId', 'String');
+      : JsonHelper.as<String>(json['customer_id'], 'customer_id', 'String');
   final emailValue = json['email'] == null
       ? null
       : JsonHelper.as<String>(json['email'], 'email', 'String');

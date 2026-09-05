@@ -170,11 +170,11 @@ final class $ProductVariantDeserializer
 
 Map<String, Object?> _$ProductVariantSerialize(ProductVariant instance) {
   return <String, Object?>{
-    'allowBackorder': instance.allowBackorder,
+    'allow_backorder': instance.allowBackorder,
     'id': instance.id,
-    'inventoryQuantity': instance.inventoryQuantity,
-    'manageInventory': instance.manageInventory,
-    'optionValues':
+    'inventory_quantity': instance.inventoryQuantity,
+    'manage_inventory': instance.manageInventory,
+    'option_values':
         instance.optionValues.map((key, value) => MapEntry(key, value)),
     'prices': instance.prices.map((item) => item.toJson()).toList(),
     'sku': instance.sku,
@@ -188,24 +188,24 @@ Map<String, Object?> _$ProductVariantToJson(ProductVariant instance) =>
 // factory ProductVariant.fromJson(Map<String, Object?> json) => _$ProductVariantFromJson(json);
 ProductVariant _$ProductVariantDeserialize(Map<String, Object?> json) {
   final allowBackorderValue = JsonHelper.as<bool>(
-    json['allowBackorder'],
-    'allowBackorder',
+    json['allow_backorder'],
+    'allow_backorder',
     'bool',
   );
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final inventoryQuantityValue = JsonHelper.as<int>(
-    json['inventoryQuantity'],
-    'inventoryQuantity',
+    json['inventory_quantity'],
+    'inventory_quantity',
     'int',
   );
   final manageInventoryValue = JsonHelper.as<bool>(
-    json['manageInventory'],
-    'manageInventory',
+    json['manage_inventory'],
+    'manage_inventory',
     'bool',
   );
   final optionValuesValue = JsonHelper.decodeMap(
-      json['optionValues'],
-      'optionValues',
+      json['option_values'],
+      'option_values',
       (value, valueKey) => JsonHelper.as<String>(value, valueKey, 'String'));
   final pricesValue = JsonHelper.decodeList(json['prices'], 'prices',
       (item, itemKey) => Money.fromJson(JsonHelper.asMap(item, itemKey)));

@@ -12,6 +12,7 @@ part 'cart.g.dart';
 /// rule the total is computed under. A cart that decided those at the end
 /// could total differently from what it displayed all the way through.
 @Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
 class Cart with _$Cart {
   /// Creates a [Cart] from already-validated values.
   const Cart({

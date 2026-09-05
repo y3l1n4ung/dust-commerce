@@ -147,12 +147,12 @@ final class $LineItemDeserializer
 Map<String, Object?> _$LineItemSerialize(LineItem instance) {
   return <String, Object?>{
     'id': instance.id,
-    'productId': instance.productId,
+    'product_id': instance.productId,
     'quantity': instance.quantity,
     'title': instance.title,
-    'unitPrice': instance.unitPrice.toJson(),
-    'variantId': instance.variantId,
-    'variantTitle': instance.variantTitle,
+    'unit_price': instance.unitPrice.toJson(),
+    'variant_id': instance.variantId,
+    'variant_title': instance.variantTitle,
   };
 }
 
@@ -163,23 +163,23 @@ Map<String, Object?> _$LineItemToJson(LineItem instance) =>
 LineItem _$LineItemDeserialize(Map<String, Object?> json) {
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final productIdValue = JsonHelper.as<String>(
-    json['productId'],
-    'productId',
+    json['product_id'],
+    'product_id',
     'String',
   );
   final quantityValue = JsonHelper.as<int>(json['quantity'], 'quantity', 'int');
   final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
   final unitPriceValue = Money.fromJson(
-    JsonHelper.asMap(json['unitPrice'], 'unitPrice'),
+    JsonHelper.asMap(json['unit_price'], 'unit_price'),
   );
   final variantIdValue = JsonHelper.as<String>(
-    json['variantId'],
-    'variantId',
+    json['variant_id'],
+    'variant_id',
     'String',
   );
-  final variantTitleValue = json['variantTitle'] == null
+  final variantTitleValue = json['variant_title'] == null
       ? null
-      : JsonHelper.as<String>(json['variantTitle'], 'variantTitle', 'String');
+      : JsonHelper.as<String>(json['variant_title'], 'variant_title', 'String');
 
   return LineItem(
     id: idValue,

@@ -12,6 +12,7 @@ part 'money.g.dart';
 /// currencies throws rather than converting, since a conversion needs a rate
 /// and a rate needs a date.
 @Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
 class Money with _$Money {
   /// Creates a [Money] from an already-normalised [amount] and [currencyCode].
   ///

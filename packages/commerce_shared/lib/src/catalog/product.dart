@@ -34,6 +34,7 @@ enum ProductStatus {
 /// is common: the name the storefront shows, the handle it routes on, and the
 /// axes along which the variants differ.
 @Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
 class Product with _$Product {
   /// Creates a [Product] from already-validated values.
   const Product({

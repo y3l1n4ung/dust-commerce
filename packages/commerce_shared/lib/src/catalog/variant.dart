@@ -9,6 +9,7 @@ part 'variant.g.dart';
 /// shirt and a large black shirt are different things to sell, count, and
 /// ship, and a model that prices the product cannot express that.
 @Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
 class ProductVariant with _$ProductVariant {
   /// Creates a [ProductVariant] from already-validated values.
   const ProductVariant({

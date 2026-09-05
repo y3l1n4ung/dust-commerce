@@ -9,6 +9,7 @@ part 'option.g.dart';
 /// what lets a storefront render a size selector without inspecting every
 /// variant to discover the sizes.
 @Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
 class ProductOption with _$ProductOption {
   /// Creates a [ProductOption] from already-validated values.
   const ProductOption({

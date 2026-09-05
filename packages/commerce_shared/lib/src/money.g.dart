@@ -108,7 +108,7 @@ final class $MoneyDeserializer
 Map<String, Object?> _$MoneySerialize(Money instance) {
   return <String, Object?>{
     'amount': instance.amount,
-    'currencyCode': instance.currencyCode,
+    'currency_code': instance.currencyCode,
   };
 }
 
@@ -119,8 +119,8 @@ Map<String, Object?> _$MoneyToJson(Money instance) =>
 Money _$MoneyDeserialize(Map<String, Object?> json) {
   final amountValue = JsonHelper.as<int>(json['amount'], 'amount', 'int');
   final currencyCodeValue = JsonHelper.as<String>(
-    json['currencyCode'],
-    'currencyCode',
+    json['currency_code'],
+    'currency_code',
     'String',
   );
 

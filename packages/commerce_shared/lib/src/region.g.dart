@@ -137,11 +137,11 @@ final class $RegionDeserializer
 Map<String, Object?> _$RegionSerialize(Region instance) {
   return <String, Object?>{
     'countries': instance.countries.map((item) => item).toList(),
-    'currencyCode': instance.currencyCode,
+    'currency_code': instance.currencyCode,
     'id': instance.id,
     'name': instance.name,
-    'taxInclusive': instance.taxInclusive,
-    'taxRate': instance.taxRate,
+    'tax_inclusive': instance.taxInclusive,
+    'tax_rate': instance.taxRate,
   };
 }
 
@@ -153,18 +153,18 @@ Region _$RegionDeserialize(Map<String, Object?> json) {
   final countriesValue = JsonHelper.decodeList(json['countries'], 'countries',
       (item, itemKey) => JsonHelper.as<String>(item, itemKey, 'String'));
   final currencyCodeValue = JsonHelper.as<String>(
-    json['currencyCode'],
-    'currencyCode',
+    json['currency_code'],
+    'currency_code',
     'String',
   );
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final nameValue = JsonHelper.as<String>(json['name'], 'name', 'String');
   final taxInclusiveValue = JsonHelper.as<bool>(
-    json['taxInclusive'],
-    'taxInclusive',
+    json['tax_inclusive'],
+    'tax_inclusive',
     'bool',
   );
-  final taxRateValue = JsonHelper.as<int>(json['taxRate'], 'taxRate', 'int');
+  final taxRateValue = JsonHelper.as<int>(json['tax_rate'], 'tax_rate', 'int');
 
   return Region(
     id: idValue,
