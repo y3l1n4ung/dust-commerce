@@ -1,213 +1,171 @@
 {
   "@@locale": "en",
   "@@context": "Translations for `shop` namespace.",
-  "empty": "Nothing for sale yet",
-  "@empty": {
-    "description": "Translation for `shop_empty`."
-  },
-  "back_to_store": "Back to store",
-  "@back_to_store": {
-    "description": "Link from a failed detail route to the store."
-  },
-  "account_title": "Account",
-  "@account_title": {"description": "Customer account navigation label."},
-  "account_welcome_back": "Welcome back",
-  "@account_welcome_back": {"description": "Customer sign-in heading."},
-  "account_sign_in_body": "Sign in to access an enhanced shopping experience.",
-  "@account_sign_in_body": {"description": "Customer sign-in supporting copy."},
-  "account_register_title": "Become a Morrow Member",
-  "@account_register_title": {"description": "Customer registration heading."},
-  "account_register_body": "Create your Morrow Member profile, and get access to an enhanced shopping experience.",
-  "@account_register_body": {"description": "Customer registration supporting copy."},
-  "account_first_name": "First name",
-  "@account_first_name": {"description": "Customer given-name field label."},
-  "account_last_name": "Last name",
-  "@account_last_name": {"description": "Customer family-name field label."},
-  "account_email": "Email",
-  "@account_email": {"description": "Customer email field label."},
-  "account_phone": "Phone",
-  "@account_phone": {"description": "Customer telephone field label."},
-  "account_password": "Password",
-  "@account_password": {"description": "Customer password field label."},
-  "account_show_password": "Show password",
-  "@account_show_password": {"description": "Password visibility action."},
-  "account_hide_password": "Hide password",
-  "@account_hide_password": {"description": "Password visibility action."},
-  "account_sign_in": "Sign in",
-  "@account_sign_in": {"description": "Customer sign-in action."},
-  "account_join": "Join",
-  "@account_join": {"description": "Customer registration action."},
-  "account_join_us": "Join us",
-  "@account_join_us": {"description": "Switches from sign-in to registration."},
   "account_already_member": "Already a member?",
-  "@account_already_member": {"description": "Prompt shown below registration."},
-  "account_not_member": "Not a member?",
-  "@account_not_member": {"description": "Prompt shown below sign-in."},
-  "account_terms": "By creating an account, you agree to our Privacy Policy and Terms of Use.",
-  "@account_terms": {"description": "Registration legal acknowledgement."},
-  "account_required": "This field is required.",
-  "@account_required": {"description": "Required account-field validation."},
-  "account_invalid_email": "Enter a valid email address.",
-  "@account_invalid_email": {"description": "Email-field validation."},
-  "account_password_length": "Use at least 12 characters.",
-  "@account_password_length": {"description": "Password-field validation."},
-  "account_restore_failed": "We could not verify your saved session.",
-  "@account_restore_failed": {"description": "Saved-session restore failure."},
-  "account_hello": "Hello {name}",
-  "@account_hello": {"description": "Authenticated customer greeting.", "placeholders": {"name": {"example": "Ada"}}},
-  "account_signed_in_as": "Signed in as: ",
-  "@account_signed_in_as": {"description": "Label before the signed-in email."},
-  "account_overview": "Overview",
-  "@account_overview": {"description": "Account overview navigation label."},
-  "account_orders": "Orders",
-  "@account_orders": {"description": "Customer order-history navigation label."},
-  "account_orders_body": "View your previous orders and their status.",
-  "@account_orders_body": {"description": "Customer order-history supporting copy."},
-  "account_orders_empty_title": "Nothing to see here",
-  "@account_orders_empty_title": {"description": "Empty order-history heading."},
-  "account_orders_empty_body": "You don't have any orders yet, let us change that.",
-  "@account_orders_empty_body": {"description": "Empty order-history supporting copy."},
-  "account_continue_shopping": "Continue shopping",
-  "@account_continue_shopping": {"description": "Returns from empty order history to the store."},
-  "account_order_items": "{count} items",
-  "@account_order_items": {"description": "Quantity summary for an order.", "placeholders": {"count": {"example": "2"}}},
-  "account_profile": "Profile",
-  "@account_profile": {"description": "Account profile section title."},
+  "@account_already_member": {
+    "description": "Prompt shown below registration."
+  },
   "account_completed": "COMPLETED",
-  "@account_completed": {"description": "Profile completion suffix."},
-  "account_recent_orders": "Recent orders",
-  "@account_recent_orders": {"description": "Recent customer orders heading."},
-  "account_no_orders": "No recent orders",
-  "@account_no_orders": {"description": "Empty recent-order state."},
-  "account_log_out": "Log out",
-  "@account_log_out": {"description": "Customer sign-out action."},
-  "account_questions": "Got questions?",
-  "@account_questions": {"description": "Account help heading."},
-  "account_questions_body": "You can find frequently asked questions and answers on our customer service page.",
-  "@account_questions_body": {"description": "Account help supporting copy."},
+  "@account_completed": {
+    "description": "Profile completion suffix."
+  },
+  "account_continue_shopping": "Continue shopping",
+  "@account_continue_shopping": {
+    "description": "Returns from empty order history to the store."
+  },
   "account_customer_service": "Customer Service",
-  "@account_customer_service": {"description": "Customer service label."},
-  "cart_account_prompt": "Already have an account?",
-  "@cart_account_prompt": {"description": "Guest cart sign-in prompt heading."},
-  "cart_account_prompt_body": "Sign in for a better experience.",
-  "@cart_account_prompt_body": {"description": "Guest cart sign-in prompt copy."},
-  "cart_title": "Cart",
-  "@cart_title": {
-    "description": "Cart page title."
+  "@account_customer_service": {
+    "description": "Customer service label."
   },
-  "cart_load_failed": "Could not load your cart.",
-  "@cart_load_failed": {
-    "description": "Display-safe failure shown when cart restoration fails."
+  "account_email": "Email",
+  "@account_email": {
+    "description": "Customer email field label."
   },
-  "cart_empty_body": "You don't have anything in your cart. Let's change that, use the link below to start browsing our products.",
-  "@cart_empty_body": {
-    "description": "Body copy for the empty cart state."
+  "account_first_name": "First name",
+  "@account_first_name": {
+    "description": "Customer given-name field label."
   },
-  "explore_products": "Explore products",
-  "@explore_products": {
-    "description": "Link from the empty cart to the catalogue."
-  },
-  "cart_item": "Item",
-  "@cart_item": {
-    "description": "Product column heading in the cart table."
-  },
-  "cart_quantity": "Quantity",
-  "@cart_quantity": {
-    "description": "Quantity column heading in the cart table."
-  },
-  "cart_price": "Price",
-  "@cart_price": {
-    "description": "Unit-price column heading in the cart table."
-  },
-  "cart_total": "Total",
-  "@cart_total": {
-    "description": "Line and order total label."
-  },
-  "cart_variant": "Variant: {name}",
-  "@cart_variant": {
-    "description": "Selected variant shown under a cart line title.",
+  "account_hello": "Hello {name}",
+  "@account_hello": {
+    "description": "Authenticated customer greeting.",
     "placeholders": {
       "name": {
-        "example": "Medium / White"
+        "example": "Ada"
       }
     }
   },
-  "cart_remove": "Remove",
-  "@cart_remove": {
-    "description": "Accessible label for removing one cart line."
+  "account_hide_password": "Hide password",
+  "@account_hide_password": {
+    "description": "Password visibility action."
   },
-  "cart_update_failed": "Could not update this item.",
-  "@cart_update_failed": {
-    "description": "Fallback failure shown below a cart line."
+  "account_invalid_email": "Enter a valid email address.",
+  "@account_invalid_email": {
+    "description": "Email-field validation."
   },
-  "cart_summary": "Summary",
-  "@cart_summary": {
-    "description": "Cart totals section heading."
+  "account_join": "Join",
+  "@account_join": {
+    "description": "Customer registration action."
   },
-  "cart_subtotal_excl": "Subtotal (excl. shipping and taxes)",
-  "@cart_subtotal_excl": {
-    "description": "Cart goods subtotal before delivery and tax."
+  "account_join_us": "Join us",
+  "@account_join_us": {
+    "description": "Switches from sign-in to registration."
   },
-  "cart_shipping": "Shipping",
-  "@cart_shipping": {
-    "description": "Cart delivery total label."
+  "account_last_name": "Last name",
+  "@account_last_name": {
+    "description": "Customer family-name field label."
   },
-  "cart_discount": "Discount",
-  "@cart_discount": {
-    "description": "Cart discount total label."
+  "account_log_out": "Log out",
+  "@account_log_out": {
+    "description": "Customer sign-out action."
   },
-  "cart_taxes": "Taxes",
-  "@cart_taxes": {
-    "description": "Cart tax total label."
+  "account_no_orders": "No recent orders",
+  "@account_no_orders": {
+    "description": "Empty recent-order state."
   },
-  "cart_checkout": "Go to checkout",
-  "@cart_checkout": {
-    "description": "Primary action from cart to checkout."
+  "account_not_member": "Not a member?",
+  "@account_not_member": {
+    "description": "Prompt shown below sign-in."
   },
-  "cart_add_promotion_codes": "Add Promotion Code(s)",
-  "@cart_add_promotion_codes": {
-    "description": "Opens the promotion-code form."
-  },
-  "cart_promotion_code": "Promotion code",
-  "@cart_promotion_code": {
-    "description": "Promotion-code field hint."
-  },
-  "cart_apply": "Apply",
-  "@cart_apply": {
-    "description": "Submits a promotion code."
-  },
-  "cart_promotion_failed": "Could not apply this code.",
-  "@cart_promotion_failed": {
-    "description": "Fallback failure shown by the promotion form."
-  },
-  "cart_promotions_applied": "Promotion(s) applied:",
-  "@cart_promotions_applied": {
-    "description": "Heading above applied promotion codes."
-  },
-  "cart_remove_promotion": "Remove promotion",
-  "@cart_remove_promotion": {
-    "description": "Accessible label for removing the applied promotion."
-  },
-  "cart_preview_subtotal": "Subtotal (excl. taxes)",
-  "@cart_preview_subtotal": {
-    "description": "Goods subtotal label in the navigation cart preview."
-  },
-  "cart_go_to_cart": "Go to cart",
-  "@cart_go_to_cart": {
-    "description": "Opens the full cart from its navigation preview."
-  },
-  "cart_preview_quantity": "Quantity: {count}",
-  "@cart_preview_quantity": {
-    "description": "Line quantity in the navigation cart preview.",
+  "account_order_items": "{count} items",
+  "@account_order_items": {
+    "description": "Quantity summary for an order.",
     "placeholders": {
       "count": {
         "example": "2"
       }
     }
   },
-  "cart_preview_empty": "Your shopping bag is empty.",
-  "@cart_preview_empty": {
-    "description": "Empty state in the navigation cart preview."
+  "account_orders": "Orders",
+  "@account_orders": {
+    "description": "Customer order-history navigation label."
+  },
+  "account_orders_body": "View your previous orders and their status.",
+  "@account_orders_body": {
+    "description": "Customer order-history supporting copy."
+  },
+  "account_orders_empty_body": "You don't have any orders yet, let us change that.",
+  "@account_orders_empty_body": {
+    "description": "Empty order-history supporting copy."
+  },
+  "account_orders_empty_title": "Nothing to see here",
+  "@account_orders_empty_title": {
+    "description": "Empty order-history heading."
+  },
+  "account_overview": "Overview",
+  "@account_overview": {
+    "description": "Account overview navigation label."
+  },
+  "account_password": "Password",
+  "@account_password": {
+    "description": "Customer password field label."
+  },
+  "account_password_length": "Use at least 12 characters.",
+  "@account_password_length": {
+    "description": "Password-field validation."
+  },
+  "account_phone": "Phone",
+  "@account_phone": {
+    "description": "Customer telephone field label."
+  },
+  "account_profile": "Profile",
+  "@account_profile": {
+    "description": "Account profile section title."
+  },
+  "account_questions": "Got questions?",
+  "@account_questions": {
+    "description": "Account help heading."
+  },
+  "account_questions_body": "You can find frequently asked questions and answers on our customer service page.",
+  "@account_questions_body": {
+    "description": "Account help supporting copy."
+  },
+  "account_recent_orders": "Recent orders",
+  "@account_recent_orders": {
+    "description": "Recent customer orders heading."
+  },
+  "account_register_body": "Create your Morrow Member profile, and get access to an enhanced shopping experience.",
+  "@account_register_body": {
+    "description": "Customer registration supporting copy."
+  },
+  "account_register_title": "Become a Morrow Member",
+  "@account_register_title": {
+    "description": "Customer registration heading."
+  },
+  "account_required": "This field is required.",
+  "@account_required": {
+    "description": "Required account-field validation."
+  },
+  "account_restore_failed": "We could not verify your saved session.",
+  "@account_restore_failed": {
+    "description": "Saved-session restore failure."
+  },
+  "account_show_password": "Show password",
+  "@account_show_password": {
+    "description": "Password visibility action."
+  },
+  "account_sign_in": "Sign in",
+  "@account_sign_in": {
+    "description": "Customer sign-in action."
+  },
+  "account_sign_in_body": "Sign in to access an enhanced shopping experience.",
+  "@account_sign_in_body": {
+    "description": "Customer sign-in supporting copy."
+  },
+  "account_signed_in_as": "Signed in as: ",
+  "@account_signed_in_as": {
+    "description": "Label before the signed-in email."
+  },
+  "account_terms": "By creating an account, you agree to our Privacy Policy and Terms of Use.",
+  "@account_terms": {
+    "description": "Registration legal acknowledgement."
+  },
+  "account_title": "Account",
+  "@account_title": {
+    "description": "Customer account navigation label."
+  },
+  "account_welcome_back": "Welcome back",
+  "@account_welcome_back": {
+    "description": "Customer sign-in heading."
   },
   "add_to_cart": "Add to cart",
   "@add_to_cart": {
@@ -221,9 +179,33 @@
   "@added_to_cart": {
     "description": "Confirms a successful add-to-cart request."
   },
+  "back_to_store": "Back to store",
+  "@back_to_store": {
+    "description": "Link from a failed detail route to the store."
+  },
   "brand": "MORROW",
   "@brand": {
     "description": "Storefront wordmark."
+  },
+  "cart_account_prompt": "Already have an account?",
+  "@cart_account_prompt": {
+    "description": "Guest cart sign-in prompt heading."
+  },
+  "cart_account_prompt_body": "Sign in for a better experience.",
+  "@cart_account_prompt_body": {
+    "description": "Guest cart sign-in prompt copy."
+  },
+  "cart_add_promotion_codes": "Add Promotion Code(s)",
+  "@cart_add_promotion_codes": {
+    "description": "Opens the promotion-code form."
+  },
+  "cart_apply": "Apply",
+  "@cart_apply": {
+    "description": "Submits a promotion code."
+  },
+  "cart_checkout": "Go to checkout",
+  "@cart_checkout": {
+    "description": "Primary action from cart to checkout."
   },
   "cart_count": "Cart ({count})",
   "@cart_count": {
@@ -234,9 +216,375 @@
       }
     }
   },
+  "cart_discount": "Discount",
+  "@cart_discount": {
+    "description": "Cart discount total label."
+  },
+  "cart_empty_body": "You don't have anything in your cart. Let's change that, use the link below to start browsing our products.",
+  "@cart_empty_body": {
+    "description": "Body copy for the empty cart state."
+  },
+  "cart_go_to_cart": "Go to cart",
+  "@cart_go_to_cart": {
+    "description": "Opens the full cart from its navigation preview."
+  },
+  "cart_item": "Item",
+  "@cart_item": {
+    "description": "Product column heading in the cart table."
+  },
+  "cart_load_failed": "Could not load your cart.",
+  "@cart_load_failed": {
+    "description": "Display-safe failure shown when cart restoration fails."
+  },
+  "cart_preview_empty": "Your shopping bag is empty.",
+  "@cart_preview_empty": {
+    "description": "Empty state in the navigation cart preview."
+  },
+  "cart_preview_quantity": "Quantity: {count}",
+  "@cart_preview_quantity": {
+    "description": "Line quantity in the navigation cart preview.",
+    "placeholders": {
+      "count": {
+        "example": "2"
+      }
+    }
+  },
+  "cart_preview_subtotal": "Subtotal (excl. taxes)",
+  "@cart_preview_subtotal": {
+    "description": "Goods subtotal label in the navigation cart preview."
+  },
+  "cart_price": "Price",
+  "@cart_price": {
+    "description": "Unit-price column heading in the cart table."
+  },
+  "cart_promotion_code": "Promotion code",
+  "@cart_promotion_code": {
+    "description": "Promotion-code field hint."
+  },
+  "cart_promotion_failed": "Could not apply this code.",
+  "@cart_promotion_failed": {
+    "description": "Fallback failure shown by the promotion form."
+  },
+  "cart_promotions_applied": "Promotion(s) applied:",
+  "@cart_promotions_applied": {
+    "description": "Heading above applied promotion codes."
+  },
+  "cart_quantity": "Quantity",
+  "@cart_quantity": {
+    "description": "Quantity column heading in the cart table."
+  },
+  "cart_remove": "Remove",
+  "@cart_remove": {
+    "description": "Accessible label for removing one cart line."
+  },
+  "cart_remove_promotion": "Remove promotion",
+  "@cart_remove_promotion": {
+    "description": "Accessible label for removing the applied promotion."
+  },
+  "cart_shipping": "Shipping",
+  "@cart_shipping": {
+    "description": "Cart delivery total label."
+  },
+  "cart_subtotal_excl": "Subtotal (excl. shipping and taxes)",
+  "@cart_subtotal_excl": {
+    "description": "Cart goods subtotal before delivery and tax."
+  },
+  "cart_summary": "Summary",
+  "@cart_summary": {
+    "description": "Cart totals section heading."
+  },
+  "cart_taxes": "Taxes",
+  "@cart_taxes": {
+    "description": "Cart tax total label."
+  },
+  "cart_title": "Cart",
+  "@cart_title": {
+    "description": "Cart page title."
+  },
+  "cart_total": "Total",
+  "@cart_total": {
+    "description": "Line and order total label."
+  },
+  "cart_update_failed": "Could not update this item.",
+  "@cart_update_failed": {
+    "description": "Fallback failure shown below a cart line."
+  },
+  "cart_variant": "Variant: {name}",
+  "@cart_variant": {
+    "description": "Selected variant shown under a cart line title.",
+    "placeholders": {
+      "name": {
+        "example": "Medium / White"
+      }
+    }
+  },
+  "checkout_address": "Address",
+  "@checkout_address": {
+    "description": "Translation for `shop_checkout_address`."
+  },
+  "checkout_address_line_2": "Apartment / Company",
+  "@checkout_address_line_2": {
+    "description": "Translation for `shop_checkout_address_line_2`."
+  },
+  "checkout_awaiting_payment": "Awaiting payment",
+  "@checkout_awaiting_payment": {
+    "description": "Translation for `shop_checkout_awaiting_payment`."
+  },
+  "checkout_back": "BACK",
+  "@checkout_back": {
+    "description": "Translation for `shop_checkout_back`."
+  },
+  "checkout_back_cart": "BACK TO SHOPPING CART",
+  "@checkout_back_cart": {
+    "description": "Translation for `shop_checkout_back_cart`."
+  },
+  "checkout_billing_address": "Billing address",
+  "@checkout_billing_address": {
+    "description": "Translation for `shop_checkout_billing_address`."
+  },
+  "checkout_captured": "Captured",
+  "@checkout_captured": {
+    "description": "Translation for `shop_checkout_captured`."
+  },
+  "checkout_choose_country": "Choose a country.",
+  "@checkout_choose_country": {
+    "description": "Translation for `shop_checkout_choose_country`."
+  },
+  "checkout_city": "City",
+  "@checkout_city": {
+    "description": "Translation for `shop_checkout_city`."
+  },
+  "checkout_confirmation_sent": "We have sent the order confirmation details to {email}.",
+  "@checkout_confirmation_sent": {
+    "description": "Translation for `shop_checkout_confirmation_sent`.",
+    "placeholders": {
+      "email": {
+        "example": "user@example.com"
+      }
+    }
+  },
+  "checkout_contact": "Contact",
+  "@checkout_contact": {
+    "description": "Translation for `shop_checkout_contact`."
+  },
+  "checkout_continue_delivery": "Continue to delivery",
+  "@checkout_continue_delivery": {
+    "description": "Translation for `shop_checkout_continue_delivery`."
+  },
+  "checkout_continue_payment": "Continue to payment",
+  "@checkout_continue_payment": {
+    "description": "Translation for `shop_checkout_continue_payment`."
+  },
+  "checkout_continue_review": "Continue to review",
+  "@checkout_continue_review": {
+    "description": "Translation for `shop_checkout_continue_review`."
+  },
+  "checkout_country": "Country",
+  "@checkout_country": {
+    "description": "Translation for `shop_checkout_country`."
+  },
+  "checkout_delivery": "Delivery",
+  "@checkout_delivery": {
+    "description": "Translation for `shop_checkout_delivery`."
+  },
+  "checkout_delivery_prompt": "How would you like your order delivered",
+  "@checkout_delivery_prompt": {
+    "description": "Translation for `shop_checkout_delivery_prompt`."
+  },
+  "checkout_discount": "Discount",
+  "@checkout_discount": {
+    "description": "Translation for `shop_checkout_discount`."
+  },
+  "checkout_edit": "Edit",
+  "@checkout_edit": {
+    "description": "Translation for `shop_checkout_edit`."
+  },
+  "checkout_email": "Email",
+  "@checkout_email": {
+    "description": "Translation for `shop_checkout_email`."
+  },
+  "checkout_first_name": "First name",
+  "@checkout_first_name": {
+    "description": "Translation for `shop_checkout_first_name`."
+  },
+  "checkout_frontpage": "Go to frontpage",
+  "@checkout_frontpage": {
+    "description": "Translation for `shop_checkout_frontpage`."
+  },
+  "checkout_help_body": "If you have questions about your order, contact our customer service team.",
+  "@checkout_help_body": {
+    "description": "Translation for `shop_checkout_help_body`."
+  },
+  "checkout_in_cart": "In your Cart",
+  "@checkout_in_cart": {
+    "description": "Translation for `shop_checkout_in_cart`."
+  },
+  "checkout_last_name": "Last name",
+  "@checkout_last_name": {
+    "description": "Translation for `shop_checkout_last_name`."
+  },
+  "checkout_manual_payment": "Manual Payment",
+  "@checkout_manual_payment": {
+    "description": "Translation for `shop_checkout_manual_payment`."
+  },
+  "checkout_method": "Method",
+  "@checkout_method": {
+    "description": "Translation for `shop_checkout_method`."
+  },
+  "checkout_need_help": "Need help?",
+  "@checkout_need_help": {
+    "description": "Translation for `shop_checkout_need_help`."
+  },
+  "checkout_order_date": "Order date: {date}",
+  "@checkout_order_date": {
+    "description": "Translation for `shop_checkout_order_date`.",
+    "placeholders": {
+      "date": {
+        "example": "2026-01-01"
+      }
+    }
+  },
+  "checkout_order_number": "Order number: {id}",
+  "@checkout_order_number": {
+    "description": "Translation for `shop_checkout_order_number`.",
+    "placeholders": {
+      "id": {
+        "example": "id"
+      }
+    }
+  },
+  "checkout_payment": "Payment",
+  "@checkout_payment": {
+    "description": "Translation for `shop_checkout_payment`."
+  },
+  "checkout_payment_details": "Payment details",
+  "@checkout_payment_details": {
+    "description": "Translation for `shop_checkout_payment_details`."
+  },
+  "checkout_payment_method": "Payment method",
+  "@checkout_payment_method": {
+    "description": "Translation for `shop_checkout_payment_method`."
+  },
+  "checkout_payment_next_step": "Another step will appear",
+  "@checkout_payment_next_step": {
+    "description": "Translation for `shop_checkout_payment_next_step`."
+  },
+  "checkout_phone": "Phone",
+  "@checkout_phone": {
+    "description": "Translation for `shop_checkout_phone`."
+  },
+  "checkout_place_order": "Place Order",
+  "@checkout_place_order": {
+    "description": "Translation for `shop_checkout_place_order`."
+  },
+  "checkout_postal_code": "Postal code",
+  "@checkout_postal_code": {
+    "description": "Translation for `shop_checkout_postal_code`."
+  },
+  "checkout_province": "State / Province",
+  "@checkout_province": {
+    "description": "Translation for `shop_checkout_province`."
+  },
+  "checkout_quantity": "Quantity: {count}",
+  "@checkout_quantity": {
+    "description": "Translation for `shop_checkout_quantity`.",
+    "placeholders": {
+      "count": {
+        "example": "1"
+      }
+    }
+  },
+  "checkout_receipt_not_found": "Order confirmation not found.",
+  "@checkout_receipt_not_found": {
+    "description": "Translation for `shop_checkout_receipt_not_found`."
+  },
+  "checkout_required": "This field is required.",
+  "@checkout_required": {
+    "description": "Translation for `shop_checkout_required`."
+  },
+  "checkout_review": "Review",
+  "@checkout_review": {
+    "description": "Translation for `shop_checkout_review`."
+  },
+  "checkout_review_terms": "By clicking the Place Order button, you confirm that you have read, understand and accept our Terms of Use, Terms of Sale and Returns Policy and acknowledge that you have read Morrow's Privacy Policy.",
+  "@checkout_review_terms": {
+    "description": "Translation for `shop_checkout_review_terms`."
+  },
+  "checkout_same_billing": "Billing address same as shipping address",
+  "@checkout_same_billing": {
+    "description": "Translation for `shop_checkout_same_billing`."
+  },
+  "checkout_same_billing_summary": "Billing and delivery address are the same.",
+  "@checkout_same_billing_summary": {
+    "description": "Translation for `shop_checkout_same_billing_summary`."
+  },
+  "checkout_shipping": "Shipping",
+  "@checkout_shipping": {
+    "description": "Translation for `shop_checkout_shipping`."
+  },
+  "checkout_shipping_address": "Shipping Address",
+  "@checkout_shipping_address": {
+    "description": "Translation for `shop_checkout_shipping_address`."
+  },
+  "checkout_shipping_method": "Shipping method",
+  "@checkout_shipping_method": {
+    "description": "Translation for `shop_checkout_shipping_method`."
+  },
+  "checkout_subtotal": "Subtotal",
+  "@checkout_subtotal": {
+    "description": "Translation for `shop_checkout_subtotal`."
+  },
+  "checkout_summary": "Summary",
+  "@checkout_summary": {
+    "description": "Translation for `shop_checkout_summary`."
+  },
+  "checkout_taxes": "Taxes",
+  "@checkout_taxes": {
+    "description": "Translation for `shop_checkout_taxes`."
+  },
+  "checkout_thank_you": "Thank you!\nYour order was placed successfully.",
+  "@checkout_thank_you": {
+    "description": "Translation for `shop_checkout_thank_you`."
+  },
+  "checkout_total": "Total",
+  "@checkout_total": {
+    "description": "Translation for `shop_checkout_total`."
+  },
+  "dimensions": "Dimensions",
+  "@dimensions": {
+    "description": "Product dimensions fact label."
+  },
+  "easy_returns": "Easy returns",
+  "@easy_returns": {
+    "description": "Return policy title."
+  },
+  "easy_returns_body": "Return your product for a refund. We'll make the process hassle-free.",
+  "@easy_returns_body": {
+    "description": "Return policy detail."
+  },
+  "empty": "Nothing for sale yet",
+  "@empty": {
+    "description": "Translation for `shop_empty`."
+  },
+  "explore_products": "Explore products",
+  "@explore_products": {
+    "description": "Link from the empty cart to the catalogue."
+  },
+  "fast_delivery": "Fast delivery",
+  "@fast_delivery": {
+    "description": "Fast-delivery policy title."
+  },
+  "fast_delivery_body": "Your package will arrive in 3-5 business days at your pick up location or at home.",
+  "@fast_delivery_body": {
+    "description": "Fast-delivery policy detail."
+  },
   "featured_products": "Featured products",
   "@featured_products": {
     "description": "Heading above the home product grid."
+  },
+  "from_price": "From ",
+  "@from_price": {
+    "description": "Prefix shown before the cheapest unselected variant price."
   },
   "hero_subtitle": "Powered by dust",
   "@hero_subtitle": {
@@ -250,13 +598,29 @@
   "@home": {
     "description": "Home navigation link."
   },
+  "material": "Material",
+  "@material": {
+    "description": "Product material fact label."
+  },
   "menu": "Menu",
   "@menu": {
     "description": "Opens storefront navigation."
   },
+  "not_found": "That page does not exist",
+  "@not_found": {
+    "description": "Translation for `shop_not_found`."
+  },
+  "origin_country": "Country of origin",
+  "@origin_country": {
+    "description": "Product origin fact label."
+  },
   "out_of_stock": "Out of stock",
   "@out_of_stock": {
     "description": "Unavailable selected variant label."
+  },
+  "price_separator": "—",
+  "@price_separator": {
+    "description": "Separator between product title and price."
   },
   "product_count": "{count} products",
   "@product_count": {
@@ -267,82 +631,17 @@
       }
     }
   },
-  "products_action": "Shop products",
-  "@products_action": {
-    "description": "Scrolls from the hero to the product grid."
-  },
-  "select_option": "Select {name}",
-  "@select_option": {
-    "description": "Prompts for a named product option.",
-    "placeholders": {
-      "name": {
-        "example": "Size"
-      }
-    }
-  },
-  "select_variant": "Select variant",
-  "@select_variant": {
-    "description": "Prompts for a complete option selection."
-  },
-  "from_price": "From ",
-  "@from_price": {
-    "description": "Prefix shown before the cheapest unselected variant price."
-  },
   "product_information": "Product Information",
   "@product_information": {
     "description": "Product facts accordion title."
-  },
-  "shipping_returns": "Shipping & Returns",
-  "@shipping_returns": {
-    "description": "Delivery policy accordion title."
-  },
-  "material": "Material",
-  "@material": {
-    "description": "Product material fact label."
-  },
-  "origin_country": "Country of origin",
-  "@origin_country": {
-    "description": "Product origin fact label."
   },
   "product_type": "Type",
   "@product_type": {
     "description": "Product type fact label."
   },
-  "weight": "Weight",
-  "@weight": {
-    "description": "Product weight fact label."
-  },
-  "dimensions": "Dimensions",
-  "@dimensions": {
-    "description": "Product dimensions fact label."
-  },
-  "fast_delivery": "Fast delivery",
-  "@fast_delivery": {
-    "description": "Fast-delivery policy title."
-  },
-  "fast_delivery_body": "Your package will arrive in 3-5 business days at your pick up location or at home.",
-  "@fast_delivery_body": {
-    "description": "Fast-delivery policy detail."
-  },
-  "simple_exchanges": "Simple exchanges",
-  "@simple_exchanges": {
-    "description": "Exchange policy title."
-  },
-  "simple_exchanges_body": "If the fit is not right, we'll exchange your product for a new one.",
-  "@simple_exchanges_body": {
-    "description": "Exchange policy detail."
-  },
-  "easy_returns": "Easy returns",
-  "@easy_returns": {
-    "description": "Return policy title."
-  },
-  "easy_returns_body": "Return your product for a refund. We'll make the process hassle-free.",
-  "@easy_returns_body": {
-    "description": "Return policy detail."
-  },
-  "select_options": "Select options",
-  "@select_options": {
-    "description": "Opens product options from the sticky mobile purchase bar."
+  "products_action": "Shop products",
+  "@products_action": {
+    "description": "Scrolls from the hero to the product grid."
   },
   "related_products": "Related products",
   "@related_products": {
@@ -356,17 +655,38 @@
   "@related_products_failed": {
     "description": "Display-safe recommendation failure."
   },
-  "price_separator": "—",
-  "@price_separator": {
-    "description": "Separator between product title and price."
-  },
-  "not_found": "That page does not exist",
-  "@not_found": {
-    "description": "Translation for `shop_not_found`."
-  },
   "retry": "Try again",
   "@retry": {
     "description": "Translation for `shop_retry`."
+  },
+  "select_option": "Select {name}",
+  "@select_option": {
+    "description": "Prompts for a named product option.",
+    "placeholders": {
+      "name": {
+        "example": "Size"
+      }
+    }
+  },
+  "select_options": "Select options",
+  "@select_options": {
+    "description": "Opens product options from the sticky mobile purchase bar."
+  },
+  "select_variant": "Select variant",
+  "@select_variant": {
+    "description": "Prompts for a complete option selection."
+  },
+  "shipping_returns": "Shipping & Returns",
+  "@shipping_returns": {
+    "description": "Delivery policy accordion title."
+  },
+  "simple_exchanges": "Simple exchanges",
+  "@simple_exchanges": {
+    "description": "Exchange policy title."
+  },
+  "simple_exchanges_body": "If the fit is not right, we'll exchange your product for a new one.",
+  "@simple_exchanges_body": {
+    "description": "Exchange policy detail."
   },
   "sold_out": "Sold out",
   "@sold_out": {
@@ -375,5 +695,9 @@
   "title": "Shop",
   "@title": {
     "description": "Translation for `shop_title`."
+  },
+  "weight": "Weight",
+  "@weight": {
+    "description": "Product weight fact label."
   }
 }
