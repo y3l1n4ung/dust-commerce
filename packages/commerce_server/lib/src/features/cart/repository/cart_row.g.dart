@@ -211,8 +211,7 @@ LineItemRow _$LineItemRowFromRow(Row row) {
 }
 
 /// Row deserializer for [LineItemRow].
-final class $LineItemRowRowDeserializer
-    implements RowDeserializer<LineItemRow> {
+final class $LineItemRowRowDeserializer implements RowDeserializer<LineItemRow> {
   const $LineItemRowRowDeserializer();
 
   @override

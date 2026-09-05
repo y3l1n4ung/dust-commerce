@@ -13,12 +13,9 @@
 
 part of 'responses.dart';
 
-const DeepCollectionEquality _productPageResponseProductsEquality =
-    DeepCollectionEquality();
-const DeepCollectionEquality _cartResponseItemsEquality =
-    DeepCollectionEquality();
-const DeepCollectionEquality _orderListResponseOrdersEquality =
-    DeepCollectionEquality();
+const DeepCollectionEquality _productPageResponseProductsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _cartResponseItemsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _orderListResponseOrdersEquality = DeepCollectionEquality();
 
 mixin _$ProductPageResponse implements Serializable {
   @override
@@ -42,8 +39,7 @@ mixin _$ProductPageResponse implements Serializable {
             other.count == self.count &&
             other.limit == self.limit &&
             other.offset == self.offset &&
-            _productPageResponseProductsEquality.equals(
-                other.products, self.products) &&
+            _productPageResponseProductsEquality.equals(other.products, self.products) &&
             other.total == self.total;
   }
 
@@ -195,96 +191,72 @@ mixin _$AddLineRequest implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
-final class $ProductPageResponseSerializer
-    implements Serializer<ProductPageResponse, Map<String, Object?>> {
+final class $ProductPageResponseSerializer implements Serializer<ProductPageResponse, Map<String, Object?>> {
   const $ProductPageResponseSerializer();
 
   @override
-  Map<String, Object?> serialize(ProductPageResponse value) =>
-      _$ProductPageResponseSerialize(value);
+  Map<String, Object?> serialize(ProductPageResponse value) => _$ProductPageResponseSerialize(value);
 }
-
-final class $ProductPageResponseDeserializer
-    implements Deserializer<ProductPageResponse, Map<String, Object?>> {
+final class $ProductPageResponseDeserializer implements Deserializer<ProductPageResponse, Map<String, Object?>> {
   const $ProductPageResponseDeserializer();
 
   @override
-  ProductPageResponse deserialize(Map<String, Object?> json) =>
-      _$ProductPageResponseDeserialize(json);
+  ProductPageResponse deserialize(Map<String, Object?> json) => _$ProductPageResponseDeserialize(json);
 }
-
-final class $CartResponseSerializer
-    implements Serializer<CartResponse, Map<String, Object?>> {
+final class $CartResponseSerializer implements Serializer<CartResponse, Map<String, Object?>> {
   const $CartResponseSerializer();
 
   @override
-  Map<String, Object?> serialize(CartResponse value) =>
-      _$CartResponseSerialize(value);
+  Map<String, Object?> serialize(CartResponse value) => _$CartResponseSerialize(value);
 }
-
-final class $CartResponseDeserializer
-    implements Deserializer<CartResponse, Map<String, Object?>> {
+final class $CartResponseDeserializer implements Deserializer<CartResponse, Map<String, Object?>> {
   const $CartResponseDeserializer();
 
   @override
-  CartResponse deserialize(Map<String, Object?> json) =>
-      _$CartResponseDeserialize(json);
+  CartResponse deserialize(Map<String, Object?> json) => _$CartResponseDeserialize(json);
 }
-
-final class $OrderListResponseSerializer
-    implements Serializer<OrderListResponse, Map<String, Object?>> {
+final class $OrderListResponseSerializer implements Serializer<OrderListResponse, Map<String, Object?>> {
   const $OrderListResponseSerializer();
 
   @override
-  Map<String, Object?> serialize(OrderListResponse value) =>
-      _$OrderListResponseSerialize(value);
+  Map<String, Object?> serialize(OrderListResponse value) => _$OrderListResponseSerialize(value);
 }
-
-final class $OrderListResponseDeserializer
-    implements Deserializer<OrderListResponse, Map<String, Object?>> {
+final class $OrderListResponseDeserializer implements Deserializer<OrderListResponse, Map<String, Object?>> {
   const $OrderListResponseDeserializer();
 
   @override
-  OrderListResponse deserialize(Map<String, Object?> json) =>
-      _$OrderListResponseDeserialize(json);
+  OrderListResponse deserialize(Map<String, Object?> json) => _$OrderListResponseDeserialize(json);
 }
-
-final class $AddLineRequestSerializer
-    implements Serializer<AddLineRequest, Map<String, Object?>> {
+final class $AddLineRequestSerializer implements Serializer<AddLineRequest, Map<String, Object?>> {
   const $AddLineRequestSerializer();
 
   @override
-  Map<String, Object?> serialize(AddLineRequest value) =>
-      _$AddLineRequestSerialize(value);
+  Map<String, Object?> serialize(AddLineRequest value) => _$AddLineRequestSerialize(value);
 }
-
-final class $AddLineRequestDeserializer
-    implements Deserializer<AddLineRequest, Map<String, Object?>> {
+final class $AddLineRequestDeserializer implements Deserializer<AddLineRequest, Map<String, Object?>> {
   const $AddLineRequestDeserializer();
 
   @override
-  AddLineRequest deserialize(Map<String, Object?> json) =>
-      _$AddLineRequestDeserialize(json);
+  AddLineRequest deserialize(Map<String, Object?> json) => _$AddLineRequestDeserialize(json);
 }
 
-Map<String, Object?> _$ProductPageResponseSerialize(
-    ProductPageResponse instance) {
+Map<String, Object?> _$ProductPageResponseSerialize(ProductPageResponse instance) {
   return <String, Object?>{
     'count': instance.count,
     'limit': instance.limit,
     'offset': instance.offset,
-    'products': instance.products.map((item) => item.toJson()).toList(),
+    'products': instance.products
+        .map((item) => item.toJson())
+        .toList(),
     'total': instance.total,
   };
 }
 
-Map<String, Object?> _$ProductPageResponseToJson(
-        ProductPageResponse instance) =>
+Map<String, Object?> _$ProductPageResponseToJson(ProductPageResponse instance) =>
     _$ProductPageResponseSerialize(instance);
 
 // factory ProductPageResponse.fromJson(Map<String, Object?> json) => _$ProductPageResponseFromJson(json);
-ProductPageResponse _$ProductPageResponseDeserialize(
-    Map<String, Object?> json) {
+ProductPageResponse _$ProductPageResponseDeserialize(Map<String, Object?> json) {
   final countValue = JsonHelper.as<int>(json['count'], 'count', 'int');
   final limitValue = JsonHelper.as<int>(json['limit'], 'limit', 'int');
   final offsetValue = JsonHelper.as<int>(json['offset'], 'offset', 'int');
@@ -310,7 +282,9 @@ Map<String, Object?> _$CartResponseSerialize(CartResponse instance) {
     'email': instance.email,
     'id': instance.id,
     'item_count': instance.itemCount,
-    'items': instance.items.map((item) => item.toJson()).toList(),
+    'items': instance.items
+        .map((item) => item.toJson())
+        .toList(),
     'region': instance.region.toJson(),
     'subtotal': instance.subtotal.toJson(),
     'tax': instance.tax.toJson(),
@@ -365,7 +339,9 @@ CartResponse _$CartResponseFromJson(Map<String, Object?> json) =>
 Map<String, Object?> _$OrderListResponseSerialize(OrderListResponse instance) {
   return <String, Object?>{
     'count': instance.count,
-    'orders': instance.orders.map((item) => item.toJson()).toList(),
+    'orders': instance.orders
+        .map((item) => item.toJson())
+        .toList(),
   };
 }
 

@@ -37,10 +37,8 @@ String? commerceRouteBranch(CommerceRoute route) {
 
 RouteDebugInfo commerceRouteDebugInfo(CommerceRoute route) {
   return switch (route) {
-    CatalogRoute() => const RouteDebugInfo(
-        name: 'catalog', shell: null, branch: null, resultType: 'void'),
-    NotFoundRoute() => const RouteDebugInfo(
-        name: 'notFound', shell: null, branch: null, resultType: 'void'),
+    CatalogRoute() => const RouteDebugInfo(name: 'catalog', shell: null, branch: null, resultType: 'void'),
+    NotFoundRoute() => const RouteDebugInfo(name: 'notFound', shell: null, branch: null, resultType: 'void'),
   };
 }
 

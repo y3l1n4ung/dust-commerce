@@ -13,11 +13,8 @@
 
 part of 'variant.dart';
 
-const DeepCollectionEquality _productVariantOptionValuesEquality =
-    DeepCollectionEquality();
-const DeepCollectionEquality _productVariantPricesEquality =
-    DeepCollectionEquality();
-
+const DeepCollectionEquality _productVariantOptionValuesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _productVariantPricesEquality = DeepCollectionEquality();
 final class _ProductVariantCopyWithUnset {
   const _ProductVariantCopyWithUnset();
 }
@@ -50,8 +47,7 @@ mixin _$ProductVariant implements Serializable {
             other.id == self.id &&
             other.inventoryQuantity == self.inventoryQuantity &&
             other.manageInventory == self.manageInventory &&
-            _productVariantOptionValuesEquality.equals(
-                other.optionValues, self.optionValues) &&
+            _productVariantOptionValuesEquality.equals(other.optionValues, self.optionValues) &&
             _productVariantPricesEquality.equals(other.prices, self.prices) &&
             other.sku == self.sku &&
             other.title == self.title;
@@ -81,9 +77,7 @@ mixin _$ProductVariant implements Serializable {
   /// final cleared = productVariant.copyWith(sku: null);
   /// ```
   @pragma('vm:prefer-inline')
-  _$ProductVariantCopyWith<ProductVariant> get copyWith =>
-      _$ProductVariantCopyWithImpl<ProductVariant>(
-          this as ProductVariant, (value) => value);
+  _$ProductVariantCopyWith<ProductVariant> get copyWith => _$ProductVariantCopyWithImpl<ProductVariant>(this as ProductVariant, (value) => value);
 
   Map<String, Object?> serialize() =>
       _$ProductVariantSerialize(this as ProductVariant);
@@ -108,8 +102,7 @@ abstract class _$ProductVariantCopyWith<$Res> {
 }
 
 /// @nodoc
-final class _$ProductVariantCopyWithImpl<$Res>
-    implements _$ProductVariantCopyWith<$Res> {
+final class _$ProductVariantCopyWithImpl<$Res> implements _$ProductVariantCopyWith<$Res> {
   const _$ProductVariantCopyWithImpl(this._self, this._then);
 
   final ProductVariant _self;
@@ -127,45 +120,33 @@ final class _$ProductVariantCopyWithImpl<$Res>
     Object? sku = _productVariantCopyWithUnset,
     Object? title = null,
   }) {
-    return _then(ProductVariant(
-      id: id == null ? _self.id : id as String,
-      title: title == null ? _self.title : title as String,
-      prices: prices == null ? _self.prices : prices as List<Money>,
-      optionValues: optionValues == null
-          ? _self.optionValues
-          : optionValues as Map<String, String>,
-      sku: identical(sku, _productVariantCopyWithUnset)
-          ? _self.sku
-          : sku as String?,
-      inventoryQuantity: inventoryQuantity == null
-          ? _self.inventoryQuantity
-          : inventoryQuantity as int,
-      manageInventory: manageInventory == null
-          ? _self.manageInventory
-          : manageInventory as bool,
-      allowBackorder: allowBackorder == null
-          ? _self.allowBackorder
-          : allowBackorder as bool,
-    ));
+    return _then(
+      ProductVariant(
+        id: id == null ? _self.id : id as String,
+        title: title == null ? _self.title : title as String,
+        prices: prices == null ? _self.prices : prices as List<Money>,
+        optionValues: optionValues == null ? _self.optionValues : optionValues as Map<String, String>,
+        sku: identical(sku, _productVariantCopyWithUnset)
+            ? _self.sku
+            : sku as String?,
+        inventoryQuantity: inventoryQuantity == null ? _self.inventoryQuantity : inventoryQuantity as int,
+        manageInventory: manageInventory == null ? _self.manageInventory : manageInventory as bool,
+        allowBackorder: allowBackorder == null ? _self.allowBackorder : allowBackorder as bool,
+      )
+    );
   }
 }
-
-final class $ProductVariantSerializer
-    implements Serializer<ProductVariant, Map<String, Object?>> {
+final class $ProductVariantSerializer implements Serializer<ProductVariant, Map<String, Object?>> {
   const $ProductVariantSerializer();
 
   @override
-  Map<String, Object?> serialize(ProductVariant value) =>
-      _$ProductVariantSerialize(value);
+  Map<String, Object?> serialize(ProductVariant value) => _$ProductVariantSerialize(value);
 }
-
-final class $ProductVariantDeserializer
-    implements Deserializer<ProductVariant, Map<String, Object?>> {
+final class $ProductVariantDeserializer implements Deserializer<ProductVariant, Map<String, Object?>> {
   const $ProductVariantDeserializer();
 
   @override
-  ProductVariant deserialize(Map<String, Object?> json) =>
-      _$ProductVariantDeserialize(json);
+  ProductVariant deserialize(Map<String, Object?> json) => _$ProductVariantDeserialize(json);
 }
 
 Map<String, Object?> _$ProductVariantSerialize(ProductVariant instance) {
@@ -174,9 +155,11 @@ Map<String, Object?> _$ProductVariantSerialize(ProductVariant instance) {
     'id': instance.id,
     'inventory_quantity': instance.inventoryQuantity,
     'manage_inventory': instance.manageInventory,
-    'option_values':
-        instance.optionValues.map((key, value) => MapEntry(key, value)),
-    'prices': instance.prices.map((item) => item.toJson()).toList(),
+    'option_values': instance.optionValues
+        .map((key, value) => MapEntry(key, value)),
+    'prices': instance.prices
+        .map((item) => item.toJson())
+        .toList(),
     'sku': instance.sku,
     'title': instance.title,
   };
@@ -203,9 +186,7 @@ ProductVariant _$ProductVariantDeserialize(Map<String, Object?> json) {
     'manage_inventory',
     'bool',
   );
-  final optionValuesValue = JsonHelper.decodeMap(
-      json['option_values'],
-      'option_values',
+  final optionValuesValue = JsonHelper.decodeMap(json['option_values'], 'option_values',
       (value, valueKey) => JsonHelper.as<String>(value, valueKey, 'String'));
   final pricesValue = JsonHelper.decodeList(json['prices'], 'prices',
       (item, itemKey) => Money.fromJson(JsonHelper.asMap(item, itemKey)));

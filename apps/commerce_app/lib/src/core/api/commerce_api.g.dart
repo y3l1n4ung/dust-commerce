@@ -228,9 +228,7 @@ final class _$CommerceApi implements CommerceApi {
         _options
             .compose(
               _dio.options,
-              '/store/carts/' +
-                  Uri.encodeComponent(id.toString()) +
-                  '/line-items',
+              '/store/carts/' + Uri.encodeComponent(id.toString()) + '/line-items',
               queryParameters: _queryParameters,
               data: _data,
               cancelToken: null,

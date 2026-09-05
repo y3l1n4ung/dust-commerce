@@ -13,9 +13,7 @@
 
 part of 'catalog_state.dart';
 
-const DeepCollectionEquality _catalogStateProductsEquality =
-    DeepCollectionEquality();
-
+const DeepCollectionEquality _catalogStateProductsEquality = DeepCollectionEquality();
 final class _CatalogStateCopyWithUnset {
   const _CatalogStateCopyWithUnset();
 }
@@ -43,8 +41,7 @@ mixin _$CatalogState {
             runtimeType == other.runtimeType &&
             other.currencyCode == self.currencyCode &&
             other.message == self.message &&
-            _catalogStateProductsEquality.equals(
-                other.products, self.products) &&
+            _catalogStateProductsEquality.equals(other.products, self.products) &&
             other.status == self.status &&
             other.total == self.total;
   }
@@ -70,9 +67,7 @@ mixin _$CatalogState {
   /// final cleared = catalogState.copyWith(message: null);
   /// ```
   @pragma('vm:prefer-inline')
-  _$CatalogStateCopyWith<CatalogState> get copyWith =>
-      _$CatalogStateCopyWithImpl<CatalogState>(
-          this as CatalogState, (value) => value);
+  _$CatalogStateCopyWith<CatalogState> get copyWith => _$CatalogStateCopyWithImpl<CatalogState>(this as CatalogState, (value) => value);
 }
 
 // CopyWith API inspired by Freezed.
@@ -89,8 +84,7 @@ abstract class _$CatalogStateCopyWith<$Res> {
 }
 
 /// @nodoc
-final class _$CatalogStateCopyWithImpl<$Res>
-    implements _$CatalogStateCopyWith<$Res> {
+final class _$CatalogStateCopyWithImpl<$Res> implements _$CatalogStateCopyWith<$Res> {
   const _$CatalogStateCopyWithImpl(this._self, this._then);
 
   final CatalogState _self;
@@ -105,15 +99,16 @@ final class _$CatalogStateCopyWithImpl<$Res>
     Object? status = null,
     Object? total = null,
   }) {
-    return _then(CatalogState(
-      status: status == null ? _self.status : status as CatalogStatus,
-      products: products == null ? _self.products : products as List<Product>,
-      total: total == null ? _self.total : total as int,
-      currencyCode:
-          currencyCode == null ? _self.currencyCode : currencyCode as String,
-      message: identical(message, _catalogStateCopyWithUnset)
-          ? _self.message
-          : message as String?,
-    ));
+    return _then(
+      CatalogState(
+        status: status == null ? _self.status : status as CatalogStatus,
+        products: products == null ? _self.products : products as List<Product>,
+        total: total == null ? _self.total : total as int,
+        currencyCode: currencyCode == null ? _self.currencyCode : currencyCode as String,
+        message: identical(message, _catalogStateCopyWithUnset)
+            ? _self.message
+            : message as String?,
+      )
+    );
   }
 }

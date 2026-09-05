@@ -62,7 +62,8 @@ class AppI18n extends StatefulWidget {
 }
 
 class _AppI18nState extends State<AppI18n> {
-  late final I18nController _controller = I18nController(config: appI18nConfig);
+  late final I18nController _controller =
+      I18nController(config: appI18nConfig);
 
   @override
   void initState() {

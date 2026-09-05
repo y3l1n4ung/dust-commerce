@@ -19,8 +19,7 @@ final class _$CartRepository implements CartRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<ExecResult, SqlxError>> createCart(String id, String regionId,
-      String? customerId, String? email, String createdAt) {
+  Future<Result<ExecResult, SqlxError>> createCart(String id, String regionId, String? customerId, String? email, String createdAt) {
     return _db.execute(
       r'''
 INSERT INTO carts (id, region_id, customer_id, email, created_at)
@@ -62,8 +61,7 @@ ORDER BY rowid
   }
 
   @override
-  Future<Result<LineItemRow?, SqlxError>> findLine(
-      String cartId, String variantId) {
+  Future<Result<LineItemRow?, SqlxError>> findLine(String cartId, String variantId) {
     return _db.fetchOptional<LineItemRow>(
       r'''
 SELECT id, variant_id, product_id, title, variant_title,
@@ -77,39 +75,19 @@ WHERE cart_id = ? AND variant_id = ?
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertLine(
-      String id,
-      String cartId,
-      String variantId,
-      String productId,
-      String title,
-      String? variantTitle,
-      int unitAmount,
-      String currencyCode,
-      int quantity) {
+  Future<Result<ExecResult, SqlxError>> insertLine(String id, String cartId, String variantId, String productId, String title, String? variantTitle, int unitAmount, String currencyCode, int quantity) {
     return _db.execute(
       r'''
 INSERT INTO line_items (id, cart_id, variant_id, product_id, title,
                         variant_title, unit_amount, currency_code, quantity)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 ''',
-      [
-        id,
-        cartId,
-        variantId,
-        productId,
-        title,
-        variantTitle,
-        unitAmount,
-        currencyCode,
-        quantity
-      ],
+      [id, cartId, variantId, productId, title, variantTitle, unitAmount, currencyCode, quantity],
     );
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> setLineQuantity(
-      String lineId, int quantity) {
+  Future<Result<ExecResult, SqlxError>> setLineQuantity(String lineId, int quantity) {
     return _db.execute(
       r'''UPDATE line_items SET quantity = ? WHERE id = ?''',
       [quantity, lineId],
@@ -117,8 +95,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> deleteLine(
-      String lineId, String cartId) {
+  Future<Result<ExecResult, SqlxError>> deleteLine(String lineId, String cartId) {
     return _db.execute(
       r'''DELETE FROM line_items WHERE id = ? AND cart_id = ?''',
       [lineId, cartId],
@@ -126,8 +103,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> setCartEmail(
-      String cartId, String email) {
+  Future<Result<ExecResult, SqlxError>> setCartEmail(String cartId, String email) {
     return _db.execute(
       r'''UPDATE carts SET email = ? WHERE id = ?''',
       [email, cartId],

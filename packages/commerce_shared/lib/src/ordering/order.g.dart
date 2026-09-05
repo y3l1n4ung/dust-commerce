@@ -14,7 +14,6 @@
 part of 'order.dart';
 
 const DeepCollectionEquality _orderItemsEquality = DeepCollectionEquality();
-
 final class _OrderCopyWithUnset {
   const _OrderCopyWithUnset();
 }
@@ -92,8 +91,7 @@ mixin _$Order implements Serializable {
   /// final cleared = order.copyWith(customerId: null);
   /// ```
   @pragma('vm:prefer-inline')
-  _$OrderCopyWith<Order> get copyWith =>
-      _$OrderCopyWithImpl<Order>(this as Order, (value) => value);
+  _$OrderCopyWith<Order> get copyWith => _$OrderCopyWithImpl<Order>(this as Order, (value) => value);
 
   Map<String, Object?> serialize() => _$OrderSerialize(this as Order);
 
@@ -145,73 +143,58 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
     Object? tax = null,
     Object? total = null,
   }) {
-    return _then(Order(
-      id: id == null ? _self.id : id as String,
-      email: email == null ? _self.email : email as String,
-      region: region == null ? _self.region : region as Region,
-      items: items == null ? _self.items : items as List<LineItem>,
-      subtotal: subtotal == null ? _self.subtotal : subtotal as Money,
-      tax: tax == null ? _self.tax : tax as Money,
-      total: total == null ? _self.total : total as Money,
-      shippingAddress: shippingAddress == null
-          ? _self.shippingAddress
-          : shippingAddress as Address,
-      billingAddress: billingAddress == null
-          ? _self.billingAddress
-          : billingAddress as Address,
-      placedAt: placedAt == null ? _self.placedAt : placedAt as DateTime,
-      customerId: identical(customerId, _orderCopyWithUnset)
-          ? _self.customerId
-          : customerId as String?,
-      status: status == null ? _self.status : status as OrderStatus,
-      paymentStatus: paymentStatus == null
-          ? _self.paymentStatus
-          : paymentStatus as PaymentStatus,
-    ));
+    return _then(
+      Order(
+        id: id == null ? _self.id : id as String,
+        email: email == null ? _self.email : email as String,
+        region: region == null ? _self.region : region as Region,
+        items: items == null ? _self.items : items as List<LineItem>,
+        subtotal: subtotal == null ? _self.subtotal : subtotal as Money,
+        tax: tax == null ? _self.tax : tax as Money,
+        total: total == null ? _self.total : total as Money,
+        shippingAddress: shippingAddress == null ? _self.shippingAddress : shippingAddress as Address,
+        billingAddress: billingAddress == null ? _self.billingAddress : billingAddress as Address,
+        placedAt: placedAt == null ? _self.placedAt : placedAt as DateTime,
+        customerId: identical(customerId, _orderCopyWithUnset)
+            ? _self.customerId
+            : customerId as String?,
+        status: status == null ? _self.status : status as OrderStatus,
+        paymentStatus: paymentStatus == null ? _self.paymentStatus : paymentStatus as PaymentStatus,
+      )
+    );
   }
 }
-
-final class $OrderSerializer
-    implements Serializer<Order, Map<String, Object?>> {
+final class $OrderSerializer implements Serializer<Order, Map<String, Object?>> {
   const $OrderSerializer();
 
   @override
   Map<String, Object?> serialize(Order value) => _$OrderSerialize(value);
 }
-
-final class $OrderDeserializer
-    implements Deserializer<Order, Map<String, Object?>> {
+final class $OrderDeserializer implements Deserializer<Order, Map<String, Object?>> {
   const $OrderDeserializer();
 
   @override
   Order deserialize(Map<String, Object?> json) => _$OrderDeserialize(json);
 }
-
 final class $OrderStatusSerializer implements Serializer<OrderStatus, Object?> {
   const $OrderStatusSerializer();
 
   @override
   Object? serialize(OrderStatus value) => _$OrderStatusSerialize(value);
 }
-
-final class $OrderStatusDeserializer
-    implements Deserializer<OrderStatus, Object?> {
+final class $OrderStatusDeserializer implements Deserializer<OrderStatus, Object?> {
   const $OrderStatusDeserializer();
 
   @override
   OrderStatus deserialize(Object? json) => _$OrderStatusDeserialize(json);
 }
-
-final class $PaymentStatusSerializer
-    implements Serializer<PaymentStatus, Object?> {
+final class $PaymentStatusSerializer implements Serializer<PaymentStatus, Object?> {
   const $PaymentStatusSerializer();
 
   @override
   Object? serialize(PaymentStatus value) => _$PaymentStatusSerialize(value);
 }
-
-final class $PaymentStatusDeserializer
-    implements Deserializer<PaymentStatus, Object?> {
+final class $PaymentStatusDeserializer implements Deserializer<PaymentStatus, Object?> {
   const $PaymentStatusDeserializer();
 
   @override
@@ -224,7 +207,9 @@ Map<String, Object?> _$OrderSerialize(Order instance) {
     'customer_id': instance.customerId,
     'email': instance.email,
     'id': instance.id,
-    'items': instance.items.map((item) => item.toJson()).toList(),
+    'items': instance.items
+        .map((item) => item.toJson())
+        .toList(),
     'payment_status': _$PaymentStatusSerialize(instance.paymentStatus),
     'placed_at': instance.placedAt.toIso8601String(),
     'region': instance.region.toJson(),
@@ -286,7 +271,8 @@ Order _$OrderDeserialize(Map<String, Object?> json) {
   );
 }
 
-Order _$OrderFromJson(Map<String, Object?> json) => _$OrderDeserialize(json);
+Order _$OrderFromJson(Map<String, Object?> json) =>
+    _$OrderDeserialize(json);
 
 Object? _$OrderStatusSerialize(OrderStatus instance) {
   return switch (instance) {
@@ -304,8 +290,7 @@ OrderStatus _$OrderStatusDeserialize(Object? json, [String key = 'json']) {
     'pending' => OrderStatus.pending,
     'completed' => OrderStatus.completed,
     'cancelled' => OrderStatus.cancelled,
-    _ => throw ArgumentError.value(
-        json, key, 'unknown value for OrderStatus at $key'),
+    _ => throw ArgumentError.value(json, key, 'unknown value for OrderStatus at $key'),
   };
 }
 
@@ -328,8 +313,7 @@ PaymentStatus _$PaymentStatusDeserialize(Object? json, [String key = 'json']) {
     'awaiting' => PaymentStatus.awaiting,
     'captured' => PaymentStatus.captured,
     'refunded' => PaymentStatus.refunded,
-    _ => throw ArgumentError.value(
-        json, key, 'unknown value for PaymentStatus at $key'),
+    _ => throw ArgumentError.value(json, key, 'unknown value for PaymentStatus at $key'),
   };
 }
 

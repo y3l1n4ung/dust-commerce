@@ -7,12 +7,10 @@ import 'package:flutter/widgets.dart';
 import 'package:dust_flutter/route.dart';
 
 import 'paths.g.dart';
-
 extension CommerceRouterContext on BuildContext {
   RouterController<CommerceRoute> get _routerController =>
       RouterController.of<CommerceRoute>(this);
-  CommerceRoutesNavigator get navigator =>
-      CommerceRoutesNavigator(_routerController);
+  CommerceRoutesNavigator get navigator => CommerceRoutesNavigator(_routerController);
 }
 
 final class CommerceRoutesNavigator {

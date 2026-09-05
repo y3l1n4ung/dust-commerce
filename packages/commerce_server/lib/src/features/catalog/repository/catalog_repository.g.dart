@@ -19,8 +19,7 @@ final class _$CatalogRepository implements CatalogRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<ProductRow>, SqlxError>> listPublished(
-      int limit, int offset) {
+  Future<Result<List<ProductRow>, SqlxError>> listPublished(int limit, int offset) {
     return _db.fetchAll<ProductRow>(
       r'''
 SELECT id, title, handle, description, thumbnail, status
@@ -48,8 +47,7 @@ WHERE handle = ? AND status = 'published'
   }
 
   @override
-  Future<Result<List<VariantRow>, SqlxError>> variantsOf(
-      String productId, String currencyCode) {
+  Future<Result<List<VariantRow>, SqlxError>> variantsOf(String productId, String currencyCode) {
     return _db.fetchAll<VariantRow>(
       r'''
 SELECT v.id, v.product_id, v.title, v.sku, v.inventory_quantity,
@@ -66,8 +64,7 @@ ORDER BY v.id
   }
 
   @override
-  Future<Result<VariantRow?, SqlxError>> findVariant(
-      String variantId, String currencyCode) {
+  Future<Result<VariantRow?, SqlxError>> findVariant(String variantId, String currencyCode) {
     return _db.fetchOptional<VariantRow>(
       r'''
 SELECT v.id, v.product_id, v.title, v.sku, v.inventory_quantity,

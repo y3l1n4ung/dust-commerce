@@ -14,9 +14,7 @@
 part of 'product.dart';
 
 const DeepCollectionEquality _productOptionsEquality = DeepCollectionEquality();
-const DeepCollectionEquality _productVariantsEquality =
-    DeepCollectionEquality();
-
+const DeepCollectionEquality _productVariantsEquality = DeepCollectionEquality();
 final class _ProductCopyWithUnset {
   const _ProductCopyWithUnset();
 }
@@ -79,8 +77,7 @@ mixin _$Product implements Serializable {
   /// final cleared = product.copyWith(description: null);
   /// ```
   @pragma('vm:prefer-inline')
-  _$ProductCopyWith<Product> get copyWith =>
-      _$ProductCopyWithImpl<Product>(this as Product, (value) => value);
+  _$ProductCopyWith<Product> get copyWith => _$ProductCopyWithImpl<Product>(this as Product, (value) => value);
 
   Map<String, Object?> serialize() => _$ProductSerialize(this as Product);
 
@@ -122,50 +119,43 @@ final class _$ProductCopyWithImpl<$Res> implements _$ProductCopyWith<$Res> {
     Object? thumbnail = _productCopyWithUnset,
     Object? variants = null,
   }) {
-    return _then(Product(
-      id: id == null ? _self.id : id as String,
-      title: title == null ? _self.title : title as String,
-      handle: handle == null ? _self.handle : handle as String,
-      status: status == null ? _self.status : status as ProductStatus,
-      options: options == null ? _self.options : options as List<ProductOption>,
-      variants:
-          variants == null ? _self.variants : variants as List<ProductVariant>,
-      description: identical(description, _productCopyWithUnset)
-          ? _self.description
-          : description as String?,
-      thumbnail: identical(thumbnail, _productCopyWithUnset)
-          ? _self.thumbnail
-          : thumbnail as String?,
-    ));
+    return _then(
+      Product(
+        id: id == null ? _self.id : id as String,
+        title: title == null ? _self.title : title as String,
+        handle: handle == null ? _self.handle : handle as String,
+        status: status == null ? _self.status : status as ProductStatus,
+        options: options == null ? _self.options : options as List<ProductOption>,
+        variants: variants == null ? _self.variants : variants as List<ProductVariant>,
+        description: identical(description, _productCopyWithUnset)
+            ? _self.description
+            : description as String?,
+        thumbnail: identical(thumbnail, _productCopyWithUnset)
+            ? _self.thumbnail
+            : thumbnail as String?,
+      )
+    );
   }
 }
-
-final class $ProductSerializer
-    implements Serializer<Product, Map<String, Object?>> {
+final class $ProductSerializer implements Serializer<Product, Map<String, Object?>> {
   const $ProductSerializer();
 
   @override
   Map<String, Object?> serialize(Product value) => _$ProductSerialize(value);
 }
-
-final class $ProductDeserializer
-    implements Deserializer<Product, Map<String, Object?>> {
+final class $ProductDeserializer implements Deserializer<Product, Map<String, Object?>> {
   const $ProductDeserializer();
 
   @override
   Product deserialize(Map<String, Object?> json) => _$ProductDeserialize(json);
 }
-
-final class $ProductStatusSerializer
-    implements Serializer<ProductStatus, Object?> {
+final class $ProductStatusSerializer implements Serializer<ProductStatus, Object?> {
   const $ProductStatusSerializer();
 
   @override
   Object? serialize(ProductStatus value) => _$ProductStatusSerialize(value);
 }
-
-final class $ProductStatusDeserializer
-    implements Deserializer<ProductStatus, Object?> {
+final class $ProductStatusDeserializer implements Deserializer<ProductStatus, Object?> {
   const $ProductStatusDeserializer();
 
   @override
@@ -177,11 +167,15 @@ Map<String, Object?> _$ProductSerialize(Product instance) {
     'description': instance.description,
     'handle': instance.handle,
     'id': instance.id,
-    'options': instance.options.map((item) => item.toJson()).toList(),
+    'options': instance.options
+        .map((item) => item.toJson())
+        .toList(),
     'status': _$ProductStatusSerialize(instance.status),
     'title': instance.title,
     'thumbnail': instance.thumbnail,
-    'variants': instance.variants.map((item) => item.toJson()).toList(),
+    'variants': instance.variants
+        .map((item) => item.toJson())
+        .toList(),
   };
 }
 
@@ -195,21 +189,15 @@ Product _$ProductDeserialize(Map<String, Object?> json) {
       : JsonHelper.as<String>(json['description'], 'description', 'String');
   final handleValue = JsonHelper.as<String>(json['handle'], 'handle', 'String');
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
-  final optionsValue = JsonHelper.decodeList(
-      json['options'],
-      'options',
-      (item, itemKey) =>
-          ProductOption.fromJson(JsonHelper.asMap(item, itemKey)));
+  final optionsValue = JsonHelper.decodeList(json['options'], 'options',
+      (item, itemKey) => ProductOption.fromJson(JsonHelper.asMap(item, itemKey)));
   final statusValue = _$ProductStatusDeserialize(json['status'], 'status');
   final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
   final thumbnailValue = json['thumbnail'] == null
       ? null
       : JsonHelper.as<String>(json['thumbnail'], 'thumbnail', 'String');
-  final variantsValue = JsonHelper.decodeList(
-      json['variants'],
-      'variants',
-      (item, itemKey) =>
-          ProductVariant.fromJson(JsonHelper.asMap(item, itemKey)));
+  final variantsValue = JsonHelper.decodeList(json['variants'], 'variants',
+      (item, itemKey) => ProductVariant.fromJson(JsonHelper.asMap(item, itemKey)));
 
   return Product(
     id: idValue,
@@ -244,8 +232,7 @@ ProductStatus _$ProductStatusDeserialize(Object? json, [String key = 'json']) {
     'proposed' => ProductStatus.proposed,
     'published' => ProductStatus.published,
     'rejected' => ProductStatus.rejected,
-    _ => throw ArgumentError.value(
-        json, key, 'unknown value for ProductStatus at $key'),
+    _ => throw ArgumentError.value(json, key, 'unknown value for ProductStatus at $key'),
   };
 }
 

@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  DUST_VERSION: v0.1.4
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install the Dust CLI
+        run: |
+          set -euo pipefail
+          cargo install --locked \
+            --git https://github.com/y3l1n4ung/dust \
+            --tag "$DUST_VERSION" \
+            dust_cli
+          dust --version
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      # A generated-code repository whose CI does not check the generated code
+      # is theatre. `dust check` fails when a committed .g.dart no longer
+      # matches its source, so a contributor who edits a model and forgets to
+      # rebuild is caught here rather than by a reviewer.
+      - name: Generated output is current
+        run: |
+          set -euo pipefail
+          dust check --root packages/commerce_shared
+          dust check --root packages/commerce_server
+          dust check --root apps/commerce_app
+
+      # SQL is validated against the real schema. A column that does not exist
+      # fails this step with `no such column` and a non-zero exit.
+      - name: SQL matches the schema
+        run: dust check --db --root packages/commerce_server
+
+      - name: Translations are current
+        run: dust i18n check --root apps/commerce_app
+
+      - name: Analyze
+        run: |
+          set -euo pipefail
+          dart analyze packages/commerce_shared
+          dart analyze packages/commerce_server
+          (cd apps/commerce_app && flutter analyze --no-pub)
+
+      # Handwritten Dart only. Formatting generated files rewrites them into
+      # something the generator would not emit, and `dust check` above would
+      # then report every one of them stale.
+      - name: Format
+        run: ./scripts/format.sh --check
+
+      - name: Test
+        run: |
+          set -euo pipefail
+          (cd packages/commerce_shared && dart test)
+          (cd packages/commerce_server && dart test)
+          (cd apps/commerce_app && flutter test)
+
+      # The 180-line rule from CONTRIBUTING.md, enforced rather than trusted.
+      # Generated files are exempt: they are output, not source.
+      - name: File size budget
+        run: ./scripts/check_file_size.sh

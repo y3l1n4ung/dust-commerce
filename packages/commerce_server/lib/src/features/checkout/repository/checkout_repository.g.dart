@@ -19,80 +19,31 @@ final class _$CheckoutRepository implements CheckoutRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertOrder(
-      String id,
-      String regionId,
-      String? customerId,
-      String email,
-      String currencyCode,
-      int subtotal,
-      int tax,
-      int total,
-      String placedAt) {
+  Future<Result<ExecResult, SqlxError>> insertOrder(String id, String regionId, String? customerId, String email, String currencyCode, int subtotal, int tax, int total, String placedAt) {
     return _db.execute(
       r'''
 INSERT INTO orders (id, region_id, customer_id, email, currency_code,
                     subtotal, tax, total, placed_at)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 ''',
-      [
-        id,
-        regionId,
-        customerId,
-        email,
-        currencyCode,
-        subtotal,
-        tax,
-        total,
-        placedAt
-      ],
+      [id, regionId, customerId, email, currencyCode, subtotal, tax, total, placedAt],
     );
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertOrderItem(
-      String id,
-      String orderId,
-      String variantId,
-      String productId,
-      String title,
-      String? variantTitle,
-      int unitAmount,
-      String currencyCode,
-      int quantity) {
+  Future<Result<ExecResult, SqlxError>> insertOrderItem(String id, String orderId, String variantId, String productId, String title, String? variantTitle, int unitAmount, String currencyCode, int quantity) {
     return _db.execute(
       r'''
 INSERT INTO order_items (id, order_id, variant_id, product_id, title,
                          variant_title, unit_amount, currency_code, quantity)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 ''',
-      [
-        id,
-        orderId,
-        variantId,
-        productId,
-        title,
-        variantTitle,
-        unitAmount,
-        currencyCode,
-        quantity
-      ],
+      [id, orderId, variantId, productId, title, variantTitle, unitAmount, currencyCode, quantity],
     );
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertOrderAddress(
-      String orderId,
-      String kind,
-      String firstName,
-      String lastName,
-      String line1,
-      String? line2,
-      String city,
-      String? province,
-      String postalCode,
-      String countryCode,
-      String? phone) {
+  Future<Result<ExecResult, SqlxError>> insertOrderAddress(String orderId, String kind, String firstName, String lastName, String line1, String? line2, String city, String? province, String postalCode, String countryCode, String? phone) {
     return _db.execute(
       r'''
 INSERT INTO order_addresses (order_id, kind, first_name, last_name, line1,
@@ -100,25 +51,12 @@ INSERT INTO order_addresses (order_id, kind, first_name, last_name, line1,
                              phone)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ''',
-      [
-        orderId,
-        kind,
-        firstName,
-        lastName,
-        line1,
-        line2,
-        city,
-        province,
-        postalCode,
-        countryCode,
-        phone
-      ],
+      [orderId, kind, firstName, lastName, line1, line2, city, province, postalCode, countryCode, phone],
     );
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> reserveStock(
-      String variantId, int quantity) {
+  Future<Result<ExecResult, SqlxError>> reserveStock(String variantId, int quantity) {
     return _db.execute(
       r'''
 UPDATE product_variants

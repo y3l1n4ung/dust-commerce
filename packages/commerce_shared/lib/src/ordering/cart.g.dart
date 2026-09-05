@@ -14,7 +14,6 @@
 part of 'cart.dart';
 
 const DeepCollectionEquality _cartItemsEquality = DeepCollectionEquality();
-
 final class _CartCopyWithUnset {
   const _CartCopyWithUnset();
 }
@@ -68,8 +67,7 @@ mixin _$Cart implements Serializable {
   /// final cleared = cart.copyWith(customerId: null);
   /// ```
   @pragma('vm:prefer-inline')
-  _$CartCopyWith<Cart> get copyWith =>
-      _$CartCopyWithImpl<Cart>(this as Cart, (value) => value);
+  _$CartCopyWith<Cart> get copyWith => _$CartCopyWithImpl<Cart>(this as Cart, (value) => value);
 
   Map<String, Object?> serialize() => _$CartSerialize(this as Cart);
 
@@ -105,28 +103,28 @@ final class _$CartCopyWithImpl<$Res> implements _$CartCopyWith<$Res> {
     Object? items = null,
     Object? region = null,
   }) {
-    return _then(Cart(
-      id: id == null ? _self.id : id as String,
-      region: region == null ? _self.region : region as Region,
-      items: items == null ? _self.items : items as List<LineItem>,
-      email:
-          identical(email, _cartCopyWithUnset) ? _self.email : email as String?,
-      customerId: identical(customerId, _cartCopyWithUnset)
-          ? _self.customerId
-          : customerId as String?,
-    ));
+    return _then(
+      Cart(
+        id: id == null ? _self.id : id as String,
+        region: region == null ? _self.region : region as Region,
+        items: items == null ? _self.items : items as List<LineItem>,
+        email: identical(email, _cartCopyWithUnset)
+            ? _self.email
+            : email as String?,
+        customerId: identical(customerId, _cartCopyWithUnset)
+            ? _self.customerId
+            : customerId as String?,
+      )
+    );
   }
 }
-
 final class $CartSerializer implements Serializer<Cart, Map<String, Object?>> {
   const $CartSerializer();
 
   @override
   Map<String, Object?> serialize(Cart value) => _$CartSerialize(value);
 }
-
-final class $CartDeserializer
-    implements Deserializer<Cart, Map<String, Object?>> {
+final class $CartDeserializer implements Deserializer<Cart, Map<String, Object?>> {
   const $CartDeserializer();
 
   @override
@@ -138,12 +136,15 @@ Map<String, Object?> _$CartSerialize(Cart instance) {
     'customer_id': instance.customerId,
     'email': instance.email,
     'id': instance.id,
-    'items': instance.items.map((item) => item.toJson()).toList(),
+    'items': instance.items
+        .map((item) => item.toJson())
+        .toList(),
     'region': instance.region.toJson(),
   };
 }
 
-Map<String, Object?> _$CartToJson(Cart instance) => _$CartSerialize(instance);
+Map<String, Object?> _$CartToJson(Cart instance) =>
+    _$CartSerialize(instance);
 
 // factory Cart.fromJson(Map<String, Object?> json) => _$CartFromJson(json);
 Cart _$CartDeserialize(Map<String, Object?> json) {
@@ -169,4 +170,5 @@ Cart _$CartDeserialize(Map<String, Object?> json) {
   );
 }
 
-Cart _$CartFromJson(Map<String, Object?> json) => _$CartDeserialize(json);
+Cart _$CartFromJson(Map<String, Object?> json) =>
+    _$CartDeserialize(json);

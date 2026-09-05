@@ -18,7 +18,6 @@ final class _AddressInputCopyWithUnset {
 }
 
 const _addressInputCopyWithUnset = _AddressInputCopyWithUnset();
-
 final class _CheckoutRequestCopyWithUnset {
   const _CheckoutRequestCopyWithUnset();
 }
@@ -84,9 +83,7 @@ mixin _$AddressInput implements Validatable, Serializable {
   /// final cleared = addressInput.copyWith(line2: null);
   /// ```
   @pragma('vm:prefer-inline')
-  _$AddressInputCopyWith<AddressInput> get copyWith =>
-      _$AddressInputCopyWithImpl<AddressInput>(
-          this as AddressInput, (value) => value);
+  _$AddressInputCopyWith<AddressInput> get copyWith => _$AddressInputCopyWithImpl<AddressInput>(this as AddressInput, (value) => value);
 
   /// Validates this `AddressInput`.
   ///
@@ -173,9 +170,7 @@ mixin _$CheckoutRequest implements Validatable, Serializable {
   /// final nested = checkoutRequest.copyWith.billingAddress(city: 'London');
   /// ```
   @pragma('vm:prefer-inline')
-  _$CheckoutRequestCopyWith<CheckoutRequest> get copyWith =>
-      _$CheckoutRequestCopyWithImpl<CheckoutRequest>(
-          this as CheckoutRequest, (value) => value);
+  _$CheckoutRequestCopyWith<CheckoutRequest> get copyWith => _$CheckoutRequestCopyWithImpl<CheckoutRequest>(this as CheckoutRequest, (value) => value);
 
   /// Validates this `CheckoutRequest`.
   ///
@@ -231,8 +226,7 @@ abstract class _$AddressInputCopyWith<$Res> {
 }
 
 /// @nodoc
-final class _$AddressInputCopyWithImpl<$Res>
-    implements _$AddressInputCopyWith<$Res> {
+final class _$AddressInputCopyWithImpl<$Res> implements _$AddressInputCopyWith<$Res> {
   const _$AddressInputCopyWithImpl(this._self, this._then);
 
   final AddressInput _self;
@@ -251,27 +245,27 @@ final class _$AddressInputCopyWithImpl<$Res>
     Object? postalCode = null,
     Object? province = _addressInputCopyWithUnset,
   }) {
-    return _then(AddressInput(
-      firstName: firstName == null ? _self.firstName : firstName as String,
-      lastName: lastName == null ? _self.lastName : lastName as String,
-      line1: line1 == null ? _self.line1 : line1 as String,
-      city: city == null ? _self.city : city as String,
-      postalCode: postalCode == null ? _self.postalCode : postalCode as String,
-      countryCode:
-          countryCode == null ? _self.countryCode : countryCode as String,
-      line2: identical(line2, _addressInputCopyWithUnset)
-          ? _self.line2
-          : line2 as String?,
-      province: identical(province, _addressInputCopyWithUnset)
-          ? _self.province
-          : province as String?,
-      phone: identical(phone, _addressInputCopyWithUnset)
-          ? _self.phone
-          : phone as String?,
-    ));
+    return _then(
+      AddressInput(
+        firstName: firstName == null ? _self.firstName : firstName as String,
+        lastName: lastName == null ? _self.lastName : lastName as String,
+        line1: line1 == null ? _self.line1 : line1 as String,
+        city: city == null ? _self.city : city as String,
+        postalCode: postalCode == null ? _self.postalCode : postalCode as String,
+        countryCode: countryCode == null ? _self.countryCode : countryCode as String,
+        line2: identical(line2, _addressInputCopyWithUnset)
+            ? _self.line2
+            : line2 as String?,
+        province: identical(province, _addressInputCopyWithUnset)
+            ? _self.province
+            : province as String?,
+        phone: identical(phone, _addressInputCopyWithUnset)
+            ? _self.phone
+            : phone as String?,
+      )
+    );
   }
 }
-
 extension _AddressInputValidation on AddressInput {
   static void _validateCity(String city, List<ValidationError> errors) {
     if (city.length < 1) {
@@ -279,49 +273,40 @@ extension _AddressInputValidation on AddressInput {
     }
   }
 
-  static void _validateCountryCode(
-      String countryCode, List<ValidationError> errors) {
+  static void _validateCountryCode(String countryCode, List<ValidationError> errors) {
     if (countryCode.length < 2) {
-      errors.add(ValidationError(
-          field: 'countryCode', message: 'Enter a two-letter country code'));
+      errors.add(ValidationError(field: 'countryCode', message: 'Enter a two-letter country code'));
     }
     if (countryCode.length > 2) {
-      errors.add(ValidationError(
-          field: 'countryCode', message: 'Enter a two-letter country code'));
+      errors.add(ValidationError(field: 'countryCode', message: 'Enter a two-letter country code'));
     }
   }
 
-  static void _validateFirstName(
-      String firstName, List<ValidationError> errors) {
+  static void _validateFirstName(String firstName, List<ValidationError> errors) {
     if (firstName.length < 1) {
-      errors.add(
-          ValidationError(field: 'firstName', message: 'Enter a first name'));
+      errors.add(ValidationError(field: 'firstName', message: 'Enter a first name'));
     }
   }
 
   static void _validateLastName(String lastName, List<ValidationError> errors) {
     if (lastName.length < 1) {
-      errors.add(
-          ValidationError(field: 'lastName', message: 'Enter a last name'));
+      errors.add(ValidationError(field: 'lastName', message: 'Enter a last name'));
     }
   }
 
   static void _validateLine1(String line1, List<ValidationError> errors) {
     if (line1.length < 1) {
-      errors.add(
-          ValidationError(field: 'line1', message: 'Enter a street address'));
+      errors.add(ValidationError(field: 'line1', message: 'Enter a street address'));
     }
   }
 
-  static void _validatePostalCode(
-      String postalCode, List<ValidationError> errors) {
+  static void _validatePostalCode(String postalCode, List<ValidationError> errors) {
     if (postalCode.length < 1) {
-      errors.add(
-          ValidationError(field: 'postalCode', message: 'Enter a postal code'));
+      errors.add(ValidationError(field: 'postalCode', message: 'Enter a postal code'));
     }
   }
-}
 
+}
 /// @nodoc
 abstract class _$CheckoutRequestCopyWith<$Res> {
   $Res call({
@@ -337,8 +322,7 @@ abstract class _$CheckoutRequestCopyWith<$Res> {
 }
 
 /// @nodoc
-final class _$CheckoutRequestCopyWithImpl<$Res>
-    implements _$CheckoutRequestCopyWith<$Res> {
+final class _$CheckoutRequestCopyWithImpl<$Res> implements _$CheckoutRequestCopyWith<$Res> {
   const _$CheckoutRequestCopyWithImpl(this._self, this._then);
 
   final CheckoutRequest _self;
@@ -352,16 +336,16 @@ final class _$CheckoutRequestCopyWithImpl<$Res>
     Object? email = null,
     Object? shippingAddress = null,
   }) {
-    return _then(CheckoutRequest(
-      cartId: cartId == null ? _self.cartId : cartId as String,
-      email: email == null ? _self.email : email as String,
-      shippingAddress: shippingAddress == null
-          ? _self.shippingAddress
-          : shippingAddress as AddressInput,
-      billingAddress: identical(billingAddress, _checkoutRequestCopyWithUnset)
-          ? _self.billingAddress
-          : billingAddress as AddressInput?,
-    ));
+    return _then(
+      CheckoutRequest(
+        cartId: cartId == null ? _self.cartId : cartId as String,
+        email: email == null ? _self.email : email as String,
+        shippingAddress: shippingAddress == null ? _self.shippingAddress : shippingAddress as AddressInput,
+        billingAddress: identical(billingAddress, _checkoutRequestCopyWithUnset)
+            ? _self.billingAddress
+            : billingAddress as AddressInput?,
+      )
+    );
   }
 
   @override
@@ -387,61 +371,46 @@ final class _$CheckoutRequestCopyWithImpl<$Res>
     );
   }
 }
-
 extension _CheckoutRequestValidation on CheckoutRequest {
   static void _validateCartId(String cartId, List<ValidationError> errors) {
     if (cartId.length < 1) {
-      errors.add(
-          ValidationError(field: 'cartId', message: 'A checkout needs a cart'));
+      errors.add(ValidationError(field: 'cartId', message: 'A checkout needs a cart'));
     }
   }
 
   static void _validateEmail(String email, List<ValidationError> errors) {
     if (email.length < 1) {
-      errors.add(
-          ValidationError(field: 'email', message: 'Enter an email address'));
+      errors.add(ValidationError(field: 'email', message: 'Enter an email address'));
     }
     if (!ValidationHelper.isEmail(email)) {
-      errors.add(ValidationError(
-          field: 'email', message: 'Enter a valid email address'));
+      errors.add(ValidationError(field: 'email', message: 'Enter a valid email address'));
     }
   }
-}
 
-final class $AddressInputSerializer
-    implements Serializer<AddressInput, Map<String, Object?>> {
+}
+final class $AddressInputSerializer implements Serializer<AddressInput, Map<String, Object?>> {
   const $AddressInputSerializer();
 
   @override
-  Map<String, Object?> serialize(AddressInput value) =>
-      _$AddressInputSerialize(value);
+  Map<String, Object?> serialize(AddressInput value) => _$AddressInputSerialize(value);
 }
-
-final class $AddressInputDeserializer
-    implements Deserializer<AddressInput, Map<String, Object?>> {
+final class $AddressInputDeserializer implements Deserializer<AddressInput, Map<String, Object?>> {
   const $AddressInputDeserializer();
 
   @override
-  AddressInput deserialize(Map<String, Object?> json) =>
-      _$AddressInputDeserialize(json);
+  AddressInput deserialize(Map<String, Object?> json) => _$AddressInputDeserialize(json);
 }
-
-final class $CheckoutRequestSerializer
-    implements Serializer<CheckoutRequest, Map<String, Object?>> {
+final class $CheckoutRequestSerializer implements Serializer<CheckoutRequest, Map<String, Object?>> {
   const $CheckoutRequestSerializer();
 
   @override
-  Map<String, Object?> serialize(CheckoutRequest value) =>
-      _$CheckoutRequestSerialize(value);
+  Map<String, Object?> serialize(CheckoutRequest value) => _$CheckoutRequestSerialize(value);
 }
-
-final class $CheckoutRequestDeserializer
-    implements Deserializer<CheckoutRequest, Map<String, Object?>> {
+final class $CheckoutRequestDeserializer implements Deserializer<CheckoutRequest, Map<String, Object?>> {
   const $CheckoutRequestDeserializer();
 
   @override
-  CheckoutRequest deserialize(Map<String, Object?> json) =>
-      _$CheckoutRequestDeserialize(json);
+  CheckoutRequest deserialize(Map<String, Object?> json) => _$CheckoutRequestDeserialize(json);
 }
 
 Map<String, Object?> _$AddressInputSerialize(AddressInput instance) {
@@ -529,8 +498,7 @@ Map<String, Object?> _$CheckoutRequestToJson(CheckoutRequest instance) =>
 CheckoutRequest _$CheckoutRequestDeserialize(Map<String, Object?> json) {
   final billingAddressValue = json['billing_address'] == null
       ? null
-      : _$AddressInputDeserialize(
-          JsonHelper.asMap(json['billing_address'], 'billing_address'));
+      : _$AddressInputDeserialize(JsonHelper.asMap(json['billing_address'], 'billing_address'));
   final cartIdValue = JsonHelper.as<String>(
     json['cart_id'],
     'cart_id',

@@ -13,8 +13,7 @@
 
 part of 'option.dart';
 
-const DeepCollectionEquality _productOptionValuesEquality =
-    DeepCollectionEquality();
+const DeepCollectionEquality _productOptionValuesEquality = DeepCollectionEquality();
 
 mixin _$ProductOption implements Serializable {
   @override
@@ -56,9 +55,7 @@ mixin _$ProductOption implements Serializable {
   /// final updated = productOption.copyWith(id: 'John');
   /// ```
   @pragma('vm:prefer-inline')
-  _$ProductOptionCopyWith<ProductOption> get copyWith =>
-      _$ProductOptionCopyWithImpl<ProductOption>(
-          this as ProductOption, (value) => value);
+  _$ProductOptionCopyWith<ProductOption> get copyWith => _$ProductOptionCopyWithImpl<ProductOption>(this as ProductOption, (value) => value);
 
   Map<String, Object?> serialize() =>
       _$ProductOptionSerialize(this as ProductOption);
@@ -78,8 +75,7 @@ abstract class _$ProductOptionCopyWith<$Res> {
 }
 
 /// @nodoc
-final class _$ProductOptionCopyWithImpl<$Res>
-    implements _$ProductOptionCopyWith<$Res> {
+final class _$ProductOptionCopyWithImpl<$Res> implements _$ProductOptionCopyWith<$Res> {
   const _$ProductOptionCopyWithImpl(this._self, this._then);
 
   final ProductOption _self;
@@ -92,37 +88,35 @@ final class _$ProductOptionCopyWithImpl<$Res>
     Object? title = null,
     Object? values = null,
   }) {
-    return _then(ProductOption(
-      id: id == null ? _self.id : id as String,
-      title: title == null ? _self.title : title as String,
-      values: values == null ? _self.values : values as List<String>,
-    ));
+    return _then(
+      ProductOption(
+        id: id == null ? _self.id : id as String,
+        title: title == null ? _self.title : title as String,
+        values: values == null ? _self.values : values as List<String>,
+      )
+    );
   }
 }
-
-final class $ProductOptionSerializer
-    implements Serializer<ProductOption, Map<String, Object?>> {
+final class $ProductOptionSerializer implements Serializer<ProductOption, Map<String, Object?>> {
   const $ProductOptionSerializer();
 
   @override
-  Map<String, Object?> serialize(ProductOption value) =>
-      _$ProductOptionSerialize(value);
+  Map<String, Object?> serialize(ProductOption value) => _$ProductOptionSerialize(value);
 }
-
-final class $ProductOptionDeserializer
-    implements Deserializer<ProductOption, Map<String, Object?>> {
+final class $ProductOptionDeserializer implements Deserializer<ProductOption, Map<String, Object?>> {
   const $ProductOptionDeserializer();
 
   @override
-  ProductOption deserialize(Map<String, Object?> json) =>
-      _$ProductOptionDeserialize(json);
+  ProductOption deserialize(Map<String, Object?> json) => _$ProductOptionDeserialize(json);
 }
 
 Map<String, Object?> _$ProductOptionSerialize(ProductOption instance) {
   return <String, Object?>{
     'id': instance.id,
     'title': instance.title,
-    'values': instance.values.map((item) => item).toList(),
+    'values': instance.values
+        .map((item) => item)
+        .toList(),
   };
 }
 

@@ -14,6 +14,7 @@ import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
 
 abstract class $CommerceRouter extends RouterBase<CommerceRoute> {
+
   late final RouterConfig<CommerceRoute> config = _buildConfig();
 
   RouterConfig<CommerceRoute> _buildConfig() {
@@ -53,12 +54,12 @@ abstract class $CommerceRouter extends RouterBase<CommerceRoute> {
 RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
   return switch (route) {
     CatalogRoute() => [
-        route,
-      ],
+      route,
+    ],
     NotFoundRoute() => [
-        const CatalogRoute(),
-        route,
-      ],
+      const CatalogRoute(),
+      route,
+    ],
   };
 }
 
@@ -78,22 +79,22 @@ Page<dynamic> buildCommerceRoutePage(
   );
   return switch (route) {
     CatalogRoute() => generatedPage(
-        key: key,
-        location: route.location,
-        name: 'catalog',
-        onPopInvoked: onPopInvoked,
-        fullscreenDialog: false,
-        maintainState: true,
-        child: const CatalogPage(),
-      ),
+      key: key,
+      location: route.location,
+      name: 'catalog',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: const CatalogPage(),
+    ),
     NotFoundRoute() => generatedPage(
-        key: key,
-        location: route.location,
-        name: 'notFound',
-        onPopInvoked: onPopInvoked,
-        fullscreenDialog: false,
-        maintainState: true,
-        child: const NotFoundPage(),
-      ),
+      key: key,
+      location: route.location,
+      name: 'notFound',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: const NotFoundPage(),
+    ),
   };
 }

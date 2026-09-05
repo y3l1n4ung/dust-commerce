@@ -22,8 +22,7 @@ part of 'catalog_view_model.dart';
 ///   CatalogViewModel(super.args);
 /// }
 /// ```
-abstract class $CatalogViewModel
-    extends ViewModelBase<CatalogState, CatalogViewModelArgs> {
+abstract class $CatalogViewModel extends ViewModelBase<CatalogState, CatalogViewModelArgs> {
   $CatalogViewModel(super.args) : super(initialState: const CatalogState());
 }
 
@@ -62,12 +61,10 @@ class CatalogViewModelSelector<R> extends StatefulWidget {
   final bool Function(R previous, R next)? equals;
 
   @override
-  State<CatalogViewModelSelector<R>> createState() =>
-      _CatalogViewModelSelectorState<R>();
+  State<CatalogViewModelSelector<R>> createState() => _CatalogViewModelSelectorState<R>();
 }
 
-class _CatalogViewModelSelectorState<R>
-    extends State<CatalogViewModelSelector<R>> {
+class _CatalogViewModelSelectorState<R> extends State<CatalogViewModelSelector<R>> {
   CatalogViewModel? _viewModel;
   R? _selected;
   bool _hasSelected = false;
@@ -159,13 +156,12 @@ class CatalogViewModelScope extends StatefulWidget {
     super.key,
     required CatalogViewModel this.value,
     required this.child,
-  })  : args = null,
-        create = null,
-        identity = null;
+  }) : args = null,
+       create = null,
+       identity = null;
 
   final CatalogViewModelArgs Function(BuildContext context)? args;
-  final CatalogViewModel Function(
-      BuildContext context, CatalogViewModelArgs args)? create;
+  final CatalogViewModel Function(BuildContext context, CatalogViewModelArgs args)? create;
   final Object? Function(BuildContext context)? identity;
   final CatalogViewModel? value;
   final Widget child;
@@ -175,25 +171,20 @@ class CatalogViewModelScope extends StatefulWidget {
     final scope = context
         .getElementForInheritedWidgetOfExactType<_CatalogViewModelInstance>()
         ?.widget as _CatalogViewModelInstance?;
-    if (scope == null)
-      throw StateError('No CatalogViewModelScope found in context.');
+    if (scope == null) throw StateError('No CatalogViewModelScope found in context.');
     return scope.viewModel;
   }
 
   static CatalogViewModel _watchInstance(BuildContext context) {
-    final scope =
-        context.dependOnInheritedWidgetOfExactType<_CatalogViewModelInstance>();
-    if (scope == null)
-      throw StateError('No CatalogViewModelScope found in context.');
+    final scope = context.dependOnInheritedWidgetOfExactType<_CatalogViewModelInstance>();
+    if (scope == null) throw StateError('No CatalogViewModelScope found in context.');
     return scope.viewModel;
   }
 
   /// Watches CatalogViewModel and rebuilds when state changes.
   static CatalogViewModel of(BuildContext context) {
-    final scope = context
-        .dependOnInheritedWidgetOfExactType<_CatalogViewModelInherited>();
-    if (scope == null)
-      throw StateError('No CatalogViewModelScope found in context.');
+    final scope = context.dependOnInheritedWidgetOfExactType<_CatalogViewModelInherited>();
+    if (scope == null) throw StateError('No CatalogViewModelScope found in context.');
     return scope.viewModel;
   }
 
@@ -217,8 +208,7 @@ class _CatalogViewModelScopeState extends State<CatalogViewModelScope> {
     final nextIdentity = widget.identity?.call(context);
     if (_viewModel == null || nextIdentity != _identity) {
       _identity = nextIdentity;
-      _replaceViewModel(_createOwnedViewModel(),
-          ownsViewModel: true, notify: false);
+      _replaceViewModel(_createOwnedViewModel(), ownsViewModel: true, notify: false);
     }
   }
 
@@ -310,8 +300,7 @@ class _CatalogViewModelScopeState extends State<CatalogViewModelScope> {
   Widget build(BuildContext context) {
     final viewModel = _viewModel;
     if (viewModel == null) {
-      throw StateError(
-          'CatalogViewModelScope built before its view model was initialized.');
+      throw StateError('CatalogViewModelScope built before its view model was initialized.');
     }
     return _CatalogViewModelInstance(
       viewModel: viewModel,
@@ -325,8 +314,7 @@ class _CatalogViewModelScopeState extends State<CatalogViewModelScope> {
 }
 
 class _CatalogViewModelInstance extends InheritedWidget {
-  const _CatalogViewModelInstance(
-      {required this.viewModel, required super.child});
+  const _CatalogViewModelInstance({required this.viewModel, required super.child});
 
   final CatalogViewModel viewModel;
 
@@ -337,16 +325,14 @@ class _CatalogViewModelInstance extends InheritedWidget {
 }
 
 class _CatalogViewModelInherited extends InheritedWidget {
-  const _CatalogViewModelInherited(
-      {required this.viewModel, required this.state, required super.child});
+  const _CatalogViewModelInherited({required this.viewModel, required this.state, required super.child});
 
   final CatalogViewModel viewModel;
   final CatalogState state;
 
   @override
   bool updateShouldNotify(_CatalogViewModelInherited oldWidget) {
-    return !identical(viewModel, oldWidget.viewModel) ||
-        state != oldWidget.state;
+    return !identical(viewModel, oldWidget.viewModel) || state != oldWidget.state;
   }
 }
 
@@ -361,15 +347,13 @@ class _CatalogViewModelInherited extends InheritedWidget {
 /// )
 /// ```
 class CatalogViewModelListener extends StatefulWidget {
-  const CatalogViewModelListener(
-      {super.key, required this.listener, required this.child});
+  const CatalogViewModelListener({super.key, required this.listener, required this.child});
 
   final void Function(BuildContext context, Object effect) listener;
   final Widget child;
 
   @override
-  State<CatalogViewModelListener> createState() =>
-      _CatalogViewModelListenerState();
+  State<CatalogViewModelListener> createState() => _CatalogViewModelListenerState();
 }
 
 class _CatalogViewModelListenerState extends State<CatalogViewModelListener> {

@@ -78,8 +78,7 @@ mixin _$Address implements Serializable {
   /// final cleared = address.copyWith(line2: null);
   /// ```
   @pragma('vm:prefer-inline')
-  _$AddressCopyWith<Address> get copyWith =>
-      _$AddressCopyWithImpl<Address>(this as Address, (value) => value);
+  _$AddressCopyWith<Address> get copyWith => _$AddressCopyWithImpl<Address>(this as Address, (value) => value);
 
   Map<String, Object?> serialize() => _$AddressSerialize(this as Address);
 
@@ -123,37 +122,34 @@ final class _$AddressCopyWithImpl<$Res> implements _$AddressCopyWith<$Res> {
     Object? postalCode = null,
     Object? province = _addressCopyWithUnset,
   }) {
-    return _then(Address(
-      firstName: firstName == null ? _self.firstName : firstName as String,
-      lastName: lastName == null ? _self.lastName : lastName as String,
-      line1: line1 == null ? _self.line1 : line1 as String,
-      city: city == null ? _self.city : city as String,
-      postalCode: postalCode == null ? _self.postalCode : postalCode as String,
-      countryCode:
-          countryCode == null ? _self.countryCode : countryCode as String,
-      line2: identical(line2, _addressCopyWithUnset)
-          ? _self.line2
-          : line2 as String?,
-      province: identical(province, _addressCopyWithUnset)
-          ? _self.province
-          : province as String?,
-      phone: identical(phone, _addressCopyWithUnset)
-          ? _self.phone
-          : phone as String?,
-    ));
+    return _then(
+      Address(
+        firstName: firstName == null ? _self.firstName : firstName as String,
+        lastName: lastName == null ? _self.lastName : lastName as String,
+        line1: line1 == null ? _self.line1 : line1 as String,
+        city: city == null ? _self.city : city as String,
+        postalCode: postalCode == null ? _self.postalCode : postalCode as String,
+        countryCode: countryCode == null ? _self.countryCode : countryCode as String,
+        line2: identical(line2, _addressCopyWithUnset)
+            ? _self.line2
+            : line2 as String?,
+        province: identical(province, _addressCopyWithUnset)
+            ? _self.province
+            : province as String?,
+        phone: identical(phone, _addressCopyWithUnset)
+            ? _self.phone
+            : phone as String?,
+      )
+    );
   }
 }
-
-final class $AddressSerializer
-    implements Serializer<Address, Map<String, Object?>> {
+final class $AddressSerializer implements Serializer<Address, Map<String, Object?>> {
   const $AddressSerializer();
 
   @override
   Map<String, Object?> serialize(Address value) => _$AddressSerialize(value);
 }
-
-final class $AddressDeserializer
-    implements Deserializer<Address, Map<String, Object?>> {
+final class $AddressDeserializer implements Deserializer<Address, Map<String, Object?>> {
   const $AddressDeserializer();
 
   @override

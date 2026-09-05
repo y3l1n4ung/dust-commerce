@@ -200,8 +200,7 @@ OrderAddressRow _$OrderAddressRowFromRow(Row row) {
 }
 
 /// Row deserializer for [OrderAddressRow].
-final class $OrderAddressRowRowDeserializer
-    implements RowDeserializer<OrderAddressRow> {
+final class $OrderAddressRowRowDeserializer implements RowDeserializer<OrderAddressRow> {
   const $OrderAddressRowRowDeserializer();
 
   @override

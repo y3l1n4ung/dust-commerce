@@ -66,8 +66,7 @@ mixin _$Customer implements Serializable {
   /// final cleared = customer.copyWith(firstName: null);
   /// ```
   @pragma('vm:prefer-inline')
-  _$CustomerCopyWith<Customer> get copyWith =>
-      _$CustomerCopyWithImpl<Customer>(this as Customer, (value) => value);
+  _$CustomerCopyWith<Customer> get copyWith => _$CustomerCopyWithImpl<Customer>(this as Customer, (value) => value);
 
   Map<String, Object?> serialize() => _$CustomerSerialize(this as Customer);
 
@@ -103,37 +102,34 @@ final class _$CustomerCopyWithImpl<$Res> implements _$CustomerCopyWith<$Res> {
     Object? lastName = _customerCopyWithUnset,
     Object? phone = _customerCopyWithUnset,
   }) {
-    return _then(Customer(
-      id: id == null ? _self.id : id as String,
-      email: email == null ? _self.email : email as String,
-      firstName: identical(firstName, _customerCopyWithUnset)
-          ? _self.firstName
-          : firstName as String?,
-      lastName: identical(lastName, _customerCopyWithUnset)
-          ? _self.lastName
-          : lastName as String?,
-      phone: identical(phone, _customerCopyWithUnset)
-          ? _self.phone
-          : phone as String?,
-    ));
+    return _then(
+      Customer(
+        id: id == null ? _self.id : id as String,
+        email: email == null ? _self.email : email as String,
+        firstName: identical(firstName, _customerCopyWithUnset)
+            ? _self.firstName
+            : firstName as String?,
+        lastName: identical(lastName, _customerCopyWithUnset)
+            ? _self.lastName
+            : lastName as String?,
+        phone: identical(phone, _customerCopyWithUnset)
+            ? _self.phone
+            : phone as String?,
+      )
+    );
   }
 }
-
-final class $CustomerSerializer
-    implements Serializer<Customer, Map<String, Object?>> {
+final class $CustomerSerializer implements Serializer<Customer, Map<String, Object?>> {
   const $CustomerSerializer();
 
   @override
   Map<String, Object?> serialize(Customer value) => _$CustomerSerialize(value);
 }
-
-final class $CustomerDeserializer
-    implements Deserializer<Customer, Map<String, Object?>> {
+final class $CustomerDeserializer implements Deserializer<Customer, Map<String, Object?>> {
   const $CustomerDeserializer();
 
   @override
-  Customer deserialize(Map<String, Object?> json) =>
-      _$CustomerDeserialize(json);
+  Customer deserialize(Map<String, Object?> json) => _$CustomerDeserialize(json);
 }
 
 Map<String, Object?> _$CustomerSerialize(Customer instance) {

@@ -72,8 +72,7 @@ mixin _$LineItem implements Serializable {
   /// final cleared = lineItem.copyWith(variantTitle: null);
   /// ```
   @pragma('vm:prefer-inline')
-  _$LineItemCopyWith<LineItem> get copyWith =>
-      _$LineItemCopyWithImpl<LineItem>(this as LineItem, (value) => value);
+  _$LineItemCopyWith<LineItem> get copyWith => _$LineItemCopyWithImpl<LineItem>(this as LineItem, (value) => value);
 
   Map<String, Object?> serialize() => _$LineItemSerialize(this as LineItem);
 
@@ -113,35 +112,32 @@ final class _$LineItemCopyWithImpl<$Res> implements _$LineItemCopyWith<$Res> {
     Object? variantId = null,
     Object? variantTitle = _lineItemCopyWithUnset,
   }) {
-    return _then(LineItem(
-      id: id == null ? _self.id : id as String,
-      variantId: variantId == null ? _self.variantId : variantId as String,
-      productId: productId == null ? _self.productId : productId as String,
-      title: title == null ? _self.title : title as String,
-      unitPrice: unitPrice == null ? _self.unitPrice : unitPrice as Money,
-      quantity: quantity == null ? _self.quantity : quantity as int,
-      variantTitle: identical(variantTitle, _lineItemCopyWithUnset)
-          ? _self.variantTitle
-          : variantTitle as String?,
-    ));
+    return _then(
+      LineItem(
+        id: id == null ? _self.id : id as String,
+        variantId: variantId == null ? _self.variantId : variantId as String,
+        productId: productId == null ? _self.productId : productId as String,
+        title: title == null ? _self.title : title as String,
+        unitPrice: unitPrice == null ? _self.unitPrice : unitPrice as Money,
+        quantity: quantity == null ? _self.quantity : quantity as int,
+        variantTitle: identical(variantTitle, _lineItemCopyWithUnset)
+            ? _self.variantTitle
+            : variantTitle as String?,
+      )
+    );
   }
 }
-
-final class $LineItemSerializer
-    implements Serializer<LineItem, Map<String, Object?>> {
+final class $LineItemSerializer implements Serializer<LineItem, Map<String, Object?>> {
   const $LineItemSerializer();
 
   @override
   Map<String, Object?> serialize(LineItem value) => _$LineItemSerialize(value);
 }
-
-final class $LineItemDeserializer
-    implements Deserializer<LineItem, Map<String, Object?>> {
+final class $LineItemDeserializer implements Deserializer<LineItem, Map<String, Object?>> {
   const $LineItemDeserializer();
 
   @override
-  LineItem deserialize(Map<String, Object?> json) =>
-      _$LineItemDeserialize(json);
+  LineItem deserialize(Map<String, Object?> json) => _$LineItemDeserialize(json);
 }
 
 Map<String, Object?> _$LineItemSerialize(LineItem instance) {

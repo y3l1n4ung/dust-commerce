@@ -50,8 +50,7 @@ mixin _$Money implements Serializable {
   /// final updated = money.copyWith(amount: 1);
   /// ```
   @pragma('vm:prefer-inline')
-  _$MoneyCopyWith<Money> get copyWith =>
-      _$MoneyCopyWithImpl<Money>(this as Money, (value) => value);
+  _$MoneyCopyWith<Money> get copyWith => _$MoneyCopyWithImpl<Money>(this as Money, (value) => value);
 
   Map<String, Object?> serialize() => _$MoneySerialize(this as Money);
 
@@ -81,24 +80,21 @@ final class _$MoneyCopyWithImpl<$Res> implements _$MoneyCopyWith<$Res> {
     Object? amount = null,
     Object? currencyCode = null,
   }) {
-    return _then(Money(
-      amount: amount == null ? _self.amount : amount as int,
-      currencyCode:
-          currencyCode == null ? _self.currencyCode : currencyCode as String,
-    ));
+    return _then(
+      Money(
+        amount: amount == null ? _self.amount : amount as int,
+        currencyCode: currencyCode == null ? _self.currencyCode : currencyCode as String,
+      )
+    );
   }
 }
-
-final class $MoneySerializer
-    implements Serializer<Money, Map<String, Object?>> {
+final class $MoneySerializer implements Serializer<Money, Map<String, Object?>> {
   const $MoneySerializer();
 
   @override
   Map<String, Object?> serialize(Money value) => _$MoneySerialize(value);
 }
-
-final class $MoneyDeserializer
-    implements Deserializer<Money, Map<String, Object?>> {
+final class $MoneyDeserializer implements Deserializer<Money, Map<String, Object?>> {
   const $MoneyDeserializer();
 
   @override
@@ -127,4 +123,5 @@ Money _$MoneyDeserialize(Map<String, Object?> json) {
   return Money(amount: amountValue, currencyCode: currencyCodeValue);
 }
 
-Money _$MoneyFromJson(Map<String, Object?> json) => _$MoneyDeserialize(json);
+Money _$MoneyFromJson(Map<String, Object?> json) =>
+    _$MoneyDeserialize(json);

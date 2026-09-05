@@ -45,6 +45,15 @@ Conventional commits. The body says why, not what — the diff already says what
 ## Verifying
 
 ```bash
-dust build && dust db build && dust check && dust check --db
-dart analyze && dart test
+dust build --root packages/commerce_shared
+dust build --root packages/commerce_server && dust db build --root packages/commerce_server
+dust build --root apps/commerce_app
 ```
+
+```bash
+./scripts/format.sh && ./scripts/check_file_size.sh
+```
+
+Never run `dart format` across a package. It rewrites generated files into
+something the generator would not emit, and `dust check` then reports all of
+them stale. `scripts/format.sh` formats handwritten Dart and skips the rest.

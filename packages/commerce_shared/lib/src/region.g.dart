@@ -13,8 +13,7 @@
 
 part of 'region.dart';
 
-const DeepCollectionEquality _regionCountriesEquality =
-    DeepCollectionEquality();
+const DeepCollectionEquality _regionCountriesEquality = DeepCollectionEquality();
 
 mixin _$Region implements Serializable {
   @override
@@ -65,8 +64,7 @@ mixin _$Region implements Serializable {
   /// final updated = region.copyWith(currencyCode: 'John');
   /// ```
   @pragma('vm:prefer-inline')
-  _$RegionCopyWith<Region> get copyWith =>
-      _$RegionCopyWithImpl<Region>(this as Region, (value) => value);
+  _$RegionCopyWith<Region> get copyWith => _$RegionCopyWithImpl<Region>(this as Region, (value) => value);
 
   Map<String, Object?> serialize() => _$RegionSerialize(this as Region);
 
@@ -104,30 +102,25 @@ final class _$RegionCopyWithImpl<$Res> implements _$RegionCopyWith<$Res> {
     Object? taxInclusive = null,
     Object? taxRate = null,
   }) {
-    return _then(Region(
-      id: id == null ? _self.id : id as String,
-      name: name == null ? _self.name : name as String,
-      currencyCode:
-          currencyCode == null ? _self.currencyCode : currencyCode as String,
-      taxRate: taxRate == null ? _self.taxRate : taxRate as int,
-      countries:
-          countries == null ? _self.countries : countries as List<String>,
-      taxInclusive:
-          taxInclusive == null ? _self.taxInclusive : taxInclusive as bool,
-    ));
+    return _then(
+      Region(
+        id: id == null ? _self.id : id as String,
+        name: name == null ? _self.name : name as String,
+        currencyCode: currencyCode == null ? _self.currencyCode : currencyCode as String,
+        taxRate: taxRate == null ? _self.taxRate : taxRate as int,
+        countries: countries == null ? _self.countries : countries as List<String>,
+        taxInclusive: taxInclusive == null ? _self.taxInclusive : taxInclusive as bool,
+      )
+    );
   }
 }
-
-final class $RegionSerializer
-    implements Serializer<Region, Map<String, Object?>> {
+final class $RegionSerializer implements Serializer<Region, Map<String, Object?>> {
   const $RegionSerializer();
 
   @override
   Map<String, Object?> serialize(Region value) => _$RegionSerialize(value);
 }
-
-final class $RegionDeserializer
-    implements Deserializer<Region, Map<String, Object?>> {
+final class $RegionDeserializer implements Deserializer<Region, Map<String, Object?>> {
   const $RegionDeserializer();
 
   @override
@@ -136,7 +129,9 @@ final class $RegionDeserializer
 
 Map<String, Object?> _$RegionSerialize(Region instance) {
   return <String, Object?>{
-    'countries': instance.countries.map((item) => item).toList(),
+    'countries': instance.countries
+        .map((item) => item)
+        .toList(),
     'currency_code': instance.currencyCode,
     'id': instance.id,
     'name': instance.name,
@@ -176,4 +171,5 @@ Region _$RegionDeserialize(Map<String, Object?> json) {
   );
 }
 
-Region _$RegionFromJson(Map<String, Object?> json) => _$RegionDeserialize(json);
+Region _$RegionFromJson(Map<String, Object?> json) =>
+    _$RegionDeserialize(json);
