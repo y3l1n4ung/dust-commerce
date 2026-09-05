@@ -101,6 +101,10 @@ customer records. Bind address, port, database path, and browser origins are
 configured with `COMMERCE_BIND`, `COMMERCE_PORT`, `COMMERCE_DATABASE_PATH`, and
 comma-separated `COMMERCE_ALLOWED_ORIGINS`.
 
+To reset development data safely, stop the API and point
+`COMMERCE_DATABASE_PATH` at a new file. Keep the old database as a backup until
+the replacement stack has started and passed `/health`.
+
 In a second terminal, start the Flutter web storefront:
 
 ```bash

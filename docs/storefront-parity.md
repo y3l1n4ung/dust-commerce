@@ -13,15 +13,15 @@ and the `Medusa DTC storefront parity` milestone.
 
 | Medusa source | Flutter/Dust owner | Status |
 | :--- | :--- | :--- |
-| `layout/templates/nav` | shared storefront shell | queued in #19 |
-| `home/components/hero` | home hero | queued in #19 |
-| `featured-products/product-rail` | collection rail | blocked by #18 |
-| `products/components/product-preview` | product card | queued in #19 |
-| `store/templates` | paged catalogue | queued in #19 |
-| `products/templates` | product detail route | queued in #22 |
-| `products/components/product-actions` | variant state and add to cart | queued in #22 |
+| `layout/templates/nav` | shared storefront shell | partial in #19; nav/menu/cart count work, footer remains |
+| `home/components/hero` | home hero | implemented in #19 |
+| `featured-products/product-rail` | featured product grid | partial in #19; collection rails wait on #18 |
+| `products/components/product-preview` | product card | implemented in #19 |
+| `store/templates` | catalogue | partial in #19; dedicated store filters and paging remain |
+| `products/templates` | product detail route | partial in #22; gallery and tabs remain |
+| `products/components/product-actions` | variant state and add to cart | partial in #22; unavailable combinations remain |
 | `layout/components/cart-dropdown` | cart preview | queued in #21 |
-| `cart/templates` | persistent cart route | queued in #21 |
+| `cart/templates` | cart route | partial in #21; persistence and mutations remain |
 | `account/templates` | account shell and session | queued in #26 |
 | `checkout/templates` | checkout and payment | queued in #28 |
 | `order/templates` | confirmation and order details | queued in #20 and #28 |
