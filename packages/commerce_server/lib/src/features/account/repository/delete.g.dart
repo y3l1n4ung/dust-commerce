@@ -27,6 +27,14 @@ final class _$AccountDeleteRepository implements AccountDeleteRepository {
   }
 
   @override
+  Future<Result<ExecResult, SqlxError>> revokeIdentityTokens(String authIdentityId) {
+    return _db.execute(
+      r'''DELETE FROM auth_tokens WHERE auth_identity_id = ?''',
+      [authIdentityId],
+    );
+  }
+
+  @override
   Future<Result<ExecResult, SqlxError>> deleteAddress(String id, String customerId) {
     return _db.execute(
       r'''

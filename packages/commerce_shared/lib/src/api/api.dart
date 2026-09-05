@@ -9,4 +9,5 @@ export 'cart_view.dart';
 export 'catalog_view.dart';
 export 'customer_address.dart';
 export 'option_filter_view.dart';
+export 'password.dart';
 export 'region_view.dart';

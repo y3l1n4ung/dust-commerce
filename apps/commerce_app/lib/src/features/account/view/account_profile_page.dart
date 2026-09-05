@@ -11,6 +11,7 @@ import 'account_section.dart';
 import 'profile_billing_address_editor.dart';
 import 'profile_email_info.dart';
 import 'profile_name_editor.dart';
+import 'profile_password_editor.dart';
 import 'profile_phone_editor.dart';
 
 /// Authenticated Medusa profile-information route.
@@ -77,7 +78,7 @@ final class _ProfileContent extends StatelessWidget {
             'shop_account_profile_body',
             defaultText: 'View and update your profile information, including '
                 'your name, email, and phone number. You can also update your '
-                'billing address.',
+                'billing address, or change your password.',
           ),
           const SizedBox(height: 32),
           ProfileNameEditor(customer: customer),
@@ -85,6 +86,8 @@ final class _ProfileContent extends StatelessWidget {
           ProfileEmailInfo(customer: customer),
           const _ProfileDivider(),
           ProfilePhoneEditor(customer: customer),
+          const _ProfileDivider(),
+          const ProfilePasswordEditor(),
           const _ProfileDivider(),
           ProfileBillingAddressEditor(
             customer: customer,

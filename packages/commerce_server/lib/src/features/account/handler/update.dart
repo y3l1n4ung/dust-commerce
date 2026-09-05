@@ -1,8 +1,10 @@
+import 'package:commerce_server/src/features/account/crypto.dart';
 import 'package:commerce_server/src/features/account/deps.dart';
 import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/account/model.dart';
 import 'package:commerce_server/src/features/account/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
+import 'package:dust_dart/db.dart';
 import 'package:dust_server/server.dart';
 
 const ValidatedExtractable<UpdateCustomerProfileBody> _profileBody =
@@ -15,6 +17,50 @@ const ValidatedExtractable<CustomerAddressInput> _addressBody =
     ValidatedExtractable(
   JsonExtractable<CustomerAddressInput>(CustomerAddressInput.fromJson),
 );
+const ValidatedExtractable<ChangePasswordBody> _passwordBody =
+    ValidatedExtractable(
+  JsonExtractable<ChangePasswordBody>(ChangePasswordBody.fromJson),
+);
+
+/// `PATCH /store/customers/me/password` — rotate the emailpass credential.
+Future<Result<PasswordChanged, Rejection>> updatePasswordHandler(
+  Request request,
+) async {
+  final actor = await request.extract(
+    const Extension<AuthenticatedCustomer>(),
+  );
+  final decoded = await _passwordBody.extract(request);
+  if (decoded case Err(:final error)) return Err(error);
+  final deps = await request.state<AccountDeps>();
+
+  late final Result<Result<PasswordChanged, ChangePasswordFailure>, SqlxError>
+      result;
+  try {
+    result = await changeCustomerPassword(
+      deps.database,
+      deps.reads,
+      actor.customer.id,
+      (decoded as Ok<ChangePasswordBody, Rejection>).value,
+      passwordWork: deps.passwordWork,
+    );
+  } on PasswordCapacityException {
+    return const Err(
+      Rejection.status(429, 'Authentication is busy; retry shortly'),
+    );
+  }
+  return switch (result) {
+    Ok(value: Ok(value: final changed)) => Ok(changed),
+    Ok(value: Err(error: ChangePasswordFailure.invalidCurrentPassword)) =>
+      const Err(Rejection.unprocessable({
+        'old_password': ['Current password is incorrect'],
+      })),
+    Ok(value: Err(error: ChangePasswordFailure.unchanged)) =>
+      const Err(Rejection.unprocessable({
+        'new_password': ['Use a different password'],
+      })),
+    Err() => const Err(Rejection.internal()),
+  };
+}
 
 /// `PATCH /store/customers/me` — replace editable public profile fields.
 Future<Result<CustomerResponse, Rejection>> updateCustomerHandler(

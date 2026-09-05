@@ -155,11 +155,11 @@ class _AccountFormFields extends StatelessWidget {
   String? _password(BuildContext context, String? value) {
     final required = _required(context, value);
     if (required != null) return required;
-    return value!.length >= 12
+    return value!.length >= 12 && value.length <= 1024
         ? null
         : context.tr(
             'shop_account_password_length',
-            defaultText: 'Use at least 12 characters.',
+            defaultText: 'Use 12 to 1024 characters.',
           );
   }
 }

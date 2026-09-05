@@ -24,7 +24,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
 | `layout/components/cart-dropdown` | cart preview | implemented in #21 with hover, timed add feedback, live removal, subtotal and empty state |
 | `cart/templates` | cart route | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, promotion UI, authoritative totals, session-aware sign-in prompt and checkout handoff; rendered QA remains |
-| `account/templates` | account shell and session | partial in #20 and #26; secure session, overview, profile name/phone/billing editing, API-backed address book, source-shaped navigation, order list and guarded order detail implemented; password flow remains |
+| `account/templates` | account shell and session | implemented in #20 and #26 with secure session, overview, profile name/phone/billing/password editing, API-backed address book, source-shaped navigation, order list and guarded order detail; rendered QA remains |
 | `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, delivery, manual-payment, review and confirmation steps; rendered QA remains |
 | `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards and guarded frozen order detail metadata, lines, delivery and totals implemented; contact, transfer and return flows remain |
 | `regions` store API | account and checkout country selection | implemented with explicit SQLx response allowlists; address-book selectors use active backend regions rather than hard-coded countries |
@@ -98,6 +98,10 @@ saved address into the editable form only when its country belongs to the
 cart's active region. Order detail keeps its loaded order and failure as Dust
 `Option` values, and a missing or foreign order receives the same unavailable
 state so the UI does not disclose whether another customer's id exists.
+Password rotation completes the TODO in the pinned Medusa profile source: it
+requires the current secret, writes a fresh Argon2id PHC value with
+compare-and-swap protection, atomically revokes every session, and signs the
+Flutter customer out. The confirmation value never crosses the API boundary.
 
 ## Parity rule
 

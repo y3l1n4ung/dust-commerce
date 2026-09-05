@@ -13,6 +13,12 @@ abstract final class AccountDeleteRepository {
   @Query(r'DELETE FROM auth_tokens WHERE token_hash = $1')
   Future<Result<ExecResult, SqlxError>> revokeToken(String tokenHash);
 
+  /// Revokes every session issued to one authentication identity.
+  @Query(r'DELETE FROM auth_tokens WHERE auth_identity_id = $1')
+  Future<Result<ExecResult, SqlxError>> revokeIdentityTokens(
+    String authIdentityId,
+  );
+
   /// Soft-deletes one address only when the customer owns it.
   @Query(r'''
 UPDATE customer_addresses

@@ -7,6 +7,7 @@ import 'package:dust_flutter/state.dart';
 
 part 'account_view_model.g.dart';
 part 'account_error.dart';
+part 'account_password.dart';
 part 'account_profile.dart';
 
 /// Dependencies for customer account and session state.
@@ -31,7 +32,8 @@ final class AccountViewModelArgs extends ViewModelArgs {
 
 /// Owns registration, sign-in, verified restore, and sign-out.
 @ViewModel(state: AccountState, args: AccountViewModelArgs)
-class AccountViewModel extends $AccountViewModel with _AccountProfileMutation {
+class AccountViewModel extends $AccountViewModel
+    with _AccountProfileMutation, _AccountPasswordMutation {
   /// Creates the account view model.
   AccountViewModel(super.args);
 

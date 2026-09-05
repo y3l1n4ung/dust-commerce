@@ -10,6 +10,23 @@ abstract final class AccountUpdateRepository {
   const factory AccountUpdateRepository(DatabaseExecutor db) =
       _$AccountUpdateRepository;
 
+  /// Replaces an unchanged credential hash using compare-and-swap semantics.
+  @Query(r'''
+UPDATE provider_identity
+SET provider_metadata = json_set(
+      coalesce(provider_metadata, '{}'), '$.password', $3
+    )
+WHERE auth_identity_id = $1
+  AND provider = 'emailpass'
+  AND CAST(json_extract(provider_metadata, '$.password') AS TEXT) = $2
+  AND deleted_at IS NULL
+''')
+  Future<Result<ExecResult, SqlxError>> updatePassword(
+    String authIdentityId,
+    String expectedHash,
+    String newHash,
+  );
+
   /// Replaces editable profile fields for one active customer.
   @Query(r'''
 UPDATE customers

@@ -143,9 +143,41 @@
   "@account_password": {
     "description": "Customer password field label."
   },
-  "account_password_length": "Use at least 12 characters.",
+  "account_confirm_password": "Confirm password",
+  "@account_confirm_password": {
+    "description": "Repeated replacement-password field label."
+  },
+  "account_current_password_incorrect": "Current password is incorrect.",
+  "@account_current_password_incorrect": {
+    "description": "Failed current-password reauthentication."
+  },
+  "account_new_password": "New password",
+  "@account_new_password": {
+    "description": "Replacement-password field label."
+  },
+  "account_old_password": "Old password",
+  "@account_old_password": {
+    "description": "Current-password reauthentication field label."
+  },
+  "account_password_hidden": "The password is not shown for security reasons",
+  "@account_password_hidden": {
+    "description": "Collapsed password editor summary."
+  },
+  "account_password_length": "Use 12 to 1024 characters.",
   "@account_password_length": {
     "description": "Password-field validation."
+  },
+  "account_password_mismatch": "Passwords do not match.",
+  "@account_password_mismatch": {
+    "description": "Password confirmation validation."
+  },
+  "account_password_same": "Use a different password.",
+  "@account_password_same": {
+    "description": "Rejects reusing the current password."
+  },
+  "account_password_update_failed": "We could not change your password. Please try again.",
+  "@account_password_update_failed": {
+    "description": "Display-safe password-rotation failure."
   },
   "account_phone": "Phone",
   "@account_phone": {
@@ -279,7 +311,7 @@
   "@account_postal_code": {
     "description": "Customer-address postal-code field label."
   },
-  "account_profile_body": "View and update your profile information, including your name, email, and phone number. You can also update your billing address.",
+  "account_profile_body": "View and update your profile information, including your name, email, and phone number. You can also update your billing address, or change your password.",
   "@account_profile_body": {
     "description": "Customer profile supporting copy."
   },

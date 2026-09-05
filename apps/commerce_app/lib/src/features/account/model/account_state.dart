@@ -37,6 +37,9 @@ enum AccountOperation {
 
   /// Replacing editable customer profile fields.
   updateProfile,
+
+  /// Verifying and rotating the customer password.
+  changePassword,
 }
 
 /// Public account UI state; bearer credentials never enter this object.

@@ -143,9 +143,41 @@
   "@account_password": {
     "description": "Customer password field label."
   },
-  "account_password_length": "အနည်းဆုံး စာလုံး ၁၂ လုံး အသုံးပြုပါ။",
+  "account_confirm_password": "စကားဝှက် အတည်ပြုရန်",
+  "@account_confirm_password": {
+    "description": "Repeated replacement-password field label."
+  },
+  "account_current_password_incorrect": "လက်ရှိစကားဝှက် မမှန်ပါ။",
+  "@account_current_password_incorrect": {
+    "description": "Failed current-password reauthentication."
+  },
+  "account_new_password": "စကားဝှက်အသစ်",
+  "@account_new_password": {
+    "description": "Replacement-password field label."
+  },
+  "account_old_password": "စကားဝှက်ဟောင်း",
+  "@account_old_password": {
+    "description": "Current-password reauthentication field label."
+  },
+  "account_password_hidden": "လုံခြုံရေးအတွက် စကားဝှက်ကို မပြထားပါ",
+  "@account_password_hidden": {
+    "description": "Collapsed password editor summary."
+  },
+  "account_password_length": "စာလုံး ၁၂ လုံးမှ ၁၀၂၄ လုံးအထိ အသုံးပြုပါ။",
   "@account_password_length": {
     "description": "Password-field validation."
+  },
+  "account_password_mismatch": "စကားဝှက်များ မတူညီပါ။",
+  "@account_password_mismatch": {
+    "description": "Password confirmation validation."
+  },
+  "account_password_same": "မတူညီသော စကားဝှက်ကို အသုံးပြုပါ။",
+  "@account_password_same": {
+    "description": "Rejects reusing the current password."
+  },
+  "account_password_update_failed": "စကားဝှက်ကို မပြောင်းနိုင်ပါ။ ထပ်ကြိုးစားပါ။",
+  "@account_password_update_failed": {
+    "description": "Display-safe password-rotation failure."
   },
   "account_phone": "ဖုန်း",
   "@account_phone": {
@@ -279,7 +311,7 @@
   "@account_postal_code": {
     "description": "Customer-address postal-code field label."
   },
-  "account_profile_body": "အမည်၊ အီးမေးလ်နှင့် ဖုန်းနံပါတ်အပါအဝင် ပရိုဖိုင်အချက်အလက်များကို ကြည့်ရှုပြင်ဆင်နိုင်ပြီး ငွေတောင်းခံလိပ်စာကိုလည်း ပြင်နိုင်ပါသည်။",
+  "account_profile_body": "အမည်၊ အီးမေးလ်နှင့် ဖုန်းနံပါတ်အပါအဝင် ပရိုဖိုင်အချက်အလက်များကို ကြည့်ရှုပြင်ဆင်နိုင်ပြီး ငွေတောင်းခံလိပ်စာ သို့မဟုတ် စကားဝှက်ကိုလည်း ပြင်နိုင်ပါသည်။",
   "@account_profile_body": {
     "description": "Customer profile supporting copy."
   },

@@ -19,6 +19,23 @@ final class _$AccountUpdateRepository implements AccountUpdateRepository {
   final DatabaseExecutor _db;
 
   @override
+  Future<Result<ExecResult, SqlxError>> updatePassword(String authIdentityId, String expectedHash, String newHash) {
+    return _db.execute(
+      r'''
+UPDATE provider_identity
+SET provider_metadata = json_set(
+      coalesce(provider_metadata, '{}'), '$.password', ?
+    )
+WHERE auth_identity_id = ?
+  AND provider = 'emailpass'
+  AND CAST(json_extract(provider_metadata, '$.password') AS TEXT) = ?
+  AND deleted_at IS NULL
+''',
+      [newHash, authIdentityId, expectedHash],
+    );
+  }
+
+  @override
   Future<Result<CustomerResponse?, SqlxError>> updateProfile(String customerId, String firstName, String lastName, String? phone) {
     return _db.fetchOptional<CustomerResponse>(
       r'''

@@ -11,8 +11,9 @@ Pixel dimensions, CSS size, and density normalization: not measured because no
 valid source or implementation capture could be produced.
 
 State: `/store` with the shared footer visible, authenticated `/checkout` with
-a saved address available, and `/account/orders/details/:id`, plus the
-equivalent Medusa DTC states pinned in `docs/storefront-parity.md`.
+a saved address available, `/account/orders/details/:id`, and the profile
+password editor closed and open, plus the equivalent Medusa DTC states pinned
+in `docs/storefront-parity.md`.
 
 **Findings**
 
@@ -59,6 +60,8 @@ checkout controls require focused captures after the full-view comparison.
 - Capture authenticated checkout with the saved-address menu closed and open.
 - Capture the same authenticated order-detail state at desktop and compact
   widths.
+- Capture profile password closed, open, validation-error, and post-save
+  signed-out states without exposing any secret text.
 - Compare combined images and fix every P0/P1/P2 difference.
 - Repeat captures after fixes and record post-fix evidence here.
 

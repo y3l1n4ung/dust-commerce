@@ -21,6 +21,7 @@ Router accountStoreRoutes() {
       '/customers/me',
       get(readCurrentCustomerHandler).patch(updateCustomerHandler),
     )
+    ..route('/customers/me/password', patch(updatePasswordHandler))
     ..route(
       '/customers/me/addresses',
       get(listAddressesHandler).post(createAddressHandler, status: 201),

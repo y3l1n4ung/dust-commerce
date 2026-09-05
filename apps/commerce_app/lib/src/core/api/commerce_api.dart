@@ -39,6 +39,10 @@ abstract interface class CommerceApi {
     @Body() UpdateCustomerProfileBody body,
   );
 
+  /// Rotates the password and revokes every session for this customer.
+  @PATCH('/store/customers/me/password')
+  Future<PasswordChanged> changePassword(@Body() ChangePasswordBody body);
+
   /// Lists the authenticated customer's active saved addresses.
   @GET('/store/customers/me/addresses')
   Future<CustomerAddressListView> customerAddresses();

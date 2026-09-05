@@ -41,6 +41,28 @@ WHERE p.provider = 'emailpass'
   }
 
   @override
+  Future<Result<PasswordCredential?, SqlxError>> credentialForCustomer(String customerId) {
+    return _db.fetchOptional<PasswordCredential>(
+      r'''
+SELECT a.id AS auth_identity_id,
+       coalesce(CAST(json_extract(p.provider_metadata, '$.password') AS TEXT),
+                '') AS password_hash
+FROM provider_identity p
+JOIN auth_identity a ON a.id = p.auth_identity_id
+JOIN customers c
+  ON c.id = CAST(json_extract(a.app_metadata, '$.customer_id') AS TEXT)
+WHERE p.provider = 'emailpass'
+  AND c.id = ?
+  AND p.deleted_at IS NULL
+  AND a.deleted_at IS NULL
+  AND c.deleted_at IS NULL
+''',
+      [customerId],
+      const $PasswordCredentialRowDeserializer().deserialize,
+    );
+  }
+
+  @override
   Future<Result<CustomerResponse?, SqlxError>> customerForToken(String tokenHash, String now) {
     return _db.fetchOptional<CustomerResponse>(
       r'''

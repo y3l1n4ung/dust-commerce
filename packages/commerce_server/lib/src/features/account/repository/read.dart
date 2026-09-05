@@ -27,6 +27,25 @@ WHERE p.provider = 'emailpass'
 ''')
   Future<Result<PasswordCredential?, SqlxError>> accountByEmail(String email);
 
+  /// Resolves the active email/password credential for one customer id.
+  @Query(r'''
+SELECT a.id AS auth_identity_id,
+       coalesce(CAST(json_extract(p.provider_metadata, '$.password') AS TEXT),
+                '') AS password_hash
+FROM provider_identity p
+JOIN auth_identity a ON a.id = p.auth_identity_id
+JOIN customers c
+  ON c.id = CAST(json_extract(a.app_metadata, '$.customer_id') AS TEXT)
+WHERE p.provider = 'emailpass'
+  AND c.id = $1
+  AND p.deleted_at IS NULL
+  AND a.deleted_at IS NULL
+  AND c.deleted_at IS NULL
+''')
+  Future<Result<PasswordCredential?, SqlxError>> credentialForCustomer(
+    String customerId,
+  );
+
   /// Resolves an unexpired token fingerprint to its customer actor.
   @Query(r'''
 SELECT c.id,

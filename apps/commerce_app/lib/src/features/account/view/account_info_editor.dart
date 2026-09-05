@@ -9,6 +9,7 @@ final class AccountInfoEditor extends StatefulWidget {
     required this.currentInfo,
     required this.editor,
     required this.onSave,
+    this.onCancel,
     this.busy = false,
     this.enabled = true,
     this.error,
@@ -32,6 +33,9 @@ final class AccountInfoEditor extends StatefulWidget {
 
   /// Saves the editor and reports whether the server accepted it.
   final Future<bool> Function() onSave;
+
+  /// Clears sensitive or draft-only values when editing is cancelled.
+  final VoidCallback? onCancel;
 
   /// Whether this editor's request is running.
   final bool busy;
@@ -134,10 +138,14 @@ class _AccountInfoEditorState extends State<AccountInfoEditor> {
         ],
       );
 
-  void _toggle() => setState(() {
-        _open = !_open;
-        _success = false;
-      });
+  void _toggle() {
+    final cancelling = _open;
+    setState(() {
+      _open = !_open;
+      _success = false;
+    });
+    if (cancelling) widget.onCancel?.call();
+  }
 
   Future<void> _save() async {
     final saved = await widget.onSave();
