@@ -127,18 +127,17 @@ void main() {
       expect(order.isPaid, isTrue);
     });
 
-    test('the order stays captured when read back', () async {
+    test('the completed state is persisted', () async {
       final orderId = await placedOrder();
       await authorize(orderId);
       await capture(orderId);
 
-      final read = await client
-          .get('/store/orders/$orderId?email=ada@example.com')
-          .send();
-      final order = Order.fromJson(read.json! as Map<String, Object?>);
-
-      expect(order.isPaid, isTrue);
-      expect(order.status, OrderStatus.completed);
+      final rows = await queryRaw(
+        'SELECT status, payment_status FROM orders WHERE id = ?',
+        [orderId],
+      ).fetch(database.connection as Executor);
+      expect(rows.single.readIndex<String>(0), 'completed');
+      expect(rows.single.readIndex<String>(1), 'captured');
     });
 
     test('refuses to capture twice, rather than charging twice', () async {

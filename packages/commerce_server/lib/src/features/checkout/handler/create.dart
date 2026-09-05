@@ -1,3 +1,4 @@
+import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/checkout/deps.dart';
 import 'package:commerce_server/src/features/checkout/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -16,6 +17,7 @@ const ValidatedExtractable<CheckoutRequest> _body = ValidatedExtractable(
 
 /// `POST /checkout` — turn a cart into an order.
 Future<Result<Order, Rejection>> placeOrderHandler(Request request) async {
+  final actor = await request.extract(const OptionalCustomerAuth());
   final decoded = await _body.extract(request);
   if (decoded case Err(:final error)) return Err(error);
   final input = (decoded as Ok<CheckoutRequest, Rejection>).value;
@@ -28,7 +30,8 @@ Future<Result<Order, Rejection>> placeOrderHandler(Request request) async {
   final result = await placeOrder(
     deps.database,
     cartId: input.cartId,
-    email: input.email,
+    email: actor?.customer.email ?? input.email,
+    customerId: actor?.customer.id,
     shippingAddress: shipping,
     billingAddress: input.billingAddress?.toAddress() ?? shipping,
     placedAt: deps.clock.now(),
@@ -44,6 +47,8 @@ Future<Result<Order, Rejection>> placeOrderHandler(Request request) async {
     Ok(value: (_, CheckoutFailure.outOfStock)) => const Err(
         Rejection.conflict('Something in this cart sold out before checkout'),
       ),
+    Ok(value: (_, CheckoutFailure.wrongCustomer)) =>
+      Err(Rejection.notFound('Cart "${input.cartId}"')),
     Ok() => const Err(Rejection.internal()),
     Err() => const Err(Rejection.internal()),
   };

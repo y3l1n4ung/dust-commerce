@@ -10,10 +10,10 @@ abstract final class CheckoutListRepository {
   const factory CheckoutListRepository(DatabaseExecutor db) =
       _$CheckoutListRepository;
 
-  /// The orders placed by one email address, newest first.
+  /// The orders owned by one authenticated customer, newest first.
   ///
-  /// Scoped by email in SQL. A history endpoint that filters in Dart is one
-  /// forgotten line away from showing somebody else's orders.
+  /// Scoped by customer id in SQL. A history endpoint that filters in Dart is
+  /// one forgotten line away from showing somebody else's orders.
   @Query(r'''
 SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
        o.shipping_total, o.discount_total, o.tax, o.total, o.status,
@@ -22,8 +22,10 @@ SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
        r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries
 FROM orders o
 JOIN regions r ON r.id = o.region_id
-WHERE o.email = $1
+WHERE o.customer_id = $1
 ORDER BY o.placed_at DESC, o.id DESC
 ''')
-  Future<Result<List<OrderRow>, SqlxError>> ordersFor(String email);
+  Future<Result<List<OrderRow>, SqlxError>> ordersForCustomer(
+    String customerId,
+  );
 }

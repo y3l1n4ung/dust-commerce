@@ -38,7 +38,9 @@ abstract interface class CommerceApi {
 
   /// Starts an empty cart.
   @POST('/store/carts')
-  Future<CartView> createCart();
+  Future<CartView> createCart({
+    @Header('authorization') String? authorization,
+  });
 
   /// One cart with the totals the server computed.
   @GET('/store/carts/{id}')
@@ -53,16 +55,21 @@ abstract interface class CommerceApi {
 
   /// Turns a cart into an order.
   @POST('/store/checkout')
-  Future<Order> checkout(@Body() CheckoutRequest body);
+  Future<Order> checkout(
+    @Body() CheckoutRequest body, {
+    @Header('authorization') String? authorization,
+  });
 
-  /// The orders placed by one email address.
+  /// The authenticated customer's orders.
   @GET('/store/orders')
-  Future<OrderListView> orders({@Query('email') required String email});
+  Future<OrderListView> orders({
+    @Header('authorization') required String authorization,
+  });
 
-  /// One order, which the caller must prove the email of.
+  /// One order owned by the authenticated customer.
   @GET('/store/orders/{id}')
   Future<Order> order(
     @Path() String id, {
-    @Query('email') required String email,
+    @Header('authorization') required String authorization,
   });
 }

@@ -28,6 +28,22 @@ WHERE o.id = $1
 ''')
   Future<Result<OrderRow?, SqlxError>> findOrder(String id);
 
+  /// One order only when it belongs to [customerId].
+  @Query(r'''
+SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
+       o.shipping_total, o.discount_total, o.tax, o.total, o.status,
+       o.payment_status, o.shipping_option_id, o.shipping_name,
+       o.placed_at, o.region_id,
+       r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries
+FROM orders o
+JOIN regions r ON r.id = o.region_id
+WHERE o.id = $1 AND o.customer_id = $2
+''')
+  Future<Result<OrderRow?, SqlxError>> findCustomerOrder(
+    String id,
+    String customerId,
+  );
+
   /// The lines of an order.
   @Query(r'''
 SELECT id, variant_id, product_id, title, variant_title,

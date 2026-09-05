@@ -16,6 +16,9 @@ enum CheckoutFailure {
 
   /// Somebody took the last one between adding it and paying for it.
   outOfStock,
+
+  /// The cart belongs to another authenticated customer.
+  wrongCustomer,
 }
 
 /// Turns a cart into an order, or says why it could not.
@@ -36,6 +39,7 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
   CommerceDatabase database, {
   required String cartId,
   required String email,
+  String? customerId,
   required Address shippingAddress,
   required Address billingAddress,
   required DateTime placedAt,
@@ -50,6 +54,9 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
 
     final cart = (loaded as Ok<Cart?, SqlxError>).value;
     if (cart == null) return const Ok((null, CheckoutFailure.noCart));
+    if (cart.customerId != null && cart.customerId != customerId) {
+      return const Ok((null, CheckoutFailure.wrongCustomer));
+    }
     if (cart.isEmpty) return const Ok((null, CheckoutFailure.emptyCart));
 
     for (final line in cart.items) {
@@ -64,7 +71,7 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
     final written = await orders.insertOrder(
       orderId,
       cart.region.id,
-      cart.customerId,
+      customerId ?? cart.customerId,
       email,
       cart.region.currencyCode,
       cart.subtotal.amount,
@@ -132,7 +139,7 @@ Future<Result<(Order?, CheckoutFailure?), SqlxError>> placeOrder(
       Order(
         id: orderId,
         email: email,
-        customerId: cart.customerId,
+        customerId: customerId ?? cart.customerId,
         region: cart.region,
         items: cart.items,
         subtotal: cart.subtotal,

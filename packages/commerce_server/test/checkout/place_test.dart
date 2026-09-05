@@ -1,3 +1,4 @@
+import 'package:commerce_server/commerce_server.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:test/test.dart';
 
@@ -10,6 +11,39 @@ void main() {
   tearDown(() async => harness.stop());
 
   group('POST /store/checkout', () {
+    test('binds an authenticated cart and order to the customer', () async {
+      final account = await harness.account('ada@example.com');
+      final cartId = await harness.cartWith(
+        'var_small',
+        token: account.token,
+      );
+
+      final placed = await harness.checkout(
+        cartId,
+        email: 'spoofed@example.com',
+        token: account.token,
+      );
+      placed.assertCreated();
+      final order = Order.fromJson(placed.json! as Map<String, Object?>);
+
+      expect(order.customerId, account.customerId);
+      expect(order.email, 'ada@example.com');
+      final rows = await queryRaw(
+        'SELECT customer_id, email FROM carts WHERE id = ?',
+        [cartId],
+      ).fetch(harness.database.connection as Executor);
+      expect(rows.single.readIndex<String>(0), account.customerId);
+      expect(rows.single.readIndex<String>(1), 'ada@example.com');
+    });
+
+    test('hides a customer cart from another signed-in customer', () async {
+      final ada = await harness.account('ada@example.com');
+      final grace = await harness.account('grace@example.com');
+      final cartId = await harness.cartWith('var_small', token: ada.token);
+
+      (await harness.checkout(cartId, token: grace.token)).assertNotFound();
+    });
+
     test('turns a cart into an order with frozen totals', () async {
       final cartId = await harness.cartWith('var_small', quantity: 2);
 
@@ -66,13 +100,22 @@ void main() {
       (await harness.checkout(mine, email: 'loser@example.com'))
           .assertConflict();
 
-      (await harness.client.get('/store/orders?email=loser@example.com').send())
-        ..assertOk()
-        ..assertJsonContains({'count': 0});
+      final rows = await queryRaw(
+        'SELECT COUNT(*) FROM orders WHERE email = ?',
+        ['loser@example.com'],
+      ).fetch(harness.database.connection as Executor);
+      expect(rows.single.readIndex<int>(0), 0);
     });
   });
 
   group('what it refuses', () {
+    test('an invalid bearer token cannot downgrade to a guest', () async {
+      final request = harness.client.post('/store/carts')
+        ..bearer('not-a-real-token');
+
+      (await request.send()).assertUnauthorized();
+    });
+
     test('a cart nobody started', () async {
       (await harness.checkout('nope')).assertNotFound();
     });

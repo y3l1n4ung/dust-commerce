@@ -124,6 +124,13 @@ fingerprint is stored, so reading the database cannot replay a live session;
 sign-out deletes the fingerprint. Unknown-email and wrong-password sign-in do
 the same Argon2 work and return the same response.
 
+Handlers use an Axum-style `CustomerAuth` request-parts extractor. It composes
+Dust Server's `BearerTokenExtractable` for standards-correct header parsing,
+then fingerprints the token, checks expiry, and resolves the customer. Order
+queries are scoped by that customer id in SQL; an `?email=` value is never
+treated as identity. Guest cart and checkout routes accept no header, but a
+malformed or invalid header is rejected instead of silently becoming a guest.
+
 ### PostgreSQL timestamps become explicit SQLite UTC text
 
 Medusa's PostgreSQL migrations use `timestamptz not null default now()`.

@@ -37,6 +37,24 @@ WHERE o.id = ?
   }
 
   @override
+  Future<Result<OrderRow?, SqlxError>> findCustomerOrder(String id, String customerId) {
+    return _db.fetchOptional<OrderRow>(
+      r'''
+SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
+       o.shipping_total, o.discount_total, o.tax, o.total, o.status,
+       o.payment_status, o.shipping_option_id, o.shipping_name,
+       o.placed_at, o.region_id,
+       r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries
+FROM orders o
+JOIN regions r ON r.id = o.region_id
+WHERE o.id = ? AND o.customer_id = ?
+''',
+      [id, customerId],
+      const $OrderRowRowDeserializer().deserialize,
+    );
+  }
+
+  @override
   Future<Result<List<LineItemRow>, SqlxError>> itemsOf(String orderId) {
     return _db.fetchAll<LineItemRow>(
       r'''

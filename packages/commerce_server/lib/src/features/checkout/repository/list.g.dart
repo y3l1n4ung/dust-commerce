@@ -19,7 +19,7 @@ final class _$CheckoutListRepository implements CheckoutListRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<OrderRow>, SqlxError>> ordersFor(String email) {
+  Future<Result<List<OrderRow>, SqlxError>> ordersForCustomer(String customerId) {
     return _db.fetchAll<OrderRow>(
       r'''
 SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
@@ -29,10 +29,10 @@ SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
        r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries
 FROM orders o
 JOIN regions r ON r.id = o.region_id
-WHERE o.email = ?
+WHERE o.customer_id = ?
 ORDER BY o.placed_at DESC, o.id DESC
 ''',
-      [email],
+      [customerId],
       const $OrderRowRowDeserializer().deserialize,
     );
   }

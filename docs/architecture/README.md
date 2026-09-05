@@ -88,9 +88,10 @@ the order is written: a sold-out line then fails before an order exists.
 
 ### Filters live in SQL
 
-Draft products are excluded by the query, and orders are scoped to an email by
-the query. A filter in Dart is one forgotten line away from showing somebody
-else's data; a filter in SQL cannot be forgotten by a caller.
+Draft products are excluded by the query, and account order reads are scoped to
+the authenticated customer id by the query. A filter in Dart is one forgotten
+line away from showing somebody else's data; a filter in SQL cannot be
+forgotten by a caller.
 
 ## Layers that were harder than expected
 

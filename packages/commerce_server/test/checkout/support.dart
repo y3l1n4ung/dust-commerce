@@ -59,8 +59,14 @@ final class CheckoutHarness {
       };
 
   /// Starts a cart holding [quantity] of [variantId].
-  Future<String> cartWith(String variantId, {int quantity = 1}) async {
-    final created = await client.post('/store/carts').send();
+  Future<String> cartWith(
+    String variantId, {
+    int quantity = 1,
+    String? token,
+  }) async {
+    final request = client.post('/store/carts');
+    if (token != null) request.bearer(token);
+    final created = await request.send();
     final cartId =
         CartView.fromJson(created.json! as Map<String, Object?>).cart.id;
     (await (client.post('/store/carts/$cartId/line-items')
@@ -75,14 +81,42 @@ final class CheckoutHarness {
     String cartId, {
     String email = 'ada@example.com',
     Map<String, Object?>? shipping,
+    String? token,
   }) {
-    return (client.post('/store/checkout')
+    final request = client.post('/store/checkout')
+      ..json({
+        'cart_id': cartId,
+        'email': email,
+        'shipping_address': shipping ?? address(),
+      });
+    if (token != null) request.bearer(token);
+    return request.send();
+  }
+
+  /// Registers and signs in one customer, returning the durable id and token.
+  Future<({String customerId, String token})> account(String email) async {
+    final registered = await (client.post('/store/customers')
           ..json({
-            'cart_id': cartId,
             'email': email,
-            'shipping_address': shipping ?? address(),
+            'password': 'correct horse battery staple',
+            'first_name': 'Test',
+            'last_name': 'Customer',
           }))
         .send();
+    registered.assertCreated();
+
+    final signedIn = await (client.post('/auth/customer/emailpass')
+          ..json({
+            'email': email,
+            'password': 'correct horse battery staple',
+          }))
+        .send();
+    signedIn.assertOk();
+
+    return (
+      customerId: (registered.json! as Map<String, Object?>)['id']! as String,
+      token: (signedIn.json! as Map<String, Object?>)['token']! as String,
+    );
   }
 
   /// The stock on hand for [variantId], read straight from the table.

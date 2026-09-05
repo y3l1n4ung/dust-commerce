@@ -10,6 +10,24 @@ Future<Result<Order?, SqlxError>> loadOrder(
   String orderId,
 ) async {
   final found = await reads.findOrder(orderId);
+  return _loadOrderDetails(reads, orderId, found);
+}
+
+/// One order owned by [customerId], or `Ok(null)` when there is none.
+Future<Result<Order?, SqlxError>> loadCustomerOrder(
+  CheckoutReadRepository reads,
+  String orderId,
+  String customerId,
+) async {
+  final found = await reads.findCustomerOrder(orderId, customerId);
+  return _loadOrderDetails(reads, orderId, found);
+}
+
+Future<Result<Order?, SqlxError>> _loadOrderDetails(
+  CheckoutReadRepository reads,
+  String orderId,
+  Result<OrderRow?, SqlxError> found,
+) async {
   if (found case Err(:final error)) return Err(error);
 
   final row = (found as Ok<OrderRow?, SqlxError>).value;

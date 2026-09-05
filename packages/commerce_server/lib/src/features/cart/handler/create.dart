@@ -1,3 +1,4 @@
+import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/cart/deps.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -19,6 +20,7 @@ const OptionalExtractable<CreateCartBody> _body = OptionalExtractable(
 /// Answers with a [CartView] like every other cart endpoint, so a client has
 /// one shape to decode whether it created the cart or fetched it.
 Future<Result<CartView, Rejection>> createCartHandler(Request request) async {
+  final actor = await request.extract(const OptionalCustomerAuth());
   final decoded = await _body.extract(request);
   if (decoded case Err(:final error)) return Err(error);
 
@@ -37,7 +39,8 @@ Future<Result<CartView, Rejection>> createCartHandler(Request request) async {
     id: deps.clock.nextId(),
     now: deps.clock.now(),
     regionId: body.regionId,
-    email: body.email,
+    email: actor?.customer.email ?? body.email,
+    customerId: actor?.customer.id,
   );
 
   return switch (result) {

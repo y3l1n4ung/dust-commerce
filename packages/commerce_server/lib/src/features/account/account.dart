@@ -3,6 +3,7 @@ library;
 
 export 'crypto.dart';
 export 'deps.dart';
+export 'extractor.dart';
 export 'handler/handler.dart';
 export 'model.dart';
 export 'repository/repository.dart';

@@ -7,6 +7,8 @@ import 'package:dust_dart/http.dart';
 import 'package:dust_server/testing.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'support.dart';
+
 /// The claim this repository exists to make, checked end to end.
 ///
 /// The API is the real one, serving over a real socket. The client is the one
@@ -147,8 +149,9 @@ void main() {
       expect(order.billingAddress, order.shippingAddress);
     });
 
-    test('reads the order back, and lists it for that email', () async {
-      final cart = await api.createCart();
+    test('reads and lists only the authenticated customer order', () async {
+      final authorization = 'Bearer ${await server.customerToken()}';
+      final cart = await api.createCart(authorization: authorization);
       await api.addLine(
         cart.cart.id,
         const AddLineBody(variantId: 'var_small'),
@@ -166,13 +169,17 @@ void main() {
             countryCode: 'gb',
           ),
         ),
+        authorization: authorization,
       );
 
-      final fetched = await api.order(placed.id, email: 'ada@example.com');
+      final fetched = await api.order(
+        placed.id,
+        authorization: authorization,
+      );
       expect(fetched.id, placed.id);
       expect(fetched.total, placed.total);
 
-      final history = await api.orders(email: 'ada@example.com');
+      final history = await api.orders(authorization: authorization);
       expect(history.count, 1);
       expect(history.orders.single.id, placed.id);
     });

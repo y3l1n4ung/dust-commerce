@@ -40,7 +40,7 @@ class ProductPageView with _$ProductPageView {
   final int total;
 }
 
-/// The orders one email address has placed.
+/// The orders owned by one authenticated customer.
 @Derive([ToString(), Eq(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)
 class OrderListView with _$OrderListView {

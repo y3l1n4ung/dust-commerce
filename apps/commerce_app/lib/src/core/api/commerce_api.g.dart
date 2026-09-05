@@ -139,11 +139,12 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
-  Future<CartView> createCart() async {
+  Future<CartView> createCart({String? authorization}) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
+    if (authorization != null) _headers['authorization'] = authorization.toString();
     final Object? _data = null;
     final _options = Options(
       method: 'POST',
@@ -247,11 +248,12 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
-  Future<Order> checkout(CheckoutRequest body) async {
+  Future<Order> checkout(CheckoutRequest body, {String? authorization}) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
+    if (authorization != null) _headers['authorization'] = authorization.toString();
     final Object? _data = body.toJson();
     final _options = Options(
       method: 'POST',
@@ -283,12 +285,12 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
-  Future<OrderListView> orders({required String email}) async {
+  Future<OrderListView> orders({required String authorization}) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
-    _queryParameters['email'] = email;
+    _headers['authorization'] = authorization.toString();
     final Object? _data = null;
     final _options = Options(
       method: 'GET',
@@ -320,12 +322,12 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
-  Future<Order> order(String id, {required String email}) async {
+  Future<Order> order(String id, {required String authorization}) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
-    _queryParameters['email'] = email;
+    _headers['authorization'] = authorization.toString();
     final Object? _data = null;
     final _options = Options(
       method: 'GET',
