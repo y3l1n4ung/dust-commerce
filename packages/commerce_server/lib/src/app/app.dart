@@ -1,3 +1,4 @@
+import 'package:commerce_server/src/features/account/account.dart';
 import 'package:commerce_server/src/features/cart/cart.dart';
 import 'package:commerce_server/src/features/catalog/catalog.dart';
 import 'package:commerce_server/src/features/checkout/checkout.dart';
@@ -34,11 +35,22 @@ Router buildApp(
   final orderReads = CheckoutReadRepository(executor);
 
   return Router()
+    ..nest('/auth', accountAuthRoutes())
+    ..nest('/store', accountStoreRoutes())
     ..nest('/store', catalogRoutes())
     ..nest('/store', cartRoutes())
     ..nest('/store', checkoutRoutes())
     ..nest('/store', paymentRoutes())
     ..route('/health', get(_health))
+    ..withState(
+      AccountDeps(
+        database: database,
+        reads: AccountReadRepository(executor),
+        writes: AccountCreateRepository(executor),
+        deletes: AccountDeleteRepository(executor),
+        clock: clock,
+      ),
+    )
     ..withState(
       CatalogDeps(
         reads: catalogReads,

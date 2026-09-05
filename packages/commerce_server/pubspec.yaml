@@ -10,6 +10,8 @@ resolution: workspace
 
 dependencies:
   commerce_shared: ^0.1.0
+  # Password hashing and token generation.
+  cryptography: ^2.9.0
   dust_dart: ^0.1.4
   dust_db_sqlite3: ^0.1.4
   dust_server: ^0.1.0-beta.3
