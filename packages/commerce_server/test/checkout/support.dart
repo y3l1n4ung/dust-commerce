@@ -116,6 +116,7 @@ final class CheckoutHarness {
     Map<String, Object?>? billing,
     String? token,
   }) async {
+    await chooseStandardShipping(cartId, token: token);
     final payment = client.post('/store/carts/$cartId/payment-sessions')
       ..json({'provider_id': 'manual'});
     if (token != null) payment.bearer(token);
@@ -130,6 +131,17 @@ final class CheckoutHarness {
       });
     if (token != null) request.bearer(token);
     return request.send();
+  }
+
+  /// Selects the fixture's zero-cost standard delivery method.
+  Future<TestResponse> chooseStandardShipping(
+    String cartId, {
+    String? token,
+  }) async {
+    final shipping = client.post('/store/carts/$cartId/shipping-method')
+      ..json({'option_id': 'ship_standard'});
+    if (token != null) shipping.bearer(token);
+    return shipping.send();
   }
 
   /// Registers and signs in one customer, returning the durable id and token.
@@ -179,6 +191,10 @@ Future<void> _seed(CommerceDatabase database) async {
   await run(
     r"INSERT INTO region_payment_providers (region_id, provider_id) "
     r"VALUES ('reg_us', 'manual')",
+  );
+  await run(
+    r"INSERT INTO shipping_options (id, region_id, name, amount, currency_code) "
+    r"VALUES ('ship_standard', 'reg_us', 'Standard', 0, 'usd')",
   );
   await run(
     r"INSERT INTO products (id, title, handle, status) VALUES "

@@ -144,6 +144,10 @@ void main() {
         cart.cart.id,
         const AddLineBody(variantId: 'var_small', quantity: 2),
       );
+      await api.chooseShipping(
+        cart.cart.id,
+        const ChooseShippingBody(optionId: 'ship_standard'),
+      );
       await api.choosePayment(
         cart.cart.id,
         const ChoosePaymentBody(providerId: 'manual'),
@@ -180,6 +184,10 @@ void main() {
       await api.addLine(
         cart.cart.id,
         const AddLineBody(variantId: 'var_small'),
+      );
+      await api.chooseShipping(
+        cart.cart.id,
+        const ChooseShippingBody(optionId: 'ship_standard'),
       );
       await api.choosePayment(
         cart.cart.id,

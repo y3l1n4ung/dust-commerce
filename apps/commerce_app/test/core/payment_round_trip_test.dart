@@ -36,6 +36,10 @@ void main() {
       cart.cart.id,
       const AddLineBody(variantId: 'var_small'),
     );
+    await api.chooseShipping(
+      cart.cart.id,
+      const ChooseShippingBody(optionId: 'ship_standard'),
+    );
     await api.choosePayment(
       cart.cart.id,
       const ChoosePaymentBody(providerId: 'manual'),
@@ -85,6 +89,10 @@ Future<void> _seed(CommerceDatabase database) async {
   await run(
     r"INSERT INTO region_payment_providers (region_id, provider_id) "
     r"VALUES ('reg_us', 'manual')",
+  );
+  await run(
+    r"INSERT INTO shipping_options (id, region_id, name, amount, currency_code) "
+    r"VALUES ('ship_standard', 'reg_us', 'Standard', 0, 'usd')",
   );
   await run(
     r"INSERT INTO products (id, title, handle, status) "

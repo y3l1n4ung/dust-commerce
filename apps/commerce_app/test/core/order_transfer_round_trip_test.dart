@@ -47,6 +47,10 @@ void main() {
     )));
     final cart = await api.createCart(const CreateCartBody());
     await api.addLine(cart.cart.id, const AddLineBody(variantId: 'var_small'));
+    await api.chooseShipping(
+      cart.cart.id,
+      const ChooseShippingBody(optionId: 'ship_standard'),
+    );
     await api.choosePayment(
       cart.cart.id,
       const ChoosePaymentBody(providerId: 'manual'),

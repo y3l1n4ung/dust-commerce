@@ -108,6 +108,10 @@ Future<void> seedRoundTripCatalog(CommerceDatabase database) async {
     r"VALUES ('reg_us', 'manual')",
   );
   await run(
+    r"INSERT INTO shipping_options (id, region_id, name, amount, currency_code) "
+    r"VALUES ('ship_standard', 'reg_us', 'Standard', 0, 'usd')",
+  );
+  await run(
     r"INSERT INTO product_collections (id, title, handle) VALUES "
     r"('col_summer', 'Summer', 'summer')",
   );

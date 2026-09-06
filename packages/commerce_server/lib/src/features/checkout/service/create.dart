@@ -26,6 +26,9 @@ enum CheckoutFailure {
   /// A destination is outside the cart selling region.
   countryNotInRegion,
 
+  /// No delivery method was selected for this physical cart.
+  shippingNotSelected,
+
   /// No supported payment provider was selected on the cart.
   paymentNotSelected,
 }
@@ -90,6 +93,10 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
       return Err(SqlxError.decode('Existing cart order could not be read'));
     }
     if (cart.isEmpty) return const Ok(Err(CheckoutFailure.emptyCart));
+    final shippingMethod = cart.shippingMethod;
+    if (shippingMethod == null) {
+      return const Ok(Err(CheckoutFailure.shippingNotSelected));
+    }
     if (cart.paymentSession?.providerId != 'manual') {
       return const Ok(Err(CheckoutFailure.paymentNotSelected));
     }
@@ -123,8 +130,8 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
       cart.discountTotal.amount,
       cart.tax.amount,
       cart.total.amount,
-      cart.shippingMethod?.optionId,
-      cart.shippingMethod?.name,
+      shippingMethod.optionId,
+      shippingMethod.name,
       cart.promotions.firstOrNull?.code,
       placedAt.toUtc().toIso8601String(),
     );

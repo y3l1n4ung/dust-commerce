@@ -153,6 +153,7 @@ void main() {
 
     test('a cart without a payment selection', () async {
       final cartId = await harness.cartWith('var_small');
+      (await harness.chooseStandardShipping(cartId)).assertOk();
 
       final response = await (harness.client.post('/store/checkout')
             ..json({
@@ -169,8 +170,37 @@ void main() {
         });
     });
 
+    test('a cart without a delivery selection', () async {
+      final cartId = await harness.cartWith('var_small');
+      final payment = harness.client
+          .post('/store/carts/$cartId/payment-sessions')
+        ..json({'provider_id': 'manual'});
+      (await payment.send()).assertOk();
+
+      final response = await (harness.client.post('/store/checkout')
+            ..json({
+              'cart_id': cartId,
+              'email': 'ada@example.com',
+              'shipping_address': harness.address(),
+            }))
+          .send();
+
+      response
+        ..assertUnprocessable()
+        ..assertJsonContains({
+          'error': 'Select a delivery method before checkout',
+        });
+      expect(await harness.stockOf('var_small'), 50);
+      final orders = await queryRaw(
+        'SELECT COUNT(*) FROM orders WHERE cart_id = ?',
+        [cartId],
+      ).fetch(harness.database.connection as Executor);
+      expect(orders.single.readIndex<int>(0), 0);
+    });
+
     test('a provider disabled after selection', () async {
       final cartId = await harness.cartWith('var_small');
+      (await harness.chooseStandardShipping(cartId)).assertOk();
       final selected = harness.client
           .post('/store/carts/$cartId/payment-sessions')
         ..json({'provider_id': 'manual'});

@@ -42,6 +42,10 @@ void main() {
               ..json({'variant_id': 'var_small', 'quantity': 1}))
             .send())
         .assertOk();
+    (await (client.post('/store/carts/$cartId/shipping-method')
+              ..json({'option_id': 'ship_standard'}))
+            .send())
+        .assertOk();
     (await (client.post('/store/carts/$cartId/payment-sessions')
               ..json({'provider_id': 'manual'}))
             .send())
@@ -187,6 +191,10 @@ Future<void> _seed(CommerceDatabase database) async {
   await run(
     r"INSERT INTO region_payment_providers (region_id, provider_id) "
     r"VALUES ('reg_us', 'manual')",
+  );
+  await run(
+    r"INSERT INTO shipping_options (id, region_id, name, amount, currency_code) "
+    r"VALUES ('ship_standard', 'reg_us', 'Standard', 0, 'usd')",
   );
   await run(
     r"INSERT INTO products (id, title, handle, status) VALUES "
