@@ -7,7 +7,7 @@ extension on _AdminProductMediaEditorState {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(child: _gallery(busy)),
-                  SizedBox(width: 380, child: _uploadPanel(state, busy)),
+                  SizedBox(width: 560, child: _uploadPanel(state, busy)),
                 ],
               )
             : ListView(
@@ -31,12 +31,16 @@ extension on _AdminProductMediaEditorState {
                     ),
                   ),
                 )
-              : ReorderableListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  buildDefaultDragHandles: false,
-                  itemCount: _media.length,
-                  onReorderItem: busy ? (_, __) {} : _reorder,
-                  itemBuilder: (context, index) => _mediaTile(index, busy),
+              : LayoutBuilder(
+                  builder: (context, constraints) => GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: constraints.maxWidth >= 640 ? 4 : 3,
+                      crossAxisSpacing: 24,
+                      mainAxisSpacing: 24,
+                    ),
+                    itemCount: _media.length,
+                    itemBuilder: (context, index) => _mediaTile(index, busy),
+                  ),
                 ),
         ),
       );

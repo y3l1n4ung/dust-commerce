@@ -37,7 +37,6 @@ extension on _AdminProductMediaEditorState {
           _media.add(_MediaDraft(
             id: file.id,
             url: file.url,
-            label: file.filename,
             isThumbnail: _media.isEmpty,
             staged: true,
           ));
@@ -57,6 +56,28 @@ extension on _AdminProductMediaEditorState {
         }
       });
 
+  void _toggleSelection(String id, bool selected) => _rebuild(() {
+        selected ? _selection.add(id) : _selection.remove(id);
+      });
+
+  void _promoteSelection() {
+    if (_selection.length != 1) return;
+    final index = _media.indexWhere((item) => item.id == _selection.single);
+    if (index < 0) return;
+    _makeThumbnail(index);
+    _rebuild(_selection.clear);
+  }
+
+  Future<void> _deleteSelection() async {
+    final ids = _selection.toList(growable: false);
+    for (final id in ids) {
+      final index = _media.indexWhere((item) => item.id == id);
+      if (index >= 0) await _remove(index);
+      if (!mounted) return;
+    }
+    _rebuild(_selection.clear);
+  }
+
   Future<void> _remove(int index) async {
     final item = _media[index];
     if (item.staged &&
@@ -65,7 +86,12 @@ extension on _AdminProductMediaEditorState {
             .discardUpload(item.id)) {
       return;
     }
-    if (mounted) _rebuild(() => _media.removeAt(index));
+    if (mounted) {
+      _rebuild(() {
+        _media.removeAt(index);
+        _selection.remove(item.id);
+      });
+    }
   }
 
   Future<void> _save() async {

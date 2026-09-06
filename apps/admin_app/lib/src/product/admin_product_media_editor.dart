@@ -1,5 +1,6 @@
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
 import 'package:admin_app/src/product/admin_product_detail_state.dart';
+import 'package:admin_app/src/product/admin_product_thumbnail_badge.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
 import 'package:dust_dart/fp.dart';
@@ -37,6 +38,7 @@ final class _AdminProductMediaEditor extends StatefulWidget {
 final class _AdminProductMediaEditorState
     extends State<_AdminProductMediaEditor> {
   late final List<_MediaDraft> _media;
+  final _selection = <String>{};
   var _discarding = false;
 
   @override
@@ -47,7 +49,6 @@ final class _AdminProductMediaEditorState
         _MediaDraft(
           id: widget.product.images[index].id,
           url: widget.product.images[index].url,
-          label: 'Image ${index + 1}',
           isThumbnail:
               widget.product.images[index].url == widget.product.thumbnail,
         ),
@@ -64,13 +65,24 @@ final class _AdminProductMediaEditorState
     return Material(
       color: Theme.of(context).colorScheme.surface,
       child: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            _header(busy),
-            Expanded(child: _editorBody(state, busy)),
-            if (state.failure case Some(value: final message))
-              _failureBanner(message),
-            _footer(busy),
+            Column(
+              children: [
+                _header(busy),
+                Expanded(child: _editorBody(state, busy)),
+                if (state.failure case Some(value: final message))
+                  _failureBanner(message),
+                _footer(busy),
+              ],
+            ),
+            if (_selection.isNotEmpty)
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 76,
+                child: Center(child: _commandBar(busy)),
+              ),
           ],
         ),
       ),
@@ -131,6 +143,38 @@ final class _AdminProductMediaEditorState
         )
       : Text(label);
 
+  Widget _commandBar(bool busy) => Material(
+        color: const Color(0xFF202020),
+        borderRadius: BorderRadius.circular(8),
+        elevation: 8,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '${_selection.length} selected',
+                style: const TextStyle(color: Colors.white),
+              ),
+              if (_selection.length == 1) ...[
+                const SizedBox(width: 8),
+                TextButton(
+                  onPressed: busy ? null : _promoteSelection,
+                  style: TextButton.styleFrom(foregroundColor: Colors.white),
+                  child: const Text('Make thumbnail'),
+                ),
+              ],
+              const SizedBox(width: 8),
+              TextButton(
+                onPressed: busy ? null : _deleteSelection,
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        ),
+      );
+
   void _rebuild(VoidCallback callback) => setState(callback);
 }
 
@@ -138,14 +182,12 @@ final class _MediaDraft {
   _MediaDraft({
     required this.id,
     required this.url,
-    required this.label,
     required this.isThumbnail,
     this.staged = false,
   });
 
   final String id;
   bool isThumbnail;
-  final String label;
   final bool staged;
   final String url;
 }

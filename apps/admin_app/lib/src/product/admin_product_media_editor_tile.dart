@@ -3,87 +3,29 @@ part of 'admin_product_media_editor.dart';
 extension on _AdminProductMediaEditorState {
   Widget _mediaTile(int index, bool busy) {
     final item = _media[index];
-    return Padding(
+    final tile = _MediaTileSurface(
       key: ValueKey(item.id),
-      padding: const EdgeInsets.only(right: 18),
-      child: SizedBox(
-        width: 180,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        item.url,
-                        fit: BoxFit.cover,
-                        webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
-                        errorBuilder: (_, __, ___) => ColoredBox(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerHighest,
-                          child: const Icon(Icons.image_outlined),
-                        ),
-                      ),
-                    ),
-                  ),
-                  if (item.isThumbnail)
-                    const Positioned(
-                      left: 8,
-                      top: 8,
-                      child: _ThumbnailBadge(),
-                    ),
-                  Positioned(
-                    right: 4,
-                    top: 4,
-                    child: PopupMenuButton<_MediaEditorAction>(
-                      enabled: !busy,
-                      tooltip: 'Image actions',
-                      onSelected: (action) => switch (action) {
-                        _MediaEditorAction.thumbnail => _makeThumbnail(index),
-                        _MediaEditorAction.delete => _remove(index),
-                      },
-                      itemBuilder: (_) => const [
-                        PopupMenuItem(
-                          value: _MediaEditorAction.thumbnail,
-                          child: Text('Make thumbnail'),
-                        ),
-                        PopupMenuItem(
-                          value: _MediaEditorAction.delete,
-                          child: Text('Delete'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                ReorderableDragStartListener(
-                  index: index,
-                  enabled: !busy,
-                  child: const Padding(
-                    padding: EdgeInsets.all(4),
-                    child: Icon(Icons.drag_indicator_rounded, size: 18),
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Expanded(
-                  child: Text(
-                    item.label,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ],
+      item: item,
+      busy: busy,
+      selected: _selection.contains(item.id),
+      onSelected: (selected) => _toggleSelection(item.id, selected),
+    );
+    if (busy) return tile;
+    return DragTarget<int>(
+      onWillAcceptWithDetails: (details) => details.data != index,
+      onAcceptWithDetails: (details) => _reorder(details.data, index),
+      builder: (context, candidates, rejected) => Draggable<int>(
+        data: index,
+        feedback: Material(
+          elevation: 8,
+          borderRadius: BorderRadius.circular(8),
+          child: SizedBox.square(
+            dimension: 150,
+            child: _MediaImage(item: item),
+          ),
         ),
+        childWhenDragging: Opacity(opacity: 0.35, child: tile),
+        child: MouseRegion(cursor: SystemMouseCursors.grab, child: tile),
       ),
     );
   }
@@ -101,21 +43,62 @@ extension on _AdminProductMediaEditorState {
       );
 }
 
-final class _ThumbnailBadge extends StatelessWidget {
-  const _ThumbnailBadge();
+final class _MediaTileSurface extends StatelessWidget {
+  const _MediaTileSurface({
+    required this.item,
+    required this.busy,
+    required this.selected,
+    required this.onSelected,
+    super.key,
+  });
+
+  final bool busy;
+  final _MediaDraft item;
+  final bool selected;
+  final ValueChanged<bool> onSelected;
 
   @override
-  Widget build(BuildContext context) => DecoratedBox(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(5),
-          boxShadow: const [BoxShadow(color: Color(0x26000000), blurRadius: 4)],
-        ),
-        child: const Padding(
-          padding: EdgeInsets.all(5),
-          child: Icon(Icons.photo_size_select_actual_outlined, size: 14),
-        ),
+  Widget build(BuildContext context) => Stack(
+        children: [
+          Positioned.fill(child: _MediaImage(item: item)),
+          if (item.isThumbnail)
+            const Positioned(
+              left: 8,
+              top: 8,
+              child: AdminProductThumbnailBadge(),
+            ),
+          Positioned(
+            right: 8,
+            top: 8,
+            child: Checkbox(
+              value: selected,
+              onChanged: busy
+                  ? null
+                  : (value) {
+                      onSelected(value ?? false);
+                    },
+            ),
+          ),
+        ],
       );
 }
 
-enum _MediaEditorAction { thumbnail, delete }
+final class _MediaImage extends StatelessWidget {
+  const _MediaImage({required this.item});
+
+  final _MediaDraft item;
+
+  @override
+  Widget build(BuildContext context) => ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.network(
+          item.url,
+          fit: BoxFit.cover,
+          webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+          errorBuilder: (_, __, ___) => ColoredBox(
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            child: const Icon(Icons.image_outlined),
+          ),
+        ),
+      );
+}

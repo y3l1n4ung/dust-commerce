@@ -1,4 +1,5 @@
 import 'package:admin_app/src/product/detail/admin_product_detail_section.dart';
+import 'package:admin_app/src/product/admin_product_thumbnail_badge.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
 
@@ -65,18 +66,7 @@ final class _MediaTile extends StatelessWidget {
             Positioned(
               left: 7,
               top: 7,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: const [
-                    BoxShadow(color: Color(0x26000000), blurRadius: 4),
-                  ],
-                ),
-                child: const Icon(Icons.photo_size_select_actual_outlined,
-                    size: 13),
-              ),
+              child: const AdminProductThumbnailBadge(),
             ),
         ],
       );
