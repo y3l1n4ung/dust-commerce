@@ -13,6 +13,8 @@ final class StoreShellViewModelArgs extends ViewModelArgs {
   const StoreShellViewModelArgs({
     required this.api,
     required this.countries,
+    required this.locales,
+    required this.supportedLocales,
     super.observer,
   });
 
@@ -21,6 +23,12 @@ final class StoreShellViewModelArgs extends ViewModelArgs {
 
   /// Persisted storefront-country preference.
   final CountryPreferenceStore countries;
+
+  /// Persisted storefront-language preference.
+  final LocalePreferenceStore locales;
+
+  /// Locale codes available in the generated Dust bundles.
+  final List<String> supportedLocales;
 }
 
 /// Loads the footer taxonomy once without making page content depend on it.
@@ -37,15 +45,21 @@ class StoreShellViewModel extends $StoreShellViewModel {
     final categories = _categories();
     final regions = _regions();
     final preferred = _preferredCountry();
+    final preferredLocale = _preferredLocale();
     final loadedRegions = await regions;
     emit(StoreShellState(
       status: StoreShellStatus.ready,
       collections: await collections,
       categories: await categories,
       regions: loadedRegions,
+      supportedLocales: args.supportedLocales,
       selectedCountryCode: _initialCountry(
         loadedRegions,
         await preferred,
+      ),
+      selectedLocaleCode: _initialLocale(
+        args.supportedLocales,
+        await preferredLocale,
       ),
     ));
   }
@@ -59,6 +73,28 @@ class StoreShellViewModel extends $StoreShellViewModel {
       await args.countries.write(normalized);
     } on Object {
       // A storage outage must not undo a successful cart and UI transition.
+    }
+    return true;
+  }
+
+  /// Selects a supported locale, or clears it to use the app default.
+  Future<bool> selectLocale(Option<String> localeCode) async {
+    final normalized = localeCode.match<Option<String>>(
+      some: (locale) => Some(locale.trim().toLowerCase()),
+      none: () => const None(),
+    );
+    if (normalized case Some(value: final locale)
+        when !args.supportedLocales.contains(locale)) {
+      return false;
+    }
+    emit(state.copyWith(selectedLocaleCode: normalized));
+    try {
+      await normalized.match(
+        some: args.locales.write,
+        none: args.locales.clear,
+      );
+    } on Object {
+      // Language remains usable for this session when persistence is down.
     }
     return true;
   }
@@ -97,6 +133,14 @@ class StoreShellViewModel extends $StoreShellViewModel {
     }
   }
 
+  Future<Option<String>> _preferredLocale() async {
+    try {
+      return await args.locales.read();
+    } on Object {
+      return const None();
+    }
+  }
+
   static Option<String> _initialCountry(
     List<Region> regions,
     Option<String> preferred,
@@ -116,4 +160,14 @@ class StoreShellViewModel extends $StoreShellViewModel {
     }
     return const None();
   }
+
+  static Option<String> _initialLocale(
+    List<String> supportedLocales,
+    Option<String> preferred,
+  ) =>
+      preferred.match(
+        some: (locale) =>
+            supportedLocales.contains(locale) ? Some(locale) : const None(),
+        none: () => const None(),
+      );
 }

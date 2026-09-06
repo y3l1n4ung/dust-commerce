@@ -1023,6 +1023,22 @@
   "@sold_out": {
     "description": "Translation for `shop_sold_out`."
   },
+  "language_label": "Language:",
+  "@language_label": {
+    "description": "Label for the storefront language selector."
+  },
+  "language_default": "Default",
+  "@language_default": {
+    "description": "Uses the storefront fallback language."
+  },
+  "language_english": "English",
+  "@language_english": {
+    "description": "English language option."
+  },
+  "language_burmese": "Burmese",
+  "@language_burmese": {
+    "description": "Burmese language option."
+  },
   "more": "more",
   "@more": {
     "description": "Completes the hidden order-item count."

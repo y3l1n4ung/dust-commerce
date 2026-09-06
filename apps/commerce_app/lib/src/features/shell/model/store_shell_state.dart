@@ -24,7 +24,9 @@ final class StoreShellState with _$StoreShellState {
     this.categories = const [],
     this.collections = const [],
     this.regions = const [],
+    this.supportedLocales = const [],
     this.selectedCountryCode = const None(),
+    this.selectedLocaleCode = const None(),
   });
 
   /// Active public category nodes, including direct children.
@@ -38,6 +40,12 @@ final class StoreShellState with _$StoreShellState {
 
   /// Selected ISO country code, absent when region discovery failed.
   final Option<String> selectedCountryCode;
+
+  /// Explicit language choice, absent when the app default should be used.
+  final Option<String> selectedLocaleCode;
+
+  /// Locale codes compiled into the Dust i18n bundles.
+  final List<String> supportedLocales;
 
   /// Current shared-navigation lifecycle.
   final StoreShellStatus status;
@@ -59,6 +67,12 @@ final class StoreShellState with _$StoreShellState {
   String get currencyCode => selectedRegion.match(
         some: (region) => region.currencyCode,
         none: () => 'usd',
+      );
+
+  /// Resolves the explicit language or [fallback] for the default option.
+  String localeOr(String fallback) => selectedLocaleCode.match(
+        some: (locale) => locale,
+        none: () => fallback,
       );
 
   /// Finds the region serving [countryCode].

@@ -1023,6 +1023,22 @@
   "@sold_out": {
     "description": "Translation for `shop_sold_out`."
   },
+  "language_label": "ဘာသာစကား:",
+  "@language_label": {
+    "description": "Label for the storefront language selector."
+  },
+  "language_default": "မူလ",
+  "@language_default": {
+    "description": "Uses the storefront fallback language."
+  },
+  "language_english": "အင်္ဂလိပ်",
+  "@language_english": {
+    "description": "English language option."
+  },
+  "language_burmese": "မြန်မာ",
+  "@language_burmese": {
+    "description": "Burmese language option."
+  },
   "more": "ထပ်ရှိသည်",
   "@more": {
     "description": "Completes the hidden order-item count."

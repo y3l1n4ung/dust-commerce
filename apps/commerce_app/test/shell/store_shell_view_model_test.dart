@@ -13,6 +13,7 @@ void main() {
   late TestClient server;
   late CommerceApi api;
   late _MemoryCountryPreferenceStore countries;
+  late _MemoryLocalePreferenceStore locales;
   late StoreShellViewModel viewModel;
 
   setUp(() async {
@@ -25,8 +26,14 @@ void main() {
     server = await TestClient.serve(buildApp(database));
     api = CommerceApi(Dio(), baseUrl: server.origin);
     countries = _MemoryCountryPreferenceStore();
+    locales = _MemoryLocalePreferenceStore();
     viewModel = StoreShellViewModel(
-      StoreShellViewModelArgs(api: api, countries: countries),
+      StoreShellViewModelArgs(
+        api: api,
+        countries: countries,
+        locales: locales,
+        supportedLocales: const ['en', 'my'],
+      ),
     );
   });
 
@@ -54,6 +61,31 @@ void main() {
     expect(viewModel.state.regions, hasLength(2));
     expect(viewModel.state.selectedCountryCode, const Some('dk'));
     expect(viewModel.state.currencyCode, 'eur');
+    expect(viewModel.state.supportedLocales, ['en', 'my']);
+    expect(viewModel.state.selectedLocaleCode, const None());
+  });
+
+  test('restores, persists and clears a supported language choice', () async {
+    locales.value = const Some('my');
+
+    await viewModel.load();
+    expect(viewModel.state.selectedLocaleCode, const Some('my'));
+    expect(viewModel.state.localeOr('en'), 'my');
+
+    expect(await viewModel.selectLocale(const Some('en')), isTrue);
+    expect(locales.value, const Some('en'));
+    expect(await viewModel.selectLocale(const None()), isTrue);
+    expect(viewModel.state.selectedLocaleCode, const None());
+    expect(locales.value, const None());
+  });
+
+  test('rejects an unsupported language without changing preference', () async {
+    locales.value = const Some('fr');
+
+    await viewModel.load();
+    expect(viewModel.state.selectedLocaleCode, const None());
+    expect(await viewModel.selectLocale(const Some('fr')), isFalse);
+    expect(locales.value, const Some('fr'));
   });
 
   test('restores and persists a valid country choice', () async {
@@ -73,6 +105,8 @@ void main() {
       StoreShellViewModelArgs(
         api: _CollectionFailureApi(api),
         countries: countries,
+        locales: locales,
+        supportedLocales: const ['en', 'my'],
       ),
     );
     addTearDown(resilient.dispose);
@@ -94,6 +128,21 @@ final class _MemoryCountryPreferenceStore implements CountryPreferenceStore {
   @override
   Future<void> write(String countryCode) async {
     value = Some(countryCode);
+  }
+}
+
+final class _MemoryLocalePreferenceStore implements LocalePreferenceStore {
+  Option<String> value = const None();
+
+  @override
+  Future<void> clear() async => value = const None();
+
+  @override
+  Future<Option<String>> read() async => value;
+
+  @override
+  Future<void> write(String localeCode) async {
+    value = Some(localeCode);
   }
 }
 

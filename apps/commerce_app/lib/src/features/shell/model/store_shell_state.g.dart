@@ -16,6 +16,7 @@ part of 'store_shell_state.dart';
 const DeepCollectionEquality _storeShellStateCategoriesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _storeShellStateCollectionsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _storeShellStateRegionsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _storeShellStateSupportedLocalesEquality = DeepCollectionEquality();
 
 mixin _$StoreShellState {
   @override
@@ -26,6 +27,8 @@ mixin _$StoreShellState {
         'collections: ${self.collections}, '
         'regions: ${self.regions}, '
         'selectedCountryCode: ${self.selectedCountryCode}, '
+        'selectedLocaleCode: ${self.selectedLocaleCode}, '
+        'supportedLocales: ${self.supportedLocales}, '
         'status: ${self.status}'
         ')';
   }
@@ -40,6 +43,8 @@ mixin _$StoreShellState {
             _storeShellStateCollectionsEquality.equals(other.collections, self.collections) &&
             _storeShellStateRegionsEquality.equals(other.regions, self.regions) &&
             other.selectedCountryCode == self.selectedCountryCode &&
+            other.selectedLocaleCode == self.selectedLocaleCode &&
+            _storeShellStateSupportedLocalesEquality.equals(other.supportedLocales, self.supportedLocales) &&
             other.status == self.status;
   }
 
@@ -52,6 +57,8 @@ mixin _$StoreShellState {
       _storeShellStateCollectionsEquality.hash(self.collections),
       _storeShellStateRegionsEquality.hash(self.regions),
       self.selectedCountryCode,
+      self.selectedLocaleCode,
+      _storeShellStateSupportedLocalesEquality.hash(self.supportedLocales),
       self.status,
     ]);
   }
@@ -75,6 +82,8 @@ abstract class _$StoreShellStateCopyWith<$Res> {
     List<ProductCollection>? collections,
     List<Region>? regions,
     Option<String>? selectedCountryCode,
+    Option<String>? selectedLocaleCode,
+    List<String>? supportedLocales,
     StoreShellStatus? status,
   });
 }
@@ -93,6 +102,8 @@ final class _$StoreShellStateCopyWithImpl<$Res> implements _$StoreShellStateCopy
     Object? collections = null,
     Object? regions = null,
     Object? selectedCountryCode = null,
+    Object? selectedLocaleCode = null,
+    Object? supportedLocales = null,
     Object? status = null,
   }) {
     return _then(
@@ -101,7 +112,9 @@ final class _$StoreShellStateCopyWithImpl<$Res> implements _$StoreShellStateCopy
         categories: categories == null ? _self.categories : categories as List<ProductCategory>,
         collections: collections == null ? _self.collections : collections as List<ProductCollection>,
         regions: regions == null ? _self.regions : regions as List<Region>,
+        supportedLocales: supportedLocales == null ? _self.supportedLocales : supportedLocales as List<String>,
         selectedCountryCode: selectedCountryCode == null ? _self.selectedCountryCode : selectedCountryCode as Option<String>,
+        selectedLocaleCode: selectedLocaleCode == null ? _self.selectedLocaleCode : selectedLocaleCode as Option<String>,
       )
     );
   }

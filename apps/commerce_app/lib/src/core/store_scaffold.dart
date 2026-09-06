@@ -131,8 +131,10 @@ class _StoreMenu extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
+                const StoreLanguageSelect(),
+                const SizedBox(height: 24),
                 const StoreCountrySelect(),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
                 Text(
                   '© ${DateTime.now().year} Morrow',
                   style: const TextStyle(color: Colors.white70),
