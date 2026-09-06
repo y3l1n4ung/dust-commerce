@@ -192,12 +192,16 @@ identical viewport. Local interaction captures additionally prove apply,
 percentage disclosure, recalculation, removal and safe failure rendering.
 The checkout pair confirms the compact address geometry, country placeholder,
 billing toggle, Continue action, step dividers and initial delivery state. The
-local server-backed journey additionally proves Standard delivery, Manual
-Payment and Review with authoritative totals. It deliberately stopped before
-Place order. Manual Payment is now retained on the server-owned cart; a hard
-reload at `/checkout?step=review` restored the same URL, collapsed payment
-summary and active Review action. The reference's delivery mutation failed, so
-no live payment/review visual match is asserted. The desktop pass confirms the
+local server-backed journey additionally proves Standard delivery, the
+API-listed Manual Payment choice and Review with authoritative totals. It
+deliberately stopped before Place order. Manual Payment is retained on the
+server-owned cart; a hard reload at `/checkout?step=review` restored the same
+URL, collapsed payment summary and active Review action. A later exact-source
+pass loaded Medusa's Payment route directly and compared the same selected
+Manual Payment state beside Morrow at the same browser surface. The radio card,
+interactive border, icon, spacing and black action treatment align. The source
+still lacked a completed address and delivery state, so no whole-page Review
+match is asserted. The desktop pass confirms the
 complete back label, 24px semibold summary heading, source-spaced dividers, right-aligned
 quantity/unit price, and final totals rule. A browser-only CORS failure on the
 new address PUT was found and fixed before the successful Delivery transition;
@@ -211,8 +215,10 @@ clearly readable. The open 420px cart panels were emitted as matched full-page
 pairs at native density; their type, thumbnail, subtotal and action remained
 large enough for focused inspection without a lossy crop. Compact collection
 cards, footer columns and the side menu were readable in their full-page
-captures. Store filters, authenticated account forms and remaining checkout
-controls still require focused captures.
+captures. The selected Manual Payment control was emitted in a same-surface
+pair after both implementations loaded their provider list. Store filters,
+authenticated account forms and remaining checkout controls still require
+focused captures.
 
 **Comparison history**
 

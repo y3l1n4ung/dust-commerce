@@ -18,9 +18,9 @@ payment, and a basic customer account.
 
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
-| Schema | modular PostgreSQL schemas | 33 SQLite tables |
+| Schema | modular PostgreSQL schemas | 34 SQLite tables |
 | Admin API | broad modular API | isolated identity and product-detail slices (6 operations) |
-| Store operations | broad Store API | 37 method/path operations |
+| Store operations | broad Store API | 38 method/path operations |
 | Workflow engine and plugins | yes | none |
 | Admin dashboard | broad operational UI | authenticated shell only |
 
@@ -181,7 +181,7 @@ than copying this SQLite representation.
 
 ## Not attempted
 
-Fulfilment and returns, real payment providers or saved payment methods,
+Fulfilment and returns, external payment integrations or saved payment methods,
 provider-driven taxes, inventory locations, sales channels, product types,
 search, password reset, email verification,
 MFA, OAuth providers, API keys, admin RBAC, admin catalogue/order/customer and
@@ -189,13 +189,14 @@ operations APIs, workflow engine, plugin system, notifications, file storage,
 and an operational admin dashboard.
 
 Shipping is a small set of regional options with optional item-total rules,
-promotions are one fixed or percentage code, payment is a manual state
-transition, and authentication is email/password plus opaque sessions. Those
+promotions are one fixed or percentage code, and payment-provider availability
+is configured per region while execution remains a manual state transition.
+Authentication is email/password plus opaque sessions. Those
 are tested vertical slices, not the corresponding Medusa modules in miniature.
 
 ## The honest summary
 
-Across its 36 method/path operations, the domain modelling follows the same
+Across its 38 method/path operations, the domain modelling follows the same
 core boundaries where they fit. On everything else, Medusa is a commerce
 platform and this is a demonstration that Dust can generate one end of a wire,
 decode it at the other, and statically validate SQL against a real schema.
