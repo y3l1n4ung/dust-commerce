@@ -19,6 +19,26 @@ final class _$CartReadRepository implements CartReadRepository {
   final DatabaseExecutor _db;
 
   @override
+  Future<Result<int, SqlxError>> hasEnabledPaymentProvider(String cartId) {
+    return _db.fetchScalar<int>(
+      r'''
+SELECT EXISTS (
+  SELECT 1
+  FROM carts
+  JOIN cart_payment_sessions
+    ON cart_payment_sessions.cart_id = carts.id
+  JOIN region_payment_providers
+    ON region_payment_providers.region_id = carts.region_id
+   AND region_payment_providers.provider_id = cart_payment_sessions.provider_id
+   AND region_payment_providers.enabled = 1
+  WHERE carts.id = ?
+)
+''',
+      [cartId],
+    );
+  }
+
+  @override
   Future<Result<CartResponse?, SqlxError>> findCart(String id) {
     return _db.fetchOptional<CartResponse>(
       r'''

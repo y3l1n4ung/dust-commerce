@@ -16,3 +16,24 @@ Future<Result<SellingRegionListResponse, Rejection>> listRegionsHandler(
     Err() => const Err(Rejection.internal()),
   };
 }
+
+/// `GET /payment-providers?region_id=…` — providers configured for a region.
+Future<Result<PaymentProviderListResponse, Rejection>>
+    listPaymentProvidersHandler(Request request) async {
+  final regionId = request.requestedUri.queryParameters['region_id']?.trim();
+  if (regionId == null || regionId.isEmpty) {
+    return const Err(Rejection.badRequest('region_id is required'));
+  }
+
+  final state = await regionDeps(request);
+  if (state case Err(:final error)) return Err(error);
+  final deps = (state as Ok<RegionDeps, Rejection>).value;
+  final result = await listPaymentProviders(
+    deps.regions,
+    regionId: regionId,
+  );
+  return switch (result) {
+    Ok(:final value) => Ok(value),
+    Err() => const Err(Rejection.internal()),
+  };
+}

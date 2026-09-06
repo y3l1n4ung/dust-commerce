@@ -65,6 +65,19 @@ void main() {
     );
   });
 
+  test('rejects a configured provider after the region disables it', () async {
+    final cartId = await harness.cartWith('var_small');
+    await queryExecute(
+      r"UPDATE region_payment_providers SET enabled = 0 "
+      r"WHERE region_id = 'reg_us' AND provider_id = 'manual'",
+      const [],
+    ).execute(harness.database.executor);
+
+    final response = await choose(cartId, 'manual');
+
+    response.assertUnprocessable();
+  });
+
   test('uses the shared route guard for a customer-owned cart', () async {
     final owner = await harness.account('owner@example.com');
     final stranger = await harness.account('stranger@example.com');

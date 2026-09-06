@@ -32,8 +32,6 @@ Future<Result<CartViewResponse, Rejection>> choosePaymentHandler(
 
   return switch (result) {
     Ok(value: None()) => await cartViewOf(deps.reads, cartId),
-    Ok(value: Some(value: ChoosePaymentFailure.noCart)) =>
-      Err(Rejection.notFound('Cart "$cartId"')),
     Ok(value: Some(value: ChoosePaymentFailure.unsupportedProvider)) => Err(
         Rejection.status(
           422,

@@ -71,7 +71,10 @@ void main() {
     expect(await _saveAddress(model), isTrue);
     expect(await model.loadDelivery(), isTrue);
     expect(await model.chooseDelivery('ship_standard'), isTrue);
-    expect(await model.selectManualPayment(), isTrue);
+    expect(await model.loadPaymentMethods(), isTrue);
+    expect(model.state.paymentProviders,
+        const [PaymentProviderView(id: 'manual')]);
+    expect(await model.selectPayment('manual'), isTrue);
     expect(await model.placeOrder(), isTrue);
 
     final order = model.state.order!;
@@ -92,7 +95,8 @@ void main() {
     await _saveAddress(model);
     await model.loadDelivery();
     await model.chooseDelivery('ship_standard');
-    expect(await model.selectManualPayment(), isTrue);
+    expect(await model.loadPaymentMethods(), isTrue);
+    expect(await model.selectPayment('manual'), isTrue);
 
     expect(await model.placeOrder(), isFalse);
     final placedId = model.state.order!.id;
@@ -130,11 +134,11 @@ void main() {
     final first = checkout()..prepare();
     await _saveAddress(first);
     await first.chooseDelivery('ship_standard');
-    expect(await first.selectManualPayment(), isTrue);
+    expect(await first.selectPayment('manual'), isTrue);
 
     final restored = checkout()..prepare();
 
-    expect(restored.state.isManualPaymentSelected, isTrue);
+    expect(restored.state.isPaymentSelected('manual'), isTrue);
     expect(restored.state.status, CheckoutStatus.ready);
   });
 
@@ -202,6 +206,10 @@ final class _FailFirstCaptureApi implements CommerceApi {
 
   @override
   Future<Order> order(String id) => delegate.order(id);
+
+  @override
+  Future<PaymentProviderListView> paymentProviders(String regionId) =>
+      delegate.paymentProviders(regionId);
 
   @override
   Object? noSuchMethod(Invocation invocation) =>

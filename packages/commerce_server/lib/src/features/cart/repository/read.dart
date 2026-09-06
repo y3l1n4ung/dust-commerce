@@ -12,6 +12,22 @@ abstract final class CartReadRepository {
   /// Binds the queries to [db].
   const factory CartReadRepository(DatabaseExecutor db) = _$CartReadRepository;
 
+  /// Whether the cart's retained provider is still enabled for its region.
+  @Query(r'''
+SELECT EXISTS (
+  SELECT 1
+  FROM carts
+  JOIN cart_payment_sessions
+    ON cart_payment_sessions.cart_id = carts.id
+  JOIN region_payment_providers
+    ON region_payment_providers.region_id = carts.region_id
+   AND region_payment_providers.provider_id = cart_payment_sessions.provider_id
+   AND region_payment_providers.enabled = 1
+  WHERE carts.id = $1
+)
+''')
+  Future<Result<int, SqlxError>> hasEnabledPaymentProvider(String cartId);
+
   /// One cart with the region that fixes its currency and tax.
   ///
   /// Joined rather than fetched in two calls: a cart without its region cannot

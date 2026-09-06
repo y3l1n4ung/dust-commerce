@@ -774,6 +774,10 @@
   "@checkout_need_help": {
     "description": "Translation for `shop_checkout_need_help`."
   },
+  "checkout_no_payment_methods": "ငွေပေးချေမှု နည်းလမ်း မရနိုင်ပါ။",
+  "@checkout_no_payment_methods": {
+    "description": "Shown when the cart region has no enabled payment provider."
+  },
   "checkout_order_date": "အော်ဒါရက်စွဲ: {date}",
   "@checkout_order_date": {
     "description": "Translation for `shop_checkout_order_date`.",
@@ -840,6 +844,10 @@
   "checkout_required": "ဤအချက်ကို ဖြည့်ရန်လိုသည်။",
   "@checkout_required": {
     "description": "Translation for `shop_checkout_required`."
+  },
+  "checkout_retry_payment_methods": "ငွေပေးချေမှု နည်းလမ်းများကို ထပ်ကြိုးစားရန်",
+  "@checkout_retry_payment_methods": {
+    "description": "Retries regional payment-provider discovery."
   },
   "checkout_review": "ပြန်လည်စစ်ဆေးရန်",
   "@checkout_review": {

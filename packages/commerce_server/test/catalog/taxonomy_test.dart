@@ -28,6 +28,12 @@ void main() {
       r"'2026-09-05T00:00:00.000Z')",
       const [],
     ).execute(database.executor);
+    await queryExecute(
+      r"INSERT INTO region_payment_providers (region_id, provider_id, enabled) "
+      r"VALUES ('reg_us', 'manual', 1), ('reg_us', 'invented', 1), "
+      r"('reg_old', 'retired', 1)",
+      const [],
+    ).execute(database.executor);
     client = TestClient(buildApp(database));
   });
 
@@ -79,6 +85,38 @@ void main() {
       'tax_inclusive': false,
       'tax_rate': 0,
     });
+  });
+
+  test('lists only enabled providers for the requested active region',
+      () async {
+    final response =
+        await client.get('/store/payment-providers?region_id=reg_us').send();
+
+    response.assertOk();
+    final json = response.json! as Map<String, Object?>;
+    expect(
+      PaymentProviderListView.fromJson(json).paymentProviders,
+      const [PaymentProviderView(id: 'manual')],
+    );
+    expect(json, {
+      'payment_providers': [
+        {'id': 'manual'},
+      ],
+    });
+  });
+
+  test('requires a region and hides providers for retired regions', () async {
+    (await client.get('/store/payment-providers').send()).assertBadRequest();
+
+    final retired =
+        await client.get('/store/payment-providers?region_id=reg_old').send();
+    retired.assertOk();
+    expect(
+      PaymentProviderListView.fromJson(
+        retired.json! as Map<String, Object?>,
+      ).paymentProviders,
+      isEmpty,
+    );
   });
 
   test('filters product pages by collection, category and tag', () async {

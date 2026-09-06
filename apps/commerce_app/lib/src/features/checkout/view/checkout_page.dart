@@ -17,6 +17,7 @@ final class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   bool _deliveryLoadScheduled = false;
+  bool _paymentLoadScheduled = false;
 
   @override
   void initState() {
@@ -56,6 +57,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
     if (step == 'delivery' && cart.shippingOptions.isEmpty && !deliveryFailed) {
       _scheduleDeliveryLoad();
     }
+    final paymentFailed = checkout.status == CheckoutStatus.failed &&
+        checkout.operation == CheckoutOperation.payment;
+    if (step == 'payment' &&
+        !checkout.paymentProvidersLoaded &&
+        !paymentFailed) {
+      _schedulePaymentLoad();
+    }
     return CheckoutScaffold(
       body: CheckoutLayout(
         step: step,
@@ -89,6 +97,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (mounted) await context.readCheckoutViewModel().loadDelivery();
       _deliveryLoadScheduled = false;
+    });
+  }
+
+  void _schedulePaymentLoad() {
+    if (_paymentLoadScheduled) return;
+    _paymentLoadScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (mounted) await context.readCheckoutViewModel().loadPaymentMethods();
+      _paymentLoadScheduled = false;
     });
   }
 

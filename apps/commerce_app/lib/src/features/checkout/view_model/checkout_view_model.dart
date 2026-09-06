@@ -141,19 +141,45 @@ final class CheckoutViewModel extends $CheckoutViewModel {
     return true;
   }
 
-  /// Retains the manual provider on the server-owned cart.
-  Future<bool> selectManualPayment() async {
+  /// Loads the payment providers enabled for this cart's selling region.
+  Future<bool> loadPaymentMethods() async {
+    if (state.isBusy || state.paymentProvidersLoaded) return false;
+    final regionId = args.cart.state.cart?.cart.region.id;
+    if (regionId == null) {
+      return _fail('Your cart is no longer available.');
+    }
+    emit(state.copyWith(
+      status: CheckoutStatus.loading,
+      operation: CheckoutOperation.payment,
+      message: null,
+    ));
+    try {
+      final result = await args.api.paymentProviders(regionId);
+      emit(state.copyWith(
+        status: CheckoutStatus.ready,
+        paymentProviders: result.paymentProviders,
+        paymentProvidersLoaded: true,
+        message: null,
+      ));
+      return true;
+    } on Object catch (error) {
+      return _fail(_checkoutMessageOf(error));
+    }
+  }
+
+  /// Retains one region-supported provider on the server-owned cart.
+  Future<bool> selectPayment(String providerId) async {
     if (state.isBusy) return false;
     emit(state.copyWith(
       status: CheckoutStatus.loading,
       operation: CheckoutOperation.payment,
       message: null,
     ));
-    final selected = await args.cart.choosePayment('manual');
+    final selected = await args.cart.choosePayment(providerId);
     if (!selected) return _cartFailure();
     emit(state.copyWith(
       status: CheckoutStatus.ready,
-      paymentMethod: const Some('manual'),
+      paymentMethod: Some(providerId),
       message: null,
     ));
     return true;

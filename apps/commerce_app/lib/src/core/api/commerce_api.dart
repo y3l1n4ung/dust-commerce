@@ -68,6 +68,12 @@ abstract interface class CommerceApi {
   @GET('/store/regions')
   Future<SellingRegionListView> regions();
 
+  /// Payment providers enabled for one selling region.
+  @GET('/store/payment-providers')
+  Future<PaymentProviderListView> paymentProviders(
+    @Query('region_id') String regionId,
+  );
+
   /// Revokes the bearer token configured on the Dio client.
   @DELETE('/auth/session')
   Future<SessionDeleted> signOut();

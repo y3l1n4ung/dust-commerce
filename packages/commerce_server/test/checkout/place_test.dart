@@ -169,6 +169,28 @@ void main() {
         });
     });
 
+    test('a provider disabled after selection', () async {
+      final cartId = await harness.cartWith('var_small');
+      final selected = harness.client
+          .post('/store/carts/$cartId/payment-sessions')
+        ..json({'provider_id': 'manual'});
+      (await selected.send()).assertOk();
+      await queryExecute(
+        r"UPDATE region_payment_providers SET enabled = 0 "
+        r"WHERE region_id = 'reg_us' AND provider_id = 'manual'",
+        const [],
+      ).execute(harness.database.executor);
+
+      final request = harness.client.post('/store/checkout')
+        ..json({
+          'cart_id': cartId,
+          'email': 'ada@example.com',
+          'shipping_address': harness.address(),
+        });
+
+      (await request.send()).assertUnprocessable();
+    });
+
     test('an address that is not an email, naming the field', () async {
       final cartId = await harness.cartWith('var_small');
 

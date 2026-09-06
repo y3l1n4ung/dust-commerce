@@ -13,6 +13,7 @@
 
 part of 'checkout_state.dart';
 
+const DeepCollectionEquality _checkoutStatePaymentProvidersEquality = DeepCollectionEquality();
 final class _CheckoutStateCopyWithUnset {
   const _CheckoutStateCopyWithUnset();
 }
@@ -30,6 +31,8 @@ mixin _$CheckoutState {
         'operation: ${self.operation}, '
         'order: ${self.order}, '
         'paymentMethod: ${self.paymentMethod}, '
+        'paymentProviders: ${self.paymentProviders}, '
+        'paymentProvidersLoaded: ${self.paymentProvidersLoaded}, '
         'sameAsBilling: ${self.sameAsBilling}, '
         'shipping: ${self.shipping}, '
         'status: ${self.status}'
@@ -48,6 +51,8 @@ mixin _$CheckoutState {
             other.operation == self.operation &&
             other.order == self.order &&
             other.paymentMethod == self.paymentMethod &&
+            _checkoutStatePaymentProvidersEquality.equals(other.paymentProviders, self.paymentProviders) &&
+            other.paymentProvidersLoaded == self.paymentProvidersLoaded &&
             other.sameAsBilling == self.sameAsBilling &&
             other.shipping == self.shipping &&
             other.status == self.status;
@@ -64,6 +69,8 @@ mixin _$CheckoutState {
       self.operation,
       self.order,
       self.paymentMethod,
+      _checkoutStatePaymentProvidersEquality.hash(self.paymentProviders),
+      self.paymentProvidersLoaded,
       self.sameAsBilling,
       self.shipping,
       self.status,
@@ -92,6 +99,8 @@ abstract class _$CheckoutStateCopyWith<$Res> {
     CheckoutOperation? operation,
     Order? order,
     Option<String>? paymentMethod,
+    List<PaymentProviderView>? paymentProviders,
+    bool? paymentProvidersLoaded,
     bool? sameAsBilling,
     CheckoutAddressDraft? shipping,
     CheckoutStatus? status,
@@ -114,6 +123,8 @@ final class _$CheckoutStateCopyWithImpl<$Res> implements _$CheckoutStateCopyWith
     Object? operation = _checkoutStateCopyWithUnset,
     Object? order = _checkoutStateCopyWithUnset,
     Object? paymentMethod = null,
+    Object? paymentProviders = null,
+    Object? paymentProvidersLoaded = null,
     Object? sameAsBilling = null,
     Object? shipping = null,
     Object? status = null,
@@ -129,6 +140,8 @@ final class _$CheckoutStateCopyWithImpl<$Res> implements _$CheckoutStateCopyWith
         sameAsBilling: sameAsBilling == null ? _self.sameAsBilling : sameAsBilling as bool,
         email: email == null ? _self.email : email as String,
         paymentMethod: paymentMethod == null ? _self.paymentMethod : paymentMethod as Option<String>,
+        paymentProviders: paymentProviders == null ? _self.paymentProviders : paymentProviders as List<PaymentProviderView>,
+        paymentProvidersLoaded: paymentProvidersLoaded == null ? _self.paymentProvidersLoaded : paymentProvidersLoaded as bool,
         order: identical(order, _checkoutStateCopyWithUnset)
             ? _self.order
             : order as Order?,

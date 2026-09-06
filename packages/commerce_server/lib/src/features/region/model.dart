@@ -54,6 +54,28 @@ final class SellingRegionListResponse with _$SellingRegionListResponse {
   final List<SellingRegionResponse> regions;
 }
 
+/// Explicit public payment-provider response populated directly from SQLx.
+@Derive([Serialize(), FromRow()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class PaymentProviderResponse with _$PaymentProviderResponse {
+  /// Creates an allowlisted payment-provider reference.
+  const PaymentProviderResponse({required this.id});
+
+  /// Stable provider identifier accepted by payment-session selection.
+  final String id;
+}
+
+/// Explicit public payment-provider list matching the Medusa store contract.
+@Derive([Serialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class PaymentProviderListResponse with _$PaymentProviderListResponse {
+  /// Creates a regional provider listing.
+  const PaymentProviderListResponse({required this.paymentProviders});
+
+  /// Enabled providers in stable identifier order.
+  final List<PaymentProviderResponse> paymentProviders;
+}
+
 /// Converts SQLite's region boolean representation.
 final class RegionBoolFromInt implements SqlxTryFrom<bool, int> {
   /// Creates the stateless converter.

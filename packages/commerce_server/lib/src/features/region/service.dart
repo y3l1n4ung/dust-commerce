@@ -15,3 +15,16 @@ Future<Result<SellingRegionListResponse, SqlxError>> listSellingRegions(
     Err(:final error) => Err(error),
   };
 }
+
+/// Lists the providers a region can advertise and accept at checkout.
+Future<Result<PaymentProviderListResponse, SqlxError>> listPaymentProviders(
+  SellingRegionRepository regions, {
+  required String regionId,
+}) async {
+  final result = await regions.paymentProviders(regionId);
+  return switch (result) {
+    Ok(:final value) =>
+      Ok(PaymentProviderListResponse(paymentProviders: value)),
+    Err(:final error) => Err(error),
+  };
+}

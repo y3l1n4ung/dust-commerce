@@ -27,6 +27,20 @@ mixin _$SellingRegionListResponse implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$PaymentProviderResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$PaymentProviderResponseSerialize(this as PaymentProviderResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$PaymentProviderListResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$PaymentProviderListResponseSerialize(this as PaymentProviderListResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 final class $SellingRegionResponseSerializer implements Serializer<SellingRegionResponse, Map<String, Object?>> {
   const $SellingRegionResponseSerializer();
 
@@ -38,6 +52,18 @@ final class $SellingRegionListResponseSerializer implements Serializer<SellingRe
 
   @override
   Map<String, Object?> serialize(SellingRegionListResponse value) => _$SellingRegionListResponseSerialize(value);
+}
+final class $PaymentProviderResponseSerializer implements Serializer<PaymentProviderResponse, Map<String, Object?>> {
+  const $PaymentProviderResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(PaymentProviderResponse value) => _$PaymentProviderResponseSerialize(value);
+}
+final class $PaymentProviderListResponseSerializer implements Serializer<PaymentProviderListResponse, Map<String, Object?>> {
+  const $PaymentProviderListResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(PaymentProviderListResponse value) => _$PaymentProviderListResponseSerialize(value);
 }
 SellingRegionResponse _$SellingRegionResponseFromRow(Row row) {
   return SellingRegionResponse(
@@ -76,6 +102,36 @@ extension $SellingRegionResponseQuery on QueryAs<SellingRegionResponse> {
       fetchAllWith(db, _$SellingRegionResponseFromRow);
 }
 
+PaymentProviderResponse _$PaymentProviderResponseFromRow(Row row) {
+  return PaymentProviderResponse(id: row.read<String>('id'));
+}
+
+/// Row deserializer for [PaymentProviderResponse].
+final class $PaymentProviderResponseRowDeserializer implements RowDeserializer<PaymentProviderResponse> {
+  const $PaymentProviderResponseRowDeserializer();
+
+  @override
+  PaymentProviderResponse deserialize(Row row) => _$PaymentProviderResponseFromRow(row);
+}
+
+/// Typed row query terminals for [PaymentProviderResponse].
+///
+/// Resolved from the static type of the receiver, so a row type with no
+/// `FromRow` has no terminals and the call does not compile.
+extension $PaymentProviderResponseQuery on QueryAs<PaymentProviderResponse> {
+  /// Fetches exactly one row.
+  Future<PaymentProviderResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$PaymentProviderResponseFromRow);
+
+  /// Fetches zero or one row.
+  Future<PaymentProviderResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$PaymentProviderResponseFromRow);
+
+  /// Fetches every row.
+  Future<List<PaymentProviderResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$PaymentProviderResponseFromRow);
+}
+
 Map<String, Object?> _$SellingRegionResponseSerialize(SellingRegionResponse instance) {
   return <String, Object?>{
     'countries': instance.countries
@@ -103,3 +159,23 @@ Map<String, Object?> _$SellingRegionListResponseSerialize(SellingRegionListRespo
 
 Map<String, Object?> _$SellingRegionListResponseToJson(SellingRegionListResponse instance) =>
     _$SellingRegionListResponseSerialize(instance);
+
+Map<String, Object?> _$PaymentProviderResponseSerialize(PaymentProviderResponse instance) {
+  return <String, Object?>{
+    'id': instance.id,
+  };
+}
+
+Map<String, Object?> _$PaymentProviderResponseToJson(PaymentProviderResponse instance) =>
+    _$PaymentProviderResponseSerialize(instance);
+
+Map<String, Object?> _$PaymentProviderListResponseSerialize(PaymentProviderListResponse instance) {
+  return <String, Object?>{
+    'payment_providers': instance.paymentProviders
+        .map((item) => _$PaymentProviderResponseSerialize(item))
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$PaymentProviderListResponseToJson(PaymentProviderListResponse instance) =>
+    _$PaymentProviderListResponseSerialize(instance);

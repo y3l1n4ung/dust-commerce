@@ -774,6 +774,10 @@
   "@checkout_need_help": {
     "description": "Translation for `shop_checkout_need_help`."
   },
+  "checkout_no_payment_methods": "No payment methods are available.",
+  "@checkout_no_payment_methods": {
+    "description": "Shown when the cart region has no enabled payment provider."
+  },
   "checkout_order_date": "Order date: {date}",
   "@checkout_order_date": {
     "description": "Translation for `shop_checkout_order_date`.",
@@ -840,6 +844,10 @@
   "checkout_required": "This field is required.",
   "@checkout_required": {
     "description": "Translation for `shop_checkout_required`."
+  },
+  "checkout_retry_payment_methods": "Retry payment methods",
+  "@checkout_retry_payment_methods": {
+    "description": "Retries regional payment-provider discovery."
   },
   "checkout_review": "Review",
   "@checkout_review": {

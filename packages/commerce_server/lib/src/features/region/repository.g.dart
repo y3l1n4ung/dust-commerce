@@ -31,4 +31,22 @@ ORDER BY name, id
       const $SellingRegionResponseRowDeserializer().deserialize,
     );
   }
+
+  @override
+  Future<Result<List<PaymentProviderResponse>, SqlxError>> paymentProviders(String regionId) {
+    return _db.fetchAll<PaymentProviderResponse>(
+      r'''
+SELECT region_payment_providers.provider_id AS id
+FROM region_payment_providers
+JOIN regions ON regions.id = region_payment_providers.region_id
+WHERE region_payment_providers.region_id = ?
+  AND region_payment_providers.enabled = 1
+  AND region_payment_providers.provider_id = 'manual'
+  AND regions.deleted_at IS NULL
+ORDER BY region_payment_providers.provider_id
+''',
+      [regionId],
+      const $PaymentProviderResponseRowDeserializer().deserialize,
+    );
+  }
 }

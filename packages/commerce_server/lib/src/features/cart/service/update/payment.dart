@@ -3,10 +3,7 @@ import 'package:dust_dart/db.dart';
 
 /// Why a payment provider could not be retained on a cart.
 enum ChoosePaymentFailure {
-  /// No active cart accepted the mutation.
-  noCart,
-
-  /// The storefront does not offer this provider.
+  /// The cart's selling region does not offer this provider.
   unsupportedProvider,
 }
 
@@ -22,7 +19,7 @@ Future<Result<Option<ChoosePaymentFailure>, SqlxError>> choosePayment(
   final written = await writes.setPaymentSession(cartId, providerId);
   if (written case Err(:final error)) return Err(error);
   if ((written as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
-    return const Ok(Some(ChoosePaymentFailure.noCart));
+    return const Ok(Some(ChoosePaymentFailure.unsupportedProvider));
   }
   return const Ok(None<ChoosePaymentFailure>());
 }

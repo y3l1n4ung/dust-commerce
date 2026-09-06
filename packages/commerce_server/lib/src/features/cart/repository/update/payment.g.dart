@@ -23,9 +23,15 @@ final class _$CartPaymentRepository implements CartPaymentRepository {
     return _db.execute(
       r'''
 INSERT INTO cart_payment_sessions (cart_id, provider_id)
-SELECT id, ?
+SELECT carts.id, region_payment_providers.provider_id
 FROM carts
-WHERE id = ? AND completed_at IS NULL AND deleted_at IS NULL
+JOIN region_payment_providers
+  ON region_payment_providers.region_id = carts.region_id
+ AND region_payment_providers.provider_id = ?
+ AND region_payment_providers.enabled = 1
+WHERE carts.id = ?
+  AND carts.completed_at IS NULL
+  AND carts.deleted_at IS NULL
 ON CONFLICT (cart_id) DO UPDATE SET provider_id = excluded.provider_id
 ''',
       [providerId, cartId],

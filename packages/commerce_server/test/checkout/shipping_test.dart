@@ -93,6 +93,10 @@ Future<void> _seed(CommerceDatabase database) async {
     r"('reg_eu', 'Europe', 'eur', 2000, 'de')",
   );
   await run(
+    r"INSERT INTO region_payment_providers (region_id, provider_id) "
+    r"VALUES ('reg_us', 'manual'), ('reg_eu', 'manual')",
+  );
+  await run(
     r"INSERT INTO shipping_options (id, region_id, name, amount, currency_code)"
     r" VALUES "
     r"('so_standard', 'reg_us', 'Standard', 500, 'usd'), "

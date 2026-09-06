@@ -10,4 +10,5 @@ export 'catalog_view.dart';
 export 'customer_address.dart';
 export 'option_filter_view.dart';
 export 'password.dart';
+export 'payment_provider_view.dart';
 export 'region_view.dart';

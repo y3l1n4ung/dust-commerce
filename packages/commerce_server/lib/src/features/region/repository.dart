@@ -18,4 +18,19 @@ WHERE deleted_at IS NULL
 ORDER BY name, id
 ''')
   Future<Result<List<SellingRegionResponse>, SqlxError>> list();
+
+  /// Lists enabled payment providers for one active selling region.
+  @Query(r'''
+SELECT region_payment_providers.provider_id AS id
+FROM region_payment_providers
+JOIN regions ON regions.id = region_payment_providers.region_id
+WHERE region_payment_providers.region_id = $1
+  AND region_payment_providers.enabled = 1
+  AND region_payment_providers.provider_id = 'manual'
+  AND regions.deleted_at IS NULL
+ORDER BY region_payment_providers.provider_id
+''')
+  Future<Result<List<PaymentProviderResponse>, SqlxError>> paymentProviders(
+    String regionId,
+  );
 }

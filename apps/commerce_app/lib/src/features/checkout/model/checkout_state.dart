@@ -52,6 +52,8 @@ final class CheckoutState with _$CheckoutState {
     this.sameAsBilling = true,
     this.email = '',
     this.paymentMethod = const None(),
+    this.paymentProviders = const [],
+    this.paymentProvidersLoaded = false,
     this.order,
     this.message,
   });
@@ -74,6 +76,12 @@ final class CheckoutState with _$CheckoutState {
   /// Explicitly selected provider identifier.
   final Option<String> paymentMethod;
 
+  /// Providers the cart's selling region currently offers.
+  final List<PaymentProviderView> paymentProviders;
+
+  /// Whether provider discovery completed, including a valid empty result.
+  final bool paymentProvidersLoaded;
+
   /// Whether billing reuses the shipping destination.
   final bool sameAsBilling;
 
@@ -92,8 +100,13 @@ final class CheckoutState with _$CheckoutState {
         None() => false,
       };
 
-  /// Whether the currently supported manual provider is selected.
-  bool get isManualPaymentSelected => paymentMethod == const Some('manual');
+  /// Whether the retained choice remains in the latest regional listing.
+  bool get hasAvailablePaymentMethod =>
+      paymentProviders.any((provider) => isPaymentSelected(provider.id));
+
+  /// Whether [providerId] is the server-retained selection.
+  bool isPaymentSelected(String providerId) =>
+      paymentMethod == Some<String>(providerId);
 
   /// Validated request made from the values the customer reviewed.
   CheckoutRequest requestFor(String cartId) => CheckoutRequest(

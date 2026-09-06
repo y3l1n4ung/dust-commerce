@@ -90,7 +90,12 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
       return Err(SqlxError.decode('Existing cart order could not be read'));
     }
     if (cart.isEmpty) return const Ok(Err(CheckoutFailure.emptyCart));
-    if (cart.paymentSession == null) {
+    if (cart.paymentSession?.providerId != 'manual') {
+      return const Ok(Err(CheckoutFailure.paymentNotSelected));
+    }
+    final providerEnabled = await carts.hasEnabledPaymentProvider(cartId);
+    if (providerEnabled case Err(:final error)) return Err(error);
+    if ((providerEnabled as Ok<int, SqlxError>).value == 0) {
       return const Ok(Err(CheckoutFailure.paymentNotSelected));
     }
 

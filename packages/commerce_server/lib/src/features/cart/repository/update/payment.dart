@@ -9,12 +9,18 @@ abstract final class CartPaymentRepository {
   const factory CartPaymentRepository(DatabaseExecutor db) =
       _$CartPaymentRepository;
 
-  /// Retains one provider choice only while the cart is active.
+  /// Retains one enabled regional provider choice while the cart is active.
   @Query(r'''
 INSERT INTO cart_payment_sessions (cart_id, provider_id)
-SELECT id, $2
+SELECT carts.id, region_payment_providers.provider_id
 FROM carts
-WHERE id = $1 AND completed_at IS NULL AND deleted_at IS NULL
+JOIN region_payment_providers
+  ON region_payment_providers.region_id = carts.region_id
+ AND region_payment_providers.provider_id = $2
+ AND region_payment_providers.enabled = 1
+WHERE carts.id = $1
+  AND carts.completed_at IS NULL
+  AND carts.deleted_at IS NULL
 ON CONFLICT (cart_id) DO UPDATE SET provider_id = excluded.provider_id
 ''')
   Future<Result<ExecResult, SqlxError>> setPaymentSession(

@@ -30,6 +30,12 @@ VALUES
   ('reg_eu', 'Europe', 'eur', 0, 'gb,de,dk,se,fr,es,it'),
   ('reg_us', 'United States', 'usd', 1000, 'us')
 '''),
+  const _Statement(r'''
+INSERT OR IGNORE INTO region_payment_providers (region_id, provider_id)
+VALUES
+  ('reg_eu', 'manual'),
+  ('reg_us', 'manual')
+'''),
   ..._taxonomyBeforeProducts,
   const _Statement(r'''
 INSERT OR IGNORE INTO products
