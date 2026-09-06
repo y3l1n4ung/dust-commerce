@@ -18,9 +18,9 @@ payment, and a basic customer account.
 
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
-| Schema | modular PostgreSQL schemas | 27 SQLite tables |
+| Schema | modular PostgreSQL schemas | 30 SQLite tables |
 | Admin API | yes | none |
-| Store operations | broad Store API | 23 method/path operations |
+| Store operations | broad Store API | 35 method/path operations |
 | Workflow engine, plugins, dashboard | yes | none |
 
 ## Where the model genuinely agrees
@@ -141,6 +141,18 @@ building an attacker-controlled memory queue. The generated Flutter client
 keeps authorization at the Dio layer, so one default header or interceptor
 covers every protected request without token parameters in each API method.
 
+### Order transfers keep the capability out of the database
+
+The three Store routes match Medusa's request, accept and decline shape, while
+the storage boundary is deliberately narrower. A target customer makes the
+request through route-level authentication and the existing order contact
+receives a decision link. Once SMTP accepts the message, dust-commerce clears
+the raw token and retains only its SHA-256 fingerprint; accept changes the
+owner in the same transaction as the decision. The public response is a
+standalone five-field SQLx row type, so an internal model change cannot widen
+the API by inheritance. The generated Flutter client receives only those
+fields and Dio remains the sole owner of the authorization header.
+
 ### PostgreSQL timestamps become explicit SQLite UTC text
 
 Medusa's PostgreSQL migrations use `timestamptz not null default now()`.
@@ -165,7 +177,7 @@ corresponding Medusa modules in miniature.
 
 ## The honest summary
 
-Across its 23 method/path operations, the domain modelling follows the same
+Across its 35 method/path operations, the domain modelling follows the same
 core boundaries where they fit. On everything else, Medusa is a commerce
 platform and this is a demonstration that Dust can generate one end of a wire,
 decode it at the other, and statically validate SQL against a real schema.
