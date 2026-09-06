@@ -13,8 +13,9 @@ valid source or implementation capture could be produced.
 State: `/store` with the shared footer visible, authenticated `/checkout` with
 a saved address available, authenticated `/account` with completed profile,
 saved addresses and recent orders, `/account/orders/details/:id`, and the
-profile password editor closed and open, plus the equivalent Medusa DTC states
-pinned in `docs/storefront-parity.md`.
+profile password editor closed and open, authenticated guest-cart mismatch
+banner idle and retrying, plus the equivalent Medusa DTC states pinned in
+`docs/storefront-parity.md`.
 
 **Findings**
 
@@ -58,6 +59,8 @@ checkout controls require focused captures after the full-view comparison.
 
 - Capture matching desktop store views with the footer visible.
 - Capture matching `390 x 844` store views and interactive menu/filter states.
+- Capture the authenticated guest-cart mismatch banner before and during retry
+  at desktop and compact widths.
 - Capture authenticated checkout with the saved-address menu closed and open.
 - Capture the populated account overview at desktop width and confirm the
   overview is replaced by account navigation below the 1024px breakpoint.
