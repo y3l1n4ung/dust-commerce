@@ -6,3 +6,4 @@ export 'delete.dart';
 export 'list.dart';
 export 'read.dart';
 export 'update.dart';
+export 'update_media.dart';

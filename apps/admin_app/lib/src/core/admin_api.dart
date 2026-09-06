@@ -59,6 +59,13 @@ abstract interface class AdminApi {
     @Body() AdminUpdateProduct body,
   );
 
+  /// Replaces product image membership, order, and thumbnail atomically.
+  @PUT('/admin/products/{id}/media')
+  Future<AdminProductDetail> updateProductMedia(
+    @Path() String id,
+    @Body() AdminUpdateProductMedia body,
+  );
+
   /// Revokes the Dio-managed bearer.
   @DELETE('/auth/admin/session')
   Future<AdminSessionDeleted> signOut();

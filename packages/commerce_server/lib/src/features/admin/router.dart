@@ -29,6 +29,10 @@ Router adminRoutes() => Router()
     '/products/{id}',
     get(readAdminProductHandler).patch(updateAdminProductHandler),
   )
+  ..route(
+    '/products/{id}/media',
+    put(updateAdminProductMediaHandler),
+  )
   ..route('/uploads', post(uploadAdminMediaHandler, status: 201))
   ..route('/uploads/{key}', delete(deleteAdminMediaHandler));
 

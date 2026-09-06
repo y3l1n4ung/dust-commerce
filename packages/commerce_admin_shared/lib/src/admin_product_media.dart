@@ -28,3 +28,18 @@ final class AdminCreateProductMedia with _$AdminCreateProductMedia {
   @Validate(length: Length(min: 1, max: 2048), message: 'Choose an image')
   final String url;
 }
+
+/// Complete ordered gallery replacement for one existing product.
+@Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class AdminUpdateProductMedia with _$AdminUpdateProductMedia {
+  /// Creates one atomic product-media replacement.
+  const AdminUpdateProductMedia({required this.media});
+
+  /// Decodes the generated product-media request.
+  factory AdminUpdateProductMedia.fromJson(Map<String, Object?> json) =>
+      _$AdminUpdateProductMediaFromJson(json);
+
+  /// Existing image ids and staged upload keys in the desired display order.
+  final List<AdminCreateProductMedia> media;
+}

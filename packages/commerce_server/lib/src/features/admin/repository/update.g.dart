@@ -43,4 +43,75 @@ WHERE id = ?
       [title, handle, subtitle, material, description, discountable, status, id, handle, id],
     );
   }
+
+  @override
+  Future<Result<int, SqlxError>> maxImageRank(String productId) {
+    return _db.fetchScalar<int>(
+      r'''
+SELECT coalesce(max(rank), -1)
+FROM product_images
+WHERE product_id = ?
+''',
+      [productId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> shiftImageRanks(String productId, int offset) {
+    return _db.execute(
+      r'''
+UPDATE product_images
+SET rank = rank + ?
+WHERE product_id = ?
+''',
+      [offset, productId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> rankImage(String imageId, String productId, int rank) {
+    return _db.execute(
+      r'''
+UPDATE product_images
+SET rank = ?
+WHERE id = ? AND product_id = ? AND deleted_at IS NULL
+''',
+      [rank, imageId, productId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> insertImage(String id, String productId, String url, int rank) {
+    return _db.execute(
+      r'''
+INSERT INTO product_images (id, product_id, url, rank)
+VALUES (?, ?, ?, ?)
+''',
+      [id, productId, url, rank],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> deleteShiftedImages(String productId, int offset) {
+    return _db.execute(
+      r'''
+UPDATE product_images
+SET deleted_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+WHERE product_id = ? AND deleted_at IS NULL AND rank >= ?
+''',
+      [productId, offset],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> updateThumbnail(String productId, String? thumbnail) {
+    return _db.execute(
+      r'''
+UPDATE products
+SET thumbnail = ?
+WHERE id = ? AND deleted_at IS NULL
+''',
+      [thumbnail, productId],
+    );
+  }
 }

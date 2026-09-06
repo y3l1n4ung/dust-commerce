@@ -42,4 +42,69 @@ WHERE id = $1
     int discountable,
     String status,
   );
+
+  /// Returns the largest rank, including history rows kept after removal.
+  @Query(r'''
+SELECT coalesce(max(rank), -1)
+FROM product_images
+WHERE product_id = $1
+''')
+  Future<Result<int, SqlxError>> maxImageRank(String productId);
+
+  /// Moves every old rank out of the compact active range before replacement.
+  @Query(r'''
+UPDATE product_images
+SET rank = rank + $2
+WHERE product_id = $1
+''')
+  Future<Result<ExecResult, SqlxError>> shiftImageRanks(
+    String productId,
+    int offset,
+  );
+
+  /// Retains one existing image at its requested compact rank.
+  @Query(r'''
+UPDATE product_images
+SET rank = $3
+WHERE id = $1 AND product_id = $2 AND deleted_at IS NULL
+''')
+  Future<Result<ExecResult, SqlxError>> rankImage(
+    String imageId,
+    String productId,
+    int rank,
+  );
+
+  /// Attaches one staged upload at its requested compact rank.
+  @Query(r'''
+INSERT INTO product_images (id, product_id, url, rank)
+VALUES ($1, $2, $3, $4)
+''')
+  Future<Result<ExecResult, SqlxError>> insertImage(
+    String id,
+    String productId,
+    String url,
+    int rank,
+  );
+
+  /// Soft-deletes old active rows not returned to the compact rank range.
+  @Query(r'''
+UPDATE product_images
+SET deleted_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+WHERE product_id = $1 AND deleted_at IS NULL AND rank >= $2
+''')
+  Future<Result<ExecResult, SqlxError>> deleteShiftedImages(
+    String productId,
+    int offset,
+  );
+
+  /// Replaces the product thumbnail from the same transaction as its gallery.
+  @Query(r'''
+UPDATE products
+SET thumbnail = $2
+WHERE id = $1 AND deleted_at IS NULL
+''')
+  Future<Result<ExecResult, SqlxError>> updateThumbnail(
+    String productId,
+    String? thumbnail,
+  );
 }

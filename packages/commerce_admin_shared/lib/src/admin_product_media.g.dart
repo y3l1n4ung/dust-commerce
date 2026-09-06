@@ -13,6 +13,8 @@
 
 part of 'admin_product_media.dart';
 
+const DeepCollectionEquality _adminUpdateProductMediaMediaEquality = DeepCollectionEquality();
+
 mixin _$AdminCreateProductMedia implements Validatable, Serializable {
   @override
   String toString() {
@@ -82,6 +84,67 @@ mixin _$AdminCreateProductMedia implements Validatable, Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$AdminUpdateProductMedia implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as AdminUpdateProductMedia;
+    return 'AdminUpdateProductMedia('
+        'media: ${self.media}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminUpdateProductMedia;
+    return identical(this, other) ||
+        other is AdminUpdateProductMedia &&
+            runtimeType == other.runtimeType &&
+            _adminUpdateProductMediaMediaEquality.equals(other.media, self.media);
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminUpdateProductMedia;
+    return Object.hashAll([
+      runtimeType,
+      _adminUpdateProductMediaMediaEquality.hash(self.media),
+    ]);
+  }
+
+  /// Validates this `AdminUpdateProductMedia`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as AdminUpdateProductMedia;
+    final errors = <ValidationError>[];
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `AdminUpdateProductMedia` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminUpdateProductMediaSerialize(this as AdminUpdateProductMedia);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 extension _AdminCreateProductMediaValidation on AdminCreateProductMedia {
   static void _validateId(String id, List<ValidationError> errors) {
     if (id.length < 1) {
@@ -102,6 +165,8 @@ extension _AdminCreateProductMediaValidation on AdminCreateProductMedia {
   }
 
 }
+extension _AdminUpdateProductMediaValidation on AdminUpdateProductMedia {
+}
 final class $AdminCreateProductMediaSerializer implements Serializer<AdminCreateProductMedia, Map<String, Object?>> {
   const $AdminCreateProductMediaSerializer();
 
@@ -113,6 +178,18 @@ final class $AdminCreateProductMediaDeserializer implements Deserializer<AdminCr
 
   @override
   AdminCreateProductMedia deserialize(Map<String, Object?> json) => _$AdminCreateProductMediaDeserialize(json);
+}
+final class $AdminUpdateProductMediaSerializer implements Serializer<AdminUpdateProductMedia, Map<String, Object?>> {
+  const $AdminUpdateProductMediaSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminUpdateProductMedia value) => _$AdminUpdateProductMediaSerialize(value);
+}
+final class $AdminUpdateProductMediaDeserializer implements Deserializer<AdminUpdateProductMedia, Map<String, Object?>> {
+  const $AdminUpdateProductMediaDeserializer();
+
+  @override
+  AdminUpdateProductMedia deserialize(Map<String, Object?> json) => _$AdminUpdateProductMediaDeserialize(json);
 }
 
 Map<String, Object?> _$AdminCreateProductMediaSerialize(AdminCreateProductMedia instance) {
@@ -145,3 +222,25 @@ AdminCreateProductMedia _$AdminCreateProductMediaDeserialize(Map<String, Object?
 
 AdminCreateProductMedia _$AdminCreateProductMediaFromJson(Map<String, Object?> json) =>
     _$AdminCreateProductMediaDeserialize(json);
+
+Map<String, Object?> _$AdminUpdateProductMediaSerialize(AdminUpdateProductMedia instance) {
+  return <String, Object?>{
+    'media': instance.media
+        .map((item) => _$AdminCreateProductMediaSerialize(item))
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$AdminUpdateProductMediaToJson(AdminUpdateProductMedia instance) =>
+    _$AdminUpdateProductMediaSerialize(instance);
+
+// factory AdminUpdateProductMedia.fromJson(Map<String, Object?> json) => _$AdminUpdateProductMediaFromJson(json);
+AdminUpdateProductMedia _$AdminUpdateProductMediaDeserialize(Map<String, Object?> json) {
+  final mediaValue = JsonHelper.decodeList(json['media'], 'media',
+      (item, itemKey) => _$AdminCreateProductMediaDeserialize(JsonHelper.asMap(item, itemKey)));
+
+  return AdminUpdateProductMedia(media: mediaValue);
+}
+
+AdminUpdateProductMedia _$AdminUpdateProductMediaFromJson(Map<String, Object?> json) =>
+    _$AdminUpdateProductMediaDeserialize(json);

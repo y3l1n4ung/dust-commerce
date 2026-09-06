@@ -7,3 +7,4 @@ export 'list.dart';
 export 'media.dart';
 export 'read.dart';
 export 'update.dart';
+export 'update_media.dart';
