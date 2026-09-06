@@ -193,7 +193,10 @@ disclosed. Flutter keeps the optional selection as `Option<String>`, hydrates
 it from the cart, and renders only the API listing. A hard browser reload at
 `?step=review` restores Review instead of falling back to Payment. Order
 placement rechecks that the retained provider is still enabled, so disabling a
-provider after selection cannot be bypassed with a direct checkout request.
+provider after selection cannot be bypassed with a direct checkout request. It
+also requires the cart's selected shipping-method snapshot before reserving
+stock or writing an order. A direct Review bypass receives `422` and leaves
+both stock and orders unchanged.
 
 The storefront country control follows Medusa's source data flow rather than
 being a display-only currency toggle. It derives an alphabetized country list

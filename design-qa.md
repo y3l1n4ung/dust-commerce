@@ -201,7 +201,11 @@ pass loaded Medusa's Payment route directly and compared the same selected
 Manual Payment state beside Morrow at the same browser surface. The radio card,
 interactive border, icon, spacing and black action treatment align. The source
 still lacked a completed address and delivery state, so no whole-page Review
-match is asserted. The desktop pass confirms the
+match is asserted. After adding the server-side delivery guard, the valid local
+path returned from Payment to Review with the same collapsed summaries and
+`Place order` action; no local UI changed. A fresh Medusa Review capture still
+lacked completed shipping state, so this regression pass does not add a
+same-state whole-page parity claim. The desktop pass confirms the
 complete back label, 24px semibold summary heading, source-spaced dividers, right-aligned
 quantity/unit price, and final totals rule. A browser-only CORS failure on the
 new address PUT was found and fixed before the successful Delivery transition;
@@ -309,6 +313,12 @@ focused captures.
   release-mode browser pass proves Review survives a hard reload with the
   source-exact `Place order` action. A same-state rendered pair remains blocked
   by the live reference's failing Standard-delivery mutation.
+- The checkout transaction now rejects a missing shipping-method snapshot
+  before stock reservation or order creation. Targeted and full server/client
+  suites prove the bypass returns `422` without changing stock or order count;
+  the normal release-mode browser path still reaches Review. Because this is a
+  backend guard with no UI delta and the live source remains in an incomplete
+  shipping state, no new visual parity result is claimed.
 
 **Implementation checklist**
 

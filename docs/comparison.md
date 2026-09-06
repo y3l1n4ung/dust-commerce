@@ -100,6 +100,9 @@ in several places. Here `inventory_quantity` is a column on the variant, and
 stock is taken by a conditional `UPDATE` inside the checkout transaction. That
 handles the race — two checkouts for the last unit, only one wins, and a zero
 row count is how the loser finds out — but it cannot answer *which warehouse*.
+Before that write, checkout requires the cart's selected shipping-method
+snapshot; bypassing Medusa's Review readiness flow cannot create an order or
+consume stock without a delivery choice.
 
 ### The order is frozen harder
 
