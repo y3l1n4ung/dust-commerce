@@ -18,9 +18,9 @@ payment, and a basic customer account.
 
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
-| Schema | modular PostgreSQL schemas | 30 SQLite tables |
+| Schema | modular PostgreSQL schemas | 31 SQLite tables |
 | Admin API | yes | none |
-| Store operations | broad Store API | 35 method/path operations |
+| Store operations | broad Store API | 36 method/path operations |
 | Workflow engine, plugins, dashboard | yes | none |
 
 ## Where the model genuinely agrees
@@ -178,14 +178,14 @@ search, password reset, email verification,
 MFA, OAuth providers, API keys, the admin API, workflow engine, plugin system,
 notifications, file storage, and the admin dashboard.
 
-Shipping is one regional flat-price option, promotions are one fixed or
-percentage code, payment is a manual state transition, and authentication is
-email/password plus opaque sessions. Those are tested vertical slices, not the
-corresponding Medusa modules in miniature.
+Shipping is a small set of regional options with optional item-total rules,
+promotions are one fixed or percentage code, payment is a manual state
+transition, and authentication is email/password plus opaque sessions. Those
+are tested vertical slices, not the corresponding Medusa modules in miniature.
 
 ## The honest summary
 
-Across its 35 method/path operations, the domain modelling follows the same
+Across its 36 method/path operations, the domain modelling follows the same
 core boundaries where they fit. On everything else, Medusa is a commerce
 platform and this is a demonstration that Dust can generate one end of a wire,
 decode it at the other, and statically validate SQL against a real schema.

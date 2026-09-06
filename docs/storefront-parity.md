@@ -28,7 +28,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `shipping/components/free-shipping-price-nudge` | global shipping progress popup | implemented in #21 with API-backed item-total rules, session dismissal, source actions, server-enforced eligibility, and source-timed unlocked feedback; local threshold interactions pass, while matched source rendering awaits a conditional source price |
 | `cart/templates` and `layout/components/cart-mismatch-banner` | cart route and ownership recovery | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, explicit applied-promotion responses, authoritative totals, session-aware sign-in prompt, authenticated guest-cart transfer, global retry banner and checkout handoff; the desktop empty/populated states and open promotion form passed rendered source comparison, while compact, shipping and source promotion-success QA remain |
 | `account/templates` | account shell and session | implemented in #20 and #26 with secure session, source-exact four-part overview completion, saved-address count, latest-five order links, profile name/phone/billing/password editing, API-backed address book, source-shaped navigation, order list and guarded order detail; signed-out desktop sign-in and registration passed rendered comparison, while compact, authenticated and real support/policy destinations remain |
-| `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, delivery, manual-payment, review and confirmation steps; the guest address form and initial delivery state passed a same-viewport rendered comparison, while the live reference fails when selecting delivery, so later payment/review, desktop, authenticated and confirmation QA remain |
+| `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, server-retained address progress, delivery, manual-payment, review and confirmation steps; guest address passed compact and desktop rendered comparison, and a hard reload retained the delivery step, while live authenticated source, payment/review and confirmation QA remain |
 | `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards, guarded frozen order details, transfer request/decision UI, and the secure order-transfer API/client are implemented; the decision page passed rendered source comparison, while authenticated account-form QA, contact and return flows remain |
 | `regions` store API | account, checkout and storefront country selection | implemented with explicit SQLx response allowlists; selectors use active backend regions rather than hard-coded countries |
 | categories and collections routes | product organisation | implemented in #18 with real API metadata, filtering, hierarchy, sorting and paging; exact nested category paths wait on `dust#542`, rendered QA remains |
@@ -162,6 +162,18 @@ preserves intentional nulls instead of inheriting optional shipping values,
 while an omitted billing address still reuses the shipping snapshot. The
 source omits company from the collapsed checkout summary, so the Flutter
 summary does the same without discarding the stored value.
+
+The editable checkout step is also retained on the active cart instead of
+living only in Flutter memory. The one-shot reversible `cart_addresses`
+migration owns exactly that table, with a shipping/billing discriminator,
+foreign-key cascade, database-generated UTC timestamps and an automatic
+`updated_at` trigger. `PUT /store/carts/{id}/addresses` runs behind the shared
+cart-access route guard, normalizes and validates nested input, rejects a
+destination outside the cart region, and atomically stores contact, shipping
+and optional billing values. Authenticated requests take their email from the
+proven bearer identity attached by Dio. Cart reads expose only the public
+address allowlist through direct typed SQLx row decoding, so a new checkout
+view model restores the exact server-owned step after a browser reload.
 
 The storefront country control follows Medusa's source data flow rather than
 being a display-only currency toggle. It derives an alphabetized country list

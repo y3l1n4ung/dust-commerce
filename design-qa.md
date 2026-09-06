@@ -28,7 +28,8 @@ Implementation screenshot paths: in-app browser captures of the transfer route
 `http://127.0.0.1:13001/products/shorts?v_id=var_shorts_s`, and
 `http://127.0.0.1:13001/account?qa=account-register-local`, and
 `http://127.0.0.1:13001/cart`, and
-`http://127.0.0.1:13001/checkout?step=review`. The browser captures
+`http://127.0.0.1:13001/checkout?step=review`, and
+`http://127.0.0.1:13001/checkout?step=delivery`. The browser captures
 are retained in the task evidence rather than exported into the repository.
 
 Viewport: the matched desktop captures used the same in-app browser surface. The
@@ -37,7 +38,9 @@ The reference's visible scrollbar produced the small raster-size difference.
 Compact `390 x 844` transfer and authenticated account-form captures remain.
 The promotion form comparison used the same `736 x 864` browser surface for
 both storefronts. Guest checkout address and initial delivery comparisons also
-used that same `736 x 864` surface.
+used that same `736 x 864` surface. The desktop checkout comparison used an
+equal `1280 x 720` CSS viewport; the final implementation capture came from an
+isolated headless Chrome profile because the interactive Mac session locked.
 
 Pixel dimensions, CSS size, and density normalization: both captures used the
 in-app browser's default CSS viewport and density. Comparison normalized the
@@ -79,13 +82,18 @@ local journey then reached Review through Standard delivery and Manual Payment
 without placing an order. The live reference failed its Server Components
 mutation when Standard delivery was selected, so it could not render payment
 or review; those local states were checked against the pinned source structure
-rather than claimed as a successful live pair.
+rather than claimed as a successful live pair. Desktop QA repeated the address
+step at `1280 x 720`, then advanced to Delivery and hard-reloaded the route. The
+collapsed shipping/contact summary and selected checkout step survived from
+the server cart. A local authenticated account also rendered the region-scoped
+saved-address selector; the public reference was not mutated to create an
+account, so authenticated head-to-head evidence remains open.
 
 **Findings**
 
 - [P1] Remaining route groups still lack rendered comparison
-  Location: compact store, product and cart layouts; checkout desktop,
-  authenticated, payment, review and confirmation states; account and order
+  Location: compact store, product and cart layouts; checkout authenticated,
+  payment, review and confirmation states; account and order
   views; transfer-request states; mismatch banner; and the global shipping
   popup.
   Evidence: matched comparisons now cover the transfer decision, desktop
@@ -144,7 +152,8 @@ rather than claimed as a successful live pair.
   Morrow branding, privacy-safe omission of the owner email, and
   the temporarily non-actionable content-link text are intentional product
   differences. Guest checkout matches the source field order, required
-  markers, billing toggle, delivery labels and payment/review hierarchy. The
+  markers, billing toggle, desktop summary hierarchy, delivery labels and
+  payment/review hierarchy. The
   local delivery prompt intentionally corrects the source typo from "you
   order" to "your order"; other route copy remains pending.
 
@@ -172,7 +181,11 @@ billing toggle, Continue action, step dividers and initial delivery state. The
 local server-backed journey additionally proves Standard delivery, Manual
 Payment and Review with authoritative totals. It deliberately stopped before
 Place Order. The reference's delivery mutation failed, so no live
-payment/review match is asserted.
+payment/review match is asserted. The desktop pass confirms the complete back
+label, 24px semibold summary heading, source-spaced dividers, right-aligned
+quantity/unit price, and final totals rule. A browser-only CORS failure on the
+new address PUT was found and fixed before the successful Delivery transition;
+hard reload then reproduced the same collapsed address state.
 
 **Focused region comparison evidence**
 
@@ -252,6 +265,12 @@ controls still require focused captures.
   864`. Company and apartment now remain independent through the real API and
   frozen order snapshot. Standard delivery and Manual Payment reach Review
   locally; the source delivery mutation fails before those live states.
+- The first desktop checkout retry exposed a production CORS omission: direct
+  tests passed, but the browser could not preflight the new cart-address PUT.
+  The explicit storefront policy now includes PUT with preflight coverage. The
+  corrected `1280 x 720` render also fixes the truncated back label, oversized
+  cart heading, excess divider spacing, and non-source line-price layout. A
+  hard reload at Delivery preserves the collapsed server-owned address step.
 
 **Implementation checklist**
 
@@ -263,8 +282,8 @@ controls still require focused captures.
   sold-out and add-to-cart feedback states against matched product fixtures.
 - Capture populated cart at compact width and exercise shipping, line-removal
   and checkout actions against matching anonymous fixtures.
-- Capture guest checkout at desktop width and authenticated checkout with a
-  saved address; retry the payment/review pair when the reference delivery
+- Capture authenticated checkout against a non-destructive reference account;
+  retry the payment/review pair when the reference delivery
   mutation works, then capture confirmation without placing an unintended
   reference order.
 - Capture a source promotion success state when the reference has a valid code,
