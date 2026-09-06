@@ -13,7 +13,7 @@ final class AdminHarness {
   static const password = 'correct horse battery staple';
 
   /// Starts a migrated app with one bootstrapped administrator.
-  static Future<AdminHarness> start() async {
+  static Future<AdminHarness> start({bool seedStore = false}) async {
     final directory = await Directory.systemTemp.createTemp('commerce_admin');
     final database = CommerceDatabase.open(
       '${directory.path}/commerce.db',
@@ -37,6 +37,7 @@ final class AdminHarness {
     } else {
       fail('Admin bootstrap failed: $created');
     }
+    if (seedStore) await seedDevelopmentStore(database);
     var requestId = 100;
     return AdminHarness._(
       directory,

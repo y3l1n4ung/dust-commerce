@@ -13,6 +13,7 @@ final class AdminDeps {
     required this.clock,
     required this.passwordWork,
     required this.dummyPasswordHash,
+    required this.products,
   });
 
   /// Shared identifier and time source.
@@ -26,6 +27,9 @@ final class AdminDeps {
 
   /// Shared bound on memory-hard password work.
   final PasswordWorkLimiter passwordWork;
+
+  /// Merchant catalogue listing queries.
+  final AdminProductRepository products;
 
   /// Admin credential and session reads.
   final AdminReadRepository reads;

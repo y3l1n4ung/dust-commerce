@@ -21,6 +21,14 @@ abstract interface class AdminApi {
   @GET('/admin/users/me')
   Future<AdminUser> currentUser();
 
+  /// Lists merchant-visible products with server-owned paging and search.
+  @GET('/admin/products')
+  Future<AdminProductList> listProducts(
+    @Query('q') String query,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
+
   /// Revokes the Dio-managed bearer.
   @DELETE('/auth/admin/session')
   Future<AdminSessionDeleted> signOut();

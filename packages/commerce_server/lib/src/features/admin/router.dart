@@ -16,4 +16,5 @@ Router adminAuthRoutes() {
 /// Merchant-only routes guarded once at the route-tree boundary.
 Router adminRoutes() => Router()
   ..routeLayer(fromExtractor(const AdminAuth()))
-  ..route('/users/me', get(readCurrentAdminHandler));
+  ..route('/users/me', get(readCurrentAdminHandler))
+  ..route('/products', get(listAdminProductsHandler));
