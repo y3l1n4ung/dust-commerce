@@ -26,7 +26,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
 | `layout/components/cart-dropdown` | cart preview | implemented in #21 with hover, five-second post-add feedback, live removal, subtotal and empty state; the populated desktop preview passed rendered source comparison |
 | `shipping/components/free-shipping-price-nudge` | global shipping progress popup | implemented in #21 with API-backed item-total rules, session dismissal, source actions, and server-enforced eligibility; rendered QA remains |
-| `cart/templates` and `layout/components/cart-mismatch-banner` | cart route and ownership recovery | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, promotion UI, authoritative totals, session-aware sign-in prompt, authenticated guest-cart transfer, global retry banner and checkout handoff; the desktop empty and populated states passed rendered source comparison, while compact and promotion/shipping interaction QA remain |
+| `cart/templates` and `layout/components/cart-mismatch-banner` | cart route and ownership recovery | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, explicit applied-promotion responses, authoritative totals, session-aware sign-in prompt, authenticated guest-cart transfer, global retry banner and checkout handoff; the desktop empty/populated states and open promotion form passed rendered source comparison, while compact, shipping and source promotion-success QA remain |
 | `account/templates` | account shell and session | implemented in #20 and #26 with secure session, source-exact four-part overview completion, saved-address count, latest-five order links, profile name/phone/billing/password editing, API-backed address book, source-shaped navigation, order list and guarded order detail; signed-out desktop sign-in and registration passed rendered comparison, while compact, authenticated and real support/policy destinations remain |
 | `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, delivery, manual-payment, review and confirmation steps; rendered QA remains |
 | `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards, guarded frozen order details, transfer request/decision UI, and the secure order-transfer API/client are implemented; the decision page passed rendered source comparison, while authenticated account-form QA, contact and return flows remain |
@@ -142,6 +142,17 @@ line mutations clear a chosen option in the same transaction if its rule stops
 matching. An advertised shipping option and a selected shipping-method snapshot
 remain separate contracts, so eligibility metadata does not enter frozen
 orders.
+
+Applied promotions use a standalone public allowlist rather than inheriting an
+internal promotion model. The response exposes only id, code, type, value,
+fixed-value currency and the current discount amount; validity windows, usage
+limits and redemption counts remain server-only. The original reversible
+`cart_promotions` migration creates this snapshot in one shot, including
+database-generated UTC timestamps and an automatic `updated_at` trigger. Line
+changes recalculate percentage amounts transactionally, and checkout freezes
+the applied code and counts redemption only after the order write succeeds.
+This vertical slice intentionally supports one promotion per cart; applying a
+second code replaces the first until combination and exclusion policy exists.
 
 The storefront country control follows Medusa's source data flow rather than
 being a display-only currency toggle. It derives an alphabetized country list

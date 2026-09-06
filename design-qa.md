@@ -13,6 +13,8 @@ Source visual truth paths:
 - Pinned populated-cart sources: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/cart/templates/{index,items,summary}.tsx`, `components/{item,sign-in-prompt}/index.tsx`, and `modules/layout/components/cart-dropdown/index.tsx`
 - Rendered populated-cart reference: `https://next.medusajs.com/dk/cart?qa=populated-cart-source`
 - Rendered cart-preview reference: `https://next.medusajs.com/dk/products/iphone-16-bundle?qa=cart-preview-source-ready`
+- Pinned promotion source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/checkout/components/discount-code/index.tsx`
+- Rendered promotion reference: `https://next.medusajs.com/dk/cart?qa=promotion-shipping-source`
 - Pinned public-account sources: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/account/templates/account-layout.tsx`, `login-template.tsx`, and `components/{login,register}/index.tsx`
 - Rendered public-account reference: `https://next.medusajs.com/dk/account?qa=account-signed-out`
 
@@ -22,13 +24,16 @@ Implementation screenshot paths: in-app browser captures of the transfer route
 `http://127.0.0.1:13001/cart?qa=cart-after-restart`, and
 `http://127.0.0.1:13001/cart?qa=populated-cart-restarted`, and
 `http://127.0.0.1:13001/products/shorts?v_id=var_shorts_s`, and
-`http://127.0.0.1:13001/account?qa=account-register-local`. The browser captures
+`http://127.0.0.1:13001/account?qa=account-register-local`, and
+`http://127.0.0.1:13001/cart`. The browser captures
 are retained in the task evidence rather than exported into the repository.
 
 Viewport: the matched desktop captures used the same in-app browser surface. The
 reference raster was `1265 x 712`; the implementation raster was `1280 x 720`.
 The reference's visible scrollbar produced the small raster-size difference.
 Compact `390 x 844` transfer and authenticated account-form captures remain.
+The promotion form comparison used the same `736 x 864` browser surface for
+both storefronts.
 
 Pixel dimensions, CSS size, and density normalization: both captures used the
 in-app browser's default CSS viewport and density. Comparison normalized the
@@ -52,9 +57,13 @@ in selected/out-of-stock states,
 completed profile, saved addresses and recent orders,
 `/account/orders/details/:id`, the authenticated transfer-request form and its
 success/error states, the profile password editor, the guest-cart mismatch
-banner, compact cart, promotion/shipping interactions, and the global
-free-shipping popup. The empty-cart pair used clean anonymous
-browser state with zero items on both storefronts. The account pair used the
+banner, compact cart, shipping interactions, the source promotion-success
+state, and the global free-shipping popup. Promotion QA now covers the
+source-matched open form plus
+local success, recalculation, removal and safe-error states. The live source
+returned a generic production Server Components error for the tested code, so
+a rendered source success state is still unavailable. The empty-cart pair used
+clean anonymous browser state with zero items on both storefronts. The account pair used the
 signed-out sign-in screen, then exercised the in-place registration toggle and
 Flutter validation without creating a customer.
 
@@ -66,8 +75,8 @@ Flutter validation without creating a customer.
   global shipping popup.
   Evidence: matched comparisons now cover the transfer decision, desktop
   catalogue, desktop product structure, empty and populated desktop cart, open
-  cart preview, and signed-out account. The remaining states listed above do
-  not yet have matched captures.
+  cart preview, signed-out account, and the open promotion form. The remaining
+  states listed above do not yet have matched captures.
   Impact: their typography, responsive spacing, imagery and interaction states
   remain visually unverified.
   Fix: capture both sites at matching desktop and mobile viewports, combine
@@ -115,7 +124,9 @@ Flutter validation without creating a customer.
   account membership copy, required markers and toggle punctuation match the
   source structure. The populated cart and preview retain the source labels and
   remove the invented success toast because the timed preview is the source's
-  add feedback. Morrow branding, privacy-safe omission of the owner email, and
+  add feedback. The promotion form retains the source's blank input, compact
+  row, applied heading, code badge, visible value and post-success open state.
+  Morrow branding, privacy-safe omission of the owner email, and
   the temporarily non-actionable content-link text are intentional product
   differences; other route copy remains pending.
 
@@ -135,6 +146,9 @@ support layout. The populated-cart pair confirms matching heading rhythm, table
 tracks, line controls, totals and checkout action. The post-add product pair
 confirms the cart preview's panel placement, item layout, subtotal and 48px
 primary action while the panel remains open for its five-second feedback window.
+The promotion pair confirms the compact blank input and secondary action at an
+identical viewport. Local interaction captures additionally prove apply,
+percentage disclosure, recalculation, removal and safe failure rendering.
 
 **Focused region comparison evidence**
 
@@ -191,6 +205,14 @@ controls still require focused captures.
   The final post-add pair aligns the panel to the header gutter, matches the
   source item grid and action size, and preserves the five-second feedback
   window. Cross-backend item content is an expected data difference.
+- The initial promotion comparison exposed a P2 full-width local input, visible
+  placeholder, taller field, hidden promotion value and form dismissal after
+  success. The final open-form pair matches the source's compact 40px blank
+  field and action. Local browser QA applied `WELCOME10`, displayed
+  `WELCOME10 (10%)`, recalculated `EUR 1.50` to `EUR 3.00` when quantity changed,
+  removed it, and rendered an invalid-code error. Source success comparison
+  remains unavailable because the live reference returns a generic production
+  Server Components error for the submitted code.
 
 **Implementation checklist**
 
@@ -200,8 +222,10 @@ controls still require focused captures.
   sorting, option accordions and pagination in a browser that supports input.
 - Capture product detail at compact width and exercise selected, unavailable,
   sold-out and add-to-cart feedback states against matched product fixtures.
-- Capture populated cart at compact width and exercise promotion, shipping,
-  line-removal and checkout actions against matching anonymous fixtures.
+- Capture populated cart at compact width and exercise shipping, line-removal
+  and checkout actions against matching anonymous fixtures.
+- Capture a source promotion success state when the reference has a valid code,
+  then compare it with the verified local applied and removal states.
 - Capture the public transfer page at `390 x 844` and verify the intentional
   full-width native adaptation remains usable.
 - Capture signed-out account at compact width after the real customer-service,
