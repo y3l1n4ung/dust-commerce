@@ -9,6 +9,7 @@ environment:
 resolution: workspace
 
 dependencies:
+  commerce_admin_shared: ^0.1.0
   commerce_shared: ^0.1.0
   # Password hashing and token generation.
   cryptography: ^2.9.0

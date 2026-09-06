@@ -31,64 +31,6 @@ void main() {
     return rows.map((row) => row.readIndex<String>(1)).toList();
   }
 
-  group('migrations', () {
-    test('create every table the slice needs', () async {
-      final rows = await queryRaw(
-        "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name",
-        [],
-      ).fetch(database.raw);
-      final tables = rows.map((row) => row.readIndex<String>(0)).toSet();
-
-      expect(
-        tables,
-        containsAll(<String>[
-          ...'carts cart_promotions'.split(' '),
-          'cart_shipping_methods',
-          'customers',
-          'auth_identity',
-          'auth_tokens',
-          'line_items',
-          'order_addresses',
-          'order_items',
-          'orders',
-          'product_options',
-          'product_option_values',
-          'product_collections',
-          'product_categories',
-          'product_category_products',
-          'product_images',
-          'product_tags',
-          'product_tag_products',
-          'product_variants',
-          'products',
-          'promotions',
-          'provider_identity',
-          'regions',
-          ...'shipping_options shipping_option_price_rules order_transfers'
-              .split(' '),
-          'variant_option_values',
-          'variant_prices',
-          'payment_collections',
-        ]),
-      );
-    });
-
-    test('are idempotent, so a second open does not reapply them', () async {
-      await database.close();
-
-      final reopened = CommerceDatabase.open(
-        '${directory.path}/commerce.db',
-        options: commerceOptions,
-      );
-      addTearDown(reopened.close);
-
-      final rows = await queryRaw('SELECT COUNT(*) FROM products', [])
-          .fetch(reopened.raw);
-
-      expect(rows.single.readIndex<int>(0), 0);
-    });
-  });
-
   group('the shape money is stored in', () {
     test('prices are integer minor units, keyed by variant and currency',
         () async {

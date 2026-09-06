@@ -6,6 +6,7 @@ export 'package:dust_dart/db.dart';
 export 'src/app/app.dart';
 export 'src/boot/boot.dart';
 export 'src/features/account/account.dart';
+export 'src/features/admin/admin.dart';
 export 'src/features/cart/cart.dart';
 export 'src/features/category/category.dart';
 export 'src/features/catalog/catalog.dart';

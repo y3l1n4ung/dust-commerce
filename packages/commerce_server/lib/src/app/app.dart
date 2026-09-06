@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/account/account.dart';
+import 'package:commerce_server/src/features/admin/admin.dart';
 import 'package:commerce_server/src/features/cart/cart.dart';
 import 'package:commerce_server/src/features/category/category.dart';
 import 'package:commerce_server/src/features/catalog/catalog.dart';
@@ -40,9 +41,22 @@ Router buildApp(
 
   final catalogReads = CatalogReadRepository(executor);
   final orderReads = CheckoutReadRepository(executor);
+  final resolvedPasswordWork = passwordWork ?? PasswordWorkLimiter();
+  final accountDeps = AccountDeps(
+    database: database,
+    reads: AccountReadRepository(executor),
+    lists: AccountListRepository(executor),
+    writes: AccountCreateRepository(executor),
+    updates: AccountUpdateRepository(executor),
+    deletes: AccountDeleteRepository(executor),
+    clock: clock,
+    passwordWork: resolvedPasswordWork,
+  );
 
   return Router()
     ..nest('/auth', accountAuthRoutes())
+    ..nest('/auth', adminAuthRoutes())
+    ..nest('/admin', adminRoutes())
     ..nest('/store', accountStoreRoutes())
     ..nest('/store', categoryRoutes())
     ..nest('/store', catalogRoutes())
@@ -53,16 +67,15 @@ Router buildApp(
     ..nest('/store', paymentRoutes())
     ..nest('/store', regionRoutes())
     ..route('/health', get(_health))
+    ..withState(accountDeps)
     ..withState(
-      AccountDeps(
-        database: database,
-        reads: AccountReadRepository(executor),
-        lists: AccountListRepository(executor),
-        writes: AccountCreateRepository(executor),
-        updates: AccountUpdateRepository(executor),
-        deletes: AccountDeleteRepository(executor),
+      AdminDeps(
+        reads: AdminReadRepository(executor),
+        writes: AdminCreateRepository(executor),
+        deletes: AdminDeleteRepository(executor),
         clock: clock,
-        passwordWork: passwordWork,
+        passwordWork: resolvedPasswordWork,
+        dummyPasswordHash: accountDeps.dummyPasswordHash,
       ),
     )
     ..withState(
