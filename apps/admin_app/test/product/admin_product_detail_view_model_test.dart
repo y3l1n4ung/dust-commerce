@@ -31,7 +31,16 @@ void main() {
       nextId: () => 'admin_owner',
       passwordWork: PasswordWorkLimiter(),
     );
-    server = await TestClient.serve(buildApp(database));
+    final mediaStorage = LocalAdminMediaStorage(
+      root: Directory('${directory.path}/media'),
+      publicBaseUrl: Uri.parse('http://media.test'),
+      nextKey: () => 'detail_media_key',
+    );
+    await mediaStorage.prepare();
+    server = await TestClient.serve(buildApp(
+      database,
+      mediaStorage: mediaStorage,
+    ));
     final token = await AdminApi(Dio(), baseUrl: server.origin).signIn(
       const AdminCredentials(
         email: 'owner@example.com',
@@ -126,4 +135,40 @@ void main() {
       const Some('This handle is already in use.'),
     );
   });
+
+  test('uploads and publishes an ordered media replacement', () async {
+    await detail.load('prod_sweatpants');
+    final uploaded = await detail.uploadMedia([
+      MultipartFile.fromBytes(_png, filename: 'detail.png'),
+    ]);
+    final file = (uploaded as Some<List<AdminUploadedFile>>).value.single;
+    final current =
+        (detail.state.product as Some<AdminProductDetail>).value.images;
+
+    final saved = await detail.updateMedia(
+      'prod_sweatpants',
+      AdminUpdateProductMedia(media: [
+        AdminCreateProductMedia(
+          id: current.last.id,
+          url: current.last.url,
+          isThumbnail: true,
+        ),
+        AdminCreateProductMedia(
+          id: file.id,
+          url: file.url,
+          isThumbnail: false,
+        ),
+      ]),
+    );
+
+    expect(saved, isTrue);
+    expect(detail.state.status, AdminProductDetailStatus.ready);
+    final product = (detail.state.product as Some<AdminProductDetail>).value;
+    expect(
+        product.images.map((image) => image.url), [current.last.url, file.url]);
+    expect(product.thumbnail, current.last.url);
+    expect(detail.state.failure, const None<String>());
+  });
 }
+
+const _png = <int>[0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];

@@ -91,10 +91,92 @@ final class AdminProductDetailViewModel extends $AdminProductDetailViewModel {
     }
   }
 
+  /// Streams image files for the media editor without exposing Dio responses.
+  Future<Option<List<AdminUploadedFile>>> uploadMedia(
+    List<MultipartFile> files,
+  ) async {
+    if (files.isEmpty) return const None();
+    final current = state.product;
+    emit(AdminProductDetailState(
+      status: AdminProductDetailStatus.saving,
+      product: current,
+    ));
+    try {
+      final uploaded = await args.api.uploadMedia(files);
+      emit(AdminProductDetailState(
+        status: AdminProductDetailStatus.ready,
+        product: current,
+      ));
+      return Some(uploaded.files);
+    } on DioException catch (error) {
+      _updateFailed(
+          current,
+          switch (error.response?.statusCode) {
+            413 => 'Each image must be 5 MB or smaller.',
+            415 || 422 => 'Choose JPEG, PNG, GIF, or WebP image files.',
+            401 => 'Your admin session has expired.',
+            503 => 'Product media storage is not configured.',
+            _ => 'Unable to upload these images. Try again.',
+          });
+      return const None();
+    } on Object {
+      _updateFailed(current, 'Unable to upload these images. Try again.');
+      return const None();
+    }
+  }
+
+  /// Persists complete gallery membership, order, and thumbnail.
+  Future<bool> updateMedia(String id, AdminUpdateProductMedia input) async {
+    final current = state.product;
+    emit(AdminProductDetailState(
+      status: AdminProductDetailStatus.saving,
+      product: current,
+    ));
+    try {
+      final product = await args.api.updateProductMedia(id, input);
+      emit(AdminProductDetailState(
+        status: AdminProductDetailStatus.ready,
+        product: Some(product),
+      ));
+      return true;
+    } on DioException catch (error) {
+      _updateFailed(
+          current,
+          switch (error.response?.statusCode) {
+            422 => 'Check the product images and try again.',
+            404 => 'This product no longer exists.',
+            401 => 'Your admin session has expired.',
+            _ => 'Unable to save product media. Try again.',
+          });
+      return false;
+    } on Object {
+      _updateFailed(current, 'Unable to save product media. Try again.');
+      return false;
+    }
+  }
+
+  /// Deletes one newly uploaded file before the gallery is saved.
+  Future<bool> discardUpload(String id) async {
+    try {
+      await args.api.deleteUpload(id);
+      return true;
+    } on Object {
+      _updateFailed(state.product, 'Unable to remove this image. Try again.');
+      return false;
+    }
+  }
+
   /// Clears a drawer-scoped failure without discarding loaded product data.
   void clearFailure() => emit(AdminProductDetailState(
         status: state.status,
         product: state.product,
+      ));
+
+  void _updateFailed(Option<AdminProductDetail> product, String message) =>
+      emit(AdminProductDetailState(
+        status: AdminProductDetailStatus.ready,
+        product: product,
+        failure: Some(message),
       ));
 
   void _fail(String message) => emit(AdminProductDetailState(

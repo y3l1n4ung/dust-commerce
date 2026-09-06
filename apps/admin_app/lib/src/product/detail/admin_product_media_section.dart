@@ -7,20 +7,20 @@ final class AdminProductMediaSection extends StatelessWidget {
   /// Creates the product media section.
   const AdminProductMediaSection({
     required this.product,
-    required this.onUnavailable,
+    required this.onEdit,
     super.key,
   });
 
   /// Complete admin product allowlist.
   final AdminProductDetail product;
 
-  /// Reports controls whose write API is not implemented yet.
-  final VoidCallback onUnavailable;
+  /// Opens the focused gallery management surface.
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) => AdminProductDetailSection(
         title: 'Media',
-        action: adminSectionAction(onUnavailable),
+        action: adminSectionAction(onEdit),
         padding: const EdgeInsets.all(16),
         child: product.images.isEmpty
             ? const Center(child: Text('No media'))

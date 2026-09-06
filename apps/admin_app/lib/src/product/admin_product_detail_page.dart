@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:admin_app/src/product/admin_product_edit_drawer.dart';
 import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
+import 'package:admin_app/src/product/admin_product_media_editor.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/product/detail/admin_product_general_section.dart';
 import 'package:admin_app/src/product/detail/admin_product_media_section.dart';
@@ -86,6 +87,15 @@ final class _DetailBody extends StatelessWidget {
       );
     }
 
+    Future<void> editMedia() async {
+      final saved = await showAdminProductMediaEditor(context, product);
+      if (saved != true || !context.mounted) return;
+      unawaited(context.readAdminProductViewModel().load());
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Product media updated.')),
+      );
+    }
+
     final main = Column(
       children: [
         AdminProductGeneralSection(
@@ -95,7 +105,7 @@ final class _DetailBody extends StatelessWidget {
         const SizedBox(height: 12),
         AdminProductMediaSection(
           product: product,
-          onUnavailable: unavailable,
+          onEdit: editMedia,
         ),
         const SizedBox(height: 12),
         AdminProductOptionSection(
