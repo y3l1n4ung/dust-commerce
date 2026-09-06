@@ -7,6 +7,7 @@ class ProductGallery extends StatelessWidget {
   const ProductGallery({
     required this.urls,
     required this.fallbackUrl,
+    required this.wide,
     super.key,
   });
 
@@ -16,11 +17,14 @@ class ProductGallery extends StatelessWidget {
   /// Ordered merchant image URLs.
   final List<String> urls;
 
+  /// Whether the gallery uses the source desktop column gutters.
+  final bool wide;
+
   @override
   Widget build(BuildContext context) {
     final images = urls.isEmpty ? [fallbackUrl] : urls;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: wide ? 64 : 0),
       child: Column(
         children: [
           for (var index = 0; index < images.length; index++) ...[

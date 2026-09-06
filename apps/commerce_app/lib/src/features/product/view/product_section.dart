@@ -27,6 +27,7 @@ class ProductSection extends StatelessWidget {
     final gallery = ProductGallery(
       urls: product.images,
       fallbackUrl: product.thumbnail,
+      wide: wide,
     );
     if (!wide) {
       return SliverToBoxAdapter(
@@ -49,15 +50,12 @@ class ProductSection extends StatelessWidget {
     return SliverCrossAxisGroup(
       slivers: [
         SliverConstrainedCrossAxis(
-          maxExtent: 324,
+          maxExtent: 300,
           sliver: SliverPersistentHeader(
             pinned: true,
             delegate: _PinnedColumnDelegate(
               extent: 960,
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(end: 24),
-                child: info,
-              ),
+              child: info,
             ),
           ),
         ),
@@ -66,15 +64,12 @@ class ProductSection extends StatelessWidget {
           sliver: SliverToBoxAdapter(child: gallery),
         ),
         SliverConstrainedCrossAxis(
-          maxExtent: 324,
+          maxExtent: 300,
           sliver: SliverPersistentHeader(
             pinned: true,
             delegate: _PinnedColumnDelegate(
               extent: 520,
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(start: 24),
-                child: ProductActions(state: state),
-              ),
+              child: ProductActions(state: state),
             ),
           ),
         ),
@@ -106,9 +101,9 @@ class _PinnedColumnDelegate extends SliverPersistentHeaderDelegate {
         child: Align(
           alignment: Alignment.topCenter,
           child: Padding(
-            // The body begins below the 64px nav, so 128px reproduces
+            // The 64px nav, 24px section inset and this 104px gap reproduce
             // Medusa's viewport-relative top-48 (192px) sticky offset.
-            padding: const EdgeInsets.only(top: 128),
+            padding: const EdgeInsets.only(top: 104),
             child: child,
           ),
         ),

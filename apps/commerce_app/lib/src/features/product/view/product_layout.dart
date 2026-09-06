@@ -60,7 +60,7 @@ class _ProductLayoutState extends State<ProductLayout> {
                 controller: _scrollController,
                 slivers: [
                   SliverPadding(
-                    padding: EdgeInsets.fromLTRB(horizontal, 8, horizontal, 0),
+                    padding: EdgeInsets.fromLTRB(horizontal, 24, horizontal, 0),
                     sliver: ProductSection(
                       state: widget.state,
                       wide: _wide,
