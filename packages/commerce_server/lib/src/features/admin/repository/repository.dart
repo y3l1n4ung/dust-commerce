@@ -9,3 +9,4 @@ export 'media.dart';
 export 'product_create.dart';
 export 'read.dart';
 export 'update.dart';
+export 'update_variant.dart';

@@ -8,3 +8,4 @@ export 'list.dart';
 export 'read.dart';
 export 'update.dart';
 export 'update_media.dart';
+export 'update_variant.dart';

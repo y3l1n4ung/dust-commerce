@@ -1,5 +1,6 @@
 import 'package:commerce_admin_shared/src/admin_product_image.dart';
 import 'package:commerce_admin_shared/src/admin_product_media.dart';
+import 'package:commerce_admin_shared/src/admin_product_variant.dart';
 import 'package:dust_dart/serde.dart';
 
 part 'admin_product.g.dart';
@@ -349,47 +350,6 @@ final class AdminProductOption with _$AdminProductOption {
 
   /// Values in merchant-defined display order.
   final List<String> values;
-}
-
-/// One inventory-bearing variant shown in the admin detail table.
-@Derive([ToString(), Eq(), Serialize(), Deserialize()])
-@SerDe(renameAll: SerDeRename.snakeCase)
-final class AdminProductVariant with _$AdminProductVariant {
-  /// Creates an explicitly allowlisted merchant variant.
-  const AdminProductVariant({
-    required this.id,
-    required this.title,
-    required this.inventoryQuantity,
-    required this.manageInventory,
-    required this.allowBackorder,
-    required this.optionValues,
-    this.sku,
-  });
-
-  /// Decodes one generated admin variant response.
-  factory AdminProductVariant.fromJson(Map<String, Object?> json) =>
-      _$AdminProductVariantFromJson(json);
-
-  /// Whether selling beyond tracked stock is allowed.
-  final bool allowBackorder;
-
-  /// Stable variant identifier.
-  final String id;
-
-  /// Current sellable units.
-  final int inventoryQuantity;
-
-  /// Whether this variant uses inventory enforcement.
-  final bool manageInventory;
-
-  /// Selected value keyed by product-option identifier.
-  final Map<String, String> optionValues;
-
-  /// Optional merchant stock-keeping unit.
-  final String? sku;
-
-  /// Merchant-facing variant name.
-  final String title;
 }
 
 /// Complete allowlisted merchant product detail.

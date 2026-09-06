@@ -22,7 +22,6 @@ const DeepCollectionEquality _adminCreateProductVariantsEquality = DeepCollectio
 const DeepCollectionEquality _adminProductCreateContextCurrencyCodesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductListProductsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductOptionValuesEquality = DeepCollectionEquality();
-const DeepCollectionEquality _adminProductVariantOptionValuesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductDetailCategoriesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductDetailImagesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductDetailOptionsEquality = DeepCollectionEquality();
@@ -584,57 +583,6 @@ mixin _$AdminProductOption implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
-mixin _$AdminProductVariant implements Serializable {
-  @override
-  String toString() {
-    final self = this as AdminProductVariant;
-    return 'AdminProductVariant('
-        'allowBackorder: ${self.allowBackorder}, '
-        'id: ${self.id}, '
-        'inventoryQuantity: ${self.inventoryQuantity}, '
-        'manageInventory: ${self.manageInventory}, '
-        'optionValues: ${self.optionValues}, '
-        'sku: ${self.sku}, '
-        'title: ${self.title}'
-        ')';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    final self = this as AdminProductVariant;
-    return identical(this, other) ||
-        other is AdminProductVariant &&
-            runtimeType == other.runtimeType &&
-            other.allowBackorder == self.allowBackorder &&
-            other.id == self.id &&
-            other.inventoryQuantity == self.inventoryQuantity &&
-            other.manageInventory == self.manageInventory &&
-            _adminProductVariantOptionValuesEquality.equals(other.optionValues, self.optionValues) &&
-            other.sku == self.sku &&
-            other.title == self.title;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as AdminProductVariant;
-    return Object.hashAll([
-      runtimeType,
-      self.allowBackorder,
-      self.id,
-      self.inventoryQuantity,
-      self.manageInventory,
-      _adminProductVariantOptionValuesEquality.hash(self.optionValues),
-      self.sku,
-      self.title,
-    ]);
-  }
-
-  Map<String, Object?> serialize() =>
-      _$AdminProductVariantSerialize(this as AdminProductVariant);
-
-  Map<String, Object?> toJson() => serialize();
-}
-
 mixin _$AdminProductDetail implements Serializable {
   @override
   String toString() {
@@ -998,18 +946,6 @@ final class $AdminProductOptionDeserializer implements Deserializer<AdminProduct
 
   @override
   AdminProductOption deserialize(Map<String, Object?> json) => _$AdminProductOptionDeserialize(json);
-}
-final class $AdminProductVariantSerializer implements Serializer<AdminProductVariant, Map<String, Object?>> {
-  const $AdminProductVariantSerializer();
-
-  @override
-  Map<String, Object?> serialize(AdminProductVariant value) => _$AdminProductVariantSerialize(value);
-}
-final class $AdminProductVariantDeserializer implements Deserializer<AdminProductVariant, Map<String, Object?>> {
-  const $AdminProductVariantDeserializer();
-
-  @override
-  AdminProductVariant deserialize(Map<String, Object?> json) => _$AdminProductVariantDeserialize(json);
 }
 final class $AdminProductDetailSerializer implements Serializer<AdminProductDetail, Map<String, Object?>> {
   const $AdminProductDetailSerializer();
@@ -1413,61 +1349,6 @@ AdminProductOption _$AdminProductOptionDeserialize(Map<String, Object?> json) {
 AdminProductOption _$AdminProductOptionFromJson(Map<String, Object?> json) =>
     _$AdminProductOptionDeserialize(json);
 
-Map<String, Object?> _$AdminProductVariantSerialize(AdminProductVariant instance) {
-  return <String, Object?>{
-    'allow_backorder': instance.allowBackorder,
-    'id': instance.id,
-    'inventory_quantity': instance.inventoryQuantity,
-    'manage_inventory': instance.manageInventory,
-    'option_values': instance.optionValues
-        .map((key, value) => MapEntry(key, value)),
-    'sku': instance.sku,
-    'title': instance.title,
-  };
-}
-
-Map<String, Object?> _$AdminProductVariantToJson(AdminProductVariant instance) =>
-    _$AdminProductVariantSerialize(instance);
-
-// factory AdminProductVariant.fromJson(Map<String, Object?> json) => _$AdminProductVariantFromJson(json);
-AdminProductVariant _$AdminProductVariantDeserialize(Map<String, Object?> json) {
-  final allowBackorderValue = JsonHelper.as<bool>(
-    json['allow_backorder'],
-    'allow_backorder',
-    'bool',
-  );
-  final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
-  final inventoryQuantityValue = JsonHelper.as<int>(
-    json['inventory_quantity'],
-    'inventory_quantity',
-    'int',
-  );
-  final manageInventoryValue = JsonHelper.as<bool>(
-    json['manage_inventory'],
-    'manage_inventory',
-    'bool',
-  );
-  final optionValuesValue = JsonHelper.decodeMap(json['option_values'], 'option_values',
-      (value, valueKey) => JsonHelper.as<String>(value, valueKey, 'String'));
-  final skuValue = json['sku'] == null
-      ? null
-      : JsonHelper.as<String>(json['sku'], 'sku', 'String');
-  final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
-
-  return AdminProductVariant(
-    id: idValue,
-    title: titleValue,
-    inventoryQuantity: inventoryQuantityValue,
-    manageInventory: manageInventoryValue,
-    allowBackorder: allowBackorderValue,
-    optionValues: optionValuesValue,
-    sku: skuValue,
-  );
-}
-
-AdminProductVariant _$AdminProductVariantFromJson(Map<String, Object?> json) =>
-    _$AdminProductVariantDeserialize(json);
-
 Map<String, Object?> _$AdminProductDetailSerialize(AdminProductDetail instance) {
   return <String, Object?>{
     'categories': instance.categories
@@ -1497,7 +1378,7 @@ Map<String, Object?> _$AdminProductDetailSerialize(AdminProductDetail instance) 
     'thumbnail': instance.thumbnail,
     'title': instance.title,
     'variants': instance.variants
-        .map((item) => _$AdminProductVariantSerialize(item))
+        .map((item) => item.toJson())
         .toList(),
     'weight': instance.weight,
     'width': instance.width,
@@ -1557,7 +1438,7 @@ AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
       : JsonHelper.as<String>(json['thumbnail'], 'thumbnail', 'String');
   final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
   final variantsValue = JsonHelper.decodeList(json['variants'], 'variants',
-      (item, itemKey) => _$AdminProductVariantDeserialize(JsonHelper.asMap(item, itemKey)));
+      (item, itemKey) => AdminProductVariant.fromJson(JsonHelper.asMap(item, itemKey)));
   final weightValue = json['weight'] == null
       ? null
       : JsonHelper.as<int>(json['weight'], 'weight', 'int');

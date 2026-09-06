@@ -70,6 +70,7 @@ SELECT product.id, product.title, product.subtitle, product.handle,
          FROM (
            SELECT json_object(
              'id', variant.id, 'title', variant.title, 'sku', variant.sku,
+             'barcode', variant.barcode,
              'inventory_quantity', variant.inventory_quantity,
              'manage_inventory', json(iif(variant.manage_inventory = 1,
                                           'true', 'false')),
