@@ -689,6 +689,10 @@
   "@checkout_city": {
     "description": "Translation for `shop_checkout_city`."
   },
+  "checkout_company": "ကုမ္ပဏီ",
+  "@checkout_company": {
+    "description": "Optional company on a checkout address."
+  },
   "checkout_confirmation_sent": "အော်ဒါအတည်ပြုချက် အသေးစိတ်ကို {email} သို့ ပို့ပြီးပါပြီ။",
   "@checkout_confirmation_sent": {
     "description": "Translation for `shop_checkout_confirmation_sent`.",

@@ -51,7 +51,6 @@ final class CheckoutViewModel extends $CheckoutViewModel {
     final view = args.cart.state.cart;
     if (view == null || view.cart.isEmpty) return;
     final customer = args.currentCustomer();
-    final country = view.cart.region.countries.firstOrNull ?? '';
     emit(CheckoutState(
       status: CheckoutStatus.ready,
       email: customer?.email ?? view.cart.email ?? '',
@@ -59,9 +58,8 @@ final class CheckoutViewModel extends $CheckoutViewModel {
         firstName: customer?.firstName ?? '',
         lastName: customer?.lastName ?? '',
         phone: customer?.phone ?? '',
-        countryCode: country,
       ),
-      billing: CheckoutAddressDraft(countryCode: country),
+      billing: const CheckoutAddressDraft(),
     ));
   }
 

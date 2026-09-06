@@ -10,8 +10,6 @@ final class CheckoutAddressFields extends StatelessWidget {
   const CheckoutAddressFields({
     required this.controllers,
     required this.countries,
-    this.includeContact = false,
-    this.email,
     super.key,
   });
 
@@ -20,12 +18,6 @@ final class CheckoutAddressFields extends StatelessWidget {
 
   /// Controllers for this address block.
   final CheckoutAddressControllers controllers;
-
-  /// Contact email controller when [includeContact] is true.
-  final TextEditingController? email;
-
-  /// Whether email and phone fields follow the address grid.
-  final bool includeContact;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -42,19 +34,18 @@ final class CheckoutAddressFields extends StatelessWidget {
                 context.tr('shop_checkout_last_name',
                     defaultText: 'Last name')),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           _row(
             _field(context, controllers.line1,
                 context.tr('shop_checkout_address', defaultText: 'Address')),
             _field(
               context,
-              controllers.line2,
-              context.tr('shop_checkout_address_line_2',
-                  defaultText: 'Apartment / Company'),
+              controllers.company,
+              context.tr('shop_checkout_company', defaultText: 'Company'),
               required: false,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           _row(
             _field(
                 context,
@@ -64,7 +55,7 @@ final class CheckoutAddressFields extends StatelessWidget {
             _field(context, controllers.city,
                 context.tr('shop_checkout_city', defaultText: 'City')),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           _row(
             _country(context),
             _field(
@@ -75,17 +66,6 @@ final class CheckoutAddressFields extends StatelessWidget {
               required: false,
             ),
           ),
-          if (includeContact) ...[
-            const SizedBox(height: 16),
-            _row(
-              _field(context, email!,
-                  context.tr('shop_checkout_email', defaultText: 'Email'),
-                  keyboardType: TextInputType.emailAddress),
-              _field(context, controllers.phone,
-                  context.tr('shop_checkout_phone', defaultText: 'Phone'),
-                  keyboardType: TextInputType.phone, required: false),
-            ),
-          ],
         ],
       );
 
@@ -108,6 +88,7 @@ final class CheckoutAddressFields extends StatelessWidget {
       TextFormField(
         controller: controller,
         keyboardType: keyboardType,
+        style: checkoutFieldTextStyle,
         validator: required
             ? (value) => value == null || value.trim().isEmpty
                 ? context.tr(
@@ -116,18 +97,20 @@ final class CheckoutAddressFields extends StatelessWidget {
                   )
                 : null
             : null,
-        decoration: _decoration(required ? '$label *' : label),
+        decoration: checkoutFieldDecoration(label, required: required),
       );
 
   Widget _country(BuildContext context) => DropdownButtonFormField<String>(
         initialValue: countries.contains(controllers.countryCode.text)
             ? controllers.countryCode.text
             : null,
+        icon: const Icon(Icons.unfold_more, size: 16),
+        style: checkoutFieldTextStyle,
         items: [
           for (final country in countries)
             DropdownMenuItem(
               value: country,
-              child: Text(country.toUpperCase()),
+              child: Text(countryName(context, country)),
             ),
         ],
         onChanged: (value) => controllers.countryCode.text = value ?? '',
@@ -137,19 +120,40 @@ final class CheckoutAddressFields extends StatelessWidget {
                 defaultText: 'Choose a country.',
               )
             : null,
-        decoration: _decoration(
-          '${context.tr('shop_checkout_country', defaultText: 'Country')} *',
+        hint: Text(
+          context.tr('shop_checkout_country', defaultText: 'Country'),
         ),
-      );
-
-  static InputDecoration _decoration(String label) => InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: StoreColors.subtle,
-        border: const OutlineInputBorder(),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: StoreColors.border),
-        ),
-        contentPadding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+        decoration: checkoutFieldDecoration(null),
       );
 }
+
+/// Source-shaped 44px checkout input decoration shared with contact fields.
+InputDecoration checkoutFieldDecoration(
+  String? label, {
+  bool required = false,
+}) =>
+    InputDecoration(
+      label: label == null
+          ? null
+          : Text.rich(TextSpan(children: [
+              TextSpan(text: label),
+              if (required)
+                const TextSpan(
+                  text: '*',
+                  style: TextStyle(color: StoreColors.rose),
+                ),
+            ])),
+      filled: true,
+      fillColor: StoreColors.subtle,
+      isDense: true,
+      constraints: const BoxConstraints(minHeight: 44),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(6),
+        borderSide: const BorderSide(color: StoreColors.border),
+      ),
+      contentPadding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+    );
+
+/// Source `txt-compact-medium` size used inside checkout form controls.
+const checkoutFieldTextStyle = TextStyle(fontSize: 14, height: 20 / 14);

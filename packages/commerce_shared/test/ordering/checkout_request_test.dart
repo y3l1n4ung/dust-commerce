@@ -7,11 +7,15 @@ void main() {
     String line1 = '12 Analytical Way',
     String postalCode = '10115',
     String countryCode = 'de',
+    String? company,
+    String? line2,
   }) =>
       AddressInput(
         firstName: firstName,
         lastName: 'Lovelace',
+        company: company,
         line1: line1,
+        line2: line2,
         city: 'Berlin',
         postalCode: postalCode,
         countryCode: countryCode,
@@ -77,10 +81,16 @@ void main() {
 
   group('conversion', () {
     test('becomes an Address once valid', () {
-      final address = addressInput(countryCode: 'DE').toAddress();
+      final address = addressInput(
+        countryCode: 'DE',
+        company: 'Analytical Engines',
+        line2: 'Suite 2',
+      ).toAddress();
 
       expect(address.countryCode, 'de');
       expect(address.fullName, 'Ada Lovelace');
+      expect(address.company, 'Analytical Engines');
+      expect(address.line2, 'Suite 2');
     });
   });
 

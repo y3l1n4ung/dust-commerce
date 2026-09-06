@@ -59,16 +59,17 @@ VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
 
   /// Records the shipping or billing address used for an order.
   @Query(r'''
-INSERT INTO order_addresses (order_id, kind, first_name, last_name, line1,
-                             line2, city, province, postal_code, country_code,
-                             phone)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+INSERT INTO order_addresses (order_id, kind, first_name, last_name, company,
+                             line1, line2, city, province, postal_code,
+                             country_code, phone)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 ''')
   Future<Result<ExecResult, SqlxError>> insertOrderAddress(
     String orderId,
     String kind,
     String firstName,
     String lastName,
+    String? company,
     String line1,
     String? line2,
     String city,

@@ -138,6 +138,7 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
         kind,
         address.firstName,
         address.lastName,
+        address.company,
         address.line1,
         address.line2,
         address.city,

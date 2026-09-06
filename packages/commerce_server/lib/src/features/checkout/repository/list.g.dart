@@ -42,6 +42,7 @@ SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
        ), '[]') AS items_json,
        json_object(
          'first_name', shipping.first_name, 'last_name', shipping.last_name,
+         'company', shipping.company,
          'line1', shipping.line1, 'line2', shipping.line2,
          'city', shipping.city, 'province', shipping.province,
          'postal_code', shipping.postal_code,
@@ -50,13 +51,18 @@ SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
        json_object(
          'first_name', coalesce(billing.first_name, shipping.first_name),
          'last_name', coalesce(billing.last_name, shipping.last_name),
+         'company', CASE WHEN billing.order_id IS NULL
+                         THEN shipping.company ELSE billing.company END,
          'line1', coalesce(billing.line1, shipping.line1),
-         'line2', coalesce(billing.line2, shipping.line2),
+         'line2', CASE WHEN billing.order_id IS NULL
+                       THEN shipping.line2 ELSE billing.line2 END,
          'city', coalesce(billing.city, shipping.city),
-         'province', coalesce(billing.province, shipping.province),
+         'province', CASE WHEN billing.order_id IS NULL
+                          THEN shipping.province ELSE billing.province END,
          'postal_code', coalesce(billing.postal_code, shipping.postal_code),
          'country_code', coalesce(billing.country_code, shipping.country_code),
-         'phone', coalesce(billing.phone, shipping.phone)
+         'phone', CASE WHEN billing.order_id IS NULL
+                       THEN shipping.phone ELSE billing.phone END
        ) AS billing_address_json
 FROM orders o
 JOIN regions r ON r.id = o.region_id

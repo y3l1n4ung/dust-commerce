@@ -19,6 +19,7 @@ mixin _$CheckoutAddressDraft {
     final self = this as CheckoutAddressDraft;
     return 'CheckoutAddressDraft('
         'city: ${self.city}, '
+        'company: ${self.company}, '
         'countryCode: ${self.countryCode}, '
         'firstName: ${self.firstName}, '
         'lastName: ${self.lastName}, '
@@ -37,6 +38,7 @@ mixin _$CheckoutAddressDraft {
         other is CheckoutAddressDraft &&
             runtimeType == other.runtimeType &&
             other.city == self.city &&
+            other.company == self.company &&
             other.countryCode == self.countryCode &&
             other.firstName == self.firstName &&
             other.lastName == self.lastName &&
@@ -53,6 +55,7 @@ mixin _$CheckoutAddressDraft {
     return Object.hashAll([
       runtimeType,
       self.city,
+      self.company,
       self.countryCode,
       self.firstName,
       self.lastName,
@@ -80,6 +83,7 @@ mixin _$CheckoutAddressDraft {
 abstract class _$CheckoutAddressDraftCopyWith<$Res> {
   $Res call({
     String? city,
+    String? company,
     String? countryCode,
     String? firstName,
     String? lastName,
@@ -102,6 +106,7 @@ final class _$CheckoutAddressDraftCopyWithImpl<$Res> implements _$CheckoutAddres
   @pragma('vm:prefer-inline')
   $Res call({
     Object? city = null,
+    Object? company = null,
     Object? countryCode = null,
     Object? firstName = null,
     Object? lastName = null,
@@ -122,6 +127,7 @@ final class _$CheckoutAddressDraftCopyWithImpl<$Res> implements _$CheckoutAddres
         postalCode: postalCode == null ? _self.postalCode : postalCode as String,
         countryCode: countryCode == null ? _self.countryCode : countryCode as String,
         phone: phone == null ? _self.phone : phone as String,
+        company: company == null ? _self.company : company as String,
       )
     );
   }

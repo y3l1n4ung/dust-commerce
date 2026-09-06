@@ -19,6 +19,7 @@ class AddressInput with _$AddressInput {
     required this.city,
     required this.postalCode,
     required this.countryCode,
+    this.company,
     this.line2,
     this.province,
     this.phone,
@@ -31,6 +32,9 @@ class AddressInput with _$AddressInput {
   /// Town or city.
   @Validate(length: Length(min: 1), message: 'Enter a city')
   final String city;
+
+  /// Optional company or organization.
+  final String? company;
 
   /// ISO 3166-1 alpha-2 country code.
   @Validate(
@@ -71,6 +75,7 @@ class AddressInput with _$AddressInput {
   Address toAddress() => Address.of(
         firstName: firstName,
         lastName: lastName,
+        company: company,
         line1: line1,
         line2: line2,
         city: city,

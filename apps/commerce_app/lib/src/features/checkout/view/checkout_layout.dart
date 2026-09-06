@@ -1,5 +1,6 @@
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_shared/commerce_shared.dart';
+import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'checkout_address_section.dart';
@@ -51,40 +52,58 @@ final class CheckoutLayout extends StatelessWidget {
           customer: customer,
           addressBook: addressBook,
         ),
+        const SizedBox(height: 32),
         CheckoutDeliverySection(
           open: step == 'delivery',
           state: checkout,
           cart: cart,
         ),
+        const SizedBox(height: 32),
         CheckoutPaymentSection(
           open: step == 'payment',
           state: checkout,
         ),
+        const SizedBox(height: 32),
         CheckoutReviewSection(open: step == 'review', state: checkout),
       ],
     );
     final summary = CheckoutSummary(view: view, state: cart);
     return SingleChildScrollView(
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1440),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
-            child: MediaQuery.sizeOf(context).width >= 1024
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(child: form),
-                      const SizedBox(width: 160),
-                      SizedBox(width: 416, child: summary),
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [form, const SizedBox(height: 48), summary],
-                  ),
+      child: Column(
+        children: [
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1440),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 44, 24, 48),
+                child: MediaQuery.sizeOf(context).width >= 1024
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(child: form),
+                          const SizedBox(width: 160),
+                          SizedBox(width: 416, child: summary),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [form, const SizedBox(height: 48), summary],
+                      ),
+              ),
+            ),
           ),
-        ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: TranslatedText(
+              'shop_hero_subtitle',
+              defaultText: 'Powered by dust',
+              style: TextStyle(
+                color: StoreColors.foregroundMuted,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

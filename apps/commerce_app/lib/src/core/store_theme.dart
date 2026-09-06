@@ -128,8 +128,8 @@ abstract final class StoreTheme {
         style: FilledButton.styleFrom(
           backgroundColor: StoreColors.buttonPrimary,
           foregroundColor: StoreColors.base,
-          disabledBackgroundColor: StoreColors.subtleHover,
-          disabledForegroundColor: StoreColors.foregroundDisabled,
+          disabledBackgroundColor: const Color(0xff808080),
+          disabledForegroundColor: const Color(0xffbfbfbf),
           minimumSize: const Size(48, 40),
           padding: const EdgeInsets.symmetric(horizontal: 16),
           shape: RoundedRectangleBorder(

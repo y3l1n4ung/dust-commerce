@@ -25,6 +25,7 @@ mixin _$Address implements Serializable {
     final self = this as Address;
     return 'Address('
         'city: ${self.city}, '
+        'company: ${self.company}, '
         'countryCode: ${self.countryCode}, '
         'firstName: ${self.firstName}, '
         'lastName: ${self.lastName}, '
@@ -43,6 +44,7 @@ mixin _$Address implements Serializable {
         other is Address &&
             runtimeType == other.runtimeType &&
             other.city == self.city &&
+            other.company == self.company &&
             other.countryCode == self.countryCode &&
             other.firstName == self.firstName &&
             other.lastName == self.lastName &&
@@ -59,6 +61,7 @@ mixin _$Address implements Serializable {
     return Object.hashAll([
       runtimeType,
       self.city,
+      self.company,
       self.countryCode,
       self.firstName,
       self.lastName,
@@ -75,7 +78,7 @@ mixin _$Address implements Serializable {
   /// Usage:
   /// ```dart
   /// final updated = address.copyWith(city: 'John');
-  /// final cleared = address.copyWith(line2: null);
+  /// final cleared = address.copyWith(company: null);
   /// ```
   @pragma('vm:prefer-inline')
   _$AddressCopyWith<Address> get copyWith => _$AddressCopyWithImpl<Address>(this as Address, (value) => value);
@@ -91,6 +94,7 @@ mixin _$Address implements Serializable {
 abstract class _$AddressCopyWith<$Res> {
   $Res call({
     String? city,
+    String? company,
     String? countryCode,
     String? firstName,
     String? lastName,
@@ -113,6 +117,7 @@ final class _$AddressCopyWithImpl<$Res> implements _$AddressCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? city = null,
+    Object? company = _addressCopyWithUnset,
     Object? countryCode = null,
     Object? firstName = null,
     Object? lastName = null,
@@ -130,6 +135,9 @@ final class _$AddressCopyWithImpl<$Res> implements _$AddressCopyWith<$Res> {
         city: city == null ? _self.city : city as String,
         postalCode: postalCode == null ? _self.postalCode : postalCode as String,
         countryCode: countryCode == null ? _self.countryCode : countryCode as String,
+        company: identical(company, _addressCopyWithUnset)
+            ? _self.company
+            : company as String?,
         line2: identical(line2, _addressCopyWithUnset)
             ? _self.line2
             : line2 as String?,
@@ -159,6 +167,7 @@ final class $AddressDeserializer implements Deserializer<Address, Map<String, Ob
 Map<String, Object?> _$AddressSerialize(Address instance) {
   return <String, Object?>{
     'city': instance.city,
+    'company': instance.company,
     'country_code': instance.countryCode,
     'first_name': instance.firstName,
     'last_name': instance.lastName,
@@ -176,6 +185,9 @@ Map<String, Object?> _$AddressToJson(Address instance) =>
 // factory Address.fromJson(Map<String, Object?> json) => _$AddressFromJson(json);
 Address _$AddressDeserialize(Map<String, Object?> json) {
   final cityValue = JsonHelper.as<String>(json['city'], 'city', 'String');
+  final companyValue = json['company'] == null
+      ? null
+      : JsonHelper.as<String>(json['company'], 'company', 'String');
   final countryCodeValue = JsonHelper.as<String>(
     json['country_code'],
     'country_code',
@@ -214,6 +226,7 @@ Address _$AddressDeserialize(Map<String, Object?> json) {
     city: cityValue,
     postalCode: postalCodeValue,
     countryCode: countryCodeValue,
+    company: companyValue,
     line2: line2Value,
     province: provinceValue,
     phone: phoneValue,

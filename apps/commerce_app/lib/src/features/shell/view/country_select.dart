@@ -21,7 +21,9 @@ final class StoreCountrySelect extends StatelessWidget {
       for (final region in shell.regions)
         for (final country in region.countries) country,
     }.toList()
-      ..sort((a, b) => _label(context, a).compareTo(_label(context, b)));
+      ..sort((a, b) => countryName(context, a).compareTo(
+            countryName(context, b),
+          ));
     final code = (selected as Some<String>).value;
     final cart = context.watchCartViewModel().value;
     final changing = cart.operation == CartOperation.region &&
@@ -39,7 +41,7 @@ final class StoreCountrySelect extends StatelessWidget {
               children: [
                 _flag(country),
                 const SizedBox(width: 8),
-                Text(_label(context, country)),
+                Text(countryName(context, country)),
               ],
             ),
           ),
@@ -57,7 +59,7 @@ final class StoreCountrySelect extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                _label(context, code),
+                countryName(context, code),
                 style: const TextStyle(color: Colors.white, fontSize: 14),
               ),
             ),
@@ -95,22 +97,4 @@ final class StoreCountrySelect extends StatelessWidget {
     }
     await shell.selectCountry(countryCode);
   }
-
-  String _label(BuildContext context, String code) => switch (code) {
-        'de' => context.tr('shop_country_germany', defaultText: 'Germany'),
-        'dk' => context.tr('shop_country_denmark', defaultText: 'Denmark'),
-        'es' => context.tr('shop_country_spain', defaultText: 'Spain'),
-        'fr' => context.tr('shop_country_france', defaultText: 'France'),
-        'gb' => context.tr(
-            'shop_country_united_kingdom',
-            defaultText: 'United Kingdom',
-          ),
-        'it' => context.tr('shop_country_italy', defaultText: 'Italy'),
-        'se' => context.tr('shop_country_sweden', defaultText: 'Sweden'),
-        'us' => context.tr(
-            'shop_country_united_states',
-            defaultText: 'United States',
-          ),
-        _ => code.toUpperCase(),
-      };
 }

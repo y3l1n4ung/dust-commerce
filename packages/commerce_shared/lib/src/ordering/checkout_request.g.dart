@@ -30,6 +30,7 @@ mixin _$AddressInput implements Validatable, Serializable {
     final self = this as AddressInput;
     return 'AddressInput('
         'city: ${self.city}, '
+        'company: ${self.company}, '
         'countryCode: ${self.countryCode}, '
         'firstName: ${self.firstName}, '
         'lastName: ${self.lastName}, '
@@ -48,6 +49,7 @@ mixin _$AddressInput implements Validatable, Serializable {
         other is AddressInput &&
             runtimeType == other.runtimeType &&
             other.city == self.city &&
+            other.company == self.company &&
             other.countryCode == self.countryCode &&
             other.firstName == self.firstName &&
             other.lastName == self.lastName &&
@@ -64,6 +66,7 @@ mixin _$AddressInput implements Validatable, Serializable {
     return Object.hashAll([
       runtimeType,
       self.city,
+      self.company,
       self.countryCode,
       self.firstName,
       self.lastName,
@@ -80,7 +83,7 @@ mixin _$AddressInput implements Validatable, Serializable {
   /// Usage:
   /// ```dart
   /// final updated = addressInput.copyWith(city: 'John');
-  /// final cleared = addressInput.copyWith(line2: null);
+  /// final cleared = addressInput.copyWith(company: null);
   /// ```
   @pragma('vm:prefer-inline')
   _$AddressInputCopyWith<AddressInput> get copyWith => _$AddressInputCopyWithImpl<AddressInput>(this as AddressInput, (value) => value);
@@ -216,6 +219,7 @@ mixin _$CheckoutRequest implements Validatable, Serializable {
 abstract class _$AddressInputCopyWith<$Res> {
   $Res call({
     String? city,
+    String? company,
     String? countryCode,
     String? firstName,
     String? lastName,
@@ -238,6 +242,7 @@ final class _$AddressInputCopyWithImpl<$Res> implements _$AddressInputCopyWith<$
   @pragma('vm:prefer-inline')
   $Res call({
     Object? city = null,
+    Object? company = _addressInputCopyWithUnset,
     Object? countryCode = null,
     Object? firstName = null,
     Object? lastName = null,
@@ -255,6 +260,9 @@ final class _$AddressInputCopyWithImpl<$Res> implements _$AddressInputCopyWith<$
         city: city == null ? _self.city : city as String,
         postalCode: postalCode == null ? _self.postalCode : postalCode as String,
         countryCode: countryCode == null ? _self.countryCode : countryCode as String,
+        company: identical(company, _addressInputCopyWithUnset)
+            ? _self.company
+            : company as String?,
         line2: identical(line2, _addressInputCopyWithUnset)
             ? _self.line2
             : line2 as String?,
@@ -438,6 +446,7 @@ final class $CheckoutRequestDeserializer implements Deserializer<CheckoutRequest
 Map<String, Object?> _$AddressInputSerialize(AddressInput instance) {
   return <String, Object?>{
     'city': instance.city,
+    'company': instance.company,
     'country_code': instance.countryCode,
     'first_name': instance.firstName,
     'last_name': instance.lastName,
@@ -455,6 +464,9 @@ Map<String, Object?> _$AddressInputToJson(AddressInput instance) =>
 // factory AddressInput.fromJson(Map<String, Object?> json) => _$AddressInputFromJson(json);
 AddressInput _$AddressInputDeserialize(Map<String, Object?> json) {
   final cityValue = JsonHelper.as<String>(json['city'], 'city', 'String');
+  final companyValue = json['company'] == null
+      ? null
+      : JsonHelper.as<String>(json['company'], 'company', 'String');
   final countryCodeValue = JsonHelper.as<String>(
     json['country_code'],
     'country_code',
@@ -493,6 +505,7 @@ AddressInput _$AddressInputDeserialize(Map<String, Object?> json) {
     city: cityValue,
     postalCode: postalCodeValue,
     countryCode: countryCodeValue,
+    company: companyValue,
     line2: line2Value,
     province: provinceValue,
     phone: phoneValue,

@@ -7,6 +7,7 @@ final class CheckoutAddressControllers {
   CheckoutAddressControllers(CheckoutAddressDraft draft)
       : firstName = TextEditingController(text: draft.firstName),
         lastName = TextEditingController(text: draft.lastName),
+        company = TextEditingController(text: draft.company),
         line1 = TextEditingController(text: draft.line1),
         line2 = TextEditingController(text: draft.line2),
         city = TextEditingController(text: draft.city),
@@ -21,6 +22,9 @@ final class CheckoutAddressControllers {
   /// Country selection field.
   final TextEditingController countryCode;
 
+  /// Optional company or organization field.
+  final TextEditingController company;
+
   /// Given-name field.
   final TextEditingController firstName;
 
@@ -30,7 +34,7 @@ final class CheckoutAddressControllers {
   /// Primary street field.
   final TextEditingController line1;
 
-  /// Apartment or company field.
+  /// Apartment, suite, or secondary street field.
   final TextEditingController line2;
 
   /// Contact telephone field.
@@ -46,6 +50,7 @@ final class CheckoutAddressControllers {
   CheckoutAddressDraft get draft => CheckoutAddressDraft(
         firstName: firstName.text,
         lastName: lastName.text,
+        company: company.text,
         line1: line1.text,
         line2: line2.text,
         city: city.text,
@@ -59,6 +64,7 @@ final class CheckoutAddressControllers {
   void replace(CheckoutAddressDraft draft) {
     firstName.text = draft.firstName;
     lastName.text = draft.lastName;
+    company.text = draft.company;
     line1.text = draft.line1;
     line2.text = draft.line2;
     city.text = draft.city;
@@ -73,6 +79,7 @@ final class CheckoutAddressControllers {
     for (final controller in [
       firstName,
       lastName,
+      company,
       line1,
       line2,
       city,

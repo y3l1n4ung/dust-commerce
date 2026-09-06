@@ -47,15 +47,15 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertOrderAddress(String orderId, String kind, String firstName, String lastName, String line1, String? line2, String city, String? province, String postalCode, String countryCode, String? phone) {
+  Future<Result<ExecResult, SqlxError>> insertOrderAddress(String orderId, String kind, String firstName, String lastName, String? company, String line1, String? line2, String city, String? province, String postalCode, String countryCode, String? phone) {
     return _db.execute(
       r'''
-INSERT INTO order_addresses (order_id, kind, first_name, last_name, line1,
-                             line2, city, province, postal_code, country_code,
-                             phone)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO order_addresses (order_id, kind, first_name, last_name, company,
+                             line1, line2, city, province, postal_code,
+                             country_code, phone)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ''',
-      [orderId, kind, firstName, lastName, line1, line2, city, province, postalCode, countryCode, phone],
+      [orderId, kind, firstName, lastName, company, line1, line2, city, province, postalCode, countryCode, phone],
     );
   }
 

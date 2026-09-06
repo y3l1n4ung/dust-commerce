@@ -17,6 +17,7 @@ final class CheckoutAddressDraft with _$CheckoutAddressDraft {
     this.postalCode = '',
     this.countryCode = '',
     this.phone = '',
+    this.company = '',
   });
 
   /// Creates editable checkout values from a customer-owned saved address.
@@ -24,8 +25,9 @@ final class CheckoutAddressDraft with _$CheckoutAddressDraft {
       CheckoutAddressDraft(
         firstName: address.firstName,
         lastName: address.lastName,
+        company: address.company ?? '',
         line1: address.line1,
-        line2: _savedSecondaryLine(address),
+        line2: address.line2 ?? '',
         city: address.city,
         province: address.province ?? '',
         postalCode: address.postalCode,
@@ -35,6 +37,9 @@ final class CheckoutAddressDraft with _$CheckoutAddressDraft {
 
   /// Town or city field value.
   final String city;
+
+  /// Optional company or organization field value.
+  final String company;
 
   /// Selected two-letter country code.
   final String countryCode;
@@ -48,7 +53,7 @@ final class CheckoutAddressDraft with _$CheckoutAddressDraft {
   /// Primary street-address field value.
   final String line1;
 
-  /// Optional apartment or company field value.
+  /// Optional apartment, suite, or secondary street field value.
   final String line2;
 
   /// Optional delivery contact number.
@@ -64,6 +69,7 @@ final class CheckoutAddressDraft with _$CheckoutAddressDraft {
   AddressInput toInput() => AddressInput(
         firstName: firstName.trim(),
         lastName: lastName.trim(),
+        company: _optional(company),
         line1: line1.trim(),
         line2: _optional(line2),
         city: city.trim(),
@@ -76,12 +82,6 @@ final class CheckoutAddressDraft with _$CheckoutAddressDraft {
   /// Whether the editable form still represents this saved address.
   bool matchesSavedAddress(CustomerAddressView address) =>
       this == CheckoutAddressDraft.fromSavedAddress(address);
-
-  static String _savedSecondaryLine(CustomerAddressView address) {
-    final line2 = address.line2?.trim();
-    if (line2 != null && line2.isNotEmpty) return line2;
-    return address.company?.trim() ?? '';
-  }
 
   static String? _optional(String value) {
     final normalized = value.trim();

@@ -689,6 +689,10 @@
   "@checkout_city": {
     "description": "Translation for `shop_checkout_city`."
   },
+  "checkout_company": "Company",
+  "@checkout_company": {
+    "description": "Optional company on a checkout address."
+  },
   "checkout_confirmation_sent": "We have sent the order confirmation details to {email}.",
   "@checkout_confirmation_sent": {
     "description": "Translation for `shop_checkout_confirmation_sent`.",

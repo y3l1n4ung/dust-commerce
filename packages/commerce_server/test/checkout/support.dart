@@ -54,13 +54,24 @@ final class CheckoutHarness {
   }
 
   /// A well-formed shipping address, optionally broken in one field.
-  Map<String, Object?> address({String firstName = 'Ada'}) => {
+  Map<String, Object?> address({
+    String firstName = 'Ada',
+    String? company,
+    String? line2,
+    String? province,
+    String? phone,
+  }) =>
+      {
         'first_name': firstName,
         'last_name': 'Lovelace',
+        'company': company,
         'line1': '12 Analytical Way',
+        'line2': line2,
         'city': 'London',
+        'province': province,
         'postal_code': 'EC1A',
         'country_code': 'gb',
+        'phone': phone,
       };
 
   /// Starts a cart holding [quantity] of [variantId].
@@ -86,6 +97,7 @@ final class CheckoutHarness {
     String cartId, {
     String email = 'ada@example.com',
     Map<String, Object?>? shipping,
+    Map<String, Object?>? billing,
     String? token,
   }) {
     final request = client.post('/store/checkout')
@@ -93,6 +105,7 @@ final class CheckoutHarness {
         'cart_id': cartId,
         'email': email,
         'shipping_address': shipping ?? address(),
+        if (billing != null) 'billing_address': billing,
       });
     if (token != null) request.bearer(token);
     return request.send();

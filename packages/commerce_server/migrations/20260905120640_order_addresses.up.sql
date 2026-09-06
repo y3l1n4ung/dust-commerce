@@ -6,6 +6,8 @@ CREATE TABLE order_addresses (
   kind         TEXT NOT NULL CHECK (kind IN ('shipping', 'billing')),
   first_name   TEXT NOT NULL,
   last_name    TEXT NOT NULL,
+  -- Optional organization is distinct from the secondary street line.
+  company      TEXT,
   line1        TEXT NOT NULL,
   line2        TEXT,
   city         TEXT NOT NULL,

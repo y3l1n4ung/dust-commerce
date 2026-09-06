@@ -36,7 +36,8 @@ void main() {
 
     final draft = CheckoutAddressDraft.fromSavedAddress(us);
     expect(draft.countryCode, 'us');
-    expect(draft.line2, 'Analytical Engines');
+    expect(draft.company, 'Analytical Engines');
+    expect(draft.line2, isEmpty);
     expect(draft.matchesSavedAddress(us), isTrue);
     expect(draft.copyWith(city: 'Arlington').matchesSavedAddress(us), isFalse);
   });

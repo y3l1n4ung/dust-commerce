@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'checkout_address_fields.dart';
 import 'checkout_address_controllers.dart';
 import 'checkout_address_summary.dart';
+import 'checkout_billing_toggle.dart';
+import 'checkout_contact_fields.dart';
 import 'checkout_saved_address_selector.dart';
 import 'checkout_step_header.dart';
 
@@ -86,75 +88,72 @@ class _CheckoutAddressSectionState extends State<CheckoutAddressSection> {
         ],
       );
 
-  Widget _formBody() => Form(
-        key: _form,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (widget.customer case final customer?) ...[
-              CheckoutSavedAddressSelector(
-                customer: customer,
-                state: widget.addressBook,
-                countries: widget.countries,
-                draft: _shipping.draft,
-                onSelected: _selectSavedAddress,
-              ),
-              if (widget.addressBook.status != AddressBookStatus.ready ||
-                  widget.addressBook
-                      .shippingAddressesFor(widget.countries)
-                      .isNotEmpty)
-                const SizedBox(height: 24),
-            ],
-            CheckoutAddressFields(
-              controllers: _shipping,
-              countries: widget.countries,
-              includeContact: true,
-              email: _email,
-            ),
-            const SizedBox(height: 24),
-            CheckboxListTile(
-              value: _sameAsBilling,
-              onChanged: (value) => setState(
-                () => _sameAsBilling = value ?? true,
-              ),
-              controlAffinity: ListTileControlAffinity.leading,
-              contentPadding: EdgeInsets.zero,
-              title: const TranslatedText(
-                'shop_checkout_same_billing',
-                defaultText: 'Billing address same as shipping address',
-              ),
-            ),
-            if (!_sameAsBilling) ...[
-              const SizedBox(height: 24),
-              const TranslatedText(
-                'shop_checkout_billing_address',
-                defaultText: 'Billing address',
-                style: TextStyle(fontSize: 30, height: 1.25),
-              ),
-              const SizedBox(height: 24),
+  Widget _formBody() => Padding(
+        padding: const EdgeInsets.only(bottom: 28),
+        child: Form(
+          key: _form,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (widget.customer case final customer?) ...[
+                CheckoutSavedAddressSelector(
+                  customer: customer,
+                  state: widget.addressBook,
+                  countries: widget.countries,
+                  draft: _shipping.draft,
+                  onSelected: _selectSavedAddress,
+                ),
+                if (widget.addressBook.status != AddressBookStatus.ready ||
+                    widget.addressBook
+                        .shippingAddressesFor(widget.countries)
+                        .isNotEmpty)
+                  const SizedBox(height: 24),
+              ],
               CheckoutAddressFields(
-                controllers: _billing,
+                controllers: _shipping,
                 countries: widget.countries,
               ),
-            ],
-            if (widget.state.status == CheckoutStatus.failed &&
-                widget.state.operation == CheckoutOperation.prepare) ...[
-              const SizedBox(height: 12),
-              Text(widget.state.message!,
-                  style: const TextStyle(color: Colors.red)),
-            ],
-            const SizedBox(height: 24),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: FilledButton(
-                onPressed: widget.state.isBusy ? null : _continue,
-                child: const TranslatedText(
-                  'shop_checkout_continue_delivery',
-                  defaultText: 'Continue to delivery',
+              CheckoutBillingToggle(
+                value: _sameAsBilling,
+                onChanged: (value) => setState(() => _sameAsBilling = value),
+              ),
+              CheckoutContactFields(controllers: _shipping, email: _email),
+              if (!_sameAsBilling) ...[
+                const SizedBox(height: 32),
+                const TranslatedText(
+                  'shop_checkout_billing_address',
+                  defaultText: 'Billing address',
+                  style: TextStyle(
+                    fontSize: 24,
+                    height: 1.5,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                CheckoutAddressFields(
+                  controllers: _billing,
+                  countries: widget.countries,
+                ),
+              ],
+              const SizedBox(height: 36),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: FilledButton(
+                  onPressed: widget.state.isBusy ? null : _continue,
+                  child: const TranslatedText(
+                    'shop_checkout_continue_delivery',
+                    defaultText: 'Continue to delivery',
+                  ),
                 ),
               ),
-            ),
-          ],
+              if (widget.state.status == CheckoutStatus.failed &&
+                  widget.state.operation == CheckoutOperation.prepare) ...[
+                const SizedBox(height: 12),
+                Text(widget.state.message!,
+                    style: const TextStyle(color: Colors.red)),
+              ],
+            ],
+          ),
         ),
       );
 

@@ -27,7 +27,7 @@ final class CheckoutStepHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 24),
+        padding: EdgeInsets.only(bottom: open || complete ? 24 : 0),
         child: Row(
           children: [
             Expanded(
@@ -39,7 +39,11 @@ final class CheckoutStepHeader extends StatelessWidget {
                     Flexible(
                       child: Text(
                         title,
-                        style: const TextStyle(fontSize: 30, height: 1.25),
+                        style: const TextStyle(
+                          fontSize: 24,
+                          height: 1.5,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     if (!open && complete) ...[

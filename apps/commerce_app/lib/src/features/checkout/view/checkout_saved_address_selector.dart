@@ -175,8 +175,8 @@ final class _SavedAddressOption extends StatelessWidget {
                     '${address.firstName} ${address.lastName}',
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
-                  if (address.company case final company?) Text(company),
                   const SizedBox(height: 4),
+                  if (address.company case final company?) Text(company),
                   Text('${address.line1}${_line2(address.line2)}'),
                   Text('${address.postalCode}, ${address.city}'),
                   Text(
