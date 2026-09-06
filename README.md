@@ -21,8 +21,9 @@ attribution.
 This project is not affiliated with, endorsed by, or derived from Medusa.
 
 [docs/comparison.md](docs/comparison.md) sets the two side by side against a
-pinned Medusa source commit. This project implements one narrow storefront path
-and has no admin surface, workflow engine, or plugin platform.
+pinned Medusa source commit. This project implements tested storefront slices
+and the first isolated admin identity/session slice. It is not yet a Medusa
+replacement and has no workflow engine or plugin platform.
 
 ### What is modelled
 
@@ -43,9 +44,10 @@ type is the most common bug in commerce code and it is not reproduced here.
 
 Dust generates Dart from annotations. This repository is the case where that
 matters most: **one set of model definitions, generated in both directions.**
-The server decodes exactly what the client's generated HTTP client encodes,
-because both sides are generated from the same `commerce_shared` classes. Change
-a field once and both ends move together, or fail to compile together.
+The server decodes exactly what each generated HTTP client encodes. Customer
+contracts live in `commerce_shared`; merchant-only contracts live in
+`commerce_admin_shared`, so the storefront cannot accidentally import an admin
+API type. Change a field once and its two ends move together, or fail together.
 
 ## What is generated, and what is not
 
@@ -53,9 +55,9 @@ Being precise about this is part of the point of the repository.
 
 | Layer | Dust generates | Written by hand |
 | :--- | :--- | :--- |
-| `commerce_shared` | data classes, JSON, validation | the model definitions |
+| shared contracts | data classes, JSON, validation | the model definitions |
 | `commerce_server` | row mapping, DAOs, static SQL checking | routing, handlers, extractors |
-| `commerce_app` | routing, view models, i18n, the HTTP client | widgets |
+| Flutter apps | routing, view models, i18n, HTTP clients | widgets |
 
 There is no server code generator in Dust today. Handlers are written against
 `dust_server`'s API directly, and that is not a workaround — the runtime is
@@ -64,13 +66,16 @@ designed to be written against.
 ## Layout
 
 ```
-packages/commerce_shared   models shared across the wire
-packages/commerce_server   dust_server API on SQLite
-apps/commerce_app          Flutter storefront
+packages/commerce_shared         customer storefront contracts
+packages/commerce_admin_shared   merchant-only admin contracts
+packages/commerce_server         dust_server API on SQLite
+apps/commerce_app                Flutter storefront (port 13001)
+apps/admin_app                   Flutter merchant admin (port 13002)
 ```
 
-[docs/architecture](docs/architecture/) traces one request from widget to row
-and records the decisions that would be expensive to reverse.
+[docs/architecture](docs/architecture/) traces one request from widget to row.
+[docs/admin-parity.md](docs/admin-parity.md) maps the isolated merchant program
+to its Medusa source areas and GitHub delivery issues.
 
 ## Running it
 
@@ -83,15 +88,17 @@ dust --version
 ```bash
 flutter pub get
 dust build --root packages/commerce_shared
+dust build --root packages/commerce_admin_shared
 dust build --root packages/commerce_server && dust db build --root packages/commerce_server
 dust build --root apps/commerce_app
+dust build --root apps/admin_app
 ```
 
 Start a local API with the deterministic development catalogue:
 
 ```bash
 COMMERCE_SEED=true \
-  COMMERCE_ALLOWED_ORIGINS=http://127.0.0.1:13001 \
+  COMMERCE_ALLOWED_ORIGINS=http://127.0.0.1:13001,http://127.0.0.1:13002 \
   COMMERCE_DATABASE_PATH=.data/commerce.db \
   dart run packages/commerce_server/bin/server.dart
 ```
@@ -125,8 +132,29 @@ flutter run -d web-server \
   --dart-define=API_BASE_URL=http://127.0.0.1:3878
 ```
 
-The repository-owned development ports are `13001` for Flutter web and `3878`
-for the API, so neither service relies on a framework-default port.
+Create the first admin through the non-public bootstrap command. It accepts the
+password only through the environment, never as a command argument; inject the
+secret through the deployment environment in production.
+
+```bash
+COMMERCE_ADMIN_EMAIL=owner@example.com \
+  COMMERCE_ADMIN_PASSWORD='replace-with-a-long-secret' \
+  COMMERCE_DATABASE_PATH=.data/commerce.db \
+  dart run packages/commerce_server/bin/create_admin.dart
+```
+
+Start the separate merchant app in a third terminal:
+
+```bash
+flutter run -d web-server \
+  --web-hostname 127.0.0.1 \
+  --web-port 13002 \
+  --dart-define=API_BASE_URL=http://127.0.0.1:3878 \
+  -t apps/admin_app/lib/main.dart
+```
+
+The repository-owned development ports are `13001` for the storefront,
+`13002` for admin, and `3878` for the API. None uses a framework default.
 
 Then the same checks CI runs:
 

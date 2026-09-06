@@ -18,10 +18,11 @@ payment, and a basic customer account.
 
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
-| Schema | modular PostgreSQL schemas | 31 SQLite tables |
-| Admin API | yes | none |
+| Schema | modular PostgreSQL schemas | 32 SQLite tables |
+| Admin API | broad modular API | isolated identity/session slice (3 operations) |
 | Store operations | broad Store API | 36 method/path operations |
-| Workflow engine, plugins, dashboard | yes | none |
+| Workflow engine and plugins | yes | none |
+| Admin dashboard | broad operational UI | authenticated shell only |
 
 ## Where the model genuinely agrees
 
@@ -141,6 +142,14 @@ building an attacker-controlled memory queue. The generated Flutter client
 keeps authorization at the Dio layer, so one default header or interceptor
 covers every protected request without token parameters in each API method.
 
+Admin authentication is a separate actor boundary, not an extra customer role.
+It uses its own contract package, provider name, secure-storage key, Axum-style
+route guard, generated client, and Flutter app. The bootstrap command is not an
+HTTP route. It accepts the initial password only through the process environment
+and stores an Argon2id PHC value. Admin token expiry is a Dart `DateTime`; Dust
+serializes it as ISO-8601 JSON, while persistence normalizes the instant to UTC
+text for SQLite. This is the identity/session slice only, not admin API parity.
+
 ### Order transfers keep the capability out of the database
 
 The three Store routes match Medusa's request, accept and decline shape, while
@@ -175,8 +184,9 @@ than copying this SQLite representation.
 Fulfilment and returns, real payment providers or saved payment methods,
 provider-driven taxes, inventory locations, sales channels, product types,
 search, password reset, email verification,
-MFA, OAuth providers, API keys, the admin API, workflow engine, plugin system,
-notifications, file storage, and the admin dashboard.
+MFA, OAuth providers, API keys, admin RBAC, admin catalogue/order/customer and
+operations APIs, workflow engine, plugin system, notifications, file storage,
+and an operational admin dashboard.
 
 Shipping is a small set of regional options with optional item-total rules,
 promotions are one fixed or percentage code, payment is a manual state
