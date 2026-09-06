@@ -8,11 +8,14 @@ Source visual truth paths:
 - Rendered catalogue reference: `https://next.medusajs.com/dk/store?qa=store-grid-final`
 - Pinned product source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/products/templates/index.tsx`
 - Rendered product reference: `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`
+- Pinned empty-cart source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/cart/components/empty-cart-message/index.tsx`
+- Rendered empty-cart reference: `https://next.medusajs.com/dk/cart?qa=cart-empty-audit`
 
 Implementation screenshot paths: in-app browser captures of the transfer route
 `http://127.0.0.1:13001/store?qa=store-grid-final`, and
-`http://127.0.0.1:13001/products/shorts?qa=product-audit`. The browser captures
-are retained in the task evidence rather than exported into the repository.
+`http://127.0.0.1:13001/products/shorts?qa=product-audit`, and
+`http://127.0.0.1:13001/cart?qa=cart-after-restart`. The browser captures are
+retained in the task evidence rather than exported into the repository.
 
 Viewport: the matched desktop capture used the same in-app browser tab. The
 reference raster was `1265 x 712`; the implementation raster was `1280 x 720`.
@@ -37,13 +40,16 @@ the product route at compact width and in selected/out-of-stock states,
 completed profile, saved addresses and recent orders,
 `/account/orders/details/:id`, the authenticated transfer-request form and its
 success/error states, the profile password editor, the guest-cart mismatch
-banner, and the global free-shipping popup.
+banner, populated cart and cart-preview states, promotion/shipping interactions,
+and the global free-shipping popup. The empty-cart pair used clean anonymous
+browser state with zero items on both storefronts.
 
 **Findings**
 
 - [P1] Remaining route groups still lack rendered comparison
   Location: Medusa DTC and Morrow storefront views outside the public transfer
-  decision route, desktop catalogue grid and desktop product structure.
+  decision route, desktop catalogue grid, desktop product structure and desktop
+  empty cart.
   Evidence: the transfer decision page and desktop catalogue grid now have
   matched comparisons. Product detail desktop columns and offsets also match;
   the other states listed above do not yet have matched captures.
@@ -54,12 +60,15 @@ banner, and the global free-shipping popup.
 
 **Required fidelity surfaces**
 
-- Fonts and typography: the transfer hierarchy, catalogue title/card copy and
-  product information stack passed; other routes remain pending.
+- Fonts and typography: the transfer hierarchy, catalogue title/card copy,
+  product information stack and empty-cart hierarchy passed; other routes
+  remain pending.
 - Spacing and layout rhythm: the transfer's centered column and the catalogue's
   sidebar, 24px gutters, four-column medium grid, 32px row gap and card rhythm
   passed after scrollbar normalization. Product detail now matches the source
   24px inset, 300px side columns, 64px gallery gutters and 192px sticky offset.
+  Empty cart matches the source's combined 32px content inset, centered vertical
+  composition and footer position within three rendered pixels.
 - Colors and visual tokens: transfer foreground, zinc-600 copy, gray-200
   borders, exact black primary action, red/rose errors and emerald success are
   source-mapped; other rendered routes remain pending.
@@ -67,8 +76,9 @@ banner, and the global free-shipping popup.
   catalogue uses merchant images from each backend with the source's `9:16`
   card ratio; cross-backend product photography is intentionally not compared.
 - Copy and content: the transfer heading, paragraphs and actions now match the
-  source exactly. Morrow branding and privacy-safe omission of the owner email
-  are intentional product differences; other route copy remains pending.
+  source exactly. Empty-cart copy and its interactive link also match. Morrow
+  branding and privacy-safe omission of the owner email are intentional product
+  differences; other route copy remains pending.
 
 **Full-view comparison evidence**
 
@@ -78,13 +88,15 @@ The transfer composition and controls align. The catalogue title, sidebar,
 four-column grid, source aspect ratios and card spacing align after correction.
 The product detail pair confirms the source column geometry and information
 stack; product content and action controls differ with the two seed products.
+The empty-cart pair confirms the source content inset, copy, vertical placement,
+blue diagonal-arrow link and footer divider.
 
 **Focused region comparison evidence**
 
-No focused crop was necessary for the transfer page because its full-view
-capture kept the heading, body copy, SVG and both actions clearly readable. The
-footer, navigation, product cards, filters, cart preview, account form and
-checkout controls still require focused captures.
+No focused crop was necessary for the transfer or empty-cart pages because the
+full-view captures kept their copy and actions clearly readable. The footer,
+navigation, product cards, filters, populated cart, cart preview, account form
+and checkout controls still require focused captures.
 
 **Comparison history**
 
@@ -107,6 +119,11 @@ checkout controls still require focused captures.
   300px side columns, 64px gallery gutters, 192px sticky content position and
   30px/40px title treatment. Cross-backend product copy, imagery, and variant
   controls remain data differences rather than visual findings.
+- A clean preview restart proved the initial blank empty-cart capture was stale
+  preview state rather than a product defect. The first valid comparison exposed
+  a P2 missing 8px inner inset and a gray horizontal-arrow button in place of
+  Medusa's blue InteractiveLink. The final pair uses the 32px combined inset and
+  reusable blue diagonal-arrow link with no remaining P0, P1 or P2 mismatch.
 
 **Implementation checklist**
 
@@ -116,6 +133,8 @@ checkout controls still require focused captures.
   sorting, option accordions and pagination in a browser that supports input.
 - Capture product detail at compact width and exercise selected, unavailable,
   sold-out and add-to-cart feedback states against matched product fixtures.
+- Capture populated cart and cart-preview states, including sign-in, promotion,
+  shipping and checkout actions, against matching anonymous fixtures.
 - Capture the public transfer page at `390 x 844` and verify the intentional
   full-width native adaptation remains usable.
 - Capture the remaining route and interaction states listed above.
