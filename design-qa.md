@@ -10,12 +10,15 @@ Source visual truth paths:
 - Rendered product reference: `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`
 - Pinned empty-cart source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/cart/components/empty-cart-message/index.tsx`
 - Rendered empty-cart reference: `https://next.medusajs.com/dk/cart?qa=cart-empty-audit`
+- Pinned public-account sources: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/account/templates/account-layout.tsx`, `login-template.tsx`, and `components/{login,register}/index.tsx`
+- Rendered public-account reference: `https://next.medusajs.com/dk/account?qa=account-signed-out`
 
 Implementation screenshot paths: in-app browser captures of the transfer route
 `http://127.0.0.1:13001/store?qa=store-grid-final`, and
 `http://127.0.0.1:13001/products/shorts?qa=product-audit`, and
-`http://127.0.0.1:13001/cart?qa=cart-after-restart`. The browser captures are
-retained in the task evidence rather than exported into the repository.
+`http://127.0.0.1:13001/cart?qa=cart-after-restart`, and
+`http://127.0.0.1:13001/account?qa=account-register-local`. The browser captures
+are retained in the task evidence rather than exported into the repository.
 
 Viewport: the matched desktop capture used the same in-app browser tab. The
 reference raster was `1265 x 712`; the implementation raster was `1280 x 720`.
@@ -42,7 +45,9 @@ completed profile, saved addresses and recent orders,
 success/error states, the profile password editor, the guest-cart mismatch
 banner, populated cart and cart-preview states, promotion/shipping interactions,
 and the global free-shipping popup. The empty-cart pair used clean anonymous
-browser state with zero items on both storefronts.
+browser state with zero items on both storefronts. The account pair used the
+signed-out sign-in screen, then exercised the in-place registration toggle and
+Flutter validation without creating a customer.
 
 **Findings**
 
@@ -58,17 +63,30 @@ browser state with zero items on both storefronts.
   Fix: capture both sites at matching desktop and mobile viewports, combine
   each pair, and run the comparison loop.
 
+- [P2] Source account content links have no production destination
+  Location: signed-out account support and registration terms.
+  Evidence: the pinned source links to `/customer-service`,
+  `/content/privacy-policy`, and `/content/terms-of-use`, but contains no
+  customer-service route or portable Morrow policy content. The Flutter page
+  intentionally renders honest text instead of dead or invented links.
+  Impact: public sign-in and registration work, but these secondary destinations
+  are not yet actionable.
+  Fix: complete the real contact and policy routes under #20, then replace the
+  text with the shared interactive-link treatment and rerun the matched pair.
+
 **Required fidelity surfaces**
 
 - Fonts and typography: the transfer hierarchy, catalogue title/card copy,
-  product information stack and empty-cart hierarchy passed; other routes
-  remain pending.
+  product information stack, empty-cart hierarchy and public account forms
+  passed; other routes remain pending.
 - Spacing and layout rhythm: the transfer's centered column and the catalogue's
   sidebar, 24px gutters, four-column medium grid, 32px row gap and card rhythm
   passed after scrollbar normalization. Product detail now matches the source
   24px inset, 300px side columns, 64px gallery gutters and 192px sticky offset.
   Empty cart matches the source's combined 32px content inset, centered vertical
-  composition and footer position within three rendered pixels.
+  composition and footer position within three rendered pixels. Public account
+  sign-in and registration match the source's 384px form, 240px desktop rail,
+  44px inputs, 40px primary action, divider and help-block placement.
 - Colors and visual tokens: transfer foreground, zinc-600 copy, gray-200
   borders, exact black primary action, red/rose errors and emerald success are
   source-mapped; other rendered routes remain pending.
@@ -77,7 +95,9 @@ browser state with zero items on both storefronts.
   card ratio; cross-backend product photography is intentionally not compared.
 - Copy and content: the transfer heading, paragraphs and actions now match the
   source exactly. Empty-cart copy and its interactive link also match. Morrow
-  branding and privacy-safe omission of the owner email are intentional product
+  account membership copy, required markers and toggle punctuation match the
+  source structure. Morrow branding, privacy-safe omission of the owner email,
+  and the temporarily non-actionable content-link text are intentional product
   differences; other route copy remains pending.
 
 **Full-view comparison evidence**
@@ -89,14 +109,18 @@ four-column grid, source aspect ratios and card spacing align after correction.
 The product detail pair confirms the source column geometry and information
 stack; product content and action controls differ with the two seed products.
 The empty-cart pair confirms the source content inset, copy, vertical placement,
-blue diagonal-arrow link and footer divider.
+blue diagonal-arrow link and footer divider. The signed-out account pairs
+confirm the sign-in and registration compositions, exact control rhythm,
+password visibility affordance, toggle behavior, readable validation and shared
+support layout.
 
 **Focused region comparison evidence**
 
-No focused crop was necessary for the transfer or empty-cart pages because the
-full-view captures kept their copy and actions clearly readable. The footer,
-navigation, product cards, filters, populated cart, cart preview, account form
-and checkout controls still require focused captures.
+No focused crop was necessary for the transfer, empty-cart or public-account
+pages because the full-view captures kept their copy and actions clearly
+readable. The footer, navigation, product cards, filters, populated cart, cart
+preview, authenticated account forms and checkout controls still require
+focused captures.
 
 **Comparison history**
 
@@ -124,6 +148,14 @@ and checkout controls still require focused captures.
   a P2 missing 8px inner inset and a gray horizontal-arrow button in place of
   Medusa's blue InteractiveLink. The final pair uses the 32px combined inset and
   reusable blue diagonal-arrow link with no remaining P0, P1 or P2 mismatch.
+- The first settled account comparison exposed a P1 full-width, top-aligned form
+  with no source AccountSupport section. The source shell, empty 240px signed-out
+  rail, centered 384px form, typography and support divider were translated.
+  A browser validation pass rejected a tightly constrained input experiment
+  because it compressed error borders; the final dense 44px controls retain
+  readable expanding errors. The sign-in/register pair has no remaining P0 or
+  P1 mismatch. The missing real customer-service and policy destinations remain
+  the explicit P2 above rather than dead links.
 
 **Implementation checklist**
 
@@ -137,6 +169,8 @@ and checkout controls still require focused captures.
   shipping and checkout actions, against matching anonymous fixtures.
 - Capture the public transfer page at `390 x 844` and verify the intentional
   full-width native adaptation remains usable.
+- Capture signed-out account at compact width after the real customer-service,
+  privacy-policy and terms routes are available under #20.
 - Capture the remaining route and interaction states listed above.
 - Compare each source/implementation pair together and fix every P0/P1/P2
   difference before changing the global result.
