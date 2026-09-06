@@ -62,6 +62,7 @@ final class CheckoutDeliverySection extends StatelessWidget {
               _DeliveryChoice(
                 option: option,
                 selected: selected?.optionId == option.optionId,
+                available: option.isAvailableFor(cart.cart!.subtotal),
                 enabled: !state.isBusy,
                 onTap: () => context
                     .readCheckoutViewModel()
@@ -125,13 +126,15 @@ final class _DeliveryChoice extends StatelessWidget {
   const _DeliveryChoice({
     required this.option,
     required this.selected,
+    required this.available,
     required this.enabled,
     required this.onTap,
   });
 
+  final bool available;
   final bool enabled;
   final VoidCallback onTap;
-  final ShippingMethod option;
+  final ShippingOption option;
   final bool selected;
 
   @override
@@ -144,7 +147,7 @@ final class _DeliveryChoice extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: InkWell(
-          onTap: enabled ? onTap : null,
+          onTap: enabled && available ? onTap : null,
           borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
@@ -155,13 +158,24 @@ final class _DeliveryChoice extends StatelessWidget {
                       ? Icons.radio_button_checked
                       : Icons.radio_button_unchecked,
                   size: 18,
-                  color: selected
-                      ? StoreColors.interactive
-                      : StoreColors.foregroundMuted,
+                  color: !available
+                      ? StoreColors.foregroundDisabled
+                      : selected
+                          ? StoreColors.interactive
+                          : StoreColors.foregroundMuted,
                 ),
                 const SizedBox(width: 16),
-                Expanded(child: Text(option.name)),
-                Text(formatMoney(option.amount)),
+                Expanded(
+                  child: Text(
+                    option.name,
+                    style: TextStyle(
+                      color: available
+                          ? StoreColors.foreground
+                          : StoreColors.foregroundDisabled,
+                    ),
+                  ),
+                ),
+                Text(available ? formatMoney(option.amount) : '-'),
               ],
             ),
           ),

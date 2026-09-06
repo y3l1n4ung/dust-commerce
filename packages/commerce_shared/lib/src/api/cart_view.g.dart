@@ -191,7 +191,7 @@ Map<String, Object?> _$ShippingOptionsViewToJson(ShippingOptionsView instance) =
 ShippingOptionsView _$ShippingOptionsViewDeserialize(Map<String, Object?> json) {
   final countValue = JsonHelper.as<int>(json['count'], 'count', 'int');
   final shippingOptionsValue = JsonHelper.decodeList(json['shipping_options'], 'shipping_options',
-      (item, itemKey) => ShippingMethod.fromJson(JsonHelper.asMap(item, itemKey)));
+      (item, itemKey) => ShippingOption.fromJson(JsonHelper.asMap(item, itemKey)));
 
   return ShippingOptionsView(
     shippingOptions: shippingOptionsValue,

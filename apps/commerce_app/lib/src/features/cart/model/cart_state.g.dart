@@ -31,7 +31,8 @@ mixin _$CartState {
         'operation: ${self.operation}, '
         'shippingOptions: ${self.shippingOptions}, '
         'status: ${self.status}, '
-        'transferFailure: ${self.transferFailure}'
+        'transferFailure: ${self.transferFailure}, '
+        'dismissedFreeShippingCartId: ${self.dismissedFreeShippingCartId}'
         ')';
   }
 
@@ -47,7 +48,8 @@ mixin _$CartState {
             other.operation == self.operation &&
             _cartStateShippingOptionsEquality.equals(other.shippingOptions, self.shippingOptions) &&
             other.status == self.status &&
-            other.transferFailure == self.transferFailure;
+            other.transferFailure == self.transferFailure &&
+            other.dismissedFreeShippingCartId == self.dismissedFreeShippingCartId;
   }
 
   @override
@@ -62,6 +64,7 @@ mixin _$CartState {
       _cartStateShippingOptionsEquality.hash(self.shippingOptions),
       self.status,
       self.transferFailure,
+      self.dismissedFreeShippingCartId,
     ]);
   }
 
@@ -85,9 +88,10 @@ abstract class _$CartStateCopyWith<$Res> {
     String? activeLineId,
     String? message,
     CartOperation? operation,
-    List<ShippingMethod>? shippingOptions,
+    List<ShippingOption>? shippingOptions,
     CartStatus? status,
     Option<CartTransferFailure>? transferFailure,
+    Option<String>? dismissedFreeShippingCartId,
   });
 }
 
@@ -108,6 +112,7 @@ final class _$CartStateCopyWithImpl<$Res> implements _$CartStateCopyWith<$Res> {
     Object? shippingOptions = null,
     Object? status = null,
     Object? transferFailure = null,
+    Object? dismissedFreeShippingCartId = null,
   }) {
     return _then(
       CartState(
@@ -124,8 +129,9 @@ final class _$CartStateCopyWithImpl<$Res> implements _$CartStateCopyWith<$Res> {
         activeLineId: identical(activeLineId, _cartStateCopyWithUnset)
             ? _self.activeLineId
             : activeLineId as String?,
-        shippingOptions: shippingOptions == null ? _self.shippingOptions : shippingOptions as List<ShippingMethod>,
+        shippingOptions: shippingOptions == null ? _self.shippingOptions : shippingOptions as List<ShippingOption>,
         transferFailure: transferFailure == null ? _self.transferFailure : transferFailure as Option<CartTransferFailure>,
+        dismissedFreeShippingCartId: dismissedFreeShippingCartId == null ? _self.dismissedFreeShippingCartId : dismissedFreeShippingCartId as Option<String>,
       )
     );
   }

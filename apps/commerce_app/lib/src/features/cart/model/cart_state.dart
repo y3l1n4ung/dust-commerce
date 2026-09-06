@@ -63,6 +63,7 @@ class CartState with _$CartState {
     this.activeLineId,
     this.shippingOptions = const [],
     this.transferFailure = const None(),
+    this.dismissedFreeShippingCartId = const None(),
   });
 
   /// The server-computed cart and totals, once created.
@@ -78,7 +79,7 @@ class CartState with _$CartState {
   final CartOperation? operation;
 
   /// Delivery choices returned by the server for the current cart.
-  final List<ShippingMethod> shippingOptions;
+  final List<ShippingOption> shippingOptions;
 
   /// The operation currently in flight.
   final CartStatus status;
@@ -86,6 +87,16 @@ class CartState with _$CartState {
   /// Why the current guest cart remains unclaimed, when known.
   final Option<CartTransferFailure> transferFailure;
 
+  /// Cart whose free-shipping popup the customer dismissed this session.
+  final Option<String> dismissedFreeShippingCartId;
+
   /// Quantity shown in navigation.
   int get itemCount => cart?.itemCount ?? 0;
+
+  /// Whether the customer closed the popup for [cartId] this session.
+  bool isFreeShippingNudgeDismissedFor(String cartId) =>
+      dismissedFreeShippingCartId.match(
+        some: (dismissedId) => dismissedId == cartId,
+        none: () => false,
+      );
 }

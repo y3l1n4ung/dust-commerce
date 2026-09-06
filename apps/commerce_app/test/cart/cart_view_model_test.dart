@@ -119,8 +119,9 @@ void main() {
     await cart.restore();
     await cart.add(await variant());
 
+    expect(cart.state.shippingOptions, hasLength(3));
     expect(await cart.loadShippingOptions(), isTrue);
-    expect(cart.state.shippingOptions, hasLength(2));
+    expect(cart.state.shippingOptions, hasLength(3));
     expect(await cart.chooseShipping('ship_standard'), isTrue);
     expect(cart.state.cart!.shippingTotal, Money.of(500, 'usd'));
 

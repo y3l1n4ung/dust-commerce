@@ -29,9 +29,7 @@ Future<Result<CartViewResponse, Rejection>> addLineHandler(
   final deps = (state as Ok<CartDeps, Rejection>).value;
 
   final result = await addLine(
-    deps.reads,
-    deps.writes,
-    deps.catalog,
+    deps.database,
     cartId: cartId,
     variantId: body.variantId,
     quantity: body.quantity,

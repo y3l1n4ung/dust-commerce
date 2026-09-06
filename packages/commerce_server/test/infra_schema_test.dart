@@ -3,10 +3,7 @@ import 'dart:io';
 import 'package:commerce_server/commerce_server.dart';
 import 'package:test/test.dart';
 
-/// Raw SQL access, which `fetch` needs and `DatabaseClient.executor` is not.
-///
-/// `DatabaseConnection` implements `DatabaseExecutor`; a raw query wants the
-/// wider `Executor`, which the driver behind it does provide.
+/// Raw SQL access required by `fetch` beyond `DatabaseClient.executor`.
 extension on CommerceDatabase {
   Executor get raw => connection as Executor;
 }
@@ -68,7 +65,7 @@ void main() {
           'promotions',
           'provider_identity',
           'regions',
-          'shipping_options',
+          ...'shipping_options shipping_option_price_rules'.split(' '),
           'variant_option_values',
           'variant_prices',
           'payment_collections',

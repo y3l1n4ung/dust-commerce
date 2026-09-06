@@ -2,6 +2,7 @@ import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_server/src/features/catalog/repository/repository.dart';
 import 'package:commerce_server/src/features/catalog/sellable_variant.dart';
+import 'package:commerce_server/src/infra/database.dart';
 import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
 
@@ -19,8 +20,27 @@ enum UpdateLineFailure {
 
 /// Replaces a cart line's quantity after rechecking current inventory.
 Future<Result<Option<UpdateLineFailure>, SqlxError>> updateLineQuantity(
+  CommerceDatabase database, {
+  required String cartId,
+  required String lineId,
+  required int quantity,
+}) =>
+    database.transaction(
+      (tx) => _updateLineQuantity(
+        CartReadRepository(tx),
+        CartUpdateRepository(tx),
+        CartShippingRepository(tx),
+        CatalogReadRepository(tx),
+        cartId: cartId,
+        lineId: lineId,
+        quantity: quantity,
+      ),
+    );
+
+Future<Result<Option<UpdateLineFailure>, SqlxError>> _updateLineQuantity(
   CartReadRepository reads,
   CartUpdateRepository writes,
+  CartShippingRepository shipping,
   CatalogReadRepository catalog, {
   required String cartId,
   required String lineId,
@@ -64,5 +84,7 @@ Future<Result<Option<UpdateLineFailure>, SqlxError>> updateLineQuantity(
   if ((written as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
     return const Ok(Some(UpdateLineFailure.noLine));
   }
+  final cleared = await shipping.clearIneligibleMethod(cartId);
+  if (cleared case Err(:final error)) return Err(error);
   return const Ok(None<UpdateLineFailure>());
 }

@@ -19,31 +19,66 @@ final class _$CartListRepository implements CartListRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<ShippingMethodResponse>, SqlxError>> shippingOptionsOf(String regionId) {
-    return _db.fetchAll<ShippingMethodResponse>(
+  Future<Result<List<ShippingOptionResponse>, SqlxError>> shippingOptionsOf(String regionId) {
+    return _db.fetchAll<ShippingOptionResponse>(
       r'''
-SELECT id AS option_id, name,
-       json_object('amount', amount, 'currency_code', currency_code) AS amount
-FROM shipping_options
-WHERE region_id = ?
-ORDER BY shipping_options.amount, id
+SELECT option.id AS option_id, option.name,
+       json_object(
+         'amount', option.amount,
+         'currency_code', option.currency_code
+       ) AS amount,
+       coalesce((
+         SELECT json_group_array(json(ordered.rule_json))
+         FROM (
+           SELECT json_object(
+             'attribute', rule.attribute,
+             'operator', rule.operator,
+             'value', rule.value
+           ) AS rule_json
+           FROM shipping_option_price_rules rule
+           WHERE rule.shipping_option_id = option.id
+             AND rule.deleted_at IS NULL
+           ORDER BY rule.id
+         ) ordered
+       ), '[]') AS price_rules
+FROM shipping_options option
+WHERE option.region_id = ? AND option.deleted_at IS NULL
+ORDER BY option.amount, option.id
 ''',
       [regionId],
-      const $ShippingMethodResponseRowDeserializer().deserialize,
+      const $ShippingOptionResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<ShippingMethodResponse?, SqlxError>> shippingOptionFor(String optionId, String regionId) {
-    return _db.fetchOptional<ShippingMethodResponse>(
+  Future<Result<ShippingOptionResponse?, SqlxError>> shippingOptionFor(String optionId, String regionId) {
+    return _db.fetchOptional<ShippingOptionResponse>(
       r'''
-SELECT id AS option_id, name,
-       json_object('amount', amount, 'currency_code', currency_code) AS amount
-FROM shipping_options
-WHERE id = ? AND region_id = ?
+SELECT option.id AS option_id, option.name,
+       json_object(
+         'amount', option.amount,
+         'currency_code', option.currency_code
+       ) AS amount,
+       coalesce((
+         SELECT json_group_array(json(ordered.rule_json))
+         FROM (
+           SELECT json_object(
+             'attribute', rule.attribute,
+             'operator', rule.operator,
+             'value', rule.value
+           ) AS rule_json
+           FROM shipping_option_price_rules rule
+           WHERE rule.shipping_option_id = option.id
+             AND rule.deleted_at IS NULL
+           ORDER BY rule.id
+         ) ordered
+       ), '[]') AS price_rules
+FROM shipping_options option
+WHERE option.id = ? AND option.region_id = ?
+  AND option.deleted_at IS NULL
 ''',
       [optionId, regionId],
-      const $ShippingMethodResponseRowDeserializer().deserialize,
+      const $ShippingOptionResponseRowDeserializer().deserialize,
     );
   }
 }

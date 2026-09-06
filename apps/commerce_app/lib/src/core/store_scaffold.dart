@@ -49,10 +49,27 @@ class StoreScaffold extends StatelessWidget {
         ],
       ),
       drawer: const _StoreMenu(),
-      body: Column(
+      body: Stack(
         children: [
-          const CartMismatchBanner(),
-          Expanded(child: body),
+          Positioned.fill(
+            child: Column(
+              children: [
+                const CartMismatchBanner(),
+                Expanded(child: body),
+              ],
+            ),
+          ),
+          const Positioned(
+            left: 20,
+            right: 20,
+            bottom: 20,
+            child: SafeArea(
+              child: Align(
+                alignment: Alignment.bottomRight,
+                child: FreeShippingPriceNudge(),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -13,6 +13,20 @@
 
 part of 'shipping.dart';
 
+mixin _$ShippingOptionResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$ShippingOptionResponseSerialize(this as ShippingOptionResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$ShippingPriceRuleResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$ShippingPriceRuleResponseSerialize(this as ShippingPriceRuleResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$ShippingMethodResponse implements Serializable {
   Map<String, Object?> serialize() =>
       _$ShippingMethodResponseSerialize(this as ShippingMethodResponse);
@@ -20,12 +34,59 @@ mixin _$ShippingMethodResponse implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+final class $ShippingOptionResponseSerializer implements Serializer<ShippingOptionResponse, Map<String, Object?>> {
+  const $ShippingOptionResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(ShippingOptionResponse value) => _$ShippingOptionResponseSerialize(value);
+}
+final class $ShippingPriceRuleResponseSerializer implements Serializer<ShippingPriceRuleResponse, Map<String, Object?>> {
+  const $ShippingPriceRuleResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(ShippingPriceRuleResponse value) => _$ShippingPriceRuleResponseSerialize(value);
+}
 final class $ShippingMethodResponseSerializer implements Serializer<ShippingMethodResponse, Map<String, Object?>> {
   const $ShippingMethodResponseSerializer();
 
   @override
   Map<String, Object?> serialize(ShippingMethodResponse value) => _$ShippingMethodResponseSerialize(value);
 }
+ShippingOptionResponse _$ShippingOptionResponseFromRow(Row row) {
+  return ShippingOptionResponse(
+    optionId: row.read<String>('option_id'),
+    name: row.read<String>('name'),
+    amount: ShippingMoneyFromJson().decode(row.read<String>('amount')),
+    priceRules: ShippingPriceRulesFromJson().decode(row.read<String>('price_rules')),
+  );
+}
+
+/// Row deserializer for [ShippingOptionResponse].
+final class $ShippingOptionResponseRowDeserializer implements RowDeserializer<ShippingOptionResponse> {
+  const $ShippingOptionResponseRowDeserializer();
+
+  @override
+  ShippingOptionResponse deserialize(Row row) => _$ShippingOptionResponseFromRow(row);
+}
+
+/// Typed row query terminals for [ShippingOptionResponse].
+///
+/// Resolved from the static type of the receiver, so a row type with no
+/// `FromRow` has no terminals and the call does not compile.
+extension $ShippingOptionResponseQuery on QueryAs<ShippingOptionResponse> {
+  /// Fetches exactly one row.
+  Future<ShippingOptionResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$ShippingOptionResponseFromRow);
+
+  /// Fetches zero or one row.
+  Future<ShippingOptionResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$ShippingOptionResponseFromRow);
+
+  /// Fetches every row.
+  Future<List<ShippingOptionResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$ShippingOptionResponseFromRow);
+}
+
 ShippingMethodResponse _$ShippingMethodResponseFromRow(Row row) {
   return ShippingMethodResponse(
     optionId: row.read<String>('option_id'),
@@ -59,6 +120,31 @@ extension $ShippingMethodResponseQuery on QueryAs<ShippingMethodResponse> {
   Future<List<ShippingMethodResponse>> fetchAll(DatabaseExecutor db) =>
       fetchAllWith(db, _$ShippingMethodResponseFromRow);
 }
+
+Map<String, Object?> _$ShippingOptionResponseSerialize(ShippingOptionResponse instance) {
+  return <String, Object?>{
+    'amount': instance.amount.toJson(),
+    'name': instance.name,
+    'option_id': instance.optionId,
+    'price_rules': instance.priceRules
+        .map((item) => _$ShippingPriceRuleResponseSerialize(item))
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$ShippingOptionResponseToJson(ShippingOptionResponse instance) =>
+    _$ShippingOptionResponseSerialize(instance);
+
+Map<String, Object?> _$ShippingPriceRuleResponseSerialize(ShippingPriceRuleResponse instance) {
+  return <String, Object?>{
+    'attribute': instance.attribute,
+    'operator': instance.operator,
+    'value': instance.value,
+  };
+}
+
+Map<String, Object?> _$ShippingPriceRuleResponseToJson(ShippingPriceRuleResponse instance) =>
+    _$ShippingPriceRuleResponseSerialize(instance);
 
 Map<String, Object?> _$ShippingMethodResponseSerialize(ShippingMethodResponse instance) {
   return <String, Object?>{

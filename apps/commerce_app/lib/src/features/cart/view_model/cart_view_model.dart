@@ -68,7 +68,7 @@ class CartViewModel extends $CartViewModel {
         emit(const CartState(status: CartStatus.ready));
         return;
       }
-      emit(CartState(status: CartStatus.ready, cart: await args.api.cart(id)));
+      await _succeed(await args.api.cart(id));
     } on DioException catch (error) {
       if (error.response?.statusCode == 404) {
         await args.cartIds.clear(args.storageScope);
@@ -125,26 +125,51 @@ class CartViewModel extends $CartViewModel {
     return true;
   }
 
-  bool _succeed(CartView cart) {
+  Future<bool> _succeed(CartView cart) async {
+    final sameCart = state.cart?.cart.id == cart.cart.id;
     emit(CartState(
       status: CartStatus.ready,
       cart: cart,
-      shippingOptions: state.shippingOptions,
+      shippingOptions: sameCart ? state.shippingOptions : const [],
       transferFailure: const None(),
+      dismissedFreeShippingCartId: state.dismissedFreeShippingCartId,
     ));
+    if (!sameCart || state.shippingOptions.isEmpty) {
+      await _loadShippingOptionsFor(cart);
+    }
     return true;
+  }
+
+  Future<void> _loadShippingOptionsFor(CartView cart) async {
+    try {
+      final view = await args.api.shippingOptions(cart.cart.id);
+      final current = state.cart;
+      if (current?.cart.id == cart.cart.id) {
+        _setShippingOptions(current!, view.shippingOptions);
+      }
+    } on Object {
+      // Optional shell pricing must not replace usable cart content.
+    }
   }
 
   void _setShippingOptions(
     CartView cart,
-    List<ShippingMethod> options,
+    List<ShippingOption> options,
   ) {
     emit(CartState(
       status: CartStatus.ready,
       cart: cart,
       shippingOptions: options,
       transferFailure: state.transferFailure,
+      dismissedFreeShippingCartId: state.dismissedFreeShippingCartId,
     ));
+  }
+
+  /// Keeps a closed free-shipping popup closed while this cart stays active.
+  void dismissFreeShippingNudge() {
+    final cartId = state.cart?.cart.id;
+    if (cartId == null) return;
+    emit(state.copyWith(dismissedFreeShippingCartId: Some(cartId)));
   }
 
   void _clearForIdentity() {
@@ -167,6 +192,7 @@ class CartViewModel extends $CartViewModel {
       transferFailure: operation == CartOperation.transfer
           ? Some(_transferFailureOf(error))
           : state.transferFailure,
+      dismissedFreeShippingCartId: state.dismissedFreeShippingCartId,
     ));
   }
 

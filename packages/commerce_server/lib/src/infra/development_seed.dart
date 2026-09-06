@@ -167,8 +167,14 @@ VALUES
 INSERT OR IGNORE INTO shipping_options
   (id, region_id, name, amount, currency_code)
 VALUES
+  ('ship_free', 'reg_us', 'Free shipping', 0, 'usd'),
   ('ship_standard', 'reg_us', 'Standard shipping', 500, 'usd'),
   ('ship_express', 'reg_us', 'Express shipping', 1500, 'usd')
+'''),
+  const _Statement(r'''
+INSERT OR IGNORE INTO shipping_option_price_rules
+  (id, shipping_option_id, attribute, operator, value)
+VALUES ('ship_free_minimum', 'ship_free', 'item_total', 'gte', 10000)
 '''),
   const _Statement(r'''
 INSERT OR IGNORE INTO promotions

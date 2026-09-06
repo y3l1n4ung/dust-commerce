@@ -15,24 +15,59 @@ abstract final class CartListRepository {
   /// be offered, and therefore cannot be chosen, without the handler having to
   /// remember to check.
   @Query(r'''
-SELECT id AS option_id, name,
-       json_object('amount', amount, 'currency_code', currency_code) AS amount
-FROM shipping_options
-WHERE region_id = $1
-ORDER BY shipping_options.amount, id
+SELECT option.id AS option_id, option.name,
+       json_object(
+         'amount', option.amount,
+         'currency_code', option.currency_code
+       ) AS amount,
+       coalesce((
+         SELECT json_group_array(json(ordered.rule_json))
+         FROM (
+           SELECT json_object(
+             'attribute', rule.attribute,
+             'operator', rule.operator,
+             'value', rule.value
+           ) AS rule_json
+           FROM shipping_option_price_rules rule
+           WHERE rule.shipping_option_id = option.id
+             AND rule.deleted_at IS NULL
+           ORDER BY rule.id
+         ) ordered
+       ), '[]') AS price_rules
+FROM shipping_options option
+WHERE option.region_id = $1 AND option.deleted_at IS NULL
+ORDER BY option.amount, option.id
 ''')
-  Future<Result<List<ShippingMethodResponse>, SqlxError>> shippingOptionsOf(
+  Future<Result<List<ShippingOptionResponse>, SqlxError>> shippingOptionsOf(
     String regionId,
   );
 
   /// One option, checked against the region that is allowed to use it.
   @Query(r'''
-SELECT id AS option_id, name,
-       json_object('amount', amount, 'currency_code', currency_code) AS amount
-FROM shipping_options
-WHERE id = $1 AND region_id = $2
+SELECT option.id AS option_id, option.name,
+       json_object(
+         'amount', option.amount,
+         'currency_code', option.currency_code
+       ) AS amount,
+       coalesce((
+         SELECT json_group_array(json(ordered.rule_json))
+         FROM (
+           SELECT json_object(
+             'attribute', rule.attribute,
+             'operator', rule.operator,
+             'value', rule.value
+           ) AS rule_json
+           FROM shipping_option_price_rules rule
+           WHERE rule.shipping_option_id = option.id
+             AND rule.deleted_at IS NULL
+           ORDER BY rule.id
+         ) ordered
+       ), '[]') AS price_rules
+FROM shipping_options option
+WHERE option.id = $1 AND option.region_id = $2
+  AND option.deleted_at IS NULL
 ''')
-  Future<Result<ShippingMethodResponse?, SqlxError>> shippingOptionFor(
+  Future<Result<ShippingOptionResponse?, SqlxError>> shippingOptionFor(
     String optionId,
     String regionId,
   );

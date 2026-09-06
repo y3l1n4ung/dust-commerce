@@ -547,6 +547,30 @@
   "@cart_transferring": {
     "description": "Pending guest-cart transfer action."
   },
+  "free_shipping_away": " away",
+  "@free_shipping_away": {
+    "description": "Suffix after the amount remaining for free shipping."
+  },
+  "free_shipping_close": "Close free shipping message",
+  "@free_shipping_close": {
+    "description": "Accessible label for dismissing the free-shipping popup."
+  },
+  "free_shipping_only": "Only ",
+  "@free_shipping_only": {
+    "description": "Prefix before the amount remaining for free shipping."
+  },
+  "free_shipping_unlock": "Unlock Free Shipping",
+  "@free_shipping_unlock": {
+    "description": "Heading in the conditional free-shipping popup."
+  },
+  "free_shipping_view_cart": "View cart",
+  "@free_shipping_view_cart": {
+    "description": "Free-shipping popup link to the active cart."
+  },
+  "free_shipping_view_products": "View products",
+  "@free_shipping_view_products": {
+    "description": "Free-shipping popup link to product browsing."
+  },
   "cart_update_failed": "Could not update this item.",
   "@cart_update_failed": {
     "description": "Fallback failure shown below a cart line."

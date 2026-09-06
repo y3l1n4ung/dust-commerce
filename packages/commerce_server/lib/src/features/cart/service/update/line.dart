@@ -2,6 +2,7 @@ import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_server/src/features/catalog/repository/repository.dart';
 import 'package:commerce_server/src/features/catalog/sellable_variant.dart';
+import 'package:commerce_server/src/infra/database.dart';
 import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
 
@@ -30,8 +31,29 @@ enum AddLineFailure {
 /// Adding a variant the cart already holds raises that line's quantity instead
 /// of appending a second one, keeping the earlier line's price.
 Future<Result<Option<AddLineFailure>, SqlxError>> addLine(
+  CommerceDatabase database, {
+  required String cartId,
+  required String variantId,
+  required int quantity,
+  required String Function() nextId,
+}) =>
+    database.transaction(
+      (tx) => _addLine(
+        CartReadRepository(tx),
+        CartUpdateRepository(tx),
+        CartShippingRepository(tx),
+        CatalogReadRepository(tx),
+        cartId: cartId,
+        variantId: variantId,
+        quantity: quantity,
+        nextId: nextId,
+      ),
+    );
+
+Future<Result<Option<AddLineFailure>, SqlxError>> _addLine(
   CartReadRepository reads,
   CartUpdateRepository writes,
+  CartShippingRepository shipping,
   CatalogReadRepository catalog, {
   required String cartId,
   required String variantId,
@@ -88,5 +110,7 @@ Future<Result<Option<AddLineFailure>, SqlxError>> addLine(
   };
 
   if (written case Err(:final error)) return Err(error);
+  final cleared = await shipping.clearIneligibleMethod(cartId);
+  if (cleared case Err(:final error)) return Err(error);
   return const Ok(None<AddLineFailure>());
 }

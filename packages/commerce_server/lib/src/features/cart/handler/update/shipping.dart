@@ -28,7 +28,7 @@ Future<Result<CartViewResponse, Rejection>> chooseShippingHandler(
   final result = await chooseShipping(
     deps.reads,
     deps.lists,
-    deps.writes,
+    deps.shipping,
     cartId: cartId,
     optionId: body.optionId,
   );
@@ -41,6 +41,12 @@ Future<Result<CartViewResponse, Rejection>> chooseShippingHandler(
         Rejection.status(
           422,
           'Shipping option "${body.optionId}" is not offered here',
+        ),
+      ),
+    Ok(value: Some(value: ChooseShippingFailure.notEligible)) => Err(
+        Rejection.status(
+          422,
+          'Shipping option "${body.optionId}" does not apply to this cart yet',
         ),
       ),
     Err() => const Err(Rejection.internal()),

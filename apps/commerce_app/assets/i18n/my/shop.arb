@@ -547,6 +547,30 @@
   "@cart_transferring": {
     "description": "Pending guest-cart transfer action."
   },
+  "free_shipping_away": " ဖိုး ဝယ်ယူပါ",
+  "@free_shipping_away": {
+    "description": "Suffix after the amount remaining for free shipping."
+  },
+  "free_shipping_close": "အခမဲ့ပို့ဆောင်ရေး စာတိုကို ပိတ်ရန်",
+  "@free_shipping_close": {
+    "description": "Accessible label for dismissing the free-shipping popup."
+  },
+  "free_shipping_only": "နောက်ထပ် ",
+  "@free_shipping_only": {
+    "description": "Prefix before the amount remaining for free shipping."
+  },
+  "free_shipping_unlock": "အခမဲ့ ပို့ဆောင်ခ ရယူပါ",
+  "@free_shipping_unlock": {
+    "description": "Heading in the conditional free-shipping popup."
+  },
+  "free_shipping_view_cart": "စျေးခြင်းတောင်း ကြည့်ရန်",
+  "@free_shipping_view_cart": {
+    "description": "Free-shipping popup link to the active cart."
+  },
+  "free_shipping_view_products": "ပစ္စည်းများ ကြည့်ရန်",
+  "@free_shipping_view_products": {
+    "description": "Free-shipping popup link to product browsing."
+  },
   "cart_update_failed": "ဤပစ္စည်းကို ပြင်ဆင်၍မရပါ။",
   "@cart_update_failed": {
     "description": "Fallback failure shown below a cart line."

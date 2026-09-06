@@ -23,7 +23,8 @@ void main() {
     expect(await _count(database, 'product_option_values'), 12);
     expect(await _count(database, 'variant_option_values'), 22);
     expect(await _count(database, 'product_images'), 10);
-    expect(await _count(database, 'shipping_options'), 2);
+    expect(await _count(database, 'shipping_options'), 3);
+    expect(await _count(database, 'shipping_option_price_rules'), 1);
     expect(await _count(database, 'promotions'), 1);
 
     final thumbnails = await queryScalar<int>(

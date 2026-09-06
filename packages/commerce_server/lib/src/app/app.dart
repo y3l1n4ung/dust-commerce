@@ -83,6 +83,8 @@ Router buildApp(
         writes: CartUpdateRepository(executor),
         catalog: catalogReads,
         clock: clock,
+        database: database,
+        shipping: CartShippingRepository(executor),
       ),
     )
     ..withState(

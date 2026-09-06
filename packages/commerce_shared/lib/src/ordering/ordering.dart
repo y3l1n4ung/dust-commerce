@@ -7,3 +7,5 @@ export 'line_item.dart';
 export 'order.dart';
 export 'promotion.dart';
 export 'shipping_method.dart';
+export 'shipping_option.dart';
+export 'shipping_price_rule.dart';

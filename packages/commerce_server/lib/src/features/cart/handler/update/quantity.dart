@@ -27,9 +27,7 @@ Future<Result<CartViewResponse, Rejection>> updateLineHandler(
   if (state case Err(:final error)) return Err(error);
   final deps = (state as Ok<CartDeps, Rejection>).value;
   final result = await updateLineQuantity(
-    deps.reads,
-    deps.writes,
-    deps.catalog,
+    deps.database,
     cartId: access.cart.id,
     lineId: lineId,
     quantity: body.quantity,

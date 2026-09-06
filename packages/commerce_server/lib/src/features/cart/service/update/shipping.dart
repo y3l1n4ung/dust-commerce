@@ -10,6 +10,9 @@ enum ChooseShippingFailure {
 
   /// The option does not exist, or belongs to another region.
   noOption,
+
+  /// The option exists but its cart-value rules are not satisfied yet.
+  notEligible,
 }
 
 /// Chooses [optionId] as the cart's delivery method.
@@ -24,7 +27,7 @@ enum ChooseShippingFailure {
 Future<Result<Option<ChooseShippingFailure>, SqlxError>> chooseShipping(
   CartReadRepository reads,
   CartListRepository lists,
-  CartUpdateRepository writes, {
+  CartShippingRepository writes, {
   required String cartId,
   required String optionId,
 }) async {
@@ -39,12 +42,15 @@ Future<Result<Option<ChooseShippingFailure>, SqlxError>> chooseShipping(
   final offered = await lists.shippingOptionFor(optionId, cart.region.id);
   if (offered case Err(:final error)) return Err(error);
   final optionValue = optionOf(
-    (offered as Ok<ShippingMethodResponse?, SqlxError>).value,
+    (offered as Ok<ShippingOptionResponse?, SqlxError>).value,
   );
   if (optionValue case None()) {
     return const Ok(Some(ChooseShippingFailure.noOption));
   }
-  final option = (optionValue as Some<ShippingMethodResponse>).value;
+  final option = (optionValue as Some<ShippingOptionResponse>).value;
+  if (!option.isAvailableFor(cart.subtotal)) {
+    return const Ok(Some(ChooseShippingFailure.notEligible));
+  }
 
   final written = await writes.setShippingMethod(
     cartId,
@@ -53,6 +59,9 @@ Future<Result<Option<ChooseShippingFailure>, SqlxError>> chooseShipping(
     option.amount.amount,
   );
   if (written case Err(:final error)) return Err(error);
+  if ((written as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
+    return const Ok(Some(ChooseShippingFailure.notEligible));
+  }
 
   return const Ok(None<ChooseShippingFailure>());
 }

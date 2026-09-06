@@ -1,6 +1,7 @@
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_server/src/features/catalog/repository/repository.dart';
 import 'package:commerce_server/src/http/http.dart';
+import 'package:commerce_server/src/infra/database.dart';
 import 'package:dust_server/server.dart';
 
 /// Everything the cart handlers need, attached once with `withState`.
@@ -13,6 +14,8 @@ final class CartDeps {
     required this.writes,
     required this.catalog,
     required this.clock,
+    required this.database,
+    required this.shipping,
   });
 
   /// Finding a variant to add.
@@ -20,6 +23,9 @@ final class CartDeps {
 
   /// The clock and the identifier source.
   final Clock clock;
+
+  /// Database owner used for atomic cart mutations.
+  final CommerceDatabase database;
 
   /// Starting a cart.
   final CartCreateRepository creates;
@@ -29,6 +35,9 @@ final class CartDeps {
 
   /// Loading a cart and its lines.
   final CartReadRepository reads;
+
+  /// Delivery-method writes and eligibility enforcement.
+  final CartShippingRepository shipping;
 
   /// Changing what it holds.
   final CartUpdateRepository writes;

@@ -19,7 +19,7 @@ Future<Result<CartViewResponse, Rejection>> removeLineHandler(
   if (state case Err(:final error)) return Err(error);
   final deps = (state as Ok<CartDeps, Rejection>).value;
   final result = await removeLine(
-    deps.writes,
+    deps.database,
     cartId: access.cart.id,
     lineId: lineId,
   );

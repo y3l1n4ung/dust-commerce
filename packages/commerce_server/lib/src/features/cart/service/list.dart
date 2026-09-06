@@ -8,7 +8,7 @@ import 'package:dust_dart/db.dart';
 /// Scoped to the cart's region rather than taking a region from the caller: a
 /// storefront that could ask for another region's options would show prices in
 /// a currency the cart cannot total.
-Future<Result<Option<List<ShippingMethodResponse>>, SqlxError>>
+Future<Result<Option<List<ShippingOptionResponse>>, SqlxError>>
     shippingOptionsFor(
   CartReadRepository reads,
   CartListRepository lists,
@@ -18,14 +18,14 @@ Future<Result<Option<List<ShippingMethodResponse>>, SqlxError>>
   if (found case Err(:final error)) return Err(error);
   final cartOption = optionOf((found as Ok<CartResponse?, SqlxError>).value);
   if (cartOption case None()) {
-    return const Ok(None<List<ShippingMethodResponse>>());
+    return const Ok(None<List<ShippingOptionResponse>>());
   }
   final cart = (cartOption as Some<CartResponse>).value;
 
   final offered = await lists.shippingOptionsOf(cart.region.id);
   if (offered case Err(:final error)) return Err(error);
 
-  return Ok(Some<List<ShippingMethodResponse>>(
-    (offered as Ok<List<ShippingMethodResponse>, SqlxError>).value,
+  return Ok(Some<List<ShippingOptionResponse>>(
+    (offered as Ok<List<ShippingOptionResponse>, SqlxError>).value,
   ));
 }

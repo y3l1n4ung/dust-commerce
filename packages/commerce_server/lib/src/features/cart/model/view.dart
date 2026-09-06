@@ -52,5 +52,5 @@ final class ShippingOptionsResponse with _$ShippingOptionsResponse {
   final int count;
 
   /// Explicit available shipping methods.
-  final List<ShippingMethodResponse> shippingOptions;
+  final List<ShippingOptionResponse> shippingOptions;
 }

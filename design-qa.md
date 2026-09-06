@@ -15,7 +15,8 @@ a saved address available, authenticated `/account` with completed profile,
 saved addresses and recent orders, `/account/orders/details/:id`, and the
 profile password editor closed and open, authenticated guest-cart mismatch
 banner idle and retrying, plus the equivalent Medusa DTC states pinned in
-`docs/storefront-parity.md`.
+`docs/storefront-parity.md`, and the global free-shipping popup below its target,
+dismissed, and hidden after the target is reached.
 
 **Findings**
 
@@ -25,7 +26,8 @@ banner idle and retrying, plus the equivalent Medusa DTC states pinned in
   prevents both required browser captures and a combined comparison.
   Impact: typography, responsive spacing, link wrapping, image treatment, and
   footer placement, the saved-address selector, and order detail remain
-  visually unverified.
+  visually unverified. The fixed free-shipping popup, progress fill, responsive
+  width, and action spacing are also unverified.
   Fix: unlock the Mac, capture both sites at matching desktop and mobile
   viewports, combine the captures, and run the comparison loop.
 
@@ -62,6 +64,8 @@ checkout controls require focused captures after the full-view comparison.
 - Capture the authenticated guest-cart mismatch banner before and during retry
   at desktop and compact widths.
 - Capture authenticated checkout with the saved-address menu closed and open.
+- Capture the free-shipping popup below its target at desktop and compact
+  widths, then verify dismissal and target-reached hiding.
 - Capture the populated account overview at desktop width and confirm the
   overview is replaced by account navigation below the 1024px breakpoint.
 - Capture the same authenticated order-detail state at desktop and compact
