@@ -7,9 +7,13 @@ final class AdminProductVariantSection extends StatelessWidget {
   /// Creates the variant table.
   const AdminProductVariantSection({
     required this.variants,
+    required this.onEdit,
     required this.onUnavailable,
     super.key,
   });
+
+  /// Opens the supported variant-detail editor.
+  final ValueChanged<AdminProductVariant> onEdit;
 
   /// Inventory-bearing merchant variants.
   final List<AdminProductVariant> variants;
@@ -64,7 +68,7 @@ final class AdminProductVariantSection extends StatelessWidget {
                     children: [
                       const _VariantHeader(),
                       for (final variant in variants)
-                        _VariantRow(variant: variant),
+                        _VariantRow(variant: variant, onEdit: onEdit),
                     ],
                   ),
                 ),
@@ -94,31 +98,40 @@ final class _VariantHeader extends StatelessWidget {
 }
 
 final class _VariantRow extends StatelessWidget {
-  const _VariantRow({required this.variant});
+  const _VariantRow({required this.variant, required this.onEdit});
 
+  final ValueChanged<AdminProductVariant> onEdit;
   final AdminProductVariant variant;
 
   @override
-  Widget build(BuildContext context) => Container(
-        constraints: const BoxConstraints(minHeight: 44),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Theme.of(context).dividerColor),
+  Widget build(BuildContext context) => InkWell(
+        onTap: () => onEdit(variant),
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 44),
+          padding: const EdgeInsets.only(left: 20, right: 8),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Theme.of(context).dividerColor),
+            ),
           ),
-        ),
-        child: Row(
-          children: [
-            Expanded(flex: 3, child: Text(variant.title)),
-            Expanded(
-              flex: 2,
-              child: adminDetailText(context, variant.sku),
-            ),
-            Expanded(child: Text('${variant.inventoryQuantity}')),
-            Expanded(
-              child: Text(variant.manageInventory ? 'Managed' : 'Unmanaged'),
-            ),
-          ],
+          child: Row(
+            children: [
+              Expanded(flex: 3, child: Text(variant.title)),
+              Expanded(
+                flex: 2,
+                child: adminDetailText(context, variant.sku),
+              ),
+              Expanded(child: Text('${variant.inventoryQuantity}')),
+              Expanded(
+                child: Text(variant.manageInventory ? 'Managed' : 'Unmanaged'),
+              ),
+              IconButton(
+                tooltip: 'Edit variant',
+                onPressed: () => onEdit(variant),
+                icon: const Icon(Icons.more_horiz_rounded, size: 18),
+              ),
+            ],
+          ),
         ),
       );
 }

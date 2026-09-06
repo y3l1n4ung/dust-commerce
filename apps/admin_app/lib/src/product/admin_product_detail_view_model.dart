@@ -7,6 +7,7 @@ import 'package:dust_flutter/state.dart';
 
 part 'admin_product_detail_view_model.g.dart';
 part 'admin_product_detail_media_view_model.dart';
+part 'admin_product_detail_variant_view_model.dart';
 
 /// Dependencies for one authenticated merchant product detail.
 final class AdminProductDetailViewModelArgs extends ViewModelArgs {
@@ -99,6 +100,8 @@ final class AdminProductDetailViewModel extends $AdminProductDetailViewModel {
       ));
 
   void _emitMedia(AdminProductDetailState value) => emit(value);
+
+  void _emitVariant(AdminProductDetailState value) => emit(value);
 
   void _updateFailed(Option<AdminProductDetail> product, String message) =>
       emit(AdminProductDetailState(

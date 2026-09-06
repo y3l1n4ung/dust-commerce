@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:admin_app/src/product/admin_product_detail_media_actions.dart';
+import 'package:admin_app/src/product/admin_product_detail_failure.dart';
 import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
 import 'package:admin_app/src/product/admin_product_edit_drawer.dart';
 import 'package:admin_app/src/product/admin_product_media_editor.dart';
+import 'package:admin_app/src/product/admin_product_variant_edit_drawer.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/product/detail/admin_product_general_section.dart';
 import 'package:admin_app/src/product/detail/admin_product_media_section.dart';
@@ -55,7 +57,7 @@ final class _AdminProductDetailPageState extends State<AdminProductDetailPage> {
         ),
       None() when state.status == AdminProductDetailStatus.loading =>
         const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-      None() => _Failure(
+      None() => AdminProductDetailFailure(
           state: state,
           onBack: widget.onBack,
           onRetry: () =>
@@ -91,6 +93,19 @@ final class _DetailBody extends StatelessWidget {
       );
     }
 
+    Future<void> editVariant(AdminProductVariant variant) async {
+      final saved = await showAdminProductVariantEditDrawer(
+        context,
+        product,
+        variant,
+      );
+      if (saved != true || !context.mounted) return;
+      unawaited(context.readAdminProductViewModel().load());
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Variant updated.')),
+      );
+    }
+
     final main = Column(
       children: [
         AdminProductGeneralSection(
@@ -113,6 +128,7 @@ final class _DetailBody extends StatelessWidget {
         const SizedBox(height: 12),
         AdminProductVariantSection(
           variants: product.variants,
+          onEdit: editVariant,
           onUnavailable: () => showAdminUnavailable(context),
         ),
       ],
@@ -160,38 +176,4 @@ final class _DetailBody extends StatelessWidget {
       ],
     );
   }
-}
-
-final class _Failure extends StatelessWidget {
-  const _Failure({
-    required this.state,
-    required this.onBack,
-    required this.onRetry,
-  });
-
-  final VoidCallback onBack;
-  final VoidCallback onRetry;
-  final AdminProductDetailState state;
-
-  @override
-  Widget build(BuildContext context) => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(switch (state.failure) {
-              Some(value: final message) => message,
-              None() => 'Unable to load this product.',
-            }),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextButton(onPressed: onBack, child: const Text('Products')),
-                const SizedBox(width: 8),
-                OutlinedButton(onPressed: onRetry, child: const Text('Retry')),
-              ],
-            ),
-          ],
-        ),
-      );
 }
