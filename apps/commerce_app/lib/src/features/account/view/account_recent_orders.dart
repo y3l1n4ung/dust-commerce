@@ -65,7 +65,7 @@ final class _RecentOrderCard extends StatelessWidget {
         label: context.tr(
           'shop_account_open_order',
           defaultText: 'Go to order #{id}',
-          args: {'id': order.id},
+          args: {'id': order.displayId},
         ),
         child: Material(
           color: StoreColors.neutral50,
@@ -94,7 +94,7 @@ final class _RecentOrderCard extends StatelessWidget {
                             'shop_account_order_number',
                             defaultText: 'Order number',
                           ),
-                          value: '#${order.id}',
+                          value: '#${order.displayId}',
                         ),
                         _OrderValue(
                           label: context.tr(

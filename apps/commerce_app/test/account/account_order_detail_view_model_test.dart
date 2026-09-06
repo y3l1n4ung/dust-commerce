@@ -78,6 +78,7 @@ final class _OrderApi implements CommerceApi {
 
 final _order = Order(
   id: 'order_1',
+  displayId: 1,
   email: 'ada@example.com',
   customerId: 'cus_ada',
   region: const Region(

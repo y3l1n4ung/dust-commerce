@@ -15,35 +15,51 @@ final class OrderReceiptItems extends StatelessWidget {
   Widget build(BuildContext context) => Column(
         children: [
           for (final item in order.items) ...[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox.square(
-                  dimension: 96,
-                  child: ProductImage(url: item.thumbnail, aspectRatio: 1),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox.square(
+                    dimension: 64,
+                    child: ProductImage(url: item.thumbnail, aspectRatio: 1),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.title,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        if (item.variantTitle case final title?)
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              color: StoreColors.foregroundSubtle,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(item.title,
-                          style: const TextStyle(fontWeight: FontWeight.w600)),
-                      if (item.variantTitle case final title?) Text(title),
-                      Text(context.tr(
-                        'shop_checkout_quantity',
-                        defaultText: 'Quantity: {count}',
-                        args: {'count': item.quantity},
-                      )),
+                      Text(
+                        '${item.quantity}x ${formatMoney(item.unitPrice)}',
+                        style: const TextStyle(
+                          color: StoreColors.foregroundMuted,
+                        ),
+                      ),
+                      Text(formatMoney(item.subtotal)),
                     ],
                   ),
-                ),
-                Text(formatMoney(item.subtotal)),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 16),
+            const Divider(height: 1),
           ],
         ],
       );

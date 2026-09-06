@@ -55,7 +55,7 @@ final class OrderConfirmationView extends StatelessWidget {
                           context.tr(
                             'shop_checkout_order_number',
                             defaultText: 'Order number: {id}',
-                            args: {'id': order.id},
+                            args: {'id': order.displayId},
                           ),
                           style:
                               const TextStyle(color: StoreColors.interactive),

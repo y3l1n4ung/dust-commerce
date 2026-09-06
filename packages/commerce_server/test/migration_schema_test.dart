@@ -67,6 +67,14 @@ void main() {
     expect(columns, isNot(contains('password')));
   });
 
+  test('orders keep a separate human-facing display id', () async {
+    final rows = await queryRaw('PRAGMA table_info(orders)', [])
+        .fetch(database.connection as Executor);
+    final columns = rows.map((row) => row.readIndex<String>(1)).toList();
+
+    expect(columns, containsAll(<String>['id', 'display_id', 'cart_id']));
+  });
+
   test('migrations are idempotent across reopen', () async {
     await database.close();
     final reopened = CommerceDatabase.open(

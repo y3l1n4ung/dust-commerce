@@ -657,10 +657,6 @@
   "@checkout_address_line_2": {
     "description": "Translation for `shop_checkout_address_line_2`."
   },
-  "checkout_awaiting_payment": "ငွေပေးချေရန် စောင့်ဆိုင်းနေသည်",
-  "@checkout_awaiting_payment": {
-    "description": "Translation for `shop_checkout_awaiting_payment`."
-  },
   "checkout_back": "နောက်သို့",
   "@checkout_back": {
     "description": "Translation for `shop_checkout_back`."
@@ -672,10 +668,6 @@
   "checkout_billing_address": "ငွေတောင်းခံလိပ်စာ",
   "@checkout_billing_address": {
     "description": "Translation for `shop_checkout_billing_address`."
-  },
-  "checkout_captured": "ငွေလက်ခံပြီး",
-  "@checkout_captured": {
-    "description": "Translation for `shop_checkout_captured`."
   },
   "checkout_choose_country": "နိုင်ငံတစ်ခု ရွေးပါ။",
   "@checkout_choose_country": {
@@ -796,6 +788,18 @@
       }
     }
   },
+  "checkout_paid_at": "{date} တွင် {amount} ပေးချေပြီး",
+  "@checkout_paid_at": {
+    "description": "Translation for `shop_checkout_paid_at`.",
+    "placeholders": {
+      "amount": {
+        "example": "USD 10.00"
+      },
+      "date": {
+        "example": "Sep 6, 2026, 12:00 PM"
+      }
+    }
+  },
   "checkout_payment": "ငွေပေးချေမှု",
   "@checkout_payment": {
     "description": "Translation for `shop_checkout_payment`."
@@ -827,15 +831,6 @@
   "checkout_province": "ပြည်နယ် / တိုင်း",
   "@checkout_province": {
     "description": "Translation for `shop_checkout_province`."
-  },
-  "checkout_quantity": "အရေအတွက်: {count}",
-  "@checkout_quantity": {
-    "description": "Translation for `shop_checkout_quantity`.",
-    "placeholders": {
-      "count": {
-        "example": "1"
-      }
-    }
   },
   "checkout_receipt_not_found": "အော်ဒါအတည်ပြုချက်ကို မတွေ့ပါ။",
   "@checkout_receipt_not_found": {

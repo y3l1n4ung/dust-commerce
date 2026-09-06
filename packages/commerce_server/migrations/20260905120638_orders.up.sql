@@ -2,6 +2,8 @@
 -- UTC timestamps use ISO-8601 TEXT because SQLite has no native TIMESTAMPTZ.
 CREATE TABLE orders (
   id                 TEXT PRIMARY KEY,
+  -- Short monotonic number is shown to people; opaque ids remain API keys.
+  display_id         INTEGER NOT NULL UNIQUE CHECK (display_id > 0),
   -- One cart can become one order; this is the checkout idempotency boundary.
   cart_id            TEXT NOT NULL UNIQUE REFERENCES carts (id),
   region_id          TEXT NOT NULL REFERENCES regions (id),

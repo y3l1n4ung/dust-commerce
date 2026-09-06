@@ -53,7 +53,7 @@ final class OrderShippingDetails extends StatelessWidget {
                   ),
                   [
                     if (order.shippingMethod case final method?)
-                      '${method.name} ${formatMoney(method.amount)}'
+                      '${method.name} (${formatMoney(method.amount)})'
                     else
                       context.tr(
                         'shop_checkout_delivery',
@@ -89,16 +89,20 @@ final class OrderPaymentDetails extends StatelessWidget {
   final Order order;
 
   @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const TranslatedText(
-            'shop_checkout_payment',
-            defaultText: 'Payment',
-            style: TextStyle(fontSize: 30),
-          ),
-          const SizedBox(height: 24),
+  Widget build(BuildContext context) {
+    final payment = order.payment;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const TranslatedText(
+          'shop_checkout_payment',
+          defaultText: 'Payment',
+          style: TextStyle(fontSize: 30),
+        ),
+        const SizedBox(height: 24),
+        if (payment != null)
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: _PaymentDetail(
@@ -106,39 +110,70 @@ final class OrderPaymentDetails extends StatelessWidget {
                     'shop_checkout_payment_method',
                     defaultText: 'Payment method',
                   ),
-                  value: context.tr(
-                    'shop_checkout_manual_payment',
-                    defaultText: 'Manual Payment',
-                  ),
+                  child: Text(_providerTitle(context, payment.providerId)),
                 ),
               ),
               Expanded(
+                flex: 2,
                 child: _PaymentDetail(
                   title: context.tr(
                     'shop_checkout_payment_details',
                     defaultText: 'Payment details',
                   ),
-                  value: order.paymentStatus == PaymentStatus.captured
-                      ? context.tr(
-                          'shop_checkout_captured',
-                          defaultText: 'Captured',
-                        )
-                      : context.tr(
-                          'shop_checkout_awaiting_payment',
-                          defaultText: 'Awaiting payment',
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 28,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: StoreColors.subtleHover,
+                          borderRadius: BorderRadius.circular(6),
                         ),
+                        child: const Icon(Icons.credit_card, size: 16),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(context.tr(
+                          'shop_checkout_paid_at',
+                          defaultText: '{amount} paid at {date}',
+                          args: {
+                            'amount': formatMoney(payment.amount),
+                            'date': _paymentDate(context, payment.createdAt),
+                          },
+                        )),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-        ],
-      );
+      ],
+    );
+  }
+
+  String _providerTitle(BuildContext context, String providerId) =>
+      providerId == 'manual'
+          ? context.tr(
+              'shop_checkout_manual_payment',
+              defaultText: 'Manual Payment',
+            )
+          : providerId;
+
+  String _paymentDate(BuildContext context, DateTime value) {
+    final local = value.toLocal();
+    final material = MaterialLocalizations.of(context);
+    return '${material.formatMediumDate(local)}, '
+        '${material.formatTimeOfDay(TimeOfDay.fromDateTime(local))}';
+  }
 }
 
 final class _PaymentDetail extends StatelessWidget {
-  const _PaymentDetail({required this.title, required this.value});
+  const _PaymentDetail({required this.title, required this.child});
+
+  final Widget child;
   final String title;
-  final String value;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -146,8 +181,10 @@ final class _PaymentDetail extends StatelessWidget {
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
-          Text(value,
-              style: const TextStyle(color: StoreColors.foregroundSubtle)),
+          DefaultTextStyle.merge(
+            style: const TextStyle(color: StoreColors.foregroundSubtle),
+            child: child,
+          ),
         ],
       );
 }

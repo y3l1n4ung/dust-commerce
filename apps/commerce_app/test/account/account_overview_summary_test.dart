@@ -75,6 +75,7 @@ const _nonBillingAddress = CustomerAddressView(
 
 Order _order(int index) => Order(
       id: 'order_$index',
+      displayId: index + 1,
       email: 'ada@example.com',
       customerId: 'cus_1',
       region: _region,

@@ -126,6 +126,19 @@ void main() {
   });
 
   group('POST /store/orders/{id}/payments/capture', () {
+    test('keeps display numbers short and monotonic', () async {
+      await placedOrder();
+      final secondOrderId = await placedOrder();
+      await authorize(secondOrderId);
+
+      final response = await capture(secondOrderId);
+
+      response.assertOk();
+      final order = Order.fromJson(response.json! as Map<String, Object?>);
+      expect(order.displayId, 2);
+      expect(order.id, secondOrderId);
+    });
+
     test('captures, and completes the order', () async {
       final orderId = await placedOrder();
       (await authorize(orderId)).assertCreated();
@@ -138,6 +151,11 @@ void main() {
       expect(order.paymentStatus, PaymentStatus.captured);
       expect(order.status, OrderStatus.completed);
       expect(order.isPaid, isTrue);
+      expect(order.displayId, 1);
+      expect(order.payment?.providerId, 'manual');
+      expect(order.payment?.amount,
+          const Money(amount: 2199, currencyCode: 'usd'));
+      expect(order.payment?.createdAt.isUtc, isTrue);
     });
 
     test('the completed state is persisted', () async {
@@ -163,6 +181,8 @@ void main() {
       final order = Order.fromJson(retried.json! as Map<String, Object?>);
       expect(order.paymentStatus, PaymentStatus.captured);
       expect(order.status, OrderStatus.completed);
+      expect(order.payment?.providerId, 'manual');
+      expect(order.payment?.amount.amount, 2199);
     });
 
     test('refuses to capture what was never authorised', () async {

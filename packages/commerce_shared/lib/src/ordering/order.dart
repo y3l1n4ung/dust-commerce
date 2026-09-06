@@ -36,6 +36,35 @@ enum PaymentStatus {
   refunded,
 }
 
+/// Public payment facts needed to explain a completed order to its buyer.
+///
+/// Provider metadata and credentials stay server-side. This receipt snapshot
+/// contains only the adapter name, charged amount, and event time Medusa shows
+/// on its order-completed page.
+@Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+class OrderPayment with _$OrderPayment {
+  /// Creates a safe payment receipt.
+  const OrderPayment({
+    required this.providerId,
+    required this.amount,
+    required this.createdAt,
+  });
+
+  /// Creates a payment receipt from JSON.
+  factory OrderPayment.fromJson(Map<String, Object?> json) =>
+      _$OrderPaymentFromJson(json);
+
+  /// Amount authorised against the frozen order total.
+  final Money amount;
+
+  /// When the provider payment record was created.
+  final DateTime createdAt;
+
+  /// Public adapter identifier used to select its display treatment.
+  final String providerId;
+}
+
 /// A cart, frozen at the moment it was placed.
 ///
 /// Every amount here is stored, not derived. An order recomputed from today's
@@ -48,6 +77,7 @@ class Order with _$Order {
   /// Creates an [Order] from already-frozen values.
   const Order({
     required this.id,
+    required this.displayId,
     required this.email,
     required this.region,
     required this.items,
@@ -60,6 +90,7 @@ class Order with _$Order {
     required this.billingAddress,
     required this.placedAt,
     this.customerId,
+    this.payment,
     this.shippingMethod,
     this.status = OrderStatus.pending,
     this.paymentStatus = PaymentStatus.awaiting,
@@ -71,6 +102,7 @@ class Order with _$Order {
   /// are states a cart is allowed to be in and an order is not.
   factory Order.fromCart({
     required String id,
+    required int displayId,
     required Cart cart,
     required Address shippingAddress,
     required DateTime placedAt,
@@ -89,6 +121,7 @@ class Order with _$Order {
     }
     return Order(
       id: id,
+      displayId: displayId,
       email: email,
       customerId: cart.customerId,
       region: cart.region,
@@ -117,6 +150,9 @@ class Order with _$Order {
   /// Contact address for the buyer.
   final String email;
 
+  /// Short monotonically increasing identifier shown to people.
+  final int displayId;
+
   /// Unique identifier.
   final String id;
 
@@ -125,6 +161,9 @@ class Order with _$Order {
 
   /// Whether the money has moved.
   final PaymentStatus paymentStatus;
+
+  /// Safe provider receipt once a payment has been started.
+  final OrderPayment? payment;
 
   /// When this was placed.
   final DateTime placedAt;

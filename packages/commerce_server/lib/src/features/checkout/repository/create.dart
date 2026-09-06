@@ -11,12 +11,14 @@ abstract final class CheckoutCreateRepository {
 
   /// Writes the order header with its totals already computed.
   @Query(r'''
-INSERT INTO orders (id, cart_id, region_id, customer_id, email, currency_code,
+INSERT INTO orders (id, display_id, cart_id, region_id, customer_id, email,
+                    currency_code,
                     subtotal, shipping_total, discount_total, tax, total,
                     shipping_option_id, shipping_name, promotion_code,
                     placed_at)
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14,
-        $15)
+SELECT $1, coalesce(max(display_id), 0) + 1, $2, $3, $4, $5, $6, $7, $8,
+       $9, $10, $11, $12, $13, $14, $15
+FROM orders
 ''')
   Future<Result<ExecResult, SqlxError>> insertOrder(
     String id,

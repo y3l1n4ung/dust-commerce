@@ -81,6 +81,8 @@ void main() {
     expect(model.state.status, CheckoutStatus.complete);
     expect(order.paymentStatus, PaymentStatus.captured);
     expect(order.status, OrderStatus.completed);
+    expect(order.payment?.providerId, 'manual');
+    expect(order.payment?.amount, order.total);
     expect(cart.state.cart, isNull);
     expect(cartIds.values, isNot(contains('guest')));
     expect((await receipts.read(order.id))?.id, order.id);

@@ -22,12 +22,14 @@ final class _$CheckoutCreateRepository implements CheckoutCreateRepository {
   Future<Result<ExecResult, SqlxError>> insertOrder(String id, String cartId, String regionId, String? customerId, String email, String currencyCode, int subtotal, int shippingTotal, int discountTotal, int tax, int total, String? shippingOptionId, String? shippingName, String? promotionCode, String placedAt) {
     return _db.execute(
       r'''
-INSERT INTO orders (id, cart_id, region_id, customer_id, email, currency_code,
+INSERT INTO orders (id, display_id, cart_id, region_id, customer_id, email,
+                    currency_code,
                     subtotal, shipping_total, discount_total, tax, total,
                     shipping_option_id, shipping_name, promotion_code,
                     placed_at)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?)
+SELECT ?, coalesce(max(display_id), 0) + 1, ?, ?, ?, ?, ?, ?, ?,
+       ?, ?, ?, ?, ?, ?, ?
+FROM orders
 ''',
       [id, cartId, regionId, customerId, email, currencyCode, subtotal, shippingTotal, discountTotal, tax, total, shippingOptionId, shippingName, promotionCode, placedAt],
     );

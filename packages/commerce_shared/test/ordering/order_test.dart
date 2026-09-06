@@ -38,6 +38,7 @@ void main() {
 
   Order placed({Cart? from}) => Order.fromCart(
         id: 'order_1',
+        displayId: 1,
         cart: from ?? cart(),
         shippingAddress: address,
         placedAt: DateTime.utc(2026, 9, 5),
@@ -48,6 +49,7 @@ void main() {
       final order = placed();
 
       expect(order.subtotal, Money.of(2000, 'eur'));
+      expect(order.displayId, 1);
       expect(order.tax, Money.of(400, 'eur'));
       expect(order.total, Money.of(2400, 'eur'));
     });
@@ -117,6 +119,19 @@ void main() {
   group('json', () {
     test('round-trips through the generated codec', () {
       expect(Order.fromJson(placed().toJson()), placed());
+    });
+
+    test('round-trips the explicit payment receipt', () {
+      final order = placed().copyWith(
+        payment: OrderPayment(
+          providerId: 'manual',
+          amount: Money.of(2400, 'eur'),
+          createdAt: DateTime.utc(2026, 9, 5, 12, 30),
+        ),
+      );
+
+      expect(Order.fromJson(order.toJson()), order);
+      expect(order.toJson()['payment'], isA<Map<String, Object?>>());
     });
 
     test('encodes status as its wire name', () {

@@ -12,10 +12,13 @@ abstract final class CheckoutReadRepository {
 
   /// One complete order, including frozen lines and addresses.
   @Query(r'''
-SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
+SELECT o.id, o.display_id, o.email, o.customer_id, o.currency_code, o.subtotal,
        o.shipping_total, o.discount_total, o.tax, o.total, o.status,
        o.payment_status, o.placed_at, o.region_id,
        o.shipping_option_id, o.shipping_name,
+       payment.provider AS payment_provider,
+       payment.amount AS payment_amount,
+       payment.created_at AS payment_created_at,
        r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries,
        coalesce((
          SELECT json_group_array(json_object(
@@ -60,6 +63,8 @@ JOIN order_addresses shipping
   ON shipping.order_id = o.id AND shipping.kind = 'shipping'
 LEFT JOIN order_addresses billing
   ON billing.order_id = o.id AND billing.kind = 'billing'
+LEFT JOIN payment_collections payment
+  ON payment.order_id = o.id AND payment.deleted_at IS NULL
 WHERE o.id = $1
 ''')
   Future<Result<OrderResponse?, SqlxError>> findOrder(String id);
@@ -72,10 +77,13 @@ SELECT id FROM orders WHERE cart_id = $1 AND deleted_at IS NULL
 
   /// One complete order only when it belongs to [customerId].
   @Query(r'''
-SELECT o.id, o.email, o.customer_id, o.currency_code, o.subtotal,
+SELECT o.id, o.display_id, o.email, o.customer_id, o.currency_code, o.subtotal,
        o.shipping_total, o.discount_total, o.tax, o.total, o.status,
        o.payment_status, o.placed_at, o.region_id,
        o.shipping_option_id, o.shipping_name,
+       payment.provider AS payment_provider,
+       payment.amount AS payment_amount,
+       payment.created_at AS payment_created_at,
        r.name AS region_name, r.tax_rate, r.tax_inclusive, r.countries,
        coalesce((
          SELECT json_group_array(json_object(
@@ -120,6 +128,8 @@ JOIN order_addresses shipping
   ON shipping.order_id = o.id AND shipping.kind = 'shipping'
 LEFT JOIN order_addresses billing
   ON billing.order_id = o.id AND billing.kind = 'billing'
+LEFT JOIN payment_collections payment
+  ON payment.order_id = o.id AND payment.deleted_at IS NULL
 WHERE o.id = $1 AND o.customer_id = $2
 ''')
   Future<Result<OrderResponse?, SqlxError>> findCustomerOrder(

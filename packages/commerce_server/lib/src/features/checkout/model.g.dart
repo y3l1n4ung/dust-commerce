@@ -29,6 +29,7 @@ final class $OrderListResponseSerializer implements Serializer<OrderListResponse
 OrderResponse _$OrderResponseFromRow(Row row) {
   return OrderResponse(
     orderId: row.read<String>('id'),
+    displayId: row.read<int>('display_id'),
     orderEmail: row.read<String>('email'),
     currencyCode: row.read<String>('currency_code'),
     orderSubtotal: row.read<int>('subtotal'),
@@ -48,6 +49,9 @@ OrderResponse _$OrderResponseFromRow(Row row) {
     shippingAddressJson: row.read<String>('shipping_address_json'),
     billingAddressJson: row.read<String>('billing_address_json'),
     orderCustomerId: row.readNullable<String>('customer_id'),
+    paymentAmount: row.readNullable<int>('payment_amount'),
+    paymentCreatedAtText: row.readNullable<String>('payment_created_at'),
+    paymentProvider: row.readNullable<String>('payment_provider'),
     shippingOptionId: row.readNullable<String>('shipping_option_id'),
     shippingName: row.readNullable<String>('shipping_name'),
   );

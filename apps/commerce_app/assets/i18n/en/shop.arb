@@ -657,10 +657,6 @@
   "@checkout_address_line_2": {
     "description": "Translation for `shop_checkout_address_line_2`."
   },
-  "checkout_awaiting_payment": "Awaiting payment",
-  "@checkout_awaiting_payment": {
-    "description": "Translation for `shop_checkout_awaiting_payment`."
-  },
   "checkout_back": "BACK",
   "@checkout_back": {
     "description": "Translation for `shop_checkout_back`."
@@ -672,10 +668,6 @@
   "checkout_billing_address": "Billing address",
   "@checkout_billing_address": {
     "description": "Translation for `shop_checkout_billing_address`."
-  },
-  "checkout_captured": "Captured",
-  "@checkout_captured": {
-    "description": "Translation for `shop_checkout_captured`."
   },
   "checkout_choose_country": "Choose a country.",
   "@checkout_choose_country": {
@@ -796,6 +788,18 @@
       }
     }
   },
+  "checkout_paid_at": "{amount} paid at {date}",
+  "@checkout_paid_at": {
+    "description": "Translation for `shop_checkout_paid_at`.",
+    "placeholders": {
+      "amount": {
+        "example": "USD 10.00"
+      },
+      "date": {
+        "example": "Sep 6, 2026, 12:00 PM"
+      }
+    }
+  },
   "checkout_payment": "Payment",
   "@checkout_payment": {
     "description": "Translation for `shop_checkout_payment`."
@@ -827,15 +831,6 @@
   "checkout_province": "State / Province",
   "@checkout_province": {
     "description": "Translation for `shop_checkout_province`."
-  },
-  "checkout_quantity": "Quantity: {count}",
-  "@checkout_quantity": {
-    "description": "Translation for `shop_checkout_quantity`.",
-    "placeholders": {
-      "count": {
-        "example": "1"
-      }
-    }
   },
   "checkout_receipt_not_found": "Order confirmation not found.",
   "@checkout_receipt_not_found": {

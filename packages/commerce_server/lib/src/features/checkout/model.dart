@@ -7,6 +7,35 @@ import 'package:dust_dart/serde.dart';
 
 part 'model.g.dart';
 
+/// Explicit public payment receipt; provider metadata never crosses the API.
+final class OrderPaymentResponse implements Serializable {
+  /// Creates a safe payment receipt from persisted provider facts.
+  const OrderPaymentResponse({
+    required this.providerId,
+    required this.amount,
+    required this.createdAt,
+  });
+
+  /// Amount authorised against the frozen order total.
+  final Money amount;
+
+  /// When this provider payment record was created.
+  final DateTime createdAt;
+
+  /// Public adapter identifier used by the storefront display map.
+  final String providerId;
+
+  @override
+  Map<String, Object?> serialize() => <String, Object?>{
+        'provider_id': providerId,
+        'amount': amount,
+        'created_at': createdAt,
+      };
+
+  @override
+  Map<String, Object?> toJson() => serialize();
+}
+
 /// Complete order response populated directly by one SQLx query.
 ///
 /// Serialization is an explicit allowlist. This class does not inherit the
@@ -16,6 +45,7 @@ final class OrderResponse implements Serializable {
   /// Constructs the final response directly from frozen database values.
   OrderResponse({
     required this.orderId,
+    required this.displayId,
     required this.orderEmail,
     required this.currencyCode,
     required this.orderSubtotal,
@@ -35,6 +65,9 @@ final class OrderResponse implements Serializable {
     required this.shippingAddressJson,
     required this.billingAddressJson,
     this.orderCustomerId,
+    this.paymentAmount,
+    this.paymentCreatedAtText,
+    this.paymentProvider,
     this.shippingOptionId,
     this.shippingName,
   });
@@ -59,9 +92,25 @@ final class OrderResponse implements Serializable {
   @Sqlx(rename: 'email')
   final String orderEmail;
 
+  /// Short monotonically increasing identifier shown to people.
+  @Sqlx(rename: 'display_id')
+  final int displayId;
+
   /// Stable order identifier.
   @Sqlx(rename: 'id')
   final String orderId;
+
+  /// Authorised payment amount, absent before payment begins.
+  @Sqlx(rename: 'payment_amount')
+  final int? paymentAmount;
+
+  /// Provider record creation time, absent before payment begins.
+  @Sqlx(rename: 'payment_created_at')
+  final String? paymentCreatedAtText;
+
+  /// Public provider identifier, absent before payment begins.
+  @Sqlx(rename: 'payment_provider')
+  final String? paymentProvider;
 
   /// Frozen discount in integer minor units.
   @Sqlx(rename: 'discount_total')
@@ -148,6 +197,19 @@ final class OrderResponse implements Serializable {
         orElse: () => PaymentStatus.awaiting,
       );
 
+  /// Safe payment receipt once provider authorization has started.
+  OrderPaymentResponse? get payment {
+    final provider = paymentProvider;
+    final amount = paymentAmount;
+    final createdAt = paymentCreatedAtText;
+    if (provider == null || amount == null || createdAt == null) return null;
+    return OrderPaymentResponse(
+      providerId: provider,
+      amount: _money(amount),
+      createdAt: DateTime.parse(createdAt),
+    );
+  }
+
   /// UTC placement time.
   DateTime get placedAt => DateTime.parse(placedAtText);
 
@@ -202,6 +264,7 @@ final class OrderResponse implements Serializable {
   /// Returns the response state after successful payment capture.
   OrderResponse captured() => OrderResponse(
         orderId: orderId,
+        displayId: displayId,
         orderEmail: orderEmail,
         orderCustomerId: orderCustomerId,
         currencyCode: currencyCode,
@@ -221,6 +284,9 @@ final class OrderResponse implements Serializable {
         itemsJson: itemsJson,
         shippingAddressJson: shippingAddressJson,
         billingAddressJson: billingAddressJson,
+        paymentAmount: paymentAmount,
+        paymentCreatedAtText: paymentCreatedAtText,
+        paymentProvider: paymentProvider,
         shippingOptionId: shippingOptionId,
         shippingName: shippingName,
       );
@@ -228,6 +294,7 @@ final class OrderResponse implements Serializable {
   @override
   Map<String, Object?> serialize() => <String, Object?>{
         'id': id,
+        'display_id': displayId,
         'email': email,
         'customer_id': customerId,
         'region': region,
@@ -241,6 +308,7 @@ final class OrderResponse implements Serializable {
         'shipping_address': shippingAddress,
         'billing_address': billingAddress,
         'placed_at': placedAt,
+        'payment': payment,
         'status': status.name,
         'payment_status': paymentStatus.name,
       };

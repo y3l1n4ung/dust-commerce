@@ -20,6 +20,54 @@ final class _OrderCopyWithUnset {
 
 const _orderCopyWithUnset = _OrderCopyWithUnset();
 
+mixin _$OrderPayment implements Serializable {
+  @override
+  String toString() {
+    final self = this as OrderPayment;
+    return 'OrderPayment('
+        'amount: ${self.amount}, '
+        'createdAt: ${self.createdAt}, '
+        'providerId: ${self.providerId}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as OrderPayment;
+    return identical(this, other) ||
+        other is OrderPayment &&
+            runtimeType == other.runtimeType &&
+            other.amount == self.amount &&
+            other.createdAt == self.createdAt &&
+            other.providerId == self.providerId;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as OrderPayment;
+    return Object.hashAll([
+      runtimeType,
+      self.amount,
+      self.createdAt,
+      self.providerId,
+    ]);
+  }
+
+  /// Creates a copy of this `OrderPayment` with selected fields replaced.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final updated = orderPayment.copyWith(providerId: 'John');
+  /// ```
+  @pragma('vm:prefer-inline')
+  _$OrderPaymentCopyWith<OrderPayment> get copyWith => _$OrderPaymentCopyWithImpl<OrderPayment>(this as OrderPayment, (value) => value);
+
+  Map<String, Object?> serialize() =>
+      _$OrderPaymentSerialize(this as OrderPayment);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$Order implements Serializable {
   @override
   String toString() {
@@ -28,9 +76,11 @@ mixin _$Order implements Serializable {
         'billingAddress: ${self.billingAddress}, '
         'customerId: ${self.customerId}, '
         'email: ${self.email}, '
+        'displayId: ${self.displayId}, '
         'id: ${self.id}, '
         'items: ${self.items}, '
         'paymentStatus: ${self.paymentStatus}, '
+        'payment: ${self.payment}, '
         'placedAt: ${self.placedAt}, '
         'region: ${self.region}, '
         'shippingAddress: ${self.shippingAddress}, '
@@ -53,9 +103,11 @@ mixin _$Order implements Serializable {
             other.billingAddress == self.billingAddress &&
             other.customerId == self.customerId &&
             other.email == self.email &&
+            other.displayId == self.displayId &&
             other.id == self.id &&
             _orderItemsEquality.equals(other.items, self.items) &&
             other.paymentStatus == self.paymentStatus &&
+            other.payment == self.payment &&
             other.placedAt == self.placedAt &&
             other.region == self.region &&
             other.shippingAddress == self.shippingAddress &&
@@ -76,9 +128,11 @@ mixin _$Order implements Serializable {
       self.billingAddress,
       self.customerId,
       self.email,
+      self.displayId,
       self.id,
       _orderItemsEquality.hash(self.items),
       self.paymentStatus,
+      self.payment,
       self.placedAt,
       self.region,
       self.shippingAddress,
@@ -98,6 +152,7 @@ mixin _$Order implements Serializable {
   /// ```dart
   /// final updated = order.copyWith(email: 'John');
   /// final cleared = order.copyWith(customerId: null);
+  /// final nested = order.copyWith.payment(providerId: 'London');
   /// ```
   @pragma('vm:prefer-inline')
   _$OrderCopyWith<Order> get copyWith => _$OrderCopyWithImpl<Order>(this as Order, (value) => value);
@@ -110,14 +165,48 @@ mixin _$Order implements Serializable {
 // CopyWith API inspired by Freezed.
 
 /// @nodoc
+abstract class _$OrderPaymentCopyWith<$Res> {
+  $Res call({
+    Money? amount,
+    DateTime? createdAt,
+    String? providerId,
+  });
+}
+
+/// @nodoc
+final class _$OrderPaymentCopyWithImpl<$Res> implements _$OrderPaymentCopyWith<$Res> {
+  const _$OrderPaymentCopyWithImpl(this._self, this._then);
+
+  final OrderPayment _self;
+  final $Res Function(OrderPayment) _then;
+
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? amount = null,
+    Object? createdAt = null,
+    Object? providerId = null,
+  }) {
+    return _then(
+      OrderPayment(
+        providerId: providerId == null ? _self.providerId : providerId as String,
+        amount: amount == null ? _self.amount : amount as Money,
+        createdAt: createdAt == null ? _self.createdAt : createdAt as DateTime,
+      )
+    );
+  }
+}
+/// @nodoc
 abstract class _$OrderCopyWith<$Res> {
   $Res call({
     Address? billingAddress,
     String? customerId,
     String? email,
+    int? displayId,
     String? id,
     List<LineItem>? items,
     PaymentStatus? paymentStatus,
+    OrderPayment? payment,
     DateTime? placedAt,
     Region? region,
     Address? shippingAddress,
@@ -129,6 +218,8 @@ abstract class _$OrderCopyWith<$Res> {
     Money? tax,
     Money? total,
   });
+
+  _$OrderPaymentCopyWith<$Res>? get payment;
 }
 
 /// @nodoc
@@ -144,9 +235,11 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
     Object? billingAddress = null,
     Object? customerId = _orderCopyWithUnset,
     Object? email = null,
+    Object? displayId = null,
     Object? id = null,
     Object? items = null,
     Object? paymentStatus = null,
+    Object? payment = _orderCopyWithUnset,
     Object? placedAt = null,
     Object? region = null,
     Object? shippingAddress = null,
@@ -161,6 +254,7 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
     return _then(
       Order(
         id: id == null ? _self.id : id as String,
+        displayId: displayId == null ? _self.displayId : displayId as int,
         email: email == null ? _self.email : email as String,
         region: region == null ? _self.region : region as Region,
         items: items == null ? _self.items : items as List<LineItem>,
@@ -175,6 +269,9 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
         customerId: identical(customerId, _orderCopyWithUnset)
             ? _self.customerId
             : customerId as String?,
+        payment: identical(payment, _orderCopyWithUnset)
+            ? _self.payment
+            : payment as OrderPayment?,
         shippingMethod: identical(shippingMethod, _orderCopyWithUnset)
             ? _self.shippingMethod
             : shippingMethod as ShippingMethod?,
@@ -183,6 +280,32 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
       )
     );
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  _$OrderPaymentCopyWith<$Res>? get payment {
+    final paymentValue = _self.payment;
+    if (paymentValue == null) {
+      return null;
+    }
+
+    return _$OrderPaymentCopyWithImpl<$Res>(
+      paymentValue,
+      (value) => call(payment: value),
+    );
+  }
+}
+final class $OrderPaymentSerializer implements Serializer<OrderPayment, Map<String, Object?>> {
+  const $OrderPaymentSerializer();
+
+  @override
+  Map<String, Object?> serialize(OrderPayment value) => _$OrderPaymentSerialize(value);
+}
+final class $OrderPaymentDeserializer implements Deserializer<OrderPayment, Map<String, Object?>> {
+  const $OrderPaymentDeserializer();
+
+  @override
+  OrderPayment deserialize(Map<String, Object?> json) => _$OrderPaymentDeserialize(json);
 }
 final class $OrderSerializer implements Serializer<Order, Map<String, Object?>> {
   const $OrderSerializer();
@@ -221,16 +344,56 @@ final class $PaymentStatusDeserializer implements Deserializer<PaymentStatus, Ob
   PaymentStatus deserialize(Object? json) => _$PaymentStatusDeserialize(json);
 }
 
+Map<String, Object?> _$OrderPaymentSerialize(OrderPayment instance) {
+  return <String, Object?>{
+    'amount': instance.amount.toJson(),
+    'created_at': instance.createdAt.toIso8601String(),
+    'provider_id': instance.providerId,
+  };
+}
+
+Map<String, Object?> _$OrderPaymentToJson(OrderPayment instance) =>
+    _$OrderPaymentSerialize(instance);
+
+// factory OrderPayment.fromJson(Map<String, Object?> json) => _$OrderPaymentFromJson(json);
+OrderPayment _$OrderPaymentDeserialize(Map<String, Object?> json) {
+  final amountValue = Money.fromJson(
+    JsonHelper.asMap(json['amount'], 'amount'),
+  );
+  final createdAtValue = JsonHelper.asDateTime(
+    json['created_at'],
+    'created_at',
+  );
+  final providerIdValue = JsonHelper.as<String>(
+    json['provider_id'],
+    'provider_id',
+    'String',
+  );
+
+  return OrderPayment(
+    providerId: providerIdValue,
+    amount: amountValue,
+    createdAt: createdAtValue,
+  );
+}
+
+OrderPayment _$OrderPaymentFromJson(Map<String, Object?> json) =>
+    _$OrderPaymentDeserialize(json);
+
 Map<String, Object?> _$OrderSerialize(Order instance) {
   return <String, Object?>{
     'billing_address': instance.billingAddress.toJson(),
     'customer_id': instance.customerId,
     'email': instance.email,
+    'display_id': instance.displayId,
     'id': instance.id,
     'items': instance.items
         .map((item) => item.toJson())
         .toList(),
     'payment_status': _$PaymentStatusSerialize(instance.paymentStatus),
+    'payment': instance.payment == null
+        ? null
+        : _$OrderPaymentSerialize((instance.payment!)),
     'placed_at': instance.placedAt.toIso8601String(),
     'region': instance.region.toJson(),
     'shipping_address': instance.shippingAddress.toJson(),
@@ -258,6 +421,11 @@ Order _$OrderDeserialize(Map<String, Object?> json) {
       ? null
       : JsonHelper.as<String>(json['customer_id'], 'customer_id', 'String');
   final emailValue = JsonHelper.as<String>(json['email'], 'email', 'String');
+  final displayIdValue = JsonHelper.as<int>(
+    json['display_id'],
+    'display_id',
+    'int',
+  );
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final itemsValue = JsonHelper.decodeList(json['items'], 'items',
       (item, itemKey) => LineItem.fromJson(JsonHelper.asMap(item, itemKey)));
@@ -265,6 +433,9 @@ Order _$OrderDeserialize(Map<String, Object?> json) {
     json['payment_status'],
     'payment_status',
   );
+  final paymentValue = json['payment'] == null
+      ? null
+      : _$OrderPaymentDeserialize(JsonHelper.asMap(json['payment'], 'payment'));
   final placedAtValue = JsonHelper.asDateTime(json['placed_at'], 'placed_at');
   final regionValue = Region.fromJson(
     JsonHelper.asMap(json['region'], 'region'),
@@ -290,6 +461,7 @@ Order _$OrderDeserialize(Map<String, Object?> json) {
 
   return Order(
     id: idValue,
+    displayId: displayIdValue,
     email: emailValue,
     region: regionValue,
     items: itemsValue,
@@ -302,6 +474,7 @@ Order _$OrderDeserialize(Map<String, Object?> json) {
     billingAddress: billingAddressValue,
     placedAt: placedAtValue,
     customerId: customerIdValue,
+    payment: paymentValue,
     shippingMethod: shippingMethodValue,
     status: statusValue,
     paymentStatus: paymentStatusValue,
