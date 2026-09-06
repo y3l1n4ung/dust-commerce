@@ -84,8 +84,8 @@ final class IssuedToken with _$IssuedToken {
   factory IssuedToken.fromJson(Map<String, Object?> json) =>
       _$IssuedTokenFromJson(json);
 
-  /// UTC ISO-8601 expiry instant.
-  final String expiresAt;
+  /// Session expiry instant.
+  final DateTime expiresAt;
 
   /// Opaque bearer token returned once; only its fingerprint is stored.
   final String token;

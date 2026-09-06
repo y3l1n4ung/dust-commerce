@@ -127,7 +127,7 @@ final class MemoryAdminSessionStore implements AdminSessionStore {
   Future<void> write(AdminIssuedToken token) async {
     value = Some(StoredAdminSession(
       token: token.token,
-      expiresAt: token.expiresAt.toUtc(),
+      expiresAt: token.expiresAt,
     ));
   }
 }

@@ -31,7 +31,7 @@ final class StoredAuthSession {
   final DateTime expiresAt;
 
   /// Whether this session can no longer authorize a request at [now].
-  bool isExpiredAt(DateTime now) => !expiresAt.isAfter(now.toUtc());
+  bool isExpiredAt(DateTime now) => !expiresAt.isAfter(now);
 
   Map<String, Object?> _toJson() => {
         'token': token,
@@ -88,7 +88,7 @@ final class SecureAuthSessionStore implements AuthSessionStore {
   Future<void> write(IssuedToken token) {
     final session = StoredAuthSession(
       token: token.token,
-      expiresAt: DateTime.parse(token.expiresAt).toUtc(),
+      expiresAt: token.expiresAt,
     );
     return _storage.write(key: _key, value: jsonEncode(session._toJson()));
   }

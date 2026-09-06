@@ -42,7 +42,7 @@ final class MemoryAuthSessionStore implements AuthSessionStore {
   Future<void> write(IssuedToken token) async {
     value = StoredAuthSession(
       token: token.token,
-      expiresAt: DateTime.parse(token.expiresAt).toUtc(),
+      expiresAt: token.expiresAt,
     );
   }
 }

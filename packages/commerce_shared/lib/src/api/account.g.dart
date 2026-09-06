@@ -299,7 +299,7 @@ RegisterAccountBody _$RegisterAccountBodyFromJson(Map<String, Object?> json) =>
 
 Map<String, Object?> _$IssuedTokenSerialize(IssuedToken instance) {
   return <String, Object?>{
-    'expires_at': instance.expiresAt,
+    'expires_at': instance.expiresAt.toIso8601String(),
     'token': instance.token,
   };
 }
@@ -309,10 +309,9 @@ Map<String, Object?> _$IssuedTokenToJson(IssuedToken instance) =>
 
 // factory IssuedToken.fromJson(Map<String, Object?> json) => _$IssuedTokenFromJson(json);
 IssuedToken _$IssuedTokenDeserialize(Map<String, Object?> json) {
-  final expiresAtValue = JsonHelper.as<String>(
+  final expiresAtValue = JsonHelper.asDateTime(
     json['expires_at'],
     'expires_at',
-    'String',
   );
   final tokenValue = JsonHelper.as<String>(json['token'], 'token', 'String');
 

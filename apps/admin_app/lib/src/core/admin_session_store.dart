@@ -29,7 +29,7 @@ final class StoredAdminSession {
   final String token;
 
   /// Whether the bearer can no longer be sent at [now].
-  bool isExpiredAt(DateTime now) => !expiresAt.isAfter(now.toUtc());
+  bool isExpiredAt(DateTime now) => !expiresAt.isAfter(now);
 }
 
 /// Session persistence contract with a memory fake used by unit tests.

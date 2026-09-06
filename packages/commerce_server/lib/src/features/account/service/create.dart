@@ -101,11 +101,11 @@ Future<Result<Option<IssuedToken>, SqlxError>> signIn(
   final credential = (account as Some<PasswordCredential>).value;
 
   final token = Tokens.issue();
-  final expiresAt = now.toUtc().add(lifetime).toIso8601String();
+  final expiresAt = now.toUtc().add(lifetime);
   final stored = await writes.insertToken(
     await Tokens.fingerprint(token),
     credential.authIdentityId,
-    expiresAt,
+    expiresAt.toIso8601String(),
   );
   if (stored case Err(:final error)) return Err(error);
 
