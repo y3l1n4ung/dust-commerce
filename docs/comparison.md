@@ -19,7 +19,7 @@ payment, and a basic customer account.
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
 | Schema | modular PostgreSQL schemas | 35 SQLite tables |
-| Admin API | broad modular API | isolated identity and product-management slices (11 protected operations plus public media reads) |
+| Admin API | broad modular API | isolated identity and product-management slices (12 protected operations plus public media reads) |
 | Store operations | broad Store API | 38 method/path operations |
 | Workflow engine and plugins | yes | none |
 | Admin dashboard | broad operational UI | authenticated product list, detail, edit and creation slices |
@@ -178,6 +178,14 @@ and selects variants, while the separate Store contract returns ranked product
 images and each variant's associated images. The product page uses Medusa's
 `v_id` fallback and filtering behavior. External object storage remains an
 explicit Medusa capability not implemented here.
+
+The post-create variant detail slice also keeps Medusa's operation boundaries:
+one guarded variant route and right-side drawer edit title, SKU, barcode,
+option selections, inventory policy and backorder policy, while prices and
+stock quantity remain separate concerns. Dust maps the refreshed admin detail
+directly from its SQL allowlist, and the Store query reads the same committed
+variant independently. Complete option ownership, unique combinations and SKU
+conflicts are enforced before partial writes.
 
 ### Order transfers keep the capability out of the database
 

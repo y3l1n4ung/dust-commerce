@@ -28,6 +28,9 @@
   `packages/admin/dashboard/src/routes/products/product-image-variants-edit/`
   plus the image command bar in `product-media-section.tsx` at the pinned
   commit.
+- Variant-edit source:
+  `packages/admin/dashboard/src/routes/product-variants/product-variant-edit/`
+  and its `product-edit-variant-form.tsx` at the pinned commit.
 - Rendered reference: Medusa's official Admin product-list image in the User
   Guide, official product-detail image in the Edit Product guide, and official
   Details-step image in the Create Product guide.
@@ -74,6 +77,10 @@ Title/SKU/Thumbnail columns and Cancel/Save footer. Medusa publishes no
 same-state association-drawer raster, so source structure and browser behavior
 are verified but pixel comparison remains blocked.
 
+The variant-detail implementation follows the pinned RouteDrawer source and
+keeps Medusa's separation between variant details, prices and stock. Its local
+rendered comparison is still pending.
+
 ## Verified
 
 - The 220px navigation hierarchy, selected row, nested product links, merchant
@@ -119,6 +126,12 @@ are verified but pixel comparison remains blocked.
   refreshes detail state, and reopens with the saved checkbox state. Cross-
   product, overlapping and stale-image mutations are rejected atomically, and
   deleting media removes its stale associations.
+- Clicking a variant row opens the supported right-side editor. Its generated
+  client reaches a route-level guarded API for title, SKU, barcode, option
+  selections, inventory policy and backorder policy. Server integration tests
+  cover authorization, product ownership, duplicate SKU and option-combination
+  conflicts, database-owned timestamps and independent storefront readback;
+  non-widget view-model tests cover refreshed state and display-safe failures.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -128,9 +141,12 @@ are verified but pixel comparison remains blocked.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Post-create option/variant mutation, import/export, filters, ordering and
-  multiple option axes in the Flutter creation form remain feature work under
-  issue #31. Their visible controls do not pretend an API mutation succeeded.
+- P1 — Post-create option mutation, variant pricing/stock, import/export,
+  filters, ordering and multiple option axes in the Flutter creation form
+  remain feature work under issue #31. Their visible controls do not pretend an
+  API mutation succeeded.
+- P1 — Capture the running variant-detail drawer against the pinned Medusa
+  RouteDrawer state before marking its rendered design QA complete.
 - P2 — The post-create editor lacks a same-state rendered Medusa source capture.
   The implementation matches the pinned source structure—full focus modal,
   four-column gallery, 24px grid gap, 560px upload panel and sticky footer—but
@@ -143,8 +159,9 @@ are verified but pixel comparison remains blocked.
 ## Result
 
 Passed for the implemented product-list, product-detail, general-edit,
-product-create-with-media, post-create media-card and image-variant behavior
-slices. Post-create editor and image-variant drawer visual parity remain blocked
-on same-state source captures; broader Medusa Admin parity is not claimed.
+product-create-with-media, post-create media-card, image-variant and
+variant-detail behavior slices. Post-create editor, image-variant drawer and
+variant-detail visual parity remain blocked on same-state source captures;
+broader Medusa Admin parity is not claimed.
 
 final result: blocked
