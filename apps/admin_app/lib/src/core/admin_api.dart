@@ -29,6 +29,10 @@ abstract interface class AdminApi {
     @Query('offset') int offset,
   );
 
+  /// Reads one complete merchant product detail.
+  @GET('/admin/products/{id}')
+  Future<AdminProductDetail> product(@Path() String id);
+
   /// Revokes the Dio-managed bearer.
   @DELETE('/auth/admin/session')
   Future<AdminSessionDeleted> signOut();

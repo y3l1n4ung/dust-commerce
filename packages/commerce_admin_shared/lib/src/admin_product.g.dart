@@ -14,6 +14,13 @@
 part of 'admin_product.dart';
 
 const DeepCollectionEquality _adminProductListProductsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductOptionValuesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductVariantOptionValuesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductDetailCategoriesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductDetailImagesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductDetailOptionsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductDetailTagsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductDetailVariantsEquality = DeepCollectionEquality();
 
 mixin _$AdminProduct implements Serializable {
   @override
@@ -108,6 +115,219 @@ mixin _$AdminProductList implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$AdminProductImage implements Serializable {
+  @override
+  String toString() {
+    final self = this as AdminProductImage;
+    return 'AdminProductImage('
+        'id: ${self.id}, '
+        'url: ${self.url}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminProductImage;
+    return identical(this, other) ||
+        other is AdminProductImage &&
+            runtimeType == other.runtimeType &&
+            other.id == self.id &&
+            other.url == self.url;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminProductImage;
+    return Object.hashAll([
+      runtimeType,
+      self.id,
+      self.url,
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminProductImageSerialize(this as AdminProductImage);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminProductOption implements Serializable {
+  @override
+  String toString() {
+    final self = this as AdminProductOption;
+    return 'AdminProductOption('
+        'id: ${self.id}, '
+        'title: ${self.title}, '
+        'values: ${self.values}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminProductOption;
+    return identical(this, other) ||
+        other is AdminProductOption &&
+            runtimeType == other.runtimeType &&
+            other.id == self.id &&
+            other.title == self.title &&
+            _adminProductOptionValuesEquality.equals(other.values, self.values);
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminProductOption;
+    return Object.hashAll([
+      runtimeType,
+      self.id,
+      self.title,
+      _adminProductOptionValuesEquality.hash(self.values),
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminProductOptionSerialize(this as AdminProductOption);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminProductVariant implements Serializable {
+  @override
+  String toString() {
+    final self = this as AdminProductVariant;
+    return 'AdminProductVariant('
+        'allowBackorder: ${self.allowBackorder}, '
+        'id: ${self.id}, '
+        'inventoryQuantity: ${self.inventoryQuantity}, '
+        'manageInventory: ${self.manageInventory}, '
+        'optionValues: ${self.optionValues}, '
+        'sku: ${self.sku}, '
+        'title: ${self.title}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminProductVariant;
+    return identical(this, other) ||
+        other is AdminProductVariant &&
+            runtimeType == other.runtimeType &&
+            other.allowBackorder == self.allowBackorder &&
+            other.id == self.id &&
+            other.inventoryQuantity == self.inventoryQuantity &&
+            other.manageInventory == self.manageInventory &&
+            _adminProductVariantOptionValuesEquality.equals(other.optionValues, self.optionValues) &&
+            other.sku == self.sku &&
+            other.title == self.title;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminProductVariant;
+    return Object.hashAll([
+      runtimeType,
+      self.allowBackorder,
+      self.id,
+      self.inventoryQuantity,
+      self.manageInventory,
+      _adminProductVariantOptionValuesEquality.hash(self.optionValues),
+      self.sku,
+      self.title,
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminProductVariantSerialize(this as AdminProductVariant);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminProductDetail implements Serializable {
+  @override
+  String toString() {
+    final self = this as AdminProductDetail;
+    return 'AdminProductDetail('
+        'categories: ${self.categories}, '
+        'collectionTitle: ${self.collectionTitle}, '
+        'description: ${self.description}, '
+        'height: ${self.height}, '
+        'handle: ${self.handle}, '
+        'id: ${self.id}, '
+        'images: ${self.images}, '
+        'length: ${self.length}, '
+        'material: ${self.material}, '
+        'options: ${self.options}, '
+        'originCountry: ${self.originCountry}, '
+        'productType: ${self.productType}, '
+        'status: ${self.status}, '
+        'tags: ${self.tags}, '
+        'thumbnail: ${self.thumbnail}, '
+        'title: ${self.title}, '
+        'variants: ${self.variants}, '
+        'weight: ${self.weight}, '
+        'width: ${self.width}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminProductDetail;
+    return identical(this, other) ||
+        other is AdminProductDetail &&
+            runtimeType == other.runtimeType &&
+            _adminProductDetailCategoriesEquality.equals(other.categories, self.categories) &&
+            other.collectionTitle == self.collectionTitle &&
+            other.description == self.description &&
+            other.height == self.height &&
+            other.handle == self.handle &&
+            other.id == self.id &&
+            _adminProductDetailImagesEquality.equals(other.images, self.images) &&
+            other.length == self.length &&
+            other.material == self.material &&
+            _adminProductDetailOptionsEquality.equals(other.options, self.options) &&
+            other.originCountry == self.originCountry &&
+            other.productType == self.productType &&
+            other.status == self.status &&
+            _adminProductDetailTagsEquality.equals(other.tags, self.tags) &&
+            other.thumbnail == self.thumbnail &&
+            other.title == self.title &&
+            _adminProductDetailVariantsEquality.equals(other.variants, self.variants) &&
+            other.weight == self.weight &&
+            other.width == self.width;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminProductDetail;
+    return Object.hashAll([
+      runtimeType,
+      _adminProductDetailCategoriesEquality.hash(self.categories),
+      self.collectionTitle,
+      self.description,
+      self.height,
+      self.handle,
+      self.id,
+      _adminProductDetailImagesEquality.hash(self.images),
+      self.length,
+      self.material,
+      _adminProductDetailOptionsEquality.hash(self.options),
+      self.originCountry,
+      self.productType,
+      self.status,
+      _adminProductDetailTagsEquality.hash(self.tags),
+      self.thumbnail,
+      self.title,
+      _adminProductDetailVariantsEquality.hash(self.variants),
+      self.weight,
+      self.width,
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminProductDetailSerialize(this as AdminProductDetail);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 final class $AdminProductSerializer implements Serializer<AdminProduct, Map<String, Object?>> {
   const $AdminProductSerializer();
 
@@ -131,6 +351,54 @@ final class $AdminProductListDeserializer implements Deserializer<AdminProductLi
 
   @override
   AdminProductList deserialize(Map<String, Object?> json) => _$AdminProductListDeserialize(json);
+}
+final class $AdminProductImageSerializer implements Serializer<AdminProductImage, Map<String, Object?>> {
+  const $AdminProductImageSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminProductImage value) => _$AdminProductImageSerialize(value);
+}
+final class $AdminProductImageDeserializer implements Deserializer<AdminProductImage, Map<String, Object?>> {
+  const $AdminProductImageDeserializer();
+
+  @override
+  AdminProductImage deserialize(Map<String, Object?> json) => _$AdminProductImageDeserialize(json);
+}
+final class $AdminProductOptionSerializer implements Serializer<AdminProductOption, Map<String, Object?>> {
+  const $AdminProductOptionSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminProductOption value) => _$AdminProductOptionSerialize(value);
+}
+final class $AdminProductOptionDeserializer implements Deserializer<AdminProductOption, Map<String, Object?>> {
+  const $AdminProductOptionDeserializer();
+
+  @override
+  AdminProductOption deserialize(Map<String, Object?> json) => _$AdminProductOptionDeserialize(json);
+}
+final class $AdminProductVariantSerializer implements Serializer<AdminProductVariant, Map<String, Object?>> {
+  const $AdminProductVariantSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminProductVariant value) => _$AdminProductVariantSerialize(value);
+}
+final class $AdminProductVariantDeserializer implements Deserializer<AdminProductVariant, Map<String, Object?>> {
+  const $AdminProductVariantDeserializer();
+
+  @override
+  AdminProductVariant deserialize(Map<String, Object?> json) => _$AdminProductVariantDeserialize(json);
+}
+final class $AdminProductDetailSerializer implements Serializer<AdminProductDetail, Map<String, Object?>> {
+  const $AdminProductDetailSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminProductDetail value) => _$AdminProductDetailSerialize(value);
+}
+final class $AdminProductDetailDeserializer implements Deserializer<AdminProductDetail, Map<String, Object?>> {
+  const $AdminProductDetailDeserializer();
+
+  @override
+  AdminProductDetail deserialize(Map<String, Object?> json) => _$AdminProductDetailDeserialize(json);
 }
 
 Map<String, Object?> _$AdminProductSerialize(AdminProduct instance) {
@@ -220,3 +488,219 @@ AdminProductList _$AdminProductListDeserialize(Map<String, Object?> json) {
 
 AdminProductList _$AdminProductListFromJson(Map<String, Object?> json) =>
     _$AdminProductListDeserialize(json);
+
+Map<String, Object?> _$AdminProductImageSerialize(AdminProductImage instance) {
+  return <String, Object?>{
+    'id': instance.id,
+    'url': instance.url,
+  };
+}
+
+Map<String, Object?> _$AdminProductImageToJson(AdminProductImage instance) =>
+    _$AdminProductImageSerialize(instance);
+
+// factory AdminProductImage.fromJson(Map<String, Object?> json) => _$AdminProductImageFromJson(json);
+AdminProductImage _$AdminProductImageDeserialize(Map<String, Object?> json) {
+  final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final urlValue = JsonHelper.as<String>(json['url'], 'url', 'String');
+
+  return AdminProductImage(id: idValue, url: urlValue);
+}
+
+AdminProductImage _$AdminProductImageFromJson(Map<String, Object?> json) =>
+    _$AdminProductImageDeserialize(json);
+
+Map<String, Object?> _$AdminProductOptionSerialize(AdminProductOption instance) {
+  return <String, Object?>{
+    'id': instance.id,
+    'title': instance.title,
+    'values': instance.values
+        .map((item) => item)
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$AdminProductOptionToJson(AdminProductOption instance) =>
+    _$AdminProductOptionSerialize(instance);
+
+// factory AdminProductOption.fromJson(Map<String, Object?> json) => _$AdminProductOptionFromJson(json);
+AdminProductOption _$AdminProductOptionDeserialize(Map<String, Object?> json) {
+  final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
+  final valuesValue = JsonHelper.decodeList(json['values'], 'values',
+      (item, itemKey) => JsonHelper.as<String>(item, itemKey, 'String'));
+
+  return AdminProductOption(
+    id: idValue,
+    title: titleValue,
+    values: valuesValue,
+  );
+}
+
+AdminProductOption _$AdminProductOptionFromJson(Map<String, Object?> json) =>
+    _$AdminProductOptionDeserialize(json);
+
+Map<String, Object?> _$AdminProductVariantSerialize(AdminProductVariant instance) {
+  return <String, Object?>{
+    'allow_backorder': instance.allowBackorder,
+    'id': instance.id,
+    'inventory_quantity': instance.inventoryQuantity,
+    'manage_inventory': instance.manageInventory,
+    'option_values': instance.optionValues
+        .map((key, value) => MapEntry(key, value)),
+    'sku': instance.sku,
+    'title': instance.title,
+  };
+}
+
+Map<String, Object?> _$AdminProductVariantToJson(AdminProductVariant instance) =>
+    _$AdminProductVariantSerialize(instance);
+
+// factory AdminProductVariant.fromJson(Map<String, Object?> json) => _$AdminProductVariantFromJson(json);
+AdminProductVariant _$AdminProductVariantDeserialize(Map<String, Object?> json) {
+  final allowBackorderValue = JsonHelper.as<bool>(
+    json['allow_backorder'],
+    'allow_backorder',
+    'bool',
+  );
+  final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final inventoryQuantityValue = JsonHelper.as<int>(
+    json['inventory_quantity'],
+    'inventory_quantity',
+    'int',
+  );
+  final manageInventoryValue = JsonHelper.as<bool>(
+    json['manage_inventory'],
+    'manage_inventory',
+    'bool',
+  );
+  final optionValuesValue = JsonHelper.decodeMap(json['option_values'], 'option_values',
+      (value, valueKey) => JsonHelper.as<String>(value, valueKey, 'String'));
+  final skuValue = json['sku'] == null
+      ? null
+      : JsonHelper.as<String>(json['sku'], 'sku', 'String');
+  final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
+
+  return AdminProductVariant(
+    id: idValue,
+    title: titleValue,
+    inventoryQuantity: inventoryQuantityValue,
+    manageInventory: manageInventoryValue,
+    allowBackorder: allowBackorderValue,
+    optionValues: optionValuesValue,
+    sku: skuValue,
+  );
+}
+
+AdminProductVariant _$AdminProductVariantFromJson(Map<String, Object?> json) =>
+    _$AdminProductVariantDeserialize(json);
+
+Map<String, Object?> _$AdminProductDetailSerialize(AdminProductDetail instance) {
+  return <String, Object?>{
+    'categories': instance.categories
+        .map((item) => item)
+        .toList(),
+    'collection_title': instance.collectionTitle,
+    'description': instance.description,
+    'height': instance.height,
+    'handle': instance.handle,
+    'id': instance.id,
+    'images': instance.images
+        .map((item) => _$AdminProductImageSerialize(item))
+        .toList(),
+    'length': instance.length,
+    'material': instance.material,
+    'options': instance.options
+        .map((item) => _$AdminProductOptionSerialize(item))
+        .toList(),
+    'origin_country': instance.originCountry,
+    'product_type': instance.productType,
+    'status': instance.status,
+    'tags': instance.tags
+        .map((item) => item)
+        .toList(),
+    'thumbnail': instance.thumbnail,
+    'title': instance.title,
+    'variants': instance.variants
+        .map((item) => _$AdminProductVariantSerialize(item))
+        .toList(),
+    'weight': instance.weight,
+    'width': instance.width,
+  };
+}
+
+Map<String, Object?> _$AdminProductDetailToJson(AdminProductDetail instance) =>
+    _$AdminProductDetailSerialize(instance);
+
+// factory AdminProductDetail.fromJson(Map<String, Object?> json) => _$AdminProductDetailFromJson(json);
+AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
+  final categoriesValue = JsonHelper.decodeList(json['categories'], 'categories',
+      (item, itemKey) => JsonHelper.as<String>(item, itemKey, 'String'));
+  final collectionTitleValue = json['collection_title'] == null
+      ? null
+      : JsonHelper.as<String>(json['collection_title'], 'collection_title', 'String');
+  final descriptionValue = json['description'] == null
+      ? null
+      : JsonHelper.as<String>(json['description'], 'description', 'String');
+  final heightValue = json['height'] == null
+      ? null
+      : JsonHelper.as<int>(json['height'], 'height', 'int');
+  final handleValue = JsonHelper.as<String>(json['handle'], 'handle', 'String');
+  final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final imagesValue = JsonHelper.decodeList(json['images'], 'images',
+      (item, itemKey) => _$AdminProductImageDeserialize(JsonHelper.asMap(item, itemKey)));
+  final lengthValue = json['length'] == null
+      ? null
+      : JsonHelper.as<int>(json['length'], 'length', 'int');
+  final materialValue = json['material'] == null
+      ? null
+      : JsonHelper.as<String>(json['material'], 'material', 'String');
+  final optionsValue = JsonHelper.decodeList(json['options'], 'options',
+      (item, itemKey) => _$AdminProductOptionDeserialize(JsonHelper.asMap(item, itemKey)));
+  final originCountryValue = json['origin_country'] == null
+      ? null
+      : JsonHelper.as<String>(json['origin_country'], 'origin_country', 'String');
+  final productTypeValue = json['product_type'] == null
+      ? null
+      : JsonHelper.as<String>(json['product_type'], 'product_type', 'String');
+  final statusValue = JsonHelper.as<String>(json['status'], 'status', 'String');
+  final tagsValue = JsonHelper.decodeList(json['tags'], 'tags',
+      (item, itemKey) => JsonHelper.as<String>(item, itemKey, 'String'));
+  final thumbnailValue = json['thumbnail'] == null
+      ? null
+      : JsonHelper.as<String>(json['thumbnail'], 'thumbnail', 'String');
+  final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
+  final variantsValue = JsonHelper.decodeList(json['variants'], 'variants',
+      (item, itemKey) => _$AdminProductVariantDeserialize(JsonHelper.asMap(item, itemKey)));
+  final weightValue = json['weight'] == null
+      ? null
+      : JsonHelper.as<int>(json['weight'], 'weight', 'int');
+  final widthValue = json['width'] == null
+      ? null
+      : JsonHelper.as<int>(json['width'], 'width', 'int');
+
+  return AdminProductDetail(
+    id: idValue,
+    title: titleValue,
+    handle: handleValue,
+    status: statusValue,
+    images: imagesValue,
+    options: optionsValue,
+    variants: variantsValue,
+    categories: categoriesValue,
+    tags: tagsValue,
+    description: descriptionValue,
+    thumbnail: thumbnailValue,
+    material: materialValue,
+    originCountry: originCountryValue,
+    productType: productTypeValue,
+    collectionTitle: collectionTitleValue,
+    weight: weightValue,
+    length: lengthValue,
+    width: widthValue,
+    height: heightValue,
+  );
+}
+
+AdminProductDetail _$AdminProductDetailFromJson(Map<String, Object?> json) =>
+    _$AdminProductDetailDeserialize(json);

@@ -1,3 +1,5 @@
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
+import 'package:commerce_server/src/features/admin/product_json.dart' as json;
 import 'package:dust_dart/db.dart';
 import 'package:dust_dart/serde.dart';
 
@@ -111,4 +113,133 @@ final class AdminProductListResponse with _$AdminProductListResponse {
 
   /// Explicit product summaries.
   final List<AdminProductResponse> products;
+}
+
+/// Complete product detail selected directly from one SQL row.
+@Derive([Serialize(), FromRow()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class AdminProductDetailResponse with _$AdminProductDetailResponse {
+  /// Creates the explicitly allowlisted merchant detail response.
+  const AdminProductDetailResponse({
+    required this.id,
+    required this.title,
+    required this.handle,
+    required this.status,
+    required this.images,
+    required this.options,
+    required this.variants,
+    required this.categories,
+    required this.tags,
+    this.description,
+    this.thumbnail,
+    this.material,
+    this.originCountry,
+    this.productType,
+    this.collectionTitle,
+    this.weight,
+    this.length,
+    this.width,
+    this.height,
+  });
+
+  /// Public categories assigned to this product.
+  @Sqlx(tryFrom: _AdminProductStringsSqlxJson())
+  final List<String> categories;
+
+  /// Optional curated collection label.
+  @Sqlx(rename: 'collection_title')
+  final String? collectionTitle;
+
+  /// Optional long-form merchant description.
+  final String? description;
+
+  /// Optional height in the store's configured unit.
+  final int? height;
+
+  /// Stable storefront route segment.
+  final String handle;
+
+  /// Stable product identifier.
+  final String id;
+
+  /// Ordered merchant media.
+  @Sqlx(tryFrom: _AdminProductImagesSqlxJson())
+  final List<AdminProductImage> images;
+
+  /// Optional length in the store's configured unit.
+  final int? length;
+
+  /// Optional merchant material description.
+  final String? material;
+
+  /// Ordered selectable dimensions.
+  @Sqlx(tryFrom: _AdminProductOptionsSqlxJson())
+  final List<AdminProductOption> options;
+
+  /// Optional ISO 3166-1 alpha-2 country code.
+  @Sqlx(rename: 'origin_country')
+  final String? originCountry;
+
+  /// Optional merchant classification.
+  @Sqlx(rename: 'product_type')
+  final String? productType;
+
+  /// Merchant lifecycle state.
+  final String status;
+
+  /// Public discovery tags assigned to this product.
+  @Sqlx(tryFrom: _AdminProductStringsSqlxJson())
+  final List<String> tags;
+
+  /// Optional primary merchant image.
+  final String? thumbnail;
+
+  /// Merchant-facing product name.
+  final String title;
+
+  /// Inventory-bearing variants.
+  @Sqlx(tryFrom: _AdminProductVariantsSqlxJson())
+  final List<AdminProductVariant> variants;
+
+  /// Optional weight in the store's configured unit.
+  final int? weight;
+
+  /// Optional width in the store's configured unit.
+  final int? width;
+}
+
+final class _AdminProductImagesSqlxJson
+    implements SqlxTryFrom<List<AdminProductImage>, String> {
+  const _AdminProductImagesSqlxJson();
+
+  @override
+  List<AdminProductImage> decode(String value) =>
+      const json.AdminProductImagesFromJson().decode(value);
+}
+
+final class _AdminProductOptionsSqlxJson
+    implements SqlxTryFrom<List<AdminProductOption>, String> {
+  const _AdminProductOptionsSqlxJson();
+
+  @override
+  List<AdminProductOption> decode(String value) =>
+      const json.AdminProductOptionsFromJson().decode(value);
+}
+
+final class _AdminProductVariantsSqlxJson
+    implements SqlxTryFrom<List<AdminProductVariant>, String> {
+  const _AdminProductVariantsSqlxJson();
+
+  @override
+  List<AdminProductVariant> decode(String value) =>
+      const json.AdminProductVariantsFromJson().decode(value);
+}
+
+final class _AdminProductStringsSqlxJson
+    implements SqlxTryFrom<List<String>, String> {
+  const _AdminProductStringsSqlxJson();
+
+  @override
+  List<String> decode(String value) =>
+      const json.AdminProductStringsFromJson().decode(value);
 }

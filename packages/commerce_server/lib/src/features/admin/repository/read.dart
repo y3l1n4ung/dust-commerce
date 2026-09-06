@@ -1,6 +1,8 @@
 import 'package:commerce_server/src/features/admin/model.dart';
 import 'package:dust_dart/db.dart';
 
+export 'read/product.dart';
+
 part 'read.g.dart';
 
 /// Admin credential and session lookups.

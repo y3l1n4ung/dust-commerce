@@ -14,6 +14,7 @@ final class AdminDeps {
     required this.passwordWork,
     required this.dummyPasswordHash,
     required this.products,
+    required this.productReads,
   });
 
   /// Shared identifier and time source.
@@ -30,6 +31,9 @@ final class AdminDeps {
 
   /// Merchant catalogue listing queries.
   final AdminProductRepository products;
+
+  /// Complete merchant product detail reads.
+  final AdminProductReadRepository productReads;
 
   /// Admin credential and session reads.
   final AdminReadRepository reads;

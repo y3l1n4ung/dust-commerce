@@ -19,3 +19,13 @@ Future<Result<Option<AdminUserResponse>, SqlxError>> authenticateAdminToken(
     Err(:final error) => Err(error),
   };
 }
+
+/// Reads one complete active product or [None] when [id] is unknown.
+Future<Result<Option<AdminProductDetailResponse>, SqlxError>> readAdminProduct(
+    AdminProductReadRepository products, String id) async {
+  final result = await products.findById(id);
+  return switch (result) {
+    Ok(:final value) => Ok(optionOf<AdminProductDetailResponse>(value)),
+    Err(:final error) => Err(error),
+  };
+}
