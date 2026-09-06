@@ -205,7 +205,14 @@ match is asserted. After adding the server-side delivery guard, the valid local
 path returned from Payment to Review with the same collapsed summaries and
 `Place order` action; no local UI changed. A fresh Medusa Review capture still
 lacked completed shipping state, so this regression pass does not add a
-same-state whole-page parity claim. The desktop pass confirms the
+same-state whole-page parity claim. A subsequent fresh local release-mode
+purchase reached the confirmation route and retained it through reload. Source
+inspection then corrected the receipt to its 64px table rows, quantity/unit and
+line price stack, short display number, parenthesized delivery cost, and
+provider amount/time payment details. The matching live Medusa cart was reset,
+but its Espresso Cup add mutation remained indefinitely in `Loading...`, so a
+same-state confirmation screenshot could not be produced and no visual match
+is asserted. The desktop pass confirms the
 complete back label, 24px semibold summary heading, source-spaced dividers, right-aligned
 quantity/unit price, and final totals rule. A browser-only CORS failure on the
 new address PUT was found and fixed before the successful Delivery transition;
@@ -319,6 +326,13 @@ focused captures.
   the normal release-mode browser path still reaches Review. Because this is a
   backend guard with no UI delta and the live source remains in an incomplete
   shipping state, no new visual parity result is claimed.
+- A fresh database and release-mode browser purchase proved the complete local
+  cart → address → delivery → payment → review → confirmation path, including
+  a database-owned display number and an API-backed provider amount/time
+  receipt that survives route reload. The final top and detail captures were
+  inspected at `1280 x 720`. Medusa's source code supplied the exact component
+  contract, but its live add-to-cart mutation stalled after the previous cart
+  was cleared, so same-state confirmation comparison remains pending.
 
 **Implementation checklist**
 

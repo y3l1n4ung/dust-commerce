@@ -110,7 +110,11 @@ Every amount on an order is stored. Lines and addresses are copied, not
 referenced, so editing an account's address later cannot rewrite where
 something was already shipped. Medusa denormalises heavily too; this project
 takes it further by storing `subtotal`, `tax` and `total` rather than deriving
-them, and the assembler reads them back rather than recomputing.
+them, and the assembler reads them back rather than recomputing. Like Medusa,
+the public receipt has a short monotonic display number while the opaque id
+remains the API and ownership key. Payment-provider metadata stays private;
+the order response joins only provider id, amount and payment creation time for
+the customer-facing confirmation.
 
 ### Password hashing is Argon2id, not Medusa's current scrypt provider
 
