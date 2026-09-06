@@ -28,7 +28,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `shipping/components/free-shipping-price-nudge` | global shipping progress popup | implemented in #21 with API-backed item-total rules, session dismissal, source actions, server-enforced eligibility, and source-timed unlocked feedback; local threshold interactions pass, while matched source rendering awaits a conditional source price |
 | `cart/templates` and `layout/components/cart-mismatch-banner` | cart route and ownership recovery | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, explicit applied-promotion responses, authoritative totals, session-aware sign-in prompt, authenticated guest-cart transfer, global retry banner and checkout handoff; the desktop empty/populated states and open promotion form passed rendered source comparison, while compact, shipping and source promotion-success QA remain |
 | `account/templates` | account shell and session | implemented in #20 and #26 with secure session, source-exact four-part overview completion, saved-address count, latest-five order links, profile name/phone/billing/password editing, API-backed address book, source-shaped navigation, order list and guarded order detail; signed-out desktop sign-in and registration passed rendered comparison, while compact, authenticated and real support/policy destinations remain |
-| `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, delivery, manual-payment, review and confirmation steps; rendered QA remains |
+| `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, delivery, manual-payment, review and confirmation steps; the guest address form and initial delivery state passed a same-viewport rendered comparison, while the live reference fails when selecting delivery, so later payment/review, desktop, authenticated and confirmation QA remain |
 | `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards, guarded frozen order details, transfer request/decision UI, and the secure order-transfer API/client are implemented; the decision page passed rendered source comparison, while authenticated account-form QA, contact and return flows remain |
 | `regions` store API | account, checkout and storefront country selection | implemented with explicit SQLx response allowlists; selectors use active backend regions rather than hard-coded countries |
 | categories and collections routes | product organisation | implemented in #18 with real API metadata, filtering, hierarchy, sorting and paging; exact nested category paths wait on `dust#542`, rendered QA remains |
@@ -153,6 +153,15 @@ changes recalculate percentage amounts transactionally, and checkout freezes
 the applied code and counts redemption only after the order write succeeds.
 This vertical slice intentionally supports one promotion per cart; applying a
 second code replaces the first until combination and exclusion policy exists.
+
+Checkout addresses keep company and secondary street line as independent
+optional values from Flutter input through the frozen order snapshot. The
+original reversible `order_addresses` migration creates the company column in
+one shot; it is not appended with an `ALTER TABLE`. A separate billing address
+preserves intentional nulls instead of inheriting optional shipping values,
+while an omitted billing address still reuses the shipping snapshot. The
+source omits company from the collapsed checkout summary, so the Flutter
+summary does the same without discarding the stored value.
 
 The storefront country control follows Medusa's source data flow rather than
 being a display-only currency toggle. It derives an alphabetized country list

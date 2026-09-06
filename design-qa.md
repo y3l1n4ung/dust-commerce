@@ -17,6 +17,8 @@ Source visual truth paths:
 - Rendered promotion reference: `https://next.medusajs.com/dk/cart?qa=promotion-shipping-source`
 - Pinned public-account sources: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/account/templates/account-layout.tsx`, `login-template.tsx`, and `components/{login,register}/index.tsx`
 - Rendered public-account reference: `https://next.medusajs.com/dk/account?qa=account-signed-out`
+- Pinned checkout sources: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/checkout/components/{addresses,shipping,payment,review}/index.tsx`
+- Rendered checkout reference: `https://next.medusajs.com/dk/checkout?step=delivery`
 
 Implementation screenshot paths: in-app browser captures of the transfer route
 `http://127.0.0.1:13001/store?qa=store-grid-final`, and
@@ -25,7 +27,8 @@ Implementation screenshot paths: in-app browser captures of the transfer route
 `http://127.0.0.1:13001/cart?qa=populated-cart-restarted`, and
 `http://127.0.0.1:13001/products/shorts?v_id=var_shorts_s`, and
 `http://127.0.0.1:13001/account?qa=account-register-local`, and
-`http://127.0.0.1:13001/cart`. The browser captures
+`http://127.0.0.1:13001/cart`, and
+`http://127.0.0.1:13001/checkout?step=review`. The browser captures
 are retained in the task evidence rather than exported into the repository.
 
 Viewport: the matched desktop captures used the same in-app browser surface. The
@@ -33,7 +36,8 @@ reference raster was `1265 x 712`; the implementation raster was `1280 x 720`.
 The reference's visible scrollbar produced the small raster-size difference.
 Compact `390 x 844` transfer and authenticated account-form captures remain.
 The promotion form comparison used the same `736 x 864` browser surface for
-both storefronts.
+both storefronts. Guest checkout address and initial delivery comparisons also
+used that same `736 x 864` surface.
 
 Pixel dimensions, CSS size, and density normalization: both captures used the
 in-app browser's default CSS viewport and density. Comparison normalized the
@@ -69,13 +73,21 @@ Flutter validation without creating a customer. Local free-shipping QA used the
 seeded server rule at `EUR 100`: below-target, unlocked, faded, restored and
 session-dismissed states were captured. The live source cart exposed no
 conditional zero-cost shipping rule, so a matched popup pair remains pending.
+The guest checkout pair used equivalent complete addresses and one cart line.
+The address form and initial delivery composition were compared together. The
+local journey then reached Review through Standard delivery and Manual Payment
+without placing an order. The live reference failed its Server Components
+mutation when Standard delivery was selected, so it could not render payment
+or review; those local states were checked against the pinned source structure
+rather than claimed as a successful live pair.
 
 **Findings**
 
 - [P1] Remaining route groups still lack rendered comparison
-  Location: compact store, product and cart layouts; authenticated checkout,
-  account and order views; transfer-request states; mismatch banner; and the
-  global shipping popup.
+  Location: compact store, product and cart layouts; checkout desktop,
+  authenticated, payment, review and confirmation states; account and order
+  views; transfer-request states; mismatch banner; and the global shipping
+  popup.
   Evidence: matched comparisons now cover the transfer decision, desktop
   catalogue, desktop product structure, empty and populated desktop cart, open
   cart preview, signed-out account, and the open promotion form. The remaining
@@ -131,7 +143,10 @@ conditional zero-cost shipping rule, so a matched popup pair remains pending.
   row, applied heading, code badge, visible value and post-success open state.
   Morrow branding, privacy-safe omission of the owner email, and
   the temporarily non-actionable content-link text are intentional product
-  differences; other route copy remains pending.
+  differences. Guest checkout matches the source field order, required
+  markers, billing toggle, delivery labels and payment/review hierarchy. The
+  local delivery prompt intentionally corrects the source typo from "you
+  order" to "your order"; other route copy remains pending.
 
 **Full-view comparison evidence**
 
@@ -152,6 +167,12 @@ primary action while the panel remains open for its five-second feedback window.
 The promotion pair confirms the compact blank input and secondary action at an
 identical viewport. Local interaction captures additionally prove apply,
 percentage disclosure, recalculation, removal and safe failure rendering.
+The checkout pair confirms the compact address geometry, country placeholder,
+billing toggle, Continue action, step dividers and initial delivery state. The
+local server-backed journey additionally proves Standard delivery, Manual
+Payment and Review with authoritative totals. It deliberately stopped before
+Place Order. The reference's delivery mutation failed, so no live
+payment/review match is asserted.
 
 **Focused region comparison evidence**
 
@@ -223,6 +244,14 @@ controls still require focused captures.
   threshold and cart-session dismissal. The same pass fixed the quantity `10`
   wrapping inside its source-sized 56px control. A matched rendered popup pair
   still needs a source cart with a conditional free-shipping price.
+- The initial checkout comparison exposed a P2 preselected country, combined
+  company/apartment value, Material-scale fields, oversized gaps, sticky local
+  attribution and incorrect step spacing. The corrected address state matches
+  the source's field order, blank country placeholder, 44px controls, 14px
+  rhythm, billing toggle and in-flow `Powered by dust` placement at `736 x
+  864`. Company and apartment now remain independent through the real API and
+  frozen order snapshot. Standard delivery and Manual Payment reach Review
+  locally; the source delivery mutation fails before those live states.
 
 **Implementation checklist**
 
@@ -234,6 +263,10 @@ controls still require focused captures.
   sold-out and add-to-cart feedback states against matched product fixtures.
 - Capture populated cart at compact width and exercise shipping, line-removal
   and checkout actions against matching anonymous fixtures.
+- Capture guest checkout at desktop width and authenticated checkout with a
+  saved address; retry the payment/review pair when the reference delivery
+  mutation works, then capture confirmation without placing an unintended
+  reference order.
 - Capture a source promotion success state when the reference has a valid code,
   then compare it with the verified local applied and removal states.
 - Capture the public transfer page at `390 x 844` and verify the intentional
