@@ -165,7 +165,7 @@ class _QuantityControl extends StatelessWidget {
           Container(
             width: 56,
             height: 40,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
               color: StoreColors.subtleHover,
               border: Border.all(color: StoreColors.border),

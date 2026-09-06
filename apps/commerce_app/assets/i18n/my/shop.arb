@@ -624,6 +624,10 @@
   "@free_shipping_unlock": {
     "description": "Heading in the conditional free-shipping popup."
   },
+  "free_shipping_unlocked": "အခမဲ့ ပို့ဆောင်ခ ရပါပြီ!",
+  "@free_shipping_unlocked": {
+    "description": "Success shown when free delivery becomes available."
+  },
   "free_shipping_view_cart": "စျေးခြင်းတောင်း ကြည့်ရန်",
   "@free_shipping_view_cart": {
     "description": "Free-shipping popup link to the active cart."

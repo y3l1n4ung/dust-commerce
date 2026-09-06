@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
 import 'package:dust_dart/fp.dart';
@@ -7,9 +9,25 @@ import 'package:flutter/material.dart';
 import 'free_shipping_progress_summary.dart';
 
 /// Global popup translated from Medusa's `FreeShippingPriceNudge`.
-final class FreeShippingPriceNudge extends StatelessWidget {
+final class FreeShippingPriceNudge extends StatefulWidget {
   /// Creates the source-shaped free-shipping popup.
   const FreeShippingPriceNudge({super.key});
+
+  @override
+  State<FreeShippingPriceNudge> createState() => _FreeShippingPriceNudgeState();
+}
+
+final class _FreeShippingPriceNudgeState extends State<FreeShippingPriceNudge> {
+  Timer? _fadeTimer;
+  String? _belowTargetCartId;
+  String? _fadingCartId;
+  String? _hiddenCartId;
+
+  @override
+  void dispose() {
+    _fadeTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +38,49 @@ final class FreeShippingPriceNudge extends StatelessWidget {
     }
     final progress = freeShippingProgressOf(cart, state.shippingOptions);
     return switch (progress) {
-      Some<FreeShippingProgress>(:final value) when !value.targetReached =>
-        _popup(context, value),
+      Some<FreeShippingProgress>(:final value) =>
+        _forProgress(context, cart.cart.id, value),
       _ => const SizedBox.shrink(),
     };
+  }
+
+  Widget _forProgress(
+    BuildContext context,
+    String cartId,
+    FreeShippingProgress progress,
+  ) {
+    if (!progress.targetReached) {
+      _fadeTimer?.cancel();
+      _belowTargetCartId = cartId;
+      _fadingCartId = null;
+      _hiddenCartId = null;
+    } else if (_belowTargetCartId != cartId || _hiddenCartId == cartId) {
+      return const SizedBox.shrink();
+    } else {
+      _scheduleFade(cartId);
+    }
+    return AnimatedOpacity(
+      opacity: _fadingCartId == cartId ? 0 : 1,
+      duration: const Duration(milliseconds: 500),
+      onEnd: () => _finishFade(cartId),
+      child: _popup(context, progress),
+    );
+  }
+
+  void _scheduleFade(String cartId) {
+    if (_fadingCartId == cartId ||
+        _hiddenCartId == cartId ||
+        (_fadeTimer?.isActive ?? false)) {
+      return;
+    }
+    _fadeTimer = Timer(const Duration(seconds: 1), () {
+      if (mounted) setState(() => _fadingCartId = cartId);
+    });
+  }
+
+  void _finishFade(String cartId) {
+    if (_fadingCartId != cartId || !mounted) return;
+    setState(() => _hiddenCartId = cartId);
   }
 
   Widget _popup(BuildContext context, FreeShippingProgress progress) =>

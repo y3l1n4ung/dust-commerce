@@ -16,40 +16,63 @@ final class FreeShippingProgressSummary extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Expanded(
-                child: TranslatedText(
-                  'shop_free_shipping_unlock',
-                  defaultText: 'Unlock Free Shipping',
-                  style: TextStyle(color: Color(0xffa1a1aa), fontSize: 15),
-                ),
+              Expanded(
+                child: progress.targetReached
+                    ? const Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle,
+                            color: Color(0xff22c55e),
+                            size: 18,
+                          ),
+                          SizedBox(width: 6),
+                          TranslatedText(
+                            'shop_free_shipping_unlocked',
+                            defaultText: 'Free Shipping unlocked!',
+                            style: TextStyle(
+                              color: Color(0xffa1a1aa),
+                              fontSize: 15,
+                            ),
+                          ),
+                        ],
+                      )
+                    : const TranslatedText(
+                        'shop_free_shipping_unlock',
+                        defaultText: 'Unlock Free Shipping',
+                        style: TextStyle(
+                          color: Color(0xffa1a1aa),
+                          fontSize: 15,
+                        ),
+                      ),
               ),
-              Text.rich(
-                TextSpan(
-                  style: const TextStyle(
-                    color: Color(0xffa1a1aa),
-                    fontSize: 15,
+              if (!progress.targetReached)
+                Text.rich(
+                  TextSpan(
+                    style: const TextStyle(
+                      color: Color(0xffa1a1aa),
+                      fontSize: 15,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: context.tr(
+                          'shop_free_shipping_only',
+                          defaultText: 'Only ',
+                        ),
+                      ),
+                      TextSpan(
+                        text: formatMoney(progress.remaining),
+                        style: const TextStyle(color: StoreColors.base),
+                      ),
+                      TextSpan(
+                        text: context.tr(
+                          'shop_free_shipping_away',
+                          defaultText: ' away',
+                        ),
+                      ),
+                    ],
                   ),
-                  children: [
-                    TextSpan(
-                      text: context.tr(
-                        'shop_free_shipping_only',
-                        defaultText: 'Only ',
-                      ),
-                    ),
-                    TextSpan(
-                      text: formatMoney(progress.remaining),
-                      style: const TextStyle(color: StoreColors.base),
-                    ),
-                    TextSpan(
-                      text: context.tr(
-                        'shop_free_shipping_away',
-                        defaultText: ' away',
-                      ),
-                    ),
-                  ],
+                  textAlign: TextAlign.end,
                 ),
-                textAlign: TextAlign.end,
-              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -64,10 +87,12 @@ final class FreeShippingProgressSummary extends StatelessWidget {
                   FractionallySizedBox(
                     alignment: Alignment.centerLeft,
                     widthFactor: progress.fraction,
-                    child: const DecoratedBox(
+                    child: DecoratedBox(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [Color(0xffa1a1aa), Color(0xff71717a)],
+                          colors: progress.targetReached
+                              ? const [Color(0xff4ade80), Color(0xff22c55e)]
+                              : const [Color(0xffa1a1aa), Color(0xff71717a)],
                         ),
                       ),
                     ),
