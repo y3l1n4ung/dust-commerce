@@ -9,8 +9,7 @@ void main() {
   setUp(() async => harness = await AdminHarness.start(seedStore: true));
   tearDown(() => harness.stop());
 
-  test('rejects a syntactically valid image that was never uploaded',
-      () async {
+  test('rejects a syntactically valid image that was never uploaded', () async {
     final token = await harness.adminToken();
     final request = harness.client.post('/admin/products')
       ..bearer(token)
