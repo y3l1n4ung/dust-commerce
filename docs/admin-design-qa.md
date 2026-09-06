@@ -24,6 +24,10 @@
 - Product-media source:
   `packages/admin/dashboard/src/routes/products/product-media/` and the
   product-detail `product-media-section.tsx` at the pinned commit.
+- Image-variant source:
+  `packages/admin/dashboard/src/routes/products/product-image-variants-edit/`
+  plus the image command bar in `product-media-section.tsx` at the pinned
+  commit.
 - Rendered reference: Medusa's official Admin product-list image in the User
   Guide, official product-detail image in the Edit Product guide, and official
   Details-step image in the Create Product guide.
@@ -63,6 +67,12 @@ The current pinned source selects Medusa's two-column layout; the older guide
 raster crops that surrounding layout, so card tokens and content are directly
 comparable while page-column width is not. The editor implementation was
 captured at `1280 x 720`, but no same-state Medusa editor raster is available.
+
+The image-variant drawer was exercised at `505 x 583`: one selected image opens
+the right-side surface with its 80px preview, search, tri-state selection,
+Title/SKU/Thumbnail columns and Cancel/Save footer. Medusa publishes no
+same-state association-drawer raster, so source structure and browser behavior
+are verified but pixel comparison remains blocked.
 
 ## Verified
 
@@ -104,6 +114,11 @@ captured at `1280 x 720`, but no same-state Medusa editor raster is available.
   A browser pass reordered two real images, changed the thumbnail, saved, and
   confirmed compact ranks plus the new thumbnail in SQLite. Browser logs had no
   errors.
+- Selecting one media item exposes Delete and Manage associated variants. The
+  drawer persists add/remove deltas through the guarded generated client,
+  refreshes detail state, and reopens with the saved checkbox state. Cross-
+  product, overlapping and stale-image mutations are rejected atomically, and
+  deleting media removes its stale associations.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -113,10 +128,9 @@ captured at `1280 x 720`, but no same-state Medusa editor raster is available.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Image-to-variant association, post-create option/variant mutation,
-  import/export, filters, ordering and multiple option axes in the Flutter
-  creation form remain feature work under issue #31. Their visible controls do
-  not pretend an API mutation succeeded.
+- P1 — Post-create option/variant mutation, import/export, filters, ordering and
+  multiple option axes in the Flutter creation form remain feature work under
+  issue #31. Their visible controls do not pretend an API mutation succeeded.
 - P2 — The post-create editor lacks a same-state rendered Medusa source capture.
   The implementation matches the pinned source structure—full focus modal,
   four-column gallery, 24px grid gap, 560px upload panel and sticky footer—but
@@ -129,8 +143,8 @@ captured at `1280 x 720`, but no same-state Medusa editor raster is available.
 ## Result
 
 Passed for the implemented product-list, product-detail, general-edit,
-product-create-with-media and post-create media-card slices. Post-create editor
-visual parity remains blocked on a same-state source capture; broader Medusa
-Admin parity is not claimed.
+product-create-with-media, post-create media-card and image-variant behavior
+slices. Post-create editor and image-variant drawer visual parity remain blocked
+on same-state source captures; broader Medusa Admin parity is not claimed.
 
 final result: blocked

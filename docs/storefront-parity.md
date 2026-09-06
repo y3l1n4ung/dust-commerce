@@ -21,8 +21,8 @@ and the `Medusa DTC storefront parity` milestone.
 | `featured-products/product-rail` | featured product grid | implemented in #18 with source-ordered, API-backed collection rails; rendered QA remains |
 | `products/components/product-preview` | product card | implemented in #19 |
 | `store/templates` | catalogue | partial in #18 and #19; source sorting, 12-item paging, stable option-value filtering, and optional filter discovery implemented; the desktop grid passed rendered source comparison, while compact store controls remain |
-| `products/templates` | product detail route | implemented in #22; source-ordered mobile and sticky desktop composition, with desktop geometry passing rendered source comparison; compact and interaction-state QA remain |
-| `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations and sticky mobile actions |
+| `products/templates` | product detail route | implemented in #22; source-ordered mobile and sticky desktop composition plus variant-specific image filtering, with desktop geometry passing rendered source comparison; compact and remaining interaction-state QA remain |
+| `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations, variant-associated gallery reloads and sticky mobile actions |
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
 | `layout/components/cart-dropdown` | cart preview | implemented in #21 with hover, five-second post-add feedback, live removal, subtotal and empty state; the populated desktop preview passed rendered source comparison |
 | `shipping/components/free-shipping-price-nudge` | global shipping progress popup | implemented in #21 with API-backed item-total rules, session dismissal, source actions, server-enforced eligibility, and source-timed unlocked feedback; local threshold interactions pass, while matched source rendering awaits a conditional source price |
@@ -59,6 +59,15 @@ each value is an equal-width 40px rectangle on the subtle background, the
 selected value changes only to the interactive border, and an unselected
 hover receives the Medusa card-rest shadow treatment. Invalid combinations are
 disabled by the product state before an interaction reaches the API.
+
+The pinned DTC query requests `*variants.images`; Dust's direct SQLx response
+mirrors that shape. The public `StoreProductImage` contract contains only stable
+id, URL and rank, and remains separate from the admin image response. Without a
+valid `v_id`, or when the selected variant has no associated images, the
+complete product gallery is rendered. Otherwise the gallery preserves product
+order and keeps only image ids associated with that variant. Selecting Black
+and White in the release-mode browser changes both `v_id` and the rendered
+image set.
 
 The store refinement sidebar also follows Medusa's `OptionsPicker`: filters
 come from `/store/product-options`, every group starts expanded, selections use

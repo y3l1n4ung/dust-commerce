@@ -18,8 +18,8 @@ payment, and a basic customer account.
 
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
-| Schema | modular PostgreSQL schemas | 34 SQLite tables |
-| Admin API | broad modular API | isolated identity and product-management slices (10 protected operations plus public media reads) |
+| Schema | modular PostgreSQL schemas | 35 SQLite tables |
+| Admin API | broad modular API | isolated identity and product-management slices (11 protected operations plus public media reads) |
 | Store operations | broad Store API | 38 method/path operations |
 | Workflow engine and plugins | yes | none |
 | Admin dashboard | broad operational UI | authenticated product list, detail, edit and creation slices |
@@ -172,9 +172,12 @@ retained image ids, new upload ids, display order and thumbnail travel in one
 admin-only request. SQLite shifts historical ranks before compacting active
 ones, then soft-deletes omitted links and updates the product thumbnail in the
 same transaction. The Flutter focus surface supports upload, grid drag-order,
-selection, deletion and thumbnail promotion. Image-to-variant association and
-external object storage remain explicit Medusa capabilities not implemented
-here.
+selection, deletion and thumbnail promotion. A second guarded batch operation
+adds and removes image-to-variant links atomically; the Flutter drawer searches
+and selects variants, while the separate Store contract returns ranked product
+images and each variant's associated images. The product page uses Medusa's
+`v_id` fallback and filtering behavior. External object storage remains an
+explicit Medusa capability not implemented here.
 
 ### Order transfers keep the capability out of the database
 
