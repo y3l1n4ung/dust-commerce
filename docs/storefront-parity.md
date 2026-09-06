@@ -15,6 +15,7 @@ and the `Medusa DTC storefront parity` milestone.
 | Medusa source | Flutter/Dust owner | Status |
 | :--- | :--- | :--- |
 | `layout/templates/nav` and `footer` | shared storefront shell | implemented in #19 with nav, menu, cart count, API-backed footer taxonomy, Morrow branding, and only `Powered by dust`; rendered QA remains |
+| `layout/components/language-select` | storefront language preference | implemented in #19 with Default plus compiled Dust locales, localized names, real SVG flags, durable selection and startup restoration before routing; rendered QA remains |
 | `layout/components/country-select` | shipping-country and selling-region switch | implemented in #24 with alphabetized region countries, real SVG flags, persisted selection, path-preserving navigation, atomic cart repricing, regional shipping reset and currency-aware catalogue reload; rendered QA remains |
 | `home/components/hero` | home hero | implemented in #19 |
 | `featured-products/product-rail` | featured product grid | implemented in #18 with source-ordered, API-backed collection rails; rendered QA remains |
@@ -135,6 +136,16 @@ write occurs, line snapshots are repriced, the incompatible delivery quote is
 cleared, and a percentage promotion is reapplied or removed. Catalogue and
 product requests then reload in the selected region currency, so an
 unavailable product or option combination is not advertised.
+
+The storefront language control occupies the same menu position and uses the
+same Default-first choice model as the pinned source. Its options come from
+the locales compiled by Dust rather than an independently maintained widget
+list, names change with the active locale, and language-to-region mappings use
+real ISO-backed SVG flags. An explicit choice is persisted independently of
+authentication and restored before the router is shown. The backend catalogue
+has no localized content contract yet, so unlike Medusa the selection changes
+the Flutter interface only; it does not add a misleading locale field to the
+cart.
 
 ## Parity rule
 
