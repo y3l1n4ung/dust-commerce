@@ -167,6 +167,15 @@ from a durable single-node filesystem adapter. Medusa additionally creates
 sales-channel, shipping, type, collection, category, tag and richer pricing
 relationships. Those are not silently fabricated here.
 
+The post-create media slice copies Medusa's complete gallery replacement:
+retained image ids, new upload ids, display order and thumbnail travel in one
+admin-only request. SQLite shifts historical ranks before compacting active
+ones, then soft-deletes omitted links and updates the product thumbnail in the
+same transaction. The Flutter focus surface supports upload, grid drag-order,
+selection, deletion and thumbnail promotion. Image-to-variant association and
+external object storage remain explicit Medusa capabilities not implemented
+here.
+
 ### Order transfers keep the capability out of the database
 
 The three Store routes match Medusa's request, accept and decline shape, while

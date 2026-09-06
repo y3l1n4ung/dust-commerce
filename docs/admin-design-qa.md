@@ -21,6 +21,9 @@
 - Product-create source:
   `packages/admin/dashboard/src/routes/products/product-create/product-create.tsx`
   and the Details, Organize and Variants form components beneath it.
+- Product-media source:
+  `packages/admin/dashboard/src/routes/products/product-media/` and the
+  product-detail `product-media-section.tsx` at the pinned commit.
 - Rendered reference: Medusa's official Admin product-list image in the User
   Guide, official product-detail image in the Edit Product guide, and official
   Details-step image in the Create Product guide.
@@ -52,6 +55,14 @@ The media follow-up uses the same official raster and running implementation in
 the in-app browser at `505 x 583`. The source remains letterboxed, so this pass
 verifies hierarchy, field order, upload proportions and compact behavior rather
 than pixel identity.
+
+The post-create detail-card pair uses Medusa's official `1516 x 853` media
+section raster and Morrow's running product detail, each captured in a
+`1280 x 720` in-app browser surface and combined into one `2560 x 720` image.
+The current pinned source selects Medusa's two-column layout; the older guide
+raster crops that surrounding layout, so card tokens and content are directly
+comparable while page-column width is not. The editor implementation was
+captured at `1280 x 720`, but no same-state Medusa editor raster is available.
 
 ## Verified
 
@@ -87,6 +98,12 @@ than pixel identity.
   can be reordered, removed or made thumbnail. Publication verifies each staged
   file, stores ordered image rows atomically, exposes them through the separate
   storefront contract, and blocks staged deletion after attachment.
+- Existing-product media now opens a source-shaped focus surface. Upload,
+  four-column drag ordering, selection, deletion, thumbnail promotion, Cancel
+  cleanup and Save are wired to one authenticated generated-client operation.
+  A browser pass reordered two real images, changed the thumbnail, saved, and
+  confirmed compact ranks plus the new thumbnail in SQLite. Browser logs had no
+  errors.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -96,18 +113,24 @@ than pixel identity.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Import/export, filters, ordering, post-create media/option/variant
-  mutation and multiple option axes in the Flutter creation form remain feature
-  work under issue #31. Their visible controls do not pretend an API mutation
-  succeeded.
+- P1 — Image-to-variant association, post-create option/variant mutation,
+  import/export, filters, ordering and multiple option axes in the Flutter
+  creation form remain feature work under issue #31. Their visible controls do
+  not pretend an API mutation succeeded.
+- P2 — The post-create editor lacks a same-state rendered Medusa source capture.
+  The implementation matches the pinned source structure—full focus modal,
+  four-column gallery, 24px grid gap, 560px upload panel and sticky footer—but
+  code inspection is not a pixel comparison. Run Medusa Admin locally with
+  equivalent product data, capture both editors, and repeat the combined pass.
 - P1 — The filesystem adapter is durable for one server node. Multi-node
   deployment still needs object storage and cleanup for uploads left staged
   after an abandoned browser session.
 
 ## Result
 
-Passed for the implemented product-list, product-detail, general-edit and
-product-create-with-media vertical slices. Broader Medusa Admin parity is not
-claimed.
+Passed for the implemented product-list, product-detail, general-edit,
+product-create-with-media and post-create media-card slices. Post-create editor
+visual parity remains blocked on a same-state source capture; broader Medusa
+Admin parity is not claimed.
 
-final result: passed
+final result: blocked

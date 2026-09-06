@@ -22,8 +22,8 @@ This project is not affiliated with, endorsed by, or derived from Medusa.
 
 [docs/comparison.md](docs/comparison.md) sets the two side by side against a
 pinned Medusa source commit. This project implements tested storefront slices
-and the first isolated admin identity/session slice. It is not yet a Medusa
-replacement and has no workflow engine or plugin platform.
+and isolated admin identity and product-management slices. It is not yet a
+Medusa replacement and has no workflow engine or plugin platform.
 
 ### What is modelled
 
