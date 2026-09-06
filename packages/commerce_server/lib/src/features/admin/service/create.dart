@@ -9,6 +9,8 @@ import 'package:commerce_server/src/infra/database.dart';
 import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
 
+part 'product_media.dart';
+
 /// Why an administrator was not bootstrapped.
 enum AdminBootstrapFailure {
   /// An active administrator already owns the normalized email.
@@ -297,25 +299,11 @@ Result<_PreparedProduct, AdminCreateProductFailure> _prepareProduct(
   if (input.options.isEmpty) {
     return const Err(AdminCreateProductFailure.invalidOptions);
   }
-  if (input.media.length > adminMediaFileCountLimit) {
-    return const Err(AdminCreateProductFailure.invalidMedia);
-  }
-  final mediaIds = <String>{};
-  final mediaUrls = <String>{};
-  var thumbnails = 0;
-  final media = <_PreparedMedia>[];
-  for (final item in input.media) {
-    if (!item.validate().isValid ||
-        !mediaIds.add(item.id) ||
-        !mediaUrls.add(item.url) ||
-        !mediaStorage.accepts(item.id, item.url)) {
-      return const Err(AdminCreateProductFailure.invalidMedia);
-    }
-    if (item.isThumbnail && ++thumbnails > 1) {
-      return const Err(AdminCreateProductFailure.invalidMedia);
-    }
-    media.add(_PreparedMedia(item.url, isThumbnail: item.isThumbnail));
-  }
+  final preparedMedia = _prepareProductMedia(input.media, mediaStorage);
+  if (preparedMedia case Err(:final error)) return Err(error);
+  final media =
+      (preparedMedia as Ok<List<_PreparedMedia>, AdminCreateProductFailure>)
+          .value;
   final options = <_PreparedOption>[];
   final valuesByOption = <String, Set<String>>{};
   for (final option in input.options) {
@@ -453,13 +441,6 @@ final class _PreparedProduct {
     }
     return null;
   }
-}
-
-final class _PreparedMedia {
-  const _PreparedMedia(this.url, {required this.isThumbnail});
-
-  final bool isThumbnail;
-  final String url;
 }
 
 final class _PreparedOption {

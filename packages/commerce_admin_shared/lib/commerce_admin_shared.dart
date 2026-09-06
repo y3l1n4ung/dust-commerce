@@ -4,4 +4,5 @@ library;
 export 'src/admin_auth.dart';
 export 'src/admin_media.dart';
 export 'src/admin_product.dart';
+export 'src/admin_product_media.dart';
 export 'src/admin_user.dart';
