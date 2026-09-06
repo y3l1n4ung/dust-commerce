@@ -16,7 +16,7 @@ void main() {
   usePathUrlStrategy();
   const baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://localhost:8080',
+    defaultValue: 'http://localhost:3878',
   );
 
   final sessions = SecureAuthSessionStore();

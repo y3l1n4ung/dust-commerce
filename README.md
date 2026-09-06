@@ -99,7 +99,8 @@ COMMERCE_SEED=true \
 The seed is opt-in and idempotent. Production startup never creates merchant or
 customer records. Bind address, port, database path, and browser origins are
 configured with `COMMERCE_BIND`, `COMMERCE_PORT`, `COMMERCE_DATABASE_PATH`, and
-comma-separated `COMMERCE_ALLOWED_ORIGINS`.
+comma-separated `COMMERCE_ALLOWED_ORIGINS`. The API defaults to port `3878`
+(`DUST` on a telephone keypad); override it explicitly for each deployment.
 
 Order-transfer requests remain unavailable with `503` until outbound email is
 configured. Set `COMMERCE_SMTP_HOST`, `COMMERCE_SMTP_FROM`, and the public
@@ -121,7 +122,7 @@ In a second terminal, start the Flutter web storefront:
 flutter run -d web-server \
   --web-hostname 127.0.0.1 \
   --web-port 3000 \
-  --dart-define=API_BASE_URL=http://127.0.0.1:8080
+  --dart-define=API_BASE_URL=http://127.0.0.1:3878
 ```
 
 Then the same checks CI runs:

@@ -13,7 +13,7 @@ part 'commerce_api.g.dart';
 /// The base URL is a development default and is overridden per environment
 /// through the factory.
 @HttpClient(
-  baseUrl: 'http://localhost:8080',
+  baseUrl: 'http://localhost:3878',
   headers: {'accept': 'application/json'},
   target: HttpTarget.flutter,
 )

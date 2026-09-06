@@ -86,7 +86,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -122,7 +122,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -158,7 +158,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -194,7 +194,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -230,7 +230,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -266,7 +266,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -302,7 +302,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -341,7 +341,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -377,7 +377,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -413,7 +413,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -449,7 +449,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -500,7 +500,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -538,7 +538,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -581,7 +581,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -624,7 +624,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -661,7 +661,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -697,7 +697,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -733,7 +733,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -769,7 +769,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -805,7 +805,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -841,7 +841,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -881,7 +881,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -917,7 +917,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -953,7 +953,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -989,7 +989,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -1025,7 +1025,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -1061,7 +1061,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -1097,7 +1097,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -1134,7 +1134,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -1171,7 +1171,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -1207,7 +1207,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -1246,7 +1246,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -1285,7 +1285,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -1321,7 +1321,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),
@@ -1357,7 +1357,7 @@ final class _$CommerceApi implements CommerceApi {
             .copyWith(
               baseUrl: _combineBaseUrls(
                 _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:8080',
+                _baseUrl ?? 'http://localhost:3878',
               ),
             ),
       ),

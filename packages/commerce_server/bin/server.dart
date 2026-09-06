@@ -71,7 +71,7 @@ final class _ServerConfig {
 
   factory _ServerConfig.fromEnvironment(Map<String, String> environment) {
     final bind = environment['COMMERCE_BIND'] ?? '127.0.0.1';
-    final portText = environment['COMMERCE_PORT'] ?? '8080';
+    final portText = environment['COMMERCE_PORT'] ?? '3878';
     final port = int.tryParse(portText);
     if (port == null || port < 1 || port > 65535) {
       throw FormatException('COMMERCE_PORT must be between 1 and 65535.');
