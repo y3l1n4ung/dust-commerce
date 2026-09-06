@@ -16,6 +16,7 @@ final class ProductVariantResponse with _$ProductVariantResponse {
     required this.title,
     required this.prices,
     required this.optionValues,
+    required this.images,
     required this.inventoryQuantity,
     required this.manageInventory,
     required this.allowBackorder,
@@ -27,6 +28,9 @@ final class ProductVariantResponse with _$ProductVariantResponse {
 
   /// Stable variant identifier.
   final String id;
+
+  /// Storefront images explicitly associated with this variant.
+  final List<StoreProductImage> images;
 
   /// Units currently available.
   final int inventoryQuantity;

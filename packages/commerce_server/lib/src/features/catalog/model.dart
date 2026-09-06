@@ -53,9 +53,9 @@ final class ProductResponse with _$ProductResponse {
   /// Stable product identifier.
   final String id;
 
-  /// Ordered gallery image URLs.
+  /// Ordered storefront image allowlists.
   @Sqlx(tryFrom: _ProductImagesSqlxJson())
-  final List<String> images;
+  final List<StoreProductImage> images;
 
   /// Explicit variant axes approved for the storefront.
   @Sqlx(tryFrom: _ProductOptionsSqlxJson())
@@ -106,10 +106,10 @@ final class _ProductCategoriesSqlxJson
 }
 
 final class _ProductImagesSqlxJson
-    implements SqlxTryFrom<List<String>, String> {
+    implements SqlxTryFrom<List<StoreProductImage>, String> {
   const _ProductImagesSqlxJson();
   @override
-  List<String> decode(String value) =>
+  List<StoreProductImage> decode(String value) =>
       const json.ProductImagesFromJson().decode(value);
 }
 

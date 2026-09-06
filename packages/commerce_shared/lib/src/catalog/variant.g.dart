@@ -13,6 +13,7 @@
 
 part of 'variant.dart';
 
+const DeepCollectionEquality _productVariantImagesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productVariantOptionValuesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _productVariantPricesEquality = DeepCollectionEquality();
 final class _ProductVariantCopyWithUnset {
@@ -28,6 +29,7 @@ mixin _$ProductVariant implements Serializable {
     return 'ProductVariant('
         'allowBackorder: ${self.allowBackorder}, '
         'id: ${self.id}, '
+        'images: ${self.images}, '
         'inventoryQuantity: ${self.inventoryQuantity}, '
         'manageInventory: ${self.manageInventory}, '
         'optionValues: ${self.optionValues}, '
@@ -45,6 +47,7 @@ mixin _$ProductVariant implements Serializable {
             runtimeType == other.runtimeType &&
             other.allowBackorder == self.allowBackorder &&
             other.id == self.id &&
+            _productVariantImagesEquality.equals(other.images, self.images) &&
             other.inventoryQuantity == self.inventoryQuantity &&
             other.manageInventory == self.manageInventory &&
             _productVariantOptionValuesEquality.equals(other.optionValues, self.optionValues) &&
@@ -60,6 +63,7 @@ mixin _$ProductVariant implements Serializable {
       runtimeType,
       self.allowBackorder,
       self.id,
+      _productVariantImagesEquality.hash(self.images),
       self.inventoryQuantity,
       self.manageInventory,
       _productVariantOptionValuesEquality.hash(self.optionValues),
@@ -92,6 +96,7 @@ abstract class _$ProductVariantCopyWith<$Res> {
   $Res call({
     bool? allowBackorder,
     String? id,
+    List<StoreProductImage>? images,
     int? inventoryQuantity,
     bool? manageInventory,
     Map<String, String>? optionValues,
@@ -113,6 +118,7 @@ final class _$ProductVariantCopyWithImpl<$Res> implements _$ProductVariantCopyWi
   $Res call({
     Object? allowBackorder = null,
     Object? id = null,
+    Object? images = null,
     Object? inventoryQuantity = null,
     Object? manageInventory = null,
     Object? optionValues = null,
@@ -126,6 +132,7 @@ final class _$ProductVariantCopyWithImpl<$Res> implements _$ProductVariantCopyWi
         title: title == null ? _self.title : title as String,
         prices: prices == null ? _self.prices : prices as List<Money>,
         optionValues: optionValues == null ? _self.optionValues : optionValues as Map<String, String>,
+        images: images == null ? _self.images : images as List<StoreProductImage>,
         sku: identical(sku, _productVariantCopyWithUnset)
             ? _self.sku
             : sku as String?,
@@ -153,6 +160,9 @@ Map<String, Object?> _$ProductVariantSerialize(ProductVariant instance) {
   return <String, Object?>{
     'allow_backorder': instance.allowBackorder,
     'id': instance.id,
+    'images': instance.images
+        .map((item) => item.toJson())
+        .toList(),
     'inventory_quantity': instance.inventoryQuantity,
     'manage_inventory': instance.manageInventory,
     'option_values': instance.optionValues
@@ -176,6 +186,8 @@ ProductVariant _$ProductVariantDeserialize(Map<String, Object?> json) {
     'bool',
   );
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final imagesValue = JsonHelper.decodeList(json['images'], 'images',
+      (item, itemKey) => StoreProductImage.fromJson(JsonHelper.asMap(item, itemKey)));
   final inventoryQuantityValue = JsonHelper.as<int>(
     json['inventory_quantity'],
     'inventory_quantity',
@@ -200,6 +212,7 @@ ProductVariant _$ProductVariantDeserialize(Map<String, Object?> json) {
     title: titleValue,
     prices: pricesValue,
     optionValues: optionValuesValue,
+    images: imagesValue,
     sku: skuValue,
     inventoryQuantity: inventoryQuantityValue,
     manageInventory: manageInventoryValue,

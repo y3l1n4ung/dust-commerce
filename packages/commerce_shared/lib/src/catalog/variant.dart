@@ -1,3 +1,4 @@
+import 'package:commerce_shared/src/catalog/image.dart';
 import 'package:commerce_shared/src/money.dart';
 import 'package:dust_dart/serde.dart';
 
@@ -17,6 +18,7 @@ class ProductVariant with _$ProductVariant {
     required this.title,
     required this.prices,
     required this.optionValues,
+    this.images = const [],
     this.sku,
     this.inventoryQuantity = 0,
     this.manageInventory = true,
@@ -34,6 +36,7 @@ class ProductVariant with _$ProductVariant {
     bool manageInventory = true,
     bool allowBackorder = false,
     Map<String, String> optionValues = const {},
+    List<StoreProductImage> images = const [],
   }) {
     final currencies = prices.map((price) => price.currencyCode).toList();
     if (currencies.toSet().length != currencies.length) {
@@ -59,6 +62,7 @@ class ProductVariant with _$ProductVariant {
       manageInventory: manageInventory,
       allowBackorder: allowBackorder,
       optionValues: optionValues,
+      images: images,
     );
   }
 
@@ -71,6 +75,9 @@ class ProductVariant with _$ProductVariant {
 
   /// Unique identifier.
   final String id;
+
+  /// Product images explicitly associated with this variant.
+  final List<StoreProductImage> images;
 
   /// Units on hand. Meaningful only when [manageInventory] is true.
   final int inventoryQuantity;

@@ -70,7 +70,7 @@ void main() {
     storefront.assertOk();
     final public = Product.fromJson(storefront.json! as Map<String, Object?>);
     expect(public.thumbnail, _back);
-    expect(public.images, [_back, uploaded['url']]);
+    expect(public.images.map((image) => image.url), [_back, uploaded['url']]);
 
     final rows = await harness.raw('''
 SELECT id, deleted_at FROM product_images
@@ -83,7 +83,13 @@ WHERE product_id = 'prod_sweatpants' ORDER BY id
           .readIndex<String?>(1),
       isNotNull,
     );
-    expect(await harness.raw('SELECT * FROM product_image_variants'), isEmpty);
+    expect(
+      await harness.raw('''
+SELECT * FROM product_image_variants
+WHERE image_id IN ('img_sweatpants_1', 'img_sweatpants_2')
+'''),
+      isEmpty,
+    );
   });
 
   test('rejects mismatched existing ids without changing media', () async {

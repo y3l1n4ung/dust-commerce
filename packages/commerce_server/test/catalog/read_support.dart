@@ -49,6 +49,15 @@ Future<void> seedCatalogRead(CommerceDatabase database) async {
     r"('var_mug', 'prod_mug', 'Default', 3)",
   );
   await run(
+    r"INSERT INTO product_images (id, product_id, url, rank) VALUES "
+    r"('img_shirt_back', 'prod_shirt', "
+    r"'https://example.test/shirt-back.png', 1)",
+  );
+  await run(
+    r"INSERT INTO product_image_variants (image_id, variant_id) VALUES "
+    r"('img_shirt', 'var_large')",
+  );
+  await run(
     r"INSERT INTO product_options (id, product_id, title) VALUES "
     r"('opt_size', 'prod_shirt', 'Size')",
   );

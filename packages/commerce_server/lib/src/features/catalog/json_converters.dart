@@ -57,14 +57,16 @@ final class ProductTagsFromJson
       ];
 }
 
-/// Decodes ordered product image URLs selected as JSON.
-final class ProductImagesFromJson implements SqlxTryFrom<List<String>, String> {
+/// Decodes ordered storefront images selected as JSON.
+final class ProductImagesFromJson
+    implements SqlxTryFrom<List<StoreProductImage>, String> {
   /// Creates the stateless converter.
   const ProductImagesFromJson();
 
   @override
-  List<String> decode(String value) => [
-        for (final item in _array(value)) item! as String,
+  List<StoreProductImage> decode(String value) => [
+        for (final item in _array(value))
+          StoreProductImage.fromJson(item! as Map<String, Object?>),
       ];
 }
 
@@ -120,6 +122,10 @@ final class ProductVariantsFromJson
         optionValues: (value['option_values']! as Map<String, Object?>).map(
           (key, choice) => MapEntry(key, choice! as String),
         ),
+        images: [
+          for (final image in value['images']! as List<Object?>)
+            StoreProductImage.fromJson(image! as Map<String, Object?>),
+        ],
       );
 }
 

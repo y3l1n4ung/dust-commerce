@@ -39,12 +39,16 @@ SELECT product.id, product.title, product.handle, product.description,
          'height', product.height
        ) AS details,
        coalesce((
-         SELECT json_group_array(ordered.url)
+         SELECT json_group_array(json(ordered.image_json))
          FROM (
-           SELECT image.url
+           SELECT json_object(
+             'id', image.id,
+             'url', image.url,
+             'rank', image.rank
+           ) AS image_json
            FROM product_images image
            WHERE image.product_id = product.id AND image.deleted_at IS NULL
-           ORDER BY image.rank
+           ORDER BY image.rank, image.id
          ) ordered
        ), '[]') AS images,
        coalesce((
@@ -117,7 +121,22 @@ SELECT product.id, product.title, product.handle, product.description,
                 AND option_value.option_id = choice.option_id
                WHERE choice.variant_id = variant.id
                  AND option_value.deleted_at IS NULL
-             ), '{}'))
+             ), '{}')),
+             'images', json(coalesce((
+               SELECT json_group_array(json(ordered_image.image_json))
+               FROM (
+                 SELECT json_object(
+                   'id', image.id,
+                   'url', image.url,
+                   'rank', image.rank
+                 ) AS image_json
+                 FROM product_image_variants image_variant
+                 JOIN product_images image ON image.id = image_variant.image_id
+                 WHERE image_variant.variant_id = variant.id
+                   AND image.deleted_at IS NULL
+                 ORDER BY image.rank, image.id
+               ) ordered_image
+             ), '[]'))
            ) AS variant_json
            FROM product_variants variant
            JOIN variant_prices price ON price.variant_id = variant.id

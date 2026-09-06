@@ -96,7 +96,7 @@ Map<String, Object?> _$ProductResponseSerialize(ProductResponse instance) {
     'handle': instance.handle,
     'id': instance.id,
     'images': instance.images
-        .map((item) => item)
+        .map((item) => item.toJson())
         .toList(),
     'options': instance.options
         .map((item) => item.toJson())

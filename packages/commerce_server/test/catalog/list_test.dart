@@ -137,10 +137,17 @@ void main() {
         row?.variants.map((variant) => variant.prices.single.amount),
         [2199, 1999],
       );
-      expect(row?.images, [
+      expect(row?.images.map((image) => image.url), [
         'https://example.test/front.png',
         'https://example.test/back.png',
       ]);
+      expect(
+        row?.variants
+            .singleWhere((variant) => variant.id == 'var_large')
+            .images
+            .map((image) => image.id),
+        ['img_front'],
+      );
     });
 
     test('does not leak a draft, even to a caller who knows the handle',

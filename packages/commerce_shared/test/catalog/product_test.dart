@@ -21,7 +21,13 @@ void main() {
         handle: 'T-Shirt',
         status: status,
         details: const ProductDetails(weight: 400),
-        images: const ['https://example.test/shirt.png'],
+        images: const [
+          StoreProductImage(
+            id: 'img_shirt',
+            url: 'https://example.test/shirt.png',
+            rank: 0,
+          ),
+        ],
         options: [
           ProductOption.of(
             id: 'opt_size',
@@ -114,8 +120,41 @@ void main() {
     test('preserves gallery and product information', () {
       final decoded = Product.fromJson(product().toJson());
 
-      expect(decoded.images, ['https://example.test/shirt.png']);
+      expect(
+        decoded.images.map((image) => image.url),
+        ['https://example.test/shirt.png'],
+      );
       expect(decoded.details.weight, 400);
+    });
+
+    test('filters associated variant images like the Medusa starter', () {
+      const front = StoreProductImage(
+        id: 'img_front',
+        url: 'https://example.test/front.png',
+        rank: 0,
+      );
+      const back = StoreProductImage(
+        id: 'img_back',
+        url: 'https://example.test/back.png',
+        rank: 1,
+      );
+      final subject = product(
+        variants: [
+          variant('v_small', 'Small'),
+          ProductVariant.of(
+            id: 'v_large',
+            title: 'Large / Black',
+            prices: [Money.of(1999, 'usd')],
+            optionValues: const {'opt_size': 'Large'},
+            images: const [back],
+          ),
+        ],
+      ).copyWith(images: const [front, back]);
+
+      expect(subject.imagesForVariant(null), [front, back]);
+      expect(subject.imagesForVariant('v_small'), [front, back]);
+      expect(subject.imagesForVariant('v_large'), [back]);
+      expect(subject.imagesForVariant('unknown'), [front, back]);
     });
   });
 }

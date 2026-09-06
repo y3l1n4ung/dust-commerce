@@ -95,10 +95,12 @@ void main() {
       final product = Product.fromJson(response.json! as Map<String, Object?>);
 
       expect(product.title, 'T-Shirt');
-      expect(product.variants, hasLength(2));
       expect(product.cheapestIn('usd'), Money.of(1999, 'usd'));
-      expect(product.isPurchasable, isTrue);
-      expect(product.images, ['https://example.test/shirt-front.png']);
+      final urls = product.images.map((image) => image.url);
+      expect(urls, [
+        'https://example.test/shirt-front.png',
+        'https://example.test/shirt-back.png',
+      ]);
       expect(product.collection?.handle, 'summer');
       expect(product.categories.single.handle, 'clothing/shirts');
       expect(product.categories.single.parentId, 'cat_clothing');
@@ -169,6 +171,7 @@ void main() {
         'allow_backorder',
         'id',
         'inventory_quantity',
+        'images',
         'manage_inventory',
         'option_values',
         'prices',

@@ -71,4 +71,8 @@ Future<void> seedCatalogList(CommerceDatabase database) async {
     r"('var_small', 'eur', 1799), "
     r"('var_mug', 'usd', 999)",
   );
+  await run(
+    r"INSERT INTO product_image_variants (image_id, variant_id) VALUES "
+    r"('img_front', 'var_large')",
+  );
 }

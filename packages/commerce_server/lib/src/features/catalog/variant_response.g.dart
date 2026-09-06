@@ -31,6 +31,9 @@ Map<String, Object?> _$ProductVariantResponseSerialize(ProductVariantResponse in
   return <String, Object?>{
     'allow_backorder': instance.allowBackorder,
     'id': instance.id,
+    'images': instance.images
+        .map((item) => item.toJson())
+        .toList(),
     'inventory_quantity': instance.inventoryQuantity,
     'manage_inventory': instance.manageInventory,
     'option_values': instance.optionValues

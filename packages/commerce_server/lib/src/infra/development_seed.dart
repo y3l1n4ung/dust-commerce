@@ -157,6 +157,24 @@ VALUES
   ('var_shorts_s', 'opt_shorts_size', 'optval_shorts_size_s'),
   ('var_shorts_m', 'opt_shorts_size', 'optval_shorts_size_m')
 '''),
+  const _Statement(r'''
+INSERT OR IGNORE INTO product_image_variants (image_id, variant_id)
+SELECT image.id, variant.id
+FROM product_images image
+JOIN product_variants variant ON variant.product_id = image.product_id
+WHERE image.product_id = 'prod_tshirt'
+  AND (
+    (image.id IN ('img_tshirt_1', 'img_tshirt_2') AND variant.id IN (
+      'var_tshirt_s_black', 'var_tshirt_m_black',
+      'var_tshirt_l_black', 'var_tshirt_xl_black'
+    ))
+    OR
+    (image.id IN ('img_tshirt_3', 'img_tshirt_4') AND variant.id IN (
+      'var_tshirt_s_white', 'var_tshirt_m_white',
+      'var_tshirt_l_white', 'var_tshirt_xl_white'
+    ))
+  )
+'''),
   ..._shippingPriceStatements,
   const _Statement(r'''
 INSERT OR IGNORE INTO promotions

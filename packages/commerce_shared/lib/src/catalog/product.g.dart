@@ -113,7 +113,7 @@ abstract class _$ProductCopyWith<$Res> {
     ProductDetails? details,
     String? handle,
     String? id,
-    List<String>? images,
+    List<StoreProductImage>? images,
     List<ProductOption>? options,
     ProductStatus? status,
     String? title,
@@ -163,7 +163,7 @@ final class _$ProductCopyWithImpl<$Res> implements _$ProductCopyWith<$Res> {
         description: identical(description, _productCopyWithUnset)
             ? _self.description
             : description as String?,
-        images: images == null ? _self.images : images as List<String>,
+        images: images == null ? _self.images : images as List<StoreProductImage>,
         thumbnail: identical(thumbnail, _productCopyWithUnset)
             ? _self.thumbnail
             : thumbnail as String?,
@@ -210,7 +210,7 @@ Map<String, Object?> _$ProductSerialize(Product instance) {
     'handle': instance.handle,
     'id': instance.id,
     'images': instance.images
-        .map((item) => item)
+        .map((item) => item.toJson())
         .toList(),
     'options': instance.options
         .map((item) => item.toJson())
@@ -246,7 +246,7 @@ Product _$ProductDeserialize(Map<String, Object?> json) {
   final handleValue = JsonHelper.as<String>(json['handle'], 'handle', 'String');
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final imagesValue = JsonHelper.decodeList(json['images'], 'images',
-      (item, itemKey) => JsonHelper.as<String>(item, itemKey, 'String'));
+      (item, itemKey) => StoreProductImage.fromJson(JsonHelper.asMap(item, itemKey)));
   final optionsValue = JsonHelper.decodeList(json['options'], 'options',
       (item, itemKey) => ProductOption.fromJson(JsonHelper.asMap(item, itemKey)));
   final statusValue = _$ProductStatusDeserialize(json['status'], 'status');

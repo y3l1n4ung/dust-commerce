@@ -71,7 +71,10 @@ void main() {
     (await conflict.send()).assertUnprocessable();
     (await foreign.send()).assertUnprocessable();
     expect(
-      await harness.raw('SELECT * FROM product_image_variants'),
+      await harness.raw('''
+SELECT * FROM product_image_variants
+WHERE image_id = 'img_sweatpants_1'
+'''),
       isEmpty,
     );
   });

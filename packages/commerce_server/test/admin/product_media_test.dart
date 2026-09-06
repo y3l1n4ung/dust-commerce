@@ -38,7 +38,11 @@ void main() {
     final json = created.json! as Map<String, Object?>;
     expect(json['thumbnail'], uploaded['url']);
     expect(json['images'], [
-      {'id': isA<String>(), 'url': uploaded['url']},
+      {
+        'id': isA<String>(),
+        'url': uploaded['url'],
+        'variant_ids': <String>[],
+      },
     ]);
 
     final storefront = await harness.client
@@ -49,7 +53,7 @@ void main() {
       storefront.json! as Map<String, Object?>,
     );
     expect(product.thumbnail, uploaded['url']);
-    expect(product.images, [uploaded['url']]);
+    expect(product.images.map((image) => image.url), [uploaded['url']]);
 
     final remove = harness.client.delete('/admin/uploads/${uploaded['id']}')
       ..bearer(token);
