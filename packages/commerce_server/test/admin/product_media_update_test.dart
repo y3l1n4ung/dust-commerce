@@ -19,6 +19,16 @@ void main() {
   test('reorders, adds, removes, and promotes media atomically', () async {
     final uploaded = await harness.uploadPng();
     final token = await harness.adminToken();
+    final associate = harness.client.post(
+      '/admin/products/prod_sweatpants/images/'
+      'img_sweatpants_1/variants/batch',
+    )
+      ..bearer(token)
+      ..json({
+        'add': ['var_sweatpants_s'],
+        'remove': <String>[],
+      });
+    (await associate.send()).assertOk();
     final request = harness.client.put('/admin/products/prod_sweatpants/media')
       ..bearer(token)
       ..json({
@@ -73,6 +83,7 @@ WHERE product_id = 'prod_sweatpants' ORDER BY id
           .readIndex<String?>(1),
       isNotNull,
     );
+    expect(await harness.raw('SELECT * FROM product_image_variants'), isEmpty);
   });
 
   test('rejects mismatched existing ids without changing media', () async {

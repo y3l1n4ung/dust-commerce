@@ -64,4 +64,19 @@ WHERE image_id = ? AND variant_id = ?
       [imageId, variantId],
     );
   }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> removeForShiftedImages(String productId, int minimumRank) {
+    return _db.execute(
+      r'''
+DELETE FROM product_image_variants
+WHERE image_id IN (
+  SELECT id
+  FROM product_images
+  WHERE product_id = ? AND deleted_at IS NULL AND rank >= ?
+)
+''',
+      [productId, minimumRank],
+    );
+  }
 }

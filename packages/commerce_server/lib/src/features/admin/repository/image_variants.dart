@@ -42,4 +42,18 @@ WHERE image_id = $1 AND variant_id = $2
     String imageId,
     String variantId,
   );
+
+  /// Removes associations owned by images leaving the active gallery.
+  @Query(r'''
+DELETE FROM product_image_variants
+WHERE image_id IN (
+  SELECT id
+  FROM product_images
+  WHERE product_id = $1 AND deleted_at IS NULL AND rank >= $2
+)
+''')
+  Future<Result<ExecResult, SqlxError>> removeForShiftedImages(
+    String productId,
+    int minimumRank,
+  );
 }

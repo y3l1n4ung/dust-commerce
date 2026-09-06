@@ -74,6 +74,9 @@ Future<
         if (write case Err(:final error)) return Err(error);
       }
 
+      final links = AdminProductImageVariantRepository(tx);
+      final unlinked = await links.removeForShiftedImages(productId, offset);
+      if (unlinked case Err(:final error)) return Err(error);
       final removed = await writes.deleteShiftedImages(productId, offset);
       if (removed case Err(:final error)) return Err(error);
       final thumbnail = await writes.updateThumbnail(
