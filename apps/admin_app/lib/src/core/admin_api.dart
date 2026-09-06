@@ -29,6 +29,14 @@ abstract interface class AdminApi {
     @Query('offset') int offset,
   );
 
+  /// Loads active storefront currencies required by the creation grid.
+  @GET('/admin/products/create-context')
+  Future<AdminProductCreateContext> productCreateContext();
+
+  /// Creates one complete product, option, variant, inventory, and price graph.
+  @POST('/admin/products')
+  Future<AdminProductDetail> createProduct(@Body() AdminCreateProduct body);
+
   /// Reads one complete merchant product detail.
   @GET('/admin/products/{id}')
   Future<AdminProductDetail> product(@Path() String id);

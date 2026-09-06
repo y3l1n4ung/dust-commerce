@@ -14,6 +14,158 @@ enum AdminBootstrapFailure {
   alreadyExists,
 }
 
+/// Business reason a valid JSON product graph cannot be created.
+enum AdminCreateProductFailure {
+  /// The normalized handle is empty or malformed.
+  invalidHandle,
+
+  /// Options or variant selections are incomplete or duplicated.
+  invalidOptions,
+
+  /// A variant or its prices are incomplete or duplicated.
+  invalidVariants,
+
+  /// A requested currency is not configured by an active selling region.
+  invalidCurrency,
+
+  /// Another active product already owns the requested handle.
+  handleConflict,
+
+  /// Another active variant already owns one requested SKU.
+  skuConflict,
+
+  /// The committed product could not be read back.
+  unavailable,
+}
+
+/// Reads the active storefront currencies needed by Medusa's create grid.
+Future<Result<AdminProductCreateContext, SqlxError>>
+    readAdminProductCreateContext(
+  AdminProductCreateRepository products,
+) async {
+  final currencies = await products.activeCurrencies();
+  return switch (currencies) {
+    Ok(:final value) => Ok(AdminProductCreateContext(
+        currencyCodes: value.map((row) => row.currencyCode).toList(),
+      )),
+    Err(:final error) => Err(error),
+  };
+}
+
+/// Creates a complete sellable product graph in one transaction.
+Future<
+    Result<Result<AdminProductDetailResponse, AdminCreateProductFailure>,
+        SqlxError>> createAdminProduct(
+  CommerceDatabase database,
+  AdminCreateProduct input, {
+  required String Function() nextId,
+}) =>
+    database.transaction((tx) async {
+      final writes = AdminProductCreateRepository(tx);
+      final currencies = await writes.activeCurrencies();
+      if (currencies case Err(:final error)) return Err(error);
+      final prepared = _prepareProduct(
+        input,
+        (currencies as Ok<List<AdminProductCurrencyResponse>, SqlxError>)
+            .value
+            .map((row) => row.currencyCode)
+            .toList(),
+      );
+      if (prepared case Err(:final error)) return Ok(Err(error));
+      final product =
+          (prepared as Ok<_PreparedProduct, AdminCreateProductFailure>).value;
+      final productId = nextId();
+      final inserted = await writes.insertProduct(
+        productId,
+        product.title,
+        product.handle,
+        product.subtitle,
+        product.material,
+        product.description,
+        product.discountable ? 1 : 0,
+        product.status.name,
+      );
+      if (inserted case Err(:final error)) return Err(error);
+      if ((inserted as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
+        return const Ok(Err(AdminCreateProductFailure.handleConflict));
+      }
+
+      final createdOptions = <String, _CreatedOption>{};
+      for (final option in product.options) {
+        final optionId = nextId();
+        final optionWrite = await writes.insertOption(
+          optionId,
+          productId,
+          option.title,
+        );
+        if (optionWrite case Err(:final error)) return Err(error);
+        final values = <String, String>{};
+        for (var rank = 0; rank < option.values.length; rank++) {
+          final value = option.values[rank];
+          final valueId = nextId();
+          final valueWrite = await writes.insertOptionValue(
+            valueId,
+            optionId,
+            value,
+            rank,
+          );
+          if (valueWrite case Err(:final error)) return Err(error);
+          values[value] = valueId;
+        }
+        createdOptions[option.title] = _CreatedOption(optionId, values);
+      }
+
+      for (final variant in product.variants) {
+        final variantId = nextId();
+        final variantWrite = await writes.insertVariant(
+          variantId,
+          productId,
+          variant.title,
+          variant.sku,
+          variant.inventoryQuantity,
+          variant.manageInventory ? 1 : 0,
+          variant.allowBackorder ? 1 : 0,
+        );
+        if (variantWrite case Err(:final error)) return Err(error);
+        if ((variantWrite as Ok<ExecResult, SqlxError>).value.rowsAffected ==
+            0) {
+          final cleanup = await writes.deleteCreatedProduct(productId);
+          if (cleanup case Err(:final error)) return Err(error);
+          return const Ok(Err(AdminCreateProductFailure.skuConflict));
+        }
+        for (final selection in variant.optionValues.entries) {
+          final option = createdOptions[selection.key]!;
+          final link = await writes.insertVariantOptionValue(
+            variantId,
+            option.id,
+            option.values[selection.value]!,
+          );
+          if (link case Err(:final error)) return Err(error);
+        }
+        for (final price in variant.prices) {
+          final priceWrite = await writes.insertPrice(
+            variantId,
+            price.currencyCode,
+            price.amount,
+          );
+          if (priceWrite case Err(:final error)) return Err(error);
+        }
+      }
+
+      final refreshed =
+          await AdminProductReadRepository(tx).findById(productId);
+      if (refreshed case Err(:final error)) return Err(error);
+      return switch (optionOf(
+        (refreshed as Ok<AdminProductDetailResponse?, SqlxError>).value,
+      )) {
+        Some(:final value) => Ok(Ok(value)),
+        None() => switch (await writes.deleteCreatedProduct(productId)) {
+            Ok() => const Ok(Err(AdminCreateProductFailure.unavailable)),
+            Err(:final error) => Err(error),
+          },
+      };
+    });
+
 /// Creates an admin profile and provider identity in one transaction.
 Future<Result<Result<AdminUserResponse, AdminBootstrapFailure>, SqlxError>>
     bootstrapAdmin(
@@ -103,4 +255,187 @@ Future<Result<Option<AdminIssuedToken>, SqlxError>> adminSignIn(
   );
   if (stored case Err(:final error)) return Err(error);
   return Ok(Some(AdminIssuedToken(token: token, expiresAt: expiresAt)));
+}
+
+Result<_PreparedProduct, AdminCreateProductFailure> _prepareProduct(
+  AdminCreateProduct input,
+  List<String> activeCurrencies,
+) {
+  final title = input.title.trim();
+  final handle = _handleFor(input.handle, title);
+  if (handle.isEmpty ||
+      !RegExp(r'^[a-z0-9]+(?:-[a-z0-9]+)*$').hasMatch(handle)) {
+    return const Err(AdminCreateProductFailure.invalidHandle);
+  }
+  if (input.options.isEmpty) {
+    return const Err(AdminCreateProductFailure.invalidOptions);
+  }
+  final options = <_PreparedOption>[];
+  final valuesByOption = <String, Set<String>>{};
+  for (final option in input.options) {
+    if (!option.validate().isValid) {
+      return const Err(AdminCreateProductFailure.invalidOptions);
+    }
+    final optionTitle = option.title.trim();
+    final values = option.values.map((value) => value.trim()).toList();
+    final uniqueValues = values.toSet();
+    if (values.isEmpty ||
+        values.any((value) => value.isEmpty || value.length > 255) ||
+        uniqueValues.length != values.length ||
+        valuesByOption.containsKey(optionTitle)) {
+      return const Err(AdminCreateProductFailure.invalidOptions);
+    }
+    valuesByOption[optionTitle] = uniqueValues;
+    options.add(_PreparedOption(optionTitle, values));
+  }
+  if (input.variants.isEmpty) {
+    return const Err(AdminCreateProductFailure.invalidVariants);
+  }
+  final requiredCurrencies = activeCurrencies.toSet();
+  if (requiredCurrencies.isEmpty) {
+    return const Err(AdminCreateProductFailure.invalidCurrency);
+  }
+  final skus = <String>{};
+  final selections = <String>{};
+  final variants = <_PreparedVariant>[];
+  for (final variant in input.variants) {
+    if (!variant.validate().isValid) {
+      return const Err(AdminCreateProductFailure.invalidVariants);
+    }
+    final selected = <String, String>{
+      for (final entry in variant.optionValues.entries)
+        entry.key.trim(): entry.value.trim(),
+    };
+    if (selected.keys
+            .toSet()
+            .difference(valuesByOption.keys.toSet())
+            .isNotEmpty ||
+        valuesByOption.keys
+            .toSet()
+            .difference(selected.keys.toSet())
+            .isNotEmpty ||
+        selected.entries.any(
+          (entry) =>
+              !(valuesByOption[entry.key]?.contains(entry.value) ?? false),
+        )) {
+      return const Err(AdminCreateProductFailure.invalidOptions);
+    }
+    final selectionKey =
+        options.map((option) => selected[option.title]).join('\u001F');
+    if (!selections.add(selectionKey)) {
+      return const Err(AdminCreateProductFailure.invalidVariants);
+    }
+    final skuText = variant.sku?.trim() ?? '';
+    final sku = skuText.isEmpty ? null : skuText;
+    if (sku != null && !skus.add(sku)) {
+      return const Err(AdminCreateProductFailure.invalidVariants);
+    }
+    final prices = <_PreparedPrice>[];
+    final priceCurrencies = <String>{};
+    for (final price in variant.prices) {
+      if (!price.validate().isValid ||
+          !priceCurrencies.add(price.currencyCode)) {
+        return const Err(AdminCreateProductFailure.invalidVariants);
+      }
+      prices.add(_PreparedPrice(price.currencyCode, price.amount));
+    }
+    if (priceCurrencies.length != requiredCurrencies.length ||
+        !priceCurrencies.containsAll(requiredCurrencies)) {
+      return const Err(AdminCreateProductFailure.invalidCurrency);
+    }
+    variants.add(_PreparedVariant(
+      title: variant.title.trim(),
+      sku: sku,
+      inventoryQuantity: variant.inventoryQuantity,
+      manageInventory: variant.manageInventory,
+      allowBackorder: variant.allowBackorder,
+      optionValues: selected,
+      prices: prices,
+    ));
+  }
+  return Ok(_PreparedProduct(
+    title: title,
+    handle: handle,
+    subtitle: input.subtitle,
+    material: input.material,
+    description: input.description,
+    discountable: input.discountable,
+    status: input.status,
+    options: options,
+    variants: variants,
+  ));
+}
+
+String _handleFor(String? requested, String title) {
+  final supplied = requested?.trim() ?? '';
+  if (supplied.isNotEmpty) return supplied;
+  return title
+      .toLowerCase()
+      .replaceAll(RegExp('[^a-z0-9]+'), '-')
+      .replaceAll(RegExp(r'^-+|-+$'), '');
+}
+
+final class _PreparedProduct {
+  const _PreparedProduct({
+    required this.title,
+    required this.handle,
+    required this.subtitle,
+    required this.material,
+    required this.description,
+    required this.discountable,
+    required this.status,
+    required this.options,
+    required this.variants,
+  });
+
+  final String title;
+  final String handle;
+  final String? subtitle;
+  final String? material;
+  final String? description;
+  final bool discountable;
+  final AdminProductLifecycle status;
+  final List<_PreparedOption> options;
+  final List<_PreparedVariant> variants;
+}
+
+final class _PreparedOption {
+  const _PreparedOption(this.title, this.values);
+
+  final String title;
+  final List<String> values;
+}
+
+final class _PreparedPrice {
+  const _PreparedPrice(this.currencyCode, this.amount);
+
+  final String currencyCode;
+  final int amount;
+}
+
+final class _PreparedVariant {
+  const _PreparedVariant({
+    required this.title,
+    required this.sku,
+    required this.inventoryQuantity,
+    required this.manageInventory,
+    required this.allowBackorder,
+    required this.optionValues,
+    required this.prices,
+  });
+
+  final bool allowBackorder;
+  final int inventoryQuantity;
+  final bool manageInventory;
+  final Map<String, String> optionValues;
+  final List<_PreparedPrice> prices;
+  final String? sku;
+  final String title;
+}
+
+final class _CreatedOption {
+  const _CreatedOption(this.id, this.values);
+
+  final String id;
+  final Map<String, String> values;
 }

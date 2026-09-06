@@ -16,6 +16,7 @@ final class AdminDeps {
     required this.dummyPasswordHash,
     required this.products,
     required this.productReads,
+    required this.productCreates,
     required this.database,
   });
 
@@ -36,6 +37,9 @@ final class AdminDeps {
 
   /// Merchant catalogue listing queries.
   final AdminProductRepository products;
+
+  /// Product graph writes and create-form currency discovery.
+  final AdminProductCreateRepository productCreates;
 
   /// Complete merchant product detail reads.
   final AdminProductReadRepository productReads;

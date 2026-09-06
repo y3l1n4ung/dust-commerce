@@ -11,8 +11,12 @@ final class AdminProductPage extends StatefulWidget {
   const AdminProductPage({
     required this.searchFocus,
     required this.onOpenProduct,
+    required this.onCreateProduct,
     super.key,
   });
+
+  /// Opens the authenticated product creation focus surface.
+  final VoidCallback onCreateProduct;
 
   /// Focus target shared with the sidebar search action.
   final FocusNode searchFocus;
@@ -53,7 +57,10 @@ final class _AdminProductPageState extends State<AdminProductPage> {
             clipBehavior: Clip.antiAlias,
             child: Column(
               children: [
-                _Header(onUnavailable: () => _unavailable(context)),
+                _Header(
+                  onUnavailable: () => _unavailable(context),
+                  onCreate: widget.onCreateProduct,
+                ),
                 Divider(height: 1, color: Theme.of(context).dividerColor),
                 _Toolbar(
                   controller: _query,
@@ -116,8 +123,9 @@ final class _AdminProductPageState extends State<AdminProductPage> {
 }
 
 final class _Header extends StatelessWidget {
-  const _Header({required this.onUnavailable});
+  const _Header({required this.onUnavailable, required this.onCreate});
 
+  final VoidCallback onCreate;
   final VoidCallback onUnavailable;
 
   @override
@@ -137,8 +145,7 @@ final class _Header extends StatelessWidget {
               child: const Text('Import'),
             ),
             const SizedBox(width: 8),
-            OutlinedButton(
-                onPressed: onUnavailable, child: const Text('Create')),
+            FilledButton(onPressed: onCreate, child: const Text('Create')),
           ],
         ),
       );

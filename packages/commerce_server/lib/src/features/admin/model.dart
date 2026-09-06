@@ -117,6 +117,17 @@ final class AdminProductListResponse with _$AdminProductListResponse {
   final List<AdminProductResponse> products;
 }
 
+/// One active storefront currency selected directly for product creation.
+@Derive([FromRow()])
+final class AdminProductCurrencyResponse {
+  /// Creates the private one-column query projection.
+  const AdminProductCurrencyResponse({required this.currencyCode});
+
+  /// Lowercase ISO 4217 code backed by at least one active region.
+  @Sqlx(rename: 'currency_code')
+  final String currencyCode;
+}
+
 /// Complete product detail selected directly from one SQL row.
 @Derive([Serialize(), FromRow()])
 @SerDe(renameAll: SerDeRename.snakeCase)

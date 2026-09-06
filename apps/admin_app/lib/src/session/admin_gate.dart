@@ -1,5 +1,6 @@
 import 'package:admin_app/src/product/admin_product_page.dart';
 import 'package:admin_app/src/product/admin_product_detail_page.dart';
+import 'package:admin_app/src/product/admin_product_create_page.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/session/admin_session_state.dart';
 import 'package:admin_app/src/session/admin_session_view_model.dart';
@@ -94,6 +95,7 @@ final class _AdminHomeState extends State<_AdminHome> {
           ),
         None() => AdminProductPage(
             searchFocus: _searchFocus,
+            onCreateProduct: _createProduct,
             onOpenProduct: (id) => setState(() {
               _selectedProduct = Some(id);
             }),
@@ -105,4 +107,13 @@ final class _AdminHomeState extends State<_AdminHome> {
   void _showProducts() => setState(() {
         _selectedProduct = const None();
       });
+
+  Future<void> _createProduct() async {
+    final created = await showAdminProductCreatePage(context);
+    if (!mounted) return;
+    if (created case Some(value: final product)) {
+      await context.readAdminProductViewModel().load(offset: 0);
+      if (mounted) setState(() => _selectedProduct = Some(product.id));
+    }
+  }
 }

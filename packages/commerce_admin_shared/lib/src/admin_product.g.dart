@@ -13,6 +13,12 @@
 
 part of 'admin_product.dart';
 
+const DeepCollectionEquality _adminCreateProductOptionValuesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminCreateProductVariantOptionValuesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminCreateProductVariantPricesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminCreateProductOptionsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminCreateProductVariantsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductCreateContextCurrencyCodesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductListProductsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductOptionValuesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductVariantOptionValuesEquality = DeepCollectionEquality();
@@ -21,6 +27,342 @@ const DeepCollectionEquality _adminProductDetailImagesEquality = DeepCollectionE
 const DeepCollectionEquality _adminProductDetailOptionsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductDetailTagsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductDetailVariantsEquality = DeepCollectionEquality();
+
+mixin _$AdminCreateProductPrice implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as AdminCreateProductPrice;
+    return 'AdminCreateProductPrice('
+        'amount: ${self.amount}, '
+        'currencyCode: ${self.currencyCode}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminCreateProductPrice;
+    return identical(this, other) ||
+        other is AdminCreateProductPrice &&
+            runtimeType == other.runtimeType &&
+            other.amount == self.amount &&
+            other.currencyCode == self.currencyCode;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminCreateProductPrice;
+    return Object.hashAll([
+      runtimeType,
+      self.amount,
+      self.currencyCode,
+    ]);
+  }
+
+  /// Validates this `AdminCreateProductPrice`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as AdminCreateProductPrice;
+    final errors = <ValidationError>[];
+    _AdminCreateProductPriceValidation._validateAmount(self.amount, errors);
+    _AdminCreateProductPriceValidation._validateCurrencyCode(self.currencyCode, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `AdminCreateProductPrice` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminCreateProductPriceSerialize(this as AdminCreateProductPrice);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminCreateProductOption implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as AdminCreateProductOption;
+    return 'AdminCreateProductOption('
+        'title: ${self.title}, '
+        'values: ${self.values}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminCreateProductOption;
+    return identical(this, other) ||
+        other is AdminCreateProductOption &&
+            runtimeType == other.runtimeType &&
+            other.title == self.title &&
+            _adminCreateProductOptionValuesEquality.equals(other.values, self.values);
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminCreateProductOption;
+    return Object.hashAll([
+      runtimeType,
+      self.title,
+      _adminCreateProductOptionValuesEquality.hash(self.values),
+    ]);
+  }
+
+  /// Validates this `AdminCreateProductOption`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as AdminCreateProductOption;
+    final errors = <ValidationError>[];
+    _AdminCreateProductOptionValidation._validateTitle(self.title, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `AdminCreateProductOption` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminCreateProductOptionSerialize(this as AdminCreateProductOption);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminCreateProductVariant implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as AdminCreateProductVariant;
+    return 'AdminCreateProductVariant('
+        'allowBackorder: ${self.allowBackorder}, '
+        'inventoryQuantity: ${self.inventoryQuantity}, '
+        'manageInventory: ${self.manageInventory}, '
+        'optionValues: ${self.optionValues}, '
+        'prices: ${self.prices}, '
+        'sku: ${self.sku}, '
+        'title: ${self.title}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminCreateProductVariant;
+    return identical(this, other) ||
+        other is AdminCreateProductVariant &&
+            runtimeType == other.runtimeType &&
+            other.allowBackorder == self.allowBackorder &&
+            other.inventoryQuantity == self.inventoryQuantity &&
+            other.manageInventory == self.manageInventory &&
+            _adminCreateProductVariantOptionValuesEquality.equals(other.optionValues, self.optionValues) &&
+            _adminCreateProductVariantPricesEquality.equals(other.prices, self.prices) &&
+            other.sku == self.sku &&
+            other.title == self.title;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminCreateProductVariant;
+    return Object.hashAll([
+      runtimeType,
+      self.allowBackorder,
+      self.inventoryQuantity,
+      self.manageInventory,
+      _adminCreateProductVariantOptionValuesEquality.hash(self.optionValues),
+      _adminCreateProductVariantPricesEquality.hash(self.prices),
+      self.sku,
+      self.title,
+    ]);
+  }
+
+  /// Validates this `AdminCreateProductVariant`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as AdminCreateProductVariant;
+    final errors = <ValidationError>[];
+    _AdminCreateProductVariantValidation._validateInventoryQuantity(self.inventoryQuantity, errors);
+    _AdminCreateProductVariantValidation._validateSku(self.sku, errors);
+    _AdminCreateProductVariantValidation._validateTitle(self.title, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `AdminCreateProductVariant` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminCreateProductVariantSerialize(this as AdminCreateProductVariant);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminCreateProduct implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as AdminCreateProduct;
+    return 'AdminCreateProduct('
+        'description: ${self.description}, '
+        'discountable: ${self.discountable}, '
+        'handle: ${self.handle}, '
+        'material: ${self.material}, '
+        'options: ${self.options}, '
+        'status: ${self.status}, '
+        'subtitle: ${self.subtitle}, '
+        'title: ${self.title}, '
+        'variants: ${self.variants}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminCreateProduct;
+    return identical(this, other) ||
+        other is AdminCreateProduct &&
+            runtimeType == other.runtimeType &&
+            other.description == self.description &&
+            other.discountable == self.discountable &&
+            other.handle == self.handle &&
+            other.material == self.material &&
+            _adminCreateProductOptionsEquality.equals(other.options, self.options) &&
+            other.status == self.status &&
+            other.subtitle == self.subtitle &&
+            other.title == self.title &&
+            _adminCreateProductVariantsEquality.equals(other.variants, self.variants);
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminCreateProduct;
+    return Object.hashAll([
+      runtimeType,
+      self.description,
+      self.discountable,
+      self.handle,
+      self.material,
+      _adminCreateProductOptionsEquality.hash(self.options),
+      self.status,
+      self.subtitle,
+      self.title,
+      _adminCreateProductVariantsEquality.hash(self.variants),
+    ]);
+  }
+
+  /// Validates this `AdminCreateProduct`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as AdminCreateProduct;
+    final errors = <ValidationError>[];
+    _AdminCreateProductValidation._validateDescription(self.description, errors);
+    _AdminCreateProductValidation._validateHandle(self.handle, errors);
+    _AdminCreateProductValidation._validateMaterial(self.material, errors);
+    _AdminCreateProductValidation._validateSubtitle(self.subtitle, errors);
+    _AdminCreateProductValidation._validateTitle(self.title, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `AdminCreateProduct` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminCreateProductSerialize(this as AdminCreateProduct);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminProductCreateContext implements Serializable {
+  @override
+  String toString() {
+    final self = this as AdminProductCreateContext;
+    return 'AdminProductCreateContext('
+        'currencyCodes: ${self.currencyCodes}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminProductCreateContext;
+    return identical(this, other) ||
+        other is AdminProductCreateContext &&
+            runtimeType == other.runtimeType &&
+            _adminProductCreateContextCurrencyCodesEquality.equals(other.currencyCodes, self.currencyCodes);
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminProductCreateContext;
+    return Object.hashAll([
+      runtimeType,
+      _adminProductCreateContextCurrencyCodesEquality.hash(self.currencyCodes),
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminProductCreateContextSerialize(this as AdminProductCreateContext);
+
+  Map<String, Object?> toJson() => serialize();
+}
 
 mixin _$AdminUpdateProduct implements Validatable, Serializable {
   @override
@@ -418,6 +760,119 @@ mixin _$AdminProductDetail implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+extension _AdminCreateProductPriceValidation on AdminCreateProductPrice {
+  static void _validateAmount(int amount, List<ValidationError> errors) {
+    if (amount < 0) {
+      errors.add(ValidationError(field: 'amount', message: 'Enter a non-negative price'));
+    }
+  }
+
+  static void _validateCurrencyCode(String currencyCode, List<ValidationError> errors) {
+    if (currencyCode.length < 3) {
+      errors.add(ValidationError(field: 'currencyCode', message: 'Choose a currency'));
+    }
+    if (currencyCode.length > 3) {
+      errors.add(ValidationError(field: 'currencyCode', message: 'Choose a currency'));
+    }
+    if (!RegExp('^[a-z]{3}\$').hasMatch(currencyCode)) {
+      errors.add(ValidationError(field: 'currencyCode', message: 'Choose a currency'));
+    }
+  }
+
+}
+extension _AdminCreateProductOptionValidation on AdminCreateProductOption {
+  static void _validateTitle(String title, List<ValidationError> errors) {
+    if (title.length < 1) {
+      errors.add(ValidationError(field: 'title', message: 'Enter an option name'));
+    }
+    if (title.length > 255) {
+      errors.add(ValidationError(field: 'title', message: 'Enter an option name'));
+    }
+    if (!RegExp('.*\\S.*').hasMatch(title)) {
+      errors.add(ValidationError(field: 'title', message: 'Enter an option name'));
+    }
+  }
+
+}
+extension _AdminCreateProductVariantValidation on AdminCreateProductVariant {
+  static void _validateInventoryQuantity(int inventoryQuantity, List<ValidationError> errors) {
+    if (inventoryQuantity < 0) {
+      errors.add(ValidationError(field: 'inventoryQuantity', message: 'Enter a non-negative quantity'));
+    }
+  }
+
+  static void _validateSku(String? sku, List<ValidationError> errors) {
+    if (sku != null) {
+      if (sku.length > 255) {
+        errors.add(ValidationError(field: 'sku', message: 'Use at most 255 characters'));
+      }
+    }
+  }
+
+  static void _validateTitle(String title, List<ValidationError> errors) {
+    if (title.length < 1) {
+      errors.add(ValidationError(field: 'title', message: 'Enter a variant name'));
+    }
+    if (title.length > 255) {
+      errors.add(ValidationError(field: 'title', message: 'Enter a variant name'));
+    }
+    if (!RegExp('.*\\S.*').hasMatch(title)) {
+      errors.add(ValidationError(field: 'title', message: 'Enter a variant name'));
+    }
+  }
+
+}
+extension _AdminCreateProductValidation on AdminCreateProduct {
+  static void _validateDescription(String? description, List<ValidationError> errors) {
+    if (description != null) {
+      if (description.length > 20000) {
+        errors.add(ValidationError(field: 'description', message: 'Use at most 20000 characters'));
+      }
+    }
+  }
+
+  static void _validateHandle(String? handle, List<ValidationError> errors) {
+    if (handle != null) {
+      if (handle.length > 255) {
+        errors.add(ValidationError(field: 'handle', message: 'Use at most 255 characters'));
+      }
+    }
+    if (handle != null) {
+      if (!RegExp('^\$|^[a-z0-9]+(?:-[a-z0-9]+)*\$').hasMatch(handle)) {
+        errors.add(ValidationError(field: 'handle', message: 'Use lowercase letters, numbers, and hyphens'));
+      }
+    }
+  }
+
+  static void _validateMaterial(String? material, List<ValidationError> errors) {
+    if (material != null) {
+      if (material.length > 255) {
+        errors.add(ValidationError(field: 'material', message: 'Use at most 255 characters'));
+      }
+    }
+  }
+
+  static void _validateSubtitle(String? subtitle, List<ValidationError> errors) {
+    if (subtitle != null) {
+      if (subtitle.length > 255) {
+        errors.add(ValidationError(field: 'subtitle', message: 'Use at most 255 characters'));
+      }
+    }
+  }
+
+  static void _validateTitle(String title, List<ValidationError> errors) {
+    if (title.length < 1) {
+      errors.add(ValidationError(field: 'title', message: 'Enter a title'));
+    }
+    if (title.length > 255) {
+      errors.add(ValidationError(field: 'title', message: 'Enter a title'));
+    }
+    if (!RegExp('.*\\S.*').hasMatch(title)) {
+      errors.add(ValidationError(field: 'title', message: 'Enter a title'));
+    }
+  }
+
+}
 extension _AdminUpdateProductValidation on AdminUpdateProduct {
   static void _validateDescription(String? description, List<ValidationError> errors) {
     if (description != null) {
@@ -467,6 +922,66 @@ extension _AdminUpdateProductValidation on AdminUpdateProduct {
     }
   }
 
+}
+final class $AdminCreateProductPriceSerializer implements Serializer<AdminCreateProductPrice, Map<String, Object?>> {
+  const $AdminCreateProductPriceSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminCreateProductPrice value) => _$AdminCreateProductPriceSerialize(value);
+}
+final class $AdminCreateProductPriceDeserializer implements Deserializer<AdminCreateProductPrice, Map<String, Object?>> {
+  const $AdminCreateProductPriceDeserializer();
+
+  @override
+  AdminCreateProductPrice deserialize(Map<String, Object?> json) => _$AdminCreateProductPriceDeserialize(json);
+}
+final class $AdminCreateProductOptionSerializer implements Serializer<AdminCreateProductOption, Map<String, Object?>> {
+  const $AdminCreateProductOptionSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminCreateProductOption value) => _$AdminCreateProductOptionSerialize(value);
+}
+final class $AdminCreateProductOptionDeserializer implements Deserializer<AdminCreateProductOption, Map<String, Object?>> {
+  const $AdminCreateProductOptionDeserializer();
+
+  @override
+  AdminCreateProductOption deserialize(Map<String, Object?> json) => _$AdminCreateProductOptionDeserialize(json);
+}
+final class $AdminCreateProductVariantSerializer implements Serializer<AdminCreateProductVariant, Map<String, Object?>> {
+  const $AdminCreateProductVariantSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminCreateProductVariant value) => _$AdminCreateProductVariantSerialize(value);
+}
+final class $AdminCreateProductVariantDeserializer implements Deserializer<AdminCreateProductVariant, Map<String, Object?>> {
+  const $AdminCreateProductVariantDeserializer();
+
+  @override
+  AdminCreateProductVariant deserialize(Map<String, Object?> json) => _$AdminCreateProductVariantDeserialize(json);
+}
+final class $AdminCreateProductSerializer implements Serializer<AdminCreateProduct, Map<String, Object?>> {
+  const $AdminCreateProductSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminCreateProduct value) => _$AdminCreateProductSerialize(value);
+}
+final class $AdminCreateProductDeserializer implements Deserializer<AdminCreateProduct, Map<String, Object?>> {
+  const $AdminCreateProductDeserializer();
+
+  @override
+  AdminCreateProduct deserialize(Map<String, Object?> json) => _$AdminCreateProductDeserialize(json);
+}
+final class $AdminProductCreateContextSerializer implements Serializer<AdminProductCreateContext, Map<String, Object?>> {
+  const $AdminProductCreateContextSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminProductCreateContext value) => _$AdminProductCreateContextSerialize(value);
+}
+final class $AdminProductCreateContextDeserializer implements Deserializer<AdminProductCreateContext, Map<String, Object?>> {
+  const $AdminProductCreateContextDeserializer();
+
+  @override
+  AdminProductCreateContext deserialize(Map<String, Object?> json) => _$AdminProductCreateContextDeserialize(json);
 }
 final class $AdminUpdateProductSerializer implements Serializer<AdminUpdateProduct, Map<String, Object?>> {
   const $AdminUpdateProductSerializer();
@@ -564,6 +1079,204 @@ final class $AdminProductLifecycleDeserializer implements Deserializer<AdminProd
   @override
   AdminProductLifecycle deserialize(Object? json) => _$AdminProductLifecycleDeserialize(json);
 }
+
+Map<String, Object?> _$AdminCreateProductPriceSerialize(AdminCreateProductPrice instance) {
+  return <String, Object?>{
+    'amount': instance.amount,
+    'currency_code': instance.currencyCode,
+  };
+}
+
+Map<String, Object?> _$AdminCreateProductPriceToJson(AdminCreateProductPrice instance) =>
+    _$AdminCreateProductPriceSerialize(instance);
+
+// factory AdminCreateProductPrice.fromJson(Map<String, Object?> json) => _$AdminCreateProductPriceFromJson(json);
+AdminCreateProductPrice _$AdminCreateProductPriceDeserialize(Map<String, Object?> json) {
+  final amountValue = JsonHelper.as<int>(json['amount'], 'amount', 'int');
+  final currencyCodeValue = JsonHelper.as<String>(
+    json['currency_code'],
+    'currency_code',
+    'String',
+  );
+
+  return AdminCreateProductPrice(
+    currencyCode: currencyCodeValue,
+    amount: amountValue,
+  );
+}
+
+AdminCreateProductPrice _$AdminCreateProductPriceFromJson(Map<String, Object?> json) =>
+    _$AdminCreateProductPriceDeserialize(json);
+
+Map<String, Object?> _$AdminCreateProductOptionSerialize(AdminCreateProductOption instance) {
+  return <String, Object?>{
+    'title': instance.title,
+    'values': instance.values
+        .map((item) => item)
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$AdminCreateProductOptionToJson(AdminCreateProductOption instance) =>
+    _$AdminCreateProductOptionSerialize(instance);
+
+// factory AdminCreateProductOption.fromJson(Map<String, Object?> json) => _$AdminCreateProductOptionFromJson(json);
+AdminCreateProductOption _$AdminCreateProductOptionDeserialize(Map<String, Object?> json) {
+  final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
+  final valuesValue = JsonHelper.decodeList(json['values'], 'values',
+      (item, itemKey) => JsonHelper.as<String>(item, itemKey, 'String'));
+
+  return AdminCreateProductOption(title: titleValue, values: valuesValue);
+}
+
+AdminCreateProductOption _$AdminCreateProductOptionFromJson(Map<String, Object?> json) =>
+    _$AdminCreateProductOptionDeserialize(json);
+
+Map<String, Object?> _$AdminCreateProductVariantSerialize(AdminCreateProductVariant instance) {
+  return <String, Object?>{
+    'allow_backorder': instance.allowBackorder,
+    'inventory_quantity': instance.inventoryQuantity,
+    'manage_inventory': instance.manageInventory,
+    'option_values': instance.optionValues
+        .map((key, value) => MapEntry(key, value)),
+    'prices': instance.prices
+        .map((item) => _$AdminCreateProductPriceSerialize(item))
+        .toList(),
+    'sku': instance.sku,
+    'title': instance.title,
+  };
+}
+
+Map<String, Object?> _$AdminCreateProductVariantToJson(AdminCreateProductVariant instance) =>
+    _$AdminCreateProductVariantSerialize(instance);
+
+// factory AdminCreateProductVariant.fromJson(Map<String, Object?> json) => _$AdminCreateProductVariantFromJson(json);
+AdminCreateProductVariant _$AdminCreateProductVariantDeserialize(Map<String, Object?> json) {
+  final allowBackorderValue = JsonHelper.as<bool>(
+    json['allow_backorder'],
+    'allow_backorder',
+    'bool',
+  );
+  final inventoryQuantityValue = JsonHelper.as<int>(
+    json['inventory_quantity'],
+    'inventory_quantity',
+    'int',
+  );
+  final manageInventoryValue = JsonHelper.as<bool>(
+    json['manage_inventory'],
+    'manage_inventory',
+    'bool',
+  );
+  final optionValuesValue = JsonHelper.decodeMap(json['option_values'], 'option_values',
+      (value, valueKey) => JsonHelper.as<String>(value, valueKey, 'String'));
+  final pricesValue = JsonHelper.decodeList(json['prices'], 'prices',
+      (item, itemKey) => _$AdminCreateProductPriceDeserialize(JsonHelper.asMap(item, itemKey)));
+  final skuValue = json['sku'] == null
+      ? null
+      : JsonHelper.as<String>(json['sku'], 'sku', 'String');
+  final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
+
+  return AdminCreateProductVariant(
+    title: titleValue,
+    inventoryQuantity: inventoryQuantityValue,
+    manageInventory: manageInventoryValue,
+    allowBackorder: allowBackorderValue,
+    optionValues: optionValuesValue,
+    prices: pricesValue,
+    sku: skuValue,
+  );
+}
+
+AdminCreateProductVariant _$AdminCreateProductVariantFromJson(Map<String, Object?> json) =>
+    _$AdminCreateProductVariantDeserialize(json);
+
+Map<String, Object?> _$AdminCreateProductSerialize(AdminCreateProduct instance) {
+  return <String, Object?>{
+    'description': instance.description,
+    'discountable': instance.discountable,
+    'handle': instance.handle,
+    'material': instance.material,
+    'options': instance.options
+        .map((item) => _$AdminCreateProductOptionSerialize(item))
+        .toList(),
+    'status': _$AdminProductLifecycleSerialize(instance.status),
+    'subtitle': instance.subtitle,
+    'title': instance.title,
+    'variants': instance.variants
+        .map((item) => _$AdminCreateProductVariantSerialize(item))
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$AdminCreateProductToJson(AdminCreateProduct instance) =>
+    _$AdminCreateProductSerialize(instance);
+
+// factory AdminCreateProduct.fromJson(Map<String, Object?> json) => _$AdminCreateProductFromJson(json);
+AdminCreateProduct _$AdminCreateProductDeserialize(Map<String, Object?> json) {
+  final descriptionValue = json['description'] == null
+      ? null
+      : JsonHelper.as<String>(json['description'], 'description', 'String');
+  final discountableValue = JsonHelper.as<bool>(
+    json['discountable'],
+    'discountable',
+    'bool',
+  );
+  final handleValue = json['handle'] == null
+      ? null
+      : JsonHelper.as<String>(json['handle'], 'handle', 'String');
+  final materialValue = json['material'] == null
+      ? null
+      : JsonHelper.as<String>(json['material'], 'material', 'String');
+  final optionsValue = JsonHelper.decodeList(json['options'], 'options',
+      (item, itemKey) => _$AdminCreateProductOptionDeserialize(JsonHelper.asMap(item, itemKey)));
+  final statusValue = _$AdminProductLifecycleDeserialize(
+    json['status'],
+    'status',
+  );
+  final subtitleValue = json['subtitle'] == null
+      ? null
+      : JsonHelper.as<String>(json['subtitle'], 'subtitle', 'String');
+  final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
+  final variantsValue = JsonHelper.decodeList(json['variants'], 'variants',
+      (item, itemKey) => _$AdminCreateProductVariantDeserialize(JsonHelper.asMap(item, itemKey)));
+
+  return AdminCreateProduct(
+    status: statusValue,
+    title: titleValue,
+    discountable: discountableValue,
+    options: optionsValue,
+    variants: variantsValue,
+    handle: handleValue,
+    subtitle: subtitleValue,
+    material: materialValue,
+    description: descriptionValue,
+  );
+}
+
+AdminCreateProduct _$AdminCreateProductFromJson(Map<String, Object?> json) =>
+    _$AdminCreateProductDeserialize(json);
+
+Map<String, Object?> _$AdminProductCreateContextSerialize(AdminProductCreateContext instance) {
+  return <String, Object?>{
+    'currency_codes': instance.currencyCodes
+        .map((item) => item)
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$AdminProductCreateContextToJson(AdminProductCreateContext instance) =>
+    _$AdminProductCreateContextSerialize(instance);
+
+// factory AdminProductCreateContext.fromJson(Map<String, Object?> json) => _$AdminProductCreateContextFromJson(json);
+AdminProductCreateContext _$AdminProductCreateContextDeserialize(Map<String, Object?> json) {
+  final currencyCodesValue = JsonHelper.decodeList(json['currency_codes'], 'currency_codes',
+      (item, itemKey) => JsonHelper.as<String>(item, itemKey, 'String'));
+
+  return AdminProductCreateContext(currencyCodes: currencyCodesValue);
+}
+
+AdminProductCreateContext _$AdminProductCreateContextFromJson(Map<String, Object?> json) =>
+    _$AdminProductCreateContextDeserialize(json);
 
 Map<String, Object?> _$AdminUpdateProductSerialize(AdminUpdateProduct instance) {
   return <String, Object?>{

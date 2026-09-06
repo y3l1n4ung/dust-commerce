@@ -193,6 +193,38 @@ extension $AdminProductResponseQuery on QueryAs<AdminProductResponse> {
       fetchAllWith(db, _$AdminProductResponseFromRow);
 }
 
+AdminProductCurrencyResponse _$AdminProductCurrencyResponseFromRow(Row row) {
+  return AdminProductCurrencyResponse(
+    currencyCode: row.read<String>('currency_code'),
+  );
+}
+
+/// Row deserializer for [AdminProductCurrencyResponse].
+final class $AdminProductCurrencyResponseRowDeserializer implements RowDeserializer<AdminProductCurrencyResponse> {
+  const $AdminProductCurrencyResponseRowDeserializer();
+
+  @override
+  AdminProductCurrencyResponse deserialize(Row row) => _$AdminProductCurrencyResponseFromRow(row);
+}
+
+/// Typed row query terminals for [AdminProductCurrencyResponse].
+///
+/// Resolved from the static type of the receiver, so a row type with no
+/// `FromRow` has no terminals and the call does not compile.
+extension $AdminProductCurrencyResponseQuery on QueryAs<AdminProductCurrencyResponse> {
+  /// Fetches exactly one row.
+  Future<AdminProductCurrencyResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$AdminProductCurrencyResponseFromRow);
+
+  /// Fetches zero or one row.
+  Future<AdminProductCurrencyResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$AdminProductCurrencyResponseFromRow);
+
+  /// Fetches every row.
+  Future<List<AdminProductCurrencyResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$AdminProductCurrencyResponseFromRow);
+}
+
 AdminProductDetailResponse _$AdminProductDetailResponseFromRow(Row row) {
   return AdminProductDetailResponse(
     id: row.read<String>('id'),

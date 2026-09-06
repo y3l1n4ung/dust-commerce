@@ -3,6 +3,7 @@ import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/core/admin_authorization_interceptor.dart';
 import 'package:admin_app/src/core/admin_session_store.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
+import 'package:admin_app/src/product/admin_product_create_view_model.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
 import 'package:admin_app/src/session/admin_session_view_model.dart';
 import 'package:admin_app/src/theme/admin_theme.dart';
@@ -32,6 +33,9 @@ void main() {
   final productDetail = AdminProductDetailViewModel(
     AdminProductDetailViewModelArgs(api: api),
   );
+  final productCreate = AdminProductCreateViewModel(
+    AdminProductCreateViewModelArgs(api: api),
+  );
 
   runApp(
     AdminSessionViewModelScope.value(
@@ -40,7 +44,10 @@ void main() {
         value: products,
         child: AdminProductDetailViewModelScope.value(
           value: productDetail,
-          child: MorrowAdminApp(themes: AdminThemeController()),
+          child: AdminProductCreateViewModelScope.value(
+            value: productCreate,
+            child: MorrowAdminApp(themes: AdminThemeController()),
+          ),
         ),
       ),
     ),
