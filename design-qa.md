@@ -6,10 +6,13 @@ Source visual truth paths:
 - Rendered reference: `https://next.medusajs.com/dk/order/order_qa/transfer/demo-capability?qa=matched-final`
 - Pinned catalogue source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/store/templates/paginated-products.tsx`
 - Rendered catalogue reference: `https://next.medusajs.com/dk/store?qa=store-grid-final`
+- Pinned product source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/products/templates/index.tsx`
+- Rendered product reference: `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`
 
 Implementation screenshot paths: in-app browser captures of the transfer route
-and `http://127.0.0.1:13001/store?qa=store-grid-final`. The browser captures are
-retained in the task evidence rather than exported into the repository.
+`http://127.0.0.1:13001/store?qa=store-grid-final`, and
+`http://127.0.0.1:13001/products/shorts?qa=product-audit`. The browser captures
+are retained in the task evidence rather than exported into the repository.
 
 Viewport: the matched desktop capture used the same in-app browser tab. The
 reference raster was `1265 x 712`; the implementation raster was `1280 x 720`.
@@ -25,8 +28,11 @@ State: the public transfer page used the same `order_qa`, unused demo
 capability, English locale, light theme and idle decision state. The catalogue
 comparison used each backend's first unfiltered product page; product names and
 images therefore differ, while the page structure and layout contract are
-directly comparable. Remaining global QA covers `/store` at compact width and
-with the shared footer visible, authenticated
+directly comparable. The product comparison likewise used the reference
+Espresso Cup and Morrow's seeded Everyday Shorts, so option controls and copy
+differ while column geometry remains comparable. Remaining global QA covers
+the product route at compact width and in selected/out-of-stock states,
+`/store` at compact width and with the shared footer visible, authenticated
 `/checkout` with a saved address available, authenticated `/account` with a
 completed profile, saved addresses and recent orders,
 `/account/orders/details/:id`, the authenticated transfer-request form and its
@@ -37,10 +43,10 @@ banner, and the global free-shipping popup.
 
 - [P1] Remaining route groups still lack rendered comparison
   Location: Medusa DTC and Morrow storefront views outside the public transfer
-  decision route and desktop catalogue grid.
+  decision route, desktop catalogue grid and desktop product structure.
   Evidence: the transfer decision page and desktop catalogue grid now have
-  matched comparisons. The other states listed above do not yet have matched
-  desktop and compact captures.
+  matched comparisons. Product detail desktop columns and offsets also match;
+  the other states listed above do not yet have matched captures.
   Impact: their typography, responsive spacing, imagery and interaction states
   remain visually unverified.
   Fix: capture both sites at matching desktop and mobile viewports, combine
@@ -48,11 +54,12 @@ banner, and the global free-shipping popup.
 
 **Required fidelity surfaces**
 
-- Fonts and typography: the transfer hierarchy and catalogue title/card copy
-  passed; other routes remain pending.
+- Fonts and typography: the transfer hierarchy, catalogue title/card copy and
+  product information stack passed; other routes remain pending.
 - Spacing and layout rhythm: the transfer's centered column and the catalogue's
   sidebar, 24px gutters, four-column medium grid, 32px row gap and card rhythm
-  passed after scrollbar normalization; other routes remain pending.
+  passed after scrollbar normalization. Product detail now matches the source
+  24px inset, 300px side columns, 64px gallery gutters and 192px sticky offset.
 - Colors and visual tokens: transfer foreground, zinc-600 copy, gray-200
   borders, exact black primary action, red/rose errors and emerald success are
   source-mapped; other rendered routes remain pending.
@@ -69,6 +76,8 @@ The source and implementation transfer pages, then the two catalogue pages,
 were captured from the same in-app browser tab and emitted as matched pairs.
 The transfer composition and controls align. The catalogue title, sidebar,
 four-column grid, source aspect ratios and card spacing align after correction.
+The product detail pair confirms the source column geometry and information
+stack; product content and action controls differ with the two seed products.
 
 **Focused region comparison evidence**
 
@@ -93,6 +102,11 @@ checkout controls still require focused captures.
   Medusa's viewport breakpoints, four columns at 1280px, `9:16` catalogue cards,
   `11:14` featured cards and source-shaped title/price visibility. The final
   combined comparison found no remaining P0, P1 or P2 desktop-grid mismatch.
+- The initial product comparison exposed P2 column/gutter drift and a missing
+  source collection link. The final pair aligns the source 24px page inset,
+  300px side columns, 64px gallery gutters, 192px sticky content position and
+  30px/40px title treatment. Cross-backend product copy, imagery, and variant
+  controls remain data differences rather than visual findings.
 
 **Implementation checklist**
 
@@ -100,6 +114,8 @@ checkout controls still require focused captures.
   widths, including idle, delivery-sent, delivery-pending and safe error states.
 - Capture `/store` at compact width and with the shared footer visible; exercise
   sorting, option accordions and pagination in a browser that supports input.
+- Capture product detail at compact width and exercise selected, unavailable,
+  sold-out and add-to-cart feedback states against matched product fixtures.
 - Capture the public transfer page at `390 x 844` and verify the intentional
   full-width native adaptation remains usable.
 - Capture the remaining route and interaction states listed above.
