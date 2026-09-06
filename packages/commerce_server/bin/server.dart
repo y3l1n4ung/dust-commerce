@@ -25,10 +25,7 @@ Future<void> main() async {
     stdout.writeln('dust-commerce listening on http://'
         '${server.address.host}:${server.port}');
 
-    await Future.any([
-      ProcessSignal.sigterm.watch().first,
-      ProcessSignal.sigint.watch().first,
-    ]);
+    await _waitForShutdownSignal();
     final drained = await server.close(drain: const Duration(seconds: 15));
     if (!drained) {
       stderr.writeln(
@@ -39,6 +36,21 @@ Future<void> main() async {
   } finally {
     await database.close();
   }
+}
+
+Future<void> _waitForShutdownSignal() async {
+  final signal = Completer<void>();
+  final subscriptions = <StreamSubscription<ProcessSignal>>[];
+
+  void stop(ProcessSignal _) {
+    if (!signal.isCompleted) signal.complete();
+  }
+
+  subscriptions
+    ..add(ProcessSignal.sigterm.watch().listen(stop))
+    ..add(ProcessSignal.sigint.watch().listen(stop));
+  await signal.future;
+  await Future.wait(subscriptions.map((subscription) => subscription.cancel()));
 }
 
 final class _ServerConfig {

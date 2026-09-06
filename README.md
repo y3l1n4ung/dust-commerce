@@ -120,6 +120,15 @@ Then the same checks CI runs:
 ./scripts/format.sh --check && ./scripts/check_file_size.sh
 ```
 
+The process-level smoke starts the real server entrypoint against a temporary
+database, waits for health, verifies the four-product catalogue, shuts it down
+gracefully, and restarts it against the same database to prove seeding remains
+idempotent:
+
+```bash
+dart test packages/commerce_server/test/server_entrypoint_test.dart
+```
+
 ### Database migrations
 
 The server uses SQLite, so UTC instants are stored as sortable ISO-8601 `TEXT`
