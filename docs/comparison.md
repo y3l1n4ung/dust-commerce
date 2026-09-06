@@ -153,6 +153,14 @@ standalone five-field SQLx row type, so an internal model change cannot widen
 the API by inheritance. The generated Flutter client receives only those
 fields and Dio remains the sole owner of the authorization header.
 
+The Flutter storefront completes the customer-facing request and decision
+surfaces. The authenticated order list carries the source-shaped request form,
+but its success state reports delivery to the current order contact rather than
+disclosing that person's email. The public capability route reproduces the
+pinned DTC illustration, copy, 40% desktop column and action styling. It is a
+neutral page: accept and decline remain explicit POST actions, so mail-security
+link scanners cannot transfer an order merely by opening the message.
+
 ### PostgreSQL timestamps become explicit SQLite UTC text
 
 Medusa's PostgreSQL migrations use `timestamptz not null default now()`.

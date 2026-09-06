@@ -29,7 +29,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `cart/templates` and `layout/components/cart-mismatch-banner` | cart route and ownership recovery | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, promotion UI, authoritative totals, session-aware sign-in prompt, authenticated guest-cart transfer, global retry banner and checkout handoff; rendered QA remains |
 | `account/templates` | account shell and session | implemented in #20 and #26 with secure session, source-exact four-part overview completion, saved-address count, latest-five order links, profile name/phone/billing/password editing, API-backed address book, source-shaped navigation, order list and guarded order detail; rendered QA remains |
 | `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, delivery, manual-payment, review and confirmation steps; rendered QA remains |
-| `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards, guarded frozen order details, and the secure order-transfer API/client are implemented; transfer UI, contact and return flows remain |
+| `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards, guarded frozen order details, transfer request/decision UI, and the secure order-transfer API/client are implemented; the decision page passed rendered source comparison, while account-form QA, contact and return flows remain |
 | `regions` store API | account, checkout and storefront country selection | implemented with explicit SQLx response allowlists; selectors use active backend regions rather than hard-coded countries |
 | categories and collections routes | product organisation | implemented in #18 with real API metadata, filtering, hierarchy, sorting and paging; exact nested category paths wait on `dust#542`, rendered QA remains |
 
@@ -120,6 +120,13 @@ fingerprint remains after SMTP accepts the message, accept moves ownership in
 the same transaction as the decision, and invalid, expired and unknown
 capabilities share the same not-found response. Delivery failures retain the
 same capability for a bounded retry rather than silently reporting success.
+The authenticated order-history page now includes the source transfer form and
+delivery-aware feedback without revealing the current order contact's email.
+The emailed capability opens a neutral public decision screen with the exact
+MIT-licensed source illustration, copy, proportions and explicit accept or
+decline controls. There are intentionally no GET routes that mutate transfer
+state: automated email-link scanners may open the neutral page, but only a
+deliberate button POST can accept or decline ownership.
 Guest carts are claimed immediately after sign-in through a route-level bearer
 guard and one conditional SQL update. The claim is idempotent for its owner,
 hides foreign or terminal carts as not found, and remains race-safe when two
