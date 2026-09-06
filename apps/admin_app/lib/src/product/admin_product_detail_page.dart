@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:admin_app/src/product/admin_product_edit_drawer.dart';
+import 'package:admin_app/src/product/admin_product_detail_media_actions.dart';
 import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
+import 'package:admin_app/src/product/admin_product_edit_drawer.dart';
 import 'package:admin_app/src/product/admin_product_media_editor.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/product/detail/admin_product_general_section.dart';
@@ -72,12 +73,6 @@ final class _DetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void unavailable() => ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('This action needs the next Admin API slice.'),
-          ),
-        );
-
     Future<void> editGeneral() async {
       final saved = await showAdminProductEditDrawer(context, product);
       if (saved != true || !context.mounted) return;
@@ -106,22 +101,25 @@ final class _DetailBody extends StatelessWidget {
         AdminProductMediaSection(
           product: product,
           onEdit: editMedia,
+          onDelete: (ids) => deleteAdminProductMedia(context, product, ids),
+          onManageVariants: (image) =>
+              manageAdminProductImageVariants(context, product, image),
         ),
         const SizedBox(height: 12),
         AdminProductOptionSection(
           options: product.options,
-          onUnavailable: unavailable,
+          onUnavailable: () => showAdminUnavailable(context),
         ),
         const SizedBox(height: 12),
         AdminProductVariantSection(
           variants: product.variants,
-          onUnavailable: unavailable,
+          onUnavailable: () => showAdminUnavailable(context),
         ),
       ],
     );
     final side = AdminProductSidebarSections(
       product: product,
-      onUnavailable: unavailable,
+      onUnavailable: () => showAdminUnavailable(context),
     );
 
     return ListView(

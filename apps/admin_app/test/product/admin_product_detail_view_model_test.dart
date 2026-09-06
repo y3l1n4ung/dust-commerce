@@ -169,6 +169,21 @@ void main() {
     expect(product.thumbnail, current.last.url);
     expect(detail.state.failure, const None<String>());
   });
+
+  test('associates an image with selected product variants', () async {
+    await detail.load('prod_sweatpants');
+
+    final saved = await detail.batchImageVariants(
+      'prod_sweatpants',
+      'img_sweatpants_1',
+      const AdminBatchImageVariants(add: ['var_sweatpants_m']),
+    );
+
+    expect(saved, isTrue);
+    final product = (detail.state.product as Some<AdminProductDetail>).value;
+    expect(product.images.first.variantIds, ['var_sweatpants_m']);
+    expect(detail.state.failure, const None<String>());
+  });
 }
 
 const _png = <int>[0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
