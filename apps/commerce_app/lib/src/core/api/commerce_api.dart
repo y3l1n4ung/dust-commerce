@@ -122,6 +122,10 @@ abstract interface class CommerceApi {
   @GET('/store/carts/{id}')
   Future<CartView> cart(@Path() String id);
 
+  /// Claims the current guest cart for the authenticated customer.
+  @POST('/store/carts/{id}/transfer')
+  Future<CartView> transferCart(@Path() String id);
+
   /// Adds a variant to a cart, answering with the cart it produced.
   @POST('/store/carts/{id}/line-items')
   Future<CartView> addLine(

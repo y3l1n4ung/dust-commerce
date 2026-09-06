@@ -535,6 +535,18 @@
   "@cart_total": {
     "description": "Line and order total label."
   },
+  "cart_transfer_failed": "သင့်စျေးခြင်းတောင်းကို အကောင့်သို့ လွှဲပြောင်းရာတွင် အဆင်မပြေမှု ဖြစ်ခဲ့သည်",
+  "@cart_transfer_failed": {
+    "description": "Cart ownership mismatch banner message."
+  },
+  "cart_transfer_retry": "ပြန်လည်လွှဲပြောင်းရန်",
+  "@cart_transfer_retry": {
+    "description": "Retries guest-cart ownership transfer."
+  },
+  "cart_transferring": "လွှဲပြောင်းနေသည်..",
+  "@cart_transferring": {
+    "description": "Pending guest-cart transfer action."
+  },
   "cart_update_failed": "ဤပစ္စည်းကို ပြင်ဆင်၍မရပါ။",
   "@cart_update_failed": {
     "description": "Fallback failure shown below a cart line."

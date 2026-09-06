@@ -92,4 +92,19 @@ SET promotion_id = excluded.promotion_id,
       [email, cartId],
     );
   }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> claimCart(String cartId, String customerId, String email) {
+    return _db.execute(
+      r'''
+UPDATE carts
+SET customer_id = ?, email = ?
+WHERE id = ?
+  AND (customer_id IS NULL OR customer_id = ?)
+  AND completed_at IS NULL
+  AND deleted_at IS NULL
+''',
+      [customerId, email, cartId, customerId],
+    );
+  }
 }

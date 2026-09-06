@@ -192,5 +192,10 @@ class _CommerceAppState extends State<CommerceApp> {
     _orderDetail.reset();
     _orders.reset();
     _checkout.reset();
+    if (ownerId == null) {
+      unawaited(_cart.clearForSignOut());
+    } else {
+      unawaited(_cart.transferToCustomer());
+    }
   }
 }

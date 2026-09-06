@@ -6,3 +6,4 @@ export 'promotion.dart';
 export 'quantity.dart';
 export 'remove.dart';
 export 'shipping.dart';
+export 'transfer.dart';

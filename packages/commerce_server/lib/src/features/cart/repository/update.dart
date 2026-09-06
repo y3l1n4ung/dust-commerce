@@ -96,4 +96,22 @@ SET promotion_id = excluded.promotion_id,
     String cartId,
     String email,
   );
+
+  /// Claims an active guest cart for one authenticated customer.
+  ///
+  /// Matching the same customer makes retries safe after a response is lost.
+  /// A cart owned by somebody else, completed, or deleted matches no rows.
+  @Query(r'''
+UPDATE carts
+SET customer_id = $2, email = $3
+WHERE id = $1
+  AND (customer_id IS NULL OR customer_id = $2)
+  AND completed_at IS NULL
+  AND deleted_at IS NULL
+''')
+  Future<Result<ExecResult, SqlxError>> claimCart(
+    String cartId,
+    String customerId,
+    String email,
+  );
 }

@@ -535,6 +535,18 @@
   "@cart_total": {
     "description": "Line and order total label."
   },
+  "cart_transfer_failed": "Something went wrong when we tried to transfer your cart",
+  "@cart_transfer_failed": {
+    "description": "Cart ownership mismatch banner message."
+  },
+  "cart_transfer_retry": "Run transfer again",
+  "@cart_transfer_retry": {
+    "description": "Retries guest-cart ownership transfer."
+  },
+  "cart_transferring": "Transferring..",
+  "@cart_transferring": {
+    "description": "Pending guest-cart transfer action."
+  },
   "cart_update_failed": "Could not update this item.",
   "@cart_update_failed": {
     "description": "Fallback failure shown below a cart line."

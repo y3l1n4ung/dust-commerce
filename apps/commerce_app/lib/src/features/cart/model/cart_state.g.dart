@@ -30,7 +30,8 @@ mixin _$CartState {
         'message: ${self.message}, '
         'operation: ${self.operation}, '
         'shippingOptions: ${self.shippingOptions}, '
-        'status: ${self.status}'
+        'status: ${self.status}, '
+        'transferFailure: ${self.transferFailure}'
         ')';
   }
 
@@ -45,7 +46,8 @@ mixin _$CartState {
             other.message == self.message &&
             other.operation == self.operation &&
             _cartStateShippingOptionsEquality.equals(other.shippingOptions, self.shippingOptions) &&
-            other.status == self.status;
+            other.status == self.status &&
+            other.transferFailure == self.transferFailure;
   }
 
   @override
@@ -59,6 +61,7 @@ mixin _$CartState {
       self.operation,
       _cartStateShippingOptionsEquality.hash(self.shippingOptions),
       self.status,
+      self.transferFailure,
     ]);
   }
 
@@ -84,6 +87,7 @@ abstract class _$CartStateCopyWith<$Res> {
     CartOperation? operation,
     List<ShippingMethod>? shippingOptions,
     CartStatus? status,
+    Option<CartTransferFailure>? transferFailure,
   });
 }
 
@@ -103,6 +107,7 @@ final class _$CartStateCopyWithImpl<$Res> implements _$CartStateCopyWith<$Res> {
     Object? operation = _cartStateCopyWithUnset,
     Object? shippingOptions = null,
     Object? status = null,
+    Object? transferFailure = null,
   }) {
     return _then(
       CartState(
@@ -120,6 +125,7 @@ final class _$CartStateCopyWithImpl<$Res> implements _$CartStateCopyWith<$Res> {
             ? _self.activeLineId
             : activeLineId as String?,
         shippingOptions: shippingOptions == null ? _self.shippingOptions : shippingOptions as List<ShippingMethod>,
+        transferFailure: transferFailure == null ? _self.transferFailure : transferFailure as Option<CartTransferFailure>,
       )
     );
   }

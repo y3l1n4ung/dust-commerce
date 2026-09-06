@@ -7,11 +7,14 @@ import 'package:dust_dart/http.dart';
 import 'package:dust_server/testing.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../core/support.dart';
+
 void main() {
   late Directory directory;
   late CommerceDatabase database;
   late TestClient server;
   late CommerceApi api;
+  late MemoryAuthSessionStore sessions;
   late _MemoryCartIdStore storage;
 
   setUp(() async {
@@ -22,7 +25,10 @@ void main() {
     );
     await seedDevelopmentStore(database);
     server = await TestClient.serve(buildApp(database));
-    api = CommerceApi(Dio(), baseUrl: server.origin);
+    sessions = MemoryAuthSessionStore();
+    final dio = Dio()
+      ..interceptors.add(AuthorizationInterceptor(sessions: sessions));
+    api = CommerceApi(dio, baseUrl: server.origin);
     storage = _MemoryCartIdStore();
   });
 
@@ -38,6 +44,19 @@ void main() {
 
   Future<ProductVariant> variant() async =>
       (await api.product('t-shirt')).variantById('var_tshirt_m_white')!;
+
+  Future<void> signInCustomer() async {
+    await api.registerAccount(const RegisterAccountBody(
+      email: 'ada@example.com',
+      password: 'correct horse battery staple',
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+    ));
+    await sessions.write(await api.signIn(const Credentials(
+      email: 'ada@example.com',
+      password: 'correct horse battery staple',
+    )));
+  }
 
   test('persists and restores the opaque cart capability', () async {
     final first = model();
@@ -122,6 +141,57 @@ void main() {
     await customer.add(await variant());
 
     expect(storage.values['guest'], isNot(storage.values['customer_1']));
+  });
+
+  test('claims the guest cart after authentication', () async {
+    final cart = model();
+    await cart.restore();
+    await cart.add(await variant());
+    final cartId = cart.state.cart!.cart.id;
+    await signInCustomer();
+
+    expect(
+      await Future.wait([
+        cart.transferToCustomer(),
+        cart.transferToCustomer(),
+      ]),
+      [true, true],
+    );
+
+    expect(cart.state.status, CartStatus.ready);
+    expect(cart.state.cart!.cart.id, cartId);
+    expect(cart.state.cart!.cart.customerId, isNotNull);
+    expect(cart.state.cart!.cart.email, 'ada@example.com');
+    expect(cart.state.transferFailure, const None<CartTransferFailure>());
+  });
+
+  test('keeps the guest cart recoverable when transfer is unauthorized',
+      () async {
+    final cart = model();
+    await cart.restore();
+    await cart.add(await variant());
+    final cartId = cart.state.cart!.cart.id;
+
+    expect(await cart.transferToCustomer(), isFalse);
+
+    expect(cart.state.cart!.cart.id, cartId);
+    expect(storage.values['guest'], cartId);
+    expect(
+      cart.state.transferFailure,
+      const Some(CartTransferFailure.unauthorized),
+    );
+  });
+
+  test('sign-out forgets the customer cart on this device', () async {
+    final cart = model();
+    await cart.restore();
+    await cart.add(await variant());
+
+    await cart.clearForSignOut();
+
+    expect(cart.state.status, CartStatus.ready);
+    expect(cart.state.cart, isNull);
+    expect(storage.values, isNot(contains('guest')));
   });
 }
 

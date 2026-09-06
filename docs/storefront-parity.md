@@ -23,7 +23,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations and sticky mobile actions |
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
 | `layout/components/cart-dropdown` | cart preview | implemented in #21 with hover, timed add feedback, live removal, subtotal and empty state |
-| `cart/templates` | cart route | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, promotion UI, authoritative totals, session-aware sign-in prompt and checkout handoff; rendered QA remains |
+| `cart/templates` and `layout/components/cart-mismatch-banner` | cart route and ownership recovery | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, promotion UI, authoritative totals, session-aware sign-in prompt, authenticated guest-cart transfer, global retry banner and checkout handoff; rendered QA remains |
 | `account/templates` | account shell and session | implemented in #20 and #26 with secure session, source-exact four-part overview completion, saved-address count, latest-five order links, profile name/phone/billing/password editing, API-backed address book, source-shaped navigation, order list and guarded order detail; rendered QA remains |
 | `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, delivery, manual-payment, review and confirmation steps; rendered QA remains |
 | `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards and guarded frozen order detail metadata, lines, delivery and totals implemented; contact, transfer and return flows remain |
@@ -108,6 +108,12 @@ report unknown data as zero, computes the same email/name/phone/default-billing
 quarters as Medusa, and links at most the five newest server-ordered purchases.
 Order-history absence and failure use Dust `Option` state rather than nullable
 display strings.
+Guest carts are claimed immediately after sign-in through a route-level bearer
+guard and one conditional SQL update. The claim is idempotent for its owner,
+hides foreign or terminal carts as not found, and remains race-safe when two
+customers present the same capability. A failed transfer keeps the guest cart
+recoverable behind the source-matched global retry banner; sign-out removes the
+customer cart capability from secure local storage.
 
 ## Parity rule
 

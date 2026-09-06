@@ -3,10 +3,12 @@ import 'package:commerce_app/src/core/storage/storage.dart';
 import 'package:commerce_app/src/features/cart/model/cart_state.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dio/dio.dart' show DioException;
+import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'cart_view_model.g.dart';
 part 'cart_mutations.dart';
+part 'cart_transfer.dart';
 
 /// Dependencies for the storefront cart.
 final class CartViewModelArgs extends ViewModelArgs {
@@ -35,6 +37,8 @@ class CartViewModel extends $CartViewModel {
   CartViewModel(super.args);
 
   Future<void>? _restoreTask;
+  Future<bool>? _transferTask;
+  int _identityRevision = 0;
 
   @override
   Future<void> onInit() => restore();
@@ -114,6 +118,9 @@ class CartViewModel extends $CartViewModel {
       operation: operation,
       activeLineId: lineId,
       message: null,
+      transferFailure: operation == CartOperation.transfer
+          ? const None<CartTransferFailure>()
+          : state.transferFailure,
     ));
     return true;
   }
@@ -123,6 +130,7 @@ class CartViewModel extends $CartViewModel {
       status: CartStatus.ready,
       cart: cart,
       shippingOptions: state.shippingOptions,
+      transferFailure: const None(),
     ));
     return true;
   }
@@ -135,7 +143,12 @@ class CartViewModel extends $CartViewModel {
       status: CartStatus.ready,
       cart: cart,
       shippingOptions: options,
+      transferFailure: state.transferFailure,
     ));
+  }
+
+  void _clearForIdentity() {
+    emit(const CartState(status: CartStatus.ready));
   }
 
   void _fail(
@@ -151,8 +164,16 @@ class CartViewModel extends $CartViewModel {
       activeLineId: lineId,
       shippingOptions: state.shippingOptions,
       message: _messageOf(error),
+      transferFailure: operation == CartOperation.transfer
+          ? Some(_transferFailureOf(error))
+          : state.transferFailure,
     ));
   }
+
+  static CartTransferFailure _transferFailureOf(Object error) =>
+      error is DioException && error.response?.statusCode == 401
+          ? CartTransferFailure.unauthorized
+          : CartTransferFailure.unavailable;
 
   static String _messageOf(Object error) {
     if (error is DioException) {

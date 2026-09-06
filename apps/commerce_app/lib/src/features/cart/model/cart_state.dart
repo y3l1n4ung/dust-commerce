@@ -37,6 +37,18 @@ enum CartOperation {
 
   /// Loading or choosing delivery.
   shipping,
+
+  /// Claiming the guest cart after customer authentication.
+  transfer,
+}
+
+/// Display-safe reason the guest cart could not be transferred.
+enum CartTransferFailure {
+  /// The customer session is no longer accepted.
+  unauthorized,
+
+  /// The transfer service could not complete the request.
+  unavailable,
 }
 
 /// The single cart shared by navigation, product actions, and checkout.
@@ -50,6 +62,7 @@ class CartState with _$CartState {
     this.operation,
     this.activeLineId,
     this.shippingOptions = const [],
+    this.transferFailure = const None(),
   });
 
   /// The server-computed cart and totals, once created.
@@ -69,6 +82,9 @@ class CartState with _$CartState {
 
   /// The operation currently in flight.
   final CartStatus status;
+
+  /// Why the current guest cart remains unclaimed, when known.
+  final Option<CartTransferFailure> transferFailure;
 
   /// Quantity shown in navigation.
   int get itemCount => cart?.itemCount ?? 0;

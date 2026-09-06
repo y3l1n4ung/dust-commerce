@@ -27,8 +27,12 @@ Router cartRoutes() {
       '/carts/{id}/promotions',
       post(applyPromotionHandler).delete(removePromotionHandler),
     );
+  final transfer = Router()
+    ..routeLayer(fromExtractor(const CustomerAuth()))
+    ..route('/carts/{id}/transfer', post(transferCartHandler));
 
   return Router()
     ..merge(create)
+    ..merge(transfer)
     ..merge(byId);
 }
