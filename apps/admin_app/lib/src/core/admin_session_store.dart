@@ -18,7 +18,7 @@ final class StoredAdminSession {
     }
     return StoredAdminSession(
       token: token,
-      expiresAt: DateTime.parse(expiresAt).toUtc(),
+      expiresAt: DateTime.parse(expiresAt),
     );
   }
 
@@ -52,30 +52,51 @@ final class SecureAdminSessionStore implements AdminSessionStore {
 
   static const _key = 'morrow.admin.auth.session.v1';
   final FlutterSecureStorage _storage;
+  Option<StoredAdminSession> _volatile = const None();
 
   @override
-  Future<void> clear() => _storage.delete(key: _key);
-
-  @override
-  Future<Option<StoredAdminSession>> read() async {
-    final encoded = await _storage.read(key: _key);
-    if (encoded == null) return const None<StoredAdminSession>();
+  Future<void> clear() async {
+    _volatile = const None();
     try {
-      final value = jsonDecode(encoded);
-      if (value is! Map<String, Object?>) throw const FormatException();
-      return Some(StoredAdminSession.fromJson(value));
-    } on FormatException {
-      await clear();
-      return const None<StoredAdminSession>();
+      await _storage.delete(key: _key);
+    } on Object {
+      // Restricted browsers can disable persistent storage mid-session.
     }
   }
 
   @override
-  Future<void> write(AdminIssuedToken token) => _storage.write(
+  Future<Option<StoredAdminSession>> read() async {
+    try {
+      final encoded = await _storage.read(key: _key);
+      if (encoded == null) return _volatile;
+      final value = jsonDecode(encoded);
+      if (value is! Map<String, Object?>) throw const FormatException();
+      final session = StoredAdminSession.fromJson(value);
+      return _volatile = Some(session);
+    } on FormatException {
+      await clear();
+      return const None<StoredAdminSession>();
+    } on Object {
+      return _volatile;
+    }
+  }
+
+  @override
+  Future<void> write(AdminIssuedToken token) async {
+    _volatile = Some(StoredAdminSession(
+      token: token.token,
+      expiresAt: token.expiresAt,
+    ));
+    try {
+      await _storage.write(
         key: _key,
         value: jsonEncode({
           'token': token.token,
-          'expires_at': token.expiresAt.toUtc().toIso8601String(),
+          'expires_at': token.expiresAt.toIso8601String(),
         }),
       );
+    } on Object {
+      // Keep the authenticated tab usable when persistent storage is blocked.
+    }
+  }
 }

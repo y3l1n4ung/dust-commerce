@@ -2,7 +2,9 @@ import 'package:admin_app/src/admin_app.dart';
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/core/admin_authorization_interceptor.dart';
 import 'package:admin_app/src/core/admin_session_store.dart';
+import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/session/admin_session_view_model.dart';
+import 'package:admin_app/src/theme/admin_theme.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -18,17 +20,22 @@ void main() {
   final sessions = SecureAdminSessionStore();
   final dio = Dio()
     ..interceptors.add(AdminAuthorizationInterceptor(sessions: sessions));
-  final viewModel = AdminSessionViewModel(
+  final api = AdminApi(dio, baseUrl: baseUrl);
+  final session = AdminSessionViewModel(
     AdminSessionViewModelArgs(
-      api: AdminApi(dio, baseUrl: baseUrl),
+      api: api,
       sessions: sessions,
     ),
   );
+  final products = AdminProductViewModel(AdminProductViewModelArgs(api: api));
 
   runApp(
     AdminSessionViewModelScope.value(
-      value: viewModel,
-      child: const MorrowAdminApp(),
+      value: session,
+      child: AdminProductViewModelScope.value(
+        value: products,
+        child: MorrowAdminApp(themes: AdminThemeController()),
+      ),
     ),
   );
 }
