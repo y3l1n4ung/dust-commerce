@@ -20,6 +20,10 @@ extension on _AdminProductCreatePageState {
           InkWell(
             onTap: state.isBusy || _media.length == 10 ? null : _pickMedia,
             borderRadius: BorderRadius.circular(8),
+            overlayColor: WidgetStateProperty.resolveWith((states) =>
+                states.contains(WidgetState.pressed)
+                    ? Theme.of(context).colorScheme.surfaceContainer
+                    : Colors.transparent),
             child: Container(
               width: double.infinity,
               height: 104,
