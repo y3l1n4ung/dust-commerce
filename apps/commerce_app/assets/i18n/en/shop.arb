@@ -1178,7 +1178,7 @@
   "@sort_price_desc": {
     "description": "Sorts products from highest to lowest price."
   },
-  "title": "Shop",
+  "title": "Store",
   "@title": {
     "description": "Translation for `shop_title`."
   },

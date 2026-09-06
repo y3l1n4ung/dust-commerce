@@ -45,20 +45,19 @@ class ListingGrid extends StatelessWidget {
               (constraints.maxWidth - (columns - 1) * spacing) / columns;
           return Column(
             children: [
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: columns,
-                  mainAxisExtent: cardWidth * 16 / 9 + 40,
-                  crossAxisSpacing: spacing,
-                  mainAxisSpacing: 32,
-                ),
-                itemCount: products.length,
-                itemBuilder: (_, index) => ProductCard(
-                  product: products[index],
-                  currencyCode: currencyCode,
-                ),
+              Wrap(
+                spacing: spacing,
+                runSpacing: 32,
+                children: [
+                  for (final product in products)
+                    SizedBox(
+                      width: cardWidth,
+                      child: ProductCard(
+                        product: product,
+                        currencyCode: currencyCode,
+                      ),
+                    ),
+                ],
               ),
               if (totalPages > 1) ...[
                 const SizedBox(height: 48),

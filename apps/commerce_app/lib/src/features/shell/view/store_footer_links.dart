@@ -28,84 +28,87 @@ class StoreFooterLinks extends StatelessWidget {
         .where((category) => category.parentId == null)
         .take(6)
         .toList(growable: false);
-    return Wrap(
-      spacing: 64,
-      runSpacing: 40,
-      children: [
-        if (roots.isNotEmpty)
-          _FooterColumn(
-            title: context.tr(
-              'shop_footer_categories',
-              defaultText: 'Categories',
-            ),
-            children: [
-              for (final root in roots) ...[
-                FooterTextLink(
-                  label: root.name,
-                  emphasized: categories.any(
-                    (category) => category.parentId == root.id,
-                  ),
-                  onPressed: () =>
-                      context.navigator.category(handle: root.handle).go(),
-                ),
-                for (final child in categories.where(
-                  (category) => category.parentId == root.id,
-                ))
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12),
-                    child: FooterTextLink(
-                      label: child.name,
-                      onPressed: () =>
-                          context.navigator.category(handle: child.handle).go(),
+    return LayoutBuilder(
+      builder: (context, constraints) => Wrap(
+        spacing: constraints.maxWidth < 768 ? 40 : 64,
+        runSpacing: 40,
+        children: [
+          if (roots.isNotEmpty)
+            _FooterColumn(
+              title: context.tr(
+                'shop_footer_categories',
+                defaultText: 'Categories',
+              ),
+              children: [
+                for (final root in roots) ...[
+                  FooterTextLink(
+                    label: root.name,
+                    emphasized: categories.any(
+                      (category) => category.parentId == root.id,
                     ),
+                    onPressed: () =>
+                        context.navigator.category(handle: root.handle).go(),
+                  ),
+                  for (final child in categories.where(
+                    (category) => category.parentId == root.id,
+                  ))
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12),
+                      child: FooterTextLink(
+                        label: child.name,
+                        onPressed: () => context.navigator
+                            .category(handle: child.handle)
+                            .go(),
+                      ),
+                    ),
+                ],
+              ],
+            ),
+          if (collections.isNotEmpty)
+            _FooterColumn(
+              title: context.tr(
+                'shop_footer_collections',
+                defaultText: 'Collections',
+              ),
+              children: [
+                for (final collection in collections.take(6))
+                  FooterTextLink(
+                    label: collection.title,
+                    onPressed: () => context.navigator
+                        .collection(handle: collection.handle)
+                        .go(),
                   ),
               ],
-            ],
-          ),
-        if (collections.isNotEmpty)
+            ),
           _FooterColumn(
-            title: context.tr(
-              'shop_footer_collections',
-              defaultText: 'Collections',
-            ),
+            title: 'Dust',
             children: [
-              for (final collection in collections.take(6))
-                FooterTextLink(
-                  label: collection.title,
-                  onPressed: () => context.navigator
-                      .collection(handle: collection.handle)
-                      .go(),
+              FooterTextLink(
+                label: 'GitHub',
+                onPressed: () => _open('https://github.com/y3l1n4ung/dust'),
+              ),
+              FooterTextLink(
+                label: context.tr(
+                  'shop_footer_documentation',
+                  defaultText: 'Documentation',
                 ),
+                onPressed: () => _open(
+                  'https://github.com/y3l1n4ung/dust/tree/main/docs',
+                ),
+              ),
+              FooterTextLink(
+                label: context.tr(
+                  'shop_footer_source_code',
+                  defaultText: 'Source code',
+                ),
+                onPressed: () => _open(
+                  'https://github.com/y3l1n4ung/dust-commerce',
+                ),
+              ),
             ],
           ),
-        _FooterColumn(
-          title: 'Dust',
-          children: [
-            FooterTextLink(
-              label: 'GitHub',
-              onPressed: () => _open('https://github.com/y3l1n4ung/dust'),
-            ),
-            FooterTextLink(
-              label: context.tr(
-                'shop_footer_documentation',
-                defaultText: 'Documentation',
-              ),
-              onPressed: () => _open(
-                'https://github.com/y3l1n4ung/dust/tree/main/docs',
-              ),
-            ),
-            FooterTextLink(
-              label: context.tr(
-                'shop_footer_source_code',
-                defaultText: 'Source code',
-              ),
-              onPressed: () => _open(
-                'https://github.com/y3l1n4ung/dust-commerce',
-              ),
-            ),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 
