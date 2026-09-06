@@ -55,21 +55,30 @@ class FeaturedProductRailView extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 LayoutBuilder(
-                  builder: (context, constraints) => GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: constraints.maxWidth >= 976 ? 3 : 2,
-                      childAspectRatio: 0.58,
-                      crossAxisSpacing: 24,
-                      mainAxisSpacing: constraints.maxWidth >= 976 ? 144 : 96,
-                    ),
-                    itemCount: rail.products.length,
-                    itemBuilder: (_, index) => ProductCard(
-                      product: rail.products[index],
-                      currencyCode: currencyCode,
-                    ),
-                  ),
+                  builder: (context, constraints) {
+                    final desktop = MediaQuery.sizeOf(context).width >= 1024;
+                    final columns = desktop ? 3 : 2;
+                    const spacing = 24.0;
+                    final cardWidth =
+                        (constraints.maxWidth - (columns - 1) * spacing) /
+                            columns;
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: columns,
+                        mainAxisExtent: cardWidth * 14 / 11 + 40,
+                        crossAxisSpacing: spacing,
+                        mainAxisSpacing: desktop ? 144 : 96,
+                      ),
+                      itemCount: rail.products.length,
+                      itemBuilder: (_, index) => ProductCard(
+                        product: rail.products[index],
+                        currencyCode: currencyCode,
+                        featured: true,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

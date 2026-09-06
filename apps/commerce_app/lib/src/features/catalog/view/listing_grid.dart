@@ -34,11 +34,15 @@ class ListingGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (context, constraints) {
-          final columns = constraints.maxWidth >= 960
+          final viewportWidth = MediaQuery.sizeOf(context).width;
+          final columns = viewportWidth >= 1280
               ? 4
-              : constraints.maxWidth >= 640
+              : viewportWidth >= 1024
                   ? 3
                   : 2;
+          const spacing = 24.0;
+          final cardWidth =
+              (constraints.maxWidth - (columns - 1) * spacing) / columns;
           return Column(
             children: [
               GridView.builder(
@@ -46,8 +50,8 @@ class ListingGrid extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: columns,
-                  childAspectRatio: 0.58,
-                  crossAxisSpacing: 24,
+                  mainAxisExtent: cardWidth * 16 / 9 + 40,
+                  crossAxisSpacing: spacing,
                   mainAxisSpacing: 32,
                 ),
                 itemCount: products.length,

@@ -1,7 +1,6 @@
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
 import 'package:commerce_shared/commerce_shared.dart';
-import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 /// ProductPreview translated from the Medusa DTC source.
@@ -10,11 +9,15 @@ class ProductCard extends StatelessWidget {
   const ProductCard({
     required this.product,
     required this.currencyCode,
+    this.featured = false,
     super.key,
   });
 
   /// Currency selected by the catalogue.
   final String currencyCode;
+
+  /// Whether this card uses the wider home-rail image ratio.
+  final bool featured;
 
   /// Product rendered by this card.
   final Product product;
@@ -32,8 +35,11 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ProductImage(url: product.thumbnail),
-            const SizedBox(height: 12),
+            ProductImage(
+              url: product.thumbnail,
+              aspectRatio: featured ? 11 / 14 : 9 / 16,
+            ),
+            const SizedBox(height: 16),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -44,21 +50,15 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  price == null ? '—' : formatMoney(price),
-                  style: const TextStyle(color: StoreColors.foregroundMuted),
-                ),
+                if (price != null)
+                  Text(
+                    formatMoney(price),
+                    style: const TextStyle(
+                      color: StoreColors.foregroundMuted,
+                    ),
+                  ),
               ],
             ),
-            if (!product.isPurchasable)
-              const Padding(
-                padding: EdgeInsets.only(top: 6),
-                child: TranslatedText(
-                  'shop_sold_out',
-                  defaultText: 'Sold out',
-                  style: TextStyle(color: StoreColors.foregroundMuted),
-                ),
-              ),
           ],
         ),
       ),
