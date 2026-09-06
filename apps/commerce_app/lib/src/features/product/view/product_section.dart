@@ -25,7 +25,10 @@ class ProductSection extends StatelessWidget {
     final product = state.product!;
     final info = ProductInfo(product: product);
     final gallery = ProductGallery(
-      urls: product.images,
+      urls: product
+          .imagesForVariant(state.selectedVariant?.id)
+          .map((image) => image.url)
+          .toList(growable: false),
       fallbackUrl: product.thumbnail,
       wide: wide,
     );
