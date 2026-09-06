@@ -24,7 +24,11 @@ class CartSummary extends StatelessWidget {
           const TranslatedText(
             'shop_cart_summary',
             defaultText: 'Summary',
-            style: TextStyle(fontSize: 32, height: 44 / 32),
+            style: TextStyle(
+              fontSize: 32,
+              height: 44 / 32,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 16),
           PromotionCode(cart: view.cart, state: state),

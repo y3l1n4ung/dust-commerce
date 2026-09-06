@@ -20,6 +20,7 @@ class _CartPreviewState extends State<CartPreview> {
   final _controller = MenuController();
   Timer? _autoCloseTimer;
   Timer? _hoverCloseTimer;
+  bool _isTimedOpen = false;
   int? _lastCount;
   CartOperation? _lastOperation;
 
@@ -68,11 +69,16 @@ class _CartPreviewState extends State<CartPreview> {
         ),
       ),
       menuChildren: [
-        CartPreviewPanel(
-          state: state,
-          onEnter: _open,
-          onExit: _scheduleClose,
-          onClose: _close,
+        // MenuAnchor constrains its surface to the root overlay. Padding the
+        // child preserves the source panel's 24px header gutter at that edge.
+        Padding(
+          padding: const EdgeInsets.only(right: 24),
+          child: CartPreviewPanel(
+            state: state,
+            onEnter: _open,
+            onExit: _scheduleClose,
+            onClose: _close,
+          ),
         ),
       ],
       child: MouseRegion(
@@ -104,17 +110,24 @@ class _CartPreviewState extends State<CartPreview> {
   void _open({bool timed = false}) {
     _hoverCloseTimer?.cancel();
     if (!_controller.isOpen) _controller.open();
-    if (!timed) return;
+    if (!timed) {
+      _isTimedOpen = false;
+      _autoCloseTimer?.cancel();
+      return;
+    }
+    _isTimedOpen = true;
     _autoCloseTimer?.cancel();
     _autoCloseTimer = Timer(const Duration(seconds: 5), _close);
   }
 
   void _scheduleClose() {
+    if (_isTimedOpen) return;
     _hoverCloseTimer?.cancel();
     _hoverCloseTimer = Timer(const Duration(milliseconds: 120), _close);
   }
 
   void _close() {
+    _isTimedOpen = false;
     _autoCloseTimer?.cancel();
     _hoverCloseTimer?.cancel();
     if (_controller.isOpen) _controller.close();

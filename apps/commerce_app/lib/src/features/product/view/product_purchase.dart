@@ -75,16 +75,14 @@ class ProductPurchaseButton extends StatelessWidget {
 
   Future<void> _add(BuildContext context, ProductVariant variant) async {
     final added = await context.readCartViewModel().add(variant);
-    if (!context.mounted) return;
+    if (added || !context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          added
-              ? context.tr('shop_added_to_cart', defaultText: 'Added to cart')
-              : context.tr(
-                  'shop_add_to_cart_failed',
-                  defaultText: 'Could not add to cart',
-                ),
+          context.tr(
+            'shop_add_to_cart_failed',
+            defaultText: 'Could not add to cart',
+          ),
         ),
       ),
     );

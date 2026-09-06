@@ -18,7 +18,11 @@ class CartSignInPrompt extends StatelessWidget {
                 const TranslatedText(
                   'shop_cart_account_prompt',
                   defaultText: 'Already have an account?',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 24,
+                    height: 32 / 24,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 const TranslatedText(

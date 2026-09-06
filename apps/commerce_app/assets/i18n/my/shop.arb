@@ -78,6 +78,10 @@
   "@account_join_us": {
     "description": "Switches from sign-in to registration."
   },
+  "account_sentence_end": "။",
+  "@account_sentence_end": {
+    "description": "Punctuation ending the account-mode switch prompt."
+  },
   "account_last_name": "မျိုးရိုးအမည်",
   "@account_last_name": {
     "description": "Customer family-name field label."
@@ -461,10 +465,6 @@
   "add_to_cart_failed": "စျေးခြင်းတောင်းထဲ မထည့်နိုင်ပါ",
   "@add_to_cart_failed": {
     "description": "Shown when an add-to-cart request fails."
-  },
-  "added_to_cart": "စျေးခြင်းတောင်းထဲ ထည့်ပြီးပါပြီ",
-  "@added_to_cart": {
-    "description": "Confirms a successful add-to-cart request."
   },
   "back_to_store": "ဆိုင်သို့ ပြန်သွားရန်",
   "@back_to_store": {
@@ -1051,10 +1051,6 @@
   "simple_exchanges_body": "အရွယ်အစား မကိုက်ညီပါက ကုန်ပစ္စည်းအသစ်ဖြင့် လဲပေးပါမည်။",
   "@simple_exchanges_body": {
     "description": "Exchange policy detail."
-  },
-  "sold_out": "ကုန်သွားပါပြီ",
-  "@sold_out": {
-    "description": "Translation for `shop_sold_out`."
   },
   "language_label": "ဘာသာစကား:",
   "@language_label": {

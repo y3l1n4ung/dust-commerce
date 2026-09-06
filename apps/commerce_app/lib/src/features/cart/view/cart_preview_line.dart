@@ -40,7 +40,9 @@ class CartPreviewLine extends StatelessWidget {
               child: ProductImage(url: item.thumbnail, aspectRatio: 1),
             ),
           ),
-          const SizedBox(width: 16),
+          // The source reserves a 122px image track around the 96px thumbnail,
+          // followed by a 16px grid gap.
+          const SizedBox(width: 42),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

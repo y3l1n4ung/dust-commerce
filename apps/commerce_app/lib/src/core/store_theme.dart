@@ -78,14 +78,17 @@ abstract final class StoreTheme {
       bodyMedium: TextStyle(fontSize: 14, height: 24 / 14),
       bodySmall: TextStyle(fontSize: 12, height: 20 / 12),
       labelLarge: TextStyle(
-        fontSize: 14,
-        height: 20 / 14,
+        fontSize: 16,
+        height: 1.5,
         fontWeight: FontWeight.w500,
       ),
     );
 
     return ThemeData(
       useMaterial3: true,
+      // The storefront targets web controls at their authored CSS sizes.
+      // Flutter otherwise compacts button geometry on desktop platforms.
+      visualDensity: VisualDensity.standard,
       colorScheme: scheme,
       scaffoldBackgroundColor: StoreColors.base,
       fontFamily: 'Inter',
@@ -128,6 +131,7 @@ abstract final class StoreTheme {
           disabledBackgroundColor: StoreColors.subtleHover,
           disabledForegroundColor: StoreColors.foregroundDisabled,
           minimumSize: const Size(48, 40),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6),
           ),
@@ -139,6 +143,7 @@ abstract final class StoreTheme {
           foregroundColor: StoreColors.foreground,
           backgroundColor: StoreColors.base,
           minimumSize: const Size(48, 40),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           side: const BorderSide(color: StoreColors.border),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(6),

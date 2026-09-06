@@ -51,7 +51,11 @@ class CartPreviewPanel extends StatelessWidget {
                 child: TranslatedText(
                   'shop_cart_title',
                   defaultText: 'Cart',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 16,
+                    height: 1.5,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               if (state.cart case final view? when !view.cart.isEmpty)
@@ -131,6 +135,13 @@ class _PopulatedPreview extends StatelessWidget {
                       onClose();
                       context.navigator.cart().go();
                     },
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(48),
+                      textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     child: const TranslatedText(
                       'shop_cart_go_to_cart',
                       defaultText: 'Go to cart',

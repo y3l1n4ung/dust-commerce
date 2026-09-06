@@ -78,6 +78,10 @@
   "@account_join_us": {
     "description": "Switches from sign-in to registration."
   },
+  "account_sentence_end": ".",
+  "@account_sentence_end": {
+    "description": "Punctuation ending the account-mode switch prompt."
+  },
   "account_last_name": "Last name",
   "@account_last_name": {
     "description": "Customer family-name field label."
@@ -461,10 +465,6 @@
   "add_to_cart_failed": "Could not add to cart",
   "@add_to_cart_failed": {
     "description": "Shown when an add-to-cart request fails."
-  },
-  "added_to_cart": "Added to cart",
-  "@added_to_cart": {
-    "description": "Confirms a successful add-to-cart request."
   },
   "back_to_store": "Back to store",
   "@back_to_store": {
@@ -1051,10 +1051,6 @@
   "simple_exchanges_body": "If the fit is not right, we'll exchange your product for a new one.",
   "@simple_exchanges_body": {
     "description": "Exchange policy detail."
-  },
-  "sold_out": "Sold out",
-  "@sold_out": {
-    "description": "Translation for `shop_sold_out`."
   },
   "language_label": "Language:",
   "@language_label": {

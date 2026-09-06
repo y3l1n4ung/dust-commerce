@@ -25,7 +25,11 @@ class CartItems extends StatelessWidget {
             child: TranslatedText(
               'shop_cart_title',
               defaultText: 'Cart',
-              style: TextStyle(fontSize: 32, height: 44 / 32),
+              style: TextStyle(
+                fontSize: 32,
+                height: 44 / 32,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
           LayoutBuilder(
@@ -34,8 +38,13 @@ class CartItems extends StatelessWidget {
               return Column(
                 children: [
                   _CartHeader(wide: wide),
-                  for (final item in view.cart.items.reversed)
-                    CartLineItem(item: item, state: state, wide: wide),
+                  for (final (index, item) in view.cart.items.reversed.indexed)
+                    CartLineItem(
+                      item: item,
+                      state: state,
+                      wide: wide,
+                      showDivider: index < view.cart.items.length - 1,
+                    ),
                 ],
               );
             },
@@ -63,15 +72,16 @@ class _CartHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          SizedBox(width: wide ? 104 : 64),
-          Expanded(
+          SizedBox(
+            width: wide ? 104 : 64,
             child: Text(
               context.tr('shop_cart_item', defaultText: 'Item'),
               style: style,
             ),
           ),
+          const Expanded(child: SizedBox.shrink()),
           SizedBox(
-            width: 112,
+            width: wide ? 168 : 112,
             child: Text(
               context.tr('shop_cart_quantity', defaultText: 'Quantity'),
               style: style,

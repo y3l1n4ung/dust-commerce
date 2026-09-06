@@ -108,9 +108,12 @@ class _AccountFormActions extends StatelessWidget {
                         ),
                 ),
               ),
-              const Text(
-                '.',
-                style: TextStyle(fontSize: 12),
+              Text(
+                context.tr(
+                  'shop_account_sentence_end',
+                  defaultText: '.',
+                ),
+                style: const TextStyle(fontSize: 12),
               ),
             ],
           ),

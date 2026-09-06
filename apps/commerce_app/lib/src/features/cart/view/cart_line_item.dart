@@ -11,6 +11,7 @@ class CartLineItem extends StatelessWidget {
     required this.item,
     required this.state,
     required this.wide,
+    required this.showDivider,
     super.key,
   });
 
@@ -22,6 +23,9 @@ class CartLineItem extends StatelessWidget {
 
   /// Whether all source table columns fit.
   final bool wide;
+
+  /// Whether this non-final row retains the source table divider.
+  final bool showDivider;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +41,13 @@ class CartLineItem extends StatelessWidget {
             children: [
               _LineImage(item: item, wide: wide),
               Expanded(
-                child: _LineIdentity(
-                  item: item,
+                child: Padding(
+                  padding: EdgeInsets.only(left: wide ? 22 : 8),
+                  child: _LineIdentity(item: item),
                 ),
               ),
               SizedBox(
-                width: 112,
+                width: wide ? 168 : 112,
                 child: _QuantityControl(
                   item: item,
                   enabled: !busy,
@@ -74,7 +79,7 @@ class CartLineItem extends StatelessWidget {
               style: const TextStyle(color: Colors.red),
             ),
           ),
-        const Divider(),
+        if (showDivider) const Divider(),
       ],
     );
   }
@@ -162,22 +167,15 @@ class _QuantityControl extends StatelessWidget {
             height: 40,
             padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
+              color: StoreColors.subtleHover,
               border: Border.all(color: StoreColors.border),
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<int>(
                 value: item.quantity.clamp(1, 10),
                 isExpanded: true,
-                onChanged: enabled
-                    ? (value) {
-                        if (value != null && value != item.quantity) {
-                          context
-                              .readCartViewModel()
-                              .updateQuantity(item.id, value);
-                        }
-                      }
-                    : null,
+                onChanged: enabled ? (value) => _update(context, value) : null,
                 items: [
                   for (var quantity = 1; quantity <= 10; quantity++)
                     DropdownMenuItem(value: quantity, child: Text('$quantity')),
@@ -194,4 +192,9 @@ class _QuantityControl extends StatelessWidget {
           ],
         ],
       );
+
+  void _update(BuildContext context, int? value) {
+    if (value == null || value == item.quantity) return;
+    context.readCartViewModel().updateQuantity(item.id, value);
+  }
 }
