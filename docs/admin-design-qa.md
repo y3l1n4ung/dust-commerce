@@ -18,8 +18,12 @@
   `packages/admin/dashboard/src/routes/products/product-edit/product-edit.tsx`,
   `components/edit-product-form/edit-product-form.tsx`, and
   `packages/admin/dashboard/src/components/common/switch-box/switch-box.tsx`.
+- Product-create source:
+  `packages/admin/dashboard/src/routes/products/product-create/product-create.tsx`
+  and the Details, Organize and Variants form components beneath it.
 - Rendered reference: Medusa's official Admin product-list image in the User
-  Guide and official product-detail image in the Edit Product guide.
+  Guide, official product-detail image in the Edit Product guide, and official
+  Details-step image in the Create Product guide.
 - Prototype: the authenticated Morrow Admin at port `13002`, backed by the
   local API on a temporary database.
 
@@ -38,6 +42,11 @@ spacing, hierarchy and responsive fidelity rather than pixel identity.
 The general-edit comparison uses the pinned RouteDrawer implementation as
 source truth: right-side drawer, Medusa field order, lifecycle selector,
 discountable switch box, and sticky Cancel/Save footer.
+
+The product-create comparison puts the official Medusa Details-step reference
+and the running Morrow form into one `2560 x 720` image. Both sides use a
+`1280 x 720` viewport and the same empty Details state. This is a direct
+head-to-head inspection, not two separately judged screenshots.
 
 ## Verified
 
@@ -59,6 +68,15 @@ discountable switch box, and sticky Cancel/Save footer.
   optional-value clearing, all four lifecycle transitions, automatic detail and
   list refresh, validation, and duplicate-handle conflict states were exercised
   against the temporary local database.
+- Create opens the source-shaped full-screen focus surface with progress tabs,
+  General fields, automatic handle, variant enablement, option/value setup,
+  Organize attributes, regional price and inventory controls, and draft/publish
+  actions. A two-variant product was published in the browser, opened in admin
+  detail, and then rendered by handle in the storefront with its USD price.
+- Creation failures are atomic: duplicate handle, duplicate SKU, incomplete
+  option selection and incomplete active-currency pricing are covered by server
+  integration tests. The generated admin client is exercised by non-widget
+  view-model tests.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -68,13 +86,18 @@ discountable switch box, and sticky Cancel/Save footer.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Create, import/export, filters, ordering, media mutation, option
-  mutation and variant mutation remain feature work under issue #31. Their
-  visible controls deliberately do not pretend that an API mutation succeeded.
+- P1 — Product-create media upload remains absent, so the Details screen is not
+  pixel-identical to Medusa's longer source form. File storage is tracked under
+  issue #37 and no non-working upload surface is shown.
+- P1 — Import/export, filters, ordering, post-create media/option/variant
+  mutation and multiple option axes in the Flutter creation form remain feature
+  work under issue #31. Their visible controls do not pretend an API mutation
+  succeeded.
 
 ## Result
 
-Passed for the implemented product-list, product-detail and general-edit
-vertical slices. Broader Medusa Admin feature parity is not claimed.
+Passed for the implemented product-list, product-detail, general-edit and core
+product-create vertical slices. Broader Medusa Admin and product-media parity is
+not claimed.
 
 final result: passed

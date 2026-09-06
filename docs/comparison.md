@@ -19,10 +19,10 @@ payment, and a basic customer account.
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
 | Schema | modular PostgreSQL schemas | 34 SQLite tables |
-| Admin API | broad modular API | isolated identity and product-detail slices (6 operations) |
+| Admin API | broad modular API | isolated identity and product-management slices (8 operations) |
 | Store operations | broad Store API | 38 method/path operations |
 | Workflow engine and plugins | yes | none |
-| Admin dashboard | broad operational UI | authenticated shell only |
+| Admin dashboard | broad operational UI | authenticated product list, detail, edit and creation slices |
 
 ## Where the model genuinely agrees
 
@@ -155,7 +155,15 @@ route guard, generated client, and Flutter app. The bootstrap command is not an
 HTTP route. It accepts the initial password only through the process environment
 and stores an Argon2id PHC value. Admin token expiry is a Dart `DateTime`; Dust
 serializes it as ISO-8601 JSON, while persistence normalizes the instant to UTC
-text for SQLite. This is the identity/session slice only, not admin API parity.
+text for SQLite.
+
+The product-creation slice copies Medusa's full-screen Details, Organize and
+Variants progression while keeping a smaller domain. One guarded request writes
+the product, options, option values, variants, selections and regional prices
+atomically; a published result is immediately readable through the separate
+storefront DTO. Medusa additionally creates media, sales-channel, shipping,
+type, collection, category, tag and richer pricing relationships. Those are not
+silently fabricated here.
 
 ### Order transfers keep the capability out of the database
 
@@ -191,9 +199,9 @@ than copying this SQLite representation.
 Fulfilment and returns, external payment integrations or saved payment methods,
 provider-driven taxes, inventory locations, sales channels, product types,
 search, password reset, email verification,
-MFA, OAuth providers, API keys, admin RBAC, admin catalogue/order/customer and
-operations APIs, workflow engine, plugin system, notifications, file storage,
-and an operational admin dashboard.
+MFA, OAuth providers, API keys, admin RBAC, most admin catalogue mutations,
+admin order/customer/operations APIs, workflow engine, plugin system,
+notifications, file storage, and a complete operational admin dashboard.
 
 Shipping is a small set of regional options with optional item-total rules,
 promotions are one fixed or percentage code, and payment-provider availability
