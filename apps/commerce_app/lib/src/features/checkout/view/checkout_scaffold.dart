@@ -14,7 +14,7 @@ final class CheckoutScaffold extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           toolbarHeight: 64,
-          leadingWidth: 180,
+          leadingWidth: 240,
           leading: TextButton.icon(
             onPressed: () => context.navigator.cart().go(),
             icon: const Icon(Icons.chevron_left, size: 18),

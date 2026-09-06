@@ -1,4 +1,5 @@
-import 'package:commerce_server/src/features/catalog/json_converters.dart';
+import 'package:commerce_server/src/features/catalog/json_converters.dart'
+    as json;
 import 'package:commerce_server/src/features/catalog/option_response.dart';
 import 'package:commerce_server/src/features/catalog/variant_response.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -35,15 +36,15 @@ final class ProductResponse with _$ProductResponse {
   final String? description;
 
   /// Explicit public categories attached to the product.
-  @Sqlx(tryFrom: ProductCategoriesFromJson())
+  @Sqlx(tryFrom: _ProductCategoriesSqlxJson())
   final List<ProductCategory> categories;
 
   /// Explicit public collection, absent when the product is ungrouped.
-  @Sqlx(tryFrom: ProductCollectionFromJson())
+  @Sqlx(tryFrom: _ProductCollectionSqlxJson())
   final ProductCollection? collection;
 
   /// Physical and merchandising facts approved for the storefront.
-  @Sqlx(tryFrom: ProductDetailsFromJson())
+  @Sqlx(tryFrom: _ProductDetailsSqlxJson())
   final ProductDetails details;
 
   /// Stable customer-facing route segment.
@@ -53,18 +54,18 @@ final class ProductResponse with _$ProductResponse {
   final String id;
 
   /// Ordered gallery image URLs.
-  @Sqlx(tryFrom: ProductImagesFromJson())
+  @Sqlx(tryFrom: _ProductImagesSqlxJson())
   final List<String> images;
 
   /// Explicit variant axes approved for the storefront.
-  @Sqlx(tryFrom: ProductOptionsFromJson())
+  @Sqlx(tryFrom: _ProductOptionsSqlxJson())
   final List<ProductOptionResponse> options;
 
   /// Public lifecycle status as its stable wire value.
   final String status;
 
   /// Explicit public discovery labels attached to the product.
-  @Sqlx(tryFrom: ProductTagsFromJson())
+  @Sqlx(tryFrom: _ProductTagsSqlxJson())
   final List<ProductTag> tags;
 
   /// Customer-facing product name.
@@ -74,8 +75,66 @@ final class ProductResponse with _$ProductResponse {
   final String? thumbnail;
 
   /// Currency-scoped buyable configurations.
-  @Sqlx(tryFrom: ProductVariantsFromJson())
+  @Sqlx(tryFrom: _ProductVariantsSqlxJson())
   final List<ProductVariantResponse> variants;
+}
+
+// These adapters keep SQLite's TEXT transport visible to Dust's FromRow
+// resolver while the reusable JSON decoding stays in its focused library.
+final class _ProductDetailsSqlxJson
+    implements SqlxTryFrom<ProductDetails, String> {
+  const _ProductDetailsSqlxJson();
+  @override
+  ProductDetails decode(String value) =>
+      const json.ProductDetailsFromJson().decode(value);
+}
+
+final class _ProductCollectionSqlxJson
+    implements SqlxTryFrom<ProductCollection?, String> {
+  const _ProductCollectionSqlxJson();
+  @override
+  ProductCollection? decode(String value) =>
+      const json.ProductCollectionFromJson().decode(value);
+}
+
+final class _ProductCategoriesSqlxJson
+    implements SqlxTryFrom<List<ProductCategory>, String> {
+  const _ProductCategoriesSqlxJson();
+  @override
+  List<ProductCategory> decode(String value) =>
+      const json.ProductCategoriesFromJson().decode(value);
+}
+
+final class _ProductImagesSqlxJson
+    implements SqlxTryFrom<List<String>, String> {
+  const _ProductImagesSqlxJson();
+  @override
+  List<String> decode(String value) =>
+      const json.ProductImagesFromJson().decode(value);
+}
+
+final class _ProductOptionsSqlxJson
+    implements SqlxTryFrom<List<ProductOptionResponse>, String> {
+  const _ProductOptionsSqlxJson();
+  @override
+  List<ProductOptionResponse> decode(String value) =>
+      const json.ProductOptionsFromJson().decode(value);
+}
+
+final class _ProductTagsSqlxJson
+    implements SqlxTryFrom<List<ProductTag>, String> {
+  const _ProductTagsSqlxJson();
+  @override
+  List<ProductTag> decode(String value) =>
+      const json.ProductTagsFromJson().decode(value);
+}
+
+final class _ProductVariantsSqlxJson
+    implements SqlxTryFrom<List<ProductVariantResponse>, String> {
+  const _ProductVariantsSqlxJson();
+  @override
+  List<ProductVariantResponse> decode(String value) =>
+      const json.ProductVariantsFromJson().decode(value);
 }
 
 /// Explicit paginated product response.

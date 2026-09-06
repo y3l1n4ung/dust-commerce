@@ -56,6 +56,9 @@ Future<Result<OrderResponse, Rejection>> placeOrderHandler(
       ),
     Ok(value: Err(error: CheckoutFailure.wrongCustomer)) =>
       Err(Rejection.notFound('Cart "${input.cartId}"')),
+    Ok(value: Err(error: CheckoutFailure.countryNotInRegion)) => const Err(
+        Rejection.status(422, 'Address country is not served by this cart'),
+      ),
     Err() => const Err(Rejection.internal()),
   };
 }

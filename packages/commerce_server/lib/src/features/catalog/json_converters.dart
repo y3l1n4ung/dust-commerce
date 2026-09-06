@@ -7,24 +7,24 @@ import 'package:dust_dart/db.dart';
 
 /// Decodes the public detail object selected as JSON.
 final class ProductDetailsFromJson
-    implements SqlxTryFrom<ProductDetails, Object?> {
+    implements SqlxTryFrom<ProductDetails, String> {
   /// Creates the stateless converter.
   const ProductDetailsFromJson();
 
   @override
-  ProductDetails decode(Object? value) =>
+  ProductDetails decode(String value) =>
       ProductDetails.fromJson(_object(value));
 }
 
 /// Decodes the optional public collection selected as JSON.
 final class ProductCollectionFromJson
-    implements SqlxTryFrom<ProductCollection?, Object?> {
+    implements SqlxTryFrom<ProductCollection?, String> {
   /// Creates the stateless converter.
   const ProductCollectionFromJson();
 
   @override
-  ProductCollection? decode(Object? value) {
-    final decoded = jsonDecode(_text(value));
+  ProductCollection? decode(String value) {
+    final decoded = jsonDecode(value);
     return decoded == null
         ? null
         : ProductCollection.fromJson(decoded as Map<String, Object?>);
@@ -33,12 +33,12 @@ final class ProductCollectionFromJson
 
 /// Decodes public categories selected as an ordered JSON array.
 final class ProductCategoriesFromJson
-    implements SqlxTryFrom<List<ProductCategory>, Object?> {
+    implements SqlxTryFrom<List<ProductCategory>, String> {
   /// Creates the stateless converter.
   const ProductCategoriesFromJson();
 
   @override
-  List<ProductCategory> decode(Object? value) => [
+  List<ProductCategory> decode(String value) => [
         for (final item in _array(value))
           ProductCategory.fromJson(item! as Map<String, Object?>),
       ];
@@ -46,37 +46,36 @@ final class ProductCategoriesFromJson
 
 /// Decodes public tags selected as an ordered JSON array.
 final class ProductTagsFromJson
-    implements SqlxTryFrom<List<ProductTag>, Object?> {
+    implements SqlxTryFrom<List<ProductTag>, String> {
   /// Creates the stateless converter.
   const ProductTagsFromJson();
 
   @override
-  List<ProductTag> decode(Object? value) => [
+  List<ProductTag> decode(String value) => [
         for (final item in _array(value))
           ProductTag.fromJson(item! as Map<String, Object?>),
       ];
 }
 
 /// Decodes ordered product image URLs selected as JSON.
-final class ProductImagesFromJson
-    implements SqlxTryFrom<List<String>, Object?> {
+final class ProductImagesFromJson implements SqlxTryFrom<List<String>, String> {
   /// Creates the stateless converter.
   const ProductImagesFromJson();
 
   @override
-  List<String> decode(Object? value) => [
+  List<String> decode(String value) => [
         for (final item in _array(value)) item! as String,
       ];
 }
 
 /// Decodes explicit public product options selected as JSON.
 final class ProductOptionsFromJson
-    implements SqlxTryFrom<List<ProductOptionResponse>, Object?> {
+    implements SqlxTryFrom<List<ProductOptionResponse>, String> {
   /// Creates the stateless converter.
   const ProductOptionsFromJson();
 
   @override
-  List<ProductOptionResponse> decode(Object? value) => [
+  List<ProductOptionResponse> decode(String value) => [
         for (final item in _array(value))
           _option(item! as Map<String, Object?>),
       ];
@@ -94,12 +93,12 @@ final class ProductOptionsFromJson
 
 /// Decodes currency-scoped public variants selected as JSON.
 final class ProductVariantsFromJson
-    implements SqlxTryFrom<List<ProductVariantResponse>, Object?> {
+    implements SqlxTryFrom<List<ProductVariantResponse>, String> {
   /// Creates the stateless converter.
   const ProductVariantsFromJson();
 
   @override
-  List<ProductVariantResponse> decode(Object? value) => [
+  List<ProductVariantResponse> decode(String value) => [
         for (final item in _array(value))
           _variant(item! as Map<String, Object?>),
       ];
@@ -124,13 +123,7 @@ final class ProductVariantsFromJson
       );
 }
 
-List<Object?> _array(Object? value) =>
-    jsonDecode(_text(value)) as List<Object?>;
+List<Object?> _array(String value) => jsonDecode(value) as List<Object?>;
 
-Map<String, Object?> _object(Object? value) =>
-    jsonDecode(_text(value)) as Map<String, Object?>;
-
-String _text(Object? value) => switch (value) {
-      final String text => text,
-      _ => throw FormatException('Expected database JSON text, got $value'),
-    };
+Map<String, Object?> _object(String value) =>
+    jsonDecode(value) as Map<String, Object?>;

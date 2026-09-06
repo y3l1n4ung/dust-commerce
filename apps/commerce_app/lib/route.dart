@@ -1,4 +1,5 @@
 import 'package:dust_flutter/route.dart';
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:flutter/widgets.dart';
 
 import 'src/features/account/view_model/account_view_model.dart';

@@ -129,6 +129,13 @@ abstract interface class CommerceApi {
     @Body() UpdateCartRegionBody body,
   );
 
+  /// Retains the validated checkout contact and destinations on the cart.
+  @PUT('/store/carts/{id}/addresses')
+  Future<CartView> updateCartAddresses(
+    @Path() String id,
+    @Body() UpdateCartAddressesBody body,
+  );
+
   /// Claims the current guest cart for the authenticated customer.
   @POST('/store/carts/{id}/transfer')
   Future<CartView> transferCart(@Path() String id);

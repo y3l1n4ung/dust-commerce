@@ -165,7 +165,7 @@ class _CheckoutAddressSectionState extends State<CheckoutAddressSection> {
   Future<void> _continue() async {
     if (!_form.currentState!.validate()) return;
     final checkout = context.readCheckoutViewModel();
-    final valid = checkout.saveAddresses(
+    final valid = await checkout.saveAddresses(
       email: _email.text,
       shipping: _shipping.draft,
       billing: _billing.draft,

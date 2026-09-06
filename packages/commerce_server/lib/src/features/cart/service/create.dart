@@ -1,4 +1,4 @@
-import 'package:commerce_server/src/features/cart/model/cart.dart';
+import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
@@ -45,6 +45,7 @@ Future<Result<Option<CartResponse>, SqlxError>> createCart(
       email: email,
       customerId: customerId,
       items: const [],
+      promotions: const [],
     )),
   );
 }

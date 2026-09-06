@@ -22,6 +22,9 @@ enum CheckoutFailure {
 
   /// The cart belongs to another authenticated customer.
   wrongCustomer,
+
+  /// A destination is outside the cart selling region.
+  countryNotInRegion,
 }
 
 /// Turns a cart into an order, or says why it could not.
@@ -63,6 +66,10 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
     final cart = (cartOption as Some<CartResponse>).value;
     if (cart.customerId case final owner? when customerId != Some(owner)) {
       return const Ok(Err(CheckoutFailure.wrongCustomer));
+    }
+    if (!cart.region.countries.contains(shippingAddress.countryCode) ||
+        !cart.region.countries.contains(billingAddress.countryCode)) {
+      return const Ok(Err(CheckoutFailure.countryNotInRegion));
     }
 
     final previousId = await reads.orderIdForCart(cartId);

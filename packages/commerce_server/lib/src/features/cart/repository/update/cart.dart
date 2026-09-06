@@ -1,6 +1,6 @@
 import 'package:dust_dart/db.dart';
 
-part 'update.g.dart';
+part 'cart.g.dart';
 
 /// The writes that change what a cart holds.
 @SqlxDao()
@@ -88,7 +88,10 @@ UPDATE cart_promotions SET amount = $2 WHERE cart_id = $1
   Future<Result<ExecResult, SqlxError>> clearPromotion(String cartId);
 
   /// Records the email a guest checkout collected.
-  @Query(r'UPDATE carts SET email = $2 WHERE id = $1')
+  @Query(r'''
+UPDATE carts SET email = $2
+WHERE id = $1 AND completed_at IS NULL AND deleted_at IS NULL
+''')
   Future<Result<ExecResult, SqlxError>> setCartEmail(
     String cartId,
     String email,

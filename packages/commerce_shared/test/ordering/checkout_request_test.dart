@@ -103,5 +103,24 @@ void main() {
       expect(request().toJson().containsKey('cart_id'), isTrue);
       expect(request().toJson().containsKey('shipping_address'), isTrue);
     });
+
+    test('normalizes transport whitespace before validation and conversion',
+        () {
+      final decoded = CheckoutRequest.fromJson({
+        'cart_id': 'cart_1',
+        'email': '  ada@example.com  ',
+        'shipping_address': {
+          ...addressInput(countryCode: ' US ').toJson(),
+          'company': '   ',
+          'line2': '  Suite 2  ',
+        },
+      });
+
+      expect(decoded.validate().isValid, isTrue);
+      expect(decoded.email, 'ada@example.com');
+      expect(decoded.shippingAddress.toAddress().countryCode, 'us');
+      expect(decoded.shippingAddress.toAddress().company, isNull);
+      expect(decoded.shippingAddress.toAddress().line2, 'Suite 2');
+    });
   });
 }

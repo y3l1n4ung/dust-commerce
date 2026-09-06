@@ -10,6 +10,7 @@ const storefrontCorsMethods = {
   'GET',
   'POST',
   'PATCH',
+  'PUT',
   'DELETE',
   'OPTIONS',
 };

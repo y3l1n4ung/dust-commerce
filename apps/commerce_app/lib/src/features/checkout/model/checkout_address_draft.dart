@@ -35,6 +35,21 @@ final class CheckoutAddressDraft with _$CheckoutAddressDraft {
         phone: address.phone ?? '',
       );
 
+  /// Creates editable checkout values from a cart-owned destination.
+  factory CheckoutAddressDraft.fromAddress(Address address) =>
+      CheckoutAddressDraft(
+        firstName: address.firstName,
+        lastName: address.lastName,
+        company: address.company ?? '',
+        line1: address.line1,
+        line2: address.line2 ?? '',
+        city: address.city,
+        province: address.province ?? '',
+        postalCode: address.postalCode,
+        countryCode: address.countryCode,
+        phone: address.phone ?? '',
+      );
+
   /// Town or city field value.
   final String city;
 

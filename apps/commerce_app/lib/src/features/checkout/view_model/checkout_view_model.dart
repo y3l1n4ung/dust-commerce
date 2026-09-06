@@ -45,31 +45,34 @@ final class CheckoutViewModel extends $CheckoutViewModel {
   /// Clears customer-derived checkout input when account ownership changes.
   void reset() => emit(const CheckoutState());
 
-  /// Prefills a new checkout from the current customer and selling region.
+  /// Restores a new checkout from the server-owned cart address step.
   void prepare() {
     if (state.status != CheckoutStatus.idle) return;
     final view = args.cart.state.cart;
     if (view == null || view.cart.isEmpty) return;
     final customer = args.currentCustomer();
+    final shipping = view.cart.shippingAddress;
+    final billing = view.cart.billingAddress;
     emit(CheckoutState(
       status: CheckoutStatus.ready,
       email: customer?.email ?? view.cart.email ?? '',
-      shipping: CheckoutAddressDraft(
-        firstName: customer?.firstName ?? '',
-        lastName: customer?.lastName ?? '',
-        phone: customer?.phone ?? '',
-      ),
-      billing: const CheckoutAddressDraft(),
+      shipping: shipping == null
+          ? const CheckoutAddressDraft()
+          : CheckoutAddressDraft.fromAddress(shipping),
+      billing: billing == null
+          ? const CheckoutAddressDraft()
+          : CheckoutAddressDraft.fromAddress(billing),
+      sameAsBilling: billing == null,
     ));
   }
 
-  /// Validates and retains address input before delivery selection.
-  bool saveAddresses({
+  /// Validates and persists address input before delivery selection.
+  Future<bool> saveAddresses({
     required String email,
     required CheckoutAddressDraft shipping,
     required CheckoutAddressDraft billing,
     required bool sameAsBilling,
-  }) {
+  }) async {
     final cartId = args.cart.state.cart?.cart.id;
     final next = state.copyWith(
       status: CheckoutStatus.ready,
@@ -95,6 +98,13 @@ final class CheckoutViewModel extends $CheckoutViewModel {
       ));
       return false;
     }
+    emit(next.copyWith(status: CheckoutStatus.loading));
+    final saved = await args.cart.saveAddresses(UpdateCartAddressesBody(
+      email: next.email,
+      shippingAddress: next.shipping.toInput(),
+      billingAddress: next.sameAsBilling ? null : next.billing.toInput(),
+    ));
+    if (!saved) return _cartFailure();
     emit(next);
     return true;
   }

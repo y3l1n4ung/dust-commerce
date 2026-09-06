@@ -62,7 +62,7 @@ void main() {
               'line1': '12 Analytical Way',
               'city': 'London',
               'postal_code': 'EC1A',
-              'country_code': 'gb',
+              'country_code': 'us',
             },
           }))
         .send();

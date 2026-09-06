@@ -20,46 +20,22 @@ mixin _$CartResponse implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
-mixin _$LineItemResponse implements Serializable {
-  Map<String, Object?> serialize() =>
-      _$LineItemResponseSerialize(this as LineItemResponse);
-
-  Map<String, Object?> toJson() => serialize();
-}
-
-mixin _$RegionResponse implements Serializable {
-  Map<String, Object?> serialize() =>
-      _$RegionResponseSerialize(this as RegionResponse);
-
-  Map<String, Object?> toJson() => serialize();
-}
-
 final class $CartResponseSerializer implements Serializer<CartResponse, Map<String, Object?>> {
   const $CartResponseSerializer();
 
   @override
   Map<String, Object?> serialize(CartResponse value) => _$CartResponseSerialize(value);
 }
-final class $LineItemResponseSerializer implements Serializer<LineItemResponse, Map<String, Object?>> {
-  const $LineItemResponseSerializer();
-
-  @override
-  Map<String, Object?> serialize(LineItemResponse value) => _$LineItemResponseSerialize(value);
-}
-final class $RegionResponseSerializer implements Serializer<RegionResponse, Map<String, Object?>> {
-  const $RegionResponseSerializer();
-
-  @override
-  Map<String, Object?> serialize(RegionResponse value) => _$RegionResponseSerialize(value);
-}
 CartResponse _$CartResponseFromRow(Row row) {
   return CartResponse(
     id: row.read<String>('id'),
     region: RegionResponseFromJson().decode(row.read<String>('region')),
-    items: row.readNullable<Object?>('items') == null ? const [] : LineItemsFromJson().decode(row.read<String>('items')),
-    promotions: row.readNullable<Object?>('promotions') == null ? const [] : AppliedPromotionsFromJson().decode(row.read<Object?>('promotions')),
+    items: LineItemsFromJson().decode(row.read<String>('items')),
+    promotions: CartPromotionsSqlxJson().decode(row.read<String>('promotions')),
     customerId: row.readNullable<String>('customer_id'),
     email: row.readNullable<String>('email'),
+    shippingAddress: OptionalAddressFromJson().decode(row.read<String>('shipping_address')),
+    billingAddress: OptionalAddressFromJson().decode(row.read<String>('billing_address')),
     shippingMethod: OptionalShippingMethodFromJson().decode(row.read<String>('shipping_method')),
   );
 }
@@ -90,95 +66,24 @@ extension $CartResponseQuery on QueryAs<CartResponse> {
       fetchAllWith(db, _$CartResponseFromRow);
 }
 
-LineItemResponse _$LineItemResponseFromRow(Row row) {
-  return LineItemResponse(
-    id: row.read<String>('id'),
-    variantId: row.read<String>('variant_id'),
-    productId: row.read<String>('product_id'),
-    productHandle: row.read<String>('product_handle'),
-    title: row.read<String>('title'),
-    unitPrice: MoneyFromJson().decode(row.read<String>('unit_price')),
-    quantity: row.read<int>('quantity'),
-    variantTitle: row.readNullable<String>('variant_title'),
-    thumbnail: row.readNullable<String>('thumbnail'),
-  );
-}
-
-/// Row deserializer for [LineItemResponse].
-final class $LineItemResponseRowDeserializer implements RowDeserializer<LineItemResponse> {
-  const $LineItemResponseRowDeserializer();
-
-  @override
-  LineItemResponse deserialize(Row row) => _$LineItemResponseFromRow(row);
-}
-
-/// Typed row query terminals for [LineItemResponse].
-///
-/// Resolved from the static type of the receiver, so a row type with no
-/// `FromRow` has no terminals and the call does not compile.
-extension $LineItemResponseQuery on QueryAs<LineItemResponse> {
-  /// Fetches exactly one row.
-  Future<LineItemResponse> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$LineItemResponseFromRow);
-
-  /// Fetches zero or one row.
-  Future<LineItemResponse?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$LineItemResponseFromRow);
-
-  /// Fetches every row.
-  Future<List<LineItemResponse>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$LineItemResponseFromRow);
-}
-
-RegionResponse _$RegionResponseFromRow(Row row) {
-  return RegionResponse(
-    id: row.read<String>('id'),
-    name: row.read<String>('name'),
-    currencyCode: row.read<String>('currency_code'),
-    taxRate: row.read<int>('tax_rate'),
-    countries: CountriesFromCsv().decode(row.read<String>('countries')),
-    taxInclusive: BoolFromInt().decode(row.read<int>('tax_inclusive')),
-  );
-}
-
-/// Row deserializer for [RegionResponse].
-final class $RegionResponseRowDeserializer implements RowDeserializer<RegionResponse> {
-  const $RegionResponseRowDeserializer();
-
-  @override
-  RegionResponse deserialize(Row row) => _$RegionResponseFromRow(row);
-}
-
-/// Typed row query terminals for [RegionResponse].
-///
-/// Resolved from the static type of the receiver, so a row type with no
-/// `FromRow` has no terminals and the call does not compile.
-extension $RegionResponseQuery on QueryAs<RegionResponse> {
-  /// Fetches exactly one row.
-  Future<RegionResponse> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$RegionResponseFromRow);
-
-  /// Fetches zero or one row.
-  Future<RegionResponse?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$RegionResponseFromRow);
-
-  /// Fetches every row.
-  Future<List<RegionResponse>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$RegionResponseFromRow);
-}
-
 Map<String, Object?> _$CartResponseSerialize(CartResponse instance) {
   return <String, Object?>{
+    'billing_address': instance.billingAddress == null
+        ? null
+        : (instance.billingAddress!).toJson(),
     'customer_id': instance.customerId,
     'email': instance.email,
     'id': instance.id,
     'items': instance.items
-        .map((item) => _$LineItemResponseSerialize(item))
+        .map((item) => item.toJson())
         .toList(),
     'promotions': instance.promotions
         .map((item) => item.toJson())
         .toList(),
-    'region': _$RegionResponseSerialize(instance.region),
+    'region': instance.region.toJson(),
+    'shipping_address': instance.shippingAddress == null
+        ? null
+        : (instance.shippingAddress!).toJson(),
     'shipping_method': instance.shippingMethod == null
         ? null
         : (instance.shippingMethod!).toJson(),
@@ -187,36 +92,3 @@ Map<String, Object?> _$CartResponseSerialize(CartResponse instance) {
 
 Map<String, Object?> _$CartResponseToJson(CartResponse instance) =>
     _$CartResponseSerialize(instance);
-
-Map<String, Object?> _$LineItemResponseSerialize(LineItemResponse instance) {
-  return <String, Object?>{
-    'id': instance.id,
-    'product_handle': instance.productHandle,
-    'product_id': instance.productId,
-    'quantity': instance.quantity,
-    'thumbnail': instance.thumbnail,
-    'title': instance.title,
-    'unit_price': instance.unitPrice.toJson(),
-    'variant_id': instance.variantId,
-    'variant_title': instance.variantTitle,
-  };
-}
-
-Map<String, Object?> _$LineItemResponseToJson(LineItemResponse instance) =>
-    _$LineItemResponseSerialize(instance);
-
-Map<String, Object?> _$RegionResponseSerialize(RegionResponse instance) {
-  return <String, Object?>{
-    'countries': instance.countries
-        .map((item) => item)
-        .toList(),
-    'currency_code': instance.currencyCode,
-    'id': instance.id,
-    'name': instance.name,
-    'tax_inclusive': instance.taxInclusive,
-    'tax_rate': instance.taxRate,
-  };
-}
-
-Map<String, Object?> _$RegionResponseToJson(RegionResponse instance) =>
-    _$RegionResponseSerialize(instance);

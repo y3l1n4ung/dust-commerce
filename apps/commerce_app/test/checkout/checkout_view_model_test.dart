@@ -52,12 +52,13 @@ void main() {
     await directory.delete(recursive: true);
   });
 
-  CheckoutViewModel checkout({CommerceApi? client}) => CheckoutViewModel(
+  CheckoutViewModel checkout({CommerceApi? client, Customer? customer}) =>
+      CheckoutViewModel(
         CheckoutViewModelArgs(
           api: client ?? api,
           cart: cart,
           receipts: receipts,
-          currentCustomer: () => null,
+          currentCustomer: () => customer,
         ),
       );
 
@@ -67,7 +68,7 @@ void main() {
     expect(
         await CheckoutGuard(cart).canActivate(const CheckoutRoute()), isNull);
 
-    expect(_saveAddress(model), isTrue);
+    expect(await _saveAddress(model), isTrue);
     expect(await model.loadDelivery(), isTrue);
     expect(await model.chooseDelivery('ship_standard'), isTrue);
     model.selectManualPayment();
@@ -88,7 +89,7 @@ void main() {
 
   test('capture failure retains input and resumes the same order', () async {
     final model = checkout(client: _FailFirstCaptureApi(api))..prepare();
-    _saveAddress(model);
+    await _saveAddress(model);
     await model.loadDelivery();
     await model.chooseDelivery('ship_standard');
     model.selectManualPayment();
@@ -103,17 +104,44 @@ void main() {
     expect(model.state.order!.paymentStatus, PaymentStatus.captured);
   });
 
-  test('identity reset clears customer-derived checkout input', () {
+  test('identity reset clears customer-derived checkout input', () async {
     final model = checkout()..prepare();
-    _saveAddress(model);
+    await _saveAddress(model);
 
     model.reset();
 
     expect(model.state, const CheckoutState());
   });
+
+  test('a new checkout restores the server-owned address step', () async {
+    final first = checkout()..prepare();
+    expect(await _saveAddress(first), isTrue);
+
+    final restored = checkout()..prepare();
+
+    expect(restored.state.email, 'ada@example.com');
+    expect(restored.state.shipping.firstName, 'Ada');
+    expect(restored.state.shipping.line1, '12 Analytical Way');
+    expect(restored.state.shipping.countryCode, 'us');
+    expect(restored.state.sameAsBilling, isTrue);
+  });
+
+  test('customer identity prefills only proven contact email', () {
+    const customer = Customer(
+      id: 'cus_ada',
+      email: 'ada@example.com',
+      firstName: 'Ada',
+      lastName: 'Lovelace',
+      phone: '+1 555 0101',
+    );
+    final model = checkout(customer: customer)..prepare();
+
+    expect(model.state.email, customer.email);
+    expect(model.state.shipping, const CheckoutAddressDraft());
+  });
 }
 
-bool _saveAddress(CheckoutViewModel model) => model.saveAddresses(
+Future<bool> _saveAddress(CheckoutViewModel model) => model.saveAddresses(
       email: 'ada@example.com',
       shipping: const CheckoutAddressDraft(
         firstName: 'Ada',

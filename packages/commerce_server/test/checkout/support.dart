@@ -70,7 +70,7 @@ final class CheckoutHarness {
         'city': 'London',
         'province': province,
         'postal_code': 'EC1A',
-        'country_code': 'gb',
+        'country_code': 'us',
         'phone': phone,
       };
 

@@ -19,6 +19,12 @@ extension CartMutations on CartViewModel {
     }
   }
 
+  /// Retains checkout addresses and accepts only the server response.
+  Future<bool> saveAddresses(UpdateCartAddressesBody body) => _change(
+        CartOperation.address,
+        request: (id) => args.api.updateCartAddresses(id, body),
+      );
+
   /// Replaces one line quantity after the server rechecks inventory.
   Future<bool> updateQuantity(String lineId, int quantity) => _change(
         CartOperation.update,

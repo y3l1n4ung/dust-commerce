@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:commerce_server/src/features/cart/model/line_item.dart';
 import 'package:commerce_server/src/features/cart/model/promotion.dart';
+import 'package:commerce_server/src/features/cart/model/region.dart';
 import 'package:commerce_server/src/features/cart/model/shipping.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
@@ -17,12 +19,18 @@ final class CartResponse with _$CartResponse {
   const CartResponse({
     required this.id,
     required this.region,
-    this.items = const [],
-    this.promotions = const [],
+    required this.items,
+    required this.promotions,
     this.customerId,
     this.email,
+    this.shippingAddress,
+    this.billingAddress,
     this.shippingMethod,
   });
+
+  /// Separate invoice destination, absent when shipping is reused.
+  @Sqlx(rename: 'billing_address', tryFrom: OptionalAddressFromJson())
+  final Address? billingAddress;
 
   /// Customer owner once this guest cart is claimed.
   @Sqlx(rename: 'customer_id')
@@ -39,12 +47,16 @@ final class CartResponse with _$CartResponse {
   final List<LineItemResponse> items;
 
   /// Explicit customer-facing promotion snapshots.
-  @Sqlx(tryFrom: AppliedPromotionsFromJson())
+  @Sqlx(tryFrom: CartPromotionsSqlxJson())
   final List<AppliedPromotionResponse> promotions;
 
   /// Explicit selling-region response.
   @Sqlx(tryFrom: RegionResponseFromJson())
   final RegionResponse region;
+
+  /// Delivery destination retained during checkout.
+  @Sqlx(rename: 'shipping_address', tryFrom: OptionalAddressFromJson())
+  final Address? shippingAddress;
 
   /// Explicit selected delivery response.
   @Sqlx(
@@ -54,121 +66,15 @@ final class CartResponse with _$CartResponse {
   final ShippingMethodResponse? shippingMethod;
 }
 
-/// Explicit line-item response populated directly by SQLx.
-@Derive([Serialize(), FromRow()])
-@SerDe(renameAll: SerDeRename.snakeCase)
-final class LineItemResponse with _$LineItemResponse {
-  /// Creates an allowlisted line-item response.
-  const LineItemResponse({
-    required this.id,
-    required this.variantId,
-    required this.productId,
-    required this.productHandle,
-    required this.title,
-    required this.unitPrice,
-    required this.quantity,
-    this.variantTitle,
-    this.thumbnail,
-  });
-
-  /// Stable line identifier.
-  final String id;
-
-  /// Product route captured when the line was added.
-  @Sqlx(rename: 'product_handle')
-  final String productHandle;
-
-  /// Product identifier captured when the line was added.
-  @Sqlx(rename: 'product_id')
-  final String productId;
-
-  /// Quantity currently requested.
-  final int quantity;
-
-  /// Product image captured when the line was added.
-  final String? thumbnail;
-
-  /// Product title captured when the line was added.
-  final String title;
-
-  /// Price snapshot for one unit.
-  @Sqlx(rename: 'unit_price', tryFrom: MoneyFromJson())
-  final Money unitPrice;
-
-  /// Variant identifier used for stock checks.
-  @Sqlx(rename: 'variant_id')
-  final String variantId;
-
-  /// Variant title captured when the line was added.
-  @Sqlx(rename: 'variant_title')
-  final String? variantTitle;
-}
-
-/// Explicit selling-region response.
-@Derive([Serialize(), FromRow()])
-@SerDe(renameAll: SerDeRename.snakeCase)
-final class RegionResponse with _$RegionResponse {
-  /// Creates an allowlisted selling region.
-  const RegionResponse({
-    required this.id,
-    required this.name,
-    required this.currencyCode,
-    required this.taxRate,
-    required this.countries,
-    required this.taxInclusive,
-  });
-
-  /// ISO country codes served by this region.
-  @Sqlx(tryFrom: CountriesFromCsv())
-  final List<String> countries;
-
-  /// Currency used by every regional amount.
-  @Sqlx(rename: 'currency_code')
-  final String currencyCode;
-
-  /// Stable region identifier.
-  final String id;
-
-  /// Customer-facing region name.
-  final String name;
-
-  /// Whether displayed amounts already contain tax.
-  @Sqlx(rename: 'tax_inclusive', tryFrom: BoolFromInt())
-  final bool taxInclusive;
-
-  /// Tax rate in basis points.
-  @Sqlx(rename: 'tax_rate')
-  final int taxRate;
-}
-
-/// Converts SQLite's integer boolean representation.
-final class BoolFromInt implements SqlxTryFrom<bool, int> {
-  /// Creates the stateless converter.
-  const BoolFromInt();
+/// Keeps SQLite's TEXT transport explicit to the local FromRow resolver.
+final class CartPromotionsSqlxJson
+    implements SqlxTryFrom<List<AppliedPromotionResponse>, String> {
+  /// Creates the stateless adapter.
+  const CartPromotionsSqlxJson();
 
   @override
-  bool decode(int value) => value != 0;
-}
-
-/// Converts the compact region country list.
-final class CountriesFromCsv implements SqlxTryFrom<List<String>, String> {
-  /// Creates the stateless converter.
-  const CountriesFromCsv();
-
-  @override
-  List<String> decode(String value) => value
-      .split(',')
-      .where((country) => country.isNotEmpty)
-      .toList(growable: false);
-}
-
-/// Builds [Money] from a JSON object selected by SQLite.
-final class MoneyFromJson implements SqlxTryFrom<Money, String> {
-  /// Creates the stateless converter.
-  const MoneyFromJson();
-
-  @override
-  Money decode(String value) => Money.fromJson(_object(value));
+  List<AppliedPromotionResponse> decode(String value) =>
+      const AppliedPromotionsFromJson().decode(value);
 }
 
 /// Builds explicit line responses from a SQLite JSON aggregate.
@@ -216,6 +122,16 @@ final class OptionalShippingMethodFromJson
       amount: Money.fromJson(json['amount']! as Map<String, Object?>),
     );
   }
+}
+
+/// Decodes one optional checkout address selected as JSON.
+final class OptionalAddressFromJson implements SqlxTryFrom<Address?, String> {
+  /// Creates the stateless converter.
+  const OptionalAddressFromJson();
+
+  @override
+  Address? decode(String value) =>
+      value == 'null' ? null : Address.fromJson(_object(value));
 }
 
 /// Builds an explicit region response from a JSON object selected by SQLite.

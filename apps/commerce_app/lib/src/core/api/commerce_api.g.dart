@@ -778,6 +778,42 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
+  Future<CartView> updateCartAddresses(String id, UpdateCartAddressesBody body) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<CartView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/carts/' + Uri.encodeComponent(id.toString()) + '/addresses',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return CartView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<CartView> transferCart(String id) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

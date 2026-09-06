@@ -140,6 +140,76 @@ mixin _$UpdateCartRegionBody implements Validatable, Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$UpdateCartAddressesBody implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as UpdateCartAddressesBody;
+    return 'UpdateCartAddressesBody('
+        'billingAddress: ${self.billingAddress}, '
+        'email: ${self.email}, '
+        'shippingAddress: ${self.shippingAddress}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as UpdateCartAddressesBody;
+    return identical(this, other) ||
+        other is UpdateCartAddressesBody &&
+            runtimeType == other.runtimeType &&
+            other.billingAddress == self.billingAddress &&
+            other.email == self.email &&
+            other.shippingAddress == self.shippingAddress;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as UpdateCartAddressesBody;
+    return Object.hashAll([
+      runtimeType,
+      self.billingAddress,
+      self.email,
+      self.shippingAddress,
+    ]);
+  }
+
+  /// Validates this `UpdateCartAddressesBody`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as UpdateCartAddressesBody;
+    final errors = <ValidationError>[];
+    _UpdateCartAddressesBodyValidation._validateBillingAddress(self.billingAddress, errors);
+    _UpdateCartAddressesBodyValidation._validateEmail(self.email, errors);
+    _UpdateCartAddressesBodyValidation._validateShippingAddress(self.shippingAddress, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `UpdateCartAddressesBody` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$UpdateCartAddressesBodySerialize(this as UpdateCartAddressesBody);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$AddLineBody implements Validatable, Serializable {
   @override
   String toString() {
@@ -410,6 +480,37 @@ extension _UpdateCartRegionBodyValidation on UpdateCartRegionBody {
   }
 
 }
+extension _UpdateCartAddressesBodyValidation on UpdateCartAddressesBody {
+  static void _validateBillingAddress(AddressInput? billingAddress, List<ValidationError> errors) {
+    if (billingAddress != null) {
+      final billingAddressValidation = billingAddress.validate();
+      if (billingAddressValidation case Invalid(errors: final nestedErrors)) {
+        for (final error in nestedErrors) {
+          errors.add(ValidationError(field: 'billingAddress.${error.field}', message: error.message));
+        }
+      }
+    }
+  }
+
+  static void _validateEmail(String email, List<ValidationError> errors) {
+    if (email.length < 1) {
+      errors.add(ValidationError(field: 'email', message: 'Enter an email address'));
+    }
+    if (!ValidationHelper.isEmail(email)) {
+      errors.add(ValidationError(field: 'email', message: 'Enter a valid email address'));
+    }
+  }
+
+  static void _validateShippingAddress(AddressInput shippingAddress, List<ValidationError> errors) {
+    final shippingAddressValidation = shippingAddress.validate();
+    if (shippingAddressValidation case Invalid(errors: final nestedErrors)) {
+      for (final error in nestedErrors) {
+        errors.add(ValidationError(field: 'shippingAddress.${error.field}', message: error.message));
+      }
+    }
+  }
+
+}
 extension _AddLineBodyValidation on AddLineBody {
   static void _validateQuantity(int quantity, List<ValidationError> errors) {
     if (quantity < 1) {
@@ -471,6 +572,18 @@ final class $UpdateCartRegionBodyDeserializer implements Deserializer<UpdateCart
 
   @override
   UpdateCartRegionBody deserialize(Map<String, Object?> json) => _$UpdateCartRegionBodyDeserialize(json);
+}
+final class $UpdateCartAddressesBodySerializer implements Serializer<UpdateCartAddressesBody, Map<String, Object?>> {
+  const $UpdateCartAddressesBodySerializer();
+
+  @override
+  Map<String, Object?> serialize(UpdateCartAddressesBody value) => _$UpdateCartAddressesBodySerialize(value);
+}
+final class $UpdateCartAddressesBodyDeserializer implements Deserializer<UpdateCartAddressesBody, Map<String, Object?>> {
+  const $UpdateCartAddressesBodyDeserializer();
+
+  @override
+  UpdateCartAddressesBody deserialize(Map<String, Object?> json) => _$UpdateCartAddressesBodyDeserialize(json);
 }
 final class $AddLineBodySerializer implements Serializer<AddLineBody, Map<String, Object?>> {
   const $AddLineBodySerializer();
@@ -568,6 +681,39 @@ UpdateCartRegionBody _$UpdateCartRegionBodyDeserialize(Map<String, Object?> json
 
 UpdateCartRegionBody _$UpdateCartRegionBodyFromJson(Map<String, Object?> json) =>
     _$UpdateCartRegionBodyDeserialize(json);
+
+Map<String, Object?> _$UpdateCartAddressesBodySerialize(UpdateCartAddressesBody instance) {
+  return <String, Object?>{
+    'billing_address': instance.billingAddress == null
+        ? null
+        : (instance.billingAddress!).toJson(),
+    'email': instance.email,
+    'shipping_address': instance.shippingAddress.toJson(),
+  };
+}
+
+Map<String, Object?> _$UpdateCartAddressesBodyToJson(UpdateCartAddressesBody instance) =>
+    _$UpdateCartAddressesBodySerialize(instance);
+
+// factory UpdateCartAddressesBody.fromJson(Map<String, Object?> json) => _$UpdateCartAddressesBodyFromJson(json);
+UpdateCartAddressesBody _$UpdateCartAddressesBodyDeserialize(Map<String, Object?> json) {
+  final billingAddressValue = json['billing_address'] == null
+      ? null
+      : AddressInput.fromJson(JsonHelper.asMap(json['billing_address'], 'billing_address'));
+  final emailValue = JsonHelper.as<String>(json['email'], 'email', 'String');
+  final shippingAddressValue = AddressInput.fromJson(
+    JsonHelper.asMap(json['shipping_address'], 'shipping_address'),
+  );
+
+  return UpdateCartAddressesBody(
+    email: emailValue,
+    shippingAddress: shippingAddressValue,
+    billingAddress: billingAddressValue,
+  );
+}
+
+UpdateCartAddressesBody _$UpdateCartAddressesBodyFromJson(Map<String, Object?> json) =>
+    _$UpdateCartAddressesBodyDeserialize(json);
 
 Map<String, Object?> _$AddLineBodySerialize(AddLineBody instance) {
   return <String, Object?>{

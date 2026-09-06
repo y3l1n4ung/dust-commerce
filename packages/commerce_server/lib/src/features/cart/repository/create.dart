@@ -1,4 +1,4 @@
-import 'package:commerce_server/src/features/cart/model/cart.dart';
+import 'package:commerce_server/src/features/cart/model/region.dart';
 import 'package:dust_dart/db.dart';
 
 part 'create.g.dart';

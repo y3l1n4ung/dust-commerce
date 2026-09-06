@@ -45,7 +45,7 @@ void main() {
         line1: '12 Analytical Way',
         city: 'London',
         postalCode: 'EC1A',
-        countryCode: 'gb',
+        countryCode: 'us',
       ),
     );
 

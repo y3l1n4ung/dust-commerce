@@ -56,7 +56,7 @@ ProductOptionFilterResponse _$ProductOptionFilterResponseFromRow(Row row) {
   return ProductOptionFilterResponse(
     id: row.read<String>('id'),
     title: row.read<String>('title'),
-    values: ProductOptionValuesFromJson().decode(row.read<Object?>('values')),
+    values: ProductOptionValuesFromJson().decode(row.read<String>('values')),
   );
 }
 

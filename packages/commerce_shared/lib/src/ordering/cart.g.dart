@@ -27,11 +27,13 @@ mixin _$Cart implements Serializable {
     final self = this as Cart;
     return 'Cart('
         'customerId: ${self.customerId}, '
+        'billingAddress: ${self.billingAddress}, '
         'email: ${self.email}, '
         'id: ${self.id}, '
         'items: ${self.items}, '
         'promotions: ${self.promotions}, '
         'region: ${self.region}, '
+        'shippingAddress: ${self.shippingAddress}, '
         'shippingMethod: ${self.shippingMethod}'
         ')';
   }
@@ -43,11 +45,13 @@ mixin _$Cart implements Serializable {
         other is Cart &&
             runtimeType == other.runtimeType &&
             other.customerId == self.customerId &&
+            other.billingAddress == self.billingAddress &&
             other.email == self.email &&
             other.id == self.id &&
             _cartItemsEquality.equals(other.items, self.items) &&
             _cartPromotionsEquality.equals(other.promotions, self.promotions) &&
             other.region == self.region &&
+            other.shippingAddress == self.shippingAddress &&
             other.shippingMethod == self.shippingMethod;
   }
 
@@ -57,11 +61,13 @@ mixin _$Cart implements Serializable {
     return Object.hashAll([
       runtimeType,
       self.customerId,
+      self.billingAddress,
       self.email,
       self.id,
       _cartItemsEquality.hash(self.items),
       _cartPromotionsEquality.hash(self.promotions),
       self.region,
+      self.shippingAddress,
       self.shippingMethod,
     ]);
   }
@@ -87,11 +93,13 @@ mixin _$Cart implements Serializable {
 abstract class _$CartCopyWith<$Res> {
   $Res call({
     String? customerId,
+    Address? billingAddress,
     String? email,
     String? id,
     List<LineItem>? items,
     List<CartPromotion>? promotions,
     Region? region,
+    Address? shippingAddress,
     ShippingMethod? shippingMethod,
   });
 }
@@ -107,11 +115,13 @@ final class _$CartCopyWithImpl<$Res> implements _$CartCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? customerId = _cartCopyWithUnset,
+    Object? billingAddress = _cartCopyWithUnset,
     Object? email = _cartCopyWithUnset,
     Object? id = null,
     Object? items = null,
     Object? promotions = null,
     Object? region = null,
+    Object? shippingAddress = _cartCopyWithUnset,
     Object? shippingMethod = _cartCopyWithUnset,
   }) {
     return _then(
@@ -126,6 +136,12 @@ final class _$CartCopyWithImpl<$Res> implements _$CartCopyWith<$Res> {
         customerId: identical(customerId, _cartCopyWithUnset)
             ? _self.customerId
             : customerId as String?,
+        shippingAddress: identical(shippingAddress, _cartCopyWithUnset)
+            ? _self.shippingAddress
+            : shippingAddress as Address?,
+        billingAddress: identical(billingAddress, _cartCopyWithUnset)
+            ? _self.billingAddress
+            : billingAddress as Address?,
         shippingMethod: identical(shippingMethod, _cartCopyWithUnset)
             ? _self.shippingMethod
             : shippingMethod as ShippingMethod?,
@@ -149,6 +165,9 @@ final class $CartDeserializer implements Deserializer<Cart, Map<String, Object?>
 Map<String, Object?> _$CartSerialize(Cart instance) {
   return <String, Object?>{
     'customer_id': instance.customerId,
+    'billing_address': instance.billingAddress == null
+        ? null
+        : (instance.billingAddress!).toJson(),
     'email': instance.email,
     'id': instance.id,
     'items': instance.items
@@ -158,6 +177,9 @@ Map<String, Object?> _$CartSerialize(Cart instance) {
         .map((item) => item.toJson())
         .toList(),
     'region': instance.region.toJson(),
+    'shipping_address': instance.shippingAddress == null
+        ? null
+        : (instance.shippingAddress!).toJson(),
     'shipping_method': instance.shippingMethod == null
         ? null
         : (instance.shippingMethod!).toJson(),
@@ -172,6 +194,9 @@ Cart _$CartDeserialize(Map<String, Object?> json) {
   final customerIdValue = json['customer_id'] == null
       ? null
       : JsonHelper.as<String>(json['customer_id'], 'customer_id', 'String');
+  final billingAddressValue = json['billing_address'] == null
+      ? null
+      : Address.fromJson(JsonHelper.asMap(json['billing_address'], 'billing_address'));
   final emailValue = json['email'] == null
       ? null
       : JsonHelper.as<String>(json['email'], 'email', 'String');
@@ -183,6 +208,9 @@ Cart _$CartDeserialize(Map<String, Object?> json) {
   final regionValue = Region.fromJson(
     JsonHelper.asMap(json['region'], 'region'),
   );
+  final shippingAddressValue = json['shipping_address'] == null
+      ? null
+      : Address.fromJson(JsonHelper.asMap(json['shipping_address'], 'shipping_address'));
   final shippingMethodValue = json['shipping_method'] == null
       ? null
       : ShippingMethod.fromJson(JsonHelper.asMap(json['shipping_method'], 'shipping_method'));
@@ -194,6 +222,8 @@ Cart _$CartDeserialize(Map<String, Object?> json) {
     promotions: promotionsValue,
     email: emailValue,
     customerId: customerIdValue,
+    shippingAddress: shippingAddressValue,
+    billingAddress: billingAddressValue,
     shippingMethod: shippingMethodValue,
   );
 }

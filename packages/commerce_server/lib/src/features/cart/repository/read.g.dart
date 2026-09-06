@@ -66,6 +66,38 @@ SELECT c.id, c.customer_id, c.email,
          WHERE method.cart_id = c.id
        ), 'null') AS shipping_method,
        coalesce((
+         SELECT json_object(
+           'first_name', address.first_name,
+           'last_name', address.last_name,
+           'company', address.company,
+           'line1', address.line1,
+           'line2', address.line2,
+           'city', address.city,
+           'province', address.province,
+           'postal_code', address.postal_code,
+           'country_code', address.country_code,
+           'phone', address.phone
+         )
+         FROM cart_addresses address
+         WHERE address.cart_id = c.id AND address.kind = 'shipping'
+       ), 'null') AS shipping_address,
+       coalesce((
+         SELECT json_object(
+           'first_name', address.first_name,
+           'last_name', address.last_name,
+           'company', address.company,
+           'line1', address.line1,
+           'line2', address.line2,
+           'city', address.city,
+           'province', address.province,
+           'postal_code', address.postal_code,
+           'country_code', address.country_code,
+           'phone', address.phone
+         )
+         FROM cart_addresses address
+         WHERE address.cart_id = c.id AND address.kind = 'billing'
+       ), 'null') AS billing_address,
+       coalesce((
          SELECT json_group_array(json(ordered.promotion_json))
          FROM (
            SELECT json_object(
@@ -97,10 +129,8 @@ WHERE c.id = ?
   Future<Result<List<LineItemResponse>, SqlxError>> linesOf(String cartId) {
     return _db.fetchAll<LineItemResponse>(
       r'''
-SELECT id, variant_id, product_id, product_handle, thumbnail, title,
-       variant_title,
-       json_object('amount', unit_amount, 'currency_code', currency_code)
-         AS unit_price,
+SELECT id, variant_id, product_id, product_handle, thumbnail, title, variant_title,
+       json_object('amount', unit_amount, 'currency_code', currency_code) AS unit_price,
        quantity
 FROM line_items
 WHERE cart_id = ?
@@ -168,8 +198,7 @@ WHERE code = UPPER(?)
   Future<Result<LineItemResponse?, SqlxError>> findLine(String cartId, String variantId) {
     return _db.fetchOptional<LineItemResponse>(
       r'''
-SELECT id, variant_id, product_id, product_handle, thumbnail, title,
-       variant_title,
+SELECT id, variant_id, product_id, product_handle, thumbnail, title, variant_title,
        json_object('amount', unit_amount, 'currency_code', currency_code)
          AS unit_price,
        quantity

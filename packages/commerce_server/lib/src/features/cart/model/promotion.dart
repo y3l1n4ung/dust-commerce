@@ -67,13 +67,13 @@ final class AppliedPromotionMoneyFromJson
 
 /// Decodes the explicit applied-promotion aggregate selected for a cart.
 final class AppliedPromotionsFromJson
-    implements SqlxTryFrom<List<AppliedPromotionResponse>, Object?> {
+    implements SqlxTryFrom<List<AppliedPromotionResponse>, String> {
   /// Creates the stateless converter.
   const AppliedPromotionsFromJson();
 
   @override
-  List<AppliedPromotionResponse> decode(Object? value) => [
-        for (final item in jsonDecode(value! as String) as List<Object?>)
+  List<AppliedPromotionResponse> decode(String value) => [
+        for (final item in jsonDecode(value) as List<Object?>)
           _decodeAppliedPromotion(item! as Map<String, Object?>),
       ];
 }

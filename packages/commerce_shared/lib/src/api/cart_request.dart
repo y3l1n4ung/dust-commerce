@@ -1,5 +1,7 @@
 import 'package:dust_dart/serde.dart';
 
+import '../ordering/checkout_request.dart';
+
 part 'cart_request.g.dart';
 
 /// The body of `POST /carts`.
@@ -44,6 +46,44 @@ final class UpdateCartRegionBody with _$UpdateCartRegionBody {
   @Validate(length: Length(min: 1), message: 'region_id is required')
   final String regionId;
 }
+
+/// The contact and destinations retained while checkout is in progress.
+@Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class UpdateCartAddressesBody with _$UpdateCartAddressesBody {
+  /// Creates a complete replacement for the cart checkout addresses.
+  const UpdateCartAddressesBody({
+    required this.email,
+    required this.shippingAddress,
+    this.billingAddress,
+  });
+
+  /// Decodes the validated cart-address request.
+  factory UpdateCartAddressesBody.fromJson(Map<String, Object?> json) =>
+      _$UpdateCartAddressesBodyFromJson(_normalizedCartAddresses(json));
+
+  /// Separate invoice destination, or absent when shipping is reused.
+  @Validate(nested: true)
+  final AddressInput? billingAddress;
+
+  /// Receipt and delivery-contact email.
+  @Validate(length: Length(min: 1), message: 'Enter an email address')
+  @Validate(email: true, message: 'Enter a valid email address')
+  final String email;
+
+  /// Destination selected before delivery options are shown.
+  @Validate(nested: true)
+  final AddressInput shippingAddress;
+}
+
+Map<String, Object?> _normalizedCartAddresses(Map<String, Object?> json) => {
+      ...json,
+      if (json['email'] case final String value) 'email': value.trim(),
+      if (json['shipping_address'] case final Map<Object?, Object?> address)
+        'shipping_address': AddressInput.fromJson(address.cast()).toJson(),
+      if (json['billing_address'] case final Map<Object?, Object?> address)
+        'billing_address': AddressInput.fromJson(address.cast()).toJson(),
+    };
 
 /// The body of `POST /carts/{id}/line-items`.
 @Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])

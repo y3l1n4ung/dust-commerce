@@ -17,6 +17,7 @@ Router cartRoutes() {
       '/carts/{id}',
       get(readCartHandler).patch(updateCartRegionHandler),
     )
+    ..route('/carts/{id}/addresses', put(updateCartAddressesHandler))
     ..route('/carts/{id}/line-items', post(addLineHandler))
     ..route(
       '/carts/{id}/line-items/{lineId}',

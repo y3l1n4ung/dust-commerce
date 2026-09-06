@@ -61,15 +61,12 @@ final class ProductOptionFilterListResponse
 
 /// Decodes the ordered JSON array selected by the option-filter query.
 final class ProductOptionValuesFromJson
-    implements SqlxTryFrom<List<ProductOptionValueResponse>, Object?> {
+    implements SqlxTryFrom<List<ProductOptionValueResponse>, String> {
   /// Creates the stateless converter.
   const ProductOptionValuesFromJson();
 
   @override
-  List<ProductOptionValueResponse> decode(Object? value) {
-    if (value is! String) {
-      throw FormatException('Expected option-values JSON text, got $value');
-    }
+  List<ProductOptionValueResponse> decode(String value) {
     return [
       for (final item in jsonDecode(value) as List<Object?>)
         _value(item! as Map<String, Object?>),

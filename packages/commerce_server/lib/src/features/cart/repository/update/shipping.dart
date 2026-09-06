@@ -1,6 +1,6 @@
 import 'package:dust_dart/db.dart';
 
-part 'shipping_update.g.dart';
+part 'shipping.g.dart';
 
 /// Atomic writes that keep a cart's chosen delivery method eligible.
 @SqlxDao()
