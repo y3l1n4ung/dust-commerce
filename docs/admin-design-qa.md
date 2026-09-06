@@ -14,6 +14,10 @@
   `packages/admin/dashboard/src/routes/products/product-detail/product-detail.tsx`
   plus its General, Media, Options, Variants, Sales Channels, Shipping,
   Organization and Attributes section components.
+- Product-edit source:
+  `packages/admin/dashboard/src/routes/products/product-edit/product-edit.tsx`,
+  `components/edit-product-form/edit-product-form.tsx`, and
+  `packages/admin/dashboard/src/components/common/switch-box/switch-box.tsx`.
 - Rendered reference: Medusa's official Admin product-list image in the User
   Guide and official product-detail image in the Edit Product guide.
 - Prototype: the authenticated Morrow Admin at port `13002`, backed by the
@@ -31,6 +35,10 @@ together at a `1280 x 720` browser surface. The reference raster is itself
 letterboxed and scaled inside that surface, so this establishes structural,
 spacing, hierarchy and responsive fidelity rather than pixel identity.
 
+The general-edit comparison uses the pinned RouteDrawer implementation as
+source truth: right-side drawer, Medusa field order, lifecycle selector,
+discountable switch box, and sticky Cancel/Save footer.
+
 ## Verified
 
 - The 220px navigation hierarchy, selected row, nested product links, merchant
@@ -47,6 +55,10 @@ spacing, hierarchy and responsive fidelity rather than pixel identity.
 - Clicking a real product opens its authenticated detail. General, ordered
   media, options, variants, organization and attributes are API-backed; the
   two-column desktop layout collapses into one column below 900px.
+- The General-section action opens an API-backed edit drawer. Real update,
+  optional-value clearing, all four lifecycle transitions, automatic detail and
+  list refresh, validation, and duplicate-handle conflict states were exercised
+  against the temporary local database.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -56,11 +68,13 @@ spacing, hierarchy and responsive fidelity rather than pixel identity.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Create/edit, import/export, filters, ordering, media mutation, option
+- P1 — Create, import/export, filters, ordering, media mutation, option
   mutation and variant mutation remain feature work under issue #31. Their
   visible controls deliberately do not pretend that an API mutation succeeded.
 
 ## Result
 
-Passed for the implemented read-only product-list and product-detail vertical
-slices. Broader Medusa Admin feature parity is not claimed.
+Passed for the implemented product-list, product-detail and general-edit
+vertical slices. Broader Medusa Admin feature parity is not claimed.
+
+final result: passed
