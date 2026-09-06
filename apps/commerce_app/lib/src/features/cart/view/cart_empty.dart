@@ -16,7 +16,7 @@ class CartEmpty extends StatelessWidget {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1440),
                 child: const Padding(
-                  padding: EdgeInsets.fromLTRB(24, 240, 24, 240),
+                  padding: EdgeInsets.fromLTRB(32, 240, 32, 240),
                   child: _CartEmptyContent(),
                 ),
               ),
@@ -52,11 +52,9 @@ class _CartEmptyContent extends StatelessWidget {
                 style: TextStyle(fontSize: 14, height: 24 / 14),
               ),
               const SizedBox(height: 24),
-              TextButton.icon(
+              StoreInteractiveLink(
                 onPressed: () => context.navigator.catalog().go(),
-                iconAlignment: IconAlignment.end,
-                icon: const Icon(Icons.arrow_forward, size: 14),
-                label: const TranslatedText(
+                child: const TranslatedText(
                   'shop_explore_products',
                   defaultText: 'Explore products',
                 ),

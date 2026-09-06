@@ -54,15 +54,9 @@ class ListingHeader extends StatelessWidget {
             for (final child in state.children)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: TextButton.icon(
+                child: StoreInteractiveLink(
                   onPressed: () => onCategorySelected(child.handle),
-                  style: TextButton.styleFrom(
-                    foregroundColor: StoreColors.interactive,
-                    padding: EdgeInsets.zero,
-                  ),
-                  iconAlignment: IconAlignment.end,
-                  icon: const Icon(Icons.arrow_outward, size: 16),
-                  label: TranslatedText.dynamic(
+                  child: TranslatedText.dynamic(
                     'shop_category_${child.id}',
                     fallback: child.name,
                   ),

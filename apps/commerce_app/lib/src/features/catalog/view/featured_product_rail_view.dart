@@ -37,16 +37,11 @@ class FeaturedProductRailView extends StatelessWidget {
                       fallback: rail.collection.title,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    TextButton.icon(
+                    StoreInteractiveLink(
                       onPressed: () => context.navigator
                           .collection(handle: rail.collection.handle)
                           .go(),
-                      style: TextButton.styleFrom(
-                        foregroundColor: StoreColors.interactive,
-                      ),
-                      iconAlignment: IconAlignment.end,
-                      icon: const Icon(Icons.arrow_outward, size: 16),
-                      label: const TranslatedText(
+                      child: const TranslatedText(
                         'shop_view_all',
                         defaultText: 'View all',
                       ),
