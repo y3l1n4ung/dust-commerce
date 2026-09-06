@@ -13,72 +13,95 @@
 
 part of 'promotion.dart';
 
-mixin _$AppliedPromotion {
+mixin _$AppliedPromotionResponse implements Serializable {
   @override
   String toString() {
-    final self = this as AppliedPromotion;
-    return 'AppliedPromotion('
+    final self = this as AppliedPromotionResponse;
+    return 'AppliedPromotionResponse('
         'amount: ${self.amount}, '
         'code: ${self.code}, '
-        'promotionId: ${self.promotionId}'
+        'currencyCode: ${self.currencyCode}, '
+        'id: ${self.id}, '
+        'type: ${self.type}, '
+        'value: ${self.value}'
         ')';
   }
 
   @override
   bool operator ==(Object other) {
-    final self = this as AppliedPromotion;
+    final self = this as AppliedPromotionResponse;
     return identical(this, other) ||
-        other is AppliedPromotion &&
+        other is AppliedPromotionResponse &&
             runtimeType == other.runtimeType &&
             other.amount == self.amount &&
             other.code == self.code &&
-            other.promotionId == self.promotionId;
+            other.currencyCode == self.currencyCode &&
+            other.id == self.id &&
+            other.type == self.type &&
+            other.value == self.value;
   }
 
   @override
   int get hashCode {
-    final self = this as AppliedPromotion;
+    final self = this as AppliedPromotionResponse;
     return Object.hashAll([
       runtimeType,
       self.amount,
       self.code,
-      self.promotionId,
+      self.currencyCode,
+      self.id,
+      self.type,
+      self.value,
     ]);
   }
+
+  Map<String, Object?> serialize() =>
+      _$AppliedPromotionResponseSerialize(this as AppliedPromotionResponse);
+
+  Map<String, Object?> toJson() => serialize();
 }
 
-AppliedPromotion _$AppliedPromotionFromRow(Row row) {
-  return AppliedPromotion(
-    promotionId: row.read<String>('promotion_id'),
+final class $AppliedPromotionResponseSerializer implements Serializer<AppliedPromotionResponse, Map<String, Object?>> {
+  const $AppliedPromotionResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(AppliedPromotionResponse value) => _$AppliedPromotionResponseSerialize(value);
+}
+AppliedPromotionResponse _$AppliedPromotionResponseFromRow(Row row) {
+  return AppliedPromotionResponse(
+    id: row.read<String>('id'),
     code: row.read<String>('code'),
-    amount: row.read<int>('amount'),
+    type: row.read<String>('type'),
+    value: row.read<int>('value'),
+    amount: AppliedPromotionMoneyFromJson().decode(row.read<String>('amount')),
+    currencyCode: row.readNullable<String>('currency_code'),
   );
 }
 
-/// Row deserializer for [AppliedPromotion].
-final class $AppliedPromotionRowDeserializer implements RowDeserializer<AppliedPromotion> {
-  const $AppliedPromotionRowDeserializer();
+/// Row deserializer for [AppliedPromotionResponse].
+final class $AppliedPromotionResponseRowDeserializer implements RowDeserializer<AppliedPromotionResponse> {
+  const $AppliedPromotionResponseRowDeserializer();
 
   @override
-  AppliedPromotion deserialize(Row row) => _$AppliedPromotionFromRow(row);
+  AppliedPromotionResponse deserialize(Row row) => _$AppliedPromotionResponseFromRow(row);
 }
 
-/// Typed row query terminals for [AppliedPromotion].
+/// Typed row query terminals for [AppliedPromotionResponse].
 ///
 /// Resolved from the static type of the receiver, so a row type with no
 /// `FromRow` has no terminals and the call does not compile.
-extension $AppliedPromotionQuery on QueryAs<AppliedPromotion> {
+extension $AppliedPromotionResponseQuery on QueryAs<AppliedPromotionResponse> {
   /// Fetches exactly one row.
-  Future<AppliedPromotion> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$AppliedPromotionFromRow);
+  Future<AppliedPromotionResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$AppliedPromotionResponseFromRow);
 
   /// Fetches zero or one row.
-  Future<AppliedPromotion?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$AppliedPromotionFromRow);
+  Future<AppliedPromotionResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$AppliedPromotionResponseFromRow);
 
   /// Fetches every row.
-  Future<List<AppliedPromotion>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$AppliedPromotionFromRow);
+  Future<List<AppliedPromotionResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$AppliedPromotionResponseFromRow);
 }
 
 PromotionPolicy _$PromotionPolicyFromRow(Row row) {
@@ -120,3 +143,17 @@ extension $PromotionPolicyQuery on QueryAs<PromotionPolicy> {
   Future<List<PromotionPolicy>> fetchAll(DatabaseExecutor db) =>
       fetchAllWith(db, _$PromotionPolicyFromRow);
 }
+
+Map<String, Object?> _$AppliedPromotionResponseSerialize(AppliedPromotionResponse instance) {
+  return <String, Object?>{
+    'amount': instance.amount.toJson(),
+    'code': instance.code,
+    'currency_code': instance.currencyCode,
+    'id': instance.id,
+    'type': instance.type,
+    'value': instance.value,
+  };
+}
+
+Map<String, Object?> _$AppliedPromotionResponseToJson(AppliedPromotionResponse instance) =>
+    _$AppliedPromotionResponseSerialize(instance);

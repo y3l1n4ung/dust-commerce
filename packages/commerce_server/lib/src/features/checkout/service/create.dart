@@ -107,6 +107,7 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
       cart.total.amount,
       cart.shippingMethod?.optionId,
       cart.shippingMethod?.name,
+      cart.promotions.firstOrNull?.code,
       placedAt.toUtc().toIso8601String(),
     );
     if (written case Err(:final error)) return Err(error);
@@ -150,11 +151,11 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
 
     // Counted before the cart is emptied, and inside the same transaction, so
     // a promotion cannot be redeemed by an order that then fails to write.
-    if (cart.discount != null && !cart.discount!.isZero) {
+    if (!cart.discountTotal.isZero) {
       final promotion = await carts.promotionOn(cartId);
       if (promotion case Err(:final error)) return Err(error);
       final applied = optionOf(
-        (promotion as Ok<AppliedPromotion?, SqlxError>).value,
+        (promotion as Ok<AppliedPromotionResponse?, SqlxError>).value,
       );
       if (applied case Some(value: final promotion)) {
         final counted = await orders.countRedemption(promotion.code);

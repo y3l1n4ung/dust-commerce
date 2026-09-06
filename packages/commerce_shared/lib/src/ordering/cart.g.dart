@@ -14,6 +14,7 @@
 part of 'cart.dart';
 
 const DeepCollectionEquality _cartItemsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _cartPromotionsEquality = DeepCollectionEquality();
 final class _CartCopyWithUnset {
   const _CartCopyWithUnset();
 }
@@ -29,8 +30,7 @@ mixin _$Cart implements Serializable {
         'email: ${self.email}, '
         'id: ${self.id}, '
         'items: ${self.items}, '
-        'discount: ${self.discount}, '
-        'promotionCode: ${self.promotionCode}, '
+        'promotions: ${self.promotions}, '
         'region: ${self.region}, '
         'shippingMethod: ${self.shippingMethod}'
         ')';
@@ -46,8 +46,7 @@ mixin _$Cart implements Serializable {
             other.email == self.email &&
             other.id == self.id &&
             _cartItemsEquality.equals(other.items, self.items) &&
-            other.discount == self.discount &&
-            other.promotionCode == self.promotionCode &&
+            _cartPromotionsEquality.equals(other.promotions, self.promotions) &&
             other.region == self.region &&
             other.shippingMethod == self.shippingMethod;
   }
@@ -61,8 +60,7 @@ mixin _$Cart implements Serializable {
       self.email,
       self.id,
       _cartItemsEquality.hash(self.items),
-      self.discount,
-      self.promotionCode,
+      _cartPromotionsEquality.hash(self.promotions),
       self.region,
       self.shippingMethod,
     ]);
@@ -92,8 +90,7 @@ abstract class _$CartCopyWith<$Res> {
     String? email,
     String? id,
     List<LineItem>? items,
-    Money? discount,
-    String? promotionCode,
+    List<CartPromotion>? promotions,
     Region? region,
     ShippingMethod? shippingMethod,
   });
@@ -113,8 +110,7 @@ final class _$CartCopyWithImpl<$Res> implements _$CartCopyWith<$Res> {
     Object? email = _cartCopyWithUnset,
     Object? id = null,
     Object? items = null,
-    Object? discount = _cartCopyWithUnset,
-    Object? promotionCode = _cartCopyWithUnset,
+    Object? promotions = null,
     Object? region = null,
     Object? shippingMethod = _cartCopyWithUnset,
   }) {
@@ -123,6 +119,7 @@ final class _$CartCopyWithImpl<$Res> implements _$CartCopyWith<$Res> {
         id: id == null ? _self.id : id as String,
         region: region == null ? _self.region : region as Region,
         items: items == null ? _self.items : items as List<LineItem>,
+        promotions: promotions == null ? _self.promotions : promotions as List<CartPromotion>,
         email: identical(email, _cartCopyWithUnset)
             ? _self.email
             : email as String?,
@@ -132,12 +129,6 @@ final class _$CartCopyWithImpl<$Res> implements _$CartCopyWith<$Res> {
         shippingMethod: identical(shippingMethod, _cartCopyWithUnset)
             ? _self.shippingMethod
             : shippingMethod as ShippingMethod?,
-        discount: identical(discount, _cartCopyWithUnset)
-            ? _self.discount
-            : discount as Money?,
-        promotionCode: identical(promotionCode, _cartCopyWithUnset)
-            ? _self.promotionCode
-            : promotionCode as String?,
       )
     );
   }
@@ -163,10 +154,9 @@ Map<String, Object?> _$CartSerialize(Cart instance) {
     'items': instance.items
         .map((item) => item.toJson())
         .toList(),
-    'discount': instance.discount == null
-        ? null
-        : (instance.discount!).toJson(),
-    'promotion_code': instance.promotionCode,
+    'promotions': instance.promotions
+        .map((item) => item.toJson())
+        .toList(),
     'region': instance.region.toJson(),
     'shipping_method': instance.shippingMethod == null
         ? null
@@ -188,12 +178,8 @@ Cart _$CartDeserialize(Map<String, Object?> json) {
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final itemsValue = JsonHelper.decodeList(json['items'], 'items',
       (item, itemKey) => LineItem.fromJson(JsonHelper.asMap(item, itemKey)));
-  final discountValue = json['discount'] == null
-      ? null
-      : Money.fromJson(JsonHelper.asMap(json['discount'], 'discount'));
-  final promotionCodeValue = json['promotion_code'] == null
-      ? null
-      : JsonHelper.as<String>(json['promotion_code'], 'promotion_code', 'String');
+  final promotionsValue = JsonHelper.decodeList(json['promotions'], 'promotions',
+      (item, itemKey) => CartPromotion.fromJson(JsonHelper.asMap(item, itemKey)));
   final regionValue = Region.fromJson(
     JsonHelper.asMap(json['region'], 'region'),
   );
@@ -205,11 +191,10 @@ Cart _$CartDeserialize(Map<String, Object?> json) {
     id: idValue,
     region: regionValue,
     items: itemsValue,
+    promotions: promotionsValue,
     email: emailValue,
     customerId: customerIdValue,
     shippingMethod: shippingMethodValue,
-    discount: discountValue,
-    promotionCode: promotionCodeValue,
   );
 }
 

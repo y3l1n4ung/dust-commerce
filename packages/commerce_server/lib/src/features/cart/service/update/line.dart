@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
+import 'package:commerce_server/src/features/cart/service/update/promotion.dart';
 import 'package:commerce_server/src/features/catalog/repository/repository.dart';
 import 'package:commerce_server/src/features/catalog/sellable_variant.dart';
 import 'package:commerce_server/src/infra/database.dart';
@@ -110,6 +111,8 @@ Future<Result<Option<AddLineFailure>, SqlxError>> _addLine(
   };
 
   if (written case Err(:final error)) return Err(error);
+  final refreshed = await refreshPromotionAmount(reads, writes, cartId);
+  if (refreshed case Err(:final error)) return Err(error);
   final cleared = await shipping.clearIneligibleMethod(cartId);
   if (cleared case Err(:final error)) return Err(error);
   return const Ok(None<AddLineFailure>());

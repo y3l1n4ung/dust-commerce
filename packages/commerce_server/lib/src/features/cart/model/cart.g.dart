@@ -57,11 +57,10 @@ CartResponse _$CartResponseFromRow(Row row) {
     id: row.read<String>('id'),
     region: RegionResponseFromJson().decode(row.read<String>('region')),
     items: row.readNullable<Object?>('items') == null ? const [] : LineItemsFromJson().decode(row.read<String>('items')),
+    promotions: row.readNullable<Object?>('promotions') == null ? const [] : AppliedPromotionsFromJson().decode(row.read<Object?>('promotions')),
     customerId: row.readNullable<String>('customer_id'),
     email: row.readNullable<String>('email'),
     shippingMethod: OptionalShippingMethodFromJson().decode(row.read<String>('shipping_method')),
-    discount: OptionalMoneyFromJson().decode(row.read<String>('discount')),
-    promotionCode: row.readNullable<String>('promotion_code'),
   );
 }
 
@@ -171,15 +170,14 @@ extension $RegionResponseQuery on QueryAs<RegionResponse> {
 Map<String, Object?> _$CartResponseSerialize(CartResponse instance) {
   return <String, Object?>{
     'customer_id': instance.customerId,
-    'discount': instance.discount == null
-        ? null
-        : (instance.discount!).toJson(),
     'email': instance.email,
     'id': instance.id,
     'items': instance.items
         .map((item) => _$LineItemResponseSerialize(item))
         .toList(),
-    'promotion_code': instance.promotionCode,
+    'promotions': instance.promotions
+        .map((item) => item.toJson())
+        .toList(),
     'region': _$RegionResponseSerialize(instance.region),
     'shipping_method': instance.shippingMethod == null
         ? null

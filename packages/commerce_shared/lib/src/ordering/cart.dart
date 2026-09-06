@@ -1,5 +1,6 @@
 import 'package:commerce_shared/src/money.dart';
 import 'package:commerce_shared/src/ordering/line_item.dart';
+import 'package:commerce_shared/src/ordering/promotion.dart';
 import 'package:commerce_shared/src/ordering/shipping_method.dart';
 import 'package:commerce_shared/src/region.dart';
 import 'package:dust_dart/serde.dart';
@@ -20,11 +21,10 @@ class Cart with _$Cart {
     required this.id,
     required this.region,
     required this.items,
+    this.promotions = const [],
     this.email,
     this.customerId,
     this.shippingMethod,
-    this.discount,
-    this.promotionCode,
   });
 
   /// Creates a [Cart], rejecting lines that do not belong in it.
@@ -38,8 +38,7 @@ class Cart with _$Cart {
     String? email,
     String? customerId,
     ShippingMethod? shippingMethod,
-    Money? discount,
-    String? promotionCode,
+    List<CartPromotion> promotions = const [],
   }) {
     final ids = items.map((item) => item.id).toList();
     if (ids.toSet().length != ids.length) {
@@ -62,18 +61,26 @@ class Cart with _$Cart {
         'shipping is not priced in ${region.currencyCode}',
       );
     }
-    if (discount != null) {
-      if (discount.currencyCode != region.currencyCode) {
+    final promotionIds = promotions.map((promotion) => promotion.id).toList();
+    if (promotionIds.toSet().length != promotionIds.length) {
+      throw ArgumentError.value(
+        promotions,
+        'promotions',
+        'duplicate applied promotion id',
+      );
+    }
+    for (final promotion in promotions) {
+      if (promotion.amount.currencyCode != region.currencyCode) {
         throw ArgumentError.value(
-          discount.currencyCode,
-          'discount',
-          'a discount is not priced in ${region.currencyCode}',
+          promotion.amount.currencyCode,
+          'promotions',
+          'promotion ${promotion.code} is not priced in ${region.currencyCode}',
         );
       }
-      if (discount.isNegative) {
+      if (promotion.amount.isNegative) {
         throw ArgumentError.value(
-          discount,
-          'discount',
+          promotion.amount,
+          'promotions',
           'a negative discount is a surcharge, which this is not',
         );
       }
@@ -85,8 +92,7 @@ class Cart with _$Cart {
       email: email,
       customerId: customerId,
       shippingMethod: shippingMethod,
-      discount: discount,
-      promotionCode: promotionCode,
+      promotions: List.unmodifiable(promotions),
     );
   }
 
@@ -105,11 +111,8 @@ class Cart with _$Cart {
   /// The chosen lines.
   final List<LineItem> items;
 
-  /// What has been taken off, before tax. Never more than the goods.
-  final Money? discount;
-
-  /// Applied promotion code snapshot, when the cart has one.
-  final String? promotionCode;
+  /// Customer-facing snapshots of promotions already applied to this cart.
+  final List<CartPromotion> promotions;
 
   /// The selling territory, fixing currency and tax.
   final Region region;
@@ -136,8 +139,10 @@ class Cart with _$Cart {
   /// shop, and the shipping is a cost the courier charges regardless — so a
   /// discount reduces the goods and stops there.
   Money get discountTotal {
-    final asked = discount;
-    if (asked == null) return Money.zero(region.currencyCode);
+    final asked = promotions.fold(
+      Money.zero(region.currencyCode),
+      (total, promotion) => total + promotion.amount,
+    );
     return asked > subtotal ? subtotal : asked;
   }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:commerce_server/src/features/cart/model/promotion.dart';
 import 'package:commerce_server/src/features/cart/model/shipping.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
@@ -17,20 +18,15 @@ final class CartResponse with _$CartResponse {
     required this.id,
     required this.region,
     this.items = const [],
+    this.promotions = const [],
     this.customerId,
     this.email,
     this.shippingMethod,
-    this.discount,
-    this.promotionCode,
   });
 
   /// Customer owner once this guest cart is claimed.
   @Sqlx(rename: 'customer_id')
   final String? customerId;
-
-  /// Discount currently applied to the goods.
-  @Sqlx(tryFrom: OptionalMoneyFromJson())
-  final Money? discount;
 
   /// Guest or customer contact email stored on the cart.
   final String? email;
@@ -42,9 +38,9 @@ final class CartResponse with _$CartResponse {
   @Sqlx(tryFrom: LineItemsFromJson())
   final List<LineItemResponse> items;
 
-  /// Applied promotion code snapshot.
-  @Sqlx(rename: 'promotion_code')
-  final String? promotionCode;
+  /// Explicit customer-facing promotion snapshots.
+  @Sqlx(tryFrom: AppliedPromotionsFromJson())
+  final List<AppliedPromotionResponse> promotions;
 
   /// Explicit selling-region response.
   @Sqlx(tryFrom: RegionResponseFromJson())
@@ -202,16 +198,6 @@ final class LineItemsFromJson
         ),
         quantity: item['quantity']! as int,
       );
-}
-
-/// Decodes an optional discount without using null outside the response field.
-final class OptionalMoneyFromJson implements SqlxTryFrom<Money?, String> {
-  /// Creates the stateless converter.
-  const OptionalMoneyFromJson();
-
-  @override
-  Money? decode(String value) =>
-      value == 'null' ? null : Money.fromJson(_object(value));
 }
 
 /// Decodes an optional explicit shipping-method response.

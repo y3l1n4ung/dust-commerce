@@ -61,10 +61,45 @@ Future<Result<Option<ApplyPromotionFailure>, SqlxError>> applyPromotion(
 
   final off = promotion.discountOn(cart.subtotal);
   final written = await writes.setPromotion(
-      cartId, promotion.id, promotion.code, off.amount);
+    cartId,
+    promotion.id,
+    promotion.code,
+    promotion.type.name,
+    promotion.promotionValue,
+    promotion.currencyCode,
+    off.amount,
+  );
   if (written case Err(:final error)) return Err(error);
 
   return const Ok(None<ApplyPromotionFailure>());
+}
+
+/// Recalculates the applied snapshot after a line mutation.
+Future<Result<Unit, SqlxError>> refreshPromotionAmount(
+  CartReadRepository reads,
+  CartUpdateRepository writes,
+  String cartId,
+) async {
+  final found = await reads.promotionOn(cartId);
+  if (found case Err(:final error)) return Err(error);
+  final promotion = optionOf(
+    (found as Ok<AppliedPromotionResponse?, SqlxError>).value,
+  );
+  if (promotion case None()) return const Ok(unit);
+
+  final loaded = await reads.findCart(cartId);
+  if (loaded case Err(:final error)) return Err(error);
+  final cart = optionOf((loaded as Ok<CartResponse?, SqlxError>).value);
+  if (cart case None()) return const Ok(unit);
+
+  final applied = (promotion as Some<AppliedPromotionResponse>).value;
+  final subtotal = (cart as Some<CartResponse>).value.subtotal;
+  final updated = await writes.updatePromotionAmount(
+    cartId,
+    applied.discountOn(subtotal).amount,
+  );
+  if (updated case Err(:final error)) return Err(error);
+  return const Ok(unit);
 }
 
 /// Removes whatever promotion the cart had.

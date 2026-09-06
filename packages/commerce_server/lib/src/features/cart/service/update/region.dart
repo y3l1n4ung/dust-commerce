@@ -70,13 +70,13 @@ Future<Result<Option<UpdateCartRegionFailure>, SqlxError>> updateCartRegion(
       final clearedShipping = await shipping.clearShippingMethod(cartId);
       if (clearedShipping case Err(:final error)) return Err(error);
 
-      final code = optionOf(current.promotionCode);
-      if (code case Some(value: final promotionCode)) {
+      final applied = optionOf(current.promotions.firstOrNull);
+      if (applied case Some(value: final promotion)) {
         final reapplied = await applyPromotion(
           reads,
           writes,
           cartId: cartId,
-          code: promotionCode,
+          code: promotion.code,
           now: now,
         );
         if (reapplied case Err(:final error)) return Err(error);

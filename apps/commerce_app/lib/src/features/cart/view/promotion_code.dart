@@ -51,32 +51,51 @@ class _PromotionCodeState extends State<PromotionCode> {
           ),
         ),
         if (_open) ...[
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _controller,
-                  enabled: !busy,
-                  decoration: InputDecoration(
-                    hintText: context.tr(
-                      'shop_cart_promotion_code',
-                      defaultText: 'Promotion code',
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: 260,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Semantics(
+                      label: context.tr(
+                        'shop_cart_promotion_code',
+                        defaultText: 'Promotion code',
+                      ),
+                      textField: true,
+                      child: SizedBox(
+                        height: 40,
+                        child: TextField(
+                          controller: _controller,
+                          enabled: !busy,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            contentPadding:
+                                EdgeInsets.symmetric(horizontal: 12),
+                            isDense: true,
+                          ),
+                          onSubmitted: (_) => _apply(context),
+                        ),
+                      ),
                     ),
-                    border: const OutlineInputBorder(),
-                    isDense: true,
                   ),
-                  onSubmitted: (_) => _apply(context),
-                ),
+                  const SizedBox(width: 8),
+                  OutlinedButton(
+                    onPressed: busy ? null : () => _apply(context),
+                    child: busy
+                        ? const TranslatedText(
+                            'shop_cart_loading',
+                            defaultText: 'Loading...',
+                          )
+                        : const TranslatedText(
+                            'shop_cart_apply',
+                            defaultText: 'Apply',
+                          ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              OutlinedButton(
-                onPressed: busy ? null : () => _apply(context),
-                child: const TranslatedText(
-                  'shop_cart_apply',
-                  defaultText: 'Apply',
-                ),
-              ),
-            ],
+            ),
           ),
           if (failed)
             Padding(
@@ -92,35 +111,54 @@ class _PromotionCodeState extends State<PromotionCode> {
             ),
           const SizedBox(height: 20),
         ],
-        if (widget.cart.promotionCode case final code?) ...[
+        if (widget.cart.promotions.isNotEmpty) ...[
           const TranslatedText(
             'shop_cart_promotions_applied',
             defaultText: 'Promotion(s) applied:',
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: StoreColors.subtleHover,
-                  borderRadius: BorderRadius.circular(6),
+          for (final promotion in widget.cart.promotions)
+            Row(
+              children: [
+                Flexible(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: StoreColors.subtleHover,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            promotion.code,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                      Text(' (${_promotionValue(promotion)})'),
+                    ],
+                  ),
                 ),
-                child: Text(code, style: const TextStyle(fontSize: 12)),
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed:
-                    busy ? null : context.readCartViewModel().removePromotion,
-                icon: const Icon(Icons.delete_outline, size: 16),
-                tooltip: context.tr(
-                  'shop_cart_remove_promotion',
-                  defaultText: 'Remove promotion',
+                const Spacer(),
+                IconButton(
+                  onPressed:
+                      busy ? null : context.readCartViewModel().removePromotion,
+                  icon: const Icon(Icons.delete_outline, size: 16),
+                  tooltip: context.tr(
+                    'shop_cart_remove_promotion',
+                    defaultText: 'Remove promotion',
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
         ],
       ],
     );
@@ -132,7 +170,22 @@ class _PromotionCodeState extends State<PromotionCode> {
     final applied = await context.readCartViewModel().applyPromotion(code);
     if (applied && mounted) {
       _controller.clear();
-      setState(() => _open = false);
     }
+  }
+
+  String _promotionValue(CartPromotion promotion) => switch (promotion.type) {
+        PromotionType.percentage => _percentage(promotion.value),
+        PromotionType.fixed => formatMoney(
+            Money(
+              amount: promotion.value,
+              currencyCode:
+                  promotion.currencyCode ?? promotion.amount.currencyCode,
+            ),
+          ),
+      };
+
+  String _percentage(int basisPoints) {
+    final percent = basisPoints / 100;
+    return '${percent == percent.roundToDouble() ? percent.toInt() : percent}%';
   }
 }

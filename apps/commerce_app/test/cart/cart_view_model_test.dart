@@ -132,10 +132,11 @@ void main() {
     expect(cart.state.cart!.shippingTotal, Money.of(500, 'usd'));
 
     expect(await cart.applyPromotion('welcome10'), isTrue);
-    expect(cart.state.cart!.cart.promotionCode, 'WELCOME10');
+    expect(cart.state.cart!.cart.promotions.single.code, 'WELCOME10');
+    expect(cart.state.cart!.cart.promotions.single.value, 1000);
     expect(cart.state.cart!.discountTotal.amount, greaterThan(0));
     expect(await cart.removePromotion(), isTrue);
-    expect(cart.state.cart!.cart.promotionCode, isNull);
+    expect(cart.state.cart!.cart.promotions, isEmpty);
     expect(cart.state.cart!.discountTotal, Money.zero('usd'));
   });
 

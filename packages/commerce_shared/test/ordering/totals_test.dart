@@ -30,7 +30,18 @@ void main() {
         region: region,
         items: items ?? [line(unitPrice: 2000)],
         shippingMethod: shipping,
-        discount: discount,
+        promotions: discount == null
+            ? const []
+            : [
+                CartPromotion(
+                  id: 'promo_1',
+                  code: 'SAVE',
+                  type: PromotionType.fixed,
+                  value: discount.amount,
+                  amount: discount,
+                  currencyCode: discount.currencyCode,
+                ),
+              ],
       );
 
   final standard = ShippingMethod.of(

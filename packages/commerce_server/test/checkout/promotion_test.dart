@@ -76,10 +76,14 @@ void main() {
     expect(order.total, Money.of(1980, 'usd'));
 
     final rows = await queryRaw(
-      r"SELECT usage_count FROM promotions WHERE code = 'SAVE10'",
-      [],
+      r"SELECT promotion.usage_count, orders.promotion_code "
+      r"FROM promotions promotion "
+      r"JOIN orders ON orders.cart_id = $1 "
+      r"WHERE promotion.code = 'SAVE10'",
+      [cartId],
     ).fetch(database.connection as Executor);
     expect(rows.single.readIndex<int>(0), 1);
+    expect(rows.single.readIndex<String>(1), 'SAVE10');
   });
 }
 

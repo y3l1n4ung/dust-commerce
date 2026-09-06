@@ -16,8 +16,10 @@ extension CartResponseTotals on CartResponse {
 
   /// Discount capped at the goods subtotal.
   Money get discountTotal {
-    final asked = discount;
-    if (asked == null) return Money.zero(currencyCode);
+    final asked = promotions.fold(
+      Money.zero(currencyCode),
+      (total, promotion) => total + promotion.amount,
+    );
     return asked > subtotal ? subtotal : asked;
   }
 

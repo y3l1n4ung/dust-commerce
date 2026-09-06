@@ -57,7 +57,8 @@ void main() {
     expect(cart.region.id, 'reg_eu');
     expect(cart.items.single.unitPrice, Money.of(1800, 'eur'));
     expect(cart.shippingMethod, isNull);
-    expect(cart.promotionCode, 'SAVE10');
+    expect(cart.promotions.single.code, 'SAVE10');
+    expect(cart.promotions.single.value, 1000);
     expect(cart.discountTotal, Money.of(180, 'eur'));
   });
 

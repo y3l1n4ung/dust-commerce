@@ -61,18 +61,24 @@ SELECT c.id, c.customer_id, c.email,
          WHERE method.cart_id = c.id
        ), 'null') AS shipping_method,
        coalesce((
-         SELECT json_object(
-           'amount', promotion.amount,
-           'currency_code', r.currency_code
-         )
-         FROM cart_promotions promotion
-         WHERE promotion.cart_id = c.id
-       ), 'null') AS discount,
-       (
-         SELECT promotion.code
-         FROM cart_promotions promotion
-         WHERE promotion.cart_id = c.id
-       ) AS promotion_code
+         SELECT json_group_array(json(ordered.promotion_json))
+         FROM (
+           SELECT json_object(
+             'id', promotion.promotion_id,
+             'code', promotion.code,
+             'type', promotion.type,
+             'value', promotion.value,
+             'currency_code', promotion.currency_code,
+             'amount', json_object(
+               'amount', promotion.amount,
+               'currency_code', r.currency_code
+             )
+           ) AS promotion_json
+           FROM cart_promotions promotion
+           WHERE promotion.cart_id = c.id
+           ORDER BY promotion.rowid
+         ) ordered
+       ), '[]') AS promotions
 FROM carts c
 JOIN regions r ON r.id = c.region_id
 WHERE c.id = $1
@@ -110,11 +116,20 @@ WHERE method.cart_id = $1
 
   /// The promotion [cartId] has applied, if it has one.
   @Query(r'''
-SELECT promotion_id, code, amount
-FROM cart_promotions
-WHERE cart_id = $1
+SELECT promotion.promotion_id AS id, promotion.code, promotion.type,
+       promotion.value, promotion.currency_code,
+       json_object(
+         'amount', amount,
+         'currency_code', region.currency_code
+       ) AS amount
+FROM cart_promotions promotion
+JOIN carts cart ON cart.id = promotion.cart_id
+JOIN regions region ON region.id = cart.region_id
+WHERE promotion.cart_id = $1
 ''')
-  Future<Result<AppliedPromotion?, SqlxError>> promotionOn(String cartId);
+  Future<Result<AppliedPromotionResponse?, SqlxError>> promotionOn(
+    String cartId,
+  );
 
   /// One promotion by the code a customer typed.
   ///

@@ -1,28 +1,92 @@
+import 'dart:convert';
+
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/db.dart';
+import 'package:dust_dart/serde.dart';
 
 part 'promotion.g.dart';
 
-/// Direct query response for the promotion currently applied to a cart.
-@Derive([ToString(), Eq(), FromRow()])
-final class AppliedPromotion with _$AppliedPromotion {
-  /// Creates an [AppliedPromotion].
-  const AppliedPromotion({
-    required this.promotionId,
+/// Direct-query, customer-safe response for one applied cart promotion.
+@Derive([ToString(), Eq(), Serialize(), FromRow()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class AppliedPromotionResponse with _$AppliedPromotionResponse {
+  /// Creates an explicit applied-promotion response.
+  const AppliedPromotionResponse({
+    required this.id,
     required this.code,
+    required this.type,
+    required this.value,
     required this.amount,
+    this.currencyCode,
   });
 
   /// What it took off, snapshotted when applied.
-  final int amount;
+  @Sqlx(tryFrom: AppliedPromotionMoneyFromJson())
+  final Money amount;
 
   /// The code as typed.
   final String code;
 
-  /// The promotion it came from.
-  @Sqlx(rename: 'promotion_id')
-  final String promotionId;
+  /// Currency of [value] for a fixed promotion.
+  @Sqlx(rename: 'currency_code')
+  final String? currencyCode;
+
+  /// Stable promotion identifier.
+  final String id;
+
+  /// How [value] is interpreted.
+  final String type;
+
+  /// Basis points for percentages, or minor units for fixed promotions.
+  final int value;
+
+  /// Recalculates this snapshot against a changed cart subtotal.
+  Money discountOn(Money subtotal) {
+    final recalculated = switch (type) {
+      'percentage' => Money(
+          amount: (subtotal.amount * value + 5000) ~/ 10000,
+          currencyCode: subtotal.currencyCode,
+        ),
+      'fixed' => Money.of(value, currencyCode!),
+      _ => throw StateError('Unknown applied promotion type: $type'),
+    };
+    return recalculated > subtotal ? subtotal : recalculated;
+  }
 }
+
+/// Decodes a customer-facing applied amount selected as SQLite JSON.
+final class AppliedPromotionMoneyFromJson
+    implements SqlxTryFrom<Money, String> {
+  /// Creates the stateless converter.
+  const AppliedPromotionMoneyFromJson();
+
+  @override
+  Money decode(String value) =>
+      Money.fromJson(jsonDecode(value) as Map<String, Object?>);
+}
+
+/// Decodes the explicit applied-promotion aggregate selected for a cart.
+final class AppliedPromotionsFromJson
+    implements SqlxTryFrom<List<AppliedPromotionResponse>, Object?> {
+  /// Creates the stateless converter.
+  const AppliedPromotionsFromJson();
+
+  @override
+  List<AppliedPromotionResponse> decode(Object? value) => [
+        for (final item in jsonDecode(value! as String) as List<Object?>)
+          _decodeAppliedPromotion(item! as Map<String, Object?>),
+      ];
+}
+
+AppliedPromotionResponse _decodeAppliedPromotion(Map<String, Object?> item) =>
+    AppliedPromotionResponse(
+      id: item['id']! as String,
+      code: item['code']! as String,
+      type: item['type']! as String,
+      value: item['value']! as int,
+      currencyCode: item['currency_code'] as String?,
+      amount: Money.fromJson(item['amount']! as Map<String, Object?>),
+    );
 
 /// Internal promotion query result used directly by cart policy.
 @Derive([FromRow()])

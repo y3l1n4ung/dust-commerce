@@ -48,17 +48,31 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> setPromotion(String cartId, String promotionId, String code, int amount) {
+  Future<Result<ExecResult, SqlxError>> setPromotion(String cartId, String promotionId, String code, String type, int value, String? currencyCode, int amount) {
     return _db.execute(
       r'''
-INSERT INTO cart_promotions (cart_id, promotion_id, code, amount)
-VALUES (?, ?, ?, ?)
+INSERT INTO cart_promotions
+  (cart_id, promotion_id, code, type, value, currency_code, amount)
+VALUES (?, ?, ?, ?, ?, ?, ?)
 ON CONFLICT (cart_id) DO UPDATE
 SET promotion_id = excluded.promotion_id,
     code = excluded.code,
+    type = excluded.type,
+    value = excluded.value,
+    currency_code = excluded.currency_code,
     amount = excluded.amount
 ''',
-      [cartId, promotionId, code, amount],
+      [cartId, promotionId, code, type, value, currencyCode, amount],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> updatePromotionAmount(String cartId, int amount) {
+    return _db.execute(
+      r'''
+UPDATE cart_promotions SET amount = ? WHERE cart_id = ?
+''',
+      [amount, cartId],
     );
   }
 
@@ -138,85 +152,6 @@ SET region_id = ?
 WHERE id = ? AND completed_at IS NULL AND deleted_at IS NULL
 ''',
       [regionId, cartId],
-    );
-  }
-}
-
-final class _$CartShippingRepository implements CartShippingRepository {
-  const _$CartShippingRepository(this._db);
-
-  final DatabaseExecutor _db;
-
-  @override
-  Future<Result<ExecResult, SqlxError>> setShippingMethod(String cartId, String optionId, String name, int amount) {
-    return _db.execute(
-      r'''
-WITH cart_value(item_total) AS (
-  SELECT coalesce(sum(line.unit_amount * line.quantity), 0)
-  FROM line_items line
-  WHERE line.cart_id = ?
-)
-INSERT INTO cart_shipping_methods (cart_id, option_id, name, amount)
-SELECT ?, ?, ?, ?
-FROM cart_value
-WHERE NOT EXISTS (
-  SELECT 1
-  FROM shipping_option_price_rules rule
-  WHERE rule.shipping_option_id = ?
-    AND rule.deleted_at IS NULL
-    AND NOT CASE rule.operator
-      WHEN 'gt' THEN cart_value.item_total > rule.value
-      WHEN 'gte' THEN cart_value.item_total >= rule.value
-      WHEN 'lt' THEN cart_value.item_total < rule.value
-      WHEN 'lte' THEN cart_value.item_total <= rule.value
-      WHEN 'eq' THEN cart_value.item_total = rule.value
-      ELSE 0
-    END
-)
-ON CONFLICT (cart_id) DO UPDATE
-SET option_id = excluded.option_id,
-    name = excluded.name,
-    amount = excluded.amount
-''',
-      [cartId, cartId, optionId, name, amount, optionId],
-    );
-  }
-
-  @override
-  Future<Result<ExecResult, SqlxError>> clearIneligibleMethod(String cartId) {
-    return _db.execute(
-      r'''
-WITH cart_value(item_total) AS (
-  SELECT coalesce(sum(line.unit_amount * line.quantity), 0)
-  FROM line_items line
-  WHERE line.cart_id = ?
-)
-DELETE FROM cart_shipping_methods AS method
-WHERE method.cart_id = ?
-  AND EXISTS (
-    SELECT 1
-    FROM shipping_option_price_rules rule, cart_value
-    WHERE rule.shipping_option_id = method.option_id
-      AND rule.deleted_at IS NULL
-      AND NOT CASE rule.operator
-        WHEN 'gt' THEN cart_value.item_total > rule.value
-        WHEN 'gte' THEN cart_value.item_total >= rule.value
-        WHEN 'lt' THEN cart_value.item_total < rule.value
-        WHEN 'lte' THEN cart_value.item_total <= rule.value
-        WHEN 'eq' THEN cart_value.item_total = rule.value
-        ELSE 0
-      END
-  )
-''',
-      [cartId, cartId],
-    );
-  }
-
-  @override
-  Future<Result<ExecResult, SqlxError>> clearShippingMethod(String cartId) {
-    return _db.execute(
-      r'''DELETE FROM cart_shipping_methods WHERE cart_id = ?''',
-      [cartId],
     );
   }
 }

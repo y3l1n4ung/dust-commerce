@@ -490,6 +490,10 @@
   "@cart_apply": {
     "description": "Submits a promotion code."
   },
+  "cart_loading": "လုပ်ဆောင်နေသည်...",
+  "@cart_loading": {
+    "description": "ခြင်းတောင်း ပြင်ဆင်နေစဉ် ပြသသည့် ပရိုမိုးရှင်းလုပ်ဆောင်ချက်။"
+  },
   "cart_checkout": "ငွေရှင်းရန်",
   "@cart_checkout": {
     "description": "Primary action from cart to checkout."

@@ -490,6 +490,10 @@
   "@cart_apply": {
     "description": "Submits a promotion code."
   },
+  "cart_loading": "Loading...",
+  "@cart_loading": {
+    "description": "Promotion action shown while the cart is updating."
+  },
   "cart_checkout": "Go to checkout",
   "@cart_checkout": {
     "description": "Primary action from cart to checkout."

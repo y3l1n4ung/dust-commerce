@@ -19,6 +19,54 @@ final class _PromotionCopyWithUnset {
 
 const _promotionCopyWithUnset = _PromotionCopyWithUnset();
 
+mixin _$CartPromotion implements Serializable {
+  @override
+  String toString() {
+    final self = this as CartPromotion;
+    return 'CartPromotion('
+        'amount: ${self.amount}, '
+        'code: ${self.code}, '
+        'currencyCode: ${self.currencyCode}, '
+        'id: ${self.id}, '
+        'type: ${self.type}, '
+        'value: ${self.value}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as CartPromotion;
+    return identical(this, other) ||
+        other is CartPromotion &&
+            runtimeType == other.runtimeType &&
+            other.amount == self.amount &&
+            other.code == self.code &&
+            other.currencyCode == self.currencyCode &&
+            other.id == self.id &&
+            other.type == self.type &&
+            other.value == self.value;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as CartPromotion;
+    return Object.hashAll([
+      runtimeType,
+      self.amount,
+      self.code,
+      self.currencyCode,
+      self.id,
+      self.type,
+      self.value,
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$CartPromotionSerialize(this as CartPromotion);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$Promotion implements Serializable {
   @override
   String toString() {
@@ -145,6 +193,18 @@ final class _$PromotionCopyWithImpl<$Res> implements _$PromotionCopyWith<$Res> {
     );
   }
 }
+final class $CartPromotionSerializer implements Serializer<CartPromotion, Map<String, Object?>> {
+  const $CartPromotionSerializer();
+
+  @override
+  Map<String, Object?> serialize(CartPromotion value) => _$CartPromotionSerialize(value);
+}
+final class $CartPromotionDeserializer implements Deserializer<CartPromotion, Map<String, Object?>> {
+  const $CartPromotionDeserializer();
+
+  @override
+  CartPromotion deserialize(Map<String, Object?> json) => _$CartPromotionDeserialize(json);
+}
 final class $PromotionSerializer implements Serializer<Promotion, Map<String, Object?>> {
   const $PromotionSerializer();
 
@@ -169,6 +229,46 @@ final class $PromotionTypeDeserializer implements Deserializer<PromotionType, Ob
   @override
   PromotionType deserialize(Object? json) => _$PromotionTypeDeserialize(json);
 }
+
+Map<String, Object?> _$CartPromotionSerialize(CartPromotion instance) {
+  return <String, Object?>{
+    'amount': instance.amount.toJson(),
+    'code': instance.code,
+    'currency_code': instance.currencyCode,
+    'id': instance.id,
+    'type': _$PromotionTypeSerialize(instance.type),
+    'value': instance.value,
+  };
+}
+
+Map<String, Object?> _$CartPromotionToJson(CartPromotion instance) =>
+    _$CartPromotionSerialize(instance);
+
+// factory CartPromotion.fromJson(Map<String, Object?> json) => _$CartPromotionFromJson(json);
+CartPromotion _$CartPromotionDeserialize(Map<String, Object?> json) {
+  final amountValue = Money.fromJson(
+    JsonHelper.asMap(json['amount'], 'amount'),
+  );
+  final codeValue = JsonHelper.as<String>(json['code'], 'code', 'String');
+  final currencyCodeValue = json['currency_code'] == null
+      ? null
+      : JsonHelper.as<String>(json['currency_code'], 'currency_code', 'String');
+  final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final typeValue = _$PromotionTypeDeserialize(json['type'], 'type');
+  final valueValue = JsonHelper.as<int>(json['value'], 'value', 'int');
+
+  return CartPromotion(
+    id: idValue,
+    code: codeValue,
+    type: typeValue,
+    value: valueValue,
+    amount: amountValue,
+    currencyCode: currencyCodeValue,
+  );
+}
+
+CartPromotion _$CartPromotionFromJson(Map<String, Object?> json) =>
+    _$CartPromotionDeserialize(json);
 
 Map<String, Object?> _$PromotionSerialize(Promotion instance) {
   return <String, Object?>{
