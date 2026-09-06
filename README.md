@@ -108,6 +108,10 @@ customer records. Bind address, port, database path, and browser origins are
 configured with `COMMERCE_BIND`, `COMMERCE_PORT`, `COMMERCE_DATABASE_PATH`, and
 comma-separated `COMMERCE_ALLOWED_ORIGINS`. The API defaults to port `3878`
 (`DUST` on a telephone keypad); override it explicitly for each deployment.
+Product images default to `.data/media`. Set `COMMERCE_MEDIA_PATH` to a durable
+single-node volume and `COMMERCE_PUBLIC_BASE_URL` to the public API origin that
+owns `/uploads`. Multi-node deployments should replace this adapter with shared
+object storage; local disk is not presented as a CDN.
 
 Order-transfer requests remain unavailable with `503` until outbound email is
 configured. Set `COMMERCE_SMTP_HOST`, `COMMERCE_SMTP_FROM`, and the public

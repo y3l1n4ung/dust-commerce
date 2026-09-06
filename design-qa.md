@@ -364,3 +364,26 @@ focused captures.
   a true equal-raster capture is available.
 
 final result: blocked
+
+## Admin product media slice
+
+Source: Medusa commit \`bda24b9725ac697ec5e8f706b503013e20babf12\`,
+\`product-create-details-media-section.tsx\`, and
+\`upload-media-form-item.tsx\`. Prototype: Morrow Admin on port \`13002\`
+with API port \`3878\`.
+
+Medusa reference and Morrow implementation were captured in the same in-app
+browser at \`505 x 583\` and combined before review. The official 16:9 reference
+is letterboxed at this viewport, so structural parity is verified; pixel parity
+is not claimed.
+
+- Pass: Media follows Description and precedes Variants.
+- Pass: optional label, upload action, supported formats, size policy, ordered
+  rows, thumbnail action and delete action follow pinned source.
+- Pass: upload, cancel cleanup, attachment, storefront delivery and attached-file
+  deletion guard are real API behavior, not visual placeholders.
+- Open P1: post-create media mutation remains.
+- Open P1: multi-node object storage and abandoned-stage cleanup remain.
+- Open P2: obtain an unletterboxed source capture for pixel-diff QA.
+
+Admin product media result: passed

@@ -48,6 +48,11 @@ and the running Morrow form into one `2560 x 720` image. Both sides use a
 `1280 x 720` viewport and the same empty Details state. This is a direct
 head-to-head inspection, not two separately judged screenshots.
 
+The media follow-up uses the same official raster and running implementation in
+the in-app browser at `505 x 583`. The source remains letterboxed, so this pass
+verifies hierarchy, field order, upload proportions and compact behavior rather
+than pixel identity.
+
 ## Verified
 
 - The 220px navigation hierarchy, selected row, nested product links, merchant
@@ -77,6 +82,11 @@ head-to-head inspection, not two separately judged screenshots.
   option selection and incomplete active-currency pricing are covered by server
   integration tests. The generated admin client is exercised by non-widget
   view-model tests.
+- Details now includes the source-positioned Media section. Real files use the
+  generated multipart client, server byte limits and signature detection; rows
+  can be reordered, removed or made thumbnail. Publication verifies each staged
+  file, stores ordered image rows atomically, exposes them through the separate
+  storefront contract, and blocks staged deletion after attachment.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -86,18 +96,18 @@ head-to-head inspection, not two separately judged screenshots.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Product-create media upload remains absent, so the Details screen is not
-  pixel-identical to Medusa's longer source form. File storage is tracked under
-  issue #37 and no non-working upload surface is shown.
 - P1 — Import/export, filters, ordering, post-create media/option/variant
   mutation and multiple option axes in the Flutter creation form remain feature
   work under issue #31. Their visible controls do not pretend an API mutation
   succeeded.
+- P1 — The filesystem adapter is durable for one server node. Multi-node
+  deployment still needs object storage and cleanup for uploads left staged
+  after an abandoned browser session.
 
 ## Result
 
-Passed for the implemented product-list, product-detail, general-edit and core
-product-create vertical slices. Broader Medusa Admin and product-media parity is
-not claimed.
+Passed for the implemented product-list, product-detail, general-edit and
+product-create-with-media vertical slices. Broader Medusa Admin parity is not
+claimed.
 
 final result: passed
