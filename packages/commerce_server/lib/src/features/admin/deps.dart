@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/account/crypto.dart';
+import 'package:commerce_server/src/features/admin/media_storage.dart';
 import 'package:commerce_server/src/features/admin/repository/repository.dart';
 import 'package:commerce_server/src/http/http.dart';
 import 'package:commerce_server/src/infra/database.dart';
@@ -17,6 +18,8 @@ final class AdminDeps {
     required this.products,
     required this.productReads,
     required this.productCreates,
+    required this.media,
+    required this.mediaStorage,
     required this.database,
   });
 
@@ -34,6 +37,12 @@ final class AdminDeps {
 
   /// Shared bound on memory-hard password work.
   final PasswordWorkLimiter passwordWork;
+
+  /// Reference checks that prevent deleting attached assets.
+  final AdminMediaRepository media;
+
+  /// Streamed file persistence and public immutable reads.
+  final AdminMediaStorage mediaStorage;
 
   /// Merchant catalogue listing queries.
   final AdminProductRepository products;

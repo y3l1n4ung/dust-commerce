@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
@@ -7,7 +8,12 @@ import 'package:test/test.dart';
 
 /// Real app and temporary database used by admin route tests.
 final class AdminHarness {
-  AdminHarness._(this.directory, this.database, this.client);
+  AdminHarness._(
+    this.directory,
+    this.mediaDirectory,
+    this.database,
+    this.client,
+  );
 
   /// Synthetic password used only inside temporary test databases.
   static const password = 'correct horse battery staple';
@@ -39,13 +45,23 @@ final class AdminHarness {
     }
     if (seedStore) await seedDevelopmentStore(database);
     var requestId = 100;
+    var mediaId = 0;
+    final mediaDirectory = Directory('${directory.path}/media');
+    final mediaStorage = LocalAdminMediaStorage(
+      root: mediaDirectory,
+      publicBaseUrl: Uri.parse('http://media.test'),
+      nextKey: () => 'test_media_${++mediaId}',
+    );
+    await mediaStorage.prepare();
     return AdminHarness._(
       directory,
+      mediaDirectory,
       database,
       TestClient(buildApp(
         database,
         nextId: () => 'id_${++requestId}',
         now: () => DateTime.utc(2026, 9, 6, 12),
+        mediaStorage: mediaStorage,
       )),
     );
   }
@@ -55,6 +71,9 @@ final class AdminHarness {
 
   /// Temporary migrated database.
   final CommerceDatabase database;
+
+  /// Temporary product-media directory.
+  final Directory mediaDirectory;
 
   /// Temporary directory deleted by [stop].
   final Directory directory;
@@ -75,6 +94,21 @@ final class AdminHarness {
     return (response.json! as Map<String, Object?>)['token']! as String;
   }
 
+  /// Uploads the minimal PNG fixture through the protected multipart route.
+  Future<Map<String, Object?>> uploadPng() async {
+    final token = await adminToken();
+    final request = client.post('/admin/uploads')
+      ..bearer(token)
+      ..bytes(
+        multipartFiles('upload', pngBytes),
+        contentType: 'multipart/form-data; boundary=upload',
+      );
+    final response = await request.send();
+    response.assertCreated();
+    final body = response.json! as Map<String, Object?>;
+    return (body['files']! as List<Object?>).single! as Map<String, Object?>;
+  }
+
   /// Executes a read-only assertion query.
   Future<List<Row>> raw(String sql) =>
       queryRaw(sql, []).fetch(database.connection as Executor);
@@ -86,3 +120,20 @@ final class AdminHarness {
     await directory.delete(recursive: true);
   }
 }
+
+/// Minimal signature-valid PNG fixture used by media boundary tests.
+const pngBytes = <int>[0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+
+/// Encodes repeated binary files as a standards-compliant multipart body.
+List<int> multipartFiles(String boundary, List<int> bytes, {int count = 1}) => [
+      for (var index = 0; index < count; index++) ...[
+        ...utf8.encode(
+          '--$boundary\r\n'
+          'Content-Disposition: form-data; name="files"; filename="product.png"\r\n'
+          'Content-Type: image/png\r\n\r\n',
+        ),
+        ...bytes,
+        ...utf8.encode('\r\n'),
+      ],
+      ...utf8.encode('--$boundary--\r\n'),
+    ];

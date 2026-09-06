@@ -18,10 +18,20 @@ Future<void> main() async {
     config.databasePath,
     options: commerceOptions,
   );
+  final mediaStorage = LocalAdminMediaStorage(
+    root: Directory(config.mediaPath),
+    publicBaseUrl: config.publicBaseUrl,
+    nextKey: () => 'media_${Tokens.issue()}',
+  );
+  await mediaStorage.prepare();
 
   try {
     if (config.seed) await seedDevelopmentStore(database);
-    final app = buildApp(database, orderTransferMailer: transferMailer)
+    final app = buildApp(
+      database,
+      orderTransferMailer: transferMailer,
+      mediaStorage: mediaStorage,
+    )
       ..layer(const SecurityHeaders())
       ..layer(const RequestId());
     if (config.allowedOrigins.isNotEmpty) {
@@ -65,6 +75,8 @@ final class _ServerConfig {
     required this.address,
     required this.port,
     required this.databasePath,
+    required this.mediaPath,
+    required this.publicBaseUrl,
     required this.seed,
     required this.allowedOrigins,
   });
@@ -81,6 +93,12 @@ final class _ServerConfig {
       address: InternetAddress(bind),
       port: port,
       databasePath: environment['COMMERCE_DATABASE_PATH'] ?? 'commerce.db',
+      mediaPath: environment['COMMERCE_MEDIA_PATH'] ?? '.data/media',
+      publicBaseUrl: _publicBaseUrl(
+        environment['COMMERCE_PUBLIC_BASE_URL'],
+        bind,
+        port,
+      ),
       seed: environment['COMMERCE_SEED'] == 'true',
       allowedOrigins: {
         for (final origin
@@ -93,6 +111,29 @@ final class _ServerConfig {
   final InternetAddress address;
   final Set<String> allowedOrigins;
   final String databasePath;
+  final String mediaPath;
   final int port;
+  final Uri publicBaseUrl;
   final bool seed;
+
+  static Uri _publicBaseUrl(String? configured, String bind, int port) {
+    final localHost = bind == '0.0.0.0' || bind == '::' ? '127.0.0.1' : bind;
+    final value = configured?.trim().isNotEmpty == true
+        ? configured!.trim()
+        : Uri(scheme: 'http', host: localHost, port: port).toString();
+    final uri = Uri.tryParse(value);
+    if (uri == null ||
+        !uri.hasScheme ||
+        !uri.hasAuthority ||
+        (uri.scheme != 'http' && uri.scheme != 'https') ||
+        uri.userInfo.isNotEmpty ||
+        (uri.path.isNotEmpty && uri.path != '/') ||
+        uri.query.isNotEmpty ||
+        uri.fragment.isNotEmpty) {
+      throw const FormatException(
+        'COMMERCE_PUBLIC_BASE_URL must be an absolute HTTP(S) origin.',
+      );
+    }
+    return uri;
+  }
 }

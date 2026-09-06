@@ -28,4 +28,10 @@ Router adminRoutes() => Router()
   ..route(
     '/products/{id}',
     get(readAdminProductHandler).patch(updateAdminProductHandler),
-  );
+  )
+  ..route('/uploads', post(uploadAdminMediaHandler, status: 201))
+  ..route('/uploads/{key}', delete(deleteAdminMediaHandler));
+
+/// Public immutable media reads used by admin and storefront image elements.
+Router adminMediaRoutes() =>
+    Router()..route('/uploads/{key}', get(readPublicMediaHandler));

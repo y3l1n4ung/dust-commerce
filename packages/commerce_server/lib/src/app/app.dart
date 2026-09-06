@@ -33,6 +33,7 @@ Router buildApp(
   String Function()? nextId,
   DateTime Function()? now,
   PasswordWorkLimiter? passwordWork,
+  AdminMediaStorage mediaStorage = const UnavailableAdminMediaStorage(),
   OrderTransferMailer orderTransferMailer =
       const UnavailableOrderTransferMailer(),
 }) {
@@ -57,6 +58,7 @@ Router buildApp(
     ..nest('/auth', accountAuthRoutes())
     ..nest('/auth', adminAuthRoutes())
     ..nest('/admin', adminRoutes())
+    ..merge(adminMediaRoutes())
     ..nest('/store', accountStoreRoutes())
     ..nest('/store', categoryRoutes())
     ..nest('/store', catalogRoutes())
@@ -80,6 +82,8 @@ Router buildApp(
         products: AdminProductRepository(executor),
         productCreates: AdminProductCreateRepository(executor),
         productReads: AdminProductReadRepository(executor),
+        media: AdminMediaRepository(executor),
+        mediaStorage: mediaStorage,
       ),
     )
     ..withState(
