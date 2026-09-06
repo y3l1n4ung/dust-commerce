@@ -1,4 +1,5 @@
 import 'package:admin_app/src/product/admin_product_page.dart';
+import 'package:admin_app/src/product/admin_product_detail_page.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/session/admin_session_state.dart';
 import 'package:admin_app/src/session/admin_session_view_model.dart';
@@ -50,6 +51,7 @@ final class _AdminHome extends StatefulWidget {
 
 final class _AdminHomeState extends State<_AdminHome> {
   final _searchFocus = FocusNode();
+  Option<String> _selectedProduct = const None();
 
   @override
   void initState() {
@@ -66,13 +68,41 @@ final class _AdminHomeState extends State<_AdminHome> {
   }
 
   @override
-  Widget build(BuildContext context) => AdminShell(
-        user: widget.user,
-        themes: widget.themes,
-        onSearchRequested: _searchFocus.requestFocus,
-        onSignOut: widget.state.isBusy
-            ? null
-            : context.readAdminSessionViewModel().signOut,
-        child: AdminProductPage(searchFocus: _searchFocus),
-      );
+  Widget build(BuildContext context) {
+    final selected = _selectedProduct;
+    return AdminShell(
+      user: widget.user,
+      themes: widget.themes,
+      title: switch (selected) {
+        Some() => 'Product details',
+        None() => 'Products',
+      },
+      onSearchRequested: () {
+        _showProducts();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _searchFocus.requestFocus();
+        });
+      },
+      onProductsRequested: _showProducts,
+      onSignOut: widget.state.isBusy
+          ? null
+          : context.readAdminSessionViewModel().signOut,
+      child: switch (selected) {
+        Some(value: final id) => AdminProductDetailPage(
+            productId: id,
+            onBack: _showProducts,
+          ),
+        None() => AdminProductPage(
+            searchFocus: _searchFocus,
+            onOpenProduct: (id) => setState(() {
+              _selectedProduct = Some(id);
+            }),
+          ),
+      },
+    );
+  }
+
+  void _showProducts() => setState(() {
+        _selectedProduct = const None();
+      });
 }

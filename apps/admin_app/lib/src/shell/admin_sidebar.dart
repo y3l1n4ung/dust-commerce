@@ -10,12 +10,16 @@ final class AdminSidebar extends StatelessWidget {
     required this.user,
     required this.themes,
     required this.onSearchRequested,
+    required this.onProductsRequested,
     required this.onSignOut,
     super.key,
   });
 
   /// Focuses the active product search field.
   final VoidCallback onSearchRequested;
+
+  /// Returns to the product catalogue route.
+  final VoidCallback onProductsRequested;
 
   /// Revokes the current admin session.
   final VoidCallback? onSignOut;
@@ -50,10 +54,11 @@ final class AdminSidebar extends StatelessWidget {
                 ),
                 const _NavRow(
                     icon: Icons.receipt_long_outlined, label: 'Orders'),
-                const _NavRow(
+                _NavRow(
                   icon: Icons.inventory_2_outlined,
                   label: 'Products',
                   selected: true,
+                  onTap: onProductsRequested,
                 ),
                 const _SubNav(label: 'Collections'),
                 const _SubNav(label: 'Categories'),

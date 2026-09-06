@@ -8,10 +8,17 @@ import 'package:flutter/material.dart';
 /// Medusa-shaped product route backed by the authenticated admin API.
 final class AdminProductPage extends StatefulWidget {
   /// Creates the product route.
-  const AdminProductPage({required this.searchFocus, super.key});
+  const AdminProductPage({
+    required this.searchFocus,
+    required this.onOpenProduct,
+    super.key,
+  });
 
   /// Focus target shared with the sidebar search action.
   final FocusNode searchFocus;
+
+  /// Opens one product detail from the result table.
+  final ValueChanged<String> onOpenProduct;
 
   @override
   State<AdminProductPage> createState() => _AdminProductPageState();
@@ -90,7 +97,10 @@ final class _AdminProductPageState extends State<AdminProductPage> {
     }
     return Stack(
       children: [
-        AdminProductTable(products: state.products),
+        AdminProductTable(
+          products: state.products,
+          onOpen: widget.onOpenProduct,
+        ),
         if (state.status == AdminProductStatus.loading)
           const LinearProgressIndicator(minHeight: 2),
       ],

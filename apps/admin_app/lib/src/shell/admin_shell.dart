@@ -10,7 +10,9 @@ final class AdminShell extends StatelessWidget {
     required this.user,
     required this.themes,
     required this.onSearchRequested,
+    required this.onProductsRequested,
     required this.onSignOut,
+    required this.title,
     required this.child,
     super.key,
   });
@@ -21,11 +23,17 @@ final class AdminShell extends StatelessWidget {
   /// Focuses the active route search field.
   final VoidCallback onSearchRequested;
 
+  /// Returns to the product catalogue route.
+  final VoidCallback onProductsRequested;
+
   /// Revokes the merchant session.
   final VoidCallback? onSignOut;
 
   /// Local appearance preference.
   final AdminThemeController themes;
+
+  /// Active route title.
+  final String title;
 
   /// Proven merchant identity.
   final AdminUser user;
@@ -38,6 +46,7 @@ final class AdminShell extends StatelessWidget {
             user: user,
             themes: themes,
             onSearchRequested: onSearchRequested,
+            onProductsRequested: onProductsRequested,
             onSignOut: onSignOut,
           );
           return Scaffold(
@@ -48,7 +57,7 @@ final class AdminShell extends StatelessWidget {
                 Expanded(
                   child: Column(
                     children: [
-                      _Topbar(desktop: desktop),
+                      _Topbar(desktop: desktop, title: title),
                       Expanded(child: child),
                     ],
                   ),
@@ -61,9 +70,10 @@ final class AdminShell extends StatelessWidget {
 }
 
 final class _Topbar extends StatelessWidget {
-  const _Topbar({required this.desktop});
+  const _Topbar({required this.desktop, required this.title});
 
   final bool desktop;
+  final String title;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -85,7 +95,7 @@ final class _Topbar extends StatelessWidget {
                 ),
               ),
             Text(
-              'Products',
+              title,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),

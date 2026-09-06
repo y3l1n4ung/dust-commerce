@@ -1,4 +1,4 @@
-# Admin product-list design QA
+# Admin product design QA
 
 ## Source truth
 
@@ -10,23 +10,26 @@
 - Product source:
   `packages/admin/dashboard/src/routes/products/product-list/product-list.tsx`
   and `components/product-list-table/product-list-table.tsx`.
+- Product-detail source:
+  `packages/admin/dashboard/src/routes/products/product-detail/product-detail.tsx`
+  plus its General, Media, Options, Variants, Sales Channels, Shipping,
+  Organization and Attributes section components.
 - Rendered reference: Medusa's official Admin product-list image in the User
-  Guide.
+  Guide and official product-detail image in the Edit Product guide.
 - Prototype: the authenticated Morrow Admin at port `13002`, backed by the
   local API on a temporary database.
 
 ## Compared state
 
-Both renders use the light product-list state with the Products navigation item
-selected, four or more published products, no active filters, and the first
-page. Merchant product names, collections, thumbnails, sales-channel values and
-variant counts are data differences rather than visual drift.
+The list renders use the light product-list state with Products selected, four
+or more published products, no active filters, and the first page. The detail
+renders use a published sweatpants product with two images, one Size option,
+inventory variants, collection, category, tags and weight.
 
-The source and prototype were emitted together for full-view comparison. The
-official image is a desktop capture; the available Codex in-app browser surface
-was `505 x 583`, so the prototype correctly used its responsive drawer and
-horizontal table safety. An equal-width desktop raster is still required before
-claiming pixel parity.
+The official product-detail source and the running prototype were emitted
+together at a `1280 x 720` browser surface. The reference raster is itself
+letterboxed and scaled inside that surface, so this establishes structural,
+spacing, hierarchy and responsive fidelity rather than pixel identity.
 
 ## Verified
 
@@ -41,12 +44,23 @@ claiming pixel parity.
   they require the next Admin API slice.
 - Remote merchant thumbnails use Flutter's HTML image strategy on web because
   Medusa's public seed CDN omits CORS headers.
+- Clicking a real product opens its authenticated detail. General, ordered
+  media, options, variants, organization and attributes are API-backed; the
+  two-column desktop layout collapses into one column below 900px.
+- Sales Channels and Shipping configuration remain visible and explicitly say
+  `Not configured` because those Medusa domains do not yet exist in this
+  schema. No fake merchant data is rendered.
 
 ## Open findings
 
-- P2 — Capture the source and prototype at one equal desktop viewport before
-  declaring pixel parity. The compact render and pinned source establish
-  responsive and structural fidelity, not a same-raster result.
-- P1 — Product detail, create/edit, import/export, filters and ordering remain
-  feature work under issue #31. Their visible controls deliberately do not
-  pretend that an API mutation succeeded.
+- P2 — Capture an unletterboxed Medusa source at the same content width before
+  declaring pixel parity. The current combined comparison passes structural
+  design QA, not a pixel-diff threshold.
+- P1 — Create/edit, import/export, filters, ordering, media mutation, option
+  mutation and variant mutation remain feature work under issue #31. Their
+  visible controls deliberately do not pretend that an API mutation succeeded.
+
+## Result
+
+Passed for the implemented read-only product-list and product-detail vertical
+slices. Broader Medusa Admin feature parity is not claimed.
