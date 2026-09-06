@@ -22,6 +22,90 @@ const DeepCollectionEquality _adminProductDetailOptionsEquality = DeepCollection
 const DeepCollectionEquality _adminProductDetailTagsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductDetailVariantsEquality = DeepCollectionEquality();
 
+mixin _$AdminUpdateProduct implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as AdminUpdateProduct;
+    return 'AdminUpdateProduct('
+        'description: ${self.description}, '
+        'discountable: ${self.discountable}, '
+        'handle: ${self.handle}, '
+        'material: ${self.material}, '
+        'status: ${self.status}, '
+        'subtitle: ${self.subtitle}, '
+        'title: ${self.title}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminUpdateProduct;
+    return identical(this, other) ||
+        other is AdminUpdateProduct &&
+            runtimeType == other.runtimeType &&
+            other.description == self.description &&
+            other.discountable == self.discountable &&
+            other.handle == self.handle &&
+            other.material == self.material &&
+            other.status == self.status &&
+            other.subtitle == self.subtitle &&
+            other.title == self.title;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminUpdateProduct;
+    return Object.hashAll([
+      runtimeType,
+      self.description,
+      self.discountable,
+      self.handle,
+      self.material,
+      self.status,
+      self.subtitle,
+      self.title,
+    ]);
+  }
+
+  /// Validates this `AdminUpdateProduct`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as AdminUpdateProduct;
+    final errors = <ValidationError>[];
+    _AdminUpdateProductValidation._validateDescription(self.description, errors);
+    _AdminUpdateProductValidation._validateHandle(self.handle, errors);
+    _AdminUpdateProductValidation._validateMaterial(self.material, errors);
+    _AdminUpdateProductValidation._validateSubtitle(self.subtitle, errors);
+    _AdminUpdateProductValidation._validateTitle(self.title, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `AdminUpdateProduct` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminUpdateProductSerialize(this as AdminUpdateProduct);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$AdminProduct implements Serializable {
   @override
   String toString() {
@@ -249,6 +333,7 @@ mixin _$AdminProductDetail implements Serializable {
         'categories: ${self.categories}, '
         'collectionTitle: ${self.collectionTitle}, '
         'description: ${self.description}, '
+        'discountable: ${self.discountable}, '
         'height: ${self.height}, '
         'handle: ${self.handle}, '
         'id: ${self.id}, '
@@ -259,6 +344,7 @@ mixin _$AdminProductDetail implements Serializable {
         'originCountry: ${self.originCountry}, '
         'productType: ${self.productType}, '
         'status: ${self.status}, '
+        'subtitle: ${self.subtitle}, '
         'tags: ${self.tags}, '
         'thumbnail: ${self.thumbnail}, '
         'title: ${self.title}, '
@@ -277,6 +363,7 @@ mixin _$AdminProductDetail implements Serializable {
             _adminProductDetailCategoriesEquality.equals(other.categories, self.categories) &&
             other.collectionTitle == self.collectionTitle &&
             other.description == self.description &&
+            other.discountable == self.discountable &&
             other.height == self.height &&
             other.handle == self.handle &&
             other.id == self.id &&
@@ -287,6 +374,7 @@ mixin _$AdminProductDetail implements Serializable {
             other.originCountry == self.originCountry &&
             other.productType == self.productType &&
             other.status == self.status &&
+            other.subtitle == self.subtitle &&
             _adminProductDetailTagsEquality.equals(other.tags, self.tags) &&
             other.thumbnail == self.thumbnail &&
             other.title == self.title &&
@@ -303,6 +391,7 @@ mixin _$AdminProductDetail implements Serializable {
       _adminProductDetailCategoriesEquality.hash(self.categories),
       self.collectionTitle,
       self.description,
+      self.discountable,
       self.height,
       self.handle,
       self.id,
@@ -313,6 +402,7 @@ mixin _$AdminProductDetail implements Serializable {
       self.originCountry,
       self.productType,
       self.status,
+      self.subtitle,
       _adminProductDetailTagsEquality.hash(self.tags),
       self.thumbnail,
       self.title,
@@ -328,6 +418,68 @@ mixin _$AdminProductDetail implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+extension _AdminUpdateProductValidation on AdminUpdateProduct {
+  static void _validateDescription(String? description, List<ValidationError> errors) {
+    if (description != null) {
+      if (description.length > 20000) {
+        errors.add(ValidationError(field: 'description', message: 'Use at most 20000 characters'));
+      }
+    }
+  }
+
+  static void _validateHandle(String handle, List<ValidationError> errors) {
+    if (handle.length < 1) {
+      errors.add(ValidationError(field: 'handle', message: 'Enter a handle'));
+    }
+    if (handle.length > 255) {
+      errors.add(ValidationError(field: 'handle', message: 'Enter a handle'));
+    }
+    if (!RegExp('^[a-z0-9]+(?:-[a-z0-9]+)*\$').hasMatch(handle)) {
+      errors.add(ValidationError(field: 'handle', message: 'Use lowercase letters, numbers, and hyphens'));
+    }
+  }
+
+  static void _validateMaterial(String? material, List<ValidationError> errors) {
+    if (material != null) {
+      if (material.length > 255) {
+        errors.add(ValidationError(field: 'material', message: 'Use at most 255 characters'));
+      }
+    }
+  }
+
+  static void _validateSubtitle(String? subtitle, List<ValidationError> errors) {
+    if (subtitle != null) {
+      if (subtitle.length > 255) {
+        errors.add(ValidationError(field: 'subtitle', message: 'Use at most 255 characters'));
+      }
+    }
+  }
+
+  static void _validateTitle(String title, List<ValidationError> errors) {
+    if (title.length < 1) {
+      errors.add(ValidationError(field: 'title', message: 'Enter a title'));
+    }
+    if (title.length > 255) {
+      errors.add(ValidationError(field: 'title', message: 'Enter a title'));
+    }
+    if (!RegExp('.*\\S.*').hasMatch(title)) {
+      errors.add(ValidationError(field: 'title', message: 'Enter a title'));
+    }
+  }
+
+}
+final class $AdminUpdateProductSerializer implements Serializer<AdminUpdateProduct, Map<String, Object?>> {
+  const $AdminUpdateProductSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminUpdateProduct value) => _$AdminUpdateProductSerialize(value);
+}
+final class $AdminUpdateProductDeserializer implements Deserializer<AdminUpdateProduct, Map<String, Object?>> {
+  const $AdminUpdateProductDeserializer();
+
+  @override
+  AdminUpdateProduct deserialize(Map<String, Object?> json) => _$AdminUpdateProductDeserialize(json);
+}
 final class $AdminProductSerializer implements Serializer<AdminProduct, Map<String, Object?>> {
   const $AdminProductSerializer();
 
@@ -400,13 +552,77 @@ final class $AdminProductDetailDeserializer implements Deserializer<AdminProduct
   @override
   AdminProductDetail deserialize(Map<String, Object?> json) => _$AdminProductDetailDeserialize(json);
 }
+final class $AdminProductLifecycleSerializer implements Serializer<AdminProductLifecycle, Object?> {
+  const $AdminProductLifecycleSerializer();
+
+  @override
+  Object? serialize(AdminProductLifecycle value) => _$AdminProductLifecycleSerialize(value);
+}
+final class $AdminProductLifecycleDeserializer implements Deserializer<AdminProductLifecycle, Object?> {
+  const $AdminProductLifecycleDeserializer();
+
+  @override
+  AdminProductLifecycle deserialize(Object? json) => _$AdminProductLifecycleDeserialize(json);
+}
+
+Map<String, Object?> _$AdminUpdateProductSerialize(AdminUpdateProduct instance) {
+  return <String, Object?>{
+    'description': instance.description,
+    'discountable': instance.discountable,
+    'handle': instance.handle,
+    'material': instance.material,
+    'status': _$AdminProductLifecycleSerialize(instance.status),
+    'subtitle': instance.subtitle,
+    'title': instance.title,
+  };
+}
+
+Map<String, Object?> _$AdminUpdateProductToJson(AdminUpdateProduct instance) =>
+    _$AdminUpdateProductSerialize(instance);
+
+// factory AdminUpdateProduct.fromJson(Map<String, Object?> json) => _$AdminUpdateProductFromJson(json);
+AdminUpdateProduct _$AdminUpdateProductDeserialize(Map<String, Object?> json) {
+  final descriptionValue = json['description'] == null
+      ? null
+      : JsonHelper.as<String>(json['description'], 'description', 'String');
+  final discountableValue = JsonHelper.as<bool>(
+    json['discountable'],
+    'discountable',
+    'bool',
+  );
+  final handleValue = JsonHelper.as<String>(json['handle'], 'handle', 'String');
+  final materialValue = json['material'] == null
+      ? null
+      : JsonHelper.as<String>(json['material'], 'material', 'String');
+  final statusValue = _$AdminProductLifecycleDeserialize(
+    json['status'],
+    'status',
+  );
+  final subtitleValue = json['subtitle'] == null
+      ? null
+      : JsonHelper.as<String>(json['subtitle'], 'subtitle', 'String');
+  final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
+
+  return AdminUpdateProduct(
+    status: statusValue,
+    title: titleValue,
+    handle: handleValue,
+    discountable: discountableValue,
+    subtitle: subtitleValue,
+    material: materialValue,
+    description: descriptionValue,
+  );
+}
+
+AdminUpdateProduct _$AdminUpdateProductFromJson(Map<String, Object?> json) =>
+    _$AdminUpdateProductDeserialize(json);
 
 Map<String, Object?> _$AdminProductSerialize(AdminProduct instance) {
   return <String, Object?>{
     'collection_title': instance.collectionTitle,
     'id': instance.id,
     'sales_channels': instance.salesChannels,
-    'status': instance.status,
+    'status': _$AdminProductLifecycleSerialize(instance.status),
     'thumbnail': instance.thumbnail,
     'title': instance.title,
     'variant_count': instance.variantCount,
@@ -429,7 +645,10 @@ AdminProduct _$AdminProductDeserialize(Map<String, Object?> json) {
     'sales_channels',
     'String',
   );
-  final statusValue = JsonHelper.as<String>(json['status'], 'status', 'String');
+  final statusValue = _$AdminProductLifecycleDeserialize(
+    json['status'],
+    'status',
+  );
   final thumbnailValue = JsonHelper.as<String>(
     json['thumbnail'],
     'thumbnail',
@@ -602,6 +821,7 @@ Map<String, Object?> _$AdminProductDetailSerialize(AdminProductDetail instance) 
         .toList(),
     'collection_title': instance.collectionTitle,
     'description': instance.description,
+    'discountable': instance.discountable,
     'height': instance.height,
     'handle': instance.handle,
     'id': instance.id,
@@ -615,7 +835,8 @@ Map<String, Object?> _$AdminProductDetailSerialize(AdminProductDetail instance) 
         .toList(),
     'origin_country': instance.originCountry,
     'product_type': instance.productType,
-    'status': instance.status,
+    'status': _$AdminProductLifecycleSerialize(instance.status),
+    'subtitle': instance.subtitle,
     'tags': instance.tags
         .map((item) => item)
         .toList(),
@@ -642,6 +863,11 @@ AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
   final descriptionValue = json['description'] == null
       ? null
       : JsonHelper.as<String>(json['description'], 'description', 'String');
+  final discountableValue = JsonHelper.as<bool>(
+    json['discountable'],
+    'discountable',
+    'bool',
+  );
   final heightValue = json['height'] == null
       ? null
       : JsonHelper.as<int>(json['height'], 'height', 'int');
@@ -663,7 +889,13 @@ AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
   final productTypeValue = json['product_type'] == null
       ? null
       : JsonHelper.as<String>(json['product_type'], 'product_type', 'String');
-  final statusValue = JsonHelper.as<String>(json['status'], 'status', 'String');
+  final statusValue = _$AdminProductLifecycleDeserialize(
+    json['status'],
+    'status',
+  );
+  final subtitleValue = json['subtitle'] == null
+      ? null
+      : JsonHelper.as<String>(json['subtitle'], 'subtitle', 'String');
   final tagsValue = JsonHelper.decodeList(json['tags'], 'tags',
       (item, itemKey) => JsonHelper.as<String>(item, itemKey, 'String'));
   final thumbnailValue = json['thumbnail'] == null
@@ -689,7 +921,9 @@ AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
     variants: variantsValue,
     categories: categoriesValue,
     tags: tagsValue,
+    discountable: discountableValue,
     description: descriptionValue,
+    subtitle: subtitleValue,
     thumbnail: thumbnailValue,
     material: materialValue,
     originCountry: originCountryValue,
@@ -704,3 +938,28 @@ AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
 
 AdminProductDetail _$AdminProductDetailFromJson(Map<String, Object?> json) =>
     _$AdminProductDetailDeserialize(json);
+
+Object? _$AdminProductLifecycleSerialize(AdminProductLifecycle instance) {
+  return switch (instance) {
+    AdminProductLifecycle.draft => 'draft',
+    AdminProductLifecycle.proposed => 'proposed',
+    AdminProductLifecycle.published => 'published',
+    AdminProductLifecycle.rejected => 'rejected',
+  };
+}
+
+Object? _$AdminProductLifecycleToJson(AdminProductLifecycle instance) =>
+    _$AdminProductLifecycleSerialize(instance);
+
+AdminProductLifecycle _$AdminProductLifecycleDeserialize(Object? json, [String key = 'json']) {
+  return switch (json) {
+    'draft' => AdminProductLifecycle.draft,
+    'proposed' => AdminProductLifecycle.proposed,
+    'published' => AdminProductLifecycle.published,
+    'rejected' => AdminProductLifecycle.rejected,
+    _ => throw ArgumentError.value(json, key, 'unknown value for AdminProductLifecycle at $key'),
+  };
+}
+
+AdminProductLifecycle _$AdminProductLifecycleFromJson(Object? json, [String key = 'json']) =>
+    _$AdminProductLifecycleDeserialize(json, key);

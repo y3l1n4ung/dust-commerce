@@ -70,6 +70,7 @@ Router buildApp(
     ..withState(accountDeps)
     ..withState(
       AdminDeps(
+        database: database,
         reads: AdminReadRepository(executor),
         writes: AdminCreateRepository(executor),
         deletes: AdminDeleteRepository(executor),

@@ -154,11 +154,11 @@ final class _Thumbnail extends StatelessWidget {
 final class _Status extends StatelessWidget {
   const _Status({required this.value});
 
-  final String value;
+  final AdminProductLifecycle value;
 
   @override
   Widget build(BuildContext context) {
-    final active = value.toLowerCase() == 'published';
+    final active = value == AdminProductLifecycle.published;
     final color = active ? const Color(0xFF22C55E) : const Color(0xFFA1A1AA);
     return Row(
       children: [
@@ -168,7 +168,7 @@ final class _Status extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 7),
-        Flexible(child: Text(_titleCase(value))),
+        Flexible(child: Text(_titleCase(value.name))),
       ],
     );
   }

@@ -66,11 +66,11 @@ final class AdminProductGeneralSection extends StatelessWidget {
 final class _ProductStatus extends StatelessWidget {
   const _ProductStatus({required this.value});
 
-  final String value;
+  final AdminProductLifecycle value;
 
   @override
   Widget build(BuildContext context) {
-    final published = value == 'published';
+    final published = value == AdminProductLifecycle.published;
     final color = published ? const Color(0xFF16A34A) : const Color(0xFF71717A);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -89,7 +89,7 @@ final class _ProductStatus extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            _titleCase(value),
+            _titleCase(value.name),
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

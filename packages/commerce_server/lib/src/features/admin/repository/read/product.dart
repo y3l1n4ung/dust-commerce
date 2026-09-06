@@ -12,8 +12,9 @@ abstract final class AdminProductReadRepository {
 
   /// Reads every currently modeled Medusa detail section in one SQL row.
   @Query(r'''
-SELECT product.id, product.title, product.handle, product.description,
-       product.thumbnail, product.material, product.origin_country,
+SELECT product.id, product.title, product.subtitle, product.handle,
+       product.description, product.discountable, product.thumbnail,
+       product.material, product.origin_country,
        product.product_type, product.weight, product.length, product.width,
        product.height, product.status, collection.title AS collection_title,
        coalesce((

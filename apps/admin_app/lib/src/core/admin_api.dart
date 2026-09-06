@@ -33,6 +33,13 @@ abstract interface class AdminApi {
   @GET('/admin/products/{id}')
   Future<AdminProductDetail> product(@Path() String id);
 
+  /// Replaces supported general fields and returns refreshed detail.
+  @PATCH('/admin/products/{id}')
+  Future<AdminProductDetail> updateProduct(
+    @Path() String id,
+    @Body() AdminUpdateProduct body,
+  );
+
   /// Revokes the Dio-managed bearer.
   @DELETE('/auth/admin/session')
   Future<AdminSessionDeleted> signOut();

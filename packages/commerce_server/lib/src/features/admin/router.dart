@@ -18,4 +18,7 @@ Router adminRoutes() => Router()
   ..routeLayer(fromExtractor(const AdminAuth()))
   ..route('/users/me', get(readCurrentAdminHandler))
   ..route('/products', get(listAdminProductsHandler))
-  ..route('/products/{id}', get(readAdminProductHandler));
+  ..route(
+    '/products/{id}',
+    get(readAdminProductHandler).patch(updateAdminProductHandler),
+  );

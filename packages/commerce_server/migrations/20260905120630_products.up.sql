@@ -5,9 +5,13 @@ CREATE TABLE products (
   -- A product belongs to at most one curated collection, matching Medusa.
   collection_id TEXT REFERENCES product_collections (id) ON DELETE SET NULL,
   title       TEXT NOT NULL CHECK (length(title) > 0),
+  -- Optional secondary name shown beneath the merchant-facing title.
+  subtitle    TEXT,
   -- Stable human-readable lookup key used by storefront URLs.
   handle      TEXT NOT NULL CHECK (length(handle) > 0),
   description TEXT,
+  -- Controls whether promotions may reduce this product's price.
+  discountable INTEGER NOT NULL DEFAULT 1 CHECK (discountable IN (0, 1)),
   thumbnail   TEXT,
   -- Merchant-facing composition shown in product information.
   material    TEXT,

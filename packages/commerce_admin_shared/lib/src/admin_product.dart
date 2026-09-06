@@ -2,6 +2,88 @@ import 'package:dust_dart/serde.dart';
 
 part 'admin_product.g.dart';
 
+/// Merchant publishing state kept separate from the storefront contract.
+@Derive([Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+enum AdminProductLifecycle {
+  /// Work in progress; hidden from customers.
+  draft,
+
+  /// Awaiting merchant approval; hidden from customers.
+  proposed,
+
+  /// Live and eligible for storefront discovery.
+  published,
+
+  /// Refused during merchant review; hidden from customers.
+  rejected,
+}
+
+/// Public codec for server projections that serialize this package's enum.
+final class AdminProductLifecycleCodec
+    implements SerDeCodec<AdminProductLifecycle, String> {
+  /// Creates the stateless lifecycle codec.
+  const AdminProductLifecycleCodec();
+
+  @override
+  AdminProductLifecycle deserialize(String value) =>
+      AdminProductLifecycle.values.byName(value);
+
+  @override
+  String serialize(AdminProductLifecycle value) => value.name;
+}
+
+/// Complete replacement of the general fields editable in this schema.
+@Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class AdminUpdateProduct with _$AdminUpdateProduct {
+  /// Creates a validated merchant product update.
+  const AdminUpdateProduct({
+    required this.status,
+    required this.title,
+    required this.handle,
+    required this.discountable,
+    this.subtitle,
+    this.material,
+    this.description,
+  });
+
+  /// Decodes the generated admin request without handwritten key mapping.
+  factory AdminUpdateProduct.fromJson(Map<String, Object?> json) =>
+      _$AdminUpdateProductFromJson(json);
+
+  /// Optional long-form product copy; an empty value clears it.
+  @Validate(length: Length(max: 20000), message: 'Use at most 20000 characters')
+  final String? description;
+
+  /// Whether promotions may reduce this product's price.
+  final bool discountable;
+
+  /// Unique, URL-safe storefront segment.
+  @Validate(length: Length(min: 1, max: 255), message: 'Enter a handle')
+  @Validate(
+    regex: r'^[a-z0-9]+(?:-[a-z0-9]+)*$',
+    message: 'Use lowercase letters, numbers, and hyphens',
+  )
+  final String handle;
+
+  /// Optional merchant material; an empty value clears it.
+  @Validate(length: Length(max: 255), message: 'Use at most 255 characters')
+  final String? material;
+
+  /// Publishing state selected by the merchant.
+  final AdminProductLifecycle status;
+
+  /// Optional secondary merchant-facing product name.
+  @Validate(length: Length(max: 255), message: 'Use at most 255 characters')
+  final String? subtitle;
+
+  /// Required product name shown to merchants and customers.
+  @Validate(length: Length(min: 1, max: 255), message: 'Enter a title')
+  @Validate(regex: r'.*\S.*', message: 'Enter a title')
+  final String title;
+}
+
 /// One explicitly allowlisted product row in the merchant catalogue.
 @Derive([ToString(), Eq(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)
@@ -31,7 +113,7 @@ final class AdminProduct with _$AdminProduct {
   final String salesChannels;
 
   /// Merchant lifecycle state.
-  final String status;
+  final AdminProductLifecycle status;
 
   /// Primary image URL, empty when the product has no thumbnail.
   final String thumbnail;
@@ -171,7 +253,9 @@ final class AdminProductDetail with _$AdminProductDetail {
     required this.variants,
     required this.categories,
     required this.tags,
+    required this.discountable,
     this.description,
+    this.subtitle,
     this.thumbnail,
     this.material,
     this.originCountry,
@@ -195,6 +279,9 @@ final class AdminProductDetail with _$AdminProductDetail {
 
   /// Optional long-form merchant description.
   final String? description;
+
+  /// Whether promotions may reduce this product's price.
+  final bool discountable;
 
   /// Optional height in the store's configured unit.
   final int? height;
@@ -224,7 +311,10 @@ final class AdminProductDetail with _$AdminProductDetail {
   final String? productType;
 
   /// Merchant lifecycle state.
-  final String status;
+  final AdminProductLifecycle status;
+
+  /// Optional secondary merchant-facing product name.
+  final String? subtitle;
 
   /// Public discovery tags assigned to the product.
   final List<String> tags;

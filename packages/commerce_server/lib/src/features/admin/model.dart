@@ -77,7 +77,9 @@ final class AdminProductResponse with _$AdminProductResponse {
   final String salesChannels;
 
   /// Merchant lifecycle state.
-  final String status;
+  @SerDe(using: AdminProductLifecycleCodec())
+  @Sqlx(tryFrom: _AdminProductLifecycleSqlx())
+  final AdminProductLifecycle status;
 
   /// Primary product image URL, or an empty value.
   final String thumbnail;
@@ -130,7 +132,9 @@ final class AdminProductDetailResponse with _$AdminProductDetailResponse {
     required this.variants,
     required this.categories,
     required this.tags,
+    required this.discountable,
     this.description,
+    this.subtitle,
     this.thumbnail,
     this.material,
     this.originCountry,
@@ -152,6 +156,10 @@ final class AdminProductDetailResponse with _$AdminProductDetailResponse {
 
   /// Optional long-form merchant description.
   final String? description;
+
+  /// Whether promotions may reduce this product's price.
+  @Sqlx(tryFrom: _AdminBoolFromInt())
+  final bool discountable;
 
   /// Optional height in the store's configured unit.
   final int? height;
@@ -185,7 +193,12 @@ final class AdminProductDetailResponse with _$AdminProductDetailResponse {
   final String? productType;
 
   /// Merchant lifecycle state.
-  final String status;
+  @SerDe(using: AdminProductLifecycleCodec())
+  @Sqlx(tryFrom: _AdminProductLifecycleSqlx())
+  final AdminProductLifecycle status;
+
+  /// Optional secondary merchant-facing product name.
+  final String? subtitle;
 
   /// Public discovery tags assigned to this product.
   @Sqlx(tryFrom: _AdminProductStringsSqlxJson())
@@ -242,4 +255,20 @@ final class _AdminProductStringsSqlxJson
   @override
   List<String> decode(String value) =>
       const json.AdminProductStringsFromJson().decode(value);
+}
+
+final class _AdminProductLifecycleSqlx
+    implements SqlxTryFrom<AdminProductLifecycle, String> {
+  const _AdminProductLifecycleSqlx();
+
+  @override
+  AdminProductLifecycle decode(String value) =>
+      AdminProductLifecycle.values.byName(value);
+}
+
+final class _AdminBoolFromInt implements SqlxTryFrom<bool, int> {
+  const _AdminBoolFromInt();
+
+  @override
+  bool decode(int value) => value != 0;
 }

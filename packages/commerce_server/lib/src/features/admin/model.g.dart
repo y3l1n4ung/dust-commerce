@@ -163,7 +163,7 @@ AdminProductResponse _$AdminProductResponseFromRow(Row row) {
     collectionTitle: row.read<String>('collection_title'),
     salesChannels: row.read<String>('sales_channels'),
     variantCount: row.read<int>('variant_count'),
-    status: row.read<String>('status'),
+    status: _AdminProductLifecycleSqlx().decode(row.read<String>('status')),
   );
 }
 
@@ -198,13 +198,15 @@ AdminProductDetailResponse _$AdminProductDetailResponseFromRow(Row row) {
     id: row.read<String>('id'),
     title: row.read<String>('title'),
     handle: row.read<String>('handle'),
-    status: row.read<String>('status'),
+    status: _AdminProductLifecycleSqlx().decode(row.read<String>('status')),
     images: _AdminProductImagesSqlxJson().decode(row.read<String>('images')),
     options: _AdminProductOptionsSqlxJson().decode(row.read<String>('options')),
     variants: _AdminProductVariantsSqlxJson().decode(row.read<String>('variants')),
     categories: _AdminProductStringsSqlxJson().decode(row.read<String>('categories')),
     tags: _AdminProductStringsSqlxJson().decode(row.read<String>('tags')),
+    discountable: _AdminBoolFromInt().decode(row.read<int>('discountable')),
     description: row.readNullable<String>('description'),
+    subtitle: row.readNullable<String>('subtitle'),
     thumbnail: row.readNullable<String>('thumbnail'),
     material: row.readNullable<String>('material'),
     originCountry: row.readNullable<String>('origin_country'),
@@ -260,7 +262,10 @@ Map<String, Object?> _$AdminProductResponseSerialize(AdminProductResponse instan
     'collection_title': instance.collectionTitle,
     'id': instance.id,
     'sales_channels': instance.salesChannels,
-    'status': instance.status,
+    'status': JsonHelper.encodeWithCodec<AdminProductLifecycle, Object?>(
+      (AdminProductLifecycleCodec()),
+      instance.status,
+    ),
     'thumbnail': instance.thumbnail,
     'title': instance.title,
     'variant_count': instance.variantCount,
@@ -291,6 +296,7 @@ Map<String, Object?> _$AdminProductDetailResponseSerialize(AdminProductDetailRes
         .toList(),
     'collection_title': instance.collectionTitle,
     'description': instance.description,
+    'discountable': instance.discountable,
     'height': instance.height,
     'handle': instance.handle,
     'id': instance.id,
@@ -304,7 +310,11 @@ Map<String, Object?> _$AdminProductDetailResponseSerialize(AdminProductDetailRes
         .toList(),
     'origin_country': instance.originCountry,
     'product_type': instance.productType,
-    'status': instance.status,
+    'status': JsonHelper.encodeWithCodec<AdminProductLifecycle, Object?>(
+      (AdminProductLifecycleCodec()),
+      instance.status,
+    ),
+    'subtitle': instance.subtitle,
     'tags': instance.tags
         .map((item) => item)
         .toList(),
