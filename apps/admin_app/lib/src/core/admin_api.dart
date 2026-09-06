@@ -66,6 +66,14 @@ abstract interface class AdminApi {
     @Body() AdminUpdateProductMedia body,
   );
 
+  /// Adds and removes variant associations for one product image.
+  @POST('/admin/products/{id}/images/{imageId}/variants/batch')
+  Future<AdminBatchImageVariantsResult> batchImageVariants(
+    @Path() String id,
+    @Path() String imageId,
+    @Body() AdminBatchImageVariants body,
+  );
+
   /// Revokes the Dio-managed bearer.
   @DELETE('/auth/admin/session')
   Future<AdminSessionDeleted> signOut();

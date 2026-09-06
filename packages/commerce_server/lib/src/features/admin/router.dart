@@ -33,6 +33,10 @@ Router adminRoutes() => Router()
     '/products/{id}/media',
     put(updateAdminProductMediaHandler),
   )
+  ..route(
+    '/products/{id}/images/{image_id}/variants/batch',
+    post(batchAdminImageVariantsHandler),
+  )
   ..route('/uploads', post(uploadAdminMediaHandler, status: 201))
   ..route('/uploads/{key}', delete(deleteAdminMediaHandler));
 

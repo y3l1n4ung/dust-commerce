@@ -42,8 +42,16 @@ void main() {
     final product = response.json! as Map<String, Object?>;
     expect(product['thumbnail'], _back);
     expect(product['images'], [
-      {'id': 'img_sweatpants_2', 'url': _back},
-      {'id': isA<String>(), 'url': uploaded['url']},
+      {
+        'id': 'img_sweatpants_2',
+        'url': _back,
+        'variant_ids': <String>[],
+      },
+      {
+        'id': isA<String>(),
+        'url': uploaded['url'],
+        'variant_ids': <String>[],
+      },
     ]);
 
     final storefront = await harness.client

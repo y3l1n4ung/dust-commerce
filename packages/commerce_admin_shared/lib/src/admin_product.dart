@@ -1,3 +1,4 @@
+import 'package:commerce_admin_shared/src/admin_product_image.dart';
 import 'package:commerce_admin_shared/src/admin_product_media.dart';
 import 'package:dust_dart/serde.dart';
 
@@ -323,24 +324,6 @@ final class AdminProductList with _$AdminProductList {
 
   /// Products in stable newest-first order.
   final List<AdminProduct> products;
-}
-
-/// One image intentionally exposed to the merchant product detail.
-@Derive([ToString(), Eq(), Serialize(), Deserialize()])
-@SerDe(renameAll: SerDeRename.snakeCase)
-final class AdminProductImage with _$AdminProductImage {
-  /// Creates an ordered merchant image.
-  const AdminProductImage({required this.id, required this.url});
-
-  /// Decodes one generated admin image response.
-  factory AdminProductImage.fromJson(Map<String, Object?> json) =>
-      _$AdminProductImageFromJson(json);
-
-  /// Stable image identifier used by future media mutations.
-  final String id;
-
-  /// Merchant asset URL.
-  final String url;
 }
 
 /// One selectable product dimension and its ordered values.

@@ -20,7 +20,16 @@ SELECT product.id, product.title, product.subtitle, product.handle,
        coalesce((
          SELECT json_group_array(json(ordered.image_json))
          FROM (
-           SELECT json_object('id', image.id, 'url', image.url) AS image_json
+           SELECT json_object(
+             'id', image.id,
+             'url', image.url,
+             'variant_ids', json(coalesce((
+               SELECT json_group_array(link.variant_id)
+               FROM product_image_variants link
+               WHERE link.image_id = image.id
+               ORDER BY link.variant_id
+             ), '[]'))
+           ) AS image_json
            FROM product_images image
            WHERE image.product_id = product.id AND image.deleted_at IS NULL
            ORDER BY image.rank, image.id

@@ -3,6 +3,7 @@ library;
 
 export 'create.dart';
 export 'delete.dart';
+export 'image_variants.dart';
 export 'list.dart';
 export 'read.dart';
 export 'update.dart';

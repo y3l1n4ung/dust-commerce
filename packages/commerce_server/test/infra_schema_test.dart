@@ -64,6 +64,10 @@ void main() {
         ]),
       );
       expect(await columnsOf('product_images'), containsAll(['url', 'rank']));
+      expect(
+        await columnsOf('product_image_variants'),
+        containsAll(['image_id', 'variant_id', 'created_at']),
+      );
       expect(await columnsOf('product_options'), isNot(contains('values_csv')));
       expect(
         await columnsOf('product_option_values'),
@@ -132,6 +136,34 @@ void main() {
           ).execute(database.executor);
 
       await expectLater(reusedHandle, throwsStateError);
+    });
+
+    test('an image cannot be associated with another product variant',
+        () async {
+      await _seedVariant(database);
+      await queryExecute(
+        r"INSERT INTO product_images (id, product_id, url, rank) "
+        r"VALUES ('img_1', 'prod_1', 'https://example.test/one.png', 0)",
+        [],
+      ).execute(database.executor);
+      await queryExecute(
+        r"INSERT INTO products (id, title, handle) "
+        r"VALUES ('prod_2', 'Other', 'other')",
+        [],
+      ).execute(database.executor);
+      await queryExecute(
+        r"INSERT INTO product_variants (id, product_id, title) "
+        r"VALUES ('var_2', 'prod_2', 'Other')",
+        [],
+      ).execute(database.executor);
+
+      Future<void> crossProductLink() => queryExecute(
+            r"INSERT INTO product_image_variants (image_id, variant_id) "
+            r"VALUES ('img_1', 'var_2')",
+            [],
+          ).execute(database.executor);
+
+      await expectLater(crossProductLink, throwsStateError);
     });
   });
 }

@@ -36,7 +36,8 @@ void main() {
         ...'line_items order_addresses order_items orders'.split(' '),
         ...'product_options product_option_values'.split(' '),
         ...'product_collections product_categories'.split(' '),
-        ...'product_category_products product_images'.split(' '),
+        ...'product_category_products product_images product_image_variants'
+            .split(' '),
         ...'product_tags product_tag_products'.split(' '),
         ...'product_variants products promotions provider_identity'.split(' '),
         ...'regions shipping_options shipping_option_price_rules'.split(' '),

@@ -545,42 +545,6 @@ mixin _$AdminProductList implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
-mixin _$AdminProductImage implements Serializable {
-  @override
-  String toString() {
-    final self = this as AdminProductImage;
-    return 'AdminProductImage('
-        'id: ${self.id}, '
-        'url: ${self.url}'
-        ')';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    final self = this as AdminProductImage;
-    return identical(this, other) ||
-        other is AdminProductImage &&
-            runtimeType == other.runtimeType &&
-            other.id == self.id &&
-            other.url == self.url;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as AdminProductImage;
-    return Object.hashAll([
-      runtimeType,
-      self.id,
-      self.url,
-    ]);
-  }
-
-  Map<String, Object?> serialize() =>
-      _$AdminProductImageSerialize(this as AdminProductImage);
-
-  Map<String, Object?> toJson() => serialize();
-}
-
 mixin _$AdminProductOption implements Serializable {
   @override
   String toString() {
@@ -1023,18 +987,6 @@ final class $AdminProductListDeserializer implements Deserializer<AdminProductLi
   @override
   AdminProductList deserialize(Map<String, Object?> json) => _$AdminProductListDeserialize(json);
 }
-final class $AdminProductImageSerializer implements Serializer<AdminProductImage, Map<String, Object?>> {
-  const $AdminProductImageSerializer();
-
-  @override
-  Map<String, Object?> serialize(AdminProductImage value) => _$AdminProductImageSerialize(value);
-}
-final class $AdminProductImageDeserializer implements Deserializer<AdminProductImage, Map<String, Object?>> {
-  const $AdminProductImageDeserializer();
-
-  @override
-  AdminProductImage deserialize(Map<String, Object?> json) => _$AdminProductImageDeserialize(json);
-}
 final class $AdminProductOptionSerializer implements Serializer<AdminProductOption, Map<String, Object?>> {
   const $AdminProductOptionSerializer();
 
@@ -1431,27 +1383,6 @@ AdminProductList _$AdminProductListDeserialize(Map<String, Object?> json) {
 AdminProductList _$AdminProductListFromJson(Map<String, Object?> json) =>
     _$AdminProductListDeserialize(json);
 
-Map<String, Object?> _$AdminProductImageSerialize(AdminProductImage instance) {
-  return <String, Object?>{
-    'id': instance.id,
-    'url': instance.url,
-  };
-}
-
-Map<String, Object?> _$AdminProductImageToJson(AdminProductImage instance) =>
-    _$AdminProductImageSerialize(instance);
-
-// factory AdminProductImage.fromJson(Map<String, Object?> json) => _$AdminProductImageFromJson(json);
-AdminProductImage _$AdminProductImageDeserialize(Map<String, Object?> json) {
-  final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
-  final urlValue = JsonHelper.as<String>(json['url'], 'url', 'String');
-
-  return AdminProductImage(id: idValue, url: urlValue);
-}
-
-AdminProductImage _$AdminProductImageFromJson(Map<String, Object?> json) =>
-    _$AdminProductImageDeserialize(json);
-
 Map<String, Object?> _$AdminProductOptionSerialize(AdminProductOption instance) {
   return <String, Object?>{
     'id': instance.id,
@@ -1549,7 +1480,7 @@ Map<String, Object?> _$AdminProductDetailSerialize(AdminProductDetail instance) 
     'handle': instance.handle,
     'id': instance.id,
     'images': instance.images
-        .map((item) => _$AdminProductImageSerialize(item))
+        .map((item) => item.toJson())
         .toList(),
     'length': instance.length,
     'material': instance.material,
@@ -1597,7 +1528,7 @@ AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
   final handleValue = JsonHelper.as<String>(json['handle'], 'handle', 'String');
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final imagesValue = JsonHelper.decodeList(json['images'], 'images',
-      (item, itemKey) => _$AdminProductImageDeserialize(JsonHelper.asMap(item, itemKey)));
+      (item, itemKey) => AdminProductImage.fromJson(JsonHelper.asMap(item, itemKey)));
   final lengthValue = json['length'] == null
       ? null
       : JsonHelper.as<int>(json['length'], 'length', 'int');
