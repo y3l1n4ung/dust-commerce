@@ -126,6 +126,17 @@ Dust requires database row classes to live in libraries separate from the
 functions that turn them into domain types — `repository/` may hold only
 operation files, and a row class is not an operation.
 
+## Response boundaries
+
+An HTTP response class is an explicit public allowlist. A response must declare
+every serialized field directly and must not extend a domain or database model.
+This keeps a future internal field from becoming part of the wire contract
+without an API review.
+
+Composition is allowed only when the nested type is itself an explicitly public
+response contract. Generated serialization mixins do not count as model
+inheritance.
+
 ## One DAO per operation
 
 Dust generates one DAO per annotated class, and a class lives in one file. An

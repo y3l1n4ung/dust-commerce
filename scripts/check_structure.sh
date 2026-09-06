@@ -41,8 +41,24 @@ for layer in handler service repository; do
   )
 done
 
+# A response is a public allowlist, never a domain subtype. Inheriting from a
+# domain class couples the wire contract to internal fields and can expose a
+# newly-added field without an explicit API review.
+while IFS= read -r match; do
+  echo "::error::$match"
+  echo "response DTOs must declare their public fields instead of extending another class"
+  status=1
+done < <(
+  rg --line-number --multiline \
+    'class\s+[A-Za-z0-9_]*Response\s+extends\s+' \
+    packages/commerce_server/lib/src/features \
+    --glob '*.dart' \
+    --glob '!*.g.dart' \
+    || true
+)
+
 if [[ "$status" -eq 0 ]]; then
-  echo "every handler, service and repository file is an operation"
+  echo "backend structure and response boundaries are valid"
 fi
 
 exit "$status"
