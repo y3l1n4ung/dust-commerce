@@ -23,6 +23,7 @@ import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
 import 'package:commerce_app/src/features/catalog/view/store_page.dart';
 import 'package:commerce_app/src/features/checkout/view/checkout_page.dart';
 import 'package:commerce_app/src/features/checkout/view/order_confirmation_page.dart';
+import 'package:commerce_app/src/features/order_transfer/view/order_transfer_page.dart';
 import 'package:commerce_app/src/features/product/view/product_page.dart';
 
 abstract class $CommerceRouter extends RouterBase<CommerceRoute> {
@@ -118,6 +119,10 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const CatalogRoute(),
       route,
     ],
+    OrderTransferRoute(id: _, token: _) => [
+      const CatalogRoute(),
+      route,
+    ],
     ProductRoute(handle: _) => [
       const CatalogRoute(),
       route,
@@ -142,6 +147,7 @@ const Map<Type, Type?> _$appliedShellsByPage = {
   CheckoutPage: null,
   CollectionPage: null,
   OrderConfirmationPage: null,
+  OrderTransferPage: null,
   ProductPage: null,
   StorePage: null,
 };
@@ -283,6 +289,15 @@ Page<dynamic> buildCommerceRoutePage(
       fullscreenDialog: false,
       maintainState: true,
       child: OrderConfirmationPage(id: id),
+    ),
+    OrderTransferRoute(id: final id, token: final token) => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'orderTransfer',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: OrderTransferPage(id: id, token: token),
     ),
     ProductRoute(handle: final handle) => generatedPage(
       key: key,

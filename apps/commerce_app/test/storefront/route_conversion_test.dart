@@ -57,6 +57,18 @@ void main() {
     expect(category.location, '/categories/clothing%2Fshirts?page=3');
   });
 
+  test('emailed transfer capability round-trips through the public route', () {
+    final transfer = parseCommerceRoute(
+      Uri.parse('/order/order_1/transfer/capability-token_123'),
+    );
+
+    expect(transfer, isA<OrderTransferRoute>());
+    expect(
+      transfer.location,
+      '/order/order_1/transfer/capability-token_123',
+    );
+  });
+
   test('router preserves the browser location on its first parse', () {
     const api = _UnusedApi();
     final router = CommerceRouter(

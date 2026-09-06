@@ -44,6 +44,7 @@ class _CommerceAppState extends State<CommerceApp> {
   late final AddressBookViewModel _addresses;
   late final AccountOrderDetailViewModel _orderDetail;
   late final AccountOrdersViewModel _orders;
+  late final OrderTransferViewModel _orderTransfer;
   late final CartViewModel _cart;
   late final CheckoutViewModel _checkout;
   late final StoreShellViewModel _shell;
@@ -68,6 +69,9 @@ class _CommerceAppState extends State<CommerceApp> {
     );
     _orderDetail = AccountOrderDetailViewModel(
       AccountOrderDetailViewModelArgs(api: widget.api),
+    );
+    _orderTransfer = OrderTransferViewModel(
+      OrderTransferViewModelArgs(api: widget.api),
     );
     _shell = StoreShellViewModel(
       StoreShellViewModelArgs(
@@ -128,6 +132,7 @@ class _CommerceAppState extends State<CommerceApp> {
     _addresses.dispose();
     _orderDetail.dispose();
     _orders.dispose();
+    _orderTransfer.dispose();
     _account.dispose();
     super.dispose();
   }
@@ -155,6 +160,7 @@ class _CommerceAppState extends State<CommerceApp> {
       addresses: _addresses,
       orderDetail: _orderDetail,
       orders: _orders,
+      orderTransfer: _orderTransfer,
       cart: _cart,
       checkout: _checkout,
       shell: _shell,
@@ -169,6 +175,7 @@ class _CommerceAppState extends State<CommerceApp> {
     _addresses.reset();
     _orderDetail.reset();
     _orders.reset();
+    _orderTransfer.reset();
     _checkout.reset();
     if (ownerId == null) {
       unawaited(_cart.clearForSignOut());

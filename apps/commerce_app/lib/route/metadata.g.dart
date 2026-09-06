@@ -22,6 +22,7 @@ import 'package:commerce_app/src/features/catalog/view/not_found_page.dart';
 import 'package:commerce_app/src/features/catalog/view/store_page.dart';
 import 'package:commerce_app/src/features/checkout/view/checkout_page.dart';
 import 'package:commerce_app/src/features/checkout/view/order_confirmation_page.dart';
+import 'package:commerce_app/src/features/order_transfer/view/order_transfer_page.dart';
 import 'package:commerce_app/src/features/product/view/product_page.dart';
 
 const List<GeneratedRoute> $commerceRoutes = [
@@ -133,6 +134,18 @@ const List<GeneratedRoute> $commerceRoutes = [
             resultType: 'void',
             guards: [],
           ),
+          GeneratedRoute(
+            'transfer',
+            routes: [
+              GeneratedRoute(
+                ':token',
+                page: OrderTransferPage,
+                name: 'orderTransfer',
+                resultType: 'void',
+                guards: [],
+              ),
+            ],
+          ),
         ],
       ),
     ],
@@ -180,6 +193,7 @@ RouteDebugInfo commerceRouteDebugInfo(CommerceRoute route) {
     CheckoutRoute() => const RouteDebugInfo(name: 'checkout', shell: null, branch: null, resultType: 'void'),
     CollectionRoute(handle: _, page: _, sortBy: _, optionValueIds: _) => const RouteDebugInfo(name: 'collection', shell: null, branch: null, resultType: 'void'),
     OrderConfirmedRoute(id: _) => const RouteDebugInfo(name: 'orderConfirmed', shell: null, branch: null, resultType: 'void'),
+    OrderTransferRoute(id: _, token: _) => const RouteDebugInfo(name: 'orderTransfer', shell: null, branch: null, resultType: 'void'),
     ProductRoute(handle: _) => const RouteDebugInfo(name: 'product', shell: null, branch: null, resultType: 'void'),
     StoreRoute(page: _, sortBy: _, optionValueIds: _) => const RouteDebugInfo(name: 'store', shell: null, branch: null, resultType: 'void'),
   };

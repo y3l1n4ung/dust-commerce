@@ -53,6 +53,9 @@ final class CommerceRoutesNavigator {
   CommerceRouteAction<void> orderConfirmed({required String id}) =>
       CommerceRouteAction(_router, OrderConfirmedRoute(id: id));
 
+  CommerceRouteAction<void> orderTransfer({required String id, required String token}) =>
+      CommerceRouteAction(_router, OrderTransferRoute(id: id, token: token));
+
   CommerceRouteAction<void> product({required String handle}) =>
       CommerceRouteAction(_router, ProductRoute(handle: handle));
 

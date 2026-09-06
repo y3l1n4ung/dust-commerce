@@ -168,6 +168,39 @@
   "@account_orders_body": {
     "description": "Customer order-history supporting copy."
   },
+  "account_order_transfers": "အော်ဒါလွှဲပြောင်းမှုများ",
+  "@account_order_transfers": {
+    "description": "Heading above the order-transfer request form."
+  },
+  "account_order_transfers_body": "သင်ရှာနေသော အော်ဒါကို မတွေ့ဘူးလား။\nအော်ဒါတစ်ခုကို သင့်အကောင့်နှင့် ချိတ်ဆက်ပါ။",
+  "@account_order_transfers_body": {
+    "description": "Explains how to connect an existing order."
+  },
+  "account_order_id": "အော်ဒါ ID",
+  "@account_order_id": {
+    "description": "Order-transfer identifier field placeholder."
+  },
+  "account_order_id_required": "အော်ဒါ ID ထည့်ရန်လိုသည်",
+  "@account_order_id_required": {
+    "description": "Required order-transfer identifier validation."
+  },
+  "account_request_transfer": "လွှဲပြောင်းရန် တောင်းဆိုမည်",
+  "@account_request_transfer": {
+    "description": "Submits an order-transfer request."
+  },
+  "account_transfer_requested": "အော်ဒါ {id} အတွက် လွှဲပြောင်းရန် တောင်းဆိုပြီးပါပြီ",
+  "@account_transfer_requested": {
+    "description": "Successful order-transfer request heading.",
+    "placeholders": {"id": {"example": "order_123"}}
+  },
+  "account_transfer_email_sent": "လက်ရှိ အော်ဒါဆက်သွယ်ရန်အီးမေးလ်သို့ ပို့ပြီးပါပြီ။",
+  "@account_transfer_email_sent": {
+    "description": "Confirms transfer email delivery without disclosing the address."
+  },
+  "account_transfer_email_pending": "အီးမေးလ်ပို့ရန် စောင့်ဆိုင်းနေသည်။ ထပ်မံကြိုးစားရန် အော်ဒါတူကို ပြန်တင်ပါ။",
+  "@account_transfer_email_pending": {
+    "description": "Explains a retryable transfer-email delivery state."
+  },
   "account_orders_empty_body": "သင့်တွင် အော်ဒါမရှိသေးပါ။ စျေးဝယ်ကြရအောင်။",
   "@account_orders_empty_body": {
     "description": "Empty order-history supporting copy."
@@ -1038,6 +1071,76 @@
   "language_burmese": "မြန်မာ",
   "@language_burmese": {
     "description": "Burmese language option."
+  },
+  "close": "ပိတ်မည်",
+  "@close": {
+    "description": "Dismisses transient storefront feedback."
+  },
+  "order_transfer_illustration": "အော်ဒါပိုင်ဆိုင်မှု လွှဲပြောင်းခြင်း",
+  "@order_transfer_illustration": {
+    "description": "Accessible label for the transfer illustration."
+  },
+  "order_transfer_title": "အော်ဒါ {id} အတွက် လွှဲပြောင်းရန် တောင်းဆိုမှု",
+  "@order_transfer_title": {
+    "description": "Order-transfer decision page heading.",
+    "placeholders": {"id": {"example": "order_123"}}
+  },
+  "order_transfer_intro": "သင့်အော်ဒါ ({id}) ၏ ပိုင်ဆိုင်မှုကို လွှဲပြောင်းရန် တောင်းဆိုချက်တစ်ခု ရရှိထားသည်။ သဘောတူပါက အောက်ပါခလုတ်ဖြင့် အတည်ပြုပါ။",
+  "@order_transfer_intro": {
+    "description": "Introduces the transfer decision.",
+    "placeholders": {"id": {"example": "order_123"}}
+  },
+  "order_transfer_responsibility": "လက်ခံပါက ပိုင်ရှင်အသစ်သည် ဤအော်ဒါနှင့် သက်ဆိုင်သော တာဝန်နှင့် ခွင့်ပြုချက်အားလုံးကို လွှဲယူမည်။",
+  "@order_transfer_responsibility": {
+    "description": "Explains the effect of accepting a transfer."
+  },
+  "order_transfer_ignore": "ဤတောင်းဆိုမှုကို မသိရှိပါက သို့မဟုတ် ပိုင်ဆိုင်မှုကို ဆက်လက်ထားလိုပါက မည်သည့်လုပ်ဆောင်ချက်မျှ မလိုပါ။",
+  "@order_transfer_ignore": {
+    "description": "Explains the safe no-action transfer choice."
+  },
+  "order_transfer_accept": "လွှဲပြောင်းမှုကို လက်ခံမည်",
+  "@order_transfer_accept": {
+    "description": "Accepts an order-transfer request."
+  },
+  "order_transfer_decline": "လွှဲပြောင်းမှုကို ငြင်းပယ်မည်",
+  "@order_transfer_decline": {
+    "description": "Declines an order-transfer request."
+  },
+  "order_transfer_accepted": "အော်ဒါကို အောင်မြင်စွာ လွှဲပြောင်းပြီးပါပြီ!",
+  "@order_transfer_accepted": {
+    "description": "Successful acceptance feedback."
+  },
+  "order_transfer_declined": "အော်ဒါလွှဲပြောင်းမှုကို အောင်မြင်စွာ ငြင်းပယ်ပြီးပါပြီ!",
+  "@order_transfer_declined": {
+    "description": "Successful decline feedback."
+  },
+  "order_transfer_invalid_request": "အော်ဒါ ID ကို စစ်ဆေးပြီး ထပ်ကြိုးစားပါ။",
+  "@order_transfer_invalid_request": {
+    "description": "Invalid transfer request feedback."
+  },
+  "order_transfer_session_expired": "အကောင့်ဝင်ထားမှု သက်တမ်းကုန်သွားပါပြီ။ ထပ်မံအကောင့်ဝင်ပါ။",
+  "@order_transfer_session_expired": {
+    "description": "Expired transfer requester session feedback."
+  },
+  "order_transfer_unavailable": "ဤလွှဲပြောင်းလင့်ခ်သည် မမှန်ကန်ပါ သို့မဟုတ် သက်တမ်းကုန်သွားပါပြီ။",
+  "@order_transfer_unavailable": {
+    "description": "Indistinguishable invalid or expired capability feedback."
+  },
+  "order_transfer_order_unavailable": "ဤအော်ဒါကို ဆက်လက်လွှဲပြောင်း၍ မရတော့ပါ။",
+  "@order_transfer_order_unavailable": {
+    "description": "Explains that the order changed after the transfer request."
+  },
+  "order_transfer_conflict": "ဤလွှဲပြောင်းမှုတွင် မတူညီသော ဆုံးဖြတ်ချက် ချပြီးသားဖြစ်သည်။",
+  "@order_transfer_conflict": {
+    "description": "Conflicting transfer decision feedback."
+  },
+  "order_transfer_delivery_unavailable": "လွှဲပြောင်းအီးမေးလ် ဝန်ဆောင်မှု မရနိုင်သေးပါ။ နောက်မှ ထပ်ကြိုးစားပါ။",
+  "@order_transfer_delivery_unavailable": {
+    "description": "Unavailable transfer-email service feedback."
+  },
+  "order_transfer_failed": "လွှဲပြောင်းမှုကို မပြင်ဆင်နိုင်ပါ။ ထပ်ကြိုးစားပါ။",
+  "@order_transfer_failed": {
+    "description": "Retryable transfer failure feedback."
   },
   "more": "ထပ်ရှိသည်",
   "@more": {

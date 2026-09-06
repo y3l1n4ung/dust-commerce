@@ -23,6 +23,18 @@ abstract final class StoreColors {
   /// Selected-control border and focus color.
   static const interactive = Color(0xff3b82f6);
 
+  /// Successful transfer feedback from the source emerald token.
+  static const success = Color(0xff10b981);
+
+  /// Failed transfer feedback from the source red token.
+  static const danger = Color(0xffef4444);
+
+  /// Transfer-request feedback from the source rose token.
+  static const rose = Color(0xfff43f5e);
+
+  /// Primary action surface used by the DTC storefront button component.
+  static const buttonPrimary = Color(0xff000000);
+
   /// Primary foreground.
   static const foreground = Color(0xff18181b);
 
@@ -111,7 +123,7 @@ abstract final class StoreTheme {
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          backgroundColor: StoreColors.inverted,
+          backgroundColor: StoreColors.buttonPrimary,
           foregroundColor: StoreColors.base,
           disabledBackgroundColor: StoreColors.subtleHover,
           disabledForegroundColor: StoreColors.foregroundDisabled,

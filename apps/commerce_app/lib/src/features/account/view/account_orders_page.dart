@@ -97,6 +97,12 @@ class _OrdersContent extends StatelessWidget {
                 ],
               ),
           },
+          if (state.status == AccountOrdersStatus.ready) ...[
+            const SizedBox(height: 32),
+            const Divider(),
+            const SizedBox(height: 32),
+            const AccountOrderTransferForm(),
+          ],
         ],
       );
 }

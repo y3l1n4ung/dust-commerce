@@ -168,6 +168,39 @@
   "@account_orders_body": {
     "description": "Customer order-history supporting copy."
   },
+  "account_order_transfers": "Order transfers",
+  "@account_order_transfers": {
+    "description": "Heading above the order-transfer request form."
+  },
+  "account_order_transfers_body": "Can't find the order you are looking for?\nConnect an order to your account.",
+  "@account_order_transfers_body": {
+    "description": "Explains how to connect an existing order."
+  },
+  "account_order_id": "Order ID",
+  "@account_order_id": {
+    "description": "Order-transfer identifier field placeholder."
+  },
+  "account_order_id_required": "Order ID is required",
+  "@account_order_id_required": {
+    "description": "Required order-transfer identifier validation."
+  },
+  "account_request_transfer": "Request transfer",
+  "@account_request_transfer": {
+    "description": "Submits an order-transfer request."
+  },
+  "account_transfer_requested": "Transfer for order {id} requested",
+  "@account_transfer_requested": {
+    "description": "Successful order-transfer request heading.",
+    "placeholders": {"id": {"example": "order_123"}}
+  },
+  "account_transfer_email_sent": "Email sent to the current order contact.",
+  "@account_transfer_email_sent": {
+    "description": "Confirms transfer email delivery without disclosing the address."
+  },
+  "account_transfer_email_pending": "Email delivery is pending. Submit the same order again to retry.",
+  "@account_transfer_email_pending": {
+    "description": "Explains a retryable transfer-email delivery state."
+  },
   "account_orders_empty_body": "You don't have any orders yet, let us change that.",
   "@account_orders_empty_body": {
     "description": "Empty order-history supporting copy."
@@ -1038,6 +1071,76 @@
   "language_burmese": "Burmese",
   "@language_burmese": {
     "description": "Burmese language option."
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Dismisses transient storefront feedback."
+  },
+  "order_transfer_illustration": "Order ownership transfer",
+  "@order_transfer_illustration": {
+    "description": "Accessible label for the transfer illustration."
+  },
+  "order_transfer_title": "Transfer request for order {id}",
+  "@order_transfer_title": {
+    "description": "Order-transfer decision page heading.",
+    "placeholders": {"id": {"example": "order_123"}}
+  },
+  "order_transfer_intro": "You've received a request to transfer ownership of your order ({id}). If you agree to this request, you can approve the transfer by clicking the button below.",
+  "@order_transfer_intro": {
+    "description": "Introduces the transfer decision.",
+    "placeholders": {"id": {"example": "order_123"}}
+  },
+  "order_transfer_responsibility": "If you accept, the new owner will take over all responsibilities and permissions associated with this order.",
+  "@order_transfer_responsibility": {
+    "description": "Explains the effect of accepting a transfer."
+  },
+  "order_transfer_ignore": "If you do not recognize this request or wish to retain ownership, no further action is required.",
+  "@order_transfer_ignore": {
+    "description": "Explains the safe no-action transfer choice."
+  },
+  "order_transfer_accept": "Accept transfer",
+  "@order_transfer_accept": {
+    "description": "Accepts an order-transfer request."
+  },
+  "order_transfer_decline": "Decline transfer",
+  "@order_transfer_decline": {
+    "description": "Declines an order-transfer request."
+  },
+  "order_transfer_accepted": "Order transferred successfully!",
+  "@order_transfer_accepted": {
+    "description": "Successful acceptance feedback."
+  },
+  "order_transfer_declined": "Order transfer declined successfully!",
+  "@order_transfer_declined": {
+    "description": "Successful decline feedback."
+  },
+  "order_transfer_invalid_request": "Check the order ID and try again.",
+  "@order_transfer_invalid_request": {
+    "description": "Invalid transfer request feedback."
+  },
+  "order_transfer_session_expired": "Your session has expired. Please sign in again.",
+  "@order_transfer_session_expired": {
+    "description": "Expired transfer requester session feedback."
+  },
+  "order_transfer_unavailable": "This transfer link is invalid or has expired.",
+  "@order_transfer_unavailable": {
+    "description": "Indistinguishable invalid or expired capability feedback."
+  },
+  "order_transfer_order_unavailable": "This order can no longer be transferred.",
+  "@order_transfer_order_unavailable": {
+    "description": "Explains that the order changed after the transfer request."
+  },
+  "order_transfer_conflict": "This transfer already has a different decision.",
+  "@order_transfer_conflict": {
+    "description": "Conflicting transfer decision feedback."
+  },
+  "order_transfer_delivery_unavailable": "Transfer email is unavailable. Please try later.",
+  "@order_transfer_delivery_unavailable": {
+    "description": "Unavailable transfer-email service feedback."
+  },
+  "order_transfer_failed": "We could not update the transfer. Please try again.",
+  "@order_transfer_failed": {
+    "description": "Retryable transfer failure feedback."
   },
   "more": "more",
   "@more": {

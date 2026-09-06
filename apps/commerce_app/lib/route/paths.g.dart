@@ -228,6 +228,25 @@ final class OrderConfirmedRoute extends CommerceRoute<void> {
   bool get requiresAuth => false;
 }
 
+/// Typed route data for `OrderTransferRoute`.
+final class OrderTransferRoute extends CommerceRoute<void> {
+  const OrderTransferRoute({required this.id, required this.token});
+
+  final String id;
+  final String token;
+
+  @override
+  String get location {
+    return generatedRoutePath(
+      ['order', id, 'transfer', token],
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+
+  @override
+  bool get requiresAuth => false;
+}
+
 /// Typed route data for `ProductRoute`.
 final class ProductRoute extends CommerceRoute<void> {
   const ProductRoute({required this.handle});
@@ -363,6 +382,12 @@ CommerceRoute parseCommerceRoute(Uri uri) {
   if (segments.length == 3 && segments[0] == 'order' && segments[2] == 'confirmed') {
     final id = segments[1];
     final route = OrderConfirmedRoute(id: id);
+    return withGeneratedRouteUriExtras(route, uri, const <String>{});
+  }
+  if (segments.length == 4 && segments[0] == 'order' && segments[2] == 'transfer') {
+    final id = segments[1];
+    final token = segments[3];
+    final route = OrderTransferRoute(id: id, token: token);
     return withGeneratedRouteUriExtras(route, uri, const <String>{});
   }
   if (segments.length == 2 && segments[0] == 'products') {
