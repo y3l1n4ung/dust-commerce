@@ -144,6 +144,10 @@ void main() {
         cart.cart.id,
         const AddLineBody(variantId: 'var_small', quantity: 2),
       );
+      await api.choosePayment(
+        cart.cart.id,
+        const ChoosePaymentBody(providerId: 'manual'),
+      );
 
       final order = await api.checkout(
         CheckoutRequest(
@@ -176,6 +180,10 @@ void main() {
       await api.addLine(
         cart.cart.id,
         const AddLineBody(variantId: 'var_small'),
+      );
+      await api.choosePayment(
+        cart.cart.id,
+        const ChoosePaymentBody(providerId: 'manual'),
       );
       final placed = await api.checkout(
         CheckoutRequest(

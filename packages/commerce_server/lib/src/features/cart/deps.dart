@@ -16,6 +16,7 @@ final class CartDeps {
     required this.clock,
     required this.database,
     required this.shipping,
+    required this.payments,
   });
 
   /// Finding a variant to add.
@@ -32,6 +33,9 @@ final class CartDeps {
 
   /// What a region offers.
   final CartListRepository lists;
+
+  /// Checkout payment-provider writes.
+  final CartPaymentRepository payments;
 
   /// Loading a cart and its lines.
   final CartReadRepository reads;

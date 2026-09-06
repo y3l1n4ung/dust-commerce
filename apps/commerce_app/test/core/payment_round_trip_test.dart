@@ -36,6 +36,10 @@ void main() {
       cart.cart.id,
       const AddLineBody(variantId: 'var_small'),
     );
+    await api.choosePayment(
+      cart.cart.id,
+      const ChoosePaymentBody(providerId: 'manual'),
+    );
     final request = CheckoutRequest(
       cartId: cart.cart.id,
       email: 'ada@example.com',

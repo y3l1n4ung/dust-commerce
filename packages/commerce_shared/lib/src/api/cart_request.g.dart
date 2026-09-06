@@ -400,6 +400,68 @@ mixin _$ChooseShippingBody implements Validatable, Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$ChoosePaymentBody implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as ChoosePaymentBody;
+    return 'ChoosePaymentBody('
+        'providerId: ${self.providerId}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as ChoosePaymentBody;
+    return identical(this, other) ||
+        other is ChoosePaymentBody &&
+            runtimeType == other.runtimeType &&
+            other.providerId == self.providerId;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as ChoosePaymentBody;
+    return Object.hashAll([
+      runtimeType,
+      self.providerId,
+    ]);
+  }
+
+  /// Validates this `ChoosePaymentBody`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as ChoosePaymentBody;
+    final errors = <ValidationError>[];
+    _ChoosePaymentBodyValidation._validateProviderId(self.providerId, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `ChoosePaymentBody` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$ChoosePaymentBodySerialize(this as ChoosePaymentBody);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$ApplyPromotionBody implements Validatable, Serializable {
   @override
   String toString() {
@@ -541,6 +603,14 @@ extension _ChooseShippingBodyValidation on ChooseShippingBody {
   }
 
 }
+extension _ChoosePaymentBodyValidation on ChoosePaymentBody {
+  static void _validateProviderId(String providerId, List<ValidationError> errors) {
+    if (providerId.length < 1) {
+      errors.add(ValidationError(field: 'providerId', message: 'provider_id is required'));
+    }
+  }
+
+}
 extension _ApplyPromotionBodyValidation on ApplyPromotionBody {
   static void _validateCode(String code, List<ValidationError> errors) {
     if (code.length < 1) {
@@ -620,6 +690,18 @@ final class $ChooseShippingBodyDeserializer implements Deserializer<ChooseShippi
 
   @override
   ChooseShippingBody deserialize(Map<String, Object?> json) => _$ChooseShippingBodyDeserialize(json);
+}
+final class $ChoosePaymentBodySerializer implements Serializer<ChoosePaymentBody, Map<String, Object?>> {
+  const $ChoosePaymentBodySerializer();
+
+  @override
+  Map<String, Object?> serialize(ChoosePaymentBody value) => _$ChoosePaymentBodySerialize(value);
+}
+final class $ChoosePaymentBodyDeserializer implements Deserializer<ChoosePaymentBody, Map<String, Object?>> {
+  const $ChoosePaymentBodyDeserializer();
+
+  @override
+  ChoosePaymentBody deserialize(Map<String, Object?> json) => _$ChoosePaymentBodyDeserialize(json);
 }
 final class $ApplyPromotionBodySerializer implements Serializer<ApplyPromotionBody, Map<String, Object?>> {
   const $ApplyPromotionBodySerializer();
@@ -783,6 +865,29 @@ ChooseShippingBody _$ChooseShippingBodyDeserialize(Map<String, Object?> json) {
 
 ChooseShippingBody _$ChooseShippingBodyFromJson(Map<String, Object?> json) =>
     _$ChooseShippingBodyDeserialize(json);
+
+Map<String, Object?> _$ChoosePaymentBodySerialize(ChoosePaymentBody instance) {
+  return <String, Object?>{
+    'provider_id': instance.providerId,
+  };
+}
+
+Map<String, Object?> _$ChoosePaymentBodyToJson(ChoosePaymentBody instance) =>
+    _$ChoosePaymentBodySerialize(instance);
+
+// factory ChoosePaymentBody.fromJson(Map<String, Object?> json) => _$ChoosePaymentBodyFromJson(json);
+ChoosePaymentBody _$ChoosePaymentBodyDeserialize(Map<String, Object?> json) {
+  final providerIdValue = JsonHelper.as<String>(
+    json['provider_id'],
+    'provider_id',
+    'String',
+  );
+
+  return ChoosePaymentBody(providerId: providerIdValue);
+}
+
+ChoosePaymentBody _$ChoosePaymentBodyFromJson(Map<String, Object?> json) =>
+    _$ChoosePaymentBodyDeserialize(json);
 
 Map<String, Object?> _$ApplyPromotionBodySerialize(ApplyPromotionBody instance) {
   return <String, Object?>{

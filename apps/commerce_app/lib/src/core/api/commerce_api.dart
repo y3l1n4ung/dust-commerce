@@ -173,6 +173,13 @@ abstract interface class CommerceApi {
     @Body() ChooseShippingBody body,
   );
 
+  /// Retains the payment provider selected for this cart.
+  @POST('/store/carts/{id}/payment-sessions')
+  Future<CartView> choosePayment(
+    @Path() String id,
+    @Body() ChoosePaymentBody body,
+  );
+
   /// Applies one promotion code and returns authoritative totals.
   @POST('/store/carts/{id}/promotions')
   Future<CartView> applyPromotion(

@@ -3,6 +3,7 @@ library;
 
 export 'address.dart';
 export 'line.dart';
+export 'payment.dart';
 export 'promotion.dart';
 export 'quantity.dart';
 export 'region.dart';

@@ -63,6 +63,10 @@ final class CheckoutViewModel extends $CheckoutViewModel {
           ? const CheckoutAddressDraft()
           : CheckoutAddressDraft.fromAddress(billing),
       sameAsBilling: billing == null,
+      paymentMethod: switch (view.cart.paymentSession?.providerId) {
+        final provider? => Some(provider),
+        null => const None(),
+      },
     ));
   }
 
@@ -137,13 +141,23 @@ final class CheckoutViewModel extends $CheckoutViewModel {
     return true;
   }
 
-  /// Retains the explicit manual-payment choice.
-  void selectManualPayment() => emit(state.copyWith(
-        status: CheckoutStatus.ready,
-        operation: CheckoutOperation.payment,
-        paymentMethod: 'manual',
-        message: null,
-      ));
+  /// Retains the manual provider on the server-owned cart.
+  Future<bool> selectManualPayment() async {
+    if (state.isBusy) return false;
+    emit(state.copyWith(
+      status: CheckoutStatus.loading,
+      operation: CheckoutOperation.payment,
+      message: null,
+    ));
+    final selected = await args.cart.choosePayment('manual');
+    if (!selected) return _cartFailure();
+    emit(state.copyWith(
+      status: CheckoutStatus.ready,
+      paymentMethod: const Some('manual'),
+      message: null,
+    ));
+    return true;
+  }
 
   bool _cartFailure() => _fail(
         args.cart.state.message ?? 'Could not update delivery. Try again.',

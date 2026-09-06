@@ -26,6 +26,7 @@ final class CartResponse with _$CartResponse {
     this.shippingAddress,
     this.billingAddress,
     this.shippingMethod,
+    this.paymentSession,
   });
 
   /// Separate invoice destination, absent when shipping is reused.
@@ -50,6 +51,13 @@ final class CartResponse with _$CartResponse {
   @Sqlx(tryFrom: CartPromotionsSqlxJson())
   final List<AppliedPromotionResponse> promotions;
 
+  /// Explicit public payment choice retained during checkout.
+  @Sqlx(
+    rename: 'payment_session',
+    tryFrom: OptionalPaymentSessionFromJson(),
+  )
+  final CartPaymentSession? paymentSession;
+
   /// Explicit selling-region response.
   @Sqlx(tryFrom: RegionResponseFromJson())
   final RegionResponse region;
@@ -64,6 +72,17 @@ final class CartResponse with _$CartResponse {
     tryFrom: OptionalShippingMethodFromJson(),
   )
   final ShippingMethodResponse? shippingMethod;
+}
+
+/// Decodes an optional allowlisted cart payment-session response.
+final class OptionalPaymentSessionFromJson
+    implements SqlxTryFrom<CartPaymentSession?, String> {
+  /// Creates the stateless converter.
+  const OptionalPaymentSessionFromJson();
+
+  @override
+  CartPaymentSession? decode(String value) =>
+      value == 'null' ? null : CartPaymentSession.fromJson(_object(value));
 }
 
 /// Keeps SQLite's TEXT transport explicit to the local FromRow resolver.

@@ -56,7 +56,7 @@ final class CheckoutReviewSection extends StatelessWidget {
                       )
                     : const TranslatedText(
                         'shop_checkout_place_order',
-                        defaultText: 'Place Order',
+                        defaultText: 'Place order',
                       ),
               ),
             ),

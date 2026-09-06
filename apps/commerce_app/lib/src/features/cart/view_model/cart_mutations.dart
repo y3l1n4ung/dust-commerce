@@ -66,6 +66,15 @@ extension CartMutations on CartViewModel {
         ),
       );
 
+  /// Retains payment selection and accepts only the server's updated cart.
+  Future<bool> choosePayment(String providerId) => _change(
+        CartOperation.payment,
+        request: (id) => args.api.choosePayment(
+          id,
+          ChoosePaymentBody(providerId: providerId),
+        ),
+      );
+
   /// Applies a promotion and accepts only the server's updated totals.
   Future<bool> applyPromotion(String code) => _change(
         CartOperation.promotion,

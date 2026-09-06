@@ -1,5 +1,6 @@
 import 'package:commerce_shared/src/money.dart';
 import 'package:commerce_shared/src/customers/address.dart';
+import 'package:commerce_shared/src/ordering/cart_payment_session.dart';
 import 'package:commerce_shared/src/ordering/line_item.dart';
 import 'package:commerce_shared/src/ordering/promotion.dart';
 import 'package:commerce_shared/src/ordering/shipping_method.dart';
@@ -29,6 +30,7 @@ class Cart with _$Cart {
     this.shippingAddress,
     this.billingAddress,
     this.shippingMethod,
+    this.paymentSession,
   });
 
   /// Creates a [Cart], rejecting lines that do not belong in it.
@@ -44,6 +46,7 @@ class Cart with _$Cart {
     Address? shippingAddress,
     Address? billingAddress,
     ShippingMethod? shippingMethod,
+    CartPaymentSession? paymentSession,
     List<CartPromotion> promotions = const [],
   }) {
     final ids = items.map((item) => item.id).toList();
@@ -100,6 +103,7 @@ class Cart with _$Cart {
       shippingAddress: shippingAddress,
       billingAddress: billingAddress,
       shippingMethod: shippingMethod,
+      paymentSession: paymentSession,
       promotions: List.unmodifiable(promotions),
     );
   }
@@ -124,6 +128,9 @@ class Cart with _$Cart {
 
   /// Customer-facing snapshots of promotions already applied to this cart.
   final List<CartPromotion> promotions;
+
+  /// Public payment provider choice retained across checkout reloads.
+  final CartPaymentSession? paymentSession;
 
   /// The selling territory, fixing currency and tax.
   final Region region;

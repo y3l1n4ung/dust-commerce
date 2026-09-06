@@ -42,6 +42,10 @@ void main() {
               ..json({'variant_id': 'var_small', 'quantity': 1}))
             .send())
         .assertOk();
+    (await (client.post('/store/carts/$cartId/payment-sessions')
+              ..json({'provider_id': 'manual'}))
+            .send())
+        .assertOk();
 
     final placed = await (client.post('/store/checkout')
           ..json({

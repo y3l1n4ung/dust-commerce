@@ -37,6 +37,7 @@ CartResponse _$CartResponseFromRow(Row row) {
     shippingAddress: OptionalAddressFromJson().decode(row.read<String>('shipping_address')),
     billingAddress: OptionalAddressFromJson().decode(row.read<String>('billing_address')),
     shippingMethod: OptionalShippingMethodFromJson().decode(row.read<String>('shipping_method')),
+    paymentSession: OptionalPaymentSessionFromJson().decode(row.read<String>('payment_session')),
   );
 }
 
@@ -80,6 +81,9 @@ Map<String, Object?> _$CartResponseSerialize(CartResponse instance) {
     'promotions': instance.promotions
         .map((item) => item.toJson())
         .toList(),
+    'payment_session': instance.paymentSession == null
+        ? null
+        : (instance.paymentSession!).toJson(),
     'region': instance.region.toJson(),
     'shipping_address': instance.shippingAddress == null
         ? null

@@ -2,6 +2,7 @@
 library;
 
 export 'cart.dart';
+export 'cart_payment_session.dart';
 export 'checkout_request.dart';
 export 'line_item.dart';
 export 'order.dart';

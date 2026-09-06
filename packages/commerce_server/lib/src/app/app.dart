@@ -105,6 +105,7 @@ Router buildApp(
         clock: clock,
         database: database,
         shipping: CartShippingRepository(executor),
+        payments: CartPaymentRepository(executor),
       ),
     )
     ..withState(

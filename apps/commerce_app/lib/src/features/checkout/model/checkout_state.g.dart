@@ -91,7 +91,7 @@ abstract class _$CheckoutStateCopyWith<$Res> {
     String? message,
     CheckoutOperation? operation,
     Order? order,
-    String? paymentMethod,
+    Option<String>? paymentMethod,
     bool? sameAsBilling,
     CheckoutAddressDraft? shipping,
     CheckoutStatus? status,
@@ -113,7 +113,7 @@ final class _$CheckoutStateCopyWithImpl<$Res> implements _$CheckoutStateCopyWith
     Object? message = _checkoutStateCopyWithUnset,
     Object? operation = _checkoutStateCopyWithUnset,
     Object? order = _checkoutStateCopyWithUnset,
-    Object? paymentMethod = _checkoutStateCopyWithUnset,
+    Object? paymentMethod = null,
     Object? sameAsBilling = null,
     Object? shipping = null,
     Object? status = null,
@@ -128,9 +128,7 @@ final class _$CheckoutStateCopyWithImpl<$Res> implements _$CheckoutStateCopyWith
         billing: billing == null ? _self.billing : billing as CheckoutAddressDraft,
         sameAsBilling: sameAsBilling == null ? _self.sameAsBilling : sameAsBilling as bool,
         email: email == null ? _self.email : email as String,
-        paymentMethod: identical(paymentMethod, _checkoutStateCopyWithUnset)
-            ? _self.paymentMethod
-            : paymentMethod as String?,
+        paymentMethod: paymentMethod == null ? _self.paymentMethod : paymentMethod as Option<String>,
         order: identical(order, _checkoutStateCopyWithUnset)
             ? _self.order
             : order as Order?,

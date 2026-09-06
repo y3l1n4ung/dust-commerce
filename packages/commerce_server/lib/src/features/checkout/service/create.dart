@@ -25,6 +25,9 @@ enum CheckoutFailure {
 
   /// A destination is outside the cart selling region.
   countryNotInRegion,
+
+  /// No supported payment provider was selected on the cart.
+  paymentNotSelected,
 }
 
 /// Turns a cart into an order, or says why it could not.
@@ -87,6 +90,9 @@ Future<Result<Result<OrderResponse, CheckoutFailure>, SqlxError>> placeOrder(
       return Err(SqlxError.decode('Existing cart order could not be read'));
     }
     if (cart.isEmpty) return const Ok(Err(CheckoutFailure.emptyCart));
+    if (cart.paymentSession == null) {
+      return const Ok(Err(CheckoutFailure.paymentNotSelected));
+    }
 
     for (final line in cart.items) {
       final taken = await orders.reserveStock(line.variantId, line.quantity);

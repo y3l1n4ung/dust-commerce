@@ -151,6 +151,24 @@ void main() {
       (await harness.checkout(cartId)).assertUnprocessable();
     });
 
+    test('a cart without a payment selection', () async {
+      final cartId = await harness.cartWith('var_small');
+
+      final response = await (harness.client.post('/store/checkout')
+            ..json({
+              'cart_id': cartId,
+              'email': 'ada@example.com',
+              'shipping_address': harness.address(),
+            }))
+          .send();
+
+      response
+        ..assertUnprocessable()
+        ..assertJsonContains({
+          'error': 'Select a payment method before checkout',
+        });
+    });
+
     test('an address that is not an email, naming the field', () async {
       final cartId = await harness.cartWith('var_small');
 

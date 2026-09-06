@@ -38,6 +38,9 @@ enum CartOperation {
   /// Loading or choosing delivery.
   shipping,
 
+  /// Retaining the checkout payment provider.
+  payment,
+
   /// Retaining checkout contact and destinations.
   address,
 

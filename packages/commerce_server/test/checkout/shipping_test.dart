@@ -51,6 +51,10 @@ void main() {
               ..json({'option_id': 'so_standard'}))
             .send())
         .assertOk();
+    (await (client.post('/store/carts/$cartId/payment-sessions')
+              ..json({'provider_id': 'manual'}))
+            .send())
+        .assertOk();
 
     final placed = await (client.post('/store/checkout')
           ..json({

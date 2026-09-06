@@ -100,6 +100,27 @@ final class CheckoutHarness {
     Map<String, Object?>? billing,
     String? token,
   }) {
+    return _checkoutAfterPayment(
+      cartId,
+      email: email,
+      shipping: shipping,
+      billing: billing,
+      token: token,
+    );
+  }
+
+  Future<TestResponse> _checkoutAfterPayment(
+    String cartId, {
+    required String email,
+    Map<String, Object?>? shipping,
+    Map<String, Object?>? billing,
+    String? token,
+  }) async {
+    final payment = client.post('/store/carts/$cartId/payment-sessions')
+      ..json({'provider_id': 'manual'});
+    if (token != null) payment.bearer(token);
+    await payment.send();
+
     final request = client.post('/store/checkout')
       ..json({
         'cart_id': cartId,

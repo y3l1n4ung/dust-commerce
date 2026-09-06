@@ -25,6 +25,7 @@ Router cartRoutes() {
     )
     ..route('/carts/{id}/shipping-options', get(listShippingOptionsHandler))
     ..route('/carts/{id}/shipping-method', post(chooseShippingHandler))
+    ..route('/carts/{id}/payment-sessions', post(choosePaymentHandler))
     ..route(
       // Chained, not cascaded: MethodRouter is immutable, so `..delete(...)`
       // would build a router and throw it away, leaving DELETE a 405.

@@ -59,6 +59,9 @@ Future<Result<OrderResponse, Rejection>> placeOrderHandler(
     Ok(value: Err(error: CheckoutFailure.countryNotInRegion)) => const Err(
         Rejection.status(422, 'Address country is not served by this cart'),
       ),
+    Ok(value: Err(error: CheckoutFailure.paymentNotSelected)) => const Err(
+        Rejection.status(422, 'Select a payment method before checkout'),
+      ),
     Err() => const Err(Rejection.internal()),
   };
 }

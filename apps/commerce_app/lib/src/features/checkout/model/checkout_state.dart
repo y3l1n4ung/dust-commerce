@@ -51,7 +51,7 @@ final class CheckoutState with _$CheckoutState {
     this.billing = const CheckoutAddressDraft(),
     this.sameAsBilling = true,
     this.email = '',
-    this.paymentMethod,
+    this.paymentMethod = const None(),
     this.order,
     this.message,
   });
@@ -72,7 +72,7 @@ final class CheckoutState with _$CheckoutState {
   final Order? order;
 
   /// Explicitly selected provider identifier.
-  final String? paymentMethod;
+  final Option<String> paymentMethod;
 
   /// Whether billing reuses the shipping destination.
   final bool sameAsBilling;
@@ -85,6 +85,15 @@ final class CheckoutState with _$CheckoutState {
 
   /// Whether a checkout request is in flight.
   bool get isBusy => status == CheckoutStatus.loading;
+
+  /// Whether any server-retained payment provider is selected.
+  bool get hasPaymentMethod => switch (paymentMethod) {
+        Some() => true,
+        None() => false,
+      };
+
+  /// Whether the currently supported manual provider is selected.
+  bool get isManualPaymentSelected => paymentMethod == const Some('manual');
 
   /// Validated request made from the values the customer reviewed.
   CheckoutRequest requestFor(String cartId) => CheckoutRequest(

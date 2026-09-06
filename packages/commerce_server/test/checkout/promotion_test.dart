@@ -53,6 +53,10 @@ void main() {
   test('freezes the discount and counts the redemption', () async {
     final cartId = await cartWorth();
     await apply(cartId, 'SAVE10');
+    (await (client.post('/store/carts/$cartId/payment-sessions')
+              ..json({'provider_id': 'manual'}))
+            .send())
+        .assertOk();
 
     final placed = await (client.post('/store/checkout')
           ..json({

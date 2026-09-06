@@ -130,6 +130,11 @@ void main() {
     expect(cart.state.shippingOptions, hasLength(3));
     expect(await cart.chooseShipping('ship_standard'), isTrue);
     expect(cart.state.cart!.shippingTotal, Money.of(500, 'usd'));
+    expect(await cart.choosePayment('manual'), isTrue);
+    expect(
+      cart.state.cart!.cart.paymentSession,
+      const CartPaymentSession(providerId: 'manual'),
+    );
 
     expect(await cart.applyPromotion('welcome10'), isTrue);
     expect(cart.state.cart!.cart.promotions.single.code, 'WELCOME10');

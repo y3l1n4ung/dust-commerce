@@ -6,7 +6,10 @@ extension CheckoutPayment on CheckoutViewModel {
   Future<bool> placeOrder() async {
     if (state.isBusy) return false;
     final cart = args.cart.state.cart;
-    if (state.paymentMethod == null || (cart == null && state.order == null)) {
+    if (!state.hasPaymentMethod) {
+      return _fail('Complete every checkout step before placing your order.');
+    }
+    if (cart == null && state.order == null) {
       return _fail('Complete every checkout step before placing your order.');
     }
     _set(state.copyWith(

@@ -102,7 +102,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         cart.cart?.cart.shippingMethod == null) {
       return 'delivery';
     }
-    if (requested == 'review' && checkout.paymentMethod == null) {
+    if (requested == 'review' && !checkout.hasPaymentMethod) {
       return 'payment';
     }
     return requested;

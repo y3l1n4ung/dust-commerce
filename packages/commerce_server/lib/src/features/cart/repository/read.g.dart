@@ -66,6 +66,11 @@ SELECT c.id, c.customer_id, c.email,
          WHERE method.cart_id = c.id
        ), 'null') AS shipping_method,
        coalesce((
+         SELECT json_object('provider_id', session.provider_id)
+         FROM cart_payment_sessions session
+         WHERE session.cart_id = c.id
+       ), 'null') AS payment_session,
+       coalesce((
          SELECT json_object(
            'first_name', address.first_name,
            'last_name', address.last_name,

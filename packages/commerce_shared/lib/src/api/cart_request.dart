@@ -142,6 +142,22 @@ class ChooseShippingBody with _$ChooseShippingBody {
   final String optionId;
 }
 
+/// The body of `POST /carts/{id}/payment-sessions`.
+@Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class ChoosePaymentBody with _$ChoosePaymentBody {
+  /// Creates an explicit payment-provider choice.
+  const ChoosePaymentBody({required this.providerId});
+
+  /// Creates a [ChoosePaymentBody] from JSON.
+  factory ChoosePaymentBody.fromJson(Map<String, Object?> json) =>
+      _$ChoosePaymentBodyFromJson(json);
+
+  /// Public provider identifier offered by this checkout.
+  @Validate(length: Length(min: 1), message: 'provider_id is required')
+  final String providerId;
+}
+
 /// The body of `POST /carts/{id}/promotions`.
 @Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)

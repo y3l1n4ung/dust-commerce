@@ -71,7 +71,7 @@ void main() {
     expect(await _saveAddress(model), isTrue);
     expect(await model.loadDelivery(), isTrue);
     expect(await model.chooseDelivery('ship_standard'), isTrue);
-    model.selectManualPayment();
+    expect(await model.selectManualPayment(), isTrue);
     expect(await model.placeOrder(), isTrue);
 
     final order = model.state.order!;
@@ -92,7 +92,7 @@ void main() {
     await _saveAddress(model);
     await model.loadDelivery();
     await model.chooseDelivery('ship_standard');
-    model.selectManualPayment();
+    expect(await model.selectManualPayment(), isTrue);
 
     expect(await model.placeOrder(), isFalse);
     final placedId = model.state.order!.id;
@@ -124,6 +124,18 @@ void main() {
     expect(restored.state.shipping.line1, '12 Analytical Way');
     expect(restored.state.shipping.countryCode, 'us');
     expect(restored.state.sameAsBilling, isTrue);
+  });
+
+  test('a new checkout restores the server-owned payment step', () async {
+    final first = checkout()..prepare();
+    await _saveAddress(first);
+    await first.chooseDelivery('ship_standard');
+    expect(await first.selectManualPayment(), isTrue);
+
+    final restored = checkout()..prepare();
+
+    expect(restored.state.isManualPaymentSelected, isTrue);
+    expect(restored.state.status, CheckoutStatus.ready);
   });
 
   test('customer identity prefills only proven contact email', () {

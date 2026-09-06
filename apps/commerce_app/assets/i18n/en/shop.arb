@@ -812,7 +812,7 @@
   "@checkout_phone": {
     "description": "Translation for `shop_checkout_phone`."
   },
-  "checkout_place_order": "Place Order",
+  "checkout_place_order": "Place order",
   "@checkout_place_order": {
     "description": "Translation for `shop_checkout_place_order`."
   },

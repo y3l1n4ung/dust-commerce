@@ -30,7 +30,8 @@ void main() {
     expect(
       tables,
       containsAll(<String>[
-        ...'carts cart_promotions cart_shipping_methods'.split(' '),
+        ...'carts cart_payment_sessions cart_promotions cart_shipping_methods'
+            .split(' '),
         ...'customers admin_users auth_identity auth_tokens'.split(' '),
         ...'line_items order_addresses order_items orders'.split(' '),
         ...'product_options product_option_values'.split(' '),

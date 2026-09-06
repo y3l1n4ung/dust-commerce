@@ -22,7 +22,7 @@ final class CheckoutPaymentSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final selected = state.paymentMethod == 'manual';
+    final selected = state.isManualPaymentSelected;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -55,7 +55,7 @@ final class CheckoutPaymentSection extends StatelessWidget {
             child: InkWell(
               onTap: state.isBusy
                   ? null
-                  : context.readCheckoutViewModel().selectManualPayment,
+                  : () => context.readCheckoutViewModel().selectManualPayment(),
               borderRadius: BorderRadius.circular(8),
               child: Padding(
                 padding:
