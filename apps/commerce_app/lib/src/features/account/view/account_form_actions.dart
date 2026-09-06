@@ -31,7 +31,7 @@ class _AccountFormActions extends StatelessWidget {
             Text(
               context.tr(
                 'shop_account_terms',
-                defaultText: 'By creating an account, you agree to our '
+                defaultText: "By creating an account, you agree to Morrow's "
                     'Privacy Policy and Terms of Use.',
               ),
               textAlign: TextAlign.center,
@@ -44,6 +44,11 @@ class _AccountFormActions extends StatelessWidget {
           const SizedBox(height: 24),
           FilledButton(
             onPressed: busy ? null : onSubmit,
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(40),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: VisualDensity.standard,
+            ),
             child: busy
                 ? const SizedBox.square(
                     dimension: 18,
@@ -83,7 +88,9 @@ class _AccountFormActions extends StatelessWidget {
               TextButton(
                 onPressed: busy ? null : onToggle,
                 style: TextButton.styleFrom(
+                  minimumSize: Size.zero,
                   padding: const EdgeInsets.symmetric(horizontal: 4),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textStyle: const TextStyle(
                     fontSize: 12,
                     decoration: TextDecoration.underline,
@@ -100,6 +107,10 @@ class _AccountFormActions extends StatelessWidget {
                           defaultText: 'Join us',
                         ),
                 ),
+              ),
+              const Text(
+                '.',
+                style: TextStyle(fontSize: 12),
               ),
             ],
           ),

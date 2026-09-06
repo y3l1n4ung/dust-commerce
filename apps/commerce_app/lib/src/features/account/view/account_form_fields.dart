@@ -92,7 +92,7 @@ class _AccountFormFields extends StatelessWidget {
                       defaultText: 'Show password',
                     ),
               icon: Icon(
-                showPassword ? Icons.visibility_off : Icons.visibility,
+                showPassword ? Icons.visibility : Icons.visibility_off,
                 size: 18,
               ),
             ),
@@ -119,15 +119,35 @@ class _AccountFormFields extends StatelessWidget {
         obscureText: obscureText,
         obscuringCharacter: '•',
         decoration: InputDecoration(
-          labelText: required ? '$label *' : label,
+          label: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text: label),
+                if (required)
+                  const TextSpan(
+                    text: '*',
+                    style: TextStyle(color: StoreColors.rose),
+                  ),
+              ],
+            ),
+          ),
           suffixIcon: suffixIcon,
+          suffixIconConstraints: const BoxConstraints(
+            minWidth: 48,
+            minHeight: 44,
+          ),
           filled: true,
           fillColor: StoreColors.subtle,
-          border: const OutlineInputBorder(),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: StoreColors.border),
+          isDense: true,
+          constraints: const BoxConstraints(minHeight: 44),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
           ),
-          contentPadding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: const BorderSide(color: StoreColors.border),
+          ),
+          contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
         ),
       );
 

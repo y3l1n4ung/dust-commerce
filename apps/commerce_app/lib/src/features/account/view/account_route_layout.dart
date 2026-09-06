@@ -36,7 +36,7 @@ final class AccountRouteLayout extends StatelessWidget {
           children: [
             Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1024),
+                constraints: const BoxConstraints(maxWidth: 1040),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Column(

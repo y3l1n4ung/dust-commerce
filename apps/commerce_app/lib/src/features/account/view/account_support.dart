@@ -18,7 +18,11 @@ class AccountSupport extends StatelessWidget {
                 const TranslatedText(
                   'shop_account_questions',
                   defaultText: 'Got questions?',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 24,
+                    height: 1.5,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -27,6 +31,7 @@ class AccountSupport extends StatelessWidget {
                     defaultText: 'You can find frequently asked questions and '
                         'answers on our customer service page.',
                   ),
+                  style: const TextStyle(fontSize: 16, height: 1.5),
                 ),
               ],
             ),
