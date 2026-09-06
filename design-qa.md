@@ -194,9 +194,11 @@ The checkout pair confirms the compact address geometry, country placeholder,
 billing toggle, Continue action, step dividers and initial delivery state. The
 local server-backed journey additionally proves Standard delivery, Manual
 Payment and Review with authoritative totals. It deliberately stopped before
-Place Order. The reference's delivery mutation failed, so no live
-payment/review match is asserted. The desktop pass confirms the complete back
-label, 24px semibold summary heading, source-spaced dividers, right-aligned
+Place order. Manual Payment is now retained on the server-owned cart; a hard
+reload at `/checkout?step=review` restored the same URL, collapsed payment
+summary and active Review action. The reference's delivery mutation failed, so
+no live payment/review visual match is asserted. The desktop pass confirms the
+complete back label, 24px semibold summary heading, source-spaced dividers, right-aligned
 quantity/unit price, and final totals rule. A browser-only CORS failure on the
 new address PUT was found and fixed before the successful Delivery transition;
 hard reload then reproduced the same collapsed address state.
@@ -293,6 +295,14 @@ controls still require focused captures.
   corrected `1280 x 720` render also fixes the truncated back label, oversized
   cart heading, excess divider spacing, and non-source line-price layout. A
   hard reload at Delivery preserves the collapsed server-owned address step.
+- Source inspection then exposed a functional reload gap that screenshots did
+  not: the pinned Payment component derives its selected provider from the
+  cart's pending payment session, while Flutter held `manual` only in memory.
+  The generated client now selects an allowlisted server session through the
+  guarded cart route, checkout refuses an unselected provider, and a settled
+  release-mode browser pass proves Review survives a hard reload with the
+  source-exact `Place order` action. A same-state rendered pair remains blocked
+  by the live reference's failing Standard-delivery mutation.
 
 **Implementation checklist**
 

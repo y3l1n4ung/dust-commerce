@@ -28,7 +28,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `shipping/components/free-shipping-price-nudge` | global shipping progress popup | implemented in #21 with API-backed item-total rules, session dismissal, source actions, server-enforced eligibility, and source-timed unlocked feedback; local threshold interactions pass, while matched source rendering awaits a conditional source price |
 | `cart/templates` and `layout/components/cart-mismatch-banner` | cart route and ownership recovery | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, explicit applied-promotion responses, authoritative totals, session-aware sign-in prompt, authenticated guest-cart transfer, global retry banner and checkout handoff; the desktop empty/populated states and open promotion form passed rendered source comparison, while compact, shipping and source promotion-success QA remain |
 | `account/templates` | account shell and session | implemented in #20 and #26 with secure session, source-exact four-part overview completion, saved-address count, latest-five order links, profile name/phone/billing/password editing, API-backed address book, source-shaped navigation, order list and guarded order detail; signed-out desktop sign-in and registration passed rendered comparison, while compact, authenticated and real support/policy destinations remain |
-| `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, server-retained address progress, delivery, manual-payment, review and confirmation steps; guest address passed compact and desktop rendered comparison, and a hard reload retained the delivery step, while live authenticated source, payment/review and confirmation QA remain |
+| `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, server-retained address and payment progress, delivery, manual-payment, review and confirmation steps; guest address passed compact and desktop rendered comparison, and hard reloads retain both Delivery and Review, while live authenticated source, payment/review and confirmation visual QA remain |
 | `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards, guarded frozen order details, transfer request/decision UI, and the secure order-transfer API/client are implemented; the decision page passed rendered source comparison, while authenticated account-form QA, contact and return flows remain |
 | `regions` store API | account, checkout and storefront country selection | implemented with explicit SQLx response allowlists; selectors use active backend regions rather than hard-coded countries |
 | categories and collections routes | product organisation | implemented in #18 with real API metadata, filtering, hierarchy, sorting and paging; the compact collection grid and shared footer passed rendered comparison, while exact nested category paths wait on `dust#542` |
@@ -174,6 +174,21 @@ and optional billing values. Authenticated requests take their email from the
 proven bearer identity attached by Dio. Cart reads expose only the public
 address allowlist through direct typed SQLx row decoding, so a new checkout
 view model restores the exact server-owned step after a browser reload.
+
+Payment selection follows the pinned DTC source's durable boundary rather than
+remaining local widget state. Medusa derives `selectedPaymentMethod` from the
+cart's pending payment session and initiates a session before navigating to
+Review. Here the one-shot reversible `cart_payment_sessions` migration owns one
+provider choice per cart, with database-generated UTC timestamps and an
+automatic `updated_at` trigger. The guarded
+`POST /store/carts/{id}/payment-sessions` accepts only the currently offered
+manual provider, upserts idempotently, and returns the authoritative cart. Cart
+queries decode an explicit one-field `CartPaymentSession` allowlist directly
+from SQLx; no provider secret or internal adapter state is disclosed. Flutter
+keeps the optional selection as `Option<String>`, hydrates it from the cart,
+and a hard browser reload at `?step=review` now restores Review instead of
+falling back to Payment. Order placement also rejects carts that bypassed the
+selection endpoint.
 
 The storefront country control follows Medusa's source data flow rather than
 being a display-only currency toggle. It derives an alphabetized country list

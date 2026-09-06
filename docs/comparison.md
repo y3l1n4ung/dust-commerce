@@ -18,9 +18,9 @@ payment, and a basic customer account.
 
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
-| Schema | modular PostgreSQL schemas | 32 SQLite tables |
-| Admin API | broad modular API | isolated identity/session slice (3 operations) |
-| Store operations | broad Store API | 36 method/path operations |
+| Schema | modular PostgreSQL schemas | 33 SQLite tables |
+| Admin API | broad modular API | isolated identity and product-detail slices (6 operations) |
+| Store operations | broad Store API | 37 method/path operations |
 | Workflow engine and plugins | yes | none |
 | Admin dashboard | broad operational UI | authenticated shell only |
 
