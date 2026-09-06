@@ -7,15 +7,15 @@ final class AdminProductGeneralSection extends StatelessWidget {
   /// Creates the general detail section.
   const AdminProductGeneralSection({
     required this.product,
-    required this.onUnavailable,
+    required this.onEdit,
     super.key,
   });
 
   /// Complete admin product allowlist.
   final AdminProductDetail product;
 
-  /// Reports controls whose write API is not implemented yet.
-  final VoidCallback onUnavailable;
+  /// Opens the supported general-details editor.
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) => Material(
@@ -41,7 +41,22 @@ final class AdminProductGeneralSection extends StatelessWidget {
                   ),
                   _ProductStatus(value: product.status),
                   const SizedBox(width: 8),
-                  adminSectionAction(onUnavailable),
+                  PopupMenuButton<void>(
+                    tooltip: 'Product actions',
+                    icon: const Icon(Icons.more_horiz_rounded, size: 18),
+                    itemBuilder: (context) => [
+                      PopupMenuItem<void>(
+                        onTap: onEdit,
+                        child: const Row(
+                          children: [
+                            Icon(Icons.edit_outlined, size: 17),
+                            SizedBox(width: 10),
+                            Text('Edit'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -51,12 +66,20 @@ final class AdminProductGeneralSection extends StatelessWidget {
               value: adminDetailText(context, product.description),
             ),
             AdminProductDetailRow(
+              label: 'Subtitle',
+              value: adminDetailText(context, product.subtitle),
+            ),
+            AdminProductDetailRow(
               label: 'Handle',
               value: adminDetailText(context, '/${product.handle}'),
             ),
             AdminProductDetailRow(
               label: 'Material',
               value: adminDetailText(context, product.material),
+            ),
+            AdminProductDetailRow(
+              label: 'Discountable',
+              value: Text(product.discountable ? 'True' : 'False'),
             ),
           ],
         ),

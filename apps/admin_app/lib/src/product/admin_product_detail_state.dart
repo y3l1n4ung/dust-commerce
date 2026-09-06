@@ -14,6 +14,9 @@ enum AdminProductDetailStatus {
   /// The requested detail is ready.
   ready,
 
+  /// A merchant update is being persisted.
+  saving,
+
   /// The request failed with display-safe copy.
   failed,
 }
@@ -36,4 +39,7 @@ final class AdminProductDetailState with _$AdminProductDetailState {
 
   /// Current request lifecycle.
   final AdminProductDetailStatus status;
+
+  /// Whether the general-details drawer must disable mutation controls.
+  bool get isSaving => status == AdminProductDetailStatus.saving;
 }

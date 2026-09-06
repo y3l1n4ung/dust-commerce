@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:admin_app/src/product/admin_product_edit_drawer.dart';
 import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
+import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/product/detail/admin_product_general_section.dart';
 import 'package:admin_app/src/product/detail/admin_product_media_section.dart';
 import 'package:admin_app/src/product/detail/admin_product_option_section.dart';
@@ -73,11 +77,20 @@ final class _DetailBody extends StatelessWidget {
           ),
         );
 
+    Future<void> editGeneral() async {
+      final saved = await showAdminProductEditDrawer(context, product);
+      if (saved != true || !context.mounted) return;
+      unawaited(context.readAdminProductViewModel().load());
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Product updated.')),
+      );
+    }
+
     final main = Column(
       children: [
         AdminProductGeneralSection(
           product: product,
-          onUnavailable: unavailable,
+          onEdit: editGeneral,
         ),
         const SizedBox(height: 12),
         AdminProductMediaSection(

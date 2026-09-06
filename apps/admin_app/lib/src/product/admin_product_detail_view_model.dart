@@ -1,5 +1,6 @@
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/product/admin_product_detail_state.dart';
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
@@ -51,6 +52,50 @@ final class AdminProductDetailViewModel extends $AdminProductDetailViewModel {
       _fail('Unable to load this product. Try again.');
     }
   }
+
+  /// Replaces supported general fields and publishes the refreshed response.
+  Future<bool> update(String id, AdminUpdateProduct input) async {
+    final current = state.product;
+    emit(AdminProductDetailState(
+      status: AdminProductDetailStatus.saving,
+      product: current,
+    ));
+    try {
+      final product = await args.api.updateProduct(id, input);
+      emit(AdminProductDetailState(
+        status: AdminProductDetailStatus.ready,
+        product: Some(product),
+      ));
+      return true;
+    } on DioException catch (error) {
+      final message = switch (error.response?.statusCode) {
+        409 => 'This handle is already in use.',
+        422 => 'Check the product details and try again.',
+        404 => 'This product no longer exists.',
+        401 => 'Your admin session has expired.',
+        _ => 'Unable to save this product. Try again.',
+      };
+      emit(AdminProductDetailState(
+        status: AdminProductDetailStatus.ready,
+        product: current,
+        failure: Some(message),
+      ));
+      return false;
+    } on Object {
+      emit(AdminProductDetailState(
+        status: AdminProductDetailStatus.ready,
+        product: current,
+        failure: const Some('Unable to save this product. Try again.'),
+      ));
+      return false;
+    }
+  }
+
+  /// Clears a drawer-scoped failure without discarding loaded product data.
+  void clearFailure() => emit(AdminProductDetailState(
+        status: state.status,
+        product: state.product,
+      ));
 
   void _fail(String message) => emit(AdminProductDetailState(
         status: AdminProductDetailStatus.failed,

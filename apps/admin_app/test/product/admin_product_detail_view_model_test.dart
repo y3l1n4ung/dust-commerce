@@ -75,4 +75,55 @@ void main() {
       const Some('This product no longer exists.'),
     );
   });
+
+  test('publishes refreshed detail after a successful update', () async {
+    await detail.load('prod_sweatpants');
+
+    final saved = await detail.update(
+      'prod_sweatpants',
+      const AdminUpdateProduct(
+        status: AdminProductLifecycle.draft,
+        title: 'Everyday Trousers',
+        handle: 'everyday-trousers',
+        subtitle: 'A softer name',
+        material: 'Cotton twill',
+        description: 'Built for daily wear.',
+        discountable: false,
+      ),
+    );
+
+    expect(saved, isTrue);
+    expect(detail.state.status, AdminProductDetailStatus.ready);
+    final product = (detail.state.product as Some<AdminProductDetail>).value;
+    expect(product.title, 'Everyday Trousers');
+    expect(product.handle, 'everyday-trousers');
+    expect(product.status, AdminProductLifecycle.draft);
+    expect(product.subtitle, 'A softer name');
+    expect(product.discountable, isFalse);
+    expect(detail.state.failure, const None<String>());
+  });
+
+  test('keeps loaded detail and exposes a typed conflict failure', () async {
+    await detail.load('prod_sweatpants');
+
+    final saved = await detail.update(
+      'prod_sweatpants',
+      const AdminUpdateProduct(
+        status: AdminProductLifecycle.published,
+        title: 'Relaxed Sweatpants',
+        handle: 't-shirt',
+        material: 'Cotton',
+        description: 'Must not persist.',
+        discountable: true,
+      ),
+    );
+
+    expect(saved, isFalse);
+    expect(detail.state.status, AdminProductDetailStatus.ready);
+    expect(detail.state.product, isA<Some<AdminProductDetail>>());
+    expect(
+      detail.state.failure,
+      const Some('This handle is already in use.'),
+    );
+  });
 }
