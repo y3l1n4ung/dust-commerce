@@ -8,6 +8,7 @@ import 'package:dust_flutter/state.dart';
 
 part 'cart_view_model.g.dart';
 part 'cart_mutations.dart';
+part 'cart_restore.dart';
 part 'cart_transfer.dart';
 
 /// Dependencies for the storefront cart.
@@ -16,6 +17,7 @@ final class CartViewModelArgs extends ViewModelArgs {
   const CartViewModelArgs({
     required this.api,
     required this.cartIds,
+    required this.selectedRegion,
     this.storageScope = 'guest',
     super.observer,
   });
@@ -25,6 +27,9 @@ final class CartViewModelArgs extends ViewModelArgs {
 
   /// Secure persistence for the opaque cart capability.
   final CartIdStore cartIds;
+
+  /// Current shell region used for restores and new cart creation.
+  final Option<Region> Function() selectedRegion;
 
   /// Separates guest and authenticated customer carts.
   final String storageScope;
@@ -43,60 +48,18 @@ class CartViewModel extends $CartViewModel {
   @override
   Future<void> onInit() => restore();
 
-  /// Restores the cart capability and refreshes it from the server.
-  Future<void> restore({bool force = false}) {
-    final active = _restoreTask;
-    if (active != null) return active;
-    if (!force &&
-        (state.status == CartStatus.loading ||
-            state.status == CartStatus.ready)) {
-      return Future<void>.value();
-    }
-    final task = _restore();
-    _restoreTask = task;
-    return task.whenComplete(() => _restoreTask = null);
-  }
-
-  Future<void> _restore() async {
-    emit(const CartState(
-      status: CartStatus.loading,
-      operation: CartOperation.restore,
-    ));
-    try {
-      final id = await args.cartIds.read(args.storageScope);
-      if (id == null) {
-        emit(const CartState(status: CartStatus.ready));
-        return;
-      }
-      await _succeed(await args.api.cart(id));
-    } on DioException catch (error) {
-      if (error.response?.statusCode == 404) {
-        await args.cartIds.clear(args.storageScope);
-        emit(const CartState(status: CartStatus.ready));
-        return;
-      }
-      _fail(CartOperation.restore, error);
-    } on Object catch (error) {
-      _fail(CartOperation.restore, error);
-    }
-  }
-
-  /// Clears the completed cart locally without making order success fragile.
-  Future<void> finishCheckout() async {
-    try {
-      await args.cartIds.clear(args.storageScope);
-    } finally {
-      emit(const CartState(status: CartStatus.ready));
-    }
-  }
-
   /// Adds one selected variant, creating and persisting a cart when needed.
   Future<bool> add(ProductVariant variant) async {
     if (!_begin(CartOperation.add)) return false;
     var current = state.cart;
     try {
       if (current == null) {
-        current = await args.api.createCart();
+        current = await args.api.createCart(CreateCartBody(
+          regionId: args.selectedRegion().match(
+                some: (region) => region.id,
+                none: () => null,
+              ),
+        ));
         await args.cartIds.write(args.storageScope, current.cart.id);
       }
       return _succeed(
@@ -125,20 +88,26 @@ class CartViewModel extends $CartViewModel {
     return true;
   }
 
-  Future<bool> _succeed(CartView cart) async {
+  Future<bool> _succeed(
+    CartView cart, {
+    bool resetShippingOptions = false,
+  }) async {
     final sameCart = state.cart?.cart.id == cart.cart.id;
     emit(CartState(
       status: CartStatus.ready,
       cart: cart,
-      shippingOptions: sameCart ? state.shippingOptions : const [],
+      shippingOptions:
+          sameCart && !resetShippingOptions ? state.shippingOptions : const [],
       transferFailure: const None(),
       dismissedFreeShippingCartId: state.dismissedFreeShippingCartId,
     ));
-    if (!sameCart || state.shippingOptions.isEmpty) {
+    if (!sameCart || resetShippingOptions || state.shippingOptions.isEmpty) {
       await _loadShippingOptionsFor(cart);
     }
     return true;
   }
+
+  void _setState(CartState next) => emit(next);
 
   Future<void> _loadShippingOptionsFor(CartView cart) async {
     try {

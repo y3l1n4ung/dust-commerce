@@ -12,6 +12,7 @@ void main() {
   late CommerceDatabase database;
   late TestClient server;
   late CommerceApi api;
+  late _MemoryCountryPreferenceStore countries;
   late StoreShellViewModel viewModel;
 
   setUp(() async {
@@ -23,7 +24,10 @@ void main() {
     await seedDevelopmentStore(database);
     server = await TestClient.serve(buildApp(database));
     api = CommerceApi(Dio(), baseUrl: server.origin);
-    viewModel = StoreShellViewModel(StoreShellViewModelArgs(api: api));
+    countries = _MemoryCountryPreferenceStore();
+    viewModel = StoreShellViewModel(
+      StoreShellViewModelArgs(api: api, countries: countries),
+    );
   });
 
   tearDown(() async {
@@ -47,11 +51,29 @@ void main() {
           .map((category) => category.name),
       ['Shirts', 'Sweatshirts', 'Pants', 'Merch'],
     );
+    expect(viewModel.state.regions, hasLength(2));
+    expect(viewModel.state.selectedCountryCode, const Some('dk'));
+    expect(viewModel.state.currencyCode, 'eur');
+  });
+
+  test('restores and persists a valid country choice', () async {
+    countries.value = const Some('us');
+
+    await viewModel.load();
+    expect(viewModel.state.selectedCountryCode, const Some('us'));
+    expect(viewModel.state.currencyCode, 'usd');
+
+    await viewModel.selectCountry('dk');
+    expect(viewModel.state.selectedCountryCode, const Some('dk'));
+    expect(countries.value, const Some('dk'));
   });
 
   test('one unavailable footer column does not hide the other', () async {
     final resilient = StoreShellViewModel(
-      StoreShellViewModelArgs(api: _CollectionFailureApi(api)),
+      StoreShellViewModelArgs(
+        api: _CollectionFailureApi(api),
+        countries: countries,
+      ),
     );
     addTearDown(resilient.dispose);
 
@@ -61,6 +83,18 @@ void main() {
     expect(resilient.state.collections, isEmpty);
     expect(resilient.state.categories, isNotEmpty);
   });
+}
+
+final class _MemoryCountryPreferenceStore implements CountryPreferenceStore {
+  Option<String> value = const None();
+
+  @override
+  Future<Option<String>> read() async => value;
+
+  @override
+  Future<void> write(String countryCode) async {
+    value = Some(countryCode);
+  }
 }
 
 final class _CollectionFailureApi implements CommerceApi {
@@ -83,6 +117,9 @@ final class _CollectionFailureApi implements CommerceApi {
     int? offset,
   }) =>
       Future.error(Exception('collections unavailable'));
+
+  @override
+  Future<SellingRegionListView> regions() => delegate.regions();
 
   @override
   Object? noSuchMethod(Invocation invocation) =>

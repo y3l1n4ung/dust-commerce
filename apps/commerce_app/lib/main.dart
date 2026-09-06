@@ -9,6 +9,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
+part 'src/app/view_model_scopes.dart';
+
 /// Runs the storefront.
 ///
 /// The API base URL is compile-time configurable so the same build can point
@@ -31,6 +33,7 @@ void main() {
       child: CommerceApp(
         api: CommerceApi(dio, baseUrl: baseUrl),
         sessions: sessions,
+        countries: SecureCountryPreferenceStore(),
         initialLocation: kIsWeb
             ? Uri.base
             : Uri.parse(
@@ -47,6 +50,7 @@ class CommerceApp extends StatefulWidget {
   const CommerceApp({
     required this.api,
     required this.sessions,
+    required this.countries,
     required this.initialLocation,
     super.key,
   });
@@ -56,6 +60,9 @@ class CommerceApp extends StatefulWidget {
 
   /// Secure customer-session persistence shared with Dio authorization.
   final AuthSessionStore sessions;
+
+  /// Persisted country selection shared by storefront routes.
+  final CountryPreferenceStore countries;
 
   /// Browser or platform location captured before the router can normalize it.
   final Uri initialLocation;
@@ -92,8 +99,18 @@ class _CommerceAppState extends State<CommerceApp> {
     _orderDetail = AccountOrderDetailViewModel(
       AccountOrderDetailViewModelArgs(api: widget.api),
     );
+    _shell = StoreShellViewModel(
+      StoreShellViewModelArgs(
+        api: widget.api,
+        countries: widget.countries,
+      ),
+    );
     _cart = CartViewModel(
-      CartViewModelArgs(api: widget.api, cartIds: SecureCartIdStore()),
+      CartViewModelArgs(
+        api: widget.api,
+        cartIds: SecureCartIdStore(),
+        selectedRegion: () => _shell.state.selectedRegion,
+      ),
     );
     _checkout = CheckoutViewModel(
       CheckoutViewModelArgs(
@@ -104,18 +121,18 @@ class _CommerceAppState extends State<CommerceApp> {
       ),
     );
     _account.addListener(_onAccountIdentityChanged);
-    _shell = StoreShellViewModel(StoreShellViewModelArgs(api: widget.api));
-    unawaited(_shell.load());
     _router = CommerceRouter(
       initialLocation: widget.initialLocation,
       account: _account,
       cart: _cart,
     );
-    // Let Dust's initial refresh settle before an async deep-link guard runs.
     _routerConfig = _router.config;
-    Future<void>.microtask(() {
-      if (mounted) setState(() => _routerReady = true);
-    });
+    unawaited(_prepareStorefront());
+  }
+
+  Future<void> _prepareStorefront() async {
+    await _shell.load();
+    if (mounted) setState(() => _routerReady = true);
   }
 
   @override
@@ -148,39 +165,16 @@ class _CommerceAppState extends State<CommerceApp> {
       routerConfig: _routerConfig,
     );
 
-    return AccountViewModelScope.value(
-      value: _account,
-      child: AddressBookViewModelScope.value(
-        value: _addresses,
-        child: AccountOrderDetailViewModelScope.value(
-          value: _orderDetail,
-          child: AccountOrdersViewModelScope.value(
-            value: _orders,
-            child: CartViewModelScope.value(
-              value: _cart,
-              child: CheckoutViewModelScope.value(
-                value: _checkout,
-                child: ProductViewModelScope(
-                  args: (_) => ProductViewModelArgs(api: widget.api),
-                  create: (_, args) => ProductViewModel(args),
-                  child: CatalogViewModelScope(
-                    args: (_) => CatalogViewModelArgs(api: widget.api),
-                    create: (_, args) => CatalogViewModel(args),
-                    child: ProductListingViewModelScope(
-                      args: (_) => ProductListingViewModelArgs(api: widget.api),
-                      create: (_, args) => ProductListingViewModel(args),
-                      child: StoreShellViewModelScope.value(
-                        value: _shell,
-                        child: app,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+    return _storefrontScopes(
+      api: widget.api,
+      account: _account,
+      addresses: _addresses,
+      orderDetail: _orderDetail,
+      orders: _orders,
+      cart: _cart,
+      checkout: _checkout,
+      shell: _shell,
+      child: app,
     );
   }
 

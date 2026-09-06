@@ -58,6 +58,20 @@ void main() {
     expect(product.state.selectedVariant?.id, 'var_tshirt_l_black');
   });
 
+  test('product details load prices in the selected region currency', () async {
+    final product = ProductViewModel(ProductViewModelArgs(api: api));
+
+    await product.load('t-shirt', currency: 'eur');
+
+    expect(product.state.currencyCode, 'eur');
+    expect(
+      product.state.product!.variants.every(
+        (variant) => variant.prices.single.currencyCode == 'eur',
+      ),
+      isTrue,
+    );
+  });
+
   test('related products come from the API and exclude the current item',
       () async {
     final product = ProductViewModel(ProductViewModelArgs(api: api));
@@ -127,7 +141,11 @@ void main() {
   test('selected variant creates a server cart and line item', () async {
     final product = await api.product('t-shirt', currency: 'usd');
     final cart = CartViewModel(
-      CartViewModelArgs(api: api, cartIds: _MemoryCartIdStore()),
+      CartViewModelArgs(
+        api: api,
+        cartIds: _MemoryCartIdStore(),
+        selectedRegion: () => const None(),
+      ),
     );
     final small = product.variants.firstWhere(
       (variant) => variant.id == 'var_tshirt_s_black',

@@ -19,26 +19,34 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  String? _currency;
+
   @override
-  void initState() {
-    super.initState();
-    _loadAfterFrame();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final currency = context.watchStoreShellViewModel().value.currencyCode;
+    if (_currency == currency) return;
+    _currency = currency;
+    _loadAfterFrame(currency);
   }
 
   @override
   void didUpdateWidget(ProductPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.handle != widget.handle) {
-      _loadAfterFrame();
+      _loadAfterFrame(
+        _currency ?? context.readStoreShellViewModel().state.currencyCode,
+      );
     }
   }
 
-  void _loadAfterFrame() {
+  void _loadAfterFrame(String currency) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         unawaited(
           context.readProductViewModel().load(
                 widget.handle,
+                currency: currency,
                 variantId: context.productVariantId,
               ),
         );

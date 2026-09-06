@@ -3,6 +3,8 @@ import 'package:commerce_app/route.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+import '../features/shell/view/country_select.dart';
+
 /// The navigation shell translated from Medusa DTC Nav and SideMenu.
 class StoreScaffold extends StatelessWidget {
   /// Creates the shared storefront shell.
@@ -129,6 +131,8 @@ class _StoreMenu extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
+                const StoreCountrySelect(),
+                const SizedBox(height: 16),
                 Text(
                   '© ${DateTime.now().year} Morrow',
                   style: const TextStyle(color: Colors.white70),

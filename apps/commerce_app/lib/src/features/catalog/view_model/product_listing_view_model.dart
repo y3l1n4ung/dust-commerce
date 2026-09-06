@@ -31,14 +31,23 @@ class ProductListingViewModel extends $ProductListingViewModel {
     int page = 1,
     String sortBy = 'created_at',
     List<String> optionValueIds = const [],
+    String currency = 'usd',
   }) async {
     final selected = normalizedOptionValueIds(optionValueIds);
     final meta = _ListingMeta(
-      requestKey: listingRequestKey('store', '', page, sortBy, selected),
+      requestKey: listingRequestKey(
+        'store',
+        '',
+        page,
+        sortBy,
+        selected,
+        currency,
+      ),
       title: 'All products',
       page: page < 1 ? 1 : page,
       sortBy: normalizedProductSort(sortBy),
       selectedOptionValueIds: selected,
+      currencyCode: currency,
     );
     final revision = _begin(meta);
     await _loadProducts(
@@ -54,6 +63,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
     int page = 1,
     String sortBy = 'created_at',
     List<String> optionValueIds = const [],
+    String currency = 'usd',
   }) async {
     final selected = normalizedOptionValueIds(optionValueIds);
     final meta = _ListingMeta(
@@ -63,12 +73,14 @@ class ProductListingViewModel extends $ProductListingViewModel {
         page,
         sortBy,
         selected,
+        currency,
       ),
       title: '',
       page: page < 1 ? 1 : page,
       sortBy: normalizedProductSort(sortBy),
       collection: Some(handle),
       selectedOptionValueIds: selected,
+      currencyCode: currency,
     );
     final revision = _begin(meta);
     try {
@@ -90,6 +102,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
     int page = 1,
     String sortBy = 'created_at',
     List<String> optionValueIds = const [],
+    String currency = 'usd',
   }) async {
     final selected = normalizedOptionValueIds(optionValueIds);
     final meta = _ListingMeta(
@@ -99,12 +112,14 @@ class ProductListingViewModel extends $ProductListingViewModel {
         page,
         sortBy,
         selected,
+        currency,
       ),
       title: '',
       page: page < 1 ? 1 : page,
       sortBy: normalizedProductSort(sortBy),
       category: Some(handle),
       selectedOptionValueIds: selected,
+      currencyCode: currency,
     );
     final revision = _begin(meta);
     try {
@@ -169,21 +184,5 @@ class ProductListingViewModel extends $ProductListingViewModel {
     }
   }
 
-  int _begin(_ListingMeta meta) {
-    final revision = ++_revision;
-    emit(meta.toState(status: ProductListingStatus.loading));
-    return revision;
-  }
-
-  bool _active(int revision) => revision == _revision;
-
-  void _missing(_ListingMeta meta) =>
-      emit(meta.toState(status: ProductListingStatus.missing));
-
-  void _fail(_ListingMeta meta, int revision) {
-    if (!_active(revision)) return;
-    emit(meta.toState(
-      status: ProductListingStatus.failed,
-    ));
-  }
+  void _setState(ProductListingState next) => emit(next);
 }

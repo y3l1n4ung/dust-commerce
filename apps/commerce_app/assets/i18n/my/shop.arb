@@ -1,6 +1,30 @@
 {
   "@@locale": "my",
   "@@context": "Translations for `shop` namespace.",
+  "shipping_to": "ပို့ဆောင်မည့် နိုင်ငံ:",
+  "@shipping_to": {
+    "description": "Country selector label in the store menu."
+  },
+  "country_change_failed": "ပို့ဆောင်မည့်နိုင်ငံကို မပြောင်းနိုင်ပါ။",
+  "@country_change_failed": {
+    "description": "Retryable selling-country change failure."
+  },
+  "country_denmark": "ဒိန်းမတ်",
+  "@country_denmark": {"description": "Country display name."},
+  "country_france": "ပြင်သစ်",
+  "@country_france": {"description": "Country display name."},
+  "country_germany": "ဂျာမနီ",
+  "@country_germany": {"description": "Country display name."},
+  "country_italy": "အီတလီ",
+  "@country_italy": {"description": "Country display name."},
+  "country_spain": "စပိန်",
+  "@country_spain": {"description": "Country display name."},
+  "country_sweden": "ဆွီဒင်",
+  "@country_sweden": {"description": "Country display name."},
+  "country_united_kingdom": "ယူနိုက်တက်ကင်းဒမ်း",
+  "@country_united_kingdom": {"description": "Country display name."},
+  "country_united_states": "အမေရိကန်ပြည်ထောင်စု",
+  "@country_united_states": {"description": "Country display name."},
   "account_already_member": "အဖွဲ့ဝင် ဖြစ်ပြီးပြီလား။",
   "@account_already_member": {
     "description": "Prompt shown below registration."

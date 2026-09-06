@@ -103,7 +103,7 @@ void main() {
 
   group('the cart', () {
     test('is created, added to, and totalled by the server', () async {
-      final created = await api.createCart();
+      final created = await api.createCart(const CreateCartBody());
       expect(created.cart.isEmpty, isTrue);
 
       final withLine = await api.addLine(
@@ -119,7 +119,7 @@ void main() {
     });
 
     test('agrees with the domain model computing the same totals', () async {
-      final created = await api.createCart();
+      final created = await api.createCart(const CreateCartBody());
       final response = await api.addLine(
         created.cart.id,
         const AddLineBody(variantId: 'var_small', quantity: 3),
@@ -139,7 +139,7 @@ void main() {
 
   group('checkout', () {
     test('places an order the client decodes as the shared Order', () async {
-      final cart = await api.createCart();
+      final cart = await api.createCart(const CreateCartBody());
       await api.addLine(
         cart.cart.id,
         const AddLineBody(variantId: 'var_small', quantity: 2),
@@ -172,7 +172,7 @@ void main() {
     test('reads and lists only the authenticated customer order', () async {
       final authorization = 'Bearer ${await server.customerToken()}';
       dio.options.headers['authorization'] = authorization;
-      final cart = await api.createCart();
+      final cart = await api.createCart(const CreateCartBody());
       await api.addLine(
         cart.cart.id,
         const AddLineBody(variantId: 'var_small'),

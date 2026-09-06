@@ -2,6 +2,23 @@ part of 'cart_view_model.dart';
 
 /// Server-authoritative mutations kept beside the generated cart state owner.
 extension CartMutations on CartViewModel {
+  /// Moves the active cart to [regionId], accepting server repricing only.
+  Future<bool> changeRegion(String regionId) async {
+    final cart = state.cart;
+    if (cart == null || cart.cart.region.id == regionId) return true;
+    if (!_begin(CartOperation.region)) return false;
+    try {
+      final changed = await args.api.updateCartRegion(
+        cart.cart.id,
+        UpdateCartRegionBody(regionId: regionId),
+      );
+      return _succeed(changed, resetShippingOptions: true);
+    } on Object catch (error) {
+      _fail(CartOperation.region, error, cart: cart);
+      return false;
+    }
+  }
+
   /// Replaces one line quantity after the server rechecks inventory.
   Future<bool> updateQuantity(String lineId, int quantity) => _change(
         CartOperation.update,

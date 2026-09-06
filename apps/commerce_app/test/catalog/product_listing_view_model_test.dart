@@ -77,6 +77,18 @@ void main() {
     );
   });
 
+  test('currency is part of the listing request identity', () async {
+    await viewModel.loadCollection('summer');
+    final usdKey = viewModel.state.requestKey;
+
+    await viewModel.loadCollection('summer', currency: 'eur');
+
+    expect(viewModel.state.currencyCode, 'eur');
+    expect(viewModel.state.requestKey, isNot(usdKey));
+    expect(viewModel.state.products, hasLength(1));
+    expect(viewModel.state.products.single.cheapestIn('eur'), isNotNull);
+  });
+
   test('store exposes stable options and filters by selected values', () async {
     await viewModel.loadStore(optionValueIds: const ['optval_small']);
 

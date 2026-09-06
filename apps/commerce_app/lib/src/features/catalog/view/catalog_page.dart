@@ -19,11 +19,18 @@ class CatalogPage extends StatefulWidget {
 }
 
 class _CatalogPageState extends State<CatalogPage> {
+  String? _currency;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final currency = context.watchStoreShellViewModel().value.currencyCode;
+    if (_currency == currency) return;
+    _currency = currency;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) unawaited(context.readCatalogViewModel().load());
+      if (mounted) {
+        unawaited(context.readCatalogViewModel().load(currency: currency));
+      }
     });
   }
 

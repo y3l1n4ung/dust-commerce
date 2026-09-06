@@ -15,7 +15,7 @@ void main() {
   late TestClient server;
   late CommerceApi api;
   late MemoryAuthSessionStore sessions;
-  late _MemoryCartIdStore storage;
+  late MemoryCartIdStore storage;
 
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('cart_view_model');
@@ -29,7 +29,7 @@ void main() {
     final dio = Dio()
       ..interceptors.add(AuthorizationInterceptor(sessions: sessions));
     api = CommerceApi(dio, baseUrl: server.origin);
-    storage = _MemoryCartIdStore();
+    storage = MemoryCartIdStore();
   });
 
   tearDown(() async {
@@ -38,8 +38,14 @@ void main() {
     await directory.delete(recursive: true);
   });
 
-  CartViewModel model({String scope = 'guest'}) => CartViewModel(
-        CartViewModelArgs(api: api, cartIds: storage, storageScope: scope),
+  CartViewModel model({String scope = 'guest', Region? region}) =>
+      CartViewModel(
+        CartViewModelArgs(
+          api: api,
+          cartIds: storage,
+          selectedRegion: () => Some(region ?? _usRegion),
+          storageScope: scope,
+        ),
       );
 
   Future<ProductVariant> variant() async =>
@@ -196,23 +202,10 @@ void main() {
   });
 }
 
-final class _MemoryCartIdStore implements CartIdStore {
-  final Map<String, String> values = {};
-  Object? readError;
-
-  @override
-  Future<void> clear(String scope) async => values.remove(scope);
-
-  @override
-  Future<String?> read(String scope) async {
-    final error = readError;
-    readError = null;
-    if (error != null) throw error;
-    return values[scope];
-  }
-
-  @override
-  Future<void> write(String scope, String cartId) async {
-    values[scope] = cartId;
-  }
-}
+const _usRegion = Region(
+  id: 'reg_us',
+  name: 'United States',
+  currencyCode: 'usd',
+  taxRate: 1000,
+  countries: ['us'],
+);

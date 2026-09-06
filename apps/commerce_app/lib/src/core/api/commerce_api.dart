@@ -114,13 +114,20 @@ abstract interface class CommerceApi {
     @Query('currency') String? currency,
   });
 
-  /// Starts an empty cart.
+  /// Starts an empty cart in the selected selling region.
   @POST('/store/carts')
-  Future<CartView> createCart();
+  Future<CartView> createCart(@Body() CreateCartBody body);
 
   /// One cart with the totals the server computed.
   @GET('/store/carts/{id}')
   Future<CartView> cart(@Path() String id);
+
+  /// Reprices an active cart under another selling region.
+  @PATCH('/store/carts/{id}')
+  Future<CartView> updateCartRegion(
+    @Path() String id,
+    @Body() UpdateCartRegionBody body,
+  );
 
   /// Claims the current guest cart for the authenticated customer.
   @POST('/store/carts/{id}/transfer')

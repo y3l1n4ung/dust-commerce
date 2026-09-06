@@ -23,6 +23,8 @@ final class StoreShellState with _$StoreShellState {
     this.status = StoreShellStatus.idle,
     this.categories = const [],
     this.collections = const [],
+    this.regions = const [],
+    this.selectedCountryCode = const None(),
   });
 
   /// Active public category nodes, including direct children.
@@ -31,6 +33,39 @@ final class StoreShellState with _$StoreShellState {
   /// Active public collections in server display order.
   final List<ProductCollection> collections;
 
+  /// Active selling regions used by the source-shaped country selector.
+  final List<Region> regions;
+
+  /// Selected ISO country code, absent when region discovery failed.
+  final Option<String> selectedCountryCode;
+
   /// Current shared-navigation lifecycle.
   final StoreShellStatus status;
+
+  /// Selling region that serves the selected country.
+  Option<Region> get selectedRegion {
+    for (final region in regions) {
+      if (selectedCountryCode.match(
+        some: region.serves,
+        none: () => false,
+      )) {
+        return Some(region);
+      }
+    }
+    return const None();
+  }
+
+  /// Currency used by product requests until a region is available.
+  String get currencyCode => selectedRegion.match(
+        some: (region) => region.currencyCode,
+        none: () => 'usd',
+      );
+
+  /// Finds the region serving [countryCode].
+  Option<Region> regionForCountry(String countryCode) {
+    for (final region in regions) {
+      if (region.serves(countryCode)) return Some(region);
+    }
+    return const None();
+  }
 }

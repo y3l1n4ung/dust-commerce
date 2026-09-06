@@ -57,11 +57,19 @@ final class MemoryCartIdStore implements CartIdStore {
   /// Stored capabilities by account scope.
   final Map<String, String> values = {};
 
+  /// One failure injected into the next read.
+  Object? readError;
+
   @override
   Future<void> clear(String scope) async => values.remove(scope);
 
   @override
-  Future<String?> read(String scope) async => values[scope];
+  Future<String?> read(String scope) async {
+    final error = readError;
+    readError = null;
+    if (error != null) throw error;
+    return values[scope];
+  }
 
   @override
   Future<void> write(String scope, String cartId) async {
@@ -70,11 +78,19 @@ final class MemoryCartIdStore implements CartIdStore {
 }
 
 /// Creates an empty cart model for routing tests.
-CartViewModel testCart(CommerceApi api, {MemoryCartIdStore? storage}) =>
+CartViewModel testCart(
+  CommerceApi api, {
+  MemoryCartIdStore? storage,
+  Region? region,
+}) =>
     CartViewModel(
       CartViewModelArgs(
         api: api,
         cartIds: storage ?? MemoryCartIdStore(),
+        selectedRegion: () => switch (region) {
+          final selected? => Some(selected),
+          null => const None(),
+        },
       ),
     );
 

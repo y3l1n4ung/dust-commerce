@@ -15,6 +15,7 @@ part of 'store_shell_state.dart';
 
 const DeepCollectionEquality _storeShellStateCategoriesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _storeShellStateCollectionsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _storeShellStateRegionsEquality = DeepCollectionEquality();
 
 mixin _$StoreShellState {
   @override
@@ -23,6 +24,8 @@ mixin _$StoreShellState {
     return 'StoreShellState('
         'categories: ${self.categories}, '
         'collections: ${self.collections}, '
+        'regions: ${self.regions}, '
+        'selectedCountryCode: ${self.selectedCountryCode}, '
         'status: ${self.status}'
         ')';
   }
@@ -35,6 +38,8 @@ mixin _$StoreShellState {
             runtimeType == other.runtimeType &&
             _storeShellStateCategoriesEquality.equals(other.categories, self.categories) &&
             _storeShellStateCollectionsEquality.equals(other.collections, self.collections) &&
+            _storeShellStateRegionsEquality.equals(other.regions, self.regions) &&
+            other.selectedCountryCode == self.selectedCountryCode &&
             other.status == self.status;
   }
 
@@ -45,6 +50,8 @@ mixin _$StoreShellState {
       runtimeType,
       _storeShellStateCategoriesEquality.hash(self.categories),
       _storeShellStateCollectionsEquality.hash(self.collections),
+      _storeShellStateRegionsEquality.hash(self.regions),
+      self.selectedCountryCode,
       self.status,
     ]);
   }
@@ -66,6 +73,8 @@ abstract class _$StoreShellStateCopyWith<$Res> {
   $Res call({
     List<ProductCategory>? categories,
     List<ProductCollection>? collections,
+    List<Region>? regions,
+    Option<String>? selectedCountryCode,
     StoreShellStatus? status,
   });
 }
@@ -82,6 +91,8 @@ final class _$StoreShellStateCopyWithImpl<$Res> implements _$StoreShellStateCopy
   $Res call({
     Object? categories = null,
     Object? collections = null,
+    Object? regions = null,
+    Object? selectedCountryCode = null,
     Object? status = null,
   }) {
     return _then(
@@ -89,6 +100,8 @@ final class _$StoreShellStateCopyWithImpl<$Res> implements _$StoreShellStateCopy
         status: status == null ? _self.status : status as StoreShellStatus,
         categories: categories == null ? _self.categories : categories as List<ProductCategory>,
         collections: collections == null ? _self.collections : collections as List<ProductCollection>,
+        regions: regions == null ? _self.regions : regions as List<Region>,
+        selectedCountryCode: selectedCountryCode == null ? _self.selectedCountryCode : selectedCountryCode as Option<String>,
       )
     );
   }

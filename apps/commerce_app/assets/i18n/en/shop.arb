@@ -1,6 +1,30 @@
 {
   "@@locale": "en",
   "@@context": "Translations for `shop` namespace.",
+  "shipping_to": "Shipping to:",
+  "@shipping_to": {
+    "description": "Country selector label in the store menu."
+  },
+  "country_change_failed": "Could not change shipping country.",
+  "@country_change_failed": {
+    "description": "Retryable selling-country change failure."
+  },
+  "country_denmark": "Denmark",
+  "@country_denmark": {"description": "Country display name."},
+  "country_france": "France",
+  "@country_france": {"description": "Country display name."},
+  "country_germany": "Germany",
+  "@country_germany": {"description": "Country display name."},
+  "country_italy": "Italy",
+  "@country_italy": {"description": "Country display name."},
+  "country_spain": "Spain",
+  "@country_spain": {"description": "Country display name."},
+  "country_sweden": "Sweden",
+  "@country_sweden": {"description": "Country display name."},
+  "country_united_kingdom": "United Kingdom",
+  "@country_united_kingdom": {"description": "Country display name."},
+  "country_united_states": "United States",
+  "@country_united_states": {"description": "Country display name."},
   "account_already_member": "Already a member?",
   "@account_already_member": {
     "description": "Prompt shown below registration."

@@ -31,7 +31,7 @@ void main() {
   });
 
   test('retries checkout and manual payment without duplicate work', () async {
-    final cart = await api.createCart();
+    final cart = await api.createCart(const CreateCartBody());
     await api.addLine(
       cart.cart.id,
       const AddLineBody(variantId: 'var_small'),

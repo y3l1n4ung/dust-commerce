@@ -33,12 +33,14 @@ class CollectionPage extends StatelessWidget {
     final currentPage = page < 1 ? 1 : page;
     final currentSort = normalizedProductSort(sortBy);
     final selected = normalizedOptionValueIds(optionValueIds);
+    final currency = context.watchStoreShellViewModel().value.currencyCode;
     final requestKey = listingRequestKey(
       'collection',
       handle,
       currentPage,
       currentSort,
       selected,
+      currency,
     );
     return ProductListingRoute(
       key: ValueKey(requestKey),
@@ -48,6 +50,7 @@ class CollectionPage extends StatelessWidget {
         page: currentPage,
         sortBy: currentSort,
         optionValueIds: selected,
+        currency: currency,
       ),
       onSortChanged: (value) => context.navigator
           .collection(

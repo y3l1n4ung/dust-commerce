@@ -29,7 +29,17 @@ void main() {
     server = await TestClient.serve(buildApp(database));
     api = CommerceApi(Dio(), baseUrl: server.origin);
     cartIds = MemoryCartIdStore();
-    cart = testCart(api, storage: cartIds);
+    cart = testCart(
+      api,
+      storage: cartIds,
+      region: const Region(
+        id: 'reg_us',
+        name: 'United States',
+        currencyCode: 'usd',
+        taxRate: 0,
+        countries: ['us'],
+      ),
+    );
     receipts = _MemoryReceiptStore();
     await cart.restore();
     final product = await api.product('t-shirt');

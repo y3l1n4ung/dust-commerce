@@ -1,5 +1,23 @@
 part of 'product_listing_view_model.dart';
 
+extension on ProductListingViewModel {
+  int _begin(_ListingMeta meta) {
+    final revision = ++_revision;
+    _setState(meta.toState(status: ProductListingStatus.loading));
+    return revision;
+  }
+
+  bool _active(int revision) => revision == _revision;
+
+  void _missing(_ListingMeta meta) =>
+      _setState(meta.toState(status: ProductListingStatus.missing));
+
+  void _fail(_ListingMeta meta, int revision) {
+    if (!_active(revision)) return;
+    _setState(meta.toState(status: ProductListingStatus.failed));
+  }
+}
+
 /// Stable key used to suppress stale listing state between routes.
 String listingRequestKey(
   String kind,
@@ -7,9 +25,10 @@ String listingRequestKey(
   int page,
   String sortBy, [
   List<String> optionValueIds = const [],
+  String currencyCode = 'usd',
 ]) =>
     '$kind:$handle:${page < 1 ? 1 : page}:${normalizedProductSort(sortBy)}:'
-    '${normalizedOptionValueIds(optionValueIds).join(',')}';
+    '${normalizedOptionValueIds(optionValueIds).join(',')}:$currencyCode';
 
 /// Removes empty and duplicate option values while preserving URL order.
 List<String> normalizedOptionValueIds(Iterable<String> values) {
