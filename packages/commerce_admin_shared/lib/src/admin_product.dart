@@ -33,6 +33,33 @@ final class AdminProductLifecycleCodec
   String serialize(AdminProductLifecycle value) => value.name;
 }
 
+/// One uploaded asset attached to a product during atomic creation.
+@Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class AdminCreateProductMedia with _$AdminCreateProductMedia {
+  /// Creates one ordered product-media input.
+  const AdminCreateProductMedia({
+    required this.id,
+    required this.url,
+    required this.isThumbnail,
+  });
+
+  /// Decodes the generated product-media input.
+  factory AdminCreateProductMedia.fromJson(Map<String, Object?> json) =>
+      _$AdminCreateProductMediaFromJson(json);
+
+  /// Server-generated storage key returned by the upload endpoint.
+  @Validate(length: Length(min: 1, max: 255), message: 'Choose an image')
+  final String id;
+
+  /// Whether this image is the product-card and cart thumbnail.
+  final bool isThumbnail;
+
+  /// Public URL returned with [id] by the upload endpoint.
+  @Validate(length: Length(min: 1, max: 2048), message: 'Choose an image')
+  final String url;
+}
+
 /// One exact regional price supplied while creating a product variant.
 @Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)
@@ -136,6 +163,7 @@ final class AdminCreateProduct with _$AdminCreateProduct {
     required this.discountable,
     required this.options,
     required this.variants,
+    required this.media,
     this.handle,
     this.subtitle,
     this.material,
@@ -164,6 +192,9 @@ final class AdminCreateProduct with _$AdminCreateProduct {
   /// Optional merchant material.
   @Validate(length: Length(max: 255), message: 'Use at most 255 characters')
   final String? material;
+
+  /// Ordered uploaded assets attached in the same product transaction.
+  final List<AdminCreateProductMedia> media;
 
   /// Option axes created in the same transaction as the product.
   final List<AdminCreateProductOption> options;

@@ -159,6 +159,7 @@ Map<String, Object?> _body({
       'description': '  A durable bag for daily essentials.  ',
       'discountable': true,
       'status': 'published',
+      'media': [],
       'options': [
         {
           'title': 'Color',

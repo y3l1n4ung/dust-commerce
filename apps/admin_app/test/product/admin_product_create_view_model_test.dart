@@ -31,7 +31,16 @@ void main() {
       nextId: () => 'admin_owner',
       passwordWork: PasswordWorkLimiter(),
     );
-    server = await TestClient.serve(buildApp(database));
+    final mediaStorage = LocalAdminMediaStorage(
+      root: Directory('${directory.path}/media'),
+      publicBaseUrl: Uri.parse('http://media.test'),
+      nextKey: () => 'test_media_key',
+    );
+    await mediaStorage.prepare();
+    server = await TestClient.serve(buildApp(
+      database,
+      mediaStorage: mediaStorage,
+    ));
     final authApi = AdminApi(Dio(), baseUrl: server.origin);
     final token = await authApi.signIn(const AdminCredentials(
       email: 'owner@example.com',
@@ -81,6 +90,21 @@ void main() {
     expect(create.state.failure,
         const Some('That handle or SKU is already in use.'));
   });
+
+  test('uploads and discards typed staged media', () async {
+    await create.load();
+
+    final uploaded = await create.uploadMedia([
+      MultipartFile.fromBytes(_png, filename: 'lamp.png'),
+    ]);
+
+    expect(uploaded, isA<Some<List<AdminUploadedFile>>>());
+    final file = (uploaded as Some<List<AdminUploadedFile>>).value.single;
+    expect(file.id, 'test_media_key.png');
+    expect(file.mimeType, 'image/png');
+    expect(create.state.status, AdminProductCreateStatus.ready);
+    expect(await create.discardUpload(file.id), isTrue);
+  });
 }
 
 AdminCreateProduct _product() => const AdminCreateProduct(
@@ -88,6 +112,7 @@ AdminCreateProduct _product() => const AdminCreateProduct(
       title: 'Desk Lamp',
       handle: 'desk-lamp',
       discountable: true,
+      media: [],
       options: [
         AdminCreateProductOption(title: 'Finish', values: ['Black']),
       ],
@@ -106,3 +131,5 @@ AdminCreateProduct _product() => const AdminCreateProduct(
         ),
       ],
     );
+
+const _png = <int>[0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];

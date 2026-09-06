@@ -17,6 +17,9 @@ enum AdminProductCreateStatus {
   /// The product graph is being committed.
   saving,
 
+  /// Selected image bytes are streaming into merchant storage.
+  uploading,
+
   /// Context loading failed.
   failed,
 }
@@ -45,5 +48,7 @@ final class AdminProductCreateState with _$AdminProductCreateState {
   final AdminProductCreateStatus status;
 
   /// Whether form controls must reject duplicate submission.
-  bool get isSaving => status == AdminProductCreateStatus.saving;
+  bool get isBusy =>
+      status == AdminProductCreateStatus.saving ||
+      status == AdminProductCreateStatus.uploading;
 }

@@ -33,19 +33,31 @@ ORDER BY currency_code
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertProduct(String id, String title, String handle, String? subtitle, String? material, String? description, int discountable, String status) {
+  Future<Result<ExecResult, SqlxError>> insertProduct(String id, String title, String handle, String? subtitle, String? material, String? description, String? thumbnail, int discountable, String status) {
     return _db.execute(
       r'''
 INSERT INTO products
-  (id, title, handle, subtitle, material, description, discountable, status)
+  (id, title, handle, subtitle, material, description, thumbnail,
+   discountable, status)
 SELECT ?, trim(?), ?, nullif(trim(?), ''), nullif(trim(?), ''),
-       nullif(trim(?), ''), ?, ?
+       nullif(trim(?), ''), ?, ?, ?
 WHERE NOT EXISTS (
   SELECT 1 FROM products
   WHERE handle = ? AND deleted_at IS NULL
 )
 ''',
-      [id, title, handle, subtitle, material, description, discountable, status, handle],
+      [id, title, handle, subtitle, material, description, thumbnail, discountable, status, handle],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> insertImage(String id, String productId, String url, int rank) {
+    return _db.execute(
+      r'''
+INSERT INTO product_images (id, product_id, url, rank)
+VALUES (?, ?, ?, ?)
+''',
+      [id, productId, url, rank],
     );
   }
 

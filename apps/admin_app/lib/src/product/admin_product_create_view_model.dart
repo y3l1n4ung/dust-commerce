@@ -79,6 +79,53 @@ final class AdminProductCreateViewModel extends $AdminProductCreateViewModel {
     }
   }
 
+  /// Streams selected image files and returns only the server-issued allowlist.
+  Future<Option<List<AdminUploadedFile>>> uploadMedia(
+    List<MultipartFile> files,
+  ) async {
+    if (files.isEmpty) return const None();
+    final currencies = state.currencyCodes;
+    emit(AdminProductCreateState(
+      status: AdminProductCreateStatus.uploading,
+      currencyCodes: currencies,
+    ));
+    try {
+      final uploaded = await args.api.uploadMedia(files);
+      emit(AdminProductCreateState(
+        status: AdminProductCreateStatus.ready,
+        currencyCodes: currencies,
+      ));
+      return Some(uploaded.files);
+    } on DioException catch (error) {
+      final message = switch (error.response?.statusCode) {
+        413 => 'Each image must be 5 MB or smaller.',
+        415 || 422 => 'Choose JPEG, PNG, GIF, or WebP image files.',
+        401 => 'Your admin session has expired.',
+        503 => 'Product media storage is not configured.',
+        _ => 'Unable to upload these images. Try again.',
+      };
+      _createFailed(currencies, message);
+      return const None();
+    } on Object {
+      _createFailed(currencies, 'Unable to upload these images. Try again.');
+      return const None();
+    }
+  }
+
+  /// Removes one staged upload before it is attached to a product.
+  Future<bool> discardUpload(String id) async {
+    try {
+      await args.api.deleteUpload(id);
+      return true;
+    } on Object {
+      _createFailed(
+        state.currencyCodes,
+        'Unable to remove this image. Try again.',
+      );
+      return false;
+    }
+  }
+
   /// Clears form-scoped errors without discarding loaded currencies.
   void clearFailure() => emit(AdminProductCreateState(
         status: AdminProductCreateStatus.ready,

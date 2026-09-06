@@ -37,6 +37,17 @@ abstract interface class AdminApi {
   @POST('/admin/products')
   Future<AdminProductDetail> createProduct(@Body() AdminCreateProduct body);
 
+  /// Streams selected image files before they are attached to a product.
+  @POST('/admin/uploads')
+  @MultiPart()
+  Future<AdminUploadedFileList> uploadMedia(
+    @Part('files') List<MultipartFile> files,
+  );
+
+  /// Discards one staged upload that is not attached to a product.
+  @DELETE('/admin/uploads/{id}')
+  Future<void> deleteUpload(@Path() String id);
+
   /// Reads one complete merchant product detail.
   @GET('/admin/products/{id}')
   Future<AdminProductDetail> product(@Path() String id);

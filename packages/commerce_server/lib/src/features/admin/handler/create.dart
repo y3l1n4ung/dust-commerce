@@ -62,6 +62,7 @@ Future<Result<AdminProductDetailResponse, Rejection>> createAdminProductHandler(
     deps.database,
     (decoded as Ok<AdminCreateProduct, Rejection>).value,
     nextId: deps.clock.nextId,
+    mediaStorage: deps.mediaStorage,
   );
   return switch (result) {
     Ok(value: Ok(value: final product)) => Ok(product),
@@ -73,6 +74,11 @@ Future<Result<AdminProductDetailResponse, Rejection>> createAdminProductHandler(
       const Err(Rejection.status(
         422,
         'Add one price for every active storefront currency',
+      )),
+    Ok(value: Err(error: AdminCreateProductFailure.invalidMedia)) =>
+      const Err(Rejection.status(
+        422,
+        'Use unique product images returned by the upload endpoint',
       )),
     Ok(value: Err(error: AdminCreateProductFailure.invalidHandle)) =>
       const Err(Rejection.status(

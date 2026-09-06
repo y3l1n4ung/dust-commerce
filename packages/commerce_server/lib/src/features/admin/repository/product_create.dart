@@ -23,9 +23,10 @@ ORDER BY currency_code
   /// Inserts the product only when no active row owns [handle].
   @Query(r'''
 INSERT INTO products
-  (id, title, handle, subtitle, material, description, discountable, status)
+  (id, title, handle, subtitle, material, description, thumbnail,
+   discountable, status)
 SELECT $1, trim($2), $3, nullif(trim($4), ''), nullif(trim($5), ''),
-       nullif(trim($6), ''), $7, $8
+       nullif(trim($6), ''), $7, $8, $9
 WHERE NOT EXISTS (
   SELECT 1 FROM products
   WHERE handle = $3 AND deleted_at IS NULL
@@ -38,8 +39,21 @@ WHERE NOT EXISTS (
     String? subtitle,
     String? material,
     String? description,
+    String? thumbnail,
     int discountable,
     String status,
+  );
+
+  /// Attaches one uploaded image in merchant-defined gallery order.
+  @Query(r'''
+INSERT INTO product_images (id, product_id, url, rank)
+VALUES ($1, $2, $3, $4)
+''')
+  Future<Result<ExecResult, SqlxError>> insertImage(
+    String id,
+    String productId,
+    String url,
+    int rank,
   );
 
   /// Creates one option axis owned by the new product.

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/src/features/account/crypto.dart';
 import 'package:commerce_server/src/features/admin/model.dart';
+import 'package:commerce_server/src/features/admin/media_storage.dart';
 import 'package:commerce_server/src/features/admin/repository/repository.dart';
 import 'package:commerce_server/src/infra/database.dart';
 import 'package:commerce_server/src/infra/option.dart';
@@ -27,6 +28,9 @@ enum AdminCreateProductFailure {
 
   /// A requested currency is not configured by an active selling region.
   invalidCurrency,
+
+  /// Uploaded media is malformed, duplicated, or not owned by this server.
+  invalidMedia,
 
   /// Another active product already owns the requested handle.
   handleConflict,
@@ -59,8 +63,14 @@ Future<
   CommerceDatabase database,
   AdminCreateProduct input, {
   required String Function() nextId,
-}) =>
-    database.transaction((tx) async {
+  required AdminMediaStorage mediaStorage,
+}) async {
+  final claims = [for (final item in input.media) (id: item.id, url: item.url)];
+  if (!mediaStorage.claim(claims)) {
+    return const Ok(Err(AdminCreateProductFailure.invalidMedia));
+  }
+  try {
+    return await database.transaction((tx) async {
       final writes = AdminProductCreateRepository(tx);
       final currencies = await writes.activeCurrencies();
       if (currencies case Err(:final error)) return Err(error);
@@ -70,6 +80,7 @@ Future<
             .value
             .map((row) => row.currencyCode)
             .toList(),
+        mediaStorage,
       );
       if (prepared case Err(:final error)) return Ok(Err(error));
       final product =
@@ -82,12 +93,23 @@ Future<
         product.subtitle,
         product.material,
         product.description,
+        product.thumbnail,
         product.discountable ? 1 : 0,
         product.status.name,
       );
       if (inserted case Err(:final error)) return Err(error);
       if ((inserted as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
         return const Ok(Err(AdminCreateProductFailure.handleConflict));
+      }
+
+      for (var rank = 0; rank < product.media.length; rank++) {
+        final imageWrite = await writes.insertImage(
+          nextId(),
+          productId,
+          product.media[rank].url,
+          rank,
+        );
+        if (imageWrite case Err(:final error)) return Err(error);
       }
 
       final createdOptions = <String, _CreatedOption>{};
@@ -165,6 +187,10 @@ Future<
           },
       };
     });
+  } finally {
+    mediaStorage.release(claims);
+  }
+}
 
 /// Creates an admin profile and provider identity in one transaction.
 Future<Result<Result<AdminUserResponse, AdminBootstrapFailure>, SqlxError>>
@@ -260,6 +286,7 @@ Future<Result<Option<AdminIssuedToken>, SqlxError>> adminSignIn(
 Result<_PreparedProduct, AdminCreateProductFailure> _prepareProduct(
   AdminCreateProduct input,
   List<String> activeCurrencies,
+  AdminMediaStorage mediaStorage,
 ) {
   final title = input.title.trim();
   final handle = _handleFor(input.handle, title);
@@ -269,6 +296,25 @@ Result<_PreparedProduct, AdminCreateProductFailure> _prepareProduct(
   }
   if (input.options.isEmpty) {
     return const Err(AdminCreateProductFailure.invalidOptions);
+  }
+  if (input.media.length > adminMediaFileCountLimit) {
+    return const Err(AdminCreateProductFailure.invalidMedia);
+  }
+  final mediaIds = <String>{};
+  final mediaUrls = <String>{};
+  var thumbnails = 0;
+  final media = <_PreparedMedia>[];
+  for (final item in input.media) {
+    if (!item.validate().isValid ||
+        !mediaIds.add(item.id) ||
+        !mediaUrls.add(item.url) ||
+        !mediaStorage.accepts(item.id, item.url)) {
+      return const Err(AdminCreateProductFailure.invalidMedia);
+    }
+    if (item.isThumbnail && ++thumbnails > 1) {
+      return const Err(AdminCreateProductFailure.invalidMedia);
+    }
+    media.add(_PreparedMedia(item.url, isThumbnail: item.isThumbnail));
   }
   final options = <_PreparedOption>[];
   final valuesByOption = <String, Set<String>>{};
@@ -359,6 +405,7 @@ Result<_PreparedProduct, AdminCreateProductFailure> _prepareProduct(
     subtitle: input.subtitle,
     material: input.material,
     description: input.description,
+    media: media,
     discountable: input.discountable,
     status: input.status,
     options: options,
@@ -382,6 +429,7 @@ final class _PreparedProduct {
     required this.subtitle,
     required this.material,
     required this.description,
+    required this.media,
     required this.discountable,
     required this.status,
     required this.options,
@@ -393,10 +441,25 @@ final class _PreparedProduct {
   final String? subtitle;
   final String? material;
   final String? description;
+  final List<_PreparedMedia> media;
   final bool discountable;
   final AdminProductLifecycle status;
   final List<_PreparedOption> options;
   final List<_PreparedVariant> variants;
+
+  String? get thumbnail {
+    for (final item in media) {
+      if (item.isThumbnail) return item.url;
+    }
+    return null;
+  }
+}
+
+final class _PreparedMedia {
+  const _PreparedMedia(this.url, {required this.isThumbnail});
+
+  final bool isThumbnail;
+  final String url;
 }
 
 final class _PreparedOption {
