@@ -91,7 +91,7 @@ Start a local API with the deterministic development catalogue:
 
 ```bash
 COMMERCE_SEED=true \
-  COMMERCE_ALLOWED_ORIGINS=http://127.0.0.1:3000 \
+  COMMERCE_ALLOWED_ORIGINS=http://127.0.0.1:13001 \
   COMMERCE_DATABASE_PATH=.data/commerce.db \
   dart run packages/commerce_server/bin/server.dart
 ```
@@ -121,9 +121,12 @@ In a second terminal, start the Flutter web storefront:
 ```bash
 flutter run -d web-server \
   --web-hostname 127.0.0.1 \
-  --web-port 3000 \
+  --web-port 13001 \
   --dart-define=API_BASE_URL=http://127.0.0.1:3878
 ```
+
+The repository-owned development ports are `13001` for Flutter web and `3878`
+for the API, so neither service relies on a framework-default port.
 
 Then the same checks CI runs:
 

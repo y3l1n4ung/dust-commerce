@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('browser cart quantity preflight allows PATCH', () async {
-    const origin = 'http://127.0.0.1:13000';
+    const origin = 'http://127.0.0.1:13001';
     final handler = storefrontCors({origin}).toMiddleware()(
       (_) async => Response.ok('preflight must not reach the handler'),
     );

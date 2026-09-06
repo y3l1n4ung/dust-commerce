@@ -56,7 +56,7 @@ final class _RunningServer {
       ['run', 'bin/server.dart'],
       workingDirectory: _packageRoot(),
       environment: {
-        'COMMERCE_ALLOWED_ORIGINS': 'http://127.0.0.1:3000',
+        'COMMERCE_ALLOWED_ORIGINS': 'http://127.0.0.1:13001',
         'COMMERCE_BIND': '127.0.0.1',
         'COMMERCE_DATABASE_PATH': databasePath,
         'COMMERCE_PORT': '$port',
