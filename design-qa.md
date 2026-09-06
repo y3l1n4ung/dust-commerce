@@ -41,6 +41,9 @@ both storefronts. Guest checkout address and initial delivery comparisons also
 used that same `736 x 864` surface. The desktop checkout comparison used an
 equal `1280 x 720` CSS viewport; the final implementation capture came from an
 isolated headless Chrome profile because the interactive Mac session locked.
+The compact collection grid and footer pair used equal `390 x 844` CSS
+viewports. The final menu interaction pass returned to the in-app browser after
+it became available.
 
 Pixel dimensions, CSS size, and density normalization: both captures used the
 in-app browser's default CSS viewport and density. Comparison normalized the
@@ -57,9 +60,13 @@ differ while column geometry remains comparable. The populated-cart pair used
 one product line from each backend, and the cart-preview pair captured the
 post-add panel while it was visibly open. Product names, prices and quantities
 are merchant data differences; table and panel geometry are directly
-comparable. Remaining global QA covers the product route at compact width and
+comparable. The compact collection pair covered the two-column grid through the
+shared footer; source and local taxonomy counts differ because they use separate
+merchant data. The live side-menu comparison additionally covered the inset
+blurred panel, source labels, close button, Escape dismissal and Store
+navigation. Remaining global QA covers the product route at compact width and
 in selected/out-of-stock states,
-`/store` at compact width and with the shared footer visible, authenticated
+`/store` compact sorting, option and paging controls, authenticated
 `/checkout` with a saved address available, authenticated `/account` with a
 completed profile, saved addresses and recent orders,
 `/account/orders/details/:id`, the authenticated transfer-request form and its
@@ -92,14 +99,15 @@ account, so authenticated head-to-head evidence remains open.
 **Findings**
 
 - [P1] Remaining route groups still lack rendered comparison
-  Location: compact store, product and cart layouts; checkout authenticated,
+  Location: compact store controls, product and cart layouts; checkout authenticated,
   payment, review and confirmation states; account and order
   views; transfer-request states; mismatch banner; and the global shipping
   popup.
   Evidence: matched comparisons now cover the transfer decision, desktop
-  catalogue, desktop product structure, empty and populated desktop cart, open
-  cart preview, signed-out account, and the open promotion form. The remaining
-  states listed above do not yet have matched captures.
+  catalogue, compact collection grid/footer/menu, desktop product structure,
+  empty and populated desktop cart, open cart preview, signed-out account, and
+  the open promotion form. The remaining states listed above do not yet have
+  matched captures.
   Impact: their typography, responsive spacing, imagery and interaction states
   remain visually unverified.
   Fix: capture both sites at matching desktop and mobile viewports, combine
@@ -123,7 +131,10 @@ account, so authenticated head-to-head evidence remains open.
   and public account forms passed; other routes remain pending.
 - Spacing and layout rhythm: the transfer's centered column and the catalogue's
   sidebar, 24px gutters, four-column medium grid, 32px row gap and card rhythm
-  passed after scrollbar normalization. Product detail now matches the source
+  passed after scrollbar normalization. The compact collection uses the
+  source's two-column flow, natural card heights and two-column taxonomy footer;
+  its inset menu follows the source width, blur, radius and 24px content inset.
+  Product detail now matches the source
   24px inset, 300px side columns, 64px gallery gutters and 192px sticky offset.
   Empty cart matches the source's combined 32px content inset, centered vertical
   composition and footer position within three rendered pixels. Public account
@@ -163,6 +174,9 @@ The source and implementation transfer pages, then the two catalogue pages,
 were captured from the same in-app browser tab and emitted as matched pairs.
 The transfer composition and controls align. The catalogue title, sidebar,
 four-column grid, source aspect ratios and card spacing align after correction.
+The equal-width compact collection pair confirms the two-column grid, wrapped
+card metadata and responsive footer. A final in-app browser pass confirms the
+source-shaped menu, both close paths and navigation to `/store`.
 The product detail pair confirms the source column geometry and information
 stack; product content and action controls differ with the two seed products.
 The empty-cart pair confirms the source content inset, copy, vertical placement,
@@ -193,8 +207,9 @@ No focused crop was necessary for the transfer, empty-cart, public-account or
 populated-cart pages because the full-view captures kept their copy and actions
 clearly readable. The open 420px cart panels were emitted as matched full-page
 pairs at native density; their type, thumbnail, subtotal and action remained
-large enough for focused inspection without a lossy crop. The footer,
-navigation, product cards, filters, authenticated account forms and checkout
+large enough for focused inspection without a lossy crop. Compact collection
+cards, footer columns and the side menu were readable in their full-page
+captures. Store filters, authenticated account forms and remaining checkout
 controls still require focused captures.
 
 **Comparison history**
@@ -208,6 +223,13 @@ controls still require focused captures.
   difference. Residual two-to-three-pixel vertical variation is P3 and follows
   browser text rendering; the raster-width difference is the source scrollbar,
   not layout drift.
+- The first compact collection pass exposed bottom-overflow stripes on wrapped
+  product names and a one-column footer caused by fixed card heights and a
+  desktop-sized column gap. Natural-height cards and the source compact footer
+  spacing removed both defects. The side-menu pass then replaced the default
+  opaque drawer with the source's inset translucent panel, restored the `Store`
+  label, matched its responsive minimum width, and verified button and Escape
+  dismissal plus Store navigation in the live browser.
 - The initial catalogue comparison exposed a P1 three-column grid and `11:14`
   cards caused by measuring the post-sidebar box. The implementation now uses
   Medusa's viewport breakpoints, four columns at 1280px, `9:16` catalogue cards,
@@ -276,8 +298,8 @@ controls still require focused captures.
 
 - Capture the authenticated transfer-request form at desktop and compact
   widths, including idle, delivery-sent, delivery-pending and safe error states.
-- Capture `/store` at compact width and with the shared footer visible; exercise
-  sorting, option accordions and pagination in a browser that supports input.
+- Capture `/store` at compact width and exercise sorting, option accordions and
+  pagination; compact collection, shared-footer and side-menu QA now pass.
 - Capture product detail at compact width and exercise selected, unavailable,
   sold-out and add-to-cart feedback states against matched product fixtures.
 - Capture populated cart at compact width and exercise shipping, line-removal

@@ -14,13 +14,13 @@ and the `Medusa DTC storefront parity` milestone.
 
 | Medusa source | Flutter/Dust owner | Status |
 | :--- | :--- | :--- |
-| `layout/templates/nav` and `footer` | shared storefront shell | implemented in #19 with nav, menu, cart count, API-backed footer taxonomy, Morrow branding, and only `Powered by dust`; rendered QA remains |
+| `layout/templates/nav` and `footer` | shared storefront shell | implemented in #19 with nav, menu, cart count, API-backed footer taxonomy, Morrow branding, and only `Powered by dust`; the compact menu and collection-footer composition passed rendered comparison |
 | `layout/components/language-select` | storefront language preference | implemented in #19 with Default plus compiled Dust locales, localized names, real SVG flags, durable selection and startup restoration before routing; rendered QA remains |
 | `layout/components/country-select` | shipping-country and selling-region switch | implemented in #24 with alphabetized region countries, real SVG flags, persisted selection, path-preserving navigation, atomic cart repricing, regional shipping reset and currency-aware catalogue reload; rendered QA remains |
 | `home/components/hero` | home hero | implemented in #19 |
 | `featured-products/product-rail` | featured product grid | implemented in #18 with source-ordered, API-backed collection rails; rendered QA remains |
 | `products/components/product-preview` | product card | implemented in #19 |
-| `store/templates` | catalogue | partial in #18 and #19; source sorting, 12-item paging, stable option-value filtering, and optional filter discovery implemented; the desktop grid passed rendered source comparison, while compact controls and footer QA remain |
+| `store/templates` | catalogue | partial in #18 and #19; source sorting, 12-item paging, stable option-value filtering, and optional filter discovery implemented; the desktop grid passed rendered source comparison, while compact store controls remain |
 | `products/templates` | product detail route | implemented in #22; source-ordered mobile and sticky desktop composition, with desktop geometry passing rendered source comparison; compact and interaction-state QA remain |
 | `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations and sticky mobile actions |
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
@@ -31,7 +31,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, server-retained address progress, delivery, manual-payment, review and confirmation steps; guest address passed compact and desktop rendered comparison, and a hard reload retained the delivery step, while live authenticated source, payment/review and confirmation QA remain |
 | `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards, guarded frozen order details, transfer request/decision UI, and the secure order-transfer API/client are implemented; the decision page passed rendered source comparison, while authenticated account-form QA, contact and return flows remain |
 | `regions` store API | account, checkout and storefront country selection | implemented with explicit SQLx response allowlists; selectors use active backend regions rather than hard-coded countries |
-| categories and collections routes | product organisation | implemented in #18 with real API metadata, filtering, hierarchy, sorting and paging; exact nested category paths wait on `dust#542`, rendered QA remains |
+| categories and collections routes | product organisation | implemented in #18 with real API metadata, filtering, hierarchy, sorting and paging; the compact collection grid and shared footer passed rendered comparison, while exact nested category paths wait on `dust#542` |
 
 ## Theme and selection map
 
