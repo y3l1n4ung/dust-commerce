@@ -29,6 +29,22 @@ class CreateCartBody with _$CreateCartBody {
   final String? regionId;
 }
 
+/// The body of `PATCH /carts/{id}` when the selling region changes.
+@Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class UpdateCartRegionBody with _$UpdateCartRegionBody {
+  /// Creates an explicit region replacement.
+  const UpdateCartRegionBody({required this.regionId});
+
+  /// Creates an [UpdateCartRegionBody] from JSON.
+  factory UpdateCartRegionBody.fromJson(Map<String, Object?> json) =>
+      _$UpdateCartRegionBodyFromJson(json);
+
+  /// Region whose currency and selling rules should govern the cart.
+  @Validate(length: Length(min: 1), message: 'region_id is required')
+  final String regionId;
+}
+
 /// The body of `POST /carts/{id}/line-items`.
 @Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)

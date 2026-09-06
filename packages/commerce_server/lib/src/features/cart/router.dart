@@ -13,7 +13,10 @@ Router cartRoutes() {
     ..route('/carts', post(createCartHandler, status: 201));
   final byId = Router()
     ..routeLayer(fromExtractor(const CartAccessExtractor()))
-    ..route('/carts/{id}', get(readCartHandler))
+    ..route(
+      '/carts/{id}',
+      get(readCartHandler).patch(updateCartRegionHandler),
+    )
     ..route('/carts/{id}/line-items', post(addLineHandler))
     ..route(
       '/carts/{id}/line-items/{lineId}',

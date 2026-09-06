@@ -1,6 +1,7 @@
 import 'package:dust_dart/db.dart';
 
 part 'development_taxonomy_seed.dart';
+part 'development_pricing_seed.dart';
 
 /// Inserts the deterministic catalogue used for local storefront development.
 ///
@@ -25,7 +26,9 @@ final _statements = <_Statement>[
   const _Statement(r'''
 INSERT OR IGNORE INTO regions
   (id, name, currency_code, tax_rate, countries)
-VALUES ('reg_us', 'United States', 'usd', 1000, 'us')
+VALUES
+  ('reg_eu', 'Europe', 'eur', 0, 'gb,de,dk,se,fr,es,it'),
+  ('reg_us', 'United States', 'usd', 1000, 'us')
 '''),
   ..._taxonomyBeforeProducts,
   const _Statement(r'''
@@ -120,22 +123,7 @@ VALUES
   ('var_shorts_s', 'prod_shorts', 'S', 'SHORTS-S', 20),
   ('var_shorts_m', 'prod_shorts', 'M', 'SHORTS-M', 20)
 '''),
-  const _Statement(r'''
-INSERT OR IGNORE INTO variant_prices
-  (variant_id, currency_code, amount)
-VALUES
-  ('var_tshirt_s_black', 'usd', 1500),
-  ('var_tshirt_s_white', 'usd', 1500),
-  ('var_tshirt_m_black', 'usd', 1500),
-  ('var_tshirt_m_white', 'usd', 1500),
-  ('var_tshirt_l_black', 'usd', 1500),
-  ('var_tshirt_l_white', 'usd', 1500),
-  ('var_tshirt_xl_black', 'usd', 1500),
-  ('var_tshirt_xl_white', 'usd', 1500),
-  ('var_sweatshirt_s', 'usd', 3500), ('var_sweatshirt_m', 'usd', 3500),
-  ('var_sweatpants_s', 'usd', 2900), ('var_sweatpants_m', 'usd', 2900),
-  ('var_shorts_s', 'usd', 2200), ('var_shorts_m', 'usd', 2200)
-'''),
+  ..._variantPriceStatements,
   const _Statement(r'''
 INSERT OR IGNORE INTO variant_option_values
   (variant_id, option_id, option_value_id)
@@ -163,19 +151,7 @@ VALUES
   ('var_shorts_s', 'opt_shorts_size', 'optval_shorts_size_s'),
   ('var_shorts_m', 'opt_shorts_size', 'optval_shorts_size_m')
 '''),
-  const _Statement(r'''
-INSERT OR IGNORE INTO shipping_options
-  (id, region_id, name, amount, currency_code)
-VALUES
-  ('ship_free', 'reg_us', 'Free shipping', 0, 'usd'),
-  ('ship_standard', 'reg_us', 'Standard shipping', 500, 'usd'),
-  ('ship_express', 'reg_us', 'Express shipping', 1500, 'usd')
-'''),
-  const _Statement(r'''
-INSERT OR IGNORE INTO shipping_option_price_rules
-  (id, shipping_option_id, attribute, operator, value)
-VALUES ('ship_free_minimum', 'ship_free', 'item_total', 'gte', 10000)
-'''),
+  ..._shippingPriceStatements,
   const _Statement(r'''
 INSERT OR IGNORE INTO promotions
   (id, code, type, value)

@@ -92,6 +92,54 @@ WHERE id = ?
       [customerId, email, cartId, customerId],
     );
   }
+
+  @override
+  Future<Result<int, SqlxError>> countLinesWithoutPrice(String cartId, String currencyCode) {
+    return _db.fetchScalar<int>(
+      r'''
+SELECT count(*)
+FROM line_items line
+WHERE line.cart_id = ?
+  AND NOT EXISTS (
+    SELECT 1
+    FROM variant_prices price
+    WHERE price.variant_id = line.variant_id
+      AND price.currency_code = ?
+  )
+''',
+      [cartId, currencyCode],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> repriceLines(String cartId, String currencyCode) {
+    return _db.execute(
+      r'''
+UPDATE line_items AS line
+SET unit_amount = (
+      SELECT price.amount
+      FROM variant_prices price
+      WHERE price.variant_id = line.variant_id
+        AND price.currency_code = ?
+    ),
+    currency_code = ?
+WHERE line.cart_id = ?
+''',
+      [currencyCode, currencyCode, cartId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> setRegion(String cartId, String regionId) {
+    return _db.execute(
+      r'''
+UPDATE carts
+SET region_id = ?
+WHERE id = ? AND completed_at IS NULL AND deleted_at IS NULL
+''',
+      [regionId, cartId],
+    );
+  }
 }
 
 final class _$CartShippingRepository implements CartShippingRepository {
@@ -161,6 +209,14 @@ WHERE method.cart_id = ?
   )
 ''',
       [cartId, cartId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> clearShippingMethod(String cartId) {
+    return _db.execute(
+      r'''DELETE FROM cart_shipping_methods WHERE cart_id = ?''',
+      [cartId],
     );
   }
 }

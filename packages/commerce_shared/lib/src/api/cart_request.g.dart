@@ -78,6 +78,68 @@ mixin _$CreateCartBody implements Validatable, Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$UpdateCartRegionBody implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as UpdateCartRegionBody;
+    return 'UpdateCartRegionBody('
+        'regionId: ${self.regionId}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as UpdateCartRegionBody;
+    return identical(this, other) ||
+        other is UpdateCartRegionBody &&
+            runtimeType == other.runtimeType &&
+            other.regionId == self.regionId;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as UpdateCartRegionBody;
+    return Object.hashAll([
+      runtimeType,
+      self.regionId,
+    ]);
+  }
+
+  /// Validates this `UpdateCartRegionBody`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as UpdateCartRegionBody;
+    final errors = <ValidationError>[];
+    _UpdateCartRegionBodyValidation._validateRegionId(self.regionId, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `UpdateCartRegionBody` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$UpdateCartRegionBodySerialize(this as UpdateCartRegionBody);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$AddLineBody implements Validatable, Serializable {
   @override
   String toString() {
@@ -340,6 +402,14 @@ extension _CreateCartBodyValidation on CreateCartBody {
   }
 
 }
+extension _UpdateCartRegionBodyValidation on UpdateCartRegionBody {
+  static void _validateRegionId(String regionId, List<ValidationError> errors) {
+    if (regionId.length < 1) {
+      errors.add(ValidationError(field: 'regionId', message: 'region_id is required'));
+    }
+  }
+
+}
 extension _AddLineBodyValidation on AddLineBody {
   static void _validateQuantity(int quantity, List<ValidationError> errors) {
     if (quantity < 1) {
@@ -389,6 +459,18 @@ final class $CreateCartBodyDeserializer implements Deserializer<CreateCartBody, 
 
   @override
   CreateCartBody deserialize(Map<String, Object?> json) => _$CreateCartBodyDeserialize(json);
+}
+final class $UpdateCartRegionBodySerializer implements Serializer<UpdateCartRegionBody, Map<String, Object?>> {
+  const $UpdateCartRegionBodySerializer();
+
+  @override
+  Map<String, Object?> serialize(UpdateCartRegionBody value) => _$UpdateCartRegionBodySerialize(value);
+}
+final class $UpdateCartRegionBodyDeserializer implements Deserializer<UpdateCartRegionBody, Map<String, Object?>> {
+  const $UpdateCartRegionBodyDeserializer();
+
+  @override
+  UpdateCartRegionBody deserialize(Map<String, Object?> json) => _$UpdateCartRegionBodyDeserialize(json);
 }
 final class $AddLineBodySerializer implements Serializer<AddLineBody, Map<String, Object?>> {
   const $AddLineBodySerializer();
@@ -463,6 +545,29 @@ CreateCartBody _$CreateCartBodyDeserialize(Map<String, Object?> json) {
 
 CreateCartBody _$CreateCartBodyFromJson(Map<String, Object?> json) =>
     _$CreateCartBodyDeserialize(json);
+
+Map<String, Object?> _$UpdateCartRegionBodySerialize(UpdateCartRegionBody instance) {
+  return <String, Object?>{
+    'region_id': instance.regionId,
+  };
+}
+
+Map<String, Object?> _$UpdateCartRegionBodyToJson(UpdateCartRegionBody instance) =>
+    _$UpdateCartRegionBodySerialize(instance);
+
+// factory UpdateCartRegionBody.fromJson(Map<String, Object?> json) => _$UpdateCartRegionBodyFromJson(json);
+UpdateCartRegionBody _$UpdateCartRegionBodyDeserialize(Map<String, Object?> json) {
+  final regionIdValue = JsonHelper.as<String>(
+    json['region_id'],
+    'region_id',
+    'String',
+  );
+
+  return UpdateCartRegionBody(regionId: regionIdValue);
+}
+
+UpdateCartRegionBody _$UpdateCartRegionBodyFromJson(Map<String, Object?> json) =>
+    _$UpdateCartRegionBodyDeserialize(json);
 
 Map<String, Object?> _$AddLineBodySerialize(AddLineBody instance) {
   return <String, Object?>{

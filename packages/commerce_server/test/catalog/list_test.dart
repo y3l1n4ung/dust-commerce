@@ -50,7 +50,7 @@ void main() {
     });
 
     test('counts what it would page through', () async {
-      expect(ok(await counts.countPublished(null, null, null, '[]')), 2);
+      expect(ok(await counts.countPublished('usd', null, null, null, '[]')), 2);
     });
 
     test('filters by collection, category and tag', () async {
@@ -90,6 +90,7 @@ void main() {
       expect(ok(missing), isEmpty);
       expect(
         ok(await counts.countPublished(
+          'usd',
           null,
           null,
           null,
@@ -97,6 +98,28 @@ void main() {
         )),
         1,
       );
+    });
+
+    test('excludes products and option choices unavailable in the currency',
+        () async {
+      final eur =
+          await lists.listPublished('eur', 10, 0, null, null, null, '[]');
+      final unavailableChoice = await lists.listPublished(
+        'eur',
+        10,
+        0,
+        null,
+        null,
+        null,
+        '["optval_large"]',
+      );
+
+      expect(ok(eur).map((row) => row.handle), ['t-shirt']);
+      expect(ok(eur).single.variants.map((variant) => variant.id), [
+        'var_small',
+      ]);
+      expect(ok(unavailableChoice), isEmpty);
+      expect(ok(await counts.countPublished('eur', null, null, null, '[]')), 1);
     });
   });
 

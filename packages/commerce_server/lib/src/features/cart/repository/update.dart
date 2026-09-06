@@ -95,6 +95,51 @@ WHERE id = $1
     String customerId,
     String email,
   );
+
+  /// Counts cart lines that have no price in [currencyCode].
+  @Query(r'''
+SELECT count(*)
+FROM line_items line
+WHERE line.cart_id = $1
+  AND NOT EXISTS (
+    SELECT 1
+    FROM variant_prices price
+    WHERE price.variant_id = line.variant_id
+      AND price.currency_code = $2
+  )
+''')
+  Future<Result<int, SqlxError>> countLinesWithoutPrice(
+    String cartId,
+    String currencyCode,
+  );
+
+  /// Reprices every line from the authoritative regional variant price.
+  @Query(r'''
+UPDATE line_items AS line
+SET unit_amount = (
+      SELECT price.amount
+      FROM variant_prices price
+      WHERE price.variant_id = line.variant_id
+        AND price.currency_code = $2
+    ),
+    currency_code = $2
+WHERE line.cart_id = $1
+''')
+  Future<Result<ExecResult, SqlxError>> repriceLines(
+    String cartId,
+    String currencyCode,
+  );
+
+  /// Makes [regionId] govern an active cart.
+  @Query(r'''
+UPDATE carts
+SET region_id = $2
+WHERE id = $1 AND completed_at IS NULL AND deleted_at IS NULL
+''')
+  Future<Result<ExecResult, SqlxError>> setRegion(
+    String cartId,
+    String regionId,
+  );
 }
 
 /// Atomic writes that keep a cart's chosen delivery method eligible.
@@ -165,4 +210,8 @@ WHERE method.cart_id = $1
   )
 ''')
   Future<Result<ExecResult, SqlxError>> clearIneligibleMethod(String cartId);
+
+  /// Clears a delivery quote when its cart changes selling region.
+  @Query(r'DELETE FROM cart_shipping_methods WHERE cart_id = $1')
+  Future<Result<ExecResult, SqlxError>> clearShippingMethod(String cartId);
 }

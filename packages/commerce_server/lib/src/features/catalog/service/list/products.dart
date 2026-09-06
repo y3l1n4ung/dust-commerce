@@ -29,6 +29,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
   if (page case Err(:final error)) return Err(error);
 
   final total = await counts.countPublished(
+    currencyCode,
     nullableOf(collection),
     nullableOf(category),
     nullableOf(tag),

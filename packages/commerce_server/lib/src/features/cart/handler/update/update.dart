@@ -4,6 +4,7 @@ library;
 export 'line.dart';
 export 'promotion.dart';
 export 'quantity.dart';
+export 'region.dart';
 export 'remove.dart';
 export 'shipping.dart';
 export 'transfer.dart';

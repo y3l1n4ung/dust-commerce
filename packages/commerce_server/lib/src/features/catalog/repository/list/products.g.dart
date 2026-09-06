@@ -131,6 +131,14 @@ FROM products product
 LEFT JOIN product_collections collection
   ON collection.id = product.collection_id AND collection.deleted_at IS NULL
 WHERE product.status = 'published' AND product.deleted_at IS NULL
+  AND EXISTS (
+    SELECT 1
+    FROM product_variants sellable_variant
+    JOIN variant_prices sellable_price ON sellable_price.variant_id = sellable_variant.id
+    WHERE sellable_variant.product_id = product.id
+      AND sellable_variant.deleted_at IS NULL
+      AND sellable_price.currency_code = ?
+  )
   AND (? IS NULL OR collection.handle = ?)
   AND (? IS NULL OR EXISTS (
     SELECT 1
@@ -153,6 +161,7 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
   AND (json_array_length(?) = 0 OR EXISTS (
     SELECT 1
     FROM product_variants filter_variant
+    JOIN variant_prices filter_price ON filter_price.variant_id = filter_variant.id
     JOIN variant_option_values filter_choice
       ON filter_choice.variant_id = filter_variant.id
     JOIN product_options filter_option
@@ -163,6 +172,7 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
      AND filter_value.option_id = filter_choice.option_id
     WHERE filter_variant.product_id = product.id
       AND filter_variant.deleted_at IS NULL
+      AND filter_price.currency_code = ?
       AND filter_option.deleted_at IS NULL
       AND filter_value.deleted_at IS NULL
       AND filter_choice.option_value_id IN (
@@ -174,7 +184,7 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
 ORDER BY product.created_at DESC, product.handle
 LIMIT ? OFFSET ?
 ''',
-      [currencyCode, collectionHandle, collectionHandle, categoryHandle, categoryHandle, tag, tag, optionValueIdsJson, optionValueIdsJson, limit, offset],
+      [currencyCode, currencyCode, collectionHandle, collectionHandle, categoryHandle, categoryHandle, tag, tag, optionValueIdsJson, currencyCode, optionValueIdsJson, limit, offset],
       const $ProductResponseRowDeserializer().deserialize,
     );
   }

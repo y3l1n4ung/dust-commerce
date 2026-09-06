@@ -41,7 +41,8 @@ Future<void> seedCatalogList(CommerceDatabase database) async {
     r"INSERT INTO product_variants "
     r"(id, product_id, title, inventory_quantity) VALUES "
     r"('var_small', 'prod_shirt', 'Small', 5), "
-    r"('var_large', 'prod_shirt', 'Large', 2)",
+    r"('var_large', 'prod_shirt', 'Large', 2), "
+    r"('var_mug', 'prod_mug', 'Default', 3)",
   );
   await run(
     r"INSERT INTO product_options (id, product_id, title) VALUES "
@@ -67,6 +68,7 @@ Future<void> seedCatalogList(CommerceDatabase database) async {
     r"INSERT INTO variant_prices (variant_id, currency_code, amount) VALUES "
     r"('var_small', 'usd', 1999), "
     r"('var_large', 'usd', 2199), "
-    r"('var_small', 'eur', 1799)",
+    r"('var_small', 'eur', 1799), "
+    r"('var_mug', 'usd', 999)",
   );
 }
