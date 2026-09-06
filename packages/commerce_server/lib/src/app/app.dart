@@ -4,6 +4,7 @@ import 'package:commerce_server/src/features/category/category.dart';
 import 'package:commerce_server/src/features/catalog/catalog.dart';
 import 'package:commerce_server/src/features/checkout/checkout.dart';
 import 'package:commerce_server/src/features/collection/collection.dart';
+import 'package:commerce_server/src/features/order_transfer/order_transfer.dart';
 import 'package:commerce_server/src/features/payment/payment.dart';
 import 'package:commerce_server/src/features/region/region.dart';
 import 'package:commerce_server/src/http/http.dart';
@@ -31,6 +32,8 @@ Router buildApp(
   String Function()? nextId,
   DateTime Function()? now,
   PasswordWorkLimiter? passwordWork,
+  OrderTransferMailer orderTransferMailer =
+      const UnavailableOrderTransferMailer(),
 }) {
   final executor = database.executor;
   final clock = Clock(now: now ?? DateTime.now, nextId: nextId ?? _randomId);
@@ -46,6 +49,7 @@ Router buildApp(
     ..nest('/store', collectionRoutes())
     ..nest('/store', cartRoutes())
     ..nest('/store', checkoutRoutes())
+    ..nest('/store', orderTransferRoutes())
     ..nest('/store', paymentRoutes())
     ..nest('/store', regionRoutes())
     ..route('/health', get(_health))
@@ -99,6 +103,16 @@ Router buildApp(
       PaymentDeps(
         database: database,
         clock: clock,
+      ),
+    )
+    ..withState(
+      OrderTransferDeps(
+        database: database,
+        reads: OrderTransferReadRepository(executor),
+        creates: OrderTransferCreateRepository(executor),
+        updates: OrderTransferUpdateRepository(executor),
+        clock: clock,
+        mailer: orderTransferMailer,
       ),
     )
     ..withState(RegionDeps(regions: SellingRegionRepository(executor)));

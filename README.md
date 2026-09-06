@@ -101,6 +101,16 @@ customer records. Bind address, port, database path, and browser origins are
 configured with `COMMERCE_BIND`, `COMMERCE_PORT`, `COMMERCE_DATABASE_PATH`, and
 comma-separated `COMMERCE_ALLOWED_ORIGINS`.
 
+Order-transfer requests remain unavailable with `503` until outbound email is
+configured. Set `COMMERCE_SMTP_HOST`, `COMMERCE_SMTP_FROM`, and the public
+`COMMERCE_STOREFRONT_URL`; optional settings are `COMMERCE_SMTP_PORT` (default
+`587`), `COMMERCE_SMTP_SSL` (default `false`), `COMMERCE_SMTP_FROM_NAME`, and
+`COMMERCE_SMTP_TIMEOUT_SECONDS`. Username and password must be supplied
+together as `COMMERCE_SMTP_USERNAME` and `COMMERCE_SMTP_PASSWORD`. With SSL
+disabled the client requires STARTTLS rather than permitting plaintext. Keep
+all SMTP credentials on the server; the storefront URL is used only to build
+the emailed decision link.
+
 To reset development data safely, stop the API and point
 `COMMERCE_DATABASE_PATH` at a new file. Keep the old database as a backup until
 the replacement stack has started and passed `/health`.

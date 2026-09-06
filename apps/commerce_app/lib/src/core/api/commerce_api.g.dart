@@ -1180,6 +1180,120 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
+  Future<OrderTransferView> requestOrderTransfer(String id) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = null;
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<OrderTransferView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/orders/' + Uri.encodeComponent(id.toString()) + '/transfer/request',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return OrderTransferView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<OrderTransferView> acceptOrderTransfer(
+    String id,
+    OrderTransferDecisionBody body,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<OrderTransferView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/orders/' + Uri.encodeComponent(id.toString()) + '/transfer/accept',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return OrderTransferView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<OrderTransferView> declineOrderTransfer(
+    String id,
+    OrderTransferDecisionBody body,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<OrderTransferView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/orders/' + Uri.encodeComponent(id.toString()) + '/transfer/decline',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:8080',
+              ),
+            ),
+      ),
+    );
+    return OrderTransferView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<OrderListView> orders() async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

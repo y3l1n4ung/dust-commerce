@@ -13,7 +13,11 @@ final class CheckoutHarness {
   CheckoutHarness._(this._directory, this.database, this.client);
 
   /// Opens a database, seeds it, and serves the app in process.
-  static Future<CheckoutHarness> start() async {
+  static Future<CheckoutHarness> start({
+    OrderTransferMailer orderTransferMailer =
+        const UnavailableOrderTransferMailer(),
+    DateTime Function()? now,
+  }) async {
     final directory = await Directory.systemTemp.createTemp('commerce_co');
     final database = CommerceDatabase.open(
       '${directory.path}/commerce.db',
@@ -26,7 +30,8 @@ final class CheckoutHarness {
       buildApp(
         database,
         nextId: () => 'id_${++counter}',
-        now: () => DateTime.utc(2026, 9, 5, 12),
+        now: now ?? () => DateTime.utc(2026, 9, 5, 12),
+        orderTransferMailer: orderTransferMailer,
       ),
     );
 

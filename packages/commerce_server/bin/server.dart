@@ -6,6 +6,13 @@ import 'package:dust_server/server.dart';
 
 Future<void> main() async {
   final config = _ServerConfig.fromEnvironment(Platform.environment);
+  final transferMail = OrderTransferMailConfig.optionFromEnvironment(
+    Platform.environment,
+  );
+  final transferMailer = transferMail.match<OrderTransferMailer>(
+    some: (value) => value.build(),
+    none: UnavailableOrderTransferMailer.new,
+  );
   await File(config.databasePath).parent.create(recursive: true);
   final database = CommerceDatabase.open(
     config.databasePath,
@@ -14,7 +21,7 @@ Future<void> main() async {
 
   try {
     if (config.seed) await seedDevelopmentStore(database);
-    final app = buildApp(database)
+    final app = buildApp(database, orderTransferMailer: transferMailer)
       ..layer(const SecurityHeaders())
       ..layer(const RequestId());
     if (config.allowedOrigins.isNotEmpty) {

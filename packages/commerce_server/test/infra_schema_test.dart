@@ -42,8 +42,7 @@ void main() {
       expect(
         tables,
         containsAll(<String>[
-          'carts',
-          'cart_promotions',
+          ...'carts cart_promotions'.split(' '),
           'cart_shipping_methods',
           'customers',
           'auth_identity',
@@ -65,7 +64,8 @@ void main() {
           'promotions',
           'provider_identity',
           'regions',
-          ...'shipping_options shipping_option_price_rules'.split(' '),
+          ...'shipping_options shipping_option_price_rules order_transfers'
+              .split(' '),
           'variant_option_values',
           'variant_prices',
           'payment_collections',

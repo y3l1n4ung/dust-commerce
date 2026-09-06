@@ -195,6 +195,24 @@ abstract interface class CommerceApi {
     @Query('email') String? guestEmail,
   });
 
+  /// Requests ownership of an order for the authenticated customer.
+  @POST('/store/orders/{id}/transfer/request')
+  Future<OrderTransferView> requestOrderTransfer(@Path() String id);
+
+  /// Accepts an order transfer using the capability delivered by email.
+  @POST('/store/orders/{id}/transfer/accept')
+  Future<OrderTransferView> acceptOrderTransfer(
+    @Path() String id,
+    @Body() OrderTransferDecisionBody body,
+  );
+
+  /// Declines an order transfer using the capability delivered by email.
+  @POST('/store/orders/{id}/transfer/decline')
+  Future<OrderTransferView> declineOrderTransfer(
+    @Path() String id,
+    @Body() OrderTransferDecisionBody body,
+  );
+
   /// The authenticated customer's orders.
   @GET('/store/orders')
   Future<OrderListView> orders();
