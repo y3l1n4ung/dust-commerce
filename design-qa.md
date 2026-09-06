@@ -65,7 +65,10 @@ returned a generic production Server Components error for the tested code, so
 a rendered source success state is still unavailable. The empty-cart pair used
 clean anonymous browser state with zero items on both storefronts. The account pair used the
 signed-out sign-in screen, then exercised the in-place registration toggle and
-Flutter validation without creating a customer.
+Flutter validation without creating a customer. Local free-shipping QA used the
+seeded server rule at `EUR 100`: below-target, unlocked, faded, restored and
+session-dismissed states were captured. The live source cart exposed no
+conditional zero-cost shipping rule, so a matched popup pair remains pending.
 
 **Findings**
 
@@ -213,6 +216,13 @@ controls still require focused captures.
   removed it, and rendered an invalid-code error. Source success comparison
   remains unavailable because the live reference returns a generic production
   Server Components error for the submitted code.
+- Source inspection found that the free-shipping popup holds its green unlocked
+  state for one second and then fades for 500ms; the local popup previously
+  disappeared immediately. Browser QA now proves the server-owned `EUR 100`
+  boundary, remaining amount, unlocked hold/fade, reappearance below the
+  threshold and cart-session dismissal. The same pass fixed the quantity `10`
+  wrapping inside its source-sized 56px control. A matched rendered popup pair
+  still needs a source cart with a conditional free-shipping price.
 
 **Implementation checklist**
 
