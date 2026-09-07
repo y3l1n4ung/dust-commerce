@@ -88,6 +88,10 @@ abstract interface class AdminApi {
     @Body() AdminUpdateProduct body,
   );
 
+  /// Soft-deletes one active product and returns a typed acknowledgement.
+  @DELETE('/admin/products/{id}')
+  Future<AdminProductDeleted> deleteProduct(@Path() String id);
+
   /// Replaces one variant's Medusa detail-drawer fields.
   @PATCH('/admin/products/{id}/variants/{variantId}')
   Future<AdminProductDetail> updateProductVariant(

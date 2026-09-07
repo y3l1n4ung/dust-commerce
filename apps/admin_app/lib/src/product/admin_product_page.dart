@@ -1,3 +1,4 @@
+import 'package:admin_app/src/product/admin_product_delete.dart';
 import 'package:admin_app/src/product/admin_product_state.dart';
 import 'package:admin_app/src/product/admin_product_pagination.dart';
 import 'package:admin_app/src/product/admin_product_table.dart';
@@ -84,7 +85,8 @@ final class _AdminProductPageState extends State<AdminProductPage> {
     if (state.status == AdminProductStatus.loading && state.products.isEmpty) {
       return const Center(child: CircularProgressIndicator(strokeWidth: 2));
     }
-    if (state.failure case Some(value: final message)) {
+    if (state.failure case Some(value: final message)
+        when state.products.isEmpty) {
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -107,6 +109,7 @@ final class _AdminProductPageState extends State<AdminProductPage> {
         AdminProductTable(
           products: state.products,
           onOpen: widget.onOpenProduct,
+          onDelete: (product) => deleteAdminProductSummary(context, product),
         ),
         if (state.status == AdminProductStatus.loading)
           const LinearProgressIndicator(minHeight: 2),

@@ -57,8 +57,21 @@ final class _DetailBody extends StatelessWidget {
       _updated(context, 'Product stock updated.');
     }
 
+    Future<void> deleteProduct() async {
+      final deleted = await deleteAdminProduct(
+        context,
+        id: product.id,
+        title: product.title,
+      );
+      if (deleted && context.mounted) onBack();
+    }
+
     final main = Column(children: [
-      AdminProductGeneralSection(product: product, onEdit: editGeneral),
+      AdminProductGeneralSection(
+        product: product,
+        onEdit: editGeneral,
+        onDelete: deleteProduct,
+      ),
       const SizedBox(height: 12),
       AdminProductMediaSection(
         product: product,

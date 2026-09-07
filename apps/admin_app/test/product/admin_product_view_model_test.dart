@@ -71,4 +71,32 @@ void main() {
       containsAll(['Vintage Sweatshirt', 'Relaxed Sweatpants']),
     );
   });
+
+  test('removes a deleted product from the current page', () async {
+    await products.load();
+
+    final deleted = await products.delete('prod_sweatpants');
+
+    expect(deleted, isTrue);
+    expect(products.state.status, AdminProductStatus.ready);
+    expect(products.state.count, 3);
+    expect(
+      products.state.products.map((product) => product.id),
+      isNot(contains('prod_sweatpants')),
+    );
+    expect(products.state.failure, const None<String>());
+  });
+
+  test('keeps the current page when a product is already gone', () async {
+    await products.load();
+
+    final deleted = await products.delete('prod_missing');
+
+    expect(deleted, isFalse);
+    expect(products.state.products, hasLength(4));
+    expect(
+      products.state.failure,
+      const Some('This product no longer exists.'),
+    );
+  });
 }

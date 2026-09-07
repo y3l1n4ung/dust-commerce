@@ -38,7 +38,9 @@ Router adminRoutes() => Router()
   )
   ..route(
     '/products/{id}',
-    get(readAdminProductHandler).patch(updateAdminProductHandler),
+    get(readAdminProductHandler)
+        .patch(updateAdminProductHandler)
+        .delete(deleteAdminProductHandler),
   )
   ..route(
     '/products/{id}/media',

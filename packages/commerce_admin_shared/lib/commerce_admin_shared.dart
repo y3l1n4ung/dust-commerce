@@ -4,6 +4,7 @@ library;
 export 'src/admin_auth.dart';
 export 'src/admin_media.dart';
 export 'src/admin_product.dart';
+export 'src/admin_product_deleted.dart';
 export 'src/admin_product_option.dart';
 export 'src/admin_product_image.dart';
 export 'src/admin_product_image_variants.dart';

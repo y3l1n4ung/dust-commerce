@@ -1,3 +1,4 @@
+import 'package:admin_app/src/product/admin_product_actions.dart';
 import 'package:admin_app/src/product/detail/admin_product_detail_section.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,12 @@ final class AdminProductGeneralSection extends StatelessWidget {
   const AdminProductGeneralSection({
     required this.product,
     required this.onEdit,
+    required this.onDelete,
     super.key,
   });
+
+  /// Confirms and retires the loaded product.
+  final VoidCallback onDelete;
 
   /// Complete admin product allowlist.
   final AdminProductDetail product;
@@ -41,21 +46,9 @@ final class AdminProductGeneralSection extends StatelessWidget {
                   ),
                   _ProductStatus(value: product.status),
                   const SizedBox(width: 8),
-                  PopupMenuButton<void>(
-                    tooltip: 'Product actions',
-                    icon: const Icon(Icons.more_horiz_rounded, size: 18),
-                    itemBuilder: (context) => [
-                      PopupMenuItem<void>(
-                        onTap: onEdit,
-                        child: const Row(
-                          children: [
-                            Icon(Icons.edit_outlined, size: 17),
-                            SizedBox(width: 10),
-                            Text('Edit'),
-                          ],
-                        ),
-                      ),
-                    ],
+                  AdminProductActions(
+                    onEdit: onEdit,
+                    onDelete: onDelete,
                   ),
                 ],
               ),

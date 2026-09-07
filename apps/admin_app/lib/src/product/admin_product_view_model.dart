@@ -23,6 +23,41 @@ final class AdminProductViewModel extends $AdminProductViewModel {
 
   int _revision = 0;
 
+  /// Retires one product and refreshes the current server-owned page.
+  Future<bool> delete(String id) async {
+    final revision = ++_revision;
+    final current = state;
+    emit(current.copyWith(
+      status: AdminProductStatus.loading,
+      failure: const None(),
+    ));
+    try {
+      await args.api.deleteProduct(id);
+      if (revision != _revision) return true;
+      final previousPage = current.products.length == 1 && current.offset > 0;
+      await load(
+        query: current.query,
+        offset: previousPage ? current.offset - current.limit : current.offset,
+      );
+      return true;
+    } on DioException catch (error) {
+      if (revision != _revision) return false;
+      _deleteFailed(
+        current,
+        error.response?.statusCode == 404
+            ? 'This product no longer exists.'
+            : error.response?.statusCode == 401
+                ? 'Your admin session has expired.'
+                : 'Unable to delete this product. Try again.',
+      );
+      return false;
+    } on Object {
+      if (revision != _revision) return false;
+      _deleteFailed(current, 'Unable to delete this product. Try again.');
+      return false;
+    }
+  }
+
   /// Loads the first page for [query].
   Future<void> search(String query) => load(query: query, offset: 0);
 
@@ -71,6 +106,12 @@ final class AdminProductViewModel extends $AdminProductViewModel {
 
   /// Loads the following server page.
   Future<void> next() => load(offset: state.offset + state.limit);
+
+  void _deleteFailed(AdminProductState current, String message) =>
+      emit(current.copyWith(
+        status: AdminProductStatus.ready,
+        failure: Some(message),
+      ));
 
   void _fail(String message) => emit(AdminProductState(
         status: AdminProductStatus.failed,

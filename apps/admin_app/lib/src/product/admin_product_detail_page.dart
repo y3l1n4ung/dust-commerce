@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:admin_app/src/product/admin_product_detail_media_actions.dart';
+import 'package:admin_app/src/product/admin_product_delete.dart';
 import 'package:admin_app/src/product/admin_product_detail_failure.dart';
 import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';

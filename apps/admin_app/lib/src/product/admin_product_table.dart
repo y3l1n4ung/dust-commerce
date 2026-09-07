@@ -1,3 +1,4 @@
+import 'package:admin_app/src/product/admin_product_actions.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
 
@@ -7,8 +8,12 @@ final class AdminProductTable extends StatelessWidget {
   const AdminProductTable({
     required this.products,
     required this.onOpen,
+    this.onDelete,
     super.key,
   });
+
+  /// Confirms and retires one product where the host route supports mutation.
+  final ValueChanged<AdminProduct>? onDelete;
 
   /// Rows returned by the explicit admin product contract.
   final List<AdminProduct> products;
@@ -31,6 +36,7 @@ final class AdminProductTable extends StatelessWidget {
                     itemBuilder: (context, index) => _ProductRow(
                       product: products[index],
                       onOpen: onOpen,
+                      onDelete: onDelete,
                     ),
                   ),
                 ),
@@ -63,8 +69,13 @@ final class _ProductHeader extends StatelessWidget {
 }
 
 final class _ProductRow extends StatelessWidget {
-  const _ProductRow({required this.product, required this.onOpen});
+  const _ProductRow({
+    required this.product,
+    required this.onOpen,
+    required this.onDelete,
+  });
 
+  final ValueChanged<AdminProduct>? onDelete;
   final ValueChanged<String> onOpen;
   final AdminProduct product;
 
@@ -102,20 +113,28 @@ final class _ProductRow extends StatelessWidget {
                     flex: 2, child: _muted(context, product.salesChannels)),
                 Expanded(child: Text('${product.variantCount}')),
                 Expanded(child: _Status(value: product.status)),
-                SizedBox(
-                  width: 32,
-                  child: IconButton(
-                    tooltip: 'Open product',
-                    onPressed: () => onOpen(product.id),
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(Icons.more_horiz_rounded, size: 17),
-                  ),
-                ),
+                SizedBox(width: 32, child: _actions()),
               ],
             ),
           ),
         ),
       );
+
+  Widget _actions() {
+    final delete = onDelete;
+    return delete == null
+        ? IconButton(
+            tooltip: 'Open product',
+            onPressed: () => onOpen(product.id),
+            padding: EdgeInsets.zero,
+            icon: const Icon(Icons.more_horiz_rounded, size: 17),
+          )
+        : AdminProductActions(
+            iconSize: 17,
+            onEdit: () => onOpen(product.id),
+            onDelete: () => delete(product),
+          );
+  }
 
   Widget _muted(BuildContext context, String value) => Text(
         value.isEmpty ? '—' : value,
