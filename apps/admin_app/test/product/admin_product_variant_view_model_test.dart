@@ -71,7 +71,17 @@ void main() {
       const AdminUpdateProductVariant(
         title: 'Small / Updated',
         sku: 'SWEATPANTS-S-NEW',
+        material: 'Organic cotton',
+        ean: '4006381333931',
+        upc: '012345678905',
         barcode: '0123456789012',
+        weight: 400.5,
+        width: 30.25,
+        length: 2.5,
+        height: 40.75,
+        midCode: 'MMABC1234',
+        hsCode: '610910',
+        originCountry: 'dk',
         manageInventory: false,
         allowBackorder: true,
         optionValues: {'opt_sweatpants_size': 'S'},
@@ -85,7 +95,17 @@ void main() {
         .singleWhere((variant) => variant.id == 'var_sweatpants_s');
     expect(variant.title, 'Small / Updated');
     expect(variant.sku, 'SWEATPANTS-S-NEW');
+    expect(variant.material, 'Organic cotton');
+    expect(variant.ean, '4006381333931');
+    expect(variant.upc, '012345678905');
     expect(variant.barcode, '0123456789012');
+    expect(variant.weight, 400.5);
+    expect(variant.width, 30.25);
+    expect(variant.length, 2.5);
+    expect(variant.height, 40.75);
+    expect(variant.midCode, 'MMABC1234');
+    expect(variant.hsCode, '610910');
+    expect(variant.originCountry, 'dk');
     expect(variant.manageInventory, isFalse);
     expect(variant.allowBackorder, isTrue);
     expect(detail.state.failure, const None<String>());

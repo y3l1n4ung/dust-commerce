@@ -4,16 +4,44 @@ extension on _VariantEditDrawerState {
   List<Widget> _fields(AdminProductDetailState state, bool busy) => [
         _field(
           label: 'Title',
-          controller: _title,
+          controller: _values.title,
           enabled: !busy,
           validator: _requiredTitle,
         ),
+        const SizedBox(height: 16),
+        _field(
+          label: 'Material',
+          optional: true,
+          controller: _values.material,
+          enabled: !busy,
+          validator: _optionalIdentifier,
+        ),
         for (final option in widget.product.options) ...[
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
+          _optionField(option, busy),
+        ],
+        const SizedBox(height: 32),
+        const Divider(height: 1),
+        const SizedBox(height: 32),
+        ..._inventoryFields(busy),
+        const SizedBox(height: 32),
+        const Divider(height: 1),
+        const SizedBox(height: 32),
+        ..._attributeFields(busy),
+        if (state.failure case Some(value: final message)) ...[
+          const SizedBox(height: 24),
+          _failure(message),
+        ],
+      ];
+
+  Widget _optionField(AdminProductOption option, bool busy) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Text(option.title, style: Theme.of(context).textTheme.labelLarge),
           const SizedBox(height: 7),
           DropdownButtonFormField<String>(
             initialValue: _selections[option.id],
+            icon: const Icon(Icons.unfold_more_rounded, size: 16),
             items: [
               for (final value in option.values)
                 DropdownMenuItem(value: value, child: Text(value)),
@@ -26,47 +54,7 @@ extension on _VariantEditDrawerState {
             validator: (value) => value == null ? 'Choose a value' : null,
           ),
         ],
-        const SizedBox(height: 24),
-        const Divider(),
-        const SizedBox(height: 20),
-        Text('Inventory', style: Theme.of(context).textTheme.titleSmall),
-        const SizedBox(height: 18),
-        _field(
-          label: 'SKU',
-          optional: true,
-          controller: _sku,
-          enabled: !busy,
-          validator: _optionalIdentifier,
-        ),
-        const SizedBox(height: 18),
-        _field(
-          label: 'Barcode',
-          optional: true,
-          controller: _barcode,
-          enabled: !busy,
-          validator: _optionalIdentifier,
-        ),
-        const SizedBox(height: 22),
-        _policy(
-          title: 'Manage inventory',
-          hint: 'Track stock and prevent sales when inventory runs out.',
-          value: _manageInventory,
-          busy: busy,
-          onChanged: _setManageInventory,
-        ),
-        const SizedBox(height: 12),
-        _policy(
-          title: 'Allow backorders',
-          hint: 'Keep selling this variant after tracked stock reaches zero.',
-          value: _allowBackorder,
-          busy: busy,
-          onChanged: _setAllowBackorder,
-        ),
-        if (state.failure case Some(value: final message)) ...[
-          const SizedBox(height: 18),
-          _failure(message),
-        ],
-      ];
+      );
 
   Widget _field({
     required String label,
@@ -74,6 +62,7 @@ extension on _VariantEditDrawerState {
     required bool enabled,
     required String? Function(String?) validator,
     bool optional = false,
+    TextInputType? keyboardType,
   }) =>
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +72,7 @@ extension on _VariantEditDrawerState {
             if (optional) ...[
               const SizedBox(width: 5),
               Text(
-                'Optional',
+                '(Optional)',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -96,6 +85,7 @@ extension on _VariantEditDrawerState {
             enabled: enabled,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: validator,
+            keyboardType: keyboardType,
           ),
         ],
       );
@@ -107,5 +97,13 @@ extension on _VariantEditDrawerState {
   }
 
   String? _optionalIdentifier(String? value) =>
-      (value?.length ?? 0) > 255 ? 'Use at most 255 characters' : null;
+      (value?.trim().length ?? 0) > 255 ? 'Use at most 255 characters' : null;
+
+  String? _optionalNumber(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return null;
+    final number = double.tryParse(text);
+    if (number == null) return 'Enter a number';
+    return number < 0 ? 'Enter zero or a positive number' : null;
+  }
 }

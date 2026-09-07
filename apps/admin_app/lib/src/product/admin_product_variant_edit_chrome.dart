@@ -2,7 +2,7 @@ part of 'admin_product_variant_edit_drawer.dart';
 
 extension on _VariantEditDrawerState {
   Widget _header(bool busy) => Container(
-        height: 56,
+        height: 62,
         padding: const EdgeInsets.only(left: 24, right: 12),
         decoration: BoxDecoration(
           border: Border(
@@ -12,10 +12,27 @@ extension on _VariantEditDrawerState {
         child: Row(children: [
           Expanded(
             child: Text(
-              'Edit variant',
-              style: Theme.of(context).textTheme.titleMedium,
+              'Edit Variant',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
           ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+            decoration: BoxDecoration(
+              border: Border.all(color: Theme.of(context).dividerColor),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              'esc',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 10,
+                  ),
+            ),
+          ),
+          const SizedBox(width: 8),
           IconButton(
             tooltip: 'Close',
             onPressed: busy ? null : () => Navigator.of(context).pop(false),
@@ -25,7 +42,7 @@ extension on _VariantEditDrawerState {
       );
 
   Widget _footer(bool busy) => Container(
-        height: 64,
+        height: 58,
         padding: const EdgeInsets.symmetric(horizontal: 24),
         decoration: BoxDecoration(
           border: Border(
@@ -60,30 +77,44 @@ extension on _VariantEditDrawerState {
     required bool busy,
     required ValueChanged<bool> onChanged,
   }) =>
-      Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          border: Border.all(color: Theme.of(context).dividerColor),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: Theme.of(context).textTheme.labelLarge),
-                const SizedBox(height: 3),
-                Text(
-                  hint,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: 22,
+            child: Row(children: [
+              Expanded(
+                child:
+                    Text(title, style: Theme.of(context).textTheme.labelLarge),
+              ),
+              SizedBox(
+                width: 36,
+                height: 22,
+                child: FittedBox(
+                  child: Switch(
+                    value: value,
+                    activeThumbColor: Colors.white,
+                    activeTrackColor: const Color(0xFF3B82F6),
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: const Color(0xFFE4E4E7),
+                    trackOutlineColor:
+                        const WidgetStatePropertyAll(Colors.transparent),
+                    onChanged: busy ? null : onChanged,
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ]),
           ),
-          Switch(value: value, onChanged: busy ? null : onChanged),
-        ]),
+          const SizedBox(height: 4),
+          Text(
+            hint,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontSize: 13,
+                  height: 1.25,
+                ),
+          ),
+        ],
       );
 
   Widget _failure(String message) => Container(
