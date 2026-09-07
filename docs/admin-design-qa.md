@@ -35,6 +35,9 @@
   `packages/admin/dashboard/src/routes/products/product-detail/components/product-option-section/`
   and `packages/admin/dashboard/src/routes/product-options/product-option-edit/`
   at the pinned commit.
+- Global product-option source:
+  `packages/admin/dashboard/src/routes/product-options/product-option-list/`,
+  `product-option-detail/`, and `product-option-create/` at the pinned commit.
 - Rendered reference: Medusa's official Admin product-list image in the User
   Guide, official product-detail image in the Edit Product guide, and official
   Details-step image in the Create Product guide.
@@ -89,6 +92,13 @@ The product-option comparison uses the same live source, browser, viewport and
 combined-image method. Both drawers use dark theme and four values. Their value
 orders differ because each isolated database supplies a different persisted
 rank; the layout and ordering behavior are directly comparable.
+
+The global product-option list and Size detail use live Medusa `2.20.1` and
+Morrow in light theme. The `1291 x 772` Medusa captures were center-cropped to
+the same `1280 x 720` content surface as Morrow, then each pair was combined
+into one `2560 x 720` image. Merchant fixtures and value rank differ; shell,
+cards, tables, searches, status labels, result counts and pagination are
+directly comparable.
 
 ## Verified
 
@@ -149,8 +159,15 @@ rank; the layout and ordering behavior are directly comparable.
   transactional API that rejects wrong ownership, duplicate titles, invalid
   values and removal of values used by active variants. Browser QA renamed the
   option, added a value, confirmed the refreshed Admin detail and storefront
-  readback, then restored the canonical fixture. Nineteen non-widget Admin
-  tests pass, including distinct display-safe messages for both 409 cases.
+  readback, then restored the canonical fixture. Non-widget Admin tests include
+  distinct display-safe messages for both 409 cases.
+- The Products sub-navigation now exposes Medusa's global Options list. The
+  generated authenticated client loads, searches, paginates, creates and opens
+  safe option detail responses; detail search filters real values and products,
+  and edits refresh both routes. Browser QA searched values and products,
+  created and opened a temporary Material option, edited Size, restored the
+  canonical fixture and observed no browser errors. Twenty non-widget Admin
+  tests pass; no widget tests were added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -164,9 +181,6 @@ rank; the layout and ordering behavior are directly comparable.
   and multiple option axes in the Flutter creation form remain feature work
   under issue #31. Their visible controls do not pretend an API mutation
   succeeded.
-- P1 — Medusa routes product-option editing through its global Product Options
-  list and detail pages. Morrow currently opens the verified editor directly
-  from product detail; the global list/detail route is not implemented yet.
 - P2 — The post-create editor lacks a same-state rendered Medusa source capture.
   The implementation matches the pinned source structure—full focus modal,
   four-column gallery, 24px grid gap, 560px upload panel and sticky footer—but
@@ -180,8 +194,9 @@ rank; the layout and ordering behavior are directly comparable.
 
 Passed for the implemented product-list, product-detail, general-edit,
 product-create-with-media, post-create media-card, image-variant and
-variant-detail and product-option-edit behavior slices. Variant-detail and
-product-option-edit visual parity now pass same-state live comparisons.
+variant-detail, product-option-edit and global product-option behavior slices.
+Variant-detail, product-option-edit and global product-option list/detail visual
+parity now pass same-state live comparisons.
 Post-create editor and image-variant drawer remain blocked on same-state source
 captures; broader Medusa Admin parity is not claimed.
 
