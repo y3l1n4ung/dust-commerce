@@ -199,6 +199,14 @@ directly from its SQL allowlist, and the Store query reads the same committed
 variant independently. Complete option ownership, unique combinations and SKU
 conflicts are enforced before partial writes.
 
+Variant pricing and stock remain separate operations as they are in Medusa.
+Pricing replaces the complete active-currency graph using integer minor units.
+Stock uses a product-level batch route and full-screen grid, but deliberately
+stores one aggregate quantity per variant because this project has no Inventory
+or Stock Location modules. The transaction validates every selected variant
+before changing any row, and the public Store projection reads the committed
+quantity independently.
+
 ### Order transfers keep the capability out of the database
 
 The three Store routes match Medusa's request, accept and decline shape, while

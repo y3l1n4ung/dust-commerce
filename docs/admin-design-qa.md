@@ -114,6 +114,13 @@ the running Morrow screen at `1280 x 720`. The local Medusa process continued
 serving its Admin route, but its existing in-app-browser tab stopped responding
 to capture, so this pass does not claim same-state pixel parity.
 
+The product-stock pass uses Medusa's pinned `product-stock` route, form, schema
+and DataGrid columns as structural truth. Morrow keeps the full-screen header,
+variant title/SKU rows and sticky Cancel/Save footer, but maps the location
+columns to its real aggregate inventory model instead of showing fake stock
+locations. The Morrow screen and end-to-end mutation were captured live; the
+local Medusa tab again timed out, so pixel parity is not claimed.
+
 ## Verified
 
 - The 220px navigation hierarchy, selected row, nested product links, merchant
@@ -194,6 +201,14 @@ to capture, so this pass does not claim same-state pixel parity.
   and USD, observed the new USD value immediately on the storefront, then
   restored both canonical values. Twenty-six non-widget Admin and 265 server
   tests pass; no widget tests were added.
+- Variants now expose Medusa's product-level Edit stock action. The full-screen
+  grid saves every shown variant through one route-guarded generated-client
+  request, with editable aggregate quantity and inventory management policy.
+  Browser QA changed a real variant to 7 unmanaged units, confirmed the
+  separate Store response immediately returned that state, then restored 20
+  managed units. Empty, duplicate, negative and cross-product selections are
+  rejected before partial writes. Twenty-eight non-widget Admin and 269 server
+  tests pass; no widget tests were added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -203,8 +218,8 @@ to capture, so this pass does not claim same-state pixel parity.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Product creation still lacks multiple option axes and variant stock,
-  import/export, filters and ordering under issue #31. Its visible controls do
+- P1 — Product creation still lacks multiple option axes, import/export,
+  filters and ordering under issue #31. Its visible controls do
   not pretend an API mutation succeeded.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
   chip input and post-entry rank organizer. Persisted ordering works, but this
@@ -229,8 +244,9 @@ variant-detail, product-option-edit and global product-option behavior slices.
 Variant-detail, product-option-edit and global product-option list/detail visual
 parity now pass same-state live comparisons. Global product-option creation
 also passes its same-state empty-form comparison.
-Variant pricing passes source-structure and live end-to-end behavior checks.
-Post-create editor, image-variant drawer and variant pricing remain blocked on
-same-state source captures; broader Medusa Admin parity is not claimed.
+Variant pricing and product stock pass source-structure and live end-to-end
+behavior checks. Post-create editor, image-variant drawer, variant pricing and
+product stock remain blocked on same-state source captures; broader Medusa
+Admin parity is not claimed.
 
 final result: blocked
