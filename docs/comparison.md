@@ -222,7 +222,10 @@ operator before SQL, normalizes offset-bearing instants to UTC, applies the
 same filters to page and count, and adds a stable id tie-breaker. The generated
 Flutter client sends typed tag and `Option<DateTime>` state while its Dio
 interceptor remains the only owner of the bearer header. This narrower slice
-still lacks Medusa's normalized product types and sales channels.
+also normalizes product types behind `products.type_id`, provides a guarded
+allowlisted discovery route, and filters by the same Medusa query key before
+count and paging. Product-type CRUD/assignment, visible filter controls and
+sales channels remain outside the implemented boundary.
 
 ### Order transfers keep the capability out of the database
 
@@ -256,7 +259,7 @@ than copying this SQLite representation.
 ## Not attempted
 
 Fulfilment and returns, external payment integrations or saved payment methods,
-provider-driven taxes, inventory locations, sales channels, product types,
+provider-driven taxes, inventory locations, sales channels, product-type CRUD,
 search, password reset, email verification,
 MFA, OAuth providers, API keys, admin RBAC, most admin catalogue mutations,
 admin order/customer/operations APIs, workflow engine, plugin system,

@@ -247,6 +247,13 @@ filter and order menus were not implemented or visually judged in this pass.
   return `400`. Live API QA returned zero rows for an unknown tag and a future
   creation bound, then rejected `$after`. Thirty-three non-widget Admin and 280
   server tests pass; no widget tests were added.
+- Product types now follow the pinned Medusa list and product-filter sources:
+  a normalized table, guarded `/admin/product-types` discovery, and `type_id`
+  filtering live behind the generated Admin client. Store and Admin detail
+  responses independently return the display label rather than the internal
+  id. Fresh-database API QA proved `401`, search/paging, one matching product,
+  malformed-id `400`, and Store readback. Thirty-four non-widget Admin and 284
+  server tests pass; all 39 migrations also pass real SQLx run/revert.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -256,11 +263,11 @@ filter and order menus were not implemented or visually judged in this pass.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Product creation still lacks multiple option axes and import/export.
-  The product list still lacks the source-shaped query-control UI and a
-  normalized product-type/filter-options API under issue #31. Tag and date
-  query contracts work, but the visible controls do not yet expose them or
-  pretend an unavailable operation succeeded.
+- P1 — Product creation still lacks multiple option axes, product-type
+  assignment and import/export. The product list still lacks the source-shaped
+  query-control UI under issue #31. Type, tag and date query contracts work,
+  but the visible controls do not yet expose them or pretend an unavailable
+  operation succeeded.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
   chip input and post-entry rank organizer. Persisted ordering works, but this
   interaction is not yet a literal copy.
@@ -285,8 +292,9 @@ Variant-detail, product-option-edit and global product-option list/detail visual
 parity now pass same-state live comparisons. Global product-option creation
 also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
-live end-to-end behavior checks. Product query behavior passes API and state
-checks, but its visible controls remain pending. Post-create editor,
+live end-to-end behavior checks. Product query behavior and normalized
+product-type discovery pass API and state checks, but visible controls remain
+pending. Post-create editor,
 image-variant drawer, variant pricing, product stock, product deletion and the
 product query controls remain blocked on same-state source captures; broader
 Medusa Admin parity is not claimed.
