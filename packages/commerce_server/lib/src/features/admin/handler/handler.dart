@@ -125,3 +125,27 @@ Future<Result<AdminProductOptionDetailResponse, Rejection>>
     Err() => const Err(Rejection.internal()),
   };
 }
+
+/// `DELETE /admin/product-options/{id}` — retires one unused product option.
+Future<Result<Response, Rejection>> deleteAdminProductOptionHandler(
+  Request request,
+) async {
+  final id = pathParametersOf(request)['id'];
+  if (id == null || id.isEmpty) {
+    return const Err(Rejection.badRequest('A product option id is required'));
+  }
+  final state = await adminDeps(request);
+  if (state case Err(:final error)) return Err(error);
+  final deps = (state as Ok<AdminDeps, Rejection>).value;
+  final result = await deleteAdminProductOption(deps.database, id);
+  return switch (result) {
+    Ok(value: Ok()) => Ok(noContent()),
+    Ok(value: Err(error: AdminDeleteProductOptionFailure.notFound)) =>
+      Err(Rejection.notFound('Product option "$id"')),
+    Ok(value: Err(error: AdminDeleteProductOptionFailure.inUse)) =>
+      const Err(Rejection.conflict(
+        'Remove this option from every product before deleting it',
+      )),
+    Err() => const Err(Rejection.internal()),
+  };
+}

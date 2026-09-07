@@ -33,7 +33,8 @@ Router adminRoutes() => Router()
   ..route(
     '/product-options/{id}',
     get(readAdminProductOptionHandler)
-        .patch(updateAdminProductOptionDetailHandler),
+        .patch(updateAdminProductOptionDetailHandler)
+        .delete(deleteAdminProductOptionHandler),
   )
   ..route(
     '/products/{id}',

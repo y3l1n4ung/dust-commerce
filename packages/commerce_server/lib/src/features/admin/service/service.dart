@@ -4,6 +4,7 @@ library;
 export 'create.dart';
 export 'create/product_option.dart';
 export 'delete.dart';
+export 'delete/product_option.dart';
 export 'image_variants.dart';
 export 'list.dart';
 export 'read/product_option.dart';
