@@ -85,6 +85,7 @@ Router buildApp(
         passwordWork: resolvedPasswordWork,
         dummyPasswordHash: accountDeps.dummyPasswordHash,
         products: AdminProductRepository(executor),
+        productTags: AdminProductTagRepository(executor),
         productTypes: AdminProductTypeRepository(executor),
         productOptions: AdminProductOptionRepository(executor),
         productCreates: AdminProductCreateRepository(executor),

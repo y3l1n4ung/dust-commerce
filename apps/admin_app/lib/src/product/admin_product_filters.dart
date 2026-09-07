@@ -51,4 +51,14 @@ extension AdminProductFilters on AdminProductViewModel {
         order: order,
         offset: 0,
       );
+
+  /// Removes every active filter while preserving search and ordering.
+  Future<void> clearFilters() => load(
+        statuses: const [],
+        tagIds: const [],
+        typeIds: const [],
+        createdAt: const AdminDateFilter(),
+        updatedAt: const AdminDateFilter(),
+        offset: 0,
+      );
 }

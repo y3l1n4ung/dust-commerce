@@ -43,6 +43,14 @@ abstract interface class AdminApi {
     @Query('offset') int offset,
   );
 
+  /// Lists public product tags for filters and product selectors.
+  @GET('/admin/product-tags')
+  Future<AdminProductTagList> listProductTags(
+    @Query('q') String query,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
+
   /// Lists globally reusable product options with paging and search.
   @GET('/admin/product-options')
   Future<AdminProductOptionList> listProductOptions(

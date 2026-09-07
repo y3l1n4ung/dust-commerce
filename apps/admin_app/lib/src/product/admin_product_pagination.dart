@@ -12,7 +12,7 @@ final class AdminProductPagination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        height: 48,
+        height: 64,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           border: Border(
@@ -20,25 +20,27 @@ final class AdminProductPagination extends StatelessWidget {
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              '${state.offset + 1}-${state.offset + state.products.length} of ${state.count}',
+              '${state.count == 0 ? 0 : state.offset + 1} — '
+              '${state.offset + state.products.length} '
+              'of ${state.count} results',
             ),
-            const SizedBox(width: 12),
-            IconButton(
-              tooltip: 'Previous page',
+            const Spacer(),
+            Text('${state.offset ~/ state.limit + 1} of '
+                '${(state.count / state.limit).ceil().clamp(1, 1 << 31)} pages'),
+            const SizedBox(width: 20),
+            TextButton(
               onPressed: state.hasPrevious
                   ? context.readAdminProductViewModel().previous
                   : null,
-              icon: const Icon(Icons.chevron_left_rounded, size: 18),
+              child: const Text('Prev'),
             ),
-            IconButton(
-              tooltip: 'Next page',
+            TextButton(
               onPressed: state.hasNext
                   ? context.readAdminProductViewModel().next
                   : null,
-              icon: const Icon(Icons.chevron_right_rounded, size: 18),
+              child: const Text('Next'),
             ),
           ],
         ),

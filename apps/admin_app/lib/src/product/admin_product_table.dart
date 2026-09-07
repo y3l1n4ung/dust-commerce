@@ -28,18 +28,15 @@ final class AdminProductTable extends StatelessWidget {
           child: SizedBox(
             width: constraints.maxWidth < 920 ? 920 : constraints.maxWidth,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const _ProductHeader(),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: products.length,
-                    itemBuilder: (context, index) => _ProductRow(
-                      product: products[index],
-                      onOpen: onOpen,
-                      onDelete: onDelete,
-                    ),
+                for (final product in products)
+                  _ProductRow(
+                    product: product,
+                    onOpen: onOpen,
+                    onDelete: onDelete,
                   ),
-                ),
               ],
             ),
           ),
@@ -52,14 +49,14 @@ final class _ProductHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        height: 43,
+        height: 48,
         padding: const EdgeInsets.symmetric(horizontal: 22),
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
         child: const Row(
           children: [
-            Expanded(flex: 4, child: Text('Product')),
-            Expanded(flex: 2, child: Text('Collection')),
-            Expanded(flex: 2, child: Text('Sales Channels')),
+            Expanded(child: Text('Product')),
+            Expanded(child: Text('Collection')),
+            Expanded(child: Text('Sales Channels')),
             Expanded(child: Text('Variants')),
             Expanded(child: Text('Status')),
             SizedBox(width: 32),
@@ -85,7 +82,7 @@ final class _ProductRow extends StatelessWidget {
         child: InkWell(
           onTap: () => onOpen(product.id),
           child: Container(
-            height: 43,
+            height: 48,
             padding: const EdgeInsets.symmetric(horizontal: 22),
             decoration: BoxDecoration(
               border: Border(
@@ -95,7 +92,6 @@ final class _ProductRow extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  flex: 4,
                   child: Row(
                     children: [
                       _Thumbnail(url: product.thumbnail),
@@ -107,10 +103,8 @@ final class _ProductRow extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                    flex: 2, child: _muted(context, product.collectionTitle)),
-                Expanded(
-                    flex: 2, child: _muted(context, product.salesChannels)),
+                Expanded(child: _muted(context, product.collectionTitle)),
+                Expanded(child: _muted(context, product.salesChannels)),
                 Expanded(child: Text('${product.variantCount}')),
                 Expanded(child: _Status(value: product.status)),
                 SizedBox(width: 32, child: _actions()),
@@ -182,9 +176,12 @@ final class _Status extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 7,
-          height: 7,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(2),
+          ),
         ),
         const SizedBox(width: 7),
         Flexible(child: Text(_titleCase(value.name))),

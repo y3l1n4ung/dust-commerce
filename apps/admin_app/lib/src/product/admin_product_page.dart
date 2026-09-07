@@ -2,6 +2,7 @@ import 'package:admin_app/src/product/admin_product_delete.dart';
 import 'package:admin_app/src/product/admin_product_state.dart';
 import 'package:admin_app/src/product/admin_product_pagination.dart';
 import 'package:admin_app/src/product/admin_product_table.dart';
+import 'package:admin_app/src/product/admin_product_toolbar.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ final class _AdminProductPageState extends State<AdminProductPage> {
   @override
   Widget build(BuildContext context) {
     final state = context.watchAdminProductViewModel().value;
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(12),
       child: Align(
         alignment: Alignment.topCenter,
@@ -57,21 +58,22 @@ final class _AdminProductPageState extends State<AdminProductPage> {
             ),
             clipBehavior: Clip.antiAlias,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _Header(
                   onUnavailable: () => _unavailable(context),
                   onCreate: widget.onCreateProduct,
                 ),
                 Divider(height: 1, color: Theme.of(context).dividerColor),
-                _Toolbar(
+                AdminProductToolbar(
                   controller: _query,
                   focusNode: widget.searchFocus,
-                  onUnavailable: () => _unavailable(context),
+                  state: state,
                   onSearch: () =>
                       context.readAdminProductViewModel().search(_query.text),
                 ),
                 Divider(height: 1, color: Theme.of(context).dividerColor),
-                Expanded(child: _body(context, state)),
+                _body(context, state),
                 AdminProductPagination(state: state),
               ],
             ),
@@ -148,53 +150,7 @@ final class _Header extends StatelessWidget {
               child: const Text('Import'),
             ),
             const SizedBox(width: 8),
-            FilledButton(onPressed: onCreate, child: const Text('Create')),
-          ],
-        ),
-      );
-}
-
-final class _Toolbar extends StatelessWidget {
-  const _Toolbar({
-    required this.controller,
-    required this.focusNode,
-    required this.onSearch,
-    required this.onUnavailable,
-  });
-
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final VoidCallback onSearch;
-  final VoidCallback onUnavailable;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-        child: Row(
-          children: [
-            OutlinedButton.icon(
-              onPressed: onUnavailable,
-              icon: const Icon(Icons.add_rounded, size: 16),
-              label: const Text('Add filter'),
-            ),
-            const Spacer(),
-            SizedBox(
-              width: 196,
-              child: TextField(
-                controller: controller,
-                focusNode: focusNode,
-                onSubmitted: (_) => onSearch(),
-                decoration: const InputDecoration(
-                  hintText: 'Search products',
-                  prefixIcon: Icon(Icons.search_rounded, size: 17),
-                ),
-              ),
-            ),
-            IconButton(
-              tooltip: 'Sort products',
-              onPressed: onUnavailable,
-              icon: const Icon(Icons.sort_rounded, size: 18),
-            ),
+            OutlinedButton(onPressed: onCreate, child: const Text('Create')),
           ],
         ),
       );

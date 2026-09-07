@@ -137,3 +137,38 @@ WHERE deleted_at IS NULL
     );
   }
 }
+
+final class _$AdminProductTagRepository implements AdminProductTagRepository {
+  const _$AdminProductTagRepository(this._db);
+
+  final DatabaseExecutor _db;
+
+  @override
+  Future<Result<List<AdminProductTagResponse>, SqlxError>> list(String query, int limit, int offset) {
+    return _db.fetchAll<AdminProductTagResponse>(
+      r'''
+SELECT id, value, created_at, updated_at
+FROM product_tags
+WHERE deleted_at IS NULL
+  AND (? = '' OR lower(value) LIKE '%' || lower(?) || '%')
+ORDER BY lower(value), id
+LIMIT ? OFFSET ?
+''',
+      [query, query, limit, offset],
+      const $AdminProductTagResponseRowDeserializer().deserialize,
+    );
+  }
+
+  @override
+  Future<Result<int, SqlxError>> count(String query) {
+    return _db.fetchScalar<int>(
+      r'''
+SELECT count(*)
+FROM product_tags
+WHERE deleted_at IS NULL
+  AND (? = '' OR lower(value) LIKE '%' || lower(?) || '%')
+''',
+      [query, query],
+    );
+  }
+}

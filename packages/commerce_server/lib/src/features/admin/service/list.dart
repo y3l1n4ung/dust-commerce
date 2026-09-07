@@ -1,5 +1,6 @@
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/src/features/admin/model.dart';
+import 'package:commerce_server/src/features/admin/product_tag_model.dart';
 import 'package:commerce_server/src/features/admin/product_type_model.dart';
 import 'package:commerce_server/src/features/admin/repository/repository.dart';
 import 'package:dust_dart/db.dart';
@@ -76,6 +77,26 @@ Future<Result<AdminProductTypeListResponse, SqlxError>> listAdminProductTypes(
   if (count case Err(:final error)) return Err(error);
   return Ok(AdminProductTypeListResponse(
     productTypes: (rows as Ok<List<AdminProductTypeResponse>, SqlxError>).value,
+    count: (count as Ok<int, SqlxError>).value,
+    limit: limit,
+    offset: offset,
+  ));
+}
+
+/// Lists one bounded page of reusable product tags.
+Future<Result<AdminProductTagListResponse, SqlxError>> listAdminProductTags(
+  AdminProductTagRepository productTags, {
+  required String query,
+  required int limit,
+  required int offset,
+}) async {
+  final normalized = query.trim();
+  final rows = await productTags.list(normalized, limit, offset);
+  if (rows case Err(:final error)) return Err(error);
+  final count = await productTags.count(normalized);
+  if (count case Err(:final error)) return Err(error);
+  return Ok(AdminProductTagListResponse(
+    productTags: (rows as Ok<List<AdminProductTagResponse>, SqlxError>).value,
     count: (count as Ok<int, SqlxError>).value,
     limit: limit,
     offset: offset,

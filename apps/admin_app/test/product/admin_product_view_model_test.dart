@@ -97,6 +97,28 @@ void main() {
     expect(products.state.products.single.id, 'prod_tshirt');
   });
 
+  test('loads real filter options and clears every active filter', () async {
+    await products.loadFilterOptions();
+
+    expect(products.state.filterOptionsStatus, AdminFilterOptionsStatus.ready);
+    expect(products.state.productTypes.map((type) => type.value),
+        contains('Shirt'));
+    expect(
+        products.state.productTags.map((tag) => tag.value), contains('Cotton'));
+
+    await products.filterByStatuses(const [AdminProductLifecycle.published]);
+    await products.filterByTypes(const ['ptyp_shirt']);
+    await products.filterByTags(const ['ptag_cotton']);
+    await products.clearFilters();
+
+    expect(products.state.statuses, isEmpty);
+    expect(products.state.typeIds, isEmpty);
+    expect(products.state.tagIds, isEmpty);
+    expect(products.state.createdAt.isEmpty, isTrue);
+    expect(products.state.updatedAt.isEmpty, isTrue);
+    expect(products.state.count, 4);
+  });
+
   test('orders products using the Medusa query contract', () async {
     await products.orderBy(AdminProductOrder.titleAsc);
 
@@ -141,6 +163,22 @@ void main() {
     );
     expect(products.state.count, 1);
     expect(products.state.products.single.id, 'prod_shorts');
+  });
+
+  test('reports expired sessions when filter discovery is unauthorized',
+      () async {
+    final unauthorized = AdminProductViewModel(
+      AdminProductViewModelArgs(api: AdminApi(Dio(), baseUrl: server.origin)),
+    );
+
+    await unauthorized.loadFilterOptions();
+
+    expect(unauthorized.state.filterOptionsStatus,
+        AdminFilterOptionsStatus.failed);
+    expect(
+      unauthorized.state.filterOptionsFailure,
+      const Some('Your admin session has expired.'),
+    );
   });
 
   test('removes a deleted product from the current page', () async {

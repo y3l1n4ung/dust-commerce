@@ -14,6 +14,8 @@
 part of 'admin_product_state.dart';
 
 const DeepCollectionEquality _adminProductStateProductsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductStateProductTagsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductStateProductTypesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductStateStatusesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductStateTagIdsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductStateTypeIdsEquality = DeepCollectionEquality();
@@ -26,10 +28,14 @@ mixin _$AdminProductState {
         'count: ${self.count}, '
         'createdAt: ${self.createdAt}, '
         'failure: ${self.failure}, '
+        'filterOptionsFailure: ${self.filterOptionsFailure}, '
+        'filterOptionsStatus: ${self.filterOptionsStatus}, '
         'limit: ${self.limit}, '
         'offset: ${self.offset}, '
         'order: ${self.order}, '
         'products: ${self.products}, '
+        'productTags: ${self.productTags}, '
+        'productTypes: ${self.productTypes}, '
         'query: ${self.query}, '
         'statuses: ${self.statuses}, '
         'tagIds: ${self.tagIds}, '
@@ -48,10 +54,14 @@ mixin _$AdminProductState {
             other.count == self.count &&
             other.createdAt == self.createdAt &&
             other.failure == self.failure &&
+            other.filterOptionsFailure == self.filterOptionsFailure &&
+            other.filterOptionsStatus == self.filterOptionsStatus &&
             other.limit == self.limit &&
             other.offset == self.offset &&
             other.order == self.order &&
             _adminProductStateProductsEquality.equals(other.products, self.products) &&
+            _adminProductStateProductTagsEquality.equals(other.productTags, self.productTags) &&
+            _adminProductStateProductTypesEquality.equals(other.productTypes, self.productTypes) &&
             other.query == self.query &&
             _adminProductStateStatusesEquality.equals(other.statuses, self.statuses) &&
             _adminProductStateTagIdsEquality.equals(other.tagIds, self.tagIds) &&
@@ -68,10 +78,14 @@ mixin _$AdminProductState {
       self.count,
       self.createdAt,
       self.failure,
+      self.filterOptionsFailure,
+      self.filterOptionsStatus,
       self.limit,
       self.offset,
       self.order,
       _adminProductStateProductsEquality.hash(self.products),
+      _adminProductStateProductTagsEquality.hash(self.productTags),
+      _adminProductStateProductTypesEquality.hash(self.productTypes),
       self.query,
       _adminProductStateStatusesEquality.hash(self.statuses),
       _adminProductStateTagIdsEquality.hash(self.tagIds),
@@ -99,10 +113,14 @@ abstract class _$AdminProductStateCopyWith<$Res> {
     int? count,
     AdminDateFilter? createdAt,
     Option<String>? failure,
+    Option<String>? filterOptionsFailure,
+    AdminFilterOptionsStatus? filterOptionsStatus,
     int? limit,
     int? offset,
     AdminProductOrder? order,
     List<AdminProduct>? products,
+    List<AdminProductTag>? productTags,
+    List<AdminProductType>? productTypes,
     String? query,
     List<AdminProductLifecycle>? statuses,
     List<String>? tagIds,
@@ -125,10 +143,14 @@ final class _$AdminProductStateCopyWithImpl<$Res> implements _$AdminProductState
     Object? count = null,
     Object? createdAt = null,
     Object? failure = null,
+    Object? filterOptionsFailure = null,
+    Object? filterOptionsStatus = null,
     Object? limit = null,
     Object? offset = null,
     Object? order = null,
     Object? products = null,
+    Object? productTags = null,
+    Object? productTypes = null,
     Object? query = null,
     Object? statuses = null,
     Object? tagIds = null,
@@ -151,6 +173,10 @@ final class _$AdminProductStateCopyWithImpl<$Res> implements _$AdminProductState
         updatedAt: updatedAt == null ? _self.updatedAt : updatedAt as AdminDateFilter,
         order: order == null ? _self.order : order as AdminProductOrder,
         failure: failure == null ? _self.failure : failure as Option<String>,
+        filterOptionsStatus: filterOptionsStatus == null ? _self.filterOptionsStatus : filterOptionsStatus as AdminFilterOptionsStatus,
+        filterOptionsFailure: filterOptionsFailure == null ? _self.filterOptionsFailure : filterOptionsFailure as Option<String>,
+        productTypes: productTypes == null ? _self.productTypes : productTypes as List<AdminProductType>,
+        productTags: productTags == null ? _self.productTags : productTags as List<AdminProductTag>,
       )
     );
   }

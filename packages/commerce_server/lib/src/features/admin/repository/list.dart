@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/admin/model.dart';
+import 'package:commerce_server/src/features/admin/product_tag_model.dart';
 import 'package:commerce_server/src/features/admin/product_type_model.dart';
 import 'package:dust_dart/db.dart';
 
@@ -142,6 +143,38 @@ LIMIT $2 OFFSET $3
   @Query(r'''
 SELECT count(*)
 FROM product_types
+WHERE deleted_at IS NULL
+  AND ($1 = '' OR lower(value) LIKE '%' || lower($1) || '%')
+''')
+  Future<Result<int, SqlxError>> count(String query);
+}
+
+/// Read-only product-tag discovery used by Admin filters.
+@SqlxDao()
+abstract final class AdminProductTagRepository {
+  /// Binds product-tag list queries to [db].
+  const factory AdminProductTagRepository(DatabaseExecutor db) =
+      _$AdminProductTagRepository;
+
+  /// Lists active product tags with Medusa's default allowlist.
+  @Query(r'''
+SELECT id, value, created_at, updated_at
+FROM product_tags
+WHERE deleted_at IS NULL
+  AND ($1 = '' OR lower(value) LIKE '%' || lower($1) || '%')
+ORDER BY lower(value), id
+LIMIT $2 OFFSET $3
+''')
+  Future<Result<List<AdminProductTagResponse>, SqlxError>> list(
+    String query,
+    int limit,
+    int offset,
+  );
+
+  /// Counts the same active product-tag search result.
+  @Query(r'''
+SELECT count(*)
+FROM product_tags
 WHERE deleted_at IS NULL
   AND ($1 = '' OR lower(value) LIKE '%' || lower($1) || '%')
 ''')

@@ -66,7 +66,10 @@ final class _AdminHomeState extends State<_AdminHome> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) context.readAdminProductViewModel().load(offset: 0);
+      if (!mounted) return;
+      context.readAdminProductViewModel()
+        ..load(offset: 0)
+        ..loadFilterOptions();
     });
   }
 

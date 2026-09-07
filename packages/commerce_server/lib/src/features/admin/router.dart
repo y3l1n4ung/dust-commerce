@@ -30,6 +30,7 @@ Router adminRoutes() => Router()
     get(listAdminProductOptionsHandler)
         .post(createAdminProductOptionHandler, status: 201),
   )
+  ..route('/product-tags', get(listAdminProductTagsHandler))
   ..route('/product-types', get(listAdminProductTypesHandler))
   ..route(
     '/product-options/{id}',

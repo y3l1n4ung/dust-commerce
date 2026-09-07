@@ -7,6 +7,7 @@ export 'src/admin_product.dart';
 export 'src/admin_product_deleted.dart';
 export 'src/admin_product_option.dart';
 export 'src/admin_product_query.dart';
+export 'src/admin_product_tag.dart';
 export 'src/admin_product_type.dart';
 export 'src/admin_product_image.dart';
 export 'src/admin_product_image_variants.dart';

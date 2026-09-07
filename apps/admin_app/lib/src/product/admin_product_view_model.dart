@@ -63,6 +63,38 @@ final class AdminProductViewModel extends $AdminProductViewModel {
   /// Loads the first page for [query].
   Future<void> search(String query) => load(query: query, offset: 0);
 
+  /// Loads the real type and tag choices used by Medusa's filter menu.
+  Future<void> loadFilterOptions() async {
+    if (state.filterOptionsStatus == AdminFilterOptionsStatus.loading ||
+        state.filterOptionsStatus == AdminFilterOptionsStatus.ready) {
+      return;
+    }
+    emit(state.copyWith(
+      filterOptionsStatus: AdminFilterOptionsStatus.loading,
+      filterOptionsFailure: const None(),
+    ));
+    try {
+      final responses = await Future.wait<Object>([
+        args.api.listProductTypes('', 1000, 0),
+        args.api.listProductTags('', 1000, 0),
+      ]);
+      final types = responses[0] as AdminProductTypeList;
+      final tags = responses[1] as AdminProductTagList;
+      emit(state.copyWith(
+        filterOptionsStatus: AdminFilterOptionsStatus.ready,
+        filterOptionsFailure: const None(),
+        productTypes: List.unmodifiable(types.productTypes),
+        productTags: List.unmodifiable(tags.productTags),
+      ));
+    } on DioException catch (error) {
+      _filterOptionsFailed(error.response?.statusCode == 401
+          ? 'Your admin session has expired.'
+          : 'Unable to load filter choices. Try again.');
+    } on Object {
+      _filterOptionsFailed('Unable to load filter choices. Try again.');
+    }
+  }
+
   /// Loads one bounded catalogue page.
   Future<void> load({
     String? query,
@@ -83,11 +115,9 @@ final class AdminProductViewModel extends $AdminProductViewModel {
     final nextUpdatedAt = updatedAt ?? state.updatedAt;
     final nextOrder = order ?? state.order;
     final revision = ++_revision;
-    emit(AdminProductState(
+    emit(state.copyWith(
       status: AdminProductStatus.loading,
       products: state.products,
-      count: state.count,
-      limit: state.limit,
       offset: nextOffset,
       query: nextQuery,
       statuses: nextStatuses,
@@ -110,7 +140,7 @@ final class AdminProductViewModel extends $AdminProductViewModel {
         nextOffset,
       );
       if (revision != _revision) return;
-      emit(AdminProductState(
+      emit(state.copyWith(
         status: AdminProductStatus.ready,
         products: result.products,
         count: result.count,
@@ -148,19 +178,13 @@ final class AdminProductViewModel extends $AdminProductViewModel {
         failure: Some(message),
       ));
 
-  void _fail(String message) => emit(AdminProductState(
+  void _filterOptionsFailed(String message) => emit(state.copyWith(
+        filterOptionsStatus: AdminFilterOptionsStatus.failed,
+        filterOptionsFailure: Some(message),
+      ));
+
+  void _fail(String message) => emit(state.copyWith(
         status: AdminProductStatus.failed,
-        products: state.products,
-        count: state.count,
-        limit: state.limit,
-        offset: state.offset,
-        query: state.query,
-        statuses: state.statuses,
-        tagIds: state.tagIds,
-        typeIds: state.typeIds,
-        createdAt: state.createdAt,
-        updatedAt: state.updatedAt,
-        order: state.order,
         failure: Some(message),
       ));
 }

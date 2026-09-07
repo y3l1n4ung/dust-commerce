@@ -16,6 +16,7 @@ final class AdminDeps {
     required this.passwordWork,
     required this.dummyPasswordHash,
     required this.products,
+    required this.productTags,
     required this.productTypes,
     required this.productOptions,
     required this.productReads,
@@ -48,6 +49,9 @@ final class AdminDeps {
 
   /// Merchant catalogue listing queries.
   final AdminProductRepository products;
+
+  /// Reusable product-tag discovery for filters and selectors.
+  final AdminProductTagRepository productTags;
 
   /// Reusable product-type discovery for filters and selectors.
   final AdminProductTypeRepository productTypes;
