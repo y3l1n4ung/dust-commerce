@@ -30,12 +30,18 @@ final class AdminProductState with _$AdminProductState {
     this.offset = 0,
     this.query = '',
     this.statuses = const [],
+    this.tagIds = const [],
+    this.createdAt = const AdminDateFilter(),
+    this.updatedAt = const AdminDateFilter(),
     this.order = AdminProductOrder.createdAtDesc,
     this.failure = const None(),
   });
 
   /// Total rows matching [query].
   final int count;
+
+  /// Creation-time comparison applied by the server.
+  final AdminDateFilter createdAt;
 
   /// Display-safe failure message.
   final Option<String> failure;
@@ -57,6 +63,12 @@ final class AdminProductState with _$AdminProductState {
 
   /// Selected lifecycle states; empty includes every active product.
   final List<AdminProductLifecycle> statuses;
+
+  /// Selected public tag identifiers; empty includes every tag.
+  final List<String> tagIds;
+
+  /// Update-time comparison applied by the server.
+  final AdminDateFilter updatedAt;
 
   /// Current request lifecycle.
   final AdminProductStatus status;

@@ -16,6 +16,12 @@ Future<Result<AdminProductListResponse, Rejection>> listAdminProductsHandler(
   final query = request.requestedUri.queryParameters['q'] ?? '';
   final statuses = _productStatuses(request);
   if (statuses case Err(:final error)) return Err(error);
+  final tagIds = _tagIds(request);
+  if (tagIds case Err(:final error)) return Err(error);
+  final createdAt = _dateFilter(request, 'created_at');
+  if (createdAt case Err(:final error)) return Err(error);
+  final updatedAt = _dateFilter(request, 'updated_at');
+  if (updatedAt case Err(:final error)) return Err(error);
   final order = AdminProductOrder.parse(
     request.requestedUri.queryParameters['order'] ?? '-created_at',
   );
@@ -26,6 +32,9 @@ Future<Result<AdminProductListResponse, Rejection>> listAdminProductsHandler(
     deps.products,
     query: query,
     statuses: (statuses as Ok<List<AdminProductLifecycle>, Rejection>).value,
+    tagIds: (tagIds as Ok<List<String>, Rejection>).value,
+    createdAt: (createdAt as Ok<AdminDateFilter, Rejection>).value,
+    updatedAt: (updatedAt as Ok<AdminDateFilter, Rejection>).value,
     order: (order as Some<AdminProductOrder>).value,
     limit: paging.limit,
     offset: paging.offset,
@@ -33,6 +42,19 @@ Future<Result<AdminProductListResponse, Rejection>> listAdminProductsHandler(
   return switch (result) {
     Ok(:final value) => Ok(value),
     Err() => const Err(Rejection.internal()),
+  };
+}
+
+Result<AdminDateFilter, Rejection> _dateFilter(
+  Request request,
+  String name,
+) {
+  final parsed = AdminDateFilter.parse(
+    request.requestedUri.queryParameters[name] ?? '',
+  );
+  return switch (parsed) {
+    Some(:final value) => Ok(value),
+    None() => Err(Rejection.badRequest('Invalid $name filter')),
   };
 }
 
@@ -52,6 +74,17 @@ Result<List<AdminProductLifecycle>, Rejection> _productStatuses(
     if (!statuses.contains(matches.single)) statuses.add(matches.single);
   }
   return Ok(List.unmodifiable(statuses));
+}
+
+Result<List<String>, Rejection> _tagIds(Request request) {
+  final raw = request.requestedUri.queryParameters['tag_id'] ?? '';
+  if (raw.isEmpty) return const Ok([]);
+  final ids = raw.split(',');
+  final valid = RegExp(r'^[A-Za-z0-9_:-]{1,100}$');
+  if (ids.length > 100 || ids.any((id) => !valid.hasMatch(id))) {
+    return const Err(Rejection.badRequest('Invalid product tag ids'));
+  }
+  return Ok(List.unmodifiable(ids.toSet()));
 }
 
 /// `GET /admin/products/create-context` — active pricing currencies.

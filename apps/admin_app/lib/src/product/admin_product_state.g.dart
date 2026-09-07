@@ -15,6 +15,7 @@ part of 'admin_product_state.dart';
 
 const DeepCollectionEquality _adminProductStateProductsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductStateStatusesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductStateTagIdsEquality = DeepCollectionEquality();
 
 mixin _$AdminProductState {
   @override
@@ -22,6 +23,7 @@ mixin _$AdminProductState {
     final self = this as AdminProductState;
     return 'AdminProductState('
         'count: ${self.count}, '
+        'createdAt: ${self.createdAt}, '
         'failure: ${self.failure}, '
         'limit: ${self.limit}, '
         'offset: ${self.offset}, '
@@ -29,6 +31,8 @@ mixin _$AdminProductState {
         'products: ${self.products}, '
         'query: ${self.query}, '
         'statuses: ${self.statuses}, '
+        'tagIds: ${self.tagIds}, '
+        'updatedAt: ${self.updatedAt}, '
         'status: ${self.status}'
         ')';
   }
@@ -40,6 +44,7 @@ mixin _$AdminProductState {
         other is AdminProductState &&
             runtimeType == other.runtimeType &&
             other.count == self.count &&
+            other.createdAt == self.createdAt &&
             other.failure == self.failure &&
             other.limit == self.limit &&
             other.offset == self.offset &&
@@ -47,6 +52,8 @@ mixin _$AdminProductState {
             _adminProductStateProductsEquality.equals(other.products, self.products) &&
             other.query == self.query &&
             _adminProductStateStatusesEquality.equals(other.statuses, self.statuses) &&
+            _adminProductStateTagIdsEquality.equals(other.tagIds, self.tagIds) &&
+            other.updatedAt == self.updatedAt &&
             other.status == self.status;
   }
 
@@ -56,6 +63,7 @@ mixin _$AdminProductState {
     return Object.hashAll([
       runtimeType,
       self.count,
+      self.createdAt,
       self.failure,
       self.limit,
       self.offset,
@@ -63,6 +71,8 @@ mixin _$AdminProductState {
       _adminProductStateProductsEquality.hash(self.products),
       self.query,
       _adminProductStateStatusesEquality.hash(self.statuses),
+      _adminProductStateTagIdsEquality.hash(self.tagIds),
+      self.updatedAt,
       self.status,
     ]);
   }
@@ -83,6 +93,7 @@ mixin _$AdminProductState {
 abstract class _$AdminProductStateCopyWith<$Res> {
   $Res call({
     int? count,
+    AdminDateFilter? createdAt,
     Option<String>? failure,
     int? limit,
     int? offset,
@@ -90,6 +101,8 @@ abstract class _$AdminProductStateCopyWith<$Res> {
     List<AdminProduct>? products,
     String? query,
     List<AdminProductLifecycle>? statuses,
+    List<String>? tagIds,
+    AdminDateFilter? updatedAt,
     AdminProductStatus? status,
   });
 }
@@ -105,6 +118,7 @@ final class _$AdminProductStateCopyWithImpl<$Res> implements _$AdminProductState
   @pragma('vm:prefer-inline')
   $Res call({
     Object? count = null,
+    Object? createdAt = null,
     Object? failure = null,
     Object? limit = null,
     Object? offset = null,
@@ -112,6 +126,8 @@ final class _$AdminProductStateCopyWithImpl<$Res> implements _$AdminProductState
     Object? products = null,
     Object? query = null,
     Object? statuses = null,
+    Object? tagIds = null,
+    Object? updatedAt = null,
     Object? status = null,
   }) {
     return _then(
@@ -123,6 +139,9 @@ final class _$AdminProductStateCopyWithImpl<$Res> implements _$AdminProductState
         offset: offset == null ? _self.offset : offset as int,
         query: query == null ? _self.query : query as String,
         statuses: statuses == null ? _self.statuses : statuses as List<AdminProductLifecycle>,
+        tagIds: tagIds == null ? _self.tagIds : tagIds as List<String>,
+        createdAt: createdAt == null ? _self.createdAt : createdAt as AdminDateFilter,
+        updatedAt: updatedAt == null ? _self.updatedAt : updatedAt as AdminDateFilter,
         order: order == null ? _self.order : order as AdminProductOrder,
         failure: failure == null ? _self.failure : failure as Option<String>,
       )

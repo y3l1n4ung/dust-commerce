@@ -8,6 +8,9 @@ Future<Result<AdminProductListResponse, SqlxError>> listAdminProducts(
   AdminProductRepository products, {
   required String query,
   required List<AdminProductLifecycle> statuses,
+  required List<String> tagIds,
+  required AdminDateFilter createdAt,
+  required AdminDateFilter updatedAt,
   required AdminProductOrder order,
   required int limit,
   required int offset,
@@ -17,13 +20,34 @@ Future<Result<AdminProductListResponse, SqlxError>> listAdminProducts(
   final page = await products.list(
     normalized,
     statusList,
+    tagIds.join(','),
+    _value(createdAt.greaterThan),
+    _value(createdAt.greaterThanOrEqual),
+    _value(createdAt.lessThan),
+    _value(createdAt.lessThanOrEqual),
+    _value(updatedAt.greaterThan),
+    _value(updatedAt.greaterThanOrEqual),
+    _value(updatedAt.lessThan),
+    _value(updatedAt.lessThanOrEqual),
     order.parameter,
     limit,
     offset,
   );
   if (page case Err(:final error)) return Err(error);
 
-  final total = await products.count(normalized, statusList);
+  final total = await products.count(
+    normalized,
+    statusList,
+    tagIds.join(','),
+    _value(createdAt.greaterThan),
+    _value(createdAt.greaterThanOrEqual),
+    _value(createdAt.lessThan),
+    _value(createdAt.lessThanOrEqual),
+    _value(updatedAt.greaterThan),
+    _value(updatedAt.greaterThanOrEqual),
+    _value(updatedAt.lessThan),
+    _value(updatedAt.lessThanOrEqual),
+  );
   if (total case Err(:final error)) return Err(error);
 
   return Ok(AdminProductListResponse(
@@ -33,3 +57,8 @@ Future<Result<AdminProductListResponse, SqlxError>> listAdminProducts(
     offset: offset,
   ));
 }
+
+String _value(Option<DateTime> value) => switch (value) {
+      Some(value: final instant) => instant.toIso8601String(),
+      None() => '',
+    };

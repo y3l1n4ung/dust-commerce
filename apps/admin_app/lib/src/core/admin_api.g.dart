@@ -134,6 +134,9 @@ final class _$AdminApi implements AdminApi {
   Future<AdminProductList> listProducts(
     String query,
     String statuses,
+    String tagIds,
+    String createdAt,
+    String updatedAt,
     String order,
     int limit,
     int offset,
@@ -144,6 +147,9 @@ final class _$AdminApi implements AdminApi {
     _headers['accept'] = 'application/json';
     _queryParameters['q'] = query;
     _queryParameters['status'] = statuses;
+    _queryParameters['tag_id'] = tagIds;
+    _queryParameters['created_at'] = createdAt;
+    _queryParameters['updated_at'] = updatedAt;
     _queryParameters['order'] = order;
     _queryParameters['limit'] = limit;
     _queryParameters['offset'] = offset;

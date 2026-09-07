@@ -68,6 +68,38 @@ final class AdminProductViewModel extends $AdminProductViewModel {
         offset: 0,
       );
 
+  /// Applies selected public tag ids and resets server paging.
+  Future<void> filterByTags(List<String> tagIds) => load(
+        tagIds: List.unmodifiable(tagIds.toSet()),
+        offset: 0,
+      );
+
+  /// Applies an inclusive creation-time range and resets server paging.
+  Future<void> filterByCreatedAt({
+    required Option<DateTime> from,
+    required Option<DateTime> to,
+  }) =>
+      load(
+        createdAt: AdminDateFilter(
+          greaterThanOrEqual: from,
+          lessThanOrEqual: to,
+        ),
+        offset: 0,
+      );
+
+  /// Applies an inclusive update-time range and resets server paging.
+  Future<void> filterByUpdatedAt({
+    required Option<DateTime> from,
+    required Option<DateTime> to,
+  }) =>
+      load(
+        updatedAt: AdminDateFilter(
+          greaterThanOrEqual: from,
+          lessThanOrEqual: to,
+        ),
+        offset: 0,
+      );
+
   /// Applies one allowlisted server ordering and resets paging.
   Future<void> orderBy(AdminProductOrder order) => load(
         order: order,
@@ -79,11 +111,17 @@ final class AdminProductViewModel extends $AdminProductViewModel {
     String? query,
     int? offset,
     List<AdminProductLifecycle>? statuses,
+    List<String>? tagIds,
+    AdminDateFilter? createdAt,
+    AdminDateFilter? updatedAt,
     AdminProductOrder? order,
   }) async {
     final nextQuery = (query ?? state.query).trim();
     final nextOffset = (offset ?? state.offset).clamp(0, 1 << 31);
     final nextStatuses = statuses ?? state.statuses;
+    final nextTagIds = tagIds ?? state.tagIds;
+    final nextCreatedAt = createdAt ?? state.createdAt;
+    final nextUpdatedAt = updatedAt ?? state.updatedAt;
     final nextOrder = order ?? state.order;
     final revision = ++_revision;
     emit(AdminProductState(
@@ -94,12 +132,18 @@ final class AdminProductViewModel extends $AdminProductViewModel {
       offset: nextOffset,
       query: nextQuery,
       statuses: nextStatuses,
+      tagIds: nextTagIds,
+      createdAt: nextCreatedAt,
+      updatedAt: nextUpdatedAt,
       order: nextOrder,
     ));
     try {
       final result = await args.api.listProducts(
         nextQuery,
         nextStatuses.map((status) => status.name).join(','),
+        nextTagIds.join(','),
+        nextCreatedAt.isEmpty ? '' : nextCreatedAt.parameter,
+        nextUpdatedAt.isEmpty ? '' : nextUpdatedAt.parameter,
         nextOrder.parameter,
         state.limit,
         nextOffset,
@@ -113,6 +157,9 @@ final class AdminProductViewModel extends $AdminProductViewModel {
         offset: result.offset,
         query: nextQuery,
         statuses: nextStatuses,
+        tagIds: nextTagIds,
+        createdAt: nextCreatedAt,
+        updatedAt: nextUpdatedAt,
         order: nextOrder,
       ));
     } on DioException catch (error) {
@@ -147,6 +194,9 @@ final class AdminProductViewModel extends $AdminProductViewModel {
         offset: state.offset,
         query: state.query,
         statuses: state.statuses,
+        tagIds: state.tagIds,
+        createdAt: state.createdAt,
+        updatedAt: state.updatedAt,
         order: state.order,
         failure: Some(message),
       ));

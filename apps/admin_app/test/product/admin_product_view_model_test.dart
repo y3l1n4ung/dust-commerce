@@ -101,6 +101,37 @@ void main() {
     );
   });
 
+  test('keeps tag and date filters in generated query state', () async {
+    await database.connection.execute(
+      "INSERT INTO product_tags (id, value) VALUES ('ptag_featured', 'Featured')",
+      const [],
+    );
+    await database.connection.execute(
+      "INSERT INTO product_tag_products (product_id, tag_id) "
+      "VALUES ('prod_shorts', 'ptag_featured')",
+      const [],
+    );
+    await database.connection.execute(
+      "UPDATE products SET created_at = '2026-01-04T00:00:00.000Z' "
+      "WHERE id = 'prod_shorts'",
+      const [],
+    );
+
+    await products.filterByTags(const ['ptag_featured']);
+    await products.filterByCreatedAt(
+      from: Some(DateTime.utc(2026, 1, 4)),
+      to: Some(DateTime.utc(2026, 1, 4, 23, 59, 59)),
+    );
+
+    expect(products.state.tagIds, const ['ptag_featured']);
+    expect(
+      products.state.createdAt.greaterThanOrEqual,
+      Some(DateTime.utc(2026, 1, 4)),
+    );
+    expect(products.state.count, 1);
+    expect(products.state.products.single.id, 'prod_shorts');
+  });
+
   test('removes a deleted product from the current page', () async {
     await products.load();
 

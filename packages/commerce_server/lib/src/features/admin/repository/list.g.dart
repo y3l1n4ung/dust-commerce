@@ -19,7 +19,7 @@ final class _$AdminProductRepository implements AdminProductRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<AdminProductResponse>, SqlxError>> list(String query, String statuses, String order, int limit, int offset) {
+  Future<Result<List<AdminProductResponse>, SqlxError>> list(String query, String statuses, String tagIds, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo, String order, int limit, int offset) {
     return _db.fetchAll<AdminProductResponse>(
       r'''
 SELECT product.id,
@@ -38,6 +38,21 @@ WHERE product.deleted_at IS NULL
   AND (? = '' OR lower(product.title) LIKE '%' || lower(?) || '%'
        OR lower(product.handle) LIKE '%' || lower(?) || '%')
   AND (? = '' OR instr(',' || ? || ',', ',' || product.status || ',') > 0)
+  AND (? = '' OR EXISTS (
+    SELECT 1
+    FROM product_tag_products tag_link
+    JOIN product_tags tag ON tag.id = tag_link.tag_id
+    WHERE tag_link.product_id = product.id AND tag.deleted_at IS NULL
+      AND instr(',' || ? || ',', ',' || tag_link.tag_id || ',') > 0
+  ))
+  AND (? = '' OR product.created_at > ?)
+  AND (? = '' OR product.created_at >= ?)
+  AND (? = '' OR product.created_at < ?)
+  AND (? = '' OR product.created_at <= ?)
+  AND (? = '' OR product.updated_at > ?)
+  AND (? = '' OR product.updated_at >= ?)
+  AND (? = '' OR product.updated_at < ?)
+  AND (? = '' OR product.updated_at <= ?)
 GROUP BY product.id, product.title, product.thumbnail, collection.title,
          product.status, product.created_at, product.updated_at
 ORDER BY
@@ -50,13 +65,13 @@ ORDER BY
   product.id ASC
 LIMIT ? OFFSET ?
 ''',
-      [query, query, query, statuses, statuses, order, order, order, order, order, order, limit, offset],
+      [query, query, query, statuses, statuses, tagIds, tagIds, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo, order, order, order, order, order, order, limit, offset],
       const $AdminProductResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<int, SqlxError>> count(String query, String statuses) {
+  Future<Result<int, SqlxError>> count(String query, String statuses, String tagIds, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo) {
     return _db.fetchScalar<int>(
       r'''
 SELECT count(*)
@@ -65,8 +80,23 @@ WHERE product.deleted_at IS NULL
   AND (? = '' OR lower(product.title) LIKE '%' || lower(?) || '%'
        OR lower(product.handle) LIKE '%' || lower(?) || '%')
   AND (? = '' OR instr(',' || ? || ',', ',' || product.status || ',') > 0)
+  AND (? = '' OR EXISTS (
+    SELECT 1
+    FROM product_tag_products tag_link
+    JOIN product_tags tag ON tag.id = tag_link.tag_id
+    WHERE tag_link.product_id = product.id AND tag.deleted_at IS NULL
+      AND instr(',' || ? || ',', ',' || tag_link.tag_id || ',') > 0
+  ))
+  AND (? = '' OR product.created_at > ?)
+  AND (? = '' OR product.created_at >= ?)
+  AND (? = '' OR product.created_at < ?)
+  AND (? = '' OR product.created_at <= ?)
+  AND (? = '' OR product.updated_at > ?)
+  AND (? = '' OR product.updated_at >= ?)
+  AND (? = '' OR product.updated_at < ?)
+  AND (? = '' OR product.updated_at <= ?)
 ''',
-      [query, query, query, statuses, statuses],
+      [query, query, query, statuses, statuses, tagIds, tagIds, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo],
     );
   }
 }

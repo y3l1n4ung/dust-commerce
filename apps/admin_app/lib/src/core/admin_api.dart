@@ -26,6 +26,9 @@ abstract interface class AdminApi {
   Future<AdminProductList> listProducts(
     @Query('q') String query,
     @Query('status') String statuses,
+    @Query('tag_id') String tagIds,
+    @Query('created_at') String createdAt,
+    @Query('updated_at') String updatedAt,
     @Query('order') String order,
     @Query('limit') int limit,
     @Query('offset') int offset,
