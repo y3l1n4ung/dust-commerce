@@ -296,6 +296,29 @@ final class StoreRoute extends CommerceRoute<void> {
   bool get requiresAuth => false;
 }
 
+/// Typed route data for `VerifyAccountRoute`.
+final class VerifyAccountRoute extends CommerceRoute<void> {
+  const VerifyAccountRoute({this.token = ''});
+
+  final String token;
+
+  @override
+  String get location {
+    final query = <String, dynamic>{};
+    if (token != '') {
+      query['token'] = token;
+    }
+    return generatedRoutePath(
+      ['verify-account'],
+      queryParameters: query.isEmpty ? null : query,
+      uriExtras: generatedRouteUriExtrasOf(this),
+    );
+  }
+
+  @override
+  bool get requiresAuth => false;
+}
+
 String commerceRouteLocation(CommerceRoute route) => route.location;
 
 CommerceRoute parseCommerceRoute(Uri uri) {
@@ -408,6 +431,11 @@ CommerceRoute parseCommerceRoute(Uri uri) {
       optionValueIds: optionValueIds,
     );
     return withGeneratedRouteUriExtras(route, uri, const <String>{'page', 'sortBy', 'optionValueIds'});
+  }
+  if (segments.length == 1 && segments[0] == 'verify-account') {
+    final token = uri.queryParameters['token'] ?? '';
+    final route = VerifyAccountRoute(token: token);
+    return withGeneratedRouteUriExtras(route, uri, const <String>{'token'});
   }
   return _$notFoundRoute(uri);
 }

@@ -1153,6 +1153,35 @@
   "@order_transfer_failed": {
     "description": "Retryable transfer failure feedback."
   },
+  "account_verification_sent": "We sent a verification link to {email}. Please check your inbox to verify your email, then sign in.",
+  "@account_verification_sent": {
+    "description": "Registration or sign-in email verification notice.",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "email_verification_title": "EMAIL VERIFICATION",
+  "@email_verification_title": {
+    "description": "Email verification page title."
+  },
+  "email_verification_loading": "Verifying your email...",
+  "@email_verification_loading": {
+    "description": "Email verification progress."
+  },
+  "email_verification_success": "Your email is verified. You can now sign in to your account.",
+  "@email_verification_success": {
+    "description": "Successful email verification message."
+  },
+  "email_verification_failed": "This verification link is invalid or has expired. Sign in to receive a new verification email.",
+  "@email_verification_failed": {
+    "description": "Invalid, expired, or consumed verification message."
+  },
+  "email_verification_sign_in": "Go to sign in",
+  "@email_verification_sign_in": {
+    "description": "Returns from verification to account sign in."
+  },
   "more": "more",
   "@more": {
     "description": "Completes the hidden order-item count."

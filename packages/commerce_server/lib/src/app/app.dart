@@ -34,8 +34,11 @@ Router buildApp(
   DateTime Function()? now,
   PasswordWorkLimiter? passwordWork,
   AdminMediaStorage mediaStorage = const UnavailableAdminMediaStorage(),
+  EmailVerificationMailer emailVerificationMailer =
+      const UnavailableEmailVerificationMailer(),
   OrderTransferMailer orderTransferMailer =
       const UnavailableOrderTransferMailer(),
+  bool requireEmailVerification = false,
 }) {
   final executor = database.executor;
   final clock = Clock(now: now ?? DateTime.now, nextId: nextId ?? _randomId);
@@ -50,8 +53,10 @@ Router buildApp(
     writes: AccountCreateRepository(executor),
     updates: AccountUpdateRepository(executor),
     deletes: AccountDeleteRepository(executor),
+    emailVerificationMailer: emailVerificationMailer,
     clock: clock,
     passwordWork: resolvedPasswordWork,
+    requireEmailVerification: requireEmailVerification,
   );
 
   return Router()

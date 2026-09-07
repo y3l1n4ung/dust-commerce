@@ -64,6 +64,17 @@ VALUES (?, ?, ?)
   }
 
   @override
+  Future<Result<ExecResult, SqlxError>> insertEmailVerification(String authIdentityId, String tokenHash, String expiresAt) {
+    return _db.execute(
+      r'''
+INSERT INTO email_verifications (auth_identity_id, token_hash, expires_at)
+VALUES (?, ?, ?)
+''',
+      [authIdentityId, tokenHash, expiresAt],
+    );
+  }
+
+  @override
   Future<Result<CustomerAddressResponse, SqlxError>> insertAddress(String id, String customerId, String firstName, String lastName, String? company, String? phone, String line1, String? line2, String city, String? province, String postalCode, String countryCode, int isDefaultShipping, int isDefaultBilling) {
     return _db.fetchOne<CustomerAddressResponse>(
       r'''

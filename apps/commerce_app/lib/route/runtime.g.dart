@@ -15,6 +15,7 @@ import 'package:commerce_app/src/features/account/view/account_order_detail_page
 import 'package:commerce_app/src/features/account/view/account_orders_page.dart';
 import 'package:commerce_app/src/features/account/view/account_page.dart';
 import 'package:commerce_app/src/features/account/view/account_profile_page.dart';
+import 'package:commerce_app/src/features/account/view/email_verification_page.dart';
 import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/category_page.dart';
@@ -131,6 +132,10 @@ RouteStack<CommerceRoute> restoreCommerceRouteStack(CommerceRoute route) {
       const CatalogRoute(),
       route,
     ],
+    VerifyAccountRoute(token: _) => [
+      const CatalogRoute(),
+      route,
+    ],
   };
 }
 
@@ -150,6 +155,7 @@ const Map<Type, Type?> _$appliedShellsByPage = {
   OrderTransferPage: null,
   ProductPage: null,
   StorePage: null,
+  EmailVerificationPage: null,
 };
 
 Page<dynamic> buildCommerceRoutePage(
@@ -320,6 +326,15 @@ Page<dynamic> buildCommerceRoutePage(
       fullscreenDialog: false,
       maintainState: true,
       child: StorePage(page: page, sortBy: sortBy, optionValueIds: optionValueIds),
+    ),
+    VerifyAccountRoute(token: final token) => generatedPage(
+      key: key,
+      location: route.location,
+      name: 'verifyAccount',
+      onPopInvoked: onPopInvoked,
+      fullscreenDialog: false,
+      maintainState: true,
+      child: EmailVerificationPage(token: token),
     ),
   };
 }

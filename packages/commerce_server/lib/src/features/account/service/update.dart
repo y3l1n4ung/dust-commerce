@@ -15,6 +15,22 @@ enum ChangePasswordFailure {
   unchanged,
 }
 
+/// Consumes one live verification capability exactly once.
+Future<Result<bool, SqlxError>> confirmCustomerEmail(
+  AccountUpdateRepository updates,
+  String token, {
+  required DateTime now,
+}) async {
+  final result = await updates.confirmEmail(
+    await Tokens.fingerprint(token),
+    now.toUtc().toIso8601String(),
+  );
+  return switch (result) {
+    Ok(:final value) => Ok(value.rowsAffected == 1),
+    Err(:final error) => Err(error),
+  };
+}
+
 /// Verifies and rotates a credential, then atomically revokes every session.
 Future<Result<Result<PasswordChanged, ChangePasswordFailure>, SqlxError>>
     changeCustomerPassword(

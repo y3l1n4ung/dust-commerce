@@ -91,6 +91,35 @@ final class IssuedToken with _$IssuedToken {
   final String token;
 }
 
+/// Single-use capability accepted from an email verification link.
+@Derive([Serialize(), Deserialize(), Validate()])
+final class VerifyEmailBody with _$VerifyEmailBody {
+  /// Creates a verification request.
+  const VerifyEmailBody({required this.token});
+
+  /// Decodes JSON using Dust.
+  factory VerifyEmailBody.fromJson(Map<String, Object?> json) =>
+      _$VerifyEmailBodyFromJson(json);
+
+  /// Opaque capability sent only in the email link and confirmation body.
+  @Validate(length: Length(min: 32, max: 1024), message: 'Invalid token')
+  final String token;
+}
+
+/// Confirms that one email capability was consumed.
+@Derive([Serialize(), Deserialize()])
+final class EmailVerified with _$EmailVerified {
+  /// Creates a verification response.
+  const EmailVerified({required this.success});
+
+  /// Decodes JSON using Dust.
+  factory EmailVerified.fromJson(Map<String, Object?> json) =>
+      _$EmailVerifiedFromJson(json);
+
+  /// Whether the account email is now verified.
+  final bool success;
+}
+
 /// Confirms that the current session token was revoked.
 @Derive([Serialize(), Deserialize()])
 final class SessionDeleted with _$SessionDeleted {

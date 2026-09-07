@@ -31,16 +31,18 @@ void main() {
       response
         ..assertCreated()
         ..assertJsonContains({
-          'id': 'id_1',
-          'email': 'ada@example.com',
-          'first_name': 'Ada',
+          'customer': {
+            'id': 'id_1',
+            'email': 'ada@example.com',
+            'first_name': 'Ada',
+            'last_name': 'Lovelace',
+            'phone': null,
+          },
+          'verification_required': false,
         });
       expect((response.json! as Map<String, Object?>).keys.toSet(), {
-        'email',
-        'first_name',
-        'id',
-        'last_name',
-        'phone',
+        'customer',
+        'verification_required',
       });
       final row = (await harness.raw(
         'SELECT c.has_account, c.created_at, c.updated_at, '

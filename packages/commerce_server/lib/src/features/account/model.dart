@@ -13,6 +13,7 @@ final class PasswordCredential with _$PasswordCredential {
   const PasswordCredential({
     required this.authIdentityId,
     required this.passwordHash,
+    required this.requiresEmailVerification,
   });
 
   /// Medusa-style authentication identity owning this provider credential.
@@ -22,6 +23,13 @@ final class PasswordCredential with _$PasswordCredential {
   /// Argon2id PHC string; never returned by an HTTP handler.
   @Sqlx(rename: 'password_hash')
   final String passwordHash;
+
+  /// Whether this identity owns an unfinished verification record.
+  @Sqlx(
+    rename: 'requires_email_verification',
+    tryFrom: AccountBoolFromInt(),
+  )
+  final bool requiresEmailVerification;
 }
 
 /// Explicit customer response populated directly from a customer row.

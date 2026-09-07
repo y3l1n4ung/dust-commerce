@@ -57,6 +57,17 @@ VALUES ($1, $2, $3)
     String expiresAt,
   );
 
+  /// Requires a new identity to consume one emailed capability before sign-in.
+  @Query(r'''
+INSERT INTO email_verifications (auth_identity_id, token_hash, expires_at)
+VALUES ($1, $2, $3)
+''')
+  Future<Result<ExecResult, SqlxError>> insertEmailVerification(
+    String authIdentityId,
+    String tokenHash,
+    String expiresAt,
+  );
+
   /// Creates one customer-owned reusable address and returns its public row.
   @Query(r'''
 INSERT INTO customer_addresses

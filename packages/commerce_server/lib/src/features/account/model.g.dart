@@ -21,7 +21,8 @@ mixin _$PasswordCredential {
         other is PasswordCredential &&
             runtimeType == other.runtimeType &&
             other.authIdentityId == self.authIdentityId &&
-            other.passwordHash == self.passwordHash;
+            other.passwordHash == self.passwordHash &&
+            other.requiresEmailVerification == self.requiresEmailVerification;
   }
 
   @override
@@ -31,6 +32,7 @@ mixin _$PasswordCredential {
       runtimeType,
       self.authIdentityId,
       self.passwordHash,
+      self.requiresEmailVerification,
     ]);
   }
 }
@@ -78,6 +80,7 @@ PasswordCredential _$PasswordCredentialFromRow(Row row) {
   return PasswordCredential(
     authIdentityId: row.read<String>('auth_identity_id'),
     passwordHash: row.read<String>('password_hash'),
+    requiresEmailVerification: AccountBoolFromInt().decode(row.read<int>('requires_email_verification')),
   );
 }
 

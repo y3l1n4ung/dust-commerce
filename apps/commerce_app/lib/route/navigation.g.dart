@@ -62,6 +62,9 @@ final class CommerceRoutesNavigator {
   CommerceRouteAction<void> store({int page = 1, String sortBy = 'created_at', List<String> optionValueIds = const []}) =>
       CommerceRouteAction(_router, StoreRoute(page: page, sortBy: sortBy, optionValueIds: optionValueIds));
 
+  CommerceRouteAction<void> verifyAccount({String token = ''}) =>
+      CommerceRouteAction(_router, VerifyAccountRoute(token: token));
+
   bool pop<R>([R? result]) => _router.pop<R>(result);
 }
 

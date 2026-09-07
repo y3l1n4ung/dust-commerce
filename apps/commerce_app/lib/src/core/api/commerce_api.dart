@@ -23,7 +23,13 @@ abstract interface class CommerceApi {
 
   /// Registers a customer account.
   @POST('/store/customers')
-  Future<Customer> registerAccount(@Body() RegisterAccountBody body);
+  Future<CustomerRegistrationView> registerAccount(
+    @Body() RegisterAccountBody body,
+  );
+
+  /// Consumes one single-use email verification capability.
+  @POST('/auth/customer/emailpass/verification/confirm')
+  Future<EmailVerified> confirmEmail(@Body() VerifyEmailBody body);
 
   /// Exchanges email/password credentials for a bearer token.
   @POST('/auth/customer/emailpass')

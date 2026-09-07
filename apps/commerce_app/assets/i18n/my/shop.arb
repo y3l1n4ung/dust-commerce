@@ -1153,6 +1153,35 @@
   "@order_transfer_failed": {
     "description": "Retryable transfer failure feedback."
   },
+  "account_verification_sent": "{email} သို့ အတည်ပြုလင့်ခ် ပို့လိုက်ပါပြီ။ အီးမေးလ်ကို အတည်ပြုပြီး အကောင့်ဝင်ပါ။",
+  "@account_verification_sent": {
+    "description": "Registration or sign-in email verification notice.",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "email_verification_title": "အီးမေးလ် အတည်ပြုခြင်း",
+  "@email_verification_title": {
+    "description": "Email verification page title."
+  },
+  "email_verification_loading": "အီးမေးလ်ကို အတည်ပြုနေပါသည်...",
+  "@email_verification_loading": {
+    "description": "Email verification progress."
+  },
+  "email_verification_success": "အီးမေးလ် အတည်ပြုပြီးပါပြီ။ ယခု အကောင့်ဝင်နိုင်ပါပြီ။",
+  "@email_verification_success": {
+    "description": "Successful email verification message."
+  },
+  "email_verification_failed": "ဤအတည်ပြုလင့်ခ်သည် မမှန်ပါ သို့မဟုတ် သက်တမ်းကုန်သွားပါပြီ။ အတည်ပြုအီးမေးလ်အသစ် ရယူရန် အကောင့်ဝင်ပါ။",
+  "@email_verification_failed": {
+    "description": "Invalid, expired, or consumed verification message."
+  },
+  "email_verification_sign_in": "အကောင့်ဝင်ရန် သွားမည်",
+  "@email_verification_sign_in": {
+    "description": "Returns from verification to account sign in."
+  },
   "more": "ထပ်ရှိသည်",
   "@more": {
     "description": "Completes the hidden order-item count."

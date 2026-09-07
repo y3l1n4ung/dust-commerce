@@ -1,8 +1,10 @@
 import 'package:commerce_app/commerce_app.dart';
+import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'account_auth_layout.dart';
+import 'account_verification_notice.dart';
 
 part 'account_form_actions.dart';
 part 'account_form_fields.dart';
@@ -54,6 +56,14 @@ class _AccountAuthFormState extends State<AccountAuthForm> {
     final matchingFailure = state.status == AccountStatus.failed &&
         state.operation ==
             (registering ? AccountOperation.register : AccountOperation.signIn);
+    final verificationEmail =
+        state.status == AccountStatus.verificationRequired &&
+                state.operation ==
+                    (registering
+                        ? AccountOperation.register
+                        : AccountOperation.signIn)
+            ? state.verificationEmail
+            : const None<String>();
     return AccountAuthLayout(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -92,6 +102,10 @@ class _AccountAuthFormState extends State<AccountAuthForm> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: registering ? 16 : 32),
+                  verificationEmail.match(
+                    some: (email) => AccountVerificationNotice(email: email),
+                    none: SizedBox.shrink,
+                  ),
                   _AccountFormFields(
                     registering: registering,
                     email: _email,

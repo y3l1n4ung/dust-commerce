@@ -3,9 +3,11 @@ import 'package:commerce_app/src/core/storage/storage.dart';
 import 'package:commerce_app/src/features/account/model/account_state.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dio/dio.dart';
+import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'account_view_model.g.dart';
+part 'account_authentication.dart';
 part 'account_error.dart';
 part 'account_password.dart';
 part 'account_profile.dart';
@@ -33,7 +35,10 @@ final class AccountViewModelArgs extends ViewModelArgs {
 /// Owns registration, sign-in, verified restore, and sign-out.
 @ViewModel(state: AccountState, args: AccountViewModelArgs)
 class AccountViewModel extends $AccountViewModel
-    with _AccountProfileMutation, _AccountPasswordMutation {
+    with
+        _AccountAuthentication,
+        _AccountProfileMutation,
+        _AccountPasswordMutation {
   /// Creates the account view model.
   AccountViewModel(super.args);
 
@@ -90,71 +95,6 @@ class AccountViewModel extends $AccountViewModel
       _fail(AccountOperation.restore, error);
     } on Object catch (error) {
       _fail(AccountOperation.restore, error);
-    }
-  }
-
-  /// Exchanges [email] and [password] for a secure customer session.
-  Future<bool> signIn({required String email, required String password}) async {
-    if (state.isBusy) return false;
-    emit(const AccountState(
-      status: AccountStatus.loading,
-      operation: AccountOperation.signIn,
-    ));
-    try {
-      final token = await args.api.signIn(
-        Credentials(email: email.trim(), password: password),
-      );
-      await args.sessions.write(token);
-      final customer = await args.api.currentCustomer();
-      emit(AccountState(
-        status: AccountStatus.signedIn,
-        customer: customer,
-      ));
-      return true;
-    } on Object catch (error) {
-      _fail(AccountOperation.signIn, error);
-      return false;
-    }
-  }
-
-  /// Creates an account and signs the new customer in.
-  Future<bool> register({
-    required String email,
-    required String password,
-    required String firstName,
-    required String lastName,
-    String? phone,
-  }) async {
-    if (state.isBusy) return false;
-    emit(const AccountState(
-      status: AccountStatus.loading,
-      operation: AccountOperation.register,
-    ));
-    try {
-      final normalizedPhone = phone?.trim();
-      final customer = await args.api.registerAccount(
-        RegisterAccountBody(
-          email: email.trim(),
-          password: password,
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
-          phone: normalizedPhone == null || normalizedPhone.isEmpty
-              ? null
-              : normalizedPhone,
-        ),
-      );
-      final token = await args.api.signIn(
-        Credentials(email: email.trim(), password: password),
-      );
-      await args.sessions.write(token);
-      emit(AccountState(
-        status: AccountStatus.signedIn,
-        customer: customer,
-      ));
-      return true;
-    } on Object catch (error) {
-      _fail(AccountOperation.register, error);
-      return false;
     }
   }
 

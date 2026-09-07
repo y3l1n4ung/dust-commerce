@@ -44,8 +44,8 @@ void main() {
     final authorization = 'Bearer ${issued.token}';
     dio.options.headers['authorization'] = authorization;
 
-    expect(registered.email, 'ada@example.com');
-    expect(await api.currentCustomer(), registered);
+    expect(registered.customer.email, 'ada@example.com');
+    expect(await api.currentCustomer(), registered.customer);
     expect((await api.signOut()).success, isTrue);
   });
 }

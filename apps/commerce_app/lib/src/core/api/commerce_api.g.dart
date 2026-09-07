@@ -59,7 +59,7 @@ final class _$CommerceApi implements CommerceApi {
   final String? _baseUrl;
 
   @override
-  Future<Customer> registerAccount(RegisterAccountBody body) async {
+  Future<CustomerRegistrationView> registerAccount(RegisterAccountBody body) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _extra = <String, dynamic>{};
@@ -72,7 +72,7 @@ final class _$CommerceApi implements CommerceApi {
       contentType: null,
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(
-      _setStreamType<Customer>(
+      _setStreamType<CustomerRegistrationView>(
         _options
             .compose(
               _dio.options,
@@ -91,7 +91,43 @@ final class _$CommerceApi implements CommerceApi {
             ),
       ),
     );
-    return Customer.fromJson(_result.data as Map<String, dynamic>);
+    return CustomerRegistrationView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<EmailVerified> confirmEmail(VerifyEmailBody body) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<EmailVerified>(
+        _options
+            .compose(
+              _dio.options,
+              '/auth/customer/emailpass/verification/confirm',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return EmailVerified.fromJson(_result.data as Map<String, dynamic>);
   }
 
   @override

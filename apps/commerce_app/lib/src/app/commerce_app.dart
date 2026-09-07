@@ -6,6 +6,7 @@ import 'package:commerce_app/route.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+part 'account_identity.dart';
 part 'view_model_scopes.dart';
 
 /// The storefront application and its long-lived state owners.
@@ -47,6 +48,7 @@ class _CommerceAppState extends State<CommerceApp> {
   late final OrderTransferViewModel _orderTransfer;
   late final CartViewModel _cart;
   late final CheckoutViewModel _checkout;
+  late final EmailVerificationViewModel _emailVerification;
   late final StoreShellViewModel _shell;
   late I18nController _i18n;
   late final CommerceRouter _router;
@@ -72,6 +74,9 @@ class _CommerceAppState extends State<CommerceApp> {
     );
     _orderTransfer = OrderTransferViewModel(
       OrderTransferViewModelArgs(api: widget.api),
+    );
+    _emailVerification = EmailVerificationViewModel(
+      EmailVerificationViewModelArgs(api: widget.api),
     );
     _shell = StoreShellViewModel(
       StoreShellViewModelArgs(
@@ -127,6 +132,7 @@ class _CommerceAppState extends State<CommerceApp> {
   void dispose() {
     _account.removeListener(_onAccountIdentityChanged);
     _checkout.dispose();
+    _emailVerification.dispose();
     _shell.dispose();
     _cart.dispose();
     _addresses.dispose();
@@ -163,24 +169,9 @@ class _CommerceAppState extends State<CommerceApp> {
       orderTransfer: _orderTransfer,
       cart: _cart,
       checkout: _checkout,
+      emailVerification: _emailVerification,
       shell: _shell,
       child: app,
     );
-  }
-
-  void _onAccountIdentityChanged() {
-    final ownerId = _account.state.customer?.id;
-    if (ownerId == _accountOwnerId) return;
-    _accountOwnerId = ownerId;
-    _addresses.reset();
-    _orderDetail.reset();
-    _orders.reset();
-    _orderTransfer.reset();
-    _checkout.reset();
-    if (ownerId == null) {
-      unawaited(_cart.clearForSignOut());
-    } else {
-      unawaited(_cart.transferToCustomer());
-    }
   }
 }

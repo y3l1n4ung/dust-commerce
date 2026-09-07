@@ -10,6 +10,30 @@ abstract final class AccountUpdateRepository {
   const factory AccountUpdateRepository(DatabaseExecutor db) =
       _$AccountUpdateRepository;
 
+  /// Consumes one live capability and removes its reusable fingerprint.
+  @Query(r'''
+UPDATE email_verifications
+SET token_hash = NULL,
+    verified_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+WHERE token_hash = $1 AND verified_at IS NULL AND expires_at > $2
+''')
+  Future<Result<ExecResult, SqlxError>> confirmEmail(
+    String tokenHash,
+    String now,
+  );
+
+  /// Replaces an expired or lost capability only while verification is pending.
+  @Query(r'''
+UPDATE email_verifications
+SET token_hash = $2, expires_at = $3
+WHERE auth_identity_id = $1 AND verified_at IS NULL
+''')
+  Future<Result<ExecResult, SqlxError>> replaceEmailVerification(
+    String authIdentityId,
+    String tokenHash,
+    String expiresAt,
+  );
+
   /// Replaces an unchanged credential hash using compare-and-swap semantics.
   @Query(r'''
 UPDATE provider_identity

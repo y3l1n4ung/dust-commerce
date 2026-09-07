@@ -19,6 +19,31 @@ final class _$AccountUpdateRepository implements AccountUpdateRepository {
   final DatabaseExecutor _db;
 
   @override
+  Future<Result<ExecResult, SqlxError>> confirmEmail(String tokenHash, String now) {
+    return _db.execute(
+      r'''
+UPDATE email_verifications
+SET token_hash = NULL,
+    verified_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+WHERE token_hash = ? AND verified_at IS NULL AND expires_at > ?
+''',
+      [tokenHash, now],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> replaceEmailVerification(String authIdentityId, String tokenHash, String expiresAt) {
+    return _db.execute(
+      r'''
+UPDATE email_verifications
+SET token_hash = ?, expires_at = ?
+WHERE auth_identity_id = ? AND verified_at IS NULL
+''',
+      [tokenHash, expiresAt, authIdentityId],
+    );
+  }
+
+  @override
   Future<Result<ExecResult, SqlxError>> updatePassword(String authIdentityId, String expectedHash, String newHash) {
     return _db.execute(
       r'''

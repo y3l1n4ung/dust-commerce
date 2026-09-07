@@ -92,7 +92,7 @@ void main() {
     expect(requested.expiresAt, DateTime.utc(2026, 9, 6, 12));
     expect(delivered.recipient, 'owner@example.com');
     expect(accepted.status, OrderTransferStatus.accepted);
-    expect((await api.order(order.id)).customerId, target.id);
+    expect((await api.order(order.id)).customerId, target.customer.id);
   });
 }
 

@@ -165,7 +165,8 @@ final class CheckoutHarness {
     signedIn.assertOk();
 
     return (
-      customerId: (registered.json! as Map<String, Object?>)['id']! as String,
+      customerId: ((registered.json! as Map<String, Object?>)['customer']!
+          as Map<String, Object?>)['id']! as String,
       token: (signedIn.json! as Map<String, Object?>)['token']! as String,
     );
   }

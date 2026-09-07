@@ -24,11 +24,14 @@ final class _$AccountReadRepository implements AccountReadRepository {
       r'''
 SELECT a.id AS auth_identity_id,
        coalesce(CAST(json_extract(p.provider_metadata, '$.password') AS TEXT),
-                '') AS password_hash
+                '') AS password_hash,
+       CASE WHEN v.auth_identity_id IS NOT NULL AND v.verified_at IS NULL
+            THEN 1 ELSE 0 END AS requires_email_verification
 FROM provider_identity p
 JOIN auth_identity a ON a.id = p.auth_identity_id
 JOIN customers c
   ON c.id = CAST(json_extract(a.app_metadata, '$.customer_id') AS TEXT)
+LEFT JOIN email_verifications v ON v.auth_identity_id = a.id
 WHERE p.provider = 'emailpass'
   AND p.entity_id COLLATE NOCASE = ?
   AND p.deleted_at IS NULL
@@ -46,11 +49,14 @@ WHERE p.provider = 'emailpass'
       r'''
 SELECT a.id AS auth_identity_id,
        coalesce(CAST(json_extract(p.provider_metadata, '$.password') AS TEXT),
-                '') AS password_hash
+                '') AS password_hash,
+       CASE WHEN v.auth_identity_id IS NOT NULL AND v.verified_at IS NULL
+            THEN 1 ELSE 0 END AS requires_email_verification
 FROM provider_identity p
 JOIN auth_identity a ON a.id = p.auth_identity_id
 JOIN customers c
   ON c.id = CAST(json_extract(a.app_metadata, '$.customer_id') AS TEXT)
+LEFT JOIN email_verifications v ON v.auth_identity_id = a.id
 WHERE p.provider = 'emailpass'
   AND c.id = ?
   AND p.deleted_at IS NULL

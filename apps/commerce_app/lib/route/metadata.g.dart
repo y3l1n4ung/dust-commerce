@@ -14,6 +14,7 @@ import 'package:commerce_app/src/features/account/view/account_order_detail_page
 import 'package:commerce_app/src/features/account/view/account_orders_page.dart';
 import 'package:commerce_app/src/features/account/view/account_page.dart';
 import 'package:commerce_app/src/features/account/view/account_profile_page.dart';
+import 'package:commerce_app/src/features/account/view/email_verification_page.dart';
 import 'package:commerce_app/src/features/cart/view/cart_page.dart';
 import 'package:commerce_app/src/features/catalog/view/catalog_page.dart';
 import 'package:commerce_app/src/features/catalog/view/category_page.dart';
@@ -169,6 +170,13 @@ const List<GeneratedRoute> $commerceRoutes = [
     resultType: 'void',
     guards: [],
   ),
+  GeneratedRoute(
+    '/verify-account',
+    page: EmailVerificationPage,
+    name: 'verifyAccount',
+    resultType: 'void',
+    guards: [],
+  ),
 ];
 
 bool commerceRouteRequiresAuth(CommerceRoute route) => route.requiresAuth;
@@ -196,6 +204,7 @@ RouteDebugInfo commerceRouteDebugInfo(CommerceRoute route) {
     OrderTransferRoute(id: _, token: _) => const RouteDebugInfo(name: 'orderTransfer', shell: null, branch: null, resultType: 'void'),
     ProductRoute(handle: _) => const RouteDebugInfo(name: 'product', shell: null, branch: null, resultType: 'void'),
     StoreRoute(page: _, sortBy: _, optionValueIds: _) => const RouteDebugInfo(name: 'store', shell: null, branch: null, resultType: 'void'),
+    VerifyAccountRoute(token: _) => const RouteDebugInfo(name: 'verifyAccount', shell: null, branch: null, resultType: 'void'),
   };
 }
 

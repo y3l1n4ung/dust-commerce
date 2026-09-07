@@ -10,6 +10,10 @@ Router accountAuthRoutes() {
 
   return Router()
     ..route('/customer/emailpass', post(signInHandler))
+    ..route(
+      '/customer/emailpass/verification/confirm',
+      post(confirmEmailHandler),
+    )
     ..merge(protected);
 }
 

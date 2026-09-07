@@ -27,7 +27,8 @@ mixin _$AccountState {
         'customer: ${self.customer}, '
         'message: ${self.message}, '
         'operation: ${self.operation}, '
-        'status: ${self.status}'
+        'status: ${self.status}, '
+        'verificationEmail: ${self.verificationEmail}'
         ')';
   }
 
@@ -40,7 +41,8 @@ mixin _$AccountState {
             other.customer == self.customer &&
             other.message == self.message &&
             other.operation == self.operation &&
-            other.status == self.status;
+            other.status == self.status &&
+            other.verificationEmail == self.verificationEmail;
   }
 
   @override
@@ -52,6 +54,7 @@ mixin _$AccountState {
       self.message,
       self.operation,
       self.status,
+      self.verificationEmail,
     ]);
   }
 
@@ -75,6 +78,7 @@ abstract class _$AccountStateCopyWith<$Res> {
     String? message,
     AccountOperation? operation,
     AccountStatus? status,
+    Option<String>? verificationEmail,
   });
 }
 
@@ -92,6 +96,7 @@ final class _$AccountStateCopyWithImpl<$Res> implements _$AccountStateCopyWith<$
     Object? message = _accountStateCopyWithUnset,
     Object? operation = _accountStateCopyWithUnset,
     Object? status = null,
+    Object? verificationEmail = null,
   }) {
     return _then(
       AccountState(
@@ -105,6 +110,7 @@ final class _$AccountStateCopyWithImpl<$Res> implements _$AccountStateCopyWith<$
         message: identical(message, _accountStateCopyWithUnset)
             ? _self.message
             : message as String?,
+        verificationEmail: verificationEmail == null ? _self.verificationEmail : verificationEmail as Option<String>,
       )
     );
   }

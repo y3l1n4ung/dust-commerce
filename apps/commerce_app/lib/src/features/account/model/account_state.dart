@@ -17,6 +17,9 @@ enum AccountStatus {
   /// The server accepted the stored session.
   signedIn,
 
+  /// Valid credentials are waiting for the emailed capability.
+  verificationRequired,
+
   /// The most recent operation failed safely.
   failed,
 }
@@ -51,6 +54,7 @@ class AccountState with _$AccountState {
     this.customer,
     this.operation,
     this.message,
+    this.verificationEmail = const None(),
   });
 
   /// Customer proven by the current server session.
@@ -64,6 +68,9 @@ class AccountState with _$AccountState {
 
   /// Current session lifecycle state.
   final AccountStatus status;
+
+  /// Normalized recipient shown only after a credential-proven request.
+  final Option<String> verificationEmail;
 
   /// Whether a server-proven customer is available.
   bool get isAuthenticated => customer != null;

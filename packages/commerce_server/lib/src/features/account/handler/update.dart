@@ -21,6 +21,31 @@ const ValidatedExtractable<ChangePasswordBody> _passwordBody =
     ValidatedExtractable(
   JsonExtractable<ChangePasswordBody>(ChangePasswordBody.fromJson),
 );
+const ValidatedExtractable<VerifyEmailBody> _verificationBody =
+    ValidatedExtractable(
+  JsonExtractable<VerifyEmailBody>(VerifyEmailBody.fromJson),
+);
+
+/// `POST /auth/customer/emailpass/verification/confirm` — consume a capability.
+Future<Result<EmailVerified, Rejection>> confirmEmailHandler(
+  Request request,
+) async {
+  final decoded = await _verificationBody.extract(request);
+  if (decoded case Err(:final error)) return Err(error);
+  final depsResult = await accountDeps(request);
+  if (depsResult case Err(:final error)) return Err(error);
+  final deps = (depsResult as Ok<AccountDeps, Rejection>).value;
+  final result = await confirmCustomerEmail(
+    deps.updates,
+    (decoded as Ok<VerifyEmailBody, Rejection>).value.token,
+    now: deps.clock.now(),
+  );
+  return switch (result) {
+    Ok(value: true) => const Ok(EmailVerified(success: true)),
+    Ok(value: false) => const Err(Rejection.notFound('Verification not found')),
+    Err() => const Err(Rejection.internal()),
+  };
+}
 
 /// `PATCH /store/customers/me/password` — rotate the emailpass credential.
 Future<Result<PasswordChanged, Rejection>> updatePasswordHandler(

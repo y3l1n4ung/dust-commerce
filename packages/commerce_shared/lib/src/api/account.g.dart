@@ -97,6 +97,49 @@ mixin _$IssuedToken implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$VerifyEmailBody implements Validatable, Serializable {
+  /// Validates this `VerifyEmailBody`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as VerifyEmailBody;
+    final errors = <ValidationError>[];
+    _VerifyEmailBodyValidation._validateToken(self.token, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `VerifyEmailBody` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$VerifyEmailBodySerialize(this as VerifyEmailBody);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$EmailVerified implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$EmailVerifiedSerialize(this as EmailVerified);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$SessionDeleted implements Serializable {
   Map<String, Object?> serialize() =>
       _$SessionDeletedSerialize(this as SessionDeleted);
@@ -180,6 +223,17 @@ extension _RegisterAccountBodyValidation on RegisterAccountBody {
   }
 
 }
+extension _VerifyEmailBodyValidation on VerifyEmailBody {
+  static void _validateToken(String token, List<ValidationError> errors) {
+    if (token.length < 32) {
+      errors.add(ValidationError(field: 'token', message: 'Invalid token'));
+    }
+    if (token.length > 1024) {
+      errors.add(ValidationError(field: 'token', message: 'Invalid token'));
+    }
+  }
+
+}
 final class $CredentialsSerializer implements Serializer<Credentials, Map<String, Object?>> {
   const $CredentialsSerializer();
 
@@ -215,6 +269,30 @@ final class $IssuedTokenDeserializer implements Deserializer<IssuedToken, Map<St
 
   @override
   IssuedToken deserialize(Map<String, Object?> json) => _$IssuedTokenDeserialize(json);
+}
+final class $VerifyEmailBodySerializer implements Serializer<VerifyEmailBody, Map<String, Object?>> {
+  const $VerifyEmailBodySerializer();
+
+  @override
+  Map<String, Object?> serialize(VerifyEmailBody value) => _$VerifyEmailBodySerialize(value);
+}
+final class $VerifyEmailBodyDeserializer implements Deserializer<VerifyEmailBody, Map<String, Object?>> {
+  const $VerifyEmailBodyDeserializer();
+
+  @override
+  VerifyEmailBody deserialize(Map<String, Object?> json) => _$VerifyEmailBodyDeserialize(json);
+}
+final class $EmailVerifiedSerializer implements Serializer<EmailVerified, Map<String, Object?>> {
+  const $EmailVerifiedSerializer();
+
+  @override
+  Map<String, Object?> serialize(EmailVerified value) => _$EmailVerifiedSerialize(value);
+}
+final class $EmailVerifiedDeserializer implements Deserializer<EmailVerified, Map<String, Object?>> {
+  const $EmailVerifiedDeserializer();
+
+  @override
+  EmailVerified deserialize(Map<String, Object?> json) => _$EmailVerifiedDeserialize(json);
 }
 final class $SessionDeletedSerializer implements Serializer<SessionDeleted, Map<String, Object?>> {
   const $SessionDeletedSerializer();
@@ -320,6 +398,44 @@ IssuedToken _$IssuedTokenDeserialize(Map<String, Object?> json) {
 
 IssuedToken _$IssuedTokenFromJson(Map<String, Object?> json) =>
     _$IssuedTokenDeserialize(json);
+
+Map<String, Object?> _$VerifyEmailBodySerialize(VerifyEmailBody instance) {
+  return <String, Object?>{
+    'token': instance.token,
+  };
+}
+
+Map<String, Object?> _$VerifyEmailBodyToJson(VerifyEmailBody instance) =>
+    _$VerifyEmailBodySerialize(instance);
+
+// factory VerifyEmailBody.fromJson(Map<String, Object?> json) => _$VerifyEmailBodyFromJson(json);
+VerifyEmailBody _$VerifyEmailBodyDeserialize(Map<String, Object?> json) {
+  final tokenValue = JsonHelper.as<String>(json['token'], 'token', 'String');
+
+  return VerifyEmailBody(token: tokenValue);
+}
+
+VerifyEmailBody _$VerifyEmailBodyFromJson(Map<String, Object?> json) =>
+    _$VerifyEmailBodyDeserialize(json);
+
+Map<String, Object?> _$EmailVerifiedSerialize(EmailVerified instance) {
+  return <String, Object?>{
+    'success': instance.success,
+  };
+}
+
+Map<String, Object?> _$EmailVerifiedToJson(EmailVerified instance) =>
+    _$EmailVerifiedSerialize(instance);
+
+// factory EmailVerified.fromJson(Map<String, Object?> json) => _$EmailVerifiedFromJson(json);
+EmailVerified _$EmailVerifiedDeserialize(Map<String, Object?> json) {
+  final successValue = JsonHelper.as<bool>(json['success'], 'success', 'bool');
+
+  return EmailVerified(success: successValue);
+}
+
+EmailVerified _$EmailVerifiedFromJson(Map<String, Object?> json) =>
+    _$EmailVerifiedDeserialize(json);
 
 Map<String, Object?> _$SessionDeletedSerialize(SessionDeleted instance) {
   return <String, Object?>{
