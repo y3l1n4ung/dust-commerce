@@ -31,6 +31,10 @@
 - Variant-edit source:
   `packages/admin/dashboard/src/routes/product-variants/product-variant-edit/`
   and its `product-edit-variant-form.tsx` at the pinned commit.
+- Variant-pricing source:
+  `packages/admin/dashboard/src/routes/products/product-prices/pricing-edit.tsx`,
+  `packages/admin/dashboard/src/routes/products/common/variant-pricing-form.tsx`
+  and the shared DataGrid currency cell at the pinned commit.
 - Product-option source:
   `packages/admin/dashboard/src/routes/products/product-detail/components/product-option-section/`
   and `packages/admin/dashboard/src/routes/product-options/product-option-edit/`
@@ -105,6 +109,11 @@ source/build method and the same empty form state. Both render the full-screen
 focus surface, 720px content column, title and value fields, close/esc chrome,
 and sticky Cancel/Save footer in one `2560 x 720` comparison.
 
+The variant-pricing pass uses the pinned source code as structural truth and
+the running Morrow screen at `1280 x 720`. The local Medusa process continued
+serving its Admin route, but its existing in-app-browser tab stopped responding
+to capture, so this pass does not claim same-state pixel parity.
+
 ## Verified
 
 - The 220px navigation hierarchy, selected row, nested product links, merchant
@@ -176,6 +185,15 @@ and sticky Cancel/Save footer in one `2560 x 720` comparison.
   option, rejected deletion of linked Size, edited Size, restored the canonical
   fixture and observed no application error. Twenty-one non-widget Admin and
   258 server tests pass; no widget tests were added.
+- Each variant action now opens Medusa's full-screen pricing focus surface with
+  a read-only title column, active-currency columns and sticky Cancel/Save
+  controls. A route-level guarded generated client replaces the complete price
+  graph transactionally and returns the refreshed direct SQLx response.
+  Currency fields use ISO 4217 precision and exact integer conversion rather
+  than assuming two decimals or using floating point. Browser QA changed EUR
+  and USD, observed the new USD value immediately on the storefront, then
+  restored both canonical values. Twenty-six non-widget Admin and 265 server
+  tests pass; no widget tests were added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -185,7 +203,7 @@ and sticky Cancel/Save footer in one `2560 x 720` comparison.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Product creation still lacks multiple option axes, variant pricing/stock,
+- P1 — Product creation still lacks multiple option axes and variant stock,
   import/export, filters and ordering under issue #31. Its visible controls do
   not pretend an API mutation succeeded.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
@@ -211,7 +229,8 @@ variant-detail, product-option-edit and global product-option behavior slices.
 Variant-detail, product-option-edit and global product-option list/detail visual
 parity now pass same-state live comparisons. Global product-option creation
 also passes its same-state empty-form comparison.
-Post-create editor and image-variant drawer remain blocked on same-state source
-captures; broader Medusa Admin parity is not claimed.
+Variant pricing passes source-structure and live end-to-end behavior checks.
+Post-create editor, image-variant drawer and variant pricing remain blocked on
+same-state source captures; broader Medusa Admin parity is not claimed.
 
 final result: blocked
