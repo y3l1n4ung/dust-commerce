@@ -38,9 +38,9 @@ void main() {
     expect(product.state.product?.variants, hasLength(8));
     expect(product.state.selectedVariant, isNull);
 
-    product.select('opt_tshirt_size', 'M');
+    product.select('opt_size', 'M');
     expect(product.state.selectedVariant, isNull);
-    product.select('opt_tshirt_color', 'White');
+    product.select('opt_color', 'White');
 
     expect(product.state.selectedVariant?.id, 'var_tshirt_m_white');
     expect(product.state.selectedVariant?.isInStock, isTrue);
@@ -52,8 +52,8 @@ void main() {
     await product.load('t-shirt', variantId: 'var_tshirt_l_black');
 
     expect(product.state.selection, {
-      'opt_tshirt_color': 'Black',
-      'opt_tshirt_size': 'L',
+      'opt_color': 'Black',
+      'opt_size': 'L',
     });
     expect(product.state.selectedVariant?.id, 'var_tshirt_l_black');
   });
@@ -131,11 +131,11 @@ void main() {
     final state = ProductDetailState(
       status: ProductDetailStatus.ready,
       product: sparse,
-      selection: const {'opt_tshirt_size': 'S'},
+      selection: const {'opt_size': 'S'},
     );
 
-    expect(state.canSelect('opt_tshirt_color', 'Black'), isTrue);
-    expect(state.canSelect('opt_tshirt_color', 'White'), isFalse);
+    expect(state.canSelect('opt_color', 'Black'), isTrue);
+    expect(state.canSelect('opt_color', 'White'), isFalse);
   });
 
   test('selected variant creates a server cart and line item', () async {
