@@ -2,7 +2,7 @@ import 'package:admin_app/src/product/admin_product_page.dart';
 import 'package:admin_app/src/product/admin_product_detail_page.dart';
 import 'package:admin_app/src/product/admin_product_create_page.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
-import 'package:admin_app/src/product_option/admin_product_option_create_drawer.dart';
+import 'package:admin_app/src/product_option/admin_product_option_create_page.dart';
 import 'package:admin_app/src/product_option/admin_product_option_detail_page.dart';
 import 'package:admin_app/src/product_option/admin_product_option_detail_view_model.dart';
 import 'package:admin_app/src/product_option/admin_product_option_page.dart';
@@ -178,7 +178,7 @@ final class _AdminHomeState extends State<_AdminHome> {
   }
 
   Future<void> _createProductOption() async {
-    final created = await showAdminProductOptionCreateDrawer(context);
+    final created = await showAdminProductOptionCreatePage(context);
     if (!mounted || created == null) return;
     _showProductOption(created.id);
   }
