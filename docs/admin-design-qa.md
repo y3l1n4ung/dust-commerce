@@ -135,10 +135,11 @@ action and uses Medusa's exact confirmation and success/error text. The local
 Medusa tab again timed out during capture, so this pass verifies source
 structure and live behavior without claiming same-state pixel parity.
 
-The product-query foundation uses the pinned API parameter names and exact
-title, creation-time and update-time ordering values. Both in-app Browser and
-Chrome timed out when opening the local Medusa product list, so the visible
-filter and order menus were not implemented or visually judged in this pass.
+The product-query comparison uses live Medusa and Morrow product lists in the
+in-app Browser at equal `1280 x 720` viewports, light theme, four published
+products and the filter menu open. Both neutral and menu states were combined
+into `2560 x 720` images before judging. Morrow omits Sales Channel because its
+schema has no such domain; the remaining filter order and labels match source.
 
 ## Verified
 
@@ -254,6 +255,14 @@ filter and order menus were not implemented or visually judged in this pass.
   id. Fresh-database API QA proved `401`, search/paging, one matching product,
   malformed-id `400`, and Store readback. Thirty-four non-widget Admin and 284
   server tests pass; all 39 migrations also pass real SQLx run/revert.
+- Product query controls now expose source-ordered Type, Tag, Status, Created
+  and Updated filters, real discovery choices, removable active controls,
+  Clear all and all six supported sort values. The head-to-head pass corrected
+  the stretched card, column proportions, row and pagination density, source
+  copy, status indicator, menu order, menu size and surface color. Live QA
+  filtered the table to Shirt, proved the removal button's accessible label,
+  and restored all four products. Thirty-six non-widget Admin and 287 server
+  tests pass; all 39 migrations apply and revert without remaining tables.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -264,10 +273,7 @@ filter and order menus were not implemented or visually judged in this pass.
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
 - P1 — Product creation still lacks multiple option axes, product-type
-  assignment and import/export. The product list still lacks the source-shaped
-  query-control UI under issue #31. Type, tag and date query contracts work,
-  but the visible controls do not yet expose them or pretend an unavailable
-  operation succeeded.
+  assignment and import/export.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
   chip input and post-entry rank organizer. Persisted ordering works, but this
   interaction is not yet a literal copy.
@@ -292,11 +298,10 @@ Variant-detail, product-option-edit and global product-option list/detail visual
 parity now pass same-state live comparisons. Global product-option creation
 also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
-live end-to-end behavior checks. Product query behavior and normalized
-product-type discovery pass API and state checks, but visible controls remain
-pending. Post-create editor,
-image-variant drawer, variant pricing, product stock, product deletion and the
-product query controls remain blocked on same-state source captures; broader
-Medusa Admin parity is not claimed.
+live end-to-end behavior checks. Product query behavior, discovery and visible
+controls pass API, state, accessibility and same-state live comparison.
+Post-create editor, image-variant drawer, variant pricing, product stock and
+product deletion remain blocked on same-state source captures; broader Medusa
+Admin parity is not claimed.
 
 final result: blocked

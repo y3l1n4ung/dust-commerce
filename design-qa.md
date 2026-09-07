@@ -489,4 +489,32 @@ The isolated catalogues use different value ranks, so the source displays
 
 Product-option edit slice result: passed
 
+## Admin product query-controls slice
+
+Source visual truth: live Medusa Admin at pinned commit
+`bda24b9725ac697ec5e8f706b503013e20babf12`. Medusa and Morrow were captured
+at equal `1280 x 720` light-theme viewports for the neutral Products table and
+open Add filter menu. Exact combined evidence remains in the task at
+`/private/tmp/medusa-morrow-product-list-final-comparison.png` and
+`/private/tmp/medusa-morrow-product-filter-menu-final-comparison.png`.
+
+**Findings**
+
+- No actionable P0, P1 or P2 difference remains in this slice after matching
+  the content-sized card, 48px rows, equal columns, 64px pagination, status
+  marker, source copy, filter order and 300px menu geometry.
+- Sales Channel is intentionally absent because Morrow has no corresponding
+  domain or API. The Material submenu appears before its filter chip, while
+  Medusa materializes the chip first; this is remaining P3 interaction polish.
+
+**Functional evidence**
+
+- Type discovery exposed the four database values. Selecting Shirt reduced the
+  live table to Essential T-Shirt and exposed the accessible action
+  `Remove Type: Shirt filter`; Clear all restored all four rows.
+- A clean Admin load produced no browser warnings or errors. No widget tests
+  were added.
+
+Product query-controls slice result: passed
+
 final result: blocked

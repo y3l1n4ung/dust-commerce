@@ -19,7 +19,7 @@ payment, and a basic customer account.
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
 | Schema | modular PostgreSQL schemas | 38 SQLite tables |
-| Admin API | broad modular API | isolated identity and product-management slices (20 protected generated-client operations plus public media reads) |
+| Admin API | broad modular API | isolated identity and product-management slices (22 protected generated-client operations plus public media reads) |
 | Generated client operations | broad Store API | 39 method/path operations |
 | Workflow engine and plugins | yes | none |
 | Admin dashboard | broad operational UI | authenticated product list, detail, edit and creation slices |
@@ -224,8 +224,11 @@ Flutter client sends typed tag and `Option<DateTime>` state while its Dio
 interceptor remains the only owner of the bearer header. This narrower slice
 also normalizes product types behind `products.type_id`, provides a guarded
 allowlisted discovery route, and filters by the same Medusa query key before
-count and paging. Product-type CRUD/assignment, visible filter controls and
-sales channels remain outside the implemented boundary.
+count and paging. A separate guarded tag-discovery route now supplies the
+visible source-ordered Type, Tag, Status, Created and Updated controls. Active
+filters, Clear all, source pagination copy and all six supported sort choices
+are wired; Sales Channel remains absent because that domain is not modeled.
+Product-type CRUD/assignment remains outside the implemented boundary.
 
 ### Order transfers keep the capability out of the database
 
