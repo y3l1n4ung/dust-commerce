@@ -71,18 +71,16 @@ final class AdminProductOptionToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Container(
-            height: 28,
-            padding: const EdgeInsets.symmetric(horizontal: 9),
-            decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).dividerColor),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            alignment: Alignment.center,
-            child: const Text('Type is Global'),
-          ),
-        ),
+        child: Row(children: [
+          Container(
+              height: 28,
+              padding: const EdgeInsets.symmetric(horizontal: 9),
+              decoration: BoxDecoration(
+                border: Border.all(color: Theme.of(context).dividerColor),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              alignment: Alignment.center,
+              child: const Text('Type is Global')),
+        ]),
       );
 }

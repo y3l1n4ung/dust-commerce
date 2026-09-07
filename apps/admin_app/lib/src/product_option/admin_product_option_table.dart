@@ -7,8 +7,12 @@ final class AdminProductOptionTable extends StatelessWidget {
   const AdminProductOptionTable({
     required this.productOptions,
     required this.onOpen,
+    required this.onDelete,
     super.key,
   });
+
+  /// Confirms and deletes one unused option.
+  final ValueChanged<AdminProductOptionSummary> onDelete;
 
   /// Opens one complete product-option detail.
   final ValueChanged<String> onOpen;
@@ -28,6 +32,7 @@ final class AdminProductOptionTable extends StatelessWidget {
             itemBuilder: (context, index) => _OptionRow(
               productOption: productOptions[index],
               onOpen: onOpen,
+              onDelete: onDelete,
             ),
           ),
         ],
@@ -54,8 +59,13 @@ final class _OptionHeader extends StatelessWidget {
 }
 
 final class _OptionRow extends StatelessWidget {
-  const _OptionRow({required this.productOption, required this.onOpen});
+  const _OptionRow({
+    required this.productOption,
+    required this.onOpen,
+    required this.onDelete,
+  });
 
+  final ValueChanged<AdminProductOptionSummary> onDelete;
   final ValueChanged<String> onOpen;
   final AdminProductOptionSummary productOption;
 
@@ -82,10 +92,26 @@ final class _OptionRow extends StatelessWidget {
                 const Expanded(flex: 2, child: _GlobalBadge()),
                 SizedBox(
                   width: 32,
-                  child: IconButton(
-                    tooltip: 'Open product option',
-                    onPressed: () => onOpen(productOption.id),
+                  child: PopupMenuButton<String>(
+                    tooltip: 'Product option actions',
+                    padding: EdgeInsets.zero,
                     icon: const Icon(Icons.more_horiz_rounded, size: 17),
+                    onSelected: (value) => switch (value) {
+                      'delete' => onDelete(productOption),
+                      _ => onOpen(productOption.id),
+                    },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(value: 'edit', child: Text('Edit')),
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Text(
+                          'Delete',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

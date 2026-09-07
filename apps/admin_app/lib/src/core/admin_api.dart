@@ -54,6 +54,10 @@ abstract interface class AdminApi {
     @Body() AdminUpdateProductOption body,
   );
 
+  /// Soft-deletes one unused product option and its values.
+  @DELETE('/admin/product-options/{id}')
+  Future<void> deleteProductOption(@Path() String id);
+
   /// Loads active storefront currencies required by the creation grid.
   @GET('/admin/products/create-context')
   Future<AdminProductCreateContext> productCreateContext();

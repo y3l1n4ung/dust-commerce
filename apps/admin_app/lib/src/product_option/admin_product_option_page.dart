@@ -1,8 +1,10 @@
 import 'package:admin_app/src/product_option/admin_product_option_pagination.dart';
+import 'package:admin_app/src/product_option/admin_product_option_delete.dart';
 import 'package:admin_app/src/product_option/admin_product_option_page_header.dart';
 import 'package:admin_app/src/product_option/admin_product_option_state.dart';
 import 'package:admin_app/src/product_option/admin_product_option_table.dart';
 import 'package:admin_app/src/product_option/admin_product_option_view_model.dart';
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
@@ -110,10 +112,31 @@ final class _AdminProductOptionPageState extends State<AdminProductOptionPage> {
         AdminProductOptionTable(
           productOptions: state.productOptions,
           onOpen: widget.onOpen,
+          onDelete: (option) => _delete(context, option),
         ),
         if (state.status == AdminProductOptionStatus.loading)
           const LinearProgressIndicator(minHeight: 2),
       ],
+    );
+  }
+
+  Future<void> _delete(
+    BuildContext context,
+    AdminProductOptionSummary option,
+  ) async {
+    if (!await confirmAdminProductOptionDelete(context, option.title) ||
+        !context.mounted) {
+      return;
+    }
+    final outcome =
+        await context.readAdminProductOptionViewModel().delete(option.id);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(adminProductOptionDeleteMessage(
+        outcome,
+        option.title,
+      ))),
     );
   }
 }

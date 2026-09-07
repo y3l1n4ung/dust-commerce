@@ -8,8 +8,12 @@ final class AdminProductOptionGeneralSection extends StatelessWidget {
   const AdminProductOptionGeneralSection({
     required this.productOption,
     required this.onEdit,
+    required this.onDelete,
     super.key,
   });
+
+  /// Confirms and deletes this option.
+  final VoidCallback onDelete;
 
   /// Opens the edit focus surface.
   final VoidCallback onEdit;
@@ -23,9 +27,19 @@ final class AdminProductOptionGeneralSection extends StatelessWidget {
         action: PopupMenuButton<String>(
           tooltip: 'Product option actions',
           icon: const Icon(Icons.more_horiz_rounded, size: 18),
-          onSelected: (_) => onEdit(),
-          itemBuilder: (_) => const [
-            PopupMenuItem(value: 'edit', child: Text('Edit')),
+          onSelected: (value) => switch (value) {
+            'delete' => onDelete(),
+            _ => onEdit(),
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem(value: 'edit', child: Text('Edit')),
+            PopupMenuItem(
+              value: 'delete',
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ),
           ],
         ),
         child: Container(

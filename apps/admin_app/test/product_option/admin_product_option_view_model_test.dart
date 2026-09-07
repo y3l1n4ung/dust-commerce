@@ -84,6 +84,26 @@ void main() {
     expect(options.state.count, 3);
   });
 
+  test('deletes unused options and reports linked options', () async {
+    await options.load();
+    final created = await options.create(const AdminCreateProductOption(
+      title: 'Material',
+      values: ['Cotton', 'Linen'],
+    ));
+    final option = (created as Some<AdminProductOptionDetail>).value;
+
+    expect(
+      await options.delete(option.id),
+      AdminProductOptionDeleteOutcome.deleted,
+    );
+    expect(options.state.count, 2);
+    expect(
+      await options.delete('opt_size'),
+      AdminProductOptionDeleteOutcome.inUse,
+    );
+    expect(options.state.count, 2);
+  });
+
   test('loads and publishes a safe refreshed detail after edit', () async {
     await detail.load('opt_size');
     final saved = await detail.update(

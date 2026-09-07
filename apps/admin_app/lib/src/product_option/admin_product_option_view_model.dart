@@ -7,6 +7,21 @@ import 'package:dust_flutter/state.dart';
 
 part 'admin_product_option_view_model.g.dart';
 
+/// Typed result of a product-option deletion attempt.
+enum AdminProductOptionDeleteOutcome {
+  /// The unused option was retired.
+  deleted,
+
+  /// Active products still expose the option.
+  inUse,
+
+  /// The authenticated admin session has expired.
+  expired,
+
+  /// The operation failed for another display-safe reason.
+  failed,
+}
+
 /// Dependencies for the authenticated global-options table.
 final class AdminProductOptionViewModelArgs extends ViewModelArgs {
   /// Creates product-option dependencies.
@@ -47,6 +62,23 @@ final class AdminProductOptionViewModel extends $AdminProductOptionViewModel {
     } catch (_) {
       _fail('Unable to create this product option. Try again.');
       return const None();
+    }
+  }
+
+  /// Deletes one unused option and refreshes the current list.
+  Future<AdminProductOptionDeleteOutcome> delete(String id) async {
+    try {
+      await args.api.deleteProductOption(id);
+      await load(offset: 0);
+      return AdminProductOptionDeleteOutcome.deleted;
+    } on DioException catch (error) {
+      return switch (error.response?.statusCode) {
+        409 => AdminProductOptionDeleteOutcome.inUse,
+        401 => AdminProductOptionDeleteOutcome.expired,
+        _ => AdminProductOptionDeleteOutcome.failed,
+      };
+    } catch (_) {
+      return AdminProductOptionDeleteOutcome.failed;
     }
   }
 

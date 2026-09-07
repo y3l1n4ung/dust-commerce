@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:admin_app/src/product/admin_product_option_edit_drawer.dart';
 import 'package:admin_app/src/product_option/admin_product_option_detail_state.dart';
 import 'package:admin_app/src/product_option/admin_product_option_detail_view_model.dart';
+import 'package:admin_app/src/product_option/admin_product_option_delete.dart';
 import 'package:admin_app/src/product_option/admin_product_option_view_model.dart';
 import 'package:admin_app/src/product_option/detail/admin_product_option_data_sections.dart';
 import 'package:admin_app/src/product_option/detail/admin_product_option_general_section.dart';
@@ -56,6 +57,7 @@ final class _AdminProductOptionDetailPageState
     return switch (state.productOption) {
       Some(value: final option) => _DetailBody(
           productOption: option,
+          onBack: widget.onBack,
           onOpenProduct: widget.onOpenProduct,
         ),
       None() when state.status == AdminProductOptionDetailStatus.loading =>
@@ -74,9 +76,11 @@ final class _AdminProductOptionDetailPageState
 final class _DetailBody extends StatelessWidget {
   const _DetailBody({
     required this.productOption,
+    required this.onBack,
     required this.onOpenProduct,
   });
 
+  final VoidCallback onBack;
   final ValueChanged<String> onOpenProduct;
   final AdminProductOptionDetail productOption;
 
@@ -92,6 +96,28 @@ final class _DetailBody extends StatelessWidget {
       );
     }
 
+    Future<void> delete() async {
+      if (!await confirmAdminProductOptionDelete(
+            context,
+            productOption.title,
+          ) ||
+          !context.mounted) {
+        return;
+      }
+      final messenger = ScaffoldMessenger.of(context);
+      final outcome = await context
+          .readAdminProductOptionViewModel()
+          .delete(productOption.id);
+      if (!context.mounted) return;
+      if (outcome == AdminProductOptionDeleteOutcome.deleted) onBack();
+      messenger.showSnackBar(SnackBar(
+        content: Text(adminProductOptionDeleteMessage(
+          outcome,
+          productOption.title,
+        )),
+      ));
+    }
+
     return ListView(
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 32),
       children: [
@@ -104,6 +130,7 @@ final class _DetailBody extends StatelessWidget {
                 AdminProductOptionGeneralSection(
                   productOption: productOption,
                   onEdit: edit,
+                  onDelete: delete,
                 ),
                 const SizedBox(height: 12),
                 AdminProductOptionValuesSection(

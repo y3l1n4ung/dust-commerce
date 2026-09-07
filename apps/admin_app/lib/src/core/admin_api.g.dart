@@ -330,6 +330,42 @@ final class _$AdminApi implements AdminApi {
   }
 
   @override
+  Future<void> deleteProductOption(String id) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = null;
+    final _options = Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    await _dio.fetch<void>(
+      _setStreamType<void>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/product-options/' + Uri.encodeComponent(id.toString()),
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return;
+  }
+
+  @override
   Future<AdminProductCreateContext> productCreateContext() async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
