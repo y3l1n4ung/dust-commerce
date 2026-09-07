@@ -19,7 +19,7 @@ payment, and a basic customer account.
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
 | Schema | modular PostgreSQL schemas | 38 SQLite tables |
-| Admin API | broad modular API | isolated identity and product-management slices (12 protected operations plus public media reads) |
+| Admin API | broad modular API | isolated identity and product-management slices (20 protected generated-client operations plus public media reads) |
 | Generated client operations | broad Store API | 39 method/path operations |
 | Workflow engine and plugins | yes | none |
 | Admin dashboard | broad operational UI | authenticated product list, detail, edit and creation slices |
@@ -206,6 +206,15 @@ stores one aggregate quantity per variant because this project has no Inventory
 or Stock Location modules. The transaction validates every selected variant
 before changing any row, and the public Store projection reads the committed
 quantity independently.
+
+Product deletion keeps Medusa's soft-delete semantics but applies them to this
+project's smaller graph in one guarded transaction. Products, variants, images,
+option memberships and product-exclusive option definitions remain as
+historical rows; reusable global options and immutable variant prices are not
+retired. Active handle and SKU indexes release identifiers immediately, and
+the separate Store query excludes the deleted graph. All timestamps come from
+SQLite defaults and update triggers rather than an application clock or an
+appended migration.
 
 ### Order transfers keep the capability out of the database
 

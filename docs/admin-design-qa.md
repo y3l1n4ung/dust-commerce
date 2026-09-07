@@ -14,6 +14,10 @@
   `packages/admin/dashboard/src/routes/products/product-detail/product-detail.tsx`
   plus its General, Media, Options, Variants, Sales Channels, Shipping,
   Organization and Attributes section components.
+- Product-delete source:
+  `components/product-list-table/product-list-table-actions.tsx`, the detail
+  `product-general-section.tsx`, `hooks/api/products.tsx`, and the English
+  product deletion translations at the pinned commit.
 - Product-edit source:
   `packages/admin/dashboard/src/routes/products/product-edit/product-edit.tsx`,
   `components/edit-product-form/edit-product-form.tsx`, and
@@ -121,6 +125,12 @@ columns to its real aggregate inventory model instead of showing fake stock
 locations. The Morrow screen and end-to-end mutation were captured live; the
 local Medusa tab again timed out, so pixel parity is not claimed.
 
+The product-delete pass uses the pinned list and detail action-group source as
+structural truth. Morrow exposes Edit followed by a separately divided Delete
+action and uses Medusa's exact confirmation and success/error text. The local
+Medusa tab again timed out during capture, so this pass verifies source
+structure and live behavior without claiming same-state pixel parity.
+
 ## Verified
 
 - The 220px navigation hierarchy, selected row, nested product links, merchant
@@ -209,6 +219,13 @@ local Medusa tab again timed out, so pixel parity is not claimed.
   managed units. Empty, duplicate, negative and cross-product selections are
   rejected before partial writes. Twenty-eight non-widget Admin and 269 server
   tests pass; no widget tests were added.
+- Product list rows and the detail General card now expose one shared
+  source-shaped Edit/Delete action menu. Browser QA deleted a temporary
+  published product through the confirmation, observed the row disappear and
+  independently received Store `404`. SQLite retained the product, variant and
+  two price rows with generated deletion timestamps. Global options remain
+  active, while product-exclusive options are retired transactionally. Thirty
+  non-widget Admin and 273 server tests pass; no widget tests were added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -244,9 +261,9 @@ variant-detail, product-option-edit and global product-option behavior slices.
 Variant-detail, product-option-edit and global product-option list/detail visual
 parity now pass same-state live comparisons. Global product-option creation
 also passes its same-state empty-form comparison.
-Variant pricing and product stock pass source-structure and live end-to-end
-behavior checks. Post-create editor, image-variant drawer, variant pricing and
-product stock remain blocked on same-state source captures; broader Medusa
-Admin parity is not claimed.
+Variant pricing, product stock and product deletion pass source-structure and
+live end-to-end behavior checks. Post-create editor, image-variant drawer,
+variant pricing, product stock and product deletion remain blocked on
+same-state source captures; broader Medusa Admin parity is not claimed.
 
 final result: blocked
