@@ -18,9 +18,9 @@ payment, and a basic customer account.
 
 | | Medusa | dust-commerce |
 | :--- | :--- | :--- |
-| Schema | modular PostgreSQL schemas | 35 SQLite tables |
+| Schema | modular PostgreSQL schemas | 38 SQLite tables |
 | Admin API | broad modular API | isolated identity and product-management slices (12 protected operations plus public media reads) |
-| Store operations | broad Store API | 38 method/path operations |
+| Generated client operations | broad Store API | 39 method/path operations |
 | Workflow engine and plugins | yes | none |
 | Admin dashboard | broad operational UI | authenticated product list, detail, edit and creation slices |
 
@@ -138,6 +138,18 @@ extension instead of authenticating independently. `CustomerAuth` composes
 `BearerTokenExtractable` for standards-correct parsing, then fingerprints the
 token, checks expiry, and resolves the customer. Cart-id routes use one shared
 ownership extractor, so every read and mutation hides another customer's cart.
+
+### Email verification is optional, explicit, and single-use
+
+Medusa's DTC registration flow can require email verification before issuing a
+customer session. This service keeps that production switch explicit so an
+existing deployment cannot silently lock out current accounts. When enabled,
+registration creates one expiring capability, stores only its SHA-256
+fingerprint, and sends the raw token through the configured TLS SMTP adapter.
+Correct credentials rotate a lost link without issuing a session. Confirmation
+is a POST, consumes the capability once, and gives expired, replayed, and
+unknown links the same response. Existing identities without a verification row
+retain their earlier sign-in behavior.
 Payment routes use the optional auth layer: customer-owned orders require their
 owner, while guest orders retain capability access. Guest carts still work,
 but a malformed or invalid header is rejected instead of silently becoming a

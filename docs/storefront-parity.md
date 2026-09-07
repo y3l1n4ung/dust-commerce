@@ -28,6 +28,7 @@ and the `Medusa DTC storefront parity` milestone.
 | `shipping/components/free-shipping-price-nudge` | global shipping progress popup | implemented in #21 with API-backed item-total rules, session dismissal, source actions, server-enforced eligibility, and source-timed unlocked feedback; local threshold interactions pass, while matched source rendering awaits a conditional source price |
 | `cart/templates` and `layout/components/cart-mismatch-banner` | cart route and ownership recovery | implemented in #21, #26 and #28 with responsive source layout, empty state, line controls, explicit applied-promotion responses, authoritative totals, session-aware sign-in prompt, authenticated guest-cart transfer, global retry banner and checkout handoff; the desktop empty/populated states and open promotion form passed rendered source comparison, while compact, shipping and source promotion-success QA remain |
 | `account/templates` | account shell and session | implemented in #20 and #26 with secure session, source-exact four-part overview completion, saved-address count, latest-five order links, profile name/phone/billing/password editing, API-backed address book, source-shaped navigation, order list and guarded order detail; signed-out desktop sign-in and registration passed rendered comparison, while compact, authenticated and real support/policy destinations remain |
+| `account/components/verify-account` | email verification capability | implemented with an explicit deployment switch, TLS SMTP delivery, hashed expiring single-use tokens, sign-in enforcement, resend rotation, a generated Dust client/state machine, and the source-shaped public route; local browser states pass and the blocked live-source comparison is recorded in `design-qa.md` |
 | `checkout/templates` | checkout and payment | implemented in #28 and #20 with real address, region-scoped saved-address selection, server-retained address and payment progress, delivery, API-backed regional payment-provider discovery, manual payment, review and confirmation steps; guest address passed compact and desktop rendered comparison, hard reloads retain both Delivery and Review, and the local confirmation passed a complete release-mode purchase, while same-state source review and confirmation visual QA remain |
 | `order/templates` | confirmation and order details | partial in #20, #26 and #28; confirmation, authenticated order list, source-shaped cards, guarded frozen order details, transfer request/decision UI, and the secure order-transfer API/client are implemented; the decision page passed rendered source comparison, while authenticated account-form QA, contact and return flows remain |
 | `regions` store API | account, checkout and storefront country selection | implemented with explicit SQLx response allowlists; selectors use active backend regions rather than hard-coded countries |
@@ -116,6 +117,15 @@ Password rotation completes the TODO in the pinned Medusa profile source: it
 requires the current secret, writes a fresh Argon2id PHC value with
 compare-and-swap protection, atomically revokes every session, and signs the
 Flutter customer out. The confirmation value never crosses the API boundary.
+Email verification follows the pinned source without storing its capability in
+Flutter state. A deployment must explicitly enable the requirement and provide
+SMTP settings. Registration then stores only a SHA-256 token fingerprint in its
+own one-shot reversible table, while the raw capability exists only in the
+outbound adapter and confirmation request. Correct credentials rotate a lost
+link but cannot create a bearer session until confirmation succeeds. The public
+GET page is inert until Flutter deliberately POSTs the capability, and invalid,
+expired, replaced, consumed, and unknown links share the same display state.
+Accounts created before the switch have no verification row and remain usable.
 The overview loads address and order capabilities independently, does not
 report unknown data as zero, computes the same email/name/phone/default-billing
 quarters as Medusa, and links at most the five newest server-ordered purchases.
