@@ -133,6 +133,8 @@ final class _$AdminApi implements AdminApi {
   @override
   Future<AdminProductList> listProducts(
     String query,
+    String statuses,
+    String order,
     int limit,
     int offset,
   ) async {
@@ -141,6 +143,8 @@ final class _$AdminApi implements AdminApi {
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
     _queryParameters['q'] = query;
+    _queryParameters['status'] = statuses;
+    _queryParameters['order'] = order;
     _queryParameters['limit'] = limit;
     _queryParameters['offset'] = offset;
     final Object? _data = null;

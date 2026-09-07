@@ -6,6 +6,7 @@ export 'src/admin_media.dart';
 export 'src/admin_product.dart';
 export 'src/admin_product_deleted.dart';
 export 'src/admin_product_option.dart';
+export 'src/admin_product_query.dart';
 export 'src/admin_product_image.dart';
 export 'src/admin_product_image_variants.dart';
 export 'src/admin_product_media.dart';

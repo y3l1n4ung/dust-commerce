@@ -14,6 +14,7 @@
 part of 'admin_product_state.dart';
 
 const DeepCollectionEquality _adminProductStateProductsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductStateStatusesEquality = DeepCollectionEquality();
 
 mixin _$AdminProductState {
   @override
@@ -24,8 +25,10 @@ mixin _$AdminProductState {
         'failure: ${self.failure}, '
         'limit: ${self.limit}, '
         'offset: ${self.offset}, '
+        'order: ${self.order}, '
         'products: ${self.products}, '
         'query: ${self.query}, '
+        'statuses: ${self.statuses}, '
         'status: ${self.status}'
         ')';
   }
@@ -40,8 +43,10 @@ mixin _$AdminProductState {
             other.failure == self.failure &&
             other.limit == self.limit &&
             other.offset == self.offset &&
+            other.order == self.order &&
             _adminProductStateProductsEquality.equals(other.products, self.products) &&
             other.query == self.query &&
+            _adminProductStateStatusesEquality.equals(other.statuses, self.statuses) &&
             other.status == self.status;
   }
 
@@ -54,8 +59,10 @@ mixin _$AdminProductState {
       self.failure,
       self.limit,
       self.offset,
+      self.order,
       _adminProductStateProductsEquality.hash(self.products),
       self.query,
+      _adminProductStateStatusesEquality.hash(self.statuses),
       self.status,
     ]);
   }
@@ -79,8 +86,10 @@ abstract class _$AdminProductStateCopyWith<$Res> {
     Option<String>? failure,
     int? limit,
     int? offset,
+    AdminProductOrder? order,
     List<AdminProduct>? products,
     String? query,
+    List<AdminProductLifecycle>? statuses,
     AdminProductStatus? status,
   });
 }
@@ -99,8 +108,10 @@ final class _$AdminProductStateCopyWithImpl<$Res> implements _$AdminProductState
     Object? failure = null,
     Object? limit = null,
     Object? offset = null,
+    Object? order = null,
     Object? products = null,
     Object? query = null,
+    Object? statuses = null,
     Object? status = null,
   }) {
     return _then(
@@ -111,6 +122,8 @@ final class _$AdminProductStateCopyWithImpl<$Res> implements _$AdminProductState
         limit: limit == null ? _self.limit : limit as int,
         offset: offset == null ? _self.offset : offset as int,
         query: query == null ? _self.query : query as String,
+        statuses: statuses == null ? _self.statuses : statuses as List<AdminProductLifecycle>,
+        order: order == null ? _self.order : order as AdminProductOrder,
         failure: failure == null ? _self.failure : failure as Option<String>,
       )
     );

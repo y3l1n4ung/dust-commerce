@@ -72,6 +72,35 @@ void main() {
     );
   });
 
+  test('filters by selected lifecycle states through the server', () async {
+    await database.connection.execute(
+      "UPDATE products SET status = 'draft' WHERE id = 'prod_tshirt'",
+      const [],
+    );
+
+    await products.filterByStatuses(const [AdminProductLifecycle.draft]);
+
+    expect(products.state.statuses, const [AdminProductLifecycle.draft]);
+    expect(products.state.count, 1);
+    expect(products.state.products.single.id, 'prod_tshirt');
+    expect(products.state.offset, 0);
+  });
+
+  test('orders products using the Medusa query contract', () async {
+    await products.orderBy(AdminProductOrder.titleAsc);
+
+    expect(products.state.order, AdminProductOrder.titleAsc);
+    expect(
+      products.state.products.map((product) => product.title),
+      orderedEquals([
+        'Essential T-Shirt',
+        'Everyday Shorts',
+        'Relaxed Sweatpants',
+        'Vintage Sweatshirt',
+      ]),
+    );
+  });
+
   test('removes a deleted product from the current page', () async {
     await products.load();
 

@@ -27,13 +27,23 @@ LEFT JOIN product_variants variant
 WHERE product.deleted_at IS NULL
   AND ($1 = '' OR lower(product.title) LIKE '%' || lower($1) || '%'
        OR lower(product.handle) LIKE '%' || lower($1) || '%')
+  AND ($2 = '' OR instr(',' || $2 || ',', ',' || product.status || ',') > 0)
 GROUP BY product.id, product.title, product.thumbnail, collection.title,
-         product.status, product.created_at
-ORDER BY product.created_at DESC, product.id
-LIMIT $2 OFFSET $3
+         product.status, product.created_at, product.updated_at
+ORDER BY
+  CASE WHEN $3 = 'title' THEN lower(product.title) END ASC,
+  CASE WHEN $3 = '-title' THEN lower(product.title) END DESC,
+  CASE WHEN $3 = 'created_at' THEN product.created_at END ASC,
+  CASE WHEN $3 = '-created_at' THEN product.created_at END DESC,
+  CASE WHEN $3 = 'updated_at' THEN product.updated_at END ASC,
+  CASE WHEN $3 = '-updated_at' THEN product.updated_at END DESC,
+  product.id ASC
+LIMIT $4 OFFSET $5
 ''')
   Future<Result<List<AdminProductResponse>, SqlxError>> list(
     String query,
+    String statuses,
+    String order,
     int limit,
     int offset,
   );
@@ -45,6 +55,7 @@ FROM products product
 WHERE product.deleted_at IS NULL
   AND ($1 = '' OR lower(product.title) LIKE '%' || lower($1) || '%'
        OR lower(product.handle) LIKE '%' || lower($1) || '%')
+  AND ($2 = '' OR instr(',' || $2 || ',', ',' || product.status || ',') > 0)
 ''')
-  Future<Result<int, SqlxError>> count(String query);
+  Future<Result<int, SqlxError>> count(String query, String statuses);
 }

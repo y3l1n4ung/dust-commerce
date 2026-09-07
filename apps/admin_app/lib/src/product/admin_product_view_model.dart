@@ -1,5 +1,6 @@
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/product/admin_product_state.dart';
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
@@ -61,10 +62,29 @@ final class AdminProductViewModel extends $AdminProductViewModel {
   /// Loads the first page for [query].
   Future<void> search(String query) => load(query: query, offset: 0);
 
+  /// Applies the selected lifecycle states and resets server paging.
+  Future<void> filterByStatuses(List<AdminProductLifecycle> statuses) => load(
+        statuses: List.unmodifiable(statuses.toSet()),
+        offset: 0,
+      );
+
+  /// Applies one allowlisted server ordering and resets paging.
+  Future<void> orderBy(AdminProductOrder order) => load(
+        order: order,
+        offset: 0,
+      );
+
   /// Loads one bounded catalogue page.
-  Future<void> load({String? query, int? offset}) async {
+  Future<void> load({
+    String? query,
+    int? offset,
+    List<AdminProductLifecycle>? statuses,
+    AdminProductOrder? order,
+  }) async {
     final nextQuery = (query ?? state.query).trim();
     final nextOffset = (offset ?? state.offset).clamp(0, 1 << 31);
+    final nextStatuses = statuses ?? state.statuses;
+    final nextOrder = order ?? state.order;
     final revision = ++_revision;
     emit(AdminProductState(
       status: AdminProductStatus.loading,
@@ -73,10 +93,14 @@ final class AdminProductViewModel extends $AdminProductViewModel {
       limit: state.limit,
       offset: nextOffset,
       query: nextQuery,
+      statuses: nextStatuses,
+      order: nextOrder,
     ));
     try {
       final result = await args.api.listProducts(
         nextQuery,
+        nextStatuses.map((status) => status.name).join(','),
+        nextOrder.parameter,
         state.limit,
         nextOffset,
       );
@@ -88,6 +112,8 @@ final class AdminProductViewModel extends $AdminProductViewModel {
         limit: result.limit,
         offset: result.offset,
         query: nextQuery,
+        statuses: nextStatuses,
+        order: nextOrder,
       ));
     } on DioException catch (error) {
       if (revision != _revision) return;
@@ -120,6 +146,8 @@ final class AdminProductViewModel extends $AdminProductViewModel {
         limit: state.limit,
         offset: state.offset,
         query: state.query,
+        statuses: state.statuses,
+        order: state.order,
         failure: Some(message),
       ));
 }

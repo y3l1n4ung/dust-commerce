@@ -14,9 +14,19 @@ Future<Result<AdminProductListResponse, Rejection>> listAdminProductsHandler(
   final deps = (state as Ok<AdminDeps, Rejection>).value;
   final paging = pagingOf(request);
   final query = request.requestedUri.queryParameters['q'] ?? '';
+  final statuses = _productStatuses(request);
+  if (statuses case Err(:final error)) return Err(error);
+  final order = AdminProductOrder.parse(
+    request.requestedUri.queryParameters['order'] ?? '-created_at',
+  );
+  if (order case None()) {
+    return const Err(Rejection.badRequest('Unknown product order'));
+  }
   final result = await listAdminProducts(
     deps.products,
     query: query,
+    statuses: (statuses as Ok<List<AdminProductLifecycle>, Rejection>).value,
+    order: (order as Some<AdminProductOrder>).value,
     limit: paging.limit,
     offset: paging.offset,
   );
@@ -24,6 +34,24 @@ Future<Result<AdminProductListResponse, Rejection>> listAdminProductsHandler(
     Ok(:final value) => Ok(value),
     Err() => const Err(Rejection.internal()),
   };
+}
+
+Result<List<AdminProductLifecycle>, Rejection> _productStatuses(
+  Request request,
+) {
+  final raw = request.requestedUri.queryParameters['status'] ?? '';
+  if (raw.isEmpty) return const Ok([]);
+  final statuses = <AdminProductLifecycle>[];
+  for (final value in raw.split(',')) {
+    final matches = AdminProductLifecycle.values.where(
+      (status) => status.name == value,
+    );
+    if (matches.isEmpty) {
+      return const Err(Rejection.badRequest('Unknown product status'));
+    }
+    if (!statuses.contains(matches.single)) statuses.add(matches.single);
+  }
+  return Ok(List.unmodifiable(statuses));
 }
 
 /// `GET /admin/products/create-context` — active pricing currencies.

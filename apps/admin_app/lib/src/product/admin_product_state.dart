@@ -29,6 +29,8 @@ final class AdminProductState with _$AdminProductState {
     this.limit = 20,
     this.offset = 0,
     this.query = '',
+    this.statuses = const [],
+    this.order = AdminProductOrder.createdAtDesc,
     this.failure = const None(),
   });
 
@@ -44,11 +46,17 @@ final class AdminProductState with _$AdminProductState {
   /// Number of matching rows skipped.
   final int offset;
 
+  /// Server-owned stable product ordering.
+  final AdminProductOrder order;
+
   /// Current allowlisted catalogue rows.
   final List<AdminProduct> products;
 
   /// Normalized title-or-handle search.
   final String query;
+
+  /// Selected lifecycle states; empty includes every active product.
+  final List<AdminProductLifecycle> statuses;
 
   /// Current request lifecycle.
   final AdminProductStatus status;

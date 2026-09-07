@@ -19,7 +19,7 @@ final class _$AdminProductRepository implements AdminProductRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<AdminProductResponse>, SqlxError>> list(String query, int limit, int offset) {
+  Future<Result<List<AdminProductResponse>, SqlxError>> list(String query, String statuses, String order, int limit, int offset) {
     return _db.fetchAll<AdminProductResponse>(
       r'''
 SELECT product.id,
@@ -37,18 +37,26 @@ LEFT JOIN product_variants variant
 WHERE product.deleted_at IS NULL
   AND (? = '' OR lower(product.title) LIKE '%' || lower(?) || '%'
        OR lower(product.handle) LIKE '%' || lower(?) || '%')
+  AND (? = '' OR instr(',' || ? || ',', ',' || product.status || ',') > 0)
 GROUP BY product.id, product.title, product.thumbnail, collection.title,
-         product.status, product.created_at
-ORDER BY product.created_at DESC, product.id
+         product.status, product.created_at, product.updated_at
+ORDER BY
+  CASE WHEN ? = 'title' THEN lower(product.title) END ASC,
+  CASE WHEN ? = '-title' THEN lower(product.title) END DESC,
+  CASE WHEN ? = 'created_at' THEN product.created_at END ASC,
+  CASE WHEN ? = '-created_at' THEN product.created_at END DESC,
+  CASE WHEN ? = 'updated_at' THEN product.updated_at END ASC,
+  CASE WHEN ? = '-updated_at' THEN product.updated_at END DESC,
+  product.id ASC
 LIMIT ? OFFSET ?
 ''',
-      [query, query, query, limit, offset],
+      [query, query, query, statuses, statuses, order, order, order, order, order, order, limit, offset],
       const $AdminProductResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<int, SqlxError>> count(String query) {
+  Future<Result<int, SqlxError>> count(String query, String statuses) {
     return _db.fetchScalar<int>(
       r'''
 SELECT count(*)
@@ -56,8 +64,9 @@ FROM products product
 WHERE product.deleted_at IS NULL
   AND (? = '' OR lower(product.title) LIKE '%' || lower(?) || '%'
        OR lower(product.handle) LIKE '%' || lower(?) || '%')
+  AND (? = '' OR instr(',' || ? || ',', ',' || product.status || ',') > 0)
 ''',
-      [query, query, query],
+      [query, query, query, statuses, statuses],
     );
   }
 }

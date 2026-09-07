@@ -1,3 +1,4 @@
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/src/features/admin/model.dart';
 import 'package:commerce_server/src/features/admin/repository/repository.dart';
 import 'package:dust_dart/db.dart';
@@ -6,14 +7,23 @@ import 'package:dust_dart/db.dart';
 Future<Result<AdminProductListResponse, SqlxError>> listAdminProducts(
   AdminProductRepository products, {
   required String query,
+  required List<AdminProductLifecycle> statuses,
+  required AdminProductOrder order,
   required int limit,
   required int offset,
 }) async {
   final normalized = query.trim();
-  final page = await products.list(normalized, limit, offset);
+  final statusList = statuses.map((status) => status.name).join(',');
+  final page = await products.list(
+    normalized,
+    statusList,
+    order.parameter,
+    limit,
+    offset,
+  );
   if (page case Err(:final error)) return Err(error);
 
-  final total = await products.count(normalized);
+  final total = await products.count(normalized, statusList);
   if (total case Err(:final error)) return Err(error);
 
   return Ok(AdminProductListResponse(

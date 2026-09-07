@@ -56,4 +56,75 @@ void main() {
       containsAll(['Vintage Sweatshirt', 'Relaxed Sweatpants']),
     );
   });
+
+  test('product list filters multiple lifecycle states before paging',
+      () async {
+    await harness.raw(
+      "UPDATE products SET status = 'draft' WHERE id = 'prod_tshirt'",
+    );
+    await harness.raw(
+      "UPDATE products SET status = 'rejected' WHERE id = 'prod_shorts'",
+    );
+    final token = await harness.adminToken();
+    final request = harness.client.get(
+      '/admin/products?status=draft,rejected&limit=1&offset=0',
+    )..bearer(token);
+    final response = await request.send();
+
+    response.assertOk();
+    final json = response.json! as Map<String, Object?>;
+    expect(json['count'], 2);
+    expect(json['products'], hasLength(1));
+  });
+
+  test('product list supports Medusa title and timestamp ordering', () async {
+    await harness.raw(
+      "UPDATE products SET created_at = CASE id "
+      "WHEN 'prod_tshirt' THEN '2026-01-01T00:00:00.000Z' "
+      "WHEN 'prod_sweatshirt' THEN '2026-01-02T00:00:00.000Z' "
+      "WHEN 'prod_sweatpants' THEN '2026-01-03T00:00:00.000Z' "
+      "ELSE '2026-01-04T00:00:00.000Z' END, "
+      "updated_at = CASE id "
+      "WHEN 'prod_tshirt' THEN '2026-02-04T00:00:00.000Z' "
+      "WHEN 'prod_sweatshirt' THEN '2026-02-03T00:00:00.000Z' "
+      "WHEN 'prod_sweatpants' THEN '2026-02-02T00:00:00.000Z' "
+      "ELSE '2026-02-01T00:00:00.000Z' END",
+    );
+    final token = await harness.adminToken();
+
+    expect(await _firstTitle(harness, token, 'title'), 'Essential T-Shirt');
+    expect(await _firstTitle(harness, token, '-title'), 'Vintage Sweatshirt');
+    expect(
+        await _firstTitle(harness, token, 'created_at'), 'Essential T-Shirt');
+    expect(await _firstTitle(harness, token, '-created_at'), 'Everyday Shorts');
+    expect(await _firstTitle(harness, token, 'updated_at'), 'Everyday Shorts');
+    expect(
+        await _firstTitle(harness, token, '-updated_at'), 'Essential T-Shirt');
+  });
+
+  test('product list rejects unknown filters and order keys', () async {
+    final token = await harness.adminToken();
+
+    (await (harness.client.get('/admin/products?status=archived')
+              ..bearer(token))
+            .send())
+        .assertBadRequest();
+    (await (harness.client.get('/admin/products?order=handle')..bearer(token))
+            .send())
+        .assertBadRequest();
+  });
+}
+
+Future<String> _firstTitle(
+  AdminHarness harness,
+  String token,
+  String order,
+) async {
+  final response = await (harness.client.get('/admin/products?order=$order')
+        ..bearer(token))
+      .send();
+  response.assertOk();
+  final json = response.json! as Map<String, Object?>;
+  final products = json['products']! as List<Object?>;
+  return (products.first! as Map<String, Object?>)['title']! as String;
 }
