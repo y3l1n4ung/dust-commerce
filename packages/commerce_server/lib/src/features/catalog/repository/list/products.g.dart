@@ -25,13 +25,12 @@ final class _$CatalogListRepository implements CatalogListRepository {
 SELECT product.id, product.title, product.handle, product.description,
        product.thumbnail, product.status,
        CASE WHEN collection.id IS NULL THEN 'null' ELSE json_object(
-         'id', collection.id, 'title', collection.title, 'handle', collection.handle
-       ) END AS collection,
+         'id', collection.id, 'title', collection.title,
+         'handle', collection.handle) END AS collection,
        json_object(
          'material', product.material, 'origin_country', product.origin_country,
          'product_type', product.product_type, 'weight', product.weight,
-         'length', product.length, 'width', product.width,
-         'height', product.height
+         'length', product.length, 'width', product.width, 'height', product.height
        ) AS details,
        coalesce((
          SELECT json_group_array(json(ordered.image_json))
@@ -45,13 +44,9 @@ SELECT product.id, product.title, product.handle, product.description,
        coalesce((
          SELECT json_group_array(json(ordered.category_json))
          FROM (
-           SELECT json_object(
-             'id', category.id,
-             'name', category.name,
-             'description', category.description,
-             'handle', category.handle,
-             'parent_id', category.parent_category_id
-           ) AS category_json
+           SELECT json_object('id', category.id, 'name', category.name,
+             'description', category.description, 'handle', category.handle,
+             'parent_id', category.parent_category_id) AS category_json
            FROM product_category_products link
            JOIN product_categories category ON category.id = link.category_id
            WHERE link.product_id = product.id
@@ -79,16 +74,19 @@ SELECT product.id, product.title, product.handle, product.description,
                SELECT json_group_array(ordered_value.value)
                FROM (
                  SELECT option_value.value
-                 FROM product_option_values option_value
-                 WHERE option_value.option_id = option.id
-                   AND option_value.deleted_at IS NULL
+                 FROM product_product_option_values availability
+                 JOIN product_option_values option_value
+                   ON option_value.id = availability.product_option_value_id
+                 WHERE availability.product_product_option_id = link.id
+                   AND option_value.deleted_at IS NULL AND availability.deleted_at IS NULL
                  ORDER BY option_value.rank, option_value.id
                ) ordered_value
              ), '[]'))
            ) AS option_json
-           FROM product_options option
-           WHERE option.product_id = product.id AND option.deleted_at IS NULL
-           ORDER BY option.id
+           FROM product_product_options link
+           JOIN product_options option ON option.id = link.product_option_id
+           WHERE link.product_id = product.id AND link.deleted_at IS NULL AND option.deleted_at IS NULL
+           ORDER BY link.rowid
          ) ordered
        ), '[]') AS options,
        coalesce((
@@ -166,7 +164,9 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       ON filter_choice.variant_id = filter_variant.id
     JOIN product_options filter_option
       ON filter_option.id = filter_choice.option_id
-     AND filter_option.product_id = product.id
+    JOIN product_product_options filter_product_option ON
+      filter_product_option.product_id = product.id AND
+      filter_product_option.product_option_id = filter_option.id
     JOIN product_option_values filter_value
       ON filter_value.id = filter_choice.option_value_id
      AND filter_value.option_id = filter_choice.option_id
@@ -174,10 +174,9 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       AND filter_variant.deleted_at IS NULL
       AND filter_price.currency_code = ?
       AND filter_option.deleted_at IS NULL
+      AND filter_product_option.deleted_at IS NULL
       AND filter_value.deleted_at IS NULL
-      AND filter_choice.option_value_id IN (
-        SELECT value FROM json_each(?)
-      )
+      AND filter_choice.option_value_id IN (SELECT value FROM json_each(?))
   ))
 -- Latest arrivals are the source storefront default; handle is deterministic
 -- when a bulk insert gives multiple products the same generated timestamp.

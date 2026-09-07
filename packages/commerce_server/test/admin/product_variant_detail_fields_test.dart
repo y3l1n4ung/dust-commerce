@@ -11,8 +11,10 @@ void main() {
   test('complete variant detail changes admin and storefront readback',
       () async {
     await harness.raw(
-      "INSERT INTO product_option_values (id, option_id, value, rank) "
-      "VALUES ('optval_sweatpants_size_l', 'opt_sweatpants_size', 'L', 2)",
+      "INSERT INTO product_product_option_values "
+      "(id, product_product_option_id, product_option_value_id) "
+      "VALUES ('prodoptval_sweatpants_size_l', "
+      "'prodopt_sweatpants_size', 'optval_size_l')",
     );
     await harness.raw(
       "UPDATE product_variants SET updated_at = '2000-01-01T00:00:00.000Z' "
@@ -50,7 +52,7 @@ void main() {
     expect(variant, containsPair('inventory_quantity', 20));
     expect(
       variant,
-      containsPair('option_values', {'opt_sweatpants_size': 'L'}),
+      containsPair('option_values', {'opt_size': 'L'}),
     );
 
     final stored = await harness.raw(
@@ -91,7 +93,7 @@ void main() {
     expect(publicVariant, containsPair('title', 'Large / Limited'));
     expect(
       publicVariant,
-      containsPair('option_values', {'opt_sweatpants_size': 'L'}),
+      containsPair('option_values', {'opt_size': 'L'}),
     );
   });
 }
@@ -105,7 +107,7 @@ Map<String, Object?> _body() => {
       'barcode': '  0123456789012  ',
       'manage_inventory': false,
       'allow_backorder': true,
-      'option_values': {'opt_sweatpants_size': 'L'},
+      'option_values': {'opt_size': 'L'},
       'weight': 400.5,
       'width': 30.25,
       'length': 2.5,

@@ -56,15 +56,25 @@ VALUES ($1, $2, $3, $4)
     int rank,
   );
 
-  /// Creates one option axis owned by the new product.
+  /// Creates one exclusive option axis for the new product graph.
   @Query(r'''
-INSERT INTO product_options (id, product_id, title)
-VALUES ($1, $2, $3)
+INSERT INTO product_options (id, title, is_exclusive)
+VALUES ($1, $2, 1)
 ''')
   Future<Result<ExecResult, SqlxError>> insertOption(
     String id,
-    String productId,
     String title,
+  );
+
+  /// Attaches an option to the product through Medusa's explicit pivot.
+  @Query(r'''
+INSERT INTO product_product_options (id, product_id, product_option_id)
+VALUES ($1, $2, $3)
+''')
+  Future<Result<ExecResult, SqlxError>> insertProductOption(
+    String id,
+    String productId,
+    String optionId,
   );
 
   /// Creates one stable, ranked value for an option axis.
@@ -77,6 +87,18 @@ VALUES ($1, $2, $3, $4)
     String optionId,
     String value,
     int rank,
+  );
+
+  /// Makes one option value available on the new product link.
+  @Query(r'''
+INSERT INTO product_product_option_values
+  (id, product_product_option_id, product_option_value_id)
+VALUES ($1, $2, $3)
+''')
+  Future<Result<ExecResult, SqlxError>> insertProductOptionValue(
+    String id,
+    String productOptionId,
+    String optionValueId,
   );
 
   /// Creates one inventory-bearing variant unless its SKU is already active.

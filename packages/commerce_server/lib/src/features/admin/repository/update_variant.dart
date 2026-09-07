@@ -14,11 +14,18 @@ abstract final class AdminVariantUpdateRepository {
 SELECT value.id
 FROM product_option_values value
 JOIN product_options option ON option.id = value.option_id
-WHERE option.product_id = $1
+JOIN product_product_options product_option
+  ON product_option.product_option_id = option.id
+JOIN product_product_option_values availability
+  ON availability.product_product_option_id = product_option.id
+ AND availability.product_option_value_id = value.id
+WHERE product_option.product_id = $1
   AND option.id = $2
   AND value.value = $3
   AND option.deleted_at IS NULL
   AND value.deleted_at IS NULL
+  AND product_option.deleted_at IS NULL
+  AND availability.deleted_at IS NULL
 ''')
   Future<Result<String?, SqlxError>> optionValueId(
     String productId,

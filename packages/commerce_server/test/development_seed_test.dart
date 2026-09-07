@@ -21,7 +21,10 @@ void main() {
     expect(await _count(database, 'products'), 4);
     expect(await _count(database, 'product_variants'), 14);
     expect(await _count(database, 'variant_prices'), 28);
-    expect(await _count(database, 'product_option_values'), 12);
+    expect(await _count(database, 'product_options'), 2);
+    expect(await _count(database, 'product_option_values'), 6);
+    expect(await _count(database, 'product_product_options'), 5);
+    expect(await _count(database, 'product_product_option_values'), 12);
     expect(await _count(database, 'variant_option_values'), 22);
     expect(await _count(database, 'product_images'), 10);
     expect(await _count(database, 'shipping_options'), 6);

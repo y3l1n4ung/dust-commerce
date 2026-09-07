@@ -35,23 +35,22 @@ WHERE selection.option_id = ?
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> updateTitle(String productId, String optionId, String title) {
+  Future<Result<ExecResult, SqlxError>> updateTitle(String optionId, String title) {
     return _db.execute(
       r'''
 UPDATE product_options
 SET title = trim(?)
 WHERE id = ?
-  AND product_id = ?
   AND deleted_at IS NULL
-  AND NOT EXISTS (
+  AND (is_exclusive = 1 OR NOT EXISTS (
     SELECT 1 FROM product_options sibling
-    WHERE sibling.product_id = ?
-      AND sibling.title = trim(?)
+    WHERE sibling.title = trim(?)
       AND sibling.id <> ?
+      AND sibling.is_exclusive = 0
       AND sibling.deleted_at IS NULL
-  )
+  ))
 ''',
-      [title, optionId, productId, productId, title, optionId],
+      [title, optionId, title, optionId],
     );
   }
 
@@ -68,6 +67,18 @@ WHERE option_id = ? AND value = ? AND deleted_at IS NULL
   }
 
   @override
+  Future<Result<String?, SqlxError>> valueId(String optionId, String value) {
+    return _db.fetchScalar<String?>(
+      r'''
+SELECT id
+FROM product_option_values
+WHERE option_id = ? AND value = ? AND deleted_at IS NULL
+''',
+      [optionId, value],
+    );
+  }
+
+  @override
   Future<Result<ExecResult, SqlxError>> insertValue(String id, String optionId, String value, int rank) {
     return _db.execute(
       r'''
@@ -75,6 +86,22 @@ INSERT INTO product_option_values (id, option_id, value, rank)
 VALUES (?, ?, ?, ?)
 ''',
       [id, optionId, value, rank],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> insertAvailability(String id, String productId, String optionId, String valueId) {
+    return _db.execute(
+      r'''
+INSERT INTO product_product_option_values
+  (id, product_product_option_id, product_option_value_id)
+SELECT ?, link.id, ?
+FROM product_product_options link
+WHERE link.product_id = ?
+  AND link.product_option_id = ?
+  AND link.deleted_at IS NULL
+''',
+      [id, valueId, productId, optionId],
     );
   }
 

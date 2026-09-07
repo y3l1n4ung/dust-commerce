@@ -24,23 +24,21 @@ WHERE selection.option_id = $1
     String value,
   );
 
-  /// Renames an owned option unless a sibling already uses the title.
+  /// Renames an option unless another global option already uses the title.
   @Query(r'''
 UPDATE product_options
-SET title = trim($3)
-WHERE id = $2
-  AND product_id = $1
+SET title = trim($2)
+WHERE id = $1
   AND deleted_at IS NULL
-  AND NOT EXISTS (
+  AND (is_exclusive = 1 OR NOT EXISTS (
     SELECT 1 FROM product_options sibling
-    WHERE sibling.product_id = $1
-      AND sibling.title = trim($3)
-      AND sibling.id <> $2
+    WHERE sibling.title = trim($2)
+      AND sibling.id <> $1
+      AND sibling.is_exclusive = 0
       AND sibling.deleted_at IS NULL
-  )
+  ))
 ''')
   Future<Result<ExecResult, SqlxError>> updateTitle(
-    String productId,
     String optionId,
     String title,
   );
@@ -57,6 +55,14 @@ WHERE option_id = $1 AND value = $2 AND deleted_at IS NULL
     int rank,
   );
 
+  /// Resolves an active global value after ranking or insertion.
+  @Query(r'''
+SELECT id
+FROM product_option_values
+WHERE option_id = $1 AND value = $2 AND deleted_at IS NULL
+''')
+  Future<Result<String?, SqlxError>> valueId(String optionId, String value);
+
   /// Adds one stable value with a server-owned identifier.
   @Query(r'''
 INSERT INTO product_option_values (id, option_id, value, rank)
@@ -67,6 +73,23 @@ VALUES ($1, $2, $3, $4)
     String optionId,
     String value,
     int rank,
+  );
+
+  /// Exposes a newly created value through the requested product link.
+  @Query(r'''
+INSERT INTO product_product_option_values
+  (id, product_product_option_id, product_option_value_id)
+SELECT $1, link.id, $4
+FROM product_product_options link
+WHERE link.product_id = $2
+  AND link.product_option_id = $3
+  AND link.deleted_at IS NULL
+''')
+  Future<Result<ExecResult, SqlxError>> insertAvailability(
+    String id,
+    String productId,
+    String optionId,
+    String valueId,
   );
 
   /// Retires an unused value while preserving its audit history.

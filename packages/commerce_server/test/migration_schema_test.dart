@@ -34,7 +34,9 @@ void main() {
             .split(' '),
         ...'customers admin_users auth_identity auth_tokens'.split(' '),
         ...'line_items order_addresses order_items orders'.split(' '),
-        ...'product_options product_option_values'.split(' '),
+        ...'product_options product_option_values product_product_options'
+            .split(' '),
+        'product_product_option_values',
         ...'product_collections product_categories'.split(' '),
         ...'product_category_products product_images product_image_variants'
             .split(' '),
@@ -102,12 +104,21 @@ void main() {
     );
   });
 
-  test('product options retain merchant-defined order', () async {
+  test('product options are reusable through explicit product links', () async {
     final rows = await queryRaw('PRAGMA table_info(product_options)', [])
         .fetch(database.connection as Executor);
     final columns = rows.map((row) => row.readIndex<String>(1)).toList();
 
-    expect(columns, contains('rank'));
+    expect(columns, contains('is_exclusive'));
+    expect(columns, isNot(contains('product_id')));
+    final links = await queryRaw(
+      'PRAGMA table_info(product_product_options)',
+      [],
+    ).fetch(database.connection as Executor);
+    expect(
+      links.map((row) => row.readIndex<String>(1)),
+      containsAll(['product_id', 'product_option_id']),
+    );
   });
 
   test('migrations are idempotent across reopen', () async {

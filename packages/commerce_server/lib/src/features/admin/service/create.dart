@@ -10,6 +10,7 @@ import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
 
 part 'product_media.dart';
+part 'product_options.dart';
 
 /// Why an administrator was not bootstrapped.
 enum AdminBootstrapFailure {
@@ -114,30 +115,15 @@ Future<
         if (imageWrite case Err(:final error)) return Err(error);
       }
 
-      final createdOptions = <String, _CreatedOption>{};
-      for (final option in product.options) {
-        final optionId = nextId();
-        final optionWrite = await writes.insertOption(
-          optionId,
-          productId,
-          option.title,
-        );
-        if (optionWrite case Err(:final error)) return Err(error);
-        final values = <String, String>{};
-        for (var rank = 0; rank < option.values.length; rank++) {
-          final value = option.values[rank];
-          final valueId = nextId();
-          final valueWrite = await writes.insertOptionValue(
-            valueId,
-            optionId,
-            value,
-            rank,
-          );
-          if (valueWrite case Err(:final error)) return Err(error);
-          values[value] = valueId;
-        }
-        createdOptions[option.title] = _CreatedOption(optionId, values);
-      }
+      final optionWrite = await _insertCreatedOptions(
+        writes,
+        productId,
+        product.options,
+        nextId,
+      );
+      if (optionWrite case Err(:final error)) return Err(error);
+      final createdOptions =
+          (optionWrite as Ok<Map<String, _CreatedOption>, SqlxError>).value;
 
       for (final variant in product.variants) {
         final variantId = nextId();

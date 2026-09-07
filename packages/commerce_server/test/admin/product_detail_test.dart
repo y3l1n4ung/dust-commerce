@@ -50,7 +50,7 @@ void main() {
     expect(json['images'], hasLength(2));
     expect(json['options'], [
       {
-        'id': 'opt_sweatpants_size',
+        'id': 'opt_size',
         'title': 'Size',
         'values': ['S', 'M'],
       },

@@ -29,8 +29,15 @@ void main() {
     expect(option['values'], ['M', 'S', 'XL']);
 
     final rows = await harness.raw(
-      "SELECT value, rank FROM product_option_values "
-      "WHERE option_id = 'opt_sweatpants_size' AND deleted_at IS NULL "
+      "SELECT value.value, value.rank "
+      "FROM product_product_options link "
+      "JOIN product_product_option_values availability "
+      "ON availability.product_product_option_id = link.id "
+      "JOIN product_option_values value "
+      "ON value.id = availability.product_option_value_id "
+      "WHERE link.product_id = 'prod_sweatpants' "
+      "AND link.product_option_id = 'opt_size' "
+      "AND availability.deleted_at IS NULL AND value.deleted_at IS NULL "
       'ORDER BY rank',
     );
     expect(
@@ -62,7 +69,7 @@ void main() {
     final option =
         (product['options']! as List<Object?>).single! as Map<String, Object?>;
     expect(option, {
-      'id': 'opt_sweatpants_size',
+      'id': 'opt_size',
       'title': 'Waist size',
       'values': ['M', 'S', 'XL'],
     });
@@ -92,14 +99,14 @@ void main() {
   test('duplicate sibling title is a conflict and changes nothing', () async {
     final token = await harness.adminToken();
     final request = harness.client.patch(
-      '/admin/products/prod_tshirt/options/opt_tshirt_size',
+      '/admin/products/prod_tshirt/options/opt_size',
     )
       ..bearer(token)
       ..json(_body(title: 'Color', values: ['S', 'M', 'L', 'XL']));
 
     (await request.send()).assertConflict();
     final rows = await harness.raw(
-      "SELECT title FROM product_options WHERE id = 'opt_tshirt_size'",
+      "SELECT title FROM product_options WHERE id = 'opt_size'",
     );
     expect(rows.single.readIndex<String>(0), 'Size');
   });
@@ -107,7 +114,7 @@ void main() {
   test('option must belong to the product in the route', () async {
     final token = await harness.adminToken();
     final request = harness.client.patch(
-      '/admin/products/prod_tshirt/options/opt_sweatpants_size',
+      '/admin/products/prod_sweatpants/options/opt_color',
     )
       ..bearer(token)
       ..json(_body());
@@ -116,7 +123,7 @@ void main() {
   });
 }
 
-const _path = '/admin/products/prod_sweatpants/options/opt_sweatpants_size';
+const _path = '/admin/products/prod_sweatpants/options/opt_size';
 
 Map<String, Object?> _body({
   String title = 'Size',
@@ -126,9 +133,15 @@ Map<String, Object?> _body({
 
 Future<void> _expectOriginal(AdminHarness harness) async {
   final rows = await harness.raw(
-    "SELECT option.title, value.value FROM product_options option "
-    'JOIN product_option_values value ON value.option_id = option.id '
-    "WHERE option.id = 'opt_sweatpants_size' AND value.deleted_at IS NULL "
+    "SELECT option.title, value.value FROM product_product_options link "
+    'JOIN product_options option ON option.id = link.product_option_id '
+    'JOIN product_product_option_values availability '
+    'ON availability.product_product_option_id = link.id '
+    'JOIN product_option_values value '
+    'ON value.id = availability.product_option_value_id '
+    "WHERE link.product_id = 'prod_sweatpants' "
+    "AND option.id = 'opt_size' AND value.deleted_at IS NULL "
+    'AND availability.deleted_at IS NULL '
     'ORDER BY value.rank',
   );
   expect(rows.map((row) => row.readIndex<String>(0)).toSet(), {'Size'});

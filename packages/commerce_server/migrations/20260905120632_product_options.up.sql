@@ -1,26 +1,26 @@
--- Defines selectable dimensions such as Size or Color for one product.
+-- Defines reusable selectable dimensions such as Size or Color.
 -- UTC timestamps use ISO-8601 TEXT because SQLite has no native TIMESTAMPTZ.
 CREATE TABLE product_options (
   id         TEXT PRIMARY KEY,
-  product_id TEXT NOT NULL REFERENCES products (id) ON DELETE CASCADE,
   -- Merchant-facing axis label; bounded to keep admin forms predictable.
   title      TEXT NOT NULL CHECK (length(trim(title)) BETWEEN 1 AND 255),
-  -- Merchant-defined order keeps variant selectors stable across every client.
-  rank       INTEGER NOT NULL DEFAULT 0 CHECK (rank >= 0),
+  -- Exclusive options disappear with their sole product; globals are reusable.
+  is_exclusive INTEGER NOT NULL DEFAULT 0 CHECK (is_exclusive IN (0, 1)),
   -- Merchant-only extension data stays outside the public response allowlist.
   metadata   TEXT CHECK (metadata IS NULL OR json_valid(metadata)),
   created_at TEXT NOT NULL DEFAULT
              (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
   updated_at TEXT NOT NULL DEFAULT
              (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
-  -- Soft deletion preserves existing variant and order history.
+  -- Soft deletion preserves historical variant and order references.
   deleted_at TEXT
 );
 
-CREATE INDEX idx_options_product ON product_options (product_id, rank, id)
-WHERE deleted_at IS NULL;
-CREATE UNIQUE INDEX idx_options_product_title
-ON product_options (product_id, title)
+-- Global titles are unique because merchants select them by meaning.
+CREATE UNIQUE INDEX idx_product_options_global_title
+ON product_options (title)
+WHERE deleted_at IS NULL AND is_exclusive = 0;
+CREATE INDEX idx_product_options_title ON product_options (title)
 WHERE deleted_at IS NULL;
 
 -- SQLite has no automatic ON UPDATE timestamp, so this maintains updated_at.

@@ -93,7 +93,8 @@ void main() {
       "SELECT count(*) FROM products WHERE handle = 'canvas-tote'",
     );
     final options = await harness.raw(
-      "SELECT count(*) FROM product_options WHERE product_id LIKE 'id_%'",
+      "SELECT count(*) FROM product_product_options "
+      "WHERE product_id LIKE 'id_%'",
     );
     expect(products.single.readIndex<int>(0), 1);
     expect(options.single.readIndex<int>(0), 1);
@@ -111,7 +112,8 @@ void main() {
       "SELECT count(*) FROM products WHERE handle = 'canvas-tote'",
     );
     final options = await harness.raw(
-      "SELECT count(*) FROM product_options WHERE product_id LIKE 'id_%'",
+      "SELECT count(*) FROM product_product_options "
+      "WHERE product_id LIKE 'id_%'",
     );
     expect(products.single.readIndex<int>(0), 0);
     expect(options.single.readIndex<int>(0), 0);

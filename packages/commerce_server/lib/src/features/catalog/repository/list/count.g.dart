@@ -64,7 +64,9 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       ON filter_choice.variant_id = filter_variant.id
     JOIN product_options filter_option
       ON filter_option.id = filter_choice.option_id
-     AND filter_option.product_id = product.id
+    JOIN product_product_options filter_product_option
+      ON filter_product_option.product_id = product.id
+     AND filter_product_option.product_option_id = filter_option.id
     JOIN product_option_values filter_value
       ON filter_value.id = filter_choice.option_value_id
      AND filter_value.option_id = filter_choice.option_id
@@ -72,6 +74,7 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       AND filter_variant.deleted_at IS NULL
       AND filter_price.currency_code = ?
       AND filter_option.deleted_at IS NULL
+      AND filter_product_option.deleted_at IS NULL
       AND filter_value.deleted_at IS NULL
       AND filter_choice.option_value_id IN (
         SELECT value FROM json_each(?)

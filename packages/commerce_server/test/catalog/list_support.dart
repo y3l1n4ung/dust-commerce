@@ -45,13 +45,24 @@ Future<void> seedCatalogList(CommerceDatabase database) async {
     r"('var_mug', 'prod_mug', 'Default', 3)",
   );
   await run(
-    r"INSERT INTO product_options (id, product_id, title) VALUES "
-    r"('opt_size', 'prod_shirt', 'Size')",
+    r"INSERT INTO product_options (id, title) VALUES "
+    r"('opt_size', 'Size')",
+  );
+  await run(
+    r"INSERT INTO product_product_options "
+    r"(id, product_id, product_option_id) VALUES "
+    r"('prodopt_size', 'prod_shirt', 'opt_size')",
   );
   await run(
     r"INSERT INTO product_option_values (id, option_id, value, rank) VALUES "
     r"('optval_small', 'opt_size', 'Small', 0), "
     r"('optval_large', 'opt_size', 'Large', 1)",
+  );
+  await run(
+    r"INSERT INTO product_product_option_values "
+    r"(id, product_product_option_id, product_option_value_id) VALUES "
+    r"('prodoptval_small', 'prodopt_size', 'optval_small'), "
+    r"('prodoptval_large', 'prodopt_size', 'optval_large')",
   );
   await run(
     r"INSERT INTO variant_option_values "

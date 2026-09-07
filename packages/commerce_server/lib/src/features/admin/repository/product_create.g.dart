@@ -62,13 +62,24 @@ VALUES (?, ?, ?, ?)
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertOption(String id, String productId, String title) {
+  Future<Result<ExecResult, SqlxError>> insertOption(String id, String title) {
     return _db.execute(
       r'''
-INSERT INTO product_options (id, product_id, title)
+INSERT INTO product_options (id, title, is_exclusive)
+VALUES (?, ?, 1)
+''',
+      [id, title],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> insertProductOption(String id, String productId, String optionId) {
+    return _db.execute(
+      r'''
+INSERT INTO product_product_options (id, product_id, product_option_id)
 VALUES (?, ?, ?)
 ''',
-      [id, productId, title],
+      [id, productId, optionId],
     );
   }
 
@@ -80,6 +91,18 @@ INSERT INTO product_option_values (id, option_id, value, rank)
 VALUES (?, ?, ?, ?)
 ''',
       [id, optionId, value, rank],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> insertProductOptionValue(String id, String productOptionId, String optionValueId) {
+    return _db.execute(
+      r'''
+INSERT INTO product_product_option_values
+  (id, product_product_option_id, product_option_value_id)
+VALUES (?, ?, ?)
+''',
+      [id, productOptionId, optionValueId],
     );
   }
 

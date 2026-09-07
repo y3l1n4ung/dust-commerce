@@ -89,16 +89,22 @@ SELECT product.id, product.title, product.handle, product.description,
                SELECT json_group_array(ordered_value.value)
                FROM (
                  SELECT option_value.value
-                 FROM product_option_values option_value
-                 WHERE option_value.option_id = option.id
+                 FROM product_product_option_values availability
+                 JOIN product_option_values option_value
+                   ON option_value.id = availability.product_option_value_id
+                 WHERE availability.product_product_option_id = link.id
                    AND option_value.deleted_at IS NULL
+                   AND availability.deleted_at IS NULL
                  ORDER BY option_value.rank, option_value.id
                ) ordered_value
              ), '[]'))
            ) AS option_json
-           FROM product_options option
-           WHERE option.product_id = product.id AND option.deleted_at IS NULL
-           ORDER BY option.id
+           FROM product_product_options link
+           JOIN product_options option ON option.id = link.product_option_id
+           WHERE link.product_id = product.id
+             AND link.deleted_at IS NULL
+             AND option.deleted_at IS NULL
+           ORDER BY link.rowid
          ) ordered
        ), '[]') AS options,
        coalesce((

@@ -73,5 +73,5 @@ Map<String, Object?> _body({
       'sku': sku,
       'manage_inventory': manageInventory,
       'allow_backorder': allowBackorder,
-      'option_values': {'opt_sweatpants_size': size},
+      'option_values': {'opt_size': size},
     };

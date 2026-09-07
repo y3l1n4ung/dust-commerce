@@ -70,6 +70,18 @@ void main() {
       );
       expect(await columnsOf('product_options'), isNot(contains('values_csv')));
       expect(
+        await columnsOf('product_options'),
+        containsAll(['id', 'title', 'is_exclusive']),
+      );
+      expect(
+        await columnsOf('product_product_options'),
+        containsAll(['product_id', 'product_option_id']),
+      );
+      expect(
+        await columnsOf('product_product_option_values'),
+        containsAll(['product_product_option_id', 'product_option_value_id']),
+      );
+      expect(
         await columnsOf('product_option_values'),
         containsAll(['id', 'option_id', 'value', 'rank']),
       );

@@ -61,17 +61,34 @@ Future<
         return const Ok(Err(AdminUpdateProductOptionFailure.valueInUse));
       }
     }
-    final renamed = await writes.updateTitle(productId, optionId, title);
+    final renamed = await writes.updateTitle(optionId, title);
     if (renamed case Err(:final error)) return Err(error);
     if ((renamed as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
       return const Ok(Err(AdminUpdateProductOptionFailure.titleConflict));
     }
     for (var rank = 0; rank < values.length; rank++) {
       final value = values[rank];
-      final write = current.values.contains(value)
-          ? await writes.rankValue(optionId, value, rank)
-          : await writes.insertValue(nextId(), optionId, value, rank);
-      if (write case Err(:final error)) return Err(error);
+      final ranked = await writes.rankValue(optionId, value, rank);
+      if (ranked case Err(:final error)) return Err(error);
+      final foundValue = await writes.valueId(optionId, value);
+      if (foundValue case Err(:final error)) return Err(error);
+      var valueId = optionOf(
+        (foundValue as Ok<String?, SqlxError>).value,
+      );
+      if (valueId case None()) {
+        final id = nextId();
+        final write = await writes.insertValue(id, optionId, value, rank);
+        if (write case Err(:final error)) return Err(error);
+        valueId = Some(id);
+      }
+      if (current.values.contains(value)) continue;
+      final availability = await writes.insertAvailability(
+        nextId(),
+        productId,
+        optionId,
+        (valueId as Some<String>).value,
+      );
+      if (availability case Err(:final error)) return Err(error);
     }
     for (final value
         in current.values.where((value) => !values.contains(value))) {
