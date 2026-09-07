@@ -30,6 +30,7 @@ void main() {
     expect(config.username, const Some('mailer@example.com'));
     expect(config.password, const Some(' secret with spaces '));
     expect(config.timeout, const Duration(seconds: 20));
+    expect(config.buildEmailVerification(), isA<SmtpEmailVerificationMailer>());
     expect(config.build(), isA<SmtpOrderTransferMailer>());
   });
 

@@ -6,13 +6,22 @@ import 'package:dust_server/server.dart';
 
 Future<void> main() async {
   final config = _ServerConfig.fromEnvironment(Platform.environment);
-  final transferMail = OrderTransferMailConfig.optionFromEnvironment(
+  final mailConfig = OrderTransferMailConfig.optionFromEnvironment(
     Platform.environment,
   );
-  final transferMailer = transferMail.match<OrderTransferMailer>(
+  final transferMailer = mailConfig.match<OrderTransferMailer>(
     some: (value) => value.build(),
     none: UnavailableOrderTransferMailer.new,
   );
+  final verificationMailer = mailConfig.match<EmailVerificationMailer>(
+    some: (value) => value.buildEmailVerification(),
+    none: UnavailableEmailVerificationMailer.new,
+  );
+  if (config.requireEmailVerification && !verificationMailer.isAvailable) {
+    throw const FormatException(
+      'SMTP settings are required when email verification is enabled.',
+    );
+  }
   await File(config.databasePath).parent.create(recursive: true);
   final database = CommerceDatabase.open(
     config.databasePath,
@@ -29,8 +38,10 @@ Future<void> main() async {
     if (config.seed) await seedDevelopmentStore(database);
     final app = buildApp(
       database,
+      emailVerificationMailer: verificationMailer,
       orderTransferMailer: transferMailer,
       mediaStorage: mediaStorage,
+      requireEmailVerification: config.requireEmailVerification,
     )
       ..layer(const SecurityHeaders())
       ..layer(const RequestId());
@@ -77,6 +88,7 @@ final class _ServerConfig {
     required this.databasePath,
     required this.mediaPath,
     required this.publicBaseUrl,
+    required this.requireEmailVerification,
     required this.seed,
     required this.allowedOrigins,
   });
@@ -99,6 +111,10 @@ final class _ServerConfig {
         bind,
         port,
       ),
+      requireEmailVerification: _boolean(
+        environment,
+        'COMMERCE_REQUIRE_EMAIL_VERIFICATION',
+      ),
       seed: environment['COMMERCE_SEED'] == 'true',
       allowedOrigins: {
         for (final origin
@@ -114,7 +130,15 @@ final class _ServerConfig {
   final String mediaPath;
   final int port;
   final Uri publicBaseUrl;
+  final bool requireEmailVerification;
   final bool seed;
+
+  static bool _boolean(Map<String, String> source, String key) =>
+      switch (source[key]) {
+        null || 'false' => false,
+        'true' => true,
+        _ => throw FormatException('$key must be true or false.'),
+      };
 
   static Uri _publicBaseUrl(String? configured, String bind, int port) {
     final localHost = bind == '0.0.0.0' || bind == '::' ? '127.0.0.1' : bind;
