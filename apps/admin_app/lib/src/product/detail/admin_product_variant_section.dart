@@ -9,6 +9,7 @@ final class AdminProductVariantSection extends StatelessWidget {
     required this.variants,
     required this.onEdit,
     required this.onEditPrices,
+    required this.onEditStock,
     required this.onUnavailable,
     super.key,
   });
@@ -19,6 +20,9 @@ final class AdminProductVariantSection extends StatelessWidget {
   /// Opens the source-shaped focused pricing editor.
   final ValueChanged<AdminProductVariant> onEditPrices;
 
+  /// Opens the source-shaped product stock grid.
+  final VoidCallback onEditStock;
+
   /// Inventory-bearing merchant variants.
   final List<AdminProductVariant> variants;
 
@@ -28,9 +32,19 @@ final class AdminProductVariantSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AdminProductDetailSection(
         title: 'Variants',
-        action: OutlinedButton(
-          onPressed: onUnavailable,
-          child: const Text('Create'),
+        action: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            OutlinedButton(
+              onPressed: onEditStock,
+              child: const Text('Edit stock'),
+            ),
+            const SizedBox(width: 8),
+            OutlinedButton(
+              onPressed: onUnavailable,
+              child: const Text('Create'),
+            ),
+          ],
         ),
         child: Column(
           children: [

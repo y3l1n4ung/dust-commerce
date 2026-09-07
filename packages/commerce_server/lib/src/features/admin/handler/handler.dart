@@ -16,6 +16,7 @@ export 'media.dart';
 export 'read.dart';
 export 'update.dart';
 export 'update/price.dart';
+export 'update/stock.dart';
 export 'update_media.dart';
 export 'update_variant.dart';
 

@@ -15,6 +15,7 @@ export 'read.dart';
 export 'update.dart';
 export 'update/option.dart';
 export 'update/price.dart';
+export 'update/stock.dart';
 export 'update_variant.dart';
 
 part 'repository.g.dart';

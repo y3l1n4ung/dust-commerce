@@ -50,6 +50,13 @@ final class _DetailBody extends StatelessWidget {
       _updated(context, 'Variant prices updated.');
     }
 
+    Future<void> editStock() async {
+      final saved = await showAdminProductStockPage(context, product);
+      if (saved != true || !context.mounted) return;
+      unawaited(context.readAdminProductViewModel().load());
+      _updated(context, 'Product stock updated.');
+    }
+
     final main = Column(children: [
       AdminProductGeneralSection(product: product, onEdit: editGeneral),
       const SizedBox(height: 12),
@@ -71,6 +78,7 @@ final class _DetailBody extends StatelessWidget {
         variants: product.variants,
         onEdit: editVariant,
         onEditPrices: editVariantPrices,
+        onEditStock: editStock,
         onUnavailable: () => showAdminUnavailable(context),
       ),
     ]);

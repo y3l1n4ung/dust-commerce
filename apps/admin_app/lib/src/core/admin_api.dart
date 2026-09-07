@@ -104,6 +104,13 @@ abstract interface class AdminApi {
     @Body() AdminUpdateVariantPrices body,
   );
 
+  /// Replaces aggregate stock for selected variants as one transaction.
+  @PUT('/admin/products/{id}/stock')
+  Future<AdminProductDetail> updateProductStock(
+    @Path() String id,
+    @Body() AdminUpdateProductStock body,
+  );
+
   /// Replaces product image membership, order, and thumbnail atomically.
   @PUT('/admin/products/{id}/media')
   Future<AdminProductDetail> updateProductMedia(

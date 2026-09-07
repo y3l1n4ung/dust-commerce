@@ -8,6 +8,7 @@ import 'package:dust_flutter/state.dart';
 part 'admin_product_detail_view_model.g.dart';
 part 'admin_product_detail_media_view_model.dart';
 part 'admin_product_detail_pricing_view_model.dart';
+part 'admin_product_detail_stock_view_model.dart';
 part 'admin_product_detail_variant_view_model.dart';
 
 /// Dependencies for one authenticated merchant product detail.
