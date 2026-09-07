@@ -26,16 +26,22 @@ Router adminRoutes() => Router()
     get(readAdminProductCreateContextHandler),
   )
   ..route(
+    '/product-options',
+    get(listAdminProductOptionsHandler)
+        .post(createAdminProductOptionHandler, status: 201),
+  )
+  ..route(
+    '/product-options/{id}',
+    get(readAdminProductOptionHandler)
+        .patch(updateAdminProductOptionDetailHandler),
+  )
+  ..route(
     '/products/{id}',
     get(readAdminProductHandler).patch(updateAdminProductHandler),
   )
   ..route(
     '/products/{id}/media',
     put(updateAdminProductMediaHandler),
-  )
-  ..route(
-    '/products/{id}/options/{option_id}',
-    patch(updateAdminProductOptionHandler),
   )
   ..route(
     '/products/{id}/images/{image_id}/variants/batch',

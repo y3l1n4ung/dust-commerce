@@ -1,4 +1,4 @@
-part of 'create.dart';
+part of '../create.dart';
 
 /// Persists the exclusive option graph owned by a newly created product.
 Future<Result<Map<String, _CreatedOption>, SqlxError>> _insertCreatedOptions(

@@ -6,6 +6,7 @@ export 'extractor.dart';
 export 'handler/handler.dart';
 export 'media_storage.dart';
 export 'model.dart';
+export 'product_option_model.dart';
 export 'repository/repository.dart';
 export 'router.dart';
 export 'service/service.dart';

@@ -80,6 +80,7 @@ Router buildApp(
         passwordWork: resolvedPasswordWork,
         dummyPasswordHash: accountDeps.dummyPasswordHash,
         products: AdminProductRepository(executor),
+        productOptions: AdminProductOptionRepository(executor),
         productCreates: AdminProductCreateRepository(executor),
         productReads: AdminProductReadRepository(executor),
         media: AdminMediaRepository(executor),

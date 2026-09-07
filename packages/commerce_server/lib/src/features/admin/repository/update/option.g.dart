@@ -90,18 +90,44 @@ VALUES (?, ?, ?, ?)
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertAvailability(String id, String productId, String optionId, String valueId) {
+  Future<Result<List<AdminProductOptionLink>, SqlxError>> productLinks(String optionId) {
+    return _db.fetchAll<AdminProductOptionLink>(
+      r'''
+SELECT id
+FROM product_product_options
+WHERE product_option_id = ? AND deleted_at IS NULL
+ORDER BY id
+''',
+      [optionId],
+      const $AdminProductOptionLinkRowDeserializer().deserialize,
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> insertLinkedAvailability(String id, String productOptionId, String valueId) {
     return _db.execute(
       r'''
 INSERT INTO product_product_option_values
   (id, product_product_option_id, product_option_value_id)
-SELECT ?, link.id, ?
-FROM product_product_options link
-WHERE link.product_id = ?
-  AND link.product_option_id = ?
-  AND link.deleted_at IS NULL
+VALUES (?, ?, ?)
 ''',
-      [id, valueId, productId, optionId],
+      [id, productOptionId, valueId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> retireAvailability(String optionId, String valueId) {
+    return _db.execute(
+      r'''
+UPDATE product_product_option_values
+SET deleted_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+WHERE product_option_value_id = ? AND deleted_at IS NULL
+  AND product_product_option_id IN (
+    SELECT id FROM product_product_options
+    WHERE product_option_id = ?
+  )
+''',
+      [valueId, optionId],
     );
   }
 

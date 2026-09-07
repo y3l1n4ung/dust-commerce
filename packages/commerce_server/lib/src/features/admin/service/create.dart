@@ -10,7 +10,7 @@ import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
 
 part 'product_media.dart';
-part 'product_options.dart';
+part 'create/insert_options.dart';
 
 /// Why an administrator was not bootstrapped.
 enum AdminBootstrapFailure {

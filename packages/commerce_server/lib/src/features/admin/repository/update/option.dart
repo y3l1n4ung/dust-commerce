@@ -1,3 +1,4 @@
+import 'package:commerce_server/src/features/admin/product_option_model.dart';
 import 'package:dust_dart/db.dart';
 
 part 'option.g.dart';
@@ -75,19 +76,40 @@ VALUES ($1, $2, $3, $4)
     int rank,
   );
 
-  /// Exposes a newly created value through the requested product link.
+  /// Lists active product-option links that need a new global value.
+  @Query(r'''
+SELECT id
+FROM product_product_options
+WHERE product_option_id = $1 AND deleted_at IS NULL
+ORDER BY id
+''')
+  Future<Result<List<AdminProductOptionLink>, SqlxError>> productLinks(
+    String optionId,
+  );
+
+  /// Exposes a new global value through one product-option link.
   @Query(r'''
 INSERT INTO product_product_option_values
   (id, product_product_option_id, product_option_value_id)
-SELECT $1, link.id, $4
-FROM product_product_options link
-WHERE link.product_id = $2
-  AND link.product_option_id = $3
-  AND link.deleted_at IS NULL
+VALUES ($1, $2, $3)
 ''')
-  Future<Result<ExecResult, SqlxError>> insertAvailability(
+  Future<Result<ExecResult, SqlxError>> insertLinkedAvailability(
     String id,
-    String productId,
+    String productOptionId,
+    String valueId,
+  );
+
+  /// Retires every active product availability for one removed global value.
+  @Query(r'''
+UPDATE product_product_option_values
+SET deleted_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+WHERE product_option_value_id = $2 AND deleted_at IS NULL
+  AND product_product_option_id IN (
+    SELECT id FROM product_product_options
+    WHERE product_option_id = $1
+  )
+''')
+  Future<Result<ExecResult, SqlxError>> retireAvailability(
     String optionId,
     String valueId,
   );
