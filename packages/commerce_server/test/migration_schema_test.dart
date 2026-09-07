@@ -76,6 +76,40 @@ void main() {
     expect(columns, containsAll(<String>['id', 'display_id', 'cart_id']));
   });
 
+  test('product variants contain the complete Medusa detail fields', () async {
+    final rows = await queryRaw('PRAGMA table_info(product_variants)', [])
+        .fetch(database.connection as Executor);
+    final columns = rows.map((row) => row.readIndex<String>(1)).toList();
+
+    expect(
+      columns,
+      containsAll(<String>[
+        'allow_backorder',
+        'barcode',
+        'ean',
+        'height',
+        'hs_code',
+        'length',
+        'manage_inventory',
+        'material',
+        'mid_code',
+        'origin_country',
+        'sku',
+        'upc',
+        'weight',
+        'width',
+      ]),
+    );
+  });
+
+  test('product options retain merchant-defined order', () async {
+    final rows = await queryRaw('PRAGMA table_info(product_options)', [])
+        .fetch(database.connection as Executor);
+    final columns = rows.map((row) => row.readIndex<String>(1)).toList();
+
+    expect(columns, contains('rank'));
+  });
+
   test('migrations are idempotent across reopen', () async {
     await database.close();
     final reopened = CommerceDatabase.open(

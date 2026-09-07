@@ -14,7 +14,6 @@
 part of 'admin_product_variant.dart';
 
 const DeepCollectionEquality _adminProductVariantOptionValuesEquality = DeepCollectionEquality();
-const DeepCollectionEquality _adminUpdateProductVariantOptionValuesEquality = DeepCollectionEquality();
 
 mixin _$AdminProductVariant implements Serializable {
   @override
@@ -23,12 +22,22 @@ mixin _$AdminProductVariant implements Serializable {
     return 'AdminProductVariant('
         'allowBackorder: ${self.allowBackorder}, '
         'barcode: ${self.barcode}, '
+        'ean: ${self.ean}, '
+        'height: ${self.height}, '
+        'hsCode: ${self.hsCode}, '
         'id: ${self.id}, '
         'inventoryQuantity: ${self.inventoryQuantity}, '
         'manageInventory: ${self.manageInventory}, '
+        'material: ${self.material}, '
+        'midCode: ${self.midCode}, '
         'optionValues: ${self.optionValues}, '
+        'originCountry: ${self.originCountry}, '
         'sku: ${self.sku}, '
-        'title: ${self.title}'
+        'title: ${self.title}, '
+        'upc: ${self.upc}, '
+        'weight: ${self.weight}, '
+        'width: ${self.width}, '
+        'length: ${self.length}'
         ')';
   }
 
@@ -40,12 +49,22 @@ mixin _$AdminProductVariant implements Serializable {
             runtimeType == other.runtimeType &&
             other.allowBackorder == self.allowBackorder &&
             other.barcode == self.barcode &&
+            other.ean == self.ean &&
+            other.height == self.height &&
+            other.hsCode == self.hsCode &&
             other.id == self.id &&
             other.inventoryQuantity == self.inventoryQuantity &&
             other.manageInventory == self.manageInventory &&
+            other.material == self.material &&
+            other.midCode == self.midCode &&
             _adminProductVariantOptionValuesEquality.equals(other.optionValues, self.optionValues) &&
+            other.originCountry == self.originCountry &&
             other.sku == self.sku &&
-            other.title == self.title;
+            other.title == self.title &&
+            other.upc == self.upc &&
+            other.weight == self.weight &&
+            other.width == self.width &&
+            other.length == self.length;
   }
 
   @override
@@ -55,12 +74,22 @@ mixin _$AdminProductVariant implements Serializable {
       runtimeType,
       self.allowBackorder,
       self.barcode,
+      self.ean,
+      self.height,
+      self.hsCode,
       self.id,
       self.inventoryQuantity,
       self.manageInventory,
+      self.material,
+      self.midCode,
       _adminProductVariantOptionValuesEquality.hash(self.optionValues),
+      self.originCountry,
       self.sku,
       self.title,
+      self.upc,
+      self.weight,
+      self.width,
+      self.length,
     ]);
   }
 
@@ -70,115 +99,6 @@ mixin _$AdminProductVariant implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
-mixin _$AdminUpdateProductVariant implements Validatable, Serializable {
-  @override
-  String toString() {
-    final self = this as AdminUpdateProductVariant;
-    return 'AdminUpdateProductVariant('
-        'allowBackorder: ${self.allowBackorder}, '
-        'barcode: ${self.barcode}, '
-        'manageInventory: ${self.manageInventory}, '
-        'optionValues: ${self.optionValues}, '
-        'sku: ${self.sku}, '
-        'title: ${self.title}'
-        ')';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    final self = this as AdminUpdateProductVariant;
-    return identical(this, other) ||
-        other is AdminUpdateProductVariant &&
-            runtimeType == other.runtimeType &&
-            other.allowBackorder == self.allowBackorder &&
-            other.barcode == self.barcode &&
-            other.manageInventory == self.manageInventory &&
-            _adminUpdateProductVariantOptionValuesEquality.equals(other.optionValues, self.optionValues) &&
-            other.sku == self.sku &&
-            other.title == self.title;
-  }
-
-  @override
-  int get hashCode {
-    final self = this as AdminUpdateProductVariant;
-    return Object.hashAll([
-      runtimeType,
-      self.allowBackorder,
-      self.barcode,
-      self.manageInventory,
-      _adminUpdateProductVariantOptionValuesEquality.hash(self.optionValues),
-      self.sku,
-      self.title,
-    ]);
-  }
-
-  /// Validates this `AdminUpdateProductVariant`.
-  ///
-  /// Usage:
-  /// ```dart
-  /// final result = value.validate();
-  /// if (result case Invalid(:final errors)) {
-  ///   print(errors.first.message);
-  /// }
-  /// ```
-  ValidationResult validate() {
-    final self = this as AdminUpdateProductVariant;
-    final errors = <ValidationError>[];
-    _AdminUpdateProductVariantValidation._validateBarcode(self.barcode, errors);
-    _AdminUpdateProductVariantValidation._validateSku(self.sku, errors);
-    _AdminUpdateProductVariantValidation._validateTitle(self.title, errors);
-    return errors.isEmpty ? const Valid() : Invalid(errors);
-  }
-
-  /// Throws [ValidationException] when this `AdminUpdateProductVariant` is invalid.
-  ///
-  /// Usage:
-  /// ```dart
-  /// value.validateOrThrow();
-  /// ```
-  void validateOrThrow() {
-    final result = validate();
-    if (result case Invalid(errors: final errors)) {
-      throw ValidationException(errors);
-    }
-  }
-
-  Map<String, Object?> serialize() =>
-      _$AdminUpdateProductVariantSerialize(this as AdminUpdateProductVariant);
-
-  Map<String, Object?> toJson() => serialize();
-}
-
-extension _AdminUpdateProductVariantValidation on AdminUpdateProductVariant {
-  static void _validateBarcode(String? barcode, List<ValidationError> errors) {
-    if (barcode != null) {
-      if (barcode.length > 255) {
-        errors.add(ValidationError(field: 'barcode', message: 'Use at most 255 characters'));
-      }
-    }
-  }
-
-  static void _validateSku(String? sku, List<ValidationError> errors) {
-    if (sku != null) {
-      if (sku.length > 255) {
-        errors.add(ValidationError(field: 'sku', message: 'Use at most 255 characters'));
-      }
-    }
-  }
-
-  static void _validateTitle(String title, List<ValidationError> errors) {
-    if (title.length < 1) {
-      errors.add(ValidationError(field: 'title', message: 'Enter a variant name'));
-    }
-    if (title.length > 255) {
-      errors.add(ValidationError(field: 'title', message: 'Enter a variant name'));
-    }
-    if (!RegExp('.*\\S.*').hasMatch(title)) {
-      errors.add(ValidationError(field: 'title', message: 'Enter a variant name'));
-    }
-  }
-
-}
 final class $AdminProductVariantSerializer implements Serializer<AdminProductVariant, Map<String, Object?>> {
   const $AdminProductVariantSerializer();
 
@@ -191,30 +111,28 @@ final class $AdminProductVariantDeserializer implements Deserializer<AdminProduc
   @override
   AdminProductVariant deserialize(Map<String, Object?> json) => _$AdminProductVariantDeserialize(json);
 }
-final class $AdminUpdateProductVariantSerializer implements Serializer<AdminUpdateProductVariant, Map<String, Object?>> {
-  const $AdminUpdateProductVariantSerializer();
-
-  @override
-  Map<String, Object?> serialize(AdminUpdateProductVariant value) => _$AdminUpdateProductVariantSerialize(value);
-}
-final class $AdminUpdateProductVariantDeserializer implements Deserializer<AdminUpdateProductVariant, Map<String, Object?>> {
-  const $AdminUpdateProductVariantDeserializer();
-
-  @override
-  AdminUpdateProductVariant deserialize(Map<String, Object?> json) => _$AdminUpdateProductVariantDeserialize(json);
-}
 
 Map<String, Object?> _$AdminProductVariantSerialize(AdminProductVariant instance) {
   return <String, Object?>{
     'allow_backorder': instance.allowBackorder,
     'barcode': instance.barcode,
+    'ean': instance.ean,
+    'height': instance.height,
+    'hs_code': instance.hsCode,
     'id': instance.id,
     'inventory_quantity': instance.inventoryQuantity,
     'manage_inventory': instance.manageInventory,
+    'material': instance.material,
+    'mid_code': instance.midCode,
     'option_values': instance.optionValues
         .map((key, value) => MapEntry(key, value)),
+    'origin_country': instance.originCountry,
     'sku': instance.sku,
     'title': instance.title,
+    'upc': instance.upc,
+    'weight': instance.weight,
+    'width': instance.width,
+    'length': instance.length,
   };
 }
 
@@ -231,6 +149,15 @@ AdminProductVariant _$AdminProductVariantDeserialize(Map<String, Object?> json) 
   final barcodeValue = json['barcode'] == null
       ? null
       : JsonHelper.as<String>(json['barcode'], 'barcode', 'String');
+  final eanValue = json['ean'] == null
+      ? null
+      : JsonHelper.as<String>(json['ean'], 'ean', 'String');
+  final heightValue = json['height'] == null
+      ? null
+      : JsonHelper.as<num>(json['height'], 'height', 'num').toDouble();
+  final hsCodeValue = json['hs_code'] == null
+      ? null
+      : JsonHelper.as<String>(json['hs_code'], 'hs_code', 'String');
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final inventoryQuantityValue = JsonHelper.as<int>(
     json['inventory_quantity'],
@@ -242,12 +169,33 @@ AdminProductVariant _$AdminProductVariantDeserialize(Map<String, Object?> json) 
     'manage_inventory',
     'bool',
   );
+  final materialValue = json['material'] == null
+      ? null
+      : JsonHelper.as<String>(json['material'], 'material', 'String');
+  final midCodeValue = json['mid_code'] == null
+      ? null
+      : JsonHelper.as<String>(json['mid_code'], 'mid_code', 'String');
   final optionValuesValue = JsonHelper.decodeMap(json['option_values'], 'option_values',
       (value, valueKey) => JsonHelper.as<String>(value, valueKey, 'String'));
+  final originCountryValue = json['origin_country'] == null
+      ? null
+      : JsonHelper.as<String>(json['origin_country'], 'origin_country', 'String');
   final skuValue = json['sku'] == null
       ? null
       : JsonHelper.as<String>(json['sku'], 'sku', 'String');
   final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
+  final upcValue = json['upc'] == null
+      ? null
+      : JsonHelper.as<String>(json['upc'], 'upc', 'String');
+  final weightValue = json['weight'] == null
+      ? null
+      : JsonHelper.as<num>(json['weight'], 'weight', 'num').toDouble();
+  final widthValue = json['width'] == null
+      ? null
+      : JsonHelper.as<num>(json['width'], 'width', 'num').toDouble();
+  final lengthValue = json['length'] == null
+      ? null
+      : JsonHelper.as<num>(json['length'], 'length', 'num').toDouble();
 
   return AdminProductVariant(
     id: idValue,
@@ -257,59 +205,19 @@ AdminProductVariant _$AdminProductVariantDeserialize(Map<String, Object?> json) 
     allowBackorder: allowBackorderValue,
     optionValues: optionValuesValue,
     sku: skuValue,
+    material: materialValue,
+    ean: eanValue,
+    upc: upcValue,
     barcode: barcodeValue,
+    weight: weightValue,
+    width: widthValue,
+    length: lengthValue,
+    height: heightValue,
+    midCode: midCodeValue,
+    hsCode: hsCodeValue,
+    originCountry: originCountryValue,
   );
 }
 
 AdminProductVariant _$AdminProductVariantFromJson(Map<String, Object?> json) =>
     _$AdminProductVariantDeserialize(json);
-
-Map<String, Object?> _$AdminUpdateProductVariantSerialize(AdminUpdateProductVariant instance) {
-  return <String, Object?>{
-    'allow_backorder': instance.allowBackorder,
-    'barcode': instance.barcode,
-    'manage_inventory': instance.manageInventory,
-    'option_values': instance.optionValues
-        .map((key, value) => MapEntry(key, value)),
-    'sku': instance.sku,
-    'title': instance.title,
-  };
-}
-
-Map<String, Object?> _$AdminUpdateProductVariantToJson(AdminUpdateProductVariant instance) =>
-    _$AdminUpdateProductVariantSerialize(instance);
-
-// factory AdminUpdateProductVariant.fromJson(Map<String, Object?> json) => _$AdminUpdateProductVariantFromJson(json);
-AdminUpdateProductVariant _$AdminUpdateProductVariantDeserialize(Map<String, Object?> json) {
-  final allowBackorderValue = JsonHelper.as<bool>(
-    json['allow_backorder'],
-    'allow_backorder',
-    'bool',
-  );
-  final barcodeValue = json['barcode'] == null
-      ? null
-      : JsonHelper.as<String>(json['barcode'], 'barcode', 'String');
-  final manageInventoryValue = JsonHelper.as<bool>(
-    json['manage_inventory'],
-    'manage_inventory',
-    'bool',
-  );
-  final optionValuesValue = JsonHelper.decodeMap(json['option_values'], 'option_values',
-      (value, valueKey) => JsonHelper.as<String>(value, valueKey, 'String'));
-  final skuValue = json['sku'] == null
-      ? null
-      : JsonHelper.as<String>(json['sku'], 'sku', 'String');
-  final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
-
-  return AdminUpdateProductVariant(
-    title: titleValue,
-    manageInventory: manageInventoryValue,
-    allowBackorder: allowBackorderValue,
-    optionValues: optionValuesValue,
-    sku: skuValue,
-    barcode: barcodeValue,
-  );
-}
-
-AdminUpdateProductVariant _$AdminUpdateProductVariantFromJson(Map<String, Object?> json) =>
-    _$AdminUpdateProductVariantDeserialize(json);

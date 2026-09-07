@@ -62,7 +62,7 @@ SELECT product.id, product.title, product.subtitle, product.handle,
            ) AS option_json
            FROM product_options option
            WHERE option.product_id = product.id AND option.deleted_at IS NULL
-           ORDER BY option.id
+           ORDER BY option.rank, option.id
          ) ordered
        ), '[]') AS options,
        coalesce((
@@ -70,7 +70,13 @@ SELECT product.id, product.title, product.subtitle, product.handle,
          FROM (
            SELECT json_object(
              'id', variant.id, 'title', variant.title, 'sku', variant.sku,
+             'material', variant.material, 'ean', variant.ean,
+             'upc', variant.upc,
              'barcode', variant.barcode,
+             'weight', variant.weight, 'width', variant.width,
+             'length', variant.length, 'height', variant.height,
+             'mid_code', variant.mid_code, 'hs_code', variant.hs_code,
+             'origin_country', variant.origin_country,
              'inventory_quantity', variant.inventory_quantity,
              'manage_inventory', json(iif(variant.manage_inventory = 1,
                                           'true', 'false')),

@@ -15,7 +15,17 @@ final class AdminProductVariant with _$AdminProductVariant {
     required this.allowBackorder,
     required this.optionValues,
     this.sku,
+    this.material,
+    this.ean,
+    this.upc,
     this.barcode,
+    this.weight,
+    this.width,
+    this.length,
+    this.height,
+    this.midCode,
+    this.hsCode,
+    this.originCountry,
   });
 
   /// Decodes one generated admin variant response.
@@ -28,6 +38,15 @@ final class AdminProductVariant with _$AdminProductVariant {
   /// Optional machine-readable product identifier.
   final String? barcode;
 
+  /// Optional European Article Number used by merchant integrations.
+  final String? ean;
+
+  /// Optional height in the merchant's configured unit.
+  final double? height;
+
+  /// Optional Harmonized System customs code.
+  final String? hsCode;
+
   /// Stable variant identifier.
   final String id;
 
@@ -37,53 +56,33 @@ final class AdminProductVariant with _$AdminProductVariant {
   /// Whether this variant uses inventory enforcement.
   final bool manageInventory;
 
+  /// Optional material that differs from the parent product.
+  final String? material;
+
+  /// Optional Manufacturer Identification customs code.
+  final String? midCode;
+
   /// Selected value keyed by product-option identifier.
   final Map<String, String> optionValues;
+
+  /// Optional lowercase ISO 3166-1 alpha-2 origin country.
+  final String? originCountry;
 
   /// Optional merchant stock-keeping unit.
   final String? sku;
 
   /// Merchant-facing variant name.
   final String title;
-}
 
-/// Complete replacement of the variant fields edited in Medusa's detail drawer.
-@Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
-@SerDe(renameAll: SerDeRename.snakeCase)
-final class AdminUpdateProductVariant with _$AdminUpdateProductVariant {
-  /// Creates one validated merchant variant update.
-  const AdminUpdateProductVariant({
-    required this.title,
-    required this.manageInventory,
-    required this.allowBackorder,
-    required this.optionValues,
-    this.sku,
-    this.barcode,
-  });
+  /// Optional Universal Product Code used by merchant integrations.
+  final String? upc;
 
-  /// Decodes the generated variant input.
-  factory AdminUpdateProductVariant.fromJson(Map<String, Object?> json) =>
-      _$AdminUpdateProductVariantFromJson(json);
+  /// Optional weight in the merchant's configured unit.
+  final double? weight;
 
-  /// Whether sales may continue after tracked stock is exhausted.
-  final bool allowBackorder;
+  /// Optional width in the merchant's configured unit.
+  final double? width;
 
-  /// Optional machine-readable product identifier; an empty value clears it.
-  @Validate(length: Length(max: 255), message: 'Use at most 255 characters')
-  final String? barcode;
-
-  /// Whether checkout enforces this variant's inventory quantity.
-  final bool manageInventory;
-
-  /// Selected value keyed by stable product-option identifier.
-  final Map<String, String> optionValues;
-
-  /// Optional unique merchant stock identifier; an empty value clears it.
-  @Validate(length: Length(max: 255), message: 'Use at most 255 characters')
-  final String? sku;
-
-  /// Required merchant-facing variant name.
-  @Validate(length: Length(min: 1, max: 255), message: 'Enter a variant name')
-  @Validate(regex: r'.*\S.*', message: 'Enter a variant name')
-  final String title;
+  /// Optional length in the merchant's configured unit.
+  final double? length;
 }

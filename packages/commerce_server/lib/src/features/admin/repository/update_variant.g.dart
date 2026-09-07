@@ -36,13 +36,23 @@ WHERE option.product_id = ?
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> updateVariant(String variantId, String productId, String title, String? sku, String? barcode, int manageInventory, int allowBackorder) {
+  Future<Result<ExecResult, SqlxError>> updateVariant(String variantId, String productId, String title, String? sku, String? material, String? ean, String? upc, String? barcode, double? weight, double? width, double? length, double? height, String? midCode, String? hsCode, String? originCountry, int manageInventory, int allowBackorder) {
     return _db.execute(
       r'''
 UPDATE product_variants
 SET title = trim(?),
     sku = nullif(trim(?), ''),
+    material = nullif(trim(?), ''),
+    ean = nullif(trim(?), ''),
+    upc = nullif(trim(?), ''),
     barcode = nullif(trim(?), ''),
+    weight = ?,
+    width = ?,
+    length = ?,
+    height = ?,
+    mid_code = nullif(trim(?), ''),
+    hs_code = nullif(trim(?), ''),
+    origin_country = nullif(lower(trim(?)), ''),
     manage_inventory = ?,
     allow_backorder = ?
 WHERE id = ?
@@ -56,7 +66,7 @@ WHERE id = ?
       AND other.deleted_at IS NULL
   ))
 ''',
-      [title, sku, barcode, manageInventory, allowBackorder, variantId, productId, sku, sku, sku, variantId],
+      [title, sku, material, ean, upc, barcode, weight, width, length, height, midCode, hsCode, originCountry, manageInventory, allowBackorder, variantId, productId, sku, sku, sku, variantId],
     );
   }
 

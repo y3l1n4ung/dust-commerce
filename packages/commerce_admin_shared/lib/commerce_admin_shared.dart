@@ -8,4 +8,5 @@ export 'src/admin_product_image.dart';
 export 'src/admin_product_image_variants.dart';
 export 'src/admin_product_media.dart';
 export 'src/admin_product_variant.dart';
+export 'src/admin_update_product_variant.dart';
 export 'src/admin_user.dart';

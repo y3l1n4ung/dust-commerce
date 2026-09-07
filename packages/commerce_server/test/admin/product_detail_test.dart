@@ -61,6 +61,20 @@ void main() {
     expect(json, isNot(contains('deleted_at')));
   });
 
+  test('product detail retains the merchant option order', () async {
+    final token = await harness.adminToken();
+    final request = harness.client.get('/admin/products/prod_tshirt')
+      ..bearer(token);
+
+    final response = await request.send();
+
+    response.assertOk();
+    final json = response.json! as Map<String, Object?>;
+    final options =
+        (json['options']! as List<Object?>).cast<Map<String, Object?>>();
+    expect(options.map((option) => option['title']), ['Size', 'Color']);
+  });
+
   test('product detail returns not found for an unknown id', () async {
     final token = await harness.adminToken();
     final request = harness.client.get('/admin/products/prod_missing')

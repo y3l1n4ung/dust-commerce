@@ -85,13 +85,13 @@ VALUES
 '''),
   const _Statement(r'''
 INSERT OR IGNORE INTO product_options
-  (id, product_id, title)
+  (id, product_id, title, rank)
 VALUES
-  ('opt_tshirt_size', 'prod_tshirt', 'Size'),
-  ('opt_tshirt_color', 'prod_tshirt', 'Color'),
-  ('opt_sweatshirt_size', 'prod_sweatshirt', 'Size'),
-  ('opt_sweatpants_size', 'prod_sweatpants', 'Size'),
-  ('opt_shorts_size', 'prod_shorts', 'Size')
+  ('opt_tshirt_size', 'prod_tshirt', 'Size', 0),
+  ('opt_tshirt_color', 'prod_tshirt', 'Color', 1),
+  ('opt_sweatshirt_size', 'prod_sweatshirt', 'Size', 0),
+  ('opt_sweatpants_size', 'prod_sweatpants', 'Size', 0),
+  ('opt_shorts_size', 'prod_shorts', 'Size', 0)
 '''),
   const _Statement(r'''
 INSERT OR IGNORE INTO product_option_values

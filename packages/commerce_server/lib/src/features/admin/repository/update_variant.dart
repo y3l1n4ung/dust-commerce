@@ -34,9 +34,19 @@ WHERE option.product_id = $1
 UPDATE product_variants
 SET title = trim($3),
     sku = nullif(trim($4), ''),
-    barcode = nullif(trim($5), ''),
-    manage_inventory = $6,
-    allow_backorder = $7
+    material = nullif(trim($5), ''),
+    ean = nullif(trim($6), ''),
+    upc = nullif(trim($7), ''),
+    barcode = nullif(trim($8), ''),
+    weight = $9,
+    width = $10,
+    length = $11,
+    height = $12,
+    mid_code = nullif(trim($13), ''),
+    hs_code = nullif(trim($14), ''),
+    origin_country = nullif(lower(trim($15)), ''),
+    manage_inventory = $16,
+    allow_backorder = $17
 WHERE id = $1
   AND product_id = $2
   AND deleted_at IS NULL
@@ -53,7 +63,17 @@ WHERE id = $1
     String productId,
     String title,
     String? sku,
+    String? material,
+    String? ean,
+    String? upc,
     String? barcode,
+    double? weight,
+    double? width,
+    double? length,
+    double? height,
+    String? midCode,
+    String? hsCode,
+    String? originCountry,
     int manageInventory,
     int allowBackorder,
   );

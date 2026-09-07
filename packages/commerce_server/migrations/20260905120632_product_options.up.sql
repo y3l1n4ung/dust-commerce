@@ -4,6 +4,8 @@ CREATE TABLE product_options (
   id         TEXT PRIMARY KEY,
   product_id TEXT NOT NULL REFERENCES products (id) ON DELETE CASCADE,
   title      TEXT NOT NULL CHECK (length(title) > 0),
+  -- Merchant-defined order keeps variant selectors stable across every client.
+  rank       INTEGER NOT NULL DEFAULT 0 CHECK (rank >= 0),
   -- Merchant-only extension data stays outside the public response allowlist.
   metadata   TEXT CHECK (metadata IS NULL OR json_valid(metadata)),
   created_at TEXT NOT NULL DEFAULT
@@ -14,7 +16,7 @@ CREATE TABLE product_options (
   deleted_at TEXT
 );
 
-CREATE INDEX idx_options_product ON product_options (product_id)
+CREATE INDEX idx_options_product ON product_options (product_id, rank, id)
 WHERE deleted_at IS NULL;
 CREATE UNIQUE INDEX idx_options_product_title
 ON product_options (product_id, title)
