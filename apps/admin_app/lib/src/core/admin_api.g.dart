@@ -174,6 +174,162 @@ final class _$AdminApi implements AdminApi {
   }
 
   @override
+  Future<AdminProductOptionList> listProductOptions(
+    String query,
+    int limit,
+    int offset,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    _queryParameters['q'] = query;
+    _queryParameters['limit'] = limit;
+    _queryParameters['offset'] = offset;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminProductOptionList>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/product-options',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminProductOptionList.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<AdminProductOptionDetail> createProductOption(
+    AdminCreateProductOption body,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminProductOptionDetail>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/product-options',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminProductOptionDetail.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<AdminProductOptionDetail> productOption(String id) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminProductOptionDetail>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/product-options/' + Uri.encodeComponent(id.toString()),
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminProductOptionDetail.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<AdminProductOptionDetail> updateProductOption(
+    String id,
+    AdminUpdateProductOption body,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminProductOptionDetail>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/product-options/' + Uri.encodeComponent(id.toString()),
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminProductOptionDetail.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<AdminProductCreateContext> productCreateContext() async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -374,46 +530,6 @@ final class _$AdminApi implements AdminApi {
             .compose(
               _dio.options,
               '/admin/products/' + Uri.encodeComponent(id.toString()),
-              queryParameters: _queryParameters,
-              data: _data,
-              cancelToken: null,
-              onSendProgress: null,
-              onReceiveProgress: null,
-            )
-            .copyWith(
-              baseUrl: _combineBaseUrls(
-                _dio.options.baseUrl,
-                _baseUrl ?? 'http://localhost:3878',
-              ),
-            ),
-      ),
-    );
-    return AdminProductDetail.fromJson(_result.data as Map<String, dynamic>);
-  }
-
-  @override
-  Future<AdminProductDetail> updateProductOption(
-    String id,
-    String optionId,
-    AdminUpdateProductOption body,
-  ) async {
-    final _queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _extra = <String, dynamic>{};
-    _headers['accept'] = 'application/json';
-    final Object? _data = body.toJson();
-    final _options = Options(
-      method: 'PATCH',
-      headers: _headers,
-      extra: _extra,
-      contentType: null,
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-      _setStreamType<AdminProductDetail>(
-        _options
-            .compose(
-              _dio.options,
-              '/admin/products/' + Uri.encodeComponent(id.toString()) + '/options/' + Uri.encodeComponent(optionId.toString()),
               queryParameters: _queryParameters,
               data: _data,
               cancelToken: null,

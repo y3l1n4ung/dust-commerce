@@ -1,7 +1,7 @@
 part of 'admin_product_option_edit_drawer.dart';
 
 extension on _OptionEditDrawerState {
-  List<Widget> _fields(AdminProductDetailState state, bool busy) => [
+  List<Widget> _fields(AdminProductOptionDetailState state, bool busy) => [
         Text('Title', style: Theme.of(context).textTheme.labelLarge),
         const SizedBox(height: 6),
         TextFormField(

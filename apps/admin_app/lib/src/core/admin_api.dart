@@ -29,6 +29,31 @@ abstract interface class AdminApi {
     @Query('offset') int offset,
   );
 
+  /// Lists globally reusable product options with paging and search.
+  @GET('/admin/product-options')
+  Future<AdminProductOptionList> listProductOptions(
+    @Query('q') String query,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
+
+  /// Creates one globally reusable product option.
+  @POST('/admin/product-options')
+  Future<AdminProductOptionDetail> createProductOption(
+    @Body() AdminCreateProductOption body,
+  );
+
+  /// Reads one complete global or exclusive product option.
+  @GET('/admin/product-options/{id}')
+  Future<AdminProductOptionDetail> productOption(@Path() String id);
+
+  /// Replaces one product option's title, values, and display order.
+  @PATCH('/admin/product-options/{id}')
+  Future<AdminProductOptionDetail> updateProductOption(
+    @Path() String id,
+    @Body() AdminUpdateProductOption body,
+  );
+
   /// Loads active storefront currencies required by the creation grid.
   @GET('/admin/products/create-context')
   Future<AdminProductCreateContext> productCreateContext();
@@ -57,14 +82,6 @@ abstract interface class AdminApi {
   Future<AdminProductDetail> updateProduct(
     @Path() String id,
     @Body() AdminUpdateProduct body,
-  );
-
-  /// Replaces one product option's title, values, and display order.
-  @PATCH('/admin/products/{id}/options/{optionId}')
-  Future<AdminProductDetail> updateProductOption(
-    @Path() String id,
-    @Path() String optionId,
-    @Body() AdminUpdateProductOption body,
   );
 
   /// Replaces one variant's Medusa detail-drawer fields.

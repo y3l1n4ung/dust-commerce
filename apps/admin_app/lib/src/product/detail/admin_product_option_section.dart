@@ -7,7 +7,7 @@ final class AdminProductOptionSection extends StatelessWidget {
   /// Creates the product option section.
   const AdminProductOptionSection({
     required this.options,
-    required this.onEdit,
+    required this.onOpen,
     required this.onUnavailable,
     super.key,
   });
@@ -15,8 +15,8 @@ final class AdminProductOptionSection extends StatelessWidget {
   /// Ordered merchant options.
   final List<AdminProductOption> options;
 
-  /// Opens the source-matched editor for one existing option.
-  final ValueChanged<AdminProductOption> onEdit;
+  /// Opens the option's dedicated Medusa detail route.
+  final ValueChanged<AdminProductOption> onOpen;
 
   /// Reports controls whose write API is not implemented yet.
   final VoidCallback onUnavailable;
@@ -44,8 +44,8 @@ final class AdminProductOptionSection extends StatelessWidget {
                         ],
                       ),
                       trailing: IconButton(
-                        tooltip: 'Edit product option',
-                        onPressed: () => onEdit(option),
+                        tooltip: 'Go to product option',
+                        onPressed: () => onOpen(option),
                         icon: const Icon(Icons.arrow_forward_rounded, size: 16),
                       ),
                     ),

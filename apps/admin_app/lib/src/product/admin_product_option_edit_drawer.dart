@@ -1,5 +1,5 @@
-import 'package:admin_app/src/product/admin_product_detail_state.dart';
-import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
+import 'package:admin_app/src/product_option/admin_product_option_detail_state.dart';
+import 'package:admin_app/src/product_option/admin_product_option_detail_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +10,7 @@ part 'admin_product_option_edit_fields.dart';
 /// Opens Medusa's right-side product-option editor.
 Future<String?> showAdminProductOptionEditDrawer(
   BuildContext context,
-  AdminProductDetail product,
-  AdminProductOption option,
+  AdminProductOptionDetail productOption,
 ) =>
     showGeneralDialog<String>(
       context: context,
@@ -23,7 +22,7 @@ Future<String?> showAdminProductOptionEditDrawer(
         padding: const EdgeInsets.all(8),
         child: Align(
           alignment: Alignment.centerRight,
-          child: _OptionEditDrawer(product: product, option: option),
+          child: _OptionEditDrawer(productOption: productOption),
         ),
       ),
       transitionBuilder: (context, animation, _, child) => SlideTransition(
@@ -37,10 +36,9 @@ Future<String?> showAdminProductOptionEditDrawer(
     );
 
 final class _OptionEditDrawer extends StatefulWidget {
-  const _OptionEditDrawer({required this.product, required this.option});
+  const _OptionEditDrawer({required this.productOption});
 
-  final AdminProductOption option;
-  final AdminProductDetail product;
+  final AdminProductOptionDetail productOption;
 
   @override
   State<_OptionEditDrawer> createState() => _OptionEditDrawerState();
@@ -56,10 +54,12 @@ final class _OptionEditDrawerState extends State<_OptionEditDrawer> {
   @override
   void initState() {
     super.initState();
-    _title = TextEditingController(text: widget.option.title);
-    _values = [...widget.option.values];
+    _title = TextEditingController(text: widget.productOption.title);
+    _values = [for (final item in widget.productOption.values) item.value];
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) context.readAdminProductDetailViewModel().clearFailure();
+      if (mounted) {
+        context.readAdminProductOptionDetailViewModel().clearFailure();
+      }
     });
   }
 
@@ -72,7 +72,7 @@ final class _OptionEditDrawerState extends State<_OptionEditDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watchAdminProductDetailViewModel().value;
+    final state = context.watchAdminProductOptionDetailViewModel().value;
     final busy = state.isSaving;
     final theme = Theme.of(context);
     return Material(
@@ -135,9 +135,8 @@ final class _OptionEditDrawerState extends State<_OptionEditDrawer> {
       setState(() => _valueError = 'At least one value is required');
       return;
     }
-    final saved = await context.readAdminProductDetailViewModel().updateOption(
-          widget.product.id,
-          widget.option.id,
+    final saved = await context.readAdminProductOptionDetailViewModel().update(
+          widget.productOption.id,
           AdminUpdateProductOption(title: _title.text, values: _values),
         );
     if (saved && mounted) Navigator.of(context).pop(_title.text.trim());

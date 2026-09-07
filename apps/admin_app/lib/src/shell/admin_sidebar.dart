@@ -1,7 +1,10 @@
 import 'package:admin_app/src/shell/admin_user_menu.dart';
+import 'package:admin_app/src/shell/admin_shell_section.dart';
 import 'package:admin_app/src/theme/admin_theme.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
+
+part 'admin_sidebar_subnav.dart';
 
 /// Medusa Admin's compact navigation hierarchy with Morrow identity.
 final class AdminSidebar extends StatelessWidget {
@@ -11,6 +14,8 @@ final class AdminSidebar extends StatelessWidget {
     required this.themes,
     required this.onSearchRequested,
     required this.onProductsRequested,
+    required this.onProductOptionsRequested,
+    required this.selectedSection,
     required this.onSignOut,
     super.key,
   });
@@ -21,8 +26,14 @@ final class AdminSidebar extends StatelessWidget {
   /// Returns to the product catalogue route.
   final VoidCallback onProductsRequested;
 
+  /// Opens the global product-options route.
+  final VoidCallback onProductOptionsRequested;
+
   /// Revokes the current admin session.
   final VoidCallback? onSignOut;
+
+  /// Current product navigation branch.
+  final AdminShellSection selectedSection;
 
   /// Local appearance preference.
   final AdminThemeController themes;
@@ -57,12 +68,16 @@ final class AdminSidebar extends StatelessWidget {
                 _NavRow(
                   icon: Icons.inventory_2_outlined,
                   label: 'Products',
-                  selected: true,
+                  selected: selectedSection == AdminShellSection.products,
                   onTap: onProductsRequested,
                 ),
                 const _SubNav(label: 'Collections'),
                 const _SubNav(label: 'Categories'),
-                const _SubNav(label: 'Product Options'),
+                _SubNav(
+                  label: 'Options',
+                  selected: selectedSection == AdminShellSection.productOptions,
+                  onTap: onProductOptionsRequested,
+                ),
                 const _NavRow(
                     icon: Icons.warehouse_outlined, label: 'Inventory'),
                 const _SubNav(label: 'Reservations'),
@@ -160,21 +175,6 @@ final class _NavRow extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      );
-}
-
-final class _SubNav extends StatelessWidget {
-  const _SubNav({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => SizedBox(
-        height: 28,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 41),
-          child: Align(alignment: Alignment.centerLeft, child: Text(label)),
         ),
       );
 }

@@ -84,7 +84,7 @@ void main() {
         originCountry: 'dk',
         manageInventory: false,
         allowBackorder: true,
-        optionValues: {'opt_sweatpants_size': 'S'},
+        optionValues: {'opt_size': 'S'},
       ),
     );
 
@@ -122,7 +122,7 @@ void main() {
         sku: 'SWEATPANTS-M',
         manageInventory: true,
         allowBackorder: false,
-        optionValues: {'opt_sweatpants_size': 'S'},
+        optionValues: {'opt_size': 'S'},
       ),
     );
 

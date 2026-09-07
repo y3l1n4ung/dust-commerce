@@ -1,4 +1,5 @@
 import 'package:admin_app/src/shell/admin_sidebar.dart';
+import 'package:admin_app/src/shell/admin_shell_section.dart';
 import 'package:admin_app/src/theme/admin_theme.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,8 @@ final class AdminShell extends StatelessWidget {
     required this.themes,
     required this.onSearchRequested,
     required this.onProductsRequested,
+    required this.onProductOptionsRequested,
+    required this.selectedSection,
     required this.onSignOut,
     required this.title,
     required this.child,
@@ -26,8 +29,14 @@ final class AdminShell extends StatelessWidget {
   /// Returns to the product catalogue route.
   final VoidCallback onProductsRequested;
 
+  /// Opens the global product-options table.
+  final VoidCallback onProductOptionsRequested;
+
   /// Revokes the merchant session.
   final VoidCallback? onSignOut;
+
+  /// Sidebar group highlighted for the current route.
+  final AdminShellSection selectedSection;
 
   /// Local appearance preference.
   final AdminThemeController themes;
@@ -47,6 +56,8 @@ final class AdminShell extends StatelessWidget {
             themes: themes,
             onSearchRequested: onSearchRequested,
             onProductsRequested: onProductsRequested,
+            onProductOptionsRequested: onProductOptionsRequested,
+            selectedSection: selectedSection,
             onSignOut: onSignOut,
           );
           return Scaffold(
