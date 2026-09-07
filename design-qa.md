@@ -390,62 +390,68 @@ Admin product media result: passed
 
 ## Admin product variant-detail slice
 
-Source visual truth: unavailable. The current Medusa implementation is pinned
-at commit `bda24b9725ac697ec5e8f706b503013e20babf12` under
-`packages/admin/dashboard/src/routes/product-variants/product-variant-edit/`,
-but source code alone is not a visual target.
+Source visual truth: Medusa `2.20.1` at pinned commit
+`bda24b9725ac697ec5e8f706b503013e20babf12`, specifically
+`packages/admin/dashboard/src/routes/product-variants/product-variant-edit/`
+and `product-edit-variant-form.tsx`. The source was run locally on port `19000`
+against its isolated demo catalogue.
 
-Implementation screenshot: unavailable. The release-mode Morrow Admin is
-served on port `13002`, but the selected in-app browser cannot capture while
-the Mac is locked.
+Implementation: Morrow Admin on port `13002`, backed by the Dust API on port
+`3878` and a fresh migrated QA database. Both drawers were captured at equal
+`1280 x 720` CSS viewports and combined into one `2560 x 720` comparison at
+`/private/tmp/dust-commerce-admin-variant-qa-20260907/variant-edit-comparison-final.png`.
 
-Viewport: intended equal `1280 x 720` CSS viewports at density 1. Source and
-implementation pixel dimensions are not yet available, so no density
-normalization or visual comparison was performed.
-
-State: light theme, authenticated product detail, edit drawer open for an
-existing seeded variant with title, Size, SKU, barcode, inventory management
-and backorder controls visible.
+State: light theme, authenticated product detail and the `M / Black` variant
+drawer. Source and implementation use different merchant SKU prefixes; this is
+a catalogue-data difference, not layout drift.
 
 **Findings**
 
-- [P1] Required same-state visual evidence is missing.
-  Location: Medusa and Morrow variant-detail drawers.
-  Evidence: neither drawer could be captured in the current locked browser
-  session, and the pinned source files are not a substitute for rendered UI.
-  Impact: typography, spacing, tokens, control density and responsive behavior
-  cannot be accepted from code inspection alone.
-  Fix: unlock the Mac, capture both drawers at the same viewport and state,
-  combine the images, then fix every actionable P0/P1/P2 mismatch.
+- No actionable P0, P1 or P2 variant-drawer difference remains in the combined
+  first-fold comparison or the matched inventory and attribute inspections.
+- Broader Admin and storefront parity findings remain open, so the repository's
+  global QA result remains blocked.
 
 **Required fidelity surfaces**
 
-- Fonts and typography: blocked on matched captures.
-- Spacing and layout rhythm: blocked on matched captures.
-- Colors and visual tokens: blocked on matched captures.
+- Fonts and typography: heading, label, optional-marker and hint hierarchy pass.
+- Spacing and layout rhythm: 560px inset drawer, sticky header/footer, field
+  cadence, dividers and scroll behavior pass.
+- Colors and visual tokens: neutral inputs, overlay, borders, black actions and
+  compact blue inventory switch pass.
 - Image quality and asset fidelity: no product imagery belongs inside this
   drawer; surrounding page imagery still needs the matched full-view capture.
-- Copy and content: source code confirms the field hierarchy, but rendered
-  wrapping and labels remain unverified.
+- Copy and content: Material, ordered options, SKU/EAN/UPC/Barcode, both exact
+  inventory hints and all seven attribute controls match the source hierarchy.
 
 **Full-view comparison evidence**
 
-Blocked: no current source or implementation raster could be captured.
+The equal-size full views were emitted as one comparison. Drawer edges, header,
+first four fields, first divider, inventory heading and footer align without an
+actionable mismatch.
 
 **Focused region comparison evidence**
 
-Blocked with the full view; no valid region exists to crop yet.
+No crop was required. Scrolling each live drawer exposed the policies and full
+attribute section at readable native density.
 
 **Comparison history**
 
-- No visual iteration has run. API, generated-client and non-widget state tests
-  are passing, but they do not count as design-QA evidence.
+- The first comparison found a flush 520px drawer, reversed option order,
+  missing fields, boxed policies and mismatched copy.
+- The final implementation uses the source's 560px inset geometry, database
+  option rank, complete generated contract, compact policies and searchable
+  250-country selector.
+- Browser QA searched for Denmark, saved the variant, observed `Variant
+  updated.`, reopened the drawer and confirmed the server-backed value.
 
 **Implementation checklist**
 
-- Capture Medusa and Morrow variant-detail drawers at equal viewport, theme,
-  product data and interaction state.
-- Combine the two captures before judging the five fidelity surfaces.
-- Fix every P0/P1/P2 mismatch and repeat the combined comparison.
+- Keep the combined evidence with this task; temporary QA rasters are not
+  committed to the product repository.
+- Continue with the next feature slice only after this stacked branch is
+  reviewed.
+
+Variant-detail slice result: passed
 
 final result: blocked

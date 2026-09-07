@@ -77,9 +77,9 @@ Title/SKU/Thumbnail columns and Cancel/Save footer. Medusa publishes no
 same-state association-drawer raster, so source structure and browser behavior
 are verified but pixel comparison remains blocked.
 
-The variant-detail implementation follows the pinned RouteDrawer source and
-keeps Medusa's separation between variant details, prices and stock. Its local
-rendered comparison is still pending.
+The variant-detail comparison uses live Medusa `2.20.1` and Morrow drawers in
+the in-app browser at equal `1280 x 720` viewports. The two captures were
+combined into one `2560 x 720` image before judging the implementation.
 
 ## Verified
 
@@ -127,11 +127,14 @@ rendered comparison is still pending.
   product, overlapping and stale-image mutations are rejected atomically, and
   deleting media removes its stale associations.
 - Clicking a variant row opens the supported right-side editor. Its generated
-  client reaches a route-level guarded API for title, SKU, barcode, option
-  selections, inventory policy and backorder policy. Server integration tests
-  cover authorization, product ownership, duplicate SKU and option-combination
-  conflicts, database-owned timestamps and independent storefront readback;
-  non-widget view-model tests cover refreshed state and display-safe failures.
+  client reaches a route-level guarded API for title, material, SKU, EAN, UPC,
+  barcode, physical/customs attributes, ordered option selections, inventory
+  policy and backorder policy. The 560px inset drawer, sticky chrome, exact
+  hints, compact switches and searchable 250-country selector match the live
+  Medusa drawer. Server integration tests cover authorization, ownership,
+  conflicts, database-owned timestamps and storefront readback; non-widget
+  view-model tests cover refreshed state and display-safe failures. Browser QA
+  saved Denmark, observed success, reopened the drawer and confirmed readback.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -145,8 +148,6 @@ rendered comparison is still pending.
   filters, ordering and multiple option axes in the Flutter creation form
   remain feature work under issue #31. Their visible controls do not pretend an
   API mutation succeeded.
-- P1 — Capture the running variant-detail drawer against the pinned Medusa
-  RouteDrawer state before marking its rendered design QA complete.
 - P2 — The post-create editor lacks a same-state rendered Medusa source capture.
   The implementation matches the pinned source structure—full focus modal,
   four-column gallery, 24px grid gap, 560px upload panel and sticky footer—but
@@ -160,8 +161,9 @@ rendered comparison is still pending.
 
 Passed for the implemented product-list, product-detail, general-edit,
 product-create-with-media, post-create media-card, image-variant and
-variant-detail behavior slices. Post-create editor, image-variant drawer and
-variant-detail visual parity remain blocked on same-state source captures;
-broader Medusa Admin parity is not claimed.
+variant-detail behavior slices. Variant-detail visual parity now passes its
+same-state live comparison. Post-create editor and image-variant drawer remain
+blocked on same-state source captures; broader Medusa Admin parity is not
+claimed.
 
 final result: blocked
