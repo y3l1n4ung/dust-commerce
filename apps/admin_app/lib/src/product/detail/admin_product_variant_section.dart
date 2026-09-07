@@ -8,12 +8,16 @@ final class AdminProductVariantSection extends StatelessWidget {
   const AdminProductVariantSection({
     required this.variants,
     required this.onEdit,
+    required this.onEditPrices,
     required this.onUnavailable,
     super.key,
   });
 
   /// Opens the supported variant-detail editor.
   final ValueChanged<AdminProductVariant> onEdit;
+
+  /// Opens the source-shaped focused pricing editor.
+  final ValueChanged<AdminProductVariant> onEditPrices;
 
   /// Inventory-bearing merchant variants.
   final List<AdminProductVariant> variants;
@@ -68,7 +72,11 @@ final class AdminProductVariantSection extends StatelessWidget {
                     children: [
                       const _VariantHeader(),
                       for (final variant in variants)
-                        _VariantRow(variant: variant, onEdit: onEdit),
+                        _VariantRow(
+                          variant: variant,
+                          onEdit: onEdit,
+                          onEditPrices: onEditPrices,
+                        ),
                     ],
                   ),
                 ),
@@ -98,9 +106,14 @@ final class _VariantHeader extends StatelessWidget {
 }
 
 final class _VariantRow extends StatelessWidget {
-  const _VariantRow({required this.variant, required this.onEdit});
+  const _VariantRow({
+    required this.variant,
+    required this.onEdit,
+    required this.onEditPrices,
+  });
 
   final ValueChanged<AdminProductVariant> onEdit;
+  final ValueChanged<AdminProductVariant> onEditPrices;
   final AdminProductVariant variant;
 
   @override
@@ -125,13 +138,28 @@ final class _VariantRow extends StatelessWidget {
               Expanded(
                 child: Text(variant.manageInventory ? 'Managed' : 'Unmanaged'),
               ),
-              IconButton(
-                tooltip: 'Edit variant',
-                onPressed: () => onEdit(variant),
+              PopupMenuButton<_VariantAction>(
+                tooltip: 'Variant actions',
                 icon: const Icon(Icons.more_horiz_rounded, size: 18),
+                onSelected: (action) => switch (action) {
+                  _VariantAction.edit => onEdit(variant),
+                  _VariantAction.prices => onEditPrices(variant),
+                },
+                itemBuilder: (_) => const [
+                  PopupMenuItem(
+                    value: _VariantAction.edit,
+                    child: Text('Edit variant'),
+                  ),
+                  PopupMenuItem(
+                    value: _VariantAction.prices,
+                    child: Text('Edit prices'),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       );
 }
+
+enum _VariantAction { edit, prices }

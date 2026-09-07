@@ -12,3 +12,4 @@ export 'src/admin_product_variant.dart';
 export 'src/admin_update_product_option.dart';
 export 'src/admin_update_product_variant.dart';
 export 'src/admin_user.dart';
+export 'src/admin_variant_price.dart';

@@ -1,5 +1,7 @@
 import 'package:dust_dart/serde.dart';
 
+import 'admin_variant_price.dart';
+
 part 'admin_product_variant.g.dart';
 
 /// One inventory-bearing variant shown in the admin detail table.
@@ -14,6 +16,7 @@ final class AdminProductVariant with _$AdminProductVariant {
     required this.manageInventory,
     required this.allowBackorder,
     required this.optionValues,
+    required this.prices,
     this.sku,
     this.material,
     this.ean,
@@ -64,6 +67,9 @@ final class AdminProductVariant with _$AdminProductVariant {
 
   /// Selected value keyed by product-option identifier.
   final Map<String, String> optionValues;
+
+  /// Exact regional prices sorted by currency code.
+  final List<AdminProductVariantPrice> prices;
 
   /// Optional lowercase ISO 3166-1 alpha-2 origin country.
   final String? originCountry;

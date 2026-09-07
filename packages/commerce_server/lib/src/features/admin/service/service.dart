@@ -11,5 +11,6 @@ export 'read/product_option.dart';
 export 'read.dart';
 export 'update.dart';
 export 'update/product_option.dart';
+export 'update/price.dart';
 export 'update_media.dart';
 export 'update_variant.dart';

@@ -96,6 +96,14 @@ abstract interface class AdminApi {
     @Body() AdminUpdateProductVariant body,
   );
 
+  /// Replaces every active-currency price for one variant.
+  @PUT('/admin/products/{id}/variants/{variantId}/prices')
+  Future<AdminProductDetail> updateProductVariantPrices(
+    @Path() String id,
+    @Path() String variantId,
+    @Body() AdminUpdateVariantPrices body,
+  );
+
   /// Replaces product image membership, order, and thumbnail atomically.
   @PUT('/admin/products/{id}/media')
   Future<AdminProductDetail> updateProductMedia(

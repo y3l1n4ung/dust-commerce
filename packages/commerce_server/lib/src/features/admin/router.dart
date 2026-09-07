@@ -52,6 +52,10 @@ Router adminRoutes() => Router()
     '/products/{id}/variants/{variant_id}',
     patch(updateAdminProductVariantHandler),
   )
+  ..route(
+    '/products/{id}/variants/{variant_id}/prices',
+    put(updateAdminVariantPricesHandler),
+  )
   ..route('/uploads', post(uploadAdminMediaHandler, status: 201))
   ..route('/uploads/{key}', delete(deleteAdminMediaHandler));
 

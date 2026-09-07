@@ -1,3 +1,4 @@
+import 'package:admin_app/src/core/admin_money.dart';
 import 'package:admin_app/src/product/admin_product_create_state.dart';
 import 'package:admin_app/src/product/admin_product_create_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
@@ -494,11 +495,13 @@ final class _AdminProductCreatePageState extends State<AdminProductCreatePage> {
       }
       final prices = <AdminCreateProductPrice>[];
       for (final currency in currencies) {
-        final amount = _minorUnits(draft.prices[currency]!.text);
+        final amount = parseMinorUnits(
+          draft.prices[currency]!.text,
+          currency,
+        );
         if (amount == null) {
           setState(() => _step = 2);
-          _showInputFailure(
-              'Enter every regional price with at most 2 decimals.');
+          _showInputFailure('Enter every price using its currency precision.');
           return const None();
         }
         prices.add(AdminCreateProductPrice(
@@ -607,15 +610,6 @@ final class _AdminProductCreatePageState extends State<AdminProductCreatePage> {
       .toLowerCase()
       .replaceAll(RegExp('[^a-z0-9]+'), '-')
       .replaceAll(RegExp(r'^-+|-+$'), '');
-
-  int? _minorUnits(String value) {
-    final match = RegExp(r'^(\d+)(?:\.(\d{1,2}))?$').firstMatch(value.trim());
-    if (match == null) return null;
-    final whole = int.tryParse(match.group(1)!);
-    if (whole == null) return null;
-    final decimal = (match.group(2) ?? '').padRight(2, '0');
-    return whole * 100 + (int.tryParse(decimal) ?? 0);
-  }
 }
 
 final class _CreateHeader extends StatelessWidget {

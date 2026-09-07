@@ -89,6 +89,18 @@ SELECT product.id, product.title, product.subtitle, product.handle,
                                           'true', 'false')),
              'allow_backorder', json(iif(variant.allow_backorder = 1,
                                          'true', 'false')),
+             'prices', json(coalesce((
+               SELECT json_group_array(json(price_ordered.price_json))
+               FROM (
+                 SELECT json_object(
+                   'currency_code', price.currency_code,
+                   'amount', price.amount
+                 ) AS price_json
+                 FROM variant_prices price
+                 WHERE price.variant_id = variant.id
+                 ORDER BY price.currency_code
+               ) price_ordered
+             ), '[]')),
              'option_values', json(coalesce((
                SELECT json_group_object(choice.option_id, value.value)
                FROM variant_option_values choice

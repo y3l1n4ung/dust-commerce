@@ -14,6 +14,7 @@
 part of 'admin_product_variant.dart';
 
 const DeepCollectionEquality _adminProductVariantOptionValuesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductVariantPricesEquality = DeepCollectionEquality();
 
 mixin _$AdminProductVariant implements Serializable {
   @override
@@ -31,6 +32,7 @@ mixin _$AdminProductVariant implements Serializable {
         'material: ${self.material}, '
         'midCode: ${self.midCode}, '
         'optionValues: ${self.optionValues}, '
+        'prices: ${self.prices}, '
         'originCountry: ${self.originCountry}, '
         'sku: ${self.sku}, '
         'title: ${self.title}, '
@@ -58,6 +60,7 @@ mixin _$AdminProductVariant implements Serializable {
             other.material == self.material &&
             other.midCode == self.midCode &&
             _adminProductVariantOptionValuesEquality.equals(other.optionValues, self.optionValues) &&
+            _adminProductVariantPricesEquality.equals(other.prices, self.prices) &&
             other.originCountry == self.originCountry &&
             other.sku == self.sku &&
             other.title == self.title &&
@@ -83,6 +86,7 @@ mixin _$AdminProductVariant implements Serializable {
       self.material,
       self.midCode,
       _adminProductVariantOptionValuesEquality.hash(self.optionValues),
+      _adminProductVariantPricesEquality.hash(self.prices),
       self.originCountry,
       self.sku,
       self.title,
@@ -126,6 +130,9 @@ Map<String, Object?> _$AdminProductVariantSerialize(AdminProductVariant instance
     'mid_code': instance.midCode,
     'option_values': instance.optionValues
         .map((key, value) => MapEntry(key, value)),
+    'prices': instance.prices
+        .map((item) => item.toJson())
+        .toList(),
     'origin_country': instance.originCountry,
     'sku': instance.sku,
     'title': instance.title,
@@ -177,6 +184,8 @@ AdminProductVariant _$AdminProductVariantDeserialize(Map<String, Object?> json) 
       : JsonHelper.as<String>(json['mid_code'], 'mid_code', 'String');
   final optionValuesValue = JsonHelper.decodeMap(json['option_values'], 'option_values',
       (value, valueKey) => JsonHelper.as<String>(value, valueKey, 'String'));
+  final pricesValue = JsonHelper.decodeList(json['prices'], 'prices',
+      (item, itemKey) => AdminProductVariantPrice.fromJson(JsonHelper.asMap(item, itemKey)));
   final originCountryValue = json['origin_country'] == null
       ? null
       : JsonHelper.as<String>(json['origin_country'], 'origin_country', 'String');
@@ -204,6 +213,7 @@ AdminProductVariant _$AdminProductVariantDeserialize(Map<String, Object?> json) 
     manageInventory: manageInventoryValue,
     allowBackorder: allowBackorderValue,
     optionValues: optionValuesValue,
+    prices: pricesValue,
     sku: skuValue,
     material: materialValue,
     ean: eanValue,
