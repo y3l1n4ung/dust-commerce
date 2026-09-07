@@ -10,6 +10,10 @@
 - Product source:
   `packages/admin/dashboard/src/routes/products/product-list/product-list.tsx`
   and `components/product-list-table/product-list-table.tsx`.
+- Product-query source:
+  `hooks/table/query/use-product-table-query.tsx`,
+  `hooks/table/filters/use-product-table-filters.tsx`, and the shared
+  DataTable filter and order-by components at the pinned commit.
 - Product-detail source:
   `packages/admin/dashboard/src/routes/products/product-detail/product-detail.tsx`
   plus its General, Media, Options, Variants, Sales Channels, Shipping,
@@ -131,6 +135,11 @@ action and uses Medusa's exact confirmation and success/error text. The local
 Medusa tab again timed out during capture, so this pass verifies source
 structure and live behavior without claiming same-state pixel parity.
 
+The product-query foundation uses the pinned API parameter names and exact
+title, creation-time and update-time ordering values. Both in-app Browser and
+Chrome timed out when opening the local Medusa product list, so the visible
+filter and order menus were not implemented or visually judged in this pass.
+
 ## Verified
 
 - The 220px navigation hierarchy, selected row, nested product links, merchant
@@ -226,6 +235,12 @@ structure and live behavior without claiming same-state pixel parity.
   two price rows with generated deletion timestamps. Global options remain
   active, while product-exclusive options are retired transactionally. Thirty
   non-widget Admin and 273 server tests pass; no widget tests were added.
+- The generated Admin client and ViewModel now carry server-owned status,
+  ordering and pagination together. Focused HTTP tests cover multiple status
+  values, all six supported sort values, filtering before paging, stable
+  counts, and `400` responses for unknown values. Live API QA returned exact
+  ascending and descending title order and rejected `order=handle`. Thirty-two
+  non-widget Admin and 276 server tests pass; no widget tests were added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -235,8 +250,9 @@ structure and live behavior without claiming same-state pixel parity.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Product creation still lacks multiple option axes, import/export,
-  filters and ordering under issue #31. Its visible controls do
+- P1 — Product creation still lacks multiple option axes and import/export.
+  The product list still lacks the source-shaped query-control UI plus
+  type/tag/date filters under issue #31. Its visible controls do
   not pretend an API mutation succeeded.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
   chip input and post-entry rank organizer. Persisted ordering works, but this
@@ -262,8 +278,10 @@ Variant-detail, product-option-edit and global product-option list/detail visual
 parity now pass same-state live comparisons. Global product-option creation
 also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
-live end-to-end behavior checks. Post-create editor, image-variant drawer,
-variant pricing, product stock and product deletion remain blocked on
-same-state source captures; broader Medusa Admin parity is not claimed.
+live end-to-end behavior checks. Product query behavior passes API and state
+checks, but its visible controls remain pending. Post-create editor,
+image-variant drawer, variant pricing, product stock, product deletion and the
+product query controls remain blocked on same-state source captures; broader
+Medusa Admin parity is not claimed.
 
 final result: blocked

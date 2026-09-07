@@ -216,6 +216,13 @@ the separate Store query excludes the deleted graph. All timestamps come from
 SQLite defaults and update triggers rather than an application clock or an
 appended migration.
 
+Admin product queries use Medusa's `status` and `order` parameter shapes. The
+server allowlists every lifecycle and sortable field before SQL, applies the
+filter to both page and count, and adds a stable id tie-breaker. The generated
+Flutter client sends query state while its Dio interceptor remains the only
+owner of the bearer header. This narrower slice does not yet implement
+Medusa's type, tag, sales-channel or date filters.
+
 ### Order transfers keep the capability out of the database
 
 The three Store routes match Medusa's request, accept and decline shape, while
