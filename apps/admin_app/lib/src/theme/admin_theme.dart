@@ -11,6 +11,7 @@ ThemeData adminTheme(Brightness brightness) {
   final dark = brightness == Brightness.dark;
   final background = dark ? const Color(0xFF18181B) : const Color(0xFFF7F7F7);
   final surface = dark ? const Color(0xFF202023) : Colors.white;
+  final field = dark ? const Color(0xFF303034) : const Color(0xFFF4F4F5);
   final foreground = dark ? const Color(0xFFFAFAFA) : const Color(0xFF18181B);
   final outline = dark ? const Color(0xFF3F3F46) : const Color(0xFFE4E4E7);
   final scheme = ColorScheme.fromSeed(
@@ -52,7 +53,7 @@ ThemeData adminTheme(Brightness brightness) {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: surface,
+      fillColor: field,
       isDense: true,
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       border: OutlineInputBorder(

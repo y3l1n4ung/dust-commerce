@@ -6,6 +6,7 @@ import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
 import 'package:admin_app/src/product/admin_product_edit_drawer.dart';
 import 'package:admin_app/src/product/admin_product_media_editor.dart';
+import 'package:admin_app/src/product/admin_product_option_edit_drawer.dart';
 import 'package:admin_app/src/product/admin_product_variant_edit_drawer.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/product/detail/admin_product_general_section.dart';
@@ -106,6 +107,19 @@ final class _DetailBody extends StatelessWidget {
       );
     }
 
+    Future<void> editOption(AdminProductOption option) async {
+      final updatedTitle = await showAdminProductOptionEditDrawer(
+        context,
+        product,
+        option,
+      );
+      if (updatedTitle == null || !context.mounted) return;
+      unawaited(context.readAdminProductViewModel().load());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Product option "$updatedTitle" updated.')),
+      );
+    }
+
     final main = Column(
       children: [
         AdminProductGeneralSection(
@@ -123,6 +137,7 @@ final class _DetailBody extends StatelessWidget {
         const SizedBox(height: 12),
         AdminProductOptionSection(
           options: product.options,
+          onEdit: editOption,
           onUnavailable: () => showAdminUnavailable(context),
         ),
         const SizedBox(height: 12),

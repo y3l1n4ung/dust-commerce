@@ -7,12 +7,16 @@ final class AdminProductOptionSection extends StatelessWidget {
   /// Creates the product option section.
   const AdminProductOptionSection({
     required this.options,
+    required this.onEdit,
     required this.onUnavailable,
     super.key,
   });
 
   /// Ordered merchant options.
   final List<AdminProductOption> options;
+
+  /// Opens the source-matched editor for one existing option.
+  final ValueChanged<AdminProductOption> onEdit;
 
   /// Reports controls whose write API is not implemented yet.
   final VoidCallback onUnavailable;
@@ -40,8 +44,8 @@ final class AdminProductOptionSection extends StatelessWidget {
                         ],
                       ),
                       trailing: IconButton(
-                        tooltip: 'Open product option',
-                        onPressed: onUnavailable,
+                        tooltip: 'Edit product option',
+                        onPressed: () => onEdit(option),
                         icon: const Icon(Icons.arrow_forward_rounded, size: 16),
                       ),
                     ),

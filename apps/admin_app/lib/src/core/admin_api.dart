@@ -59,6 +59,14 @@ abstract interface class AdminApi {
     @Body() AdminUpdateProduct body,
   );
 
+  /// Replaces one product option's title, values, and display order.
+  @PATCH('/admin/products/{id}/options/{optionId}')
+  Future<AdminProductDetail> updateProductOption(
+    @Path() String id,
+    @Path() String optionId,
+    @Body() AdminUpdateProductOption body,
+  );
+
   /// Replaces one variant's Medusa detail-drawer fields.
   @PATCH('/admin/products/{id}/variants/{variantId}')
   Future<AdminProductDetail> updateProductVariant(
