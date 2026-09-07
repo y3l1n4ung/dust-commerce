@@ -100,6 +100,11 @@ into one `2560 x 720` image. Merchant fixtures and value rank differ; shell,
 cards, tables, searches, status labels, result counts and pagination are
 directly comparable.
 
+The global product-option create comparison uses the same normalized live
+source/build method and the same empty form state. Both render the full-screen
+focus surface, 720px content column, title and value fields, close/esc chrome,
+and sticky Cancel/Save footer in one `2560 x 720` comparison.
+
 ## Verified
 
 - The 220px navigation hierarchy, selected row, nested product links, merchant
@@ -164,10 +169,13 @@ directly comparable.
 - The Products sub-navigation now exposes Medusa's global Options list. The
   generated authenticated client loads, searches, paginates, creates and opens
   safe option detail responses; detail search filters real values and products,
-  and edits refresh both routes. Browser QA searched values and products,
-  created and opened a temporary Material option, edited Size, restored the
-  canonical fixture and observed no browser errors. Twenty non-widget Admin
-  tests pass; no widget tests were added.
+  and edits refresh both routes. The source-shaped action menus also delete
+  unused options through a route-guarded soft-delete transaction and return a
+  display-safe conflict while an active product still uses the option. Browser
+  QA searched values and products, created and deleted a temporary Material
+  option, rejected deletion of linked Size, edited Size, restored the canonical
+  fixture and observed no application error. Twenty-one non-widget Admin and
+  258 server tests pass; no widget tests were added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -177,10 +185,15 @@ directly comparable.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Option creation, variant pricing/stock, import/export, filters, ordering
-  and multiple option axes in the Flutter creation form remain feature work
-  under issue #31. Their visible controls do not pretend an API mutation
-  succeeded.
+- P1 — Product creation still lacks multiple option axes, variant pricing/stock,
+  import/export, filters and ordering under issue #31. Its visible controls do
+  not pretend an API mutation succeeded.
+- P3 — Global option creation uses comma entry rather than Medusa's interactive
+  chip input and post-entry rank organizer. Persisted ordering works, but this
+  interaction is not yet a literal copy.
+- P3 — The global list keeps its required Global filter as one fixed chip;
+  Medusa's removable segmented filter and Clear all interaction are not yet
+  implemented.
 - P2 — The post-create editor lacks a same-state rendered Medusa source capture.
   The implementation matches the pinned source structure—full focus modal,
   four-column gallery, 24px grid gap, 560px upload panel and sticky footer—but
@@ -196,7 +209,8 @@ Passed for the implemented product-list, product-detail, general-edit,
 product-create-with-media, post-create media-card, image-variant and
 variant-detail, product-option-edit and global product-option behavior slices.
 Variant-detail, product-option-edit and global product-option list/detail visual
-parity now pass same-state live comparisons.
+parity now pass same-state live comparisons. Global product-option creation
+also passes its same-state empty-form comparison.
 Post-create editor and image-variant drawer remain blocked on same-state source
 captures; broader Medusa Admin parity is not claimed.
 
