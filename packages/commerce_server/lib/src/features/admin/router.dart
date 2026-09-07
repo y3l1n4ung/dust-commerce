@@ -34,6 +34,10 @@ Router adminRoutes() => Router()
     put(updateAdminProductMediaHandler),
   )
   ..route(
+    '/products/{id}/options/{option_id}',
+    patch(updateAdminProductOptionHandler),
+  )
+  ..route(
     '/products/{id}/images/{image_id}/variants/batch',
     post(batchAdminImageVariantsHandler),
   )

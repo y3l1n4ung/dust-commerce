@@ -3,7 +3,8 @@
 CREATE TABLE product_option_values (
   id         TEXT PRIMARY KEY,
   option_id  TEXT NOT NULL REFERENCES product_options (id) ON DELETE CASCADE,
-  value      TEXT NOT NULL CHECK (length(value) > 0),
+  -- Customer-visible choice label; whitespace-only values are never valid.
+  value      TEXT NOT NULL CHECK (length(trim(value)) BETWEEN 1 AND 255),
   -- Merchant-defined order keeps sizes and swatches stable in every client.
   rank       INTEGER NOT NULL DEFAULT 0 CHECK (rank >= 0),
   -- Merchant-only extension data stays outside the public response allowlist.

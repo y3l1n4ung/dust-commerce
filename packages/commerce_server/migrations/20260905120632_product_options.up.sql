@@ -3,7 +3,8 @@
 CREATE TABLE product_options (
   id         TEXT PRIMARY KEY,
   product_id TEXT NOT NULL REFERENCES products (id) ON DELETE CASCADE,
-  title      TEXT NOT NULL CHECK (length(title) > 0),
+  -- Merchant-facing axis label; bounded to keep admin forms predictable.
+  title      TEXT NOT NULL CHECK (length(trim(title)) BETWEEN 1 AND 255),
   -- Merchant-defined order keeps variant selectors stable across every client.
   rank       INTEGER NOT NULL DEFAULT 0 CHECK (rank >= 0),
   -- Merchant-only extension data stays outside the public response allowlist.
