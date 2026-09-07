@@ -454,4 +454,39 @@ attribute section at readable native density.
 
 Variant-detail slice result: passed
 
+## Admin product-option edit slice
+
+Source visual truth: live Medusa `2.20.1` at pinned commit
+`bda24b9725ac697ec5e8f706b503013e20babf12`, specifically the product-option
+detail action and
+`packages/admin/dashboard/src/routes/product-options/product-option-edit/`.
+The source and Morrow drawers were captured in the in-app browser at equal
+`1280 x 720` viewports, then combined at
+`/private/tmp/dust-commerce-admin-option-qa-20260907/option-editor-comparison-final.png`.
+
+State: authenticated dark theme with one Size option and four ranked values.
+The isolated catalogues use different value ranks, so the source displays
+`L, M, S, XL` while Morrow displays its database order `S, M, L, XL`.
+
+**Findings**
+
+- No actionable P0, P1 or P2 drawer difference remains after matching the
+  560px inset surface, field fill, chip geometry, 16px body padding, rank rows,
+  icon assets and sticky footer.
+- The wider Medusa navigation path still goes through Product Options list and
+  detail pages; Morrow currently opens this editor directly from product
+  detail. That route-level parity remains open in Admin QA.
+
+**Functional evidence**
+
+- Browser QA renamed Size to Fit, added an unused XXL value, saved, and read
+  both changes back from refreshed Admin detail.
+- A clean storefront session rendered `Select Fit` and disabled XXL because no
+  variant selects it. A second Admin save restored Size and removed XXL, and a
+  clean storefront session rendered the restored canonical state.
+- Nineteen non-widget Admin tests pass, including refreshed-state, selected
+  value conflict and sibling-title conflict behavior.
+
+Product-option edit slice result: passed
+
 final result: blocked
