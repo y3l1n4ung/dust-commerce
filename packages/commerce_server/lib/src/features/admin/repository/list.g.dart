@@ -19,7 +19,7 @@ final class _$AdminProductRepository implements AdminProductRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<AdminProductResponse>, SqlxError>> list(String query, String statuses, String tagIds, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo, String order, int limit, int offset) {
+  Future<Result<List<AdminProductResponse>, SqlxError>> list(String query, String statuses, String tagIds, String typeIds, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo, String order, int limit, int offset) {
     return _db.fetchAll<AdminProductResponse>(
       r'''
 SELECT product.id,
@@ -45,6 +45,7 @@ WHERE product.deleted_at IS NULL
     WHERE tag_link.product_id = product.id AND tag.deleted_at IS NULL
       AND instr(',' || ? || ',', ',' || tag_link.tag_id || ',') > 0
   ))
+  AND (? = '' OR instr(',' || ? || ',', ',' || product.type_id || ',') > 0)
   AND (? = '' OR product.created_at > ?)
   AND (? = '' OR product.created_at >= ?)
   AND (? = '' OR product.created_at < ?)
@@ -65,13 +66,13 @@ ORDER BY
   product.id ASC
 LIMIT ? OFFSET ?
 ''',
-      [query, query, query, statuses, statuses, tagIds, tagIds, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo, order, order, order, order, order, order, limit, offset],
+      [query, query, query, statuses, statuses, tagIds, tagIds, typeIds, typeIds, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo, order, order, order, order, order, order, limit, offset],
       const $AdminProductResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<int, SqlxError>> count(String query, String statuses, String tagIds, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo) {
+  Future<Result<int, SqlxError>> count(String query, String statuses, String tagIds, String typeIds, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo) {
     return _db.fetchScalar<int>(
       r'''
 SELECT count(*)
@@ -87,6 +88,7 @@ WHERE product.deleted_at IS NULL
     WHERE tag_link.product_id = product.id AND tag.deleted_at IS NULL
       AND instr(',' || ? || ',', ',' || tag_link.tag_id || ',') > 0
   ))
+  AND (? = '' OR instr(',' || ? || ',', ',' || product.type_id || ',') > 0)
   AND (? = '' OR product.created_at > ?)
   AND (? = '' OR product.created_at >= ?)
   AND (? = '' OR product.created_at < ?)
@@ -96,7 +98,42 @@ WHERE product.deleted_at IS NULL
   AND (? = '' OR product.updated_at < ?)
   AND (? = '' OR product.updated_at <= ?)
 ''',
-      [query, query, query, statuses, statuses, tagIds, tagIds, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo],
+      [query, query, query, statuses, statuses, tagIds, tagIds, typeIds, typeIds, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo],
+    );
+  }
+}
+
+final class _$AdminProductTypeRepository implements AdminProductTypeRepository {
+  const _$AdminProductTypeRepository(this._db);
+
+  final DatabaseExecutor _db;
+
+  @override
+  Future<Result<List<AdminProductTypeResponse>, SqlxError>> list(String query, int limit, int offset) {
+    return _db.fetchAll<AdminProductTypeResponse>(
+      r'''
+SELECT id, value, created_at, updated_at
+FROM product_types
+WHERE deleted_at IS NULL
+  AND (? = '' OR lower(value) LIKE '%' || lower(?) || '%')
+ORDER BY lower(value), id
+LIMIT ? OFFSET ?
+''',
+      [query, query, limit, offset],
+      const $AdminProductTypeResponseRowDeserializer().deserialize,
+    );
+  }
+
+  @override
+  Future<Result<int, SqlxError>> count(String query) {
+    return _db.fetchScalar<int>(
+      r'''
+SELECT count(*)
+FROM product_types
+WHERE deleted_at IS NULL
+  AND (? = '' OR lower(value) LIKE '%' || lower(?) || '%')
+''',
+      [query, query],
     );
   }
 }

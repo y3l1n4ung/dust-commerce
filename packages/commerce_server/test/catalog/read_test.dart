@@ -50,10 +50,7 @@ void main() {
     });
 
     test('pages when asked', () async {
-      final response =
-          await client.get('/store/products?limit=1&offset=1').send();
-
-      response
+      (await client.get('/store/products?limit=1&offset=1').send())
         ..assertOk()
         ..assertJsonContains({'count': 1, 'limit': 1, 'offset': 1, 'total': 2});
     });
@@ -102,6 +99,7 @@ void main() {
         'https://example.test/shirt-back.png',
       ]);
       expect(product.collection?.handle, 'summer');
+      expect(product.details.productType, 'Shirt');
       expect(product.categories.single.handle, 'clothing/shirts');
       expect(product.categories.single.parentId, 'cat_clothing');
       expect(product.tags.single.value, 'Cotton');

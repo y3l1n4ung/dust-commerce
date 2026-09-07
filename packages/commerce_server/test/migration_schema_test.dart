@@ -41,7 +41,7 @@ void main() {
         ...'product_collections product_categories'.split(' '),
         ...'product_category_products product_images product_image_variants'
             .split(' '),
-        ...'product_tags product_tag_products'.split(' '),
+        ...'product_tags product_tag_products product_types'.split(' '),
         ...'product_variants products promotions provider_identity'.split(' '),
         ...'regions shipping_options shipping_option_price_rules'.split(' '),
         ...'order_transfers variant_option_values variant_prices'.split(' '),

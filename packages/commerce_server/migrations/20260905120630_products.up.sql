@@ -20,8 +20,8 @@ CREATE TABLE products (
     origin_country IS NULL OR
     (length(origin_country) = 2 AND origin_country = lower(origin_country))
   ),
-  -- Simple storefront classification; category hierarchy is separate.
-  product_type TEXT,
+  -- Reusable merchant classification; category hierarchy is separate.
+  type_id     TEXT REFERENCES product_types (id) ON DELETE SET NULL,
   -- Physical values use the units configured for this store.
   weight      INTEGER CHECK (weight IS NULL OR weight >= 0),
   length      INTEGER CHECK (length IS NULL OR length >= 0),
@@ -45,6 +45,8 @@ CREATE INDEX idx_products_status ON products (status)
 WHERE deleted_at IS NULL;
 CREATE INDEX idx_products_collection ON products (collection_id)
 WHERE deleted_at IS NULL AND collection_id IS NOT NULL;
+CREATE INDEX idx_products_type ON products (type_id)
+WHERE deleted_at IS NULL AND type_id IS NOT NULL;
 
 -- SQLite has no automatic ON UPDATE timestamp, so this maintains updated_at.
 CREATE TRIGGER products_touch_updated_at AFTER UPDATE ON products

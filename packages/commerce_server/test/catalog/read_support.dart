@@ -10,11 +10,15 @@ Future<void> seedCatalogRead(CommerceDatabase database) async {
     r"('col_summer', 'Summer', 'summer')",
   );
   await run(
+    r"INSERT INTO product_types (id, value) VALUES "
+    r"('ptyp_shirt', 'Shirt')",
+  );
+  await run(
     r"INSERT INTO products "
-    r"(id, collection_id, title, handle, weight, status) VALUES "
-    r"('prod_shirt', 'col_summer', 'T-Shirt', 't-shirt', 400, 'published'), "
-    r"('prod_mug', NULL, 'Mug', 'mug', NULL, 'published'), "
-    r"('prod_secret', NULL, 'Hoodie', 'secret-hoodie', NULL, 'draft')",
+    r"(id, collection_id, type_id, title, handle, weight, status) VALUES "
+    r"('prod_shirt', 'col_summer', 'ptyp_shirt', 'T-Shirt', 't-shirt', 400, 'published'), "
+    r"('prod_mug', NULL, NULL, 'Mug', 'mug', NULL, 'published'), "
+    r"('prod_secret', NULL, NULL, 'Hoodie', 'secret-hoodie', NULL, 'draft')",
   );
   await run(
     r"INSERT INTO product_categories (id, name, handle) VALUES "

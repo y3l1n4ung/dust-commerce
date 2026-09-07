@@ -56,7 +56,7 @@ void main() {
           'material',
           'collection_id',
           'origin_country',
-          'product_type',
+          'type_id',
           'weight',
           'length',
           'width',

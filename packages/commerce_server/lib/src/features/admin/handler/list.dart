@@ -1,6 +1,7 @@
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/src/features/admin/deps.dart';
 import 'package:commerce_server/src/features/admin/model.dart';
+import 'package:commerce_server/src/features/admin/product_type_model.dart';
 import 'package:commerce_server/src/features/admin/service/service.dart';
 import 'package:commerce_server/src/http/http.dart';
 import 'package:dust_server/server.dart';
@@ -18,6 +19,8 @@ Future<Result<AdminProductListResponse, Rejection>> listAdminProductsHandler(
   if (statuses case Err(:final error)) return Err(error);
   final tagIds = _tagIds(request);
   if (tagIds case Err(:final error)) return Err(error);
+  final typeIds = _typeIds(request);
+  if (typeIds case Err(:final error)) return Err(error);
   final createdAt = _dateFilter(request, 'created_at');
   if (createdAt case Err(:final error)) return Err(error);
   final updatedAt = _dateFilter(request, 'updated_at');
@@ -33,9 +36,29 @@ Future<Result<AdminProductListResponse, Rejection>> listAdminProductsHandler(
     query: query,
     statuses: (statuses as Ok<List<AdminProductLifecycle>, Rejection>).value,
     tagIds: (tagIds as Ok<List<String>, Rejection>).value,
+    typeIds: (typeIds as Ok<List<String>, Rejection>).value,
     createdAt: (createdAt as Ok<AdminDateFilter, Rejection>).value,
     updatedAt: (updatedAt as Ok<AdminDateFilter, Rejection>).value,
     order: (order as Some<AdminProductOrder>).value,
+    limit: paging.limit,
+    offset: paging.offset,
+  );
+  return switch (result) {
+    Ok(:final value) => Ok(value),
+    Err() => const Err(Rejection.internal()),
+  };
+}
+
+/// `GET /admin/product-types` — lists filterable merchant classifications.
+Future<Result<AdminProductTypeListResponse, Rejection>>
+    listAdminProductTypesHandler(Request request) async {
+  final state = await adminDeps(request);
+  if (state case Err(:final error)) return Err(error);
+  final deps = (state as Ok<AdminDeps, Rejection>).value;
+  final paging = pagingOf(request);
+  final result = await listAdminProductTypes(
+    deps.productTypes,
+    query: request.requestedUri.queryParameters['q'] ?? '',
     limit: paging.limit,
     offset: paging.offset,
   );
@@ -77,12 +100,24 @@ Result<List<AdminProductLifecycle>, Rejection> _productStatuses(
 }
 
 Result<List<String>, Rejection> _tagIds(Request request) {
-  final raw = request.requestedUri.queryParameters['tag_id'] ?? '';
+  return _ids(request, 'tag_id', 'product tag');
+}
+
+Result<List<String>, Rejection> _typeIds(Request request) {
+  return _ids(request, 'type_id', 'product type');
+}
+
+Result<List<String>, Rejection> _ids(
+  Request request,
+  String parameter,
+  String label,
+) {
+  final raw = request.requestedUri.queryParameters[parameter] ?? '';
   if (raw.isEmpty) return const Ok([]);
   final ids = raw.split(',');
   final valid = RegExp(r'^[A-Za-z0-9_:-]{1,100}$');
   if (ids.length > 100 || ids.any((id) => !valid.hasMatch(id))) {
-    return const Err(Rejection.badRequest('Invalid product tag ids'));
+    return Err(Rejection.badRequest('Invalid $label ids'));
   }
   return Ok(List.unmodifiable(ids.toSet()));
 }

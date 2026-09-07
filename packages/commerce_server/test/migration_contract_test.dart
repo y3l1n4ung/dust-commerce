@@ -18,8 +18,11 @@ void main() {
     final downs =
         files.where((file) => file.path.endsWith('.down.sql')).toList();
 
-    expect(ups, hasLength(38));
+    expect(ups, hasLength(39));
     expect(downs, hasLength(ups.length));
+    final versions =
+        ups.map((file) => file.uri.pathSegments.last.split('_').first).toList();
+    expect(versions.toSet(), hasLength(versions.length));
 
     for (final up in ups) {
       final name = up.uri.pathSegments.last;

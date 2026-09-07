@@ -23,7 +23,7 @@ SELECT product.id, product.title, product.handle, product.description,
        json_object(
          'material', product.material,
          'origin_country', product.origin_country,
-         'product_type', product.product_type,
+         'product_type', product_type.value,
          'weight', product.weight,
          'length', product.length,
          'width', product.width,
@@ -146,6 +146,8 @@ SELECT product.id, product.title, product.handle, product.description,
 FROM products product
 LEFT JOIN product_collections collection
   ON collection.id = product.collection_id AND collection.deleted_at IS NULL
+LEFT JOIN product_types product_type
+  ON product_type.id = product.type_id AND product_type.deleted_at IS NULL
 WHERE product.handle = $1
   AND product.status = 'published'
   AND product.deleted_at IS NULL

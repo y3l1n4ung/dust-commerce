@@ -31,6 +31,7 @@ final class AdminProductState with _$AdminProductState {
     this.query = '',
     this.statuses = const [],
     this.tagIds = const [],
+    this.typeIds = const [],
     this.createdAt = const AdminDateFilter(),
     this.updatedAt = const AdminDateFilter(),
     this.order = AdminProductOrder.createdAtDesc,
@@ -66,6 +67,9 @@ final class AdminProductState with _$AdminProductState {
 
   /// Selected public tag identifiers; empty includes every tag.
   final List<String> tagIds;
+
+  /// Selected normalized product-type identifiers.
+  final List<String> typeIds;
 
   /// Update-time comparison applied by the server.
   final AdminDateFilter updatedAt;

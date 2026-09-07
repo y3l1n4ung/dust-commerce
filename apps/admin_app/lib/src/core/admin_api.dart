@@ -27,9 +27,18 @@ abstract interface class AdminApi {
     @Query('q') String query,
     @Query('status') String statuses,
     @Query('tag_id') String tagIds,
+    @Query('type_id') String typeIds,
     @Query('created_at') String createdAt,
     @Query('updated_at') String updatedAt,
     @Query('order') String order,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
+
+  /// Lists normalized product types for filters and product selectors.
+  @GET('/admin/product-types')
+  Future<AdminProductTypeList> listProductTypes(
+    @Query('q') String query,
     @Query('limit') int limit,
     @Query('offset') int offset,
   );

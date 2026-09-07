@@ -19,7 +19,7 @@ SELECT product.id, product.title, product.handle, product.description,
          'handle', collection.handle) END AS collection,
        json_object(
          'material', product.material, 'origin_country', product.origin_country,
-         'product_type', product.product_type, 'weight', product.weight,
+         'product_type', product_type.value, 'weight', product.weight,
          'length', product.length, 'width', product.width, 'height', product.height
        ) AS details,
        coalesce((
@@ -118,6 +118,7 @@ SELECT product.id, product.title, product.handle, product.description,
        ), '[]') AS variants
 FROM products product
 LEFT JOIN product_collections collection ON collection.id = product.collection_id AND collection.deleted_at IS NULL
+LEFT JOIN product_types product_type ON product_type.id = product.type_id AND product_type.deleted_at IS NULL
 WHERE product.status = 'published' AND product.deleted_at IS NULL
   AND EXISTS (
     SELECT 1

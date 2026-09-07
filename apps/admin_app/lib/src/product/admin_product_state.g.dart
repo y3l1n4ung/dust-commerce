@@ -16,6 +16,7 @@ part of 'admin_product_state.dart';
 const DeepCollectionEquality _adminProductStateProductsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductStateStatusesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminProductStateTagIdsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductStateTypeIdsEquality = DeepCollectionEquality();
 
 mixin _$AdminProductState {
   @override
@@ -32,6 +33,7 @@ mixin _$AdminProductState {
         'query: ${self.query}, '
         'statuses: ${self.statuses}, '
         'tagIds: ${self.tagIds}, '
+        'typeIds: ${self.typeIds}, '
         'updatedAt: ${self.updatedAt}, '
         'status: ${self.status}'
         ')';
@@ -53,6 +55,7 @@ mixin _$AdminProductState {
             other.query == self.query &&
             _adminProductStateStatusesEquality.equals(other.statuses, self.statuses) &&
             _adminProductStateTagIdsEquality.equals(other.tagIds, self.tagIds) &&
+            _adminProductStateTypeIdsEquality.equals(other.typeIds, self.typeIds) &&
             other.updatedAt == self.updatedAt &&
             other.status == self.status;
   }
@@ -72,6 +75,7 @@ mixin _$AdminProductState {
       self.query,
       _adminProductStateStatusesEquality.hash(self.statuses),
       _adminProductStateTagIdsEquality.hash(self.tagIds),
+      _adminProductStateTypeIdsEquality.hash(self.typeIds),
       self.updatedAt,
       self.status,
     ]);
@@ -102,6 +106,7 @@ abstract class _$AdminProductStateCopyWith<$Res> {
     String? query,
     List<AdminProductLifecycle>? statuses,
     List<String>? tagIds,
+    List<String>? typeIds,
     AdminDateFilter? updatedAt,
     AdminProductStatus? status,
   });
@@ -127,6 +132,7 @@ final class _$AdminProductStateCopyWithImpl<$Res> implements _$AdminProductState
     Object? query = null,
     Object? statuses = null,
     Object? tagIds = null,
+    Object? typeIds = null,
     Object? updatedAt = null,
     Object? status = null,
   }) {
@@ -140,6 +146,7 @@ final class _$AdminProductStateCopyWithImpl<$Res> implements _$AdminProductState
         query: query == null ? _self.query : query as String,
         statuses: statuses == null ? _self.statuses : statuses as List<AdminProductLifecycle>,
         tagIds: tagIds == null ? _self.tagIds : tagIds as List<String>,
+        typeIds: typeIds == null ? _self.typeIds : typeIds as List<String>,
         createdAt: createdAt == null ? _self.createdAt : createdAt as AdminDateFilter,
         updatedAt: updatedAt == null ? _self.updatedAt : updatedAt as AdminDateFilter,
         order: order == null ? _self.order : order as AdminProductOrder,

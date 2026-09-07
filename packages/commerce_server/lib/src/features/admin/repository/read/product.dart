@@ -15,7 +15,8 @@ abstract final class AdminProductReadRepository {
 SELECT product.id, product.title, product.subtitle, product.handle,
        product.description, product.discountable, product.thumbnail,
        product.material, product.origin_country,
-       product.product_type, product.weight, product.length, product.width,
+       product_type.value AS product_type,
+       product.weight, product.length, product.width,
        product.height, product.status, collection.title AS collection_title,
        coalesce((
          SELECT json_group_array(json(ordered.image_json))
@@ -131,6 +132,8 @@ SELECT product.id, product.title, product.subtitle, product.handle,
 FROM products product
 LEFT JOIN product_collections collection
   ON collection.id = product.collection_id AND collection.deleted_at IS NULL
+LEFT JOIN product_types product_type
+  ON product_type.id = product.type_id AND product_type.deleted_at IS NULL
 WHERE product.id = $1 AND product.deleted_at IS NULL
 ''')
   Future<Result<AdminProductDetailResponse?, SqlxError>> findById(String id);

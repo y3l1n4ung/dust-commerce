@@ -6,6 +6,7 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'admin_product_view_model.g.dart';
+part 'admin_product_filters.dart';
 
 /// Dependencies for the authenticated merchant catalogue.
 final class AdminProductViewModelArgs extends ViewModelArgs {
@@ -62,56 +63,13 @@ final class AdminProductViewModel extends $AdminProductViewModel {
   /// Loads the first page for [query].
   Future<void> search(String query) => load(query: query, offset: 0);
 
-  /// Applies the selected lifecycle states and resets server paging.
-  Future<void> filterByStatuses(List<AdminProductLifecycle> statuses) => load(
-        statuses: List.unmodifiable(statuses.toSet()),
-        offset: 0,
-      );
-
-  /// Applies selected public tag ids and resets server paging.
-  Future<void> filterByTags(List<String> tagIds) => load(
-        tagIds: List.unmodifiable(tagIds.toSet()),
-        offset: 0,
-      );
-
-  /// Applies an inclusive creation-time range and resets server paging.
-  Future<void> filterByCreatedAt({
-    required Option<DateTime> from,
-    required Option<DateTime> to,
-  }) =>
-      load(
-        createdAt: AdminDateFilter(
-          greaterThanOrEqual: from,
-          lessThanOrEqual: to,
-        ),
-        offset: 0,
-      );
-
-  /// Applies an inclusive update-time range and resets server paging.
-  Future<void> filterByUpdatedAt({
-    required Option<DateTime> from,
-    required Option<DateTime> to,
-  }) =>
-      load(
-        updatedAt: AdminDateFilter(
-          greaterThanOrEqual: from,
-          lessThanOrEqual: to,
-        ),
-        offset: 0,
-      );
-
-  /// Applies one allowlisted server ordering and resets paging.
-  Future<void> orderBy(AdminProductOrder order) => load(
-        order: order,
-        offset: 0,
-      );
-
   /// Loads one bounded catalogue page.
   Future<void> load({
     String? query,
     int? offset,
     List<AdminProductLifecycle>? statuses,
     List<String>? tagIds,
+    List<String>? typeIds,
     AdminDateFilter? createdAt,
     AdminDateFilter? updatedAt,
     AdminProductOrder? order,
@@ -120,6 +78,7 @@ final class AdminProductViewModel extends $AdminProductViewModel {
     final nextOffset = (offset ?? state.offset).clamp(0, 1 << 31);
     final nextStatuses = statuses ?? state.statuses;
     final nextTagIds = tagIds ?? state.tagIds;
+    final nextTypeIds = typeIds ?? state.typeIds;
     final nextCreatedAt = createdAt ?? state.createdAt;
     final nextUpdatedAt = updatedAt ?? state.updatedAt;
     final nextOrder = order ?? state.order;
@@ -133,6 +92,7 @@ final class AdminProductViewModel extends $AdminProductViewModel {
       query: nextQuery,
       statuses: nextStatuses,
       tagIds: nextTagIds,
+      typeIds: nextTypeIds,
       createdAt: nextCreatedAt,
       updatedAt: nextUpdatedAt,
       order: nextOrder,
@@ -142,6 +102,7 @@ final class AdminProductViewModel extends $AdminProductViewModel {
         nextQuery,
         nextStatuses.map((status) => status.name).join(','),
         nextTagIds.join(','),
+        nextTypeIds.join(','),
         nextCreatedAt.isEmpty ? '' : nextCreatedAt.parameter,
         nextUpdatedAt.isEmpty ? '' : nextUpdatedAt.parameter,
         nextOrder.parameter,
@@ -158,6 +119,7 @@ final class AdminProductViewModel extends $AdminProductViewModel {
         query: nextQuery,
         statuses: nextStatuses,
         tagIds: nextTagIds,
+        typeIds: nextTypeIds,
         createdAt: nextCreatedAt,
         updatedAt: nextUpdatedAt,
         order: nextOrder,
@@ -195,6 +157,7 @@ final class AdminProductViewModel extends $AdminProductViewModel {
         query: state.query,
         statuses: state.statuses,
         tagIds: state.tagIds,
+        typeIds: state.typeIds,
         createdAt: state.createdAt,
         updatedAt: state.updatedAt,
         order: state.order,

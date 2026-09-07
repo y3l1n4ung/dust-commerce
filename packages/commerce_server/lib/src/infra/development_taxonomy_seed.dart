@@ -5,6 +5,14 @@ const _taxonomyBeforeProducts = <_Statement>[
 INSERT OR IGNORE INTO product_collections (id, title, handle)
 VALUES ('pcol_featured', 'Featured', 'featured')
 '''),
+  _Statement(r'''
+INSERT OR IGNORE INTO product_types (id, value)
+VALUES
+  ('ptyp_shirt', 'Shirt'),
+  ('ptyp_sweatshirt', 'Sweatshirt'),
+  ('ptyp_pants', 'Pants'),
+  ('ptyp_shorts', 'Shorts')
+'''),
 ];
 
 const _taxonomyAfterProducts = <_Statement>[

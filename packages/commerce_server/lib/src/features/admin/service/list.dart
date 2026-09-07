@@ -1,5 +1,6 @@
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/src/features/admin/model.dart';
+import 'package:commerce_server/src/features/admin/product_type_model.dart';
 import 'package:commerce_server/src/features/admin/repository/repository.dart';
 import 'package:dust_dart/db.dart';
 
@@ -9,6 +10,7 @@ Future<Result<AdminProductListResponse, SqlxError>> listAdminProducts(
   required String query,
   required List<AdminProductLifecycle> statuses,
   required List<String> tagIds,
+  required List<String> typeIds,
   required AdminDateFilter createdAt,
   required AdminDateFilter updatedAt,
   required AdminProductOrder order,
@@ -21,6 +23,7 @@ Future<Result<AdminProductListResponse, SqlxError>> listAdminProducts(
     normalized,
     statusList,
     tagIds.join(','),
+    typeIds.join(','),
     _value(createdAt.greaterThan),
     _value(createdAt.greaterThanOrEqual),
     _value(createdAt.lessThan),
@@ -39,6 +42,7 @@ Future<Result<AdminProductListResponse, SqlxError>> listAdminProducts(
     normalized,
     statusList,
     tagIds.join(','),
+    typeIds.join(','),
     _value(createdAt.greaterThan),
     _value(createdAt.greaterThanOrEqual),
     _value(createdAt.lessThan),
@@ -53,6 +57,26 @@ Future<Result<AdminProductListResponse, SqlxError>> listAdminProducts(
   return Ok(AdminProductListResponse(
     products: (page as Ok<List<AdminProductResponse>, SqlxError>).value,
     count: (total as Ok<int, SqlxError>).value,
+    limit: limit,
+    offset: offset,
+  ));
+}
+
+/// Lists one bounded page of reusable product types.
+Future<Result<AdminProductTypeListResponse, SqlxError>> listAdminProductTypes(
+  AdminProductTypeRepository productTypes, {
+  required String query,
+  required int limit,
+  required int offset,
+}) async {
+  final normalized = query.trim();
+  final rows = await productTypes.list(normalized, limit, offset);
+  if (rows case Err(:final error)) return Err(error);
+  final count = await productTypes.count(normalized);
+  if (count case Err(:final error)) return Err(error);
+  return Ok(AdminProductTypeListResponse(
+    productTypes: (rows as Ok<List<AdminProductTypeResponse>, SqlxError>).value,
+    count: (count as Ok<int, SqlxError>).value,
     limit: limit,
     offset: offset,
   ));

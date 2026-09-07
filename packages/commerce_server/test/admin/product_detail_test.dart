@@ -45,6 +45,7 @@ void main() {
       'width',
     });
     expect(json['title'], 'Relaxed Sweatpants');
+    expect(json['product_type'], 'Pants');
     expect(json['categories'], ['Pants']);
     expect(json['tags'], ['Apparel', 'Cotton']);
     expect(json['images'], hasLength(2));

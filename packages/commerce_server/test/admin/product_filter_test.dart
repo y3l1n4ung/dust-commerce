@@ -37,6 +37,19 @@ void main() {
     expect(_ids(body), ['prod_shorts']);
   });
 
+  test('product list filters normalized product type ids', () async {
+    final response = await _get(
+      harness,
+      token,
+      {'type_id': 'ptyp_shirt,ptyp_shorts', 'order': 'title'},
+    );
+
+    response.assertOk();
+    final body = response.json! as Map<String, Object?>;
+    expect(body['count'], 2);
+    expect(_ids(body), ['prod_tshirt', 'prod_shorts']);
+  });
+
   test('product list applies inclusive UTC date ranges', () async {
     await harness.raw(
       "UPDATE products SET created_at = CASE id "
@@ -89,6 +102,7 @@ void main() {
   test('product list rejects malformed ids and date comparisons', () async {
     for (final query in [
       {'tag_id': 'ptag_apparel,,ptag_cotton'},
+      {'type_id': 'ptyp_shirt,,ptyp_shorts'},
       {
         'created_at': jsonEncode({r'$gte': '2026-01-01'})
       },

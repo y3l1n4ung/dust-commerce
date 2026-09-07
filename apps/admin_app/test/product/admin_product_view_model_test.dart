@@ -13,6 +13,7 @@ void main() {
   late Directory directory;
   late CommerceDatabase database;
   late TestClient server;
+  late AdminApi api;
   late AdminProductViewModel products;
 
   setUp(() async {
@@ -40,9 +41,8 @@ void main() {
     );
     final dio = Dio()
       ..options.headers['authorization'] = 'Bearer ${token.token}';
-    products = AdminProductViewModel(
-      AdminProductViewModelArgs(api: AdminApi(dio, baseUrl: server.origin)),
-    );
+    api = AdminApi(dio, baseUrl: server.origin);
+    products = AdminProductViewModel(AdminProductViewModelArgs(api: api));
   });
 
   tearDown(() async {
@@ -84,6 +84,17 @@ void main() {
     expect(products.state.count, 1);
     expect(products.state.products.single.id, 'prod_tshirt');
     expect(products.state.offset, 0);
+  });
+
+  test('discovers and filters normalized product types', () async {
+    final types = await api.listProductTypes('', 20, 0);
+
+    expect(types.count, 4);
+    expect(types.productTypes.first.createdAt.isUtc, isTrue);
+    await products.filterByTypes(const ['ptyp_shirt']);
+    expect(products.state.typeIds, const ['ptyp_shirt']);
+    expect(products.state.count, 1);
+    expect(products.state.products.single.id, 'prod_tshirt');
   });
 
   test('orders products using the Medusa query contract', () async {
