@@ -100,19 +100,7 @@ final class AccountOrderDetailContent extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           OrderReceiptTotals(order: order),
-          const SizedBox(height: 40),
-          const TranslatedText(
-            'shop_checkout_need_help',
-            defaultText: 'Need help?',
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          const TranslatedText(
-            'shop_checkout_help_body',
-            defaultText:
-                'If you have questions about your order, contact our customer service team.',
-            style: TextStyle(color: StoreColors.foregroundSubtle),
-          ),
+          OrderReturnSection(order: order),
         ],
       );
 

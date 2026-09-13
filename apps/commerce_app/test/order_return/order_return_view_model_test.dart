@@ -41,6 +41,19 @@ void main() {
     model.dispose();
   });
 
+  test('return panel presentation remains in generated state', () {
+    final model = OrderReturnViewModel(
+      OrderReturnViewModelArgs(api: _ReturnApi((_) async => _response)),
+    );
+    model.prepare(_paidOrder);
+
+    model.open();
+    expect(model.state.expanded, isTrue);
+    model.close();
+    expect(model.state.expanded, isFalse);
+    model.dispose();
+  });
+
   test('submits one generated request and retains its acknowledgement',
       () async {
     OrderReturnRequestBody? submitted;

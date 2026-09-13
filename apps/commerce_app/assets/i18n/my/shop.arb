@@ -192,6 +192,61 @@
   "@account_request_transfer": {
     "description": "Submits an order-transfer request."
   },
+  "account_request_return": "ပြန်အပ်ရန် တောင်းဆိုမည်",
+  "@account_request_return": {
+    "description": "Heading above the return item selector."
+  },
+  "account_return_choose_items": "ပြန်အပ်လိုသည့် ပစ္စည်းများနှင့် အရေအတွက်ကို ရွေးချယ်ပါ။",
+  "@account_return_choose_items": {
+    "description": "Instructions for selecting return items."
+  },
+  "account_return_choose_one": "ပြန်အပ်ရန် ပစ္စည်းအနည်းဆုံးတစ်ခု ရွေးချယ်ပါ။",
+  "@account_return_choose_one": {
+    "description": "Empty return selection validation."
+  },
+  "account_return_failed": "ပြန်အပ်ရန် တောင်းဆို၍ မရပါ။ ထပ်မံကြိုးစားပါ။",
+  "@account_return_failed": {
+    "description": "Retryable return-request failure."
+  },
+  "account_return_not_eligible": "ဤပစ္စည်းများကို ပြန်အပ်၍ မရတော့ပါ။",
+  "@account_return_not_eligible": {
+    "description": "Return eligibility changed before submission."
+  },
+  "account_return_note": "မှတ်ချက် (မဖြစ်မနေ မဟုတ်ပါ)",
+  "@account_return_note": {
+    "description": "Optional customer return context field."
+  },
+  "account_return_quantity": "အရေအတွက် {quantity}",
+  "@account_return_quantity": {
+    "description": "Selected return item quantity.",
+    "placeholders": {"quantity": {"example": "2"}}
+  },
+  "account_return_received": "ပြန်အပ်ရန် တောင်းဆိုချက် #{id} ကို လက်ခံရရှိပါပြီ",
+  "@account_return_received": {
+    "description": "Persisted return acknowledgement heading.",
+    "placeholders": {"id": {"example": "1001"}}
+  },
+  "account_return_received_body": "{quantity} ခုအတွက် သင့်တောင်းဆိုချက်ကို စစ်ဆေးပါမည်။",
+  "@account_return_received_body": {
+    "description": "Persisted return acknowledgement detail.",
+    "placeholders": {"quantity": {"example": "2"}}
+  },
+  "account_return_session_expired": "အကောင့်ဝင်ထားမှု သက်တမ်းကုန်သွားပါပြီ။ ထပ်မံအကောင့်ဝင်ပါ။",
+  "@account_return_session_expired": {
+    "description": "Expired-session return failure."
+  },
+  "account_return_unavailable": "ဤအော်ဒါကို မရနိုင်တော့ပါ။",
+  "@account_return_unavailable": {
+    "description": "Missing or unowned return order failure."
+  },
+  "account_returns_exchanges": "ပြန်အပ်ခြင်းနှင့် လဲလှယ်ခြင်း",
+  "@account_returns_exchanges": {
+    "description": "Opens the real order return form from the help block."
+  },
+  "account_submit_return": "ပြန်အပ်ရန် တင်သွင်းမည်",
+  "@account_submit_return": {
+    "description": "Submits the selected return items."
+  },
   "account_transfer_requested": "အော်ဒါ {id} အတွက် လွှဲပြောင်းရန် တောင်းဆိုပြီးပါပြီ",
   "@account_transfer_requested": {
     "description": "Successful order-transfer request heading.",
@@ -1158,7 +1213,8 @@
     "description": "Registration or sign-in email verification notice.",
     "placeholders": {
       "email": {
-        "type": "String"
+        "type": "String",
+        "example": "ada@example.com"
       }
     }
   },

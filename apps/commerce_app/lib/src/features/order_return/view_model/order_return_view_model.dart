@@ -49,6 +49,19 @@ final class OrderReturnViewModel extends $OrderReturnViewModel {
     emit(const OrderReturnRequestState());
   }
 
+  /// Expands the form only after an eligible order has been prepared.
+  void open() {
+    if (state.orderId case Some()) {
+      emit(state.copyWith(expanded: true));
+    }
+  }
+
+  /// Returns to the compact help link without losing submitted server state.
+  void close() {
+    if (state.status == OrderReturnRequestStatus.submitting) return;
+    emit(state.copyWith(expanded: false));
+  }
+
   /// Selects an item at quantity one, or removes an existing selection.
   void toggle(String itemId) {
     if (state.status == OrderReturnRequestStatus.submitting ||

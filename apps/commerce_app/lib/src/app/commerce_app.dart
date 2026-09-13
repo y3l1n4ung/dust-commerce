@@ -45,6 +45,7 @@ class _CommerceAppState extends State<CommerceApp> {
   late final AddressBookViewModel _addresses;
   late final AccountOrderDetailViewModel _orderDetail;
   late final AccountOrdersViewModel _orders;
+  late final OrderReturnViewModel _orderReturn;
   late final OrderTransferViewModel _orderTransfer;
   late final CartViewModel _cart;
   late final CheckoutViewModel _checkout;
@@ -71,6 +72,9 @@ class _CommerceAppState extends State<CommerceApp> {
     );
     _orderDetail = AccountOrderDetailViewModel(
       AccountOrderDetailViewModelArgs(api: widget.api),
+    );
+    _orderReturn = OrderReturnViewModel(
+      OrderReturnViewModelArgs(api: widget.api),
     );
     _orderTransfer = OrderTransferViewModel(
       OrderTransferViewModelArgs(api: widget.api),
@@ -138,6 +142,7 @@ class _CommerceAppState extends State<CommerceApp> {
     _addresses.dispose();
     _orderDetail.dispose();
     _orders.dispose();
+    _orderReturn.dispose();
     _orderTransfer.dispose();
     _account.dispose();
     super.dispose();
@@ -166,6 +171,7 @@ class _CommerceAppState extends State<CommerceApp> {
       addresses: _addresses,
       orderDetail: _orderDetail,
       orders: _orders,
+      orderReturn: _orderReturn,
       orderTransfer: _orderTransfer,
       cart: _cart,
       checkout: _checkout,

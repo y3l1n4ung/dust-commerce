@@ -22,6 +22,7 @@ mixin _$OrderReturnRequestState {
     final self = this as OrderReturnRequestState;
     return 'OrderReturnRequestState('
         'availableQuantities: ${self.availableQuantities}, '
+        'expanded: ${self.expanded}, '
         'failure: ${self.failure}, '
         'note: ${self.note}, '
         'orderId: ${self.orderId}, '
@@ -38,6 +39,7 @@ mixin _$OrderReturnRequestState {
         other is OrderReturnRequestState &&
             runtimeType == other.runtimeType &&
             _orderReturnRequestStateAvailableQuantitiesEquality.equals(other.availableQuantities, self.availableQuantities) &&
+            other.expanded == self.expanded &&
             other.failure == self.failure &&
             other.note == self.note &&
             other.orderId == self.orderId &&
@@ -52,6 +54,7 @@ mixin _$OrderReturnRequestState {
     return Object.hashAll([
       runtimeType,
       _orderReturnRequestStateAvailableQuantitiesEquality.hash(self.availableQuantities),
+      self.expanded,
       self.failure,
       self.note,
       self.orderId,
@@ -65,7 +68,7 @@ mixin _$OrderReturnRequestState {
   ///
   /// Usage:
   /// ```dart
-  /// final updated = orderReturnRequestState.copyWith();
+  /// final updated = orderReturnRequestState.copyWith(expanded: true);
   /// ```
   @pragma('vm:prefer-inline')
   _$OrderReturnRequestStateCopyWith<OrderReturnRequestState> get copyWith => _$OrderReturnRequestStateCopyWithImpl<OrderReturnRequestState>(this as OrderReturnRequestState, (value) => value);
@@ -77,6 +80,7 @@ mixin _$OrderReturnRequestState {
 abstract class _$OrderReturnRequestStateCopyWith<$Res> {
   $Res call({
     Map<String, int>? availableQuantities,
+    bool? expanded,
     Option<OrderReturnFailure>? failure,
     Option<String>? note,
     Option<String>? orderId,
@@ -97,6 +101,7 @@ final class _$OrderReturnRequestStateCopyWithImpl<$Res> implements _$OrderReturn
   @pragma('vm:prefer-inline')
   $Res call({
     Object? availableQuantities = null,
+    Object? expanded = null,
     Object? failure = null,
     Object? note = null,
     Object? orderId = null,
@@ -107,6 +112,7 @@ final class _$OrderReturnRequestStateCopyWithImpl<$Res> implements _$OrderReturn
     return _then(
       OrderReturnRequestState(
         status: status == null ? _self.status : status as OrderReturnRequestStatus,
+        expanded: expanded == null ? _self.expanded : expanded as bool,
         orderId: orderId == null ? _self.orderId : orderId as Option<String>,
         availableQuantities: availableQuantities == null ? _self.availableQuantities : availableQuantities as Map<String, int>,
         quantities: quantities == null ? _self.quantities : quantities as Map<String, int>,

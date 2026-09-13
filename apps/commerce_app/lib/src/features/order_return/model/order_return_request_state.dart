@@ -45,6 +45,7 @@ final class OrderReturnRequestState with _$OrderReturnRequestState {
   /// Creates an empty return-request state.
   const OrderReturnRequestState({
     this.status = OrderReturnRequestStatus.idle,
+    this.expanded = false,
     this.orderId = const None(),
     this.availableQuantities = const {},
     this.quantities = const {},
@@ -55,6 +56,9 @@ final class OrderReturnRequestState with _$OrderReturnRequestState {
 
   /// Maximum purchasable quantity keyed by immutable order-item id.
   final Map<String, int> availableQuantities;
+
+  /// Whether the source-shaped help link has expanded the request form.
+  final bool expanded;
 
   /// Display-safe failure for the latest attempt.
   final Option<OrderReturnFailure> failure;

@@ -7,6 +7,7 @@ final class _StorefrontScopes extends StatelessWidget {
     required this.addresses,
     required this.orderDetail,
     required this.orders,
+    required this.orderReturn,
     required this.orderTransfer,
     required this.cart,
     required this.checkout,
@@ -20,6 +21,7 @@ final class _StorefrontScopes extends StatelessWidget {
   final AddressBookViewModel addresses;
   final AccountOrderDetailViewModel orderDetail;
   final AccountOrdersViewModel orders;
+  final OrderReturnViewModel orderReturn;
   final OrderTransferViewModel orderTransfer;
   final CartViewModel cart;
   final CheckoutViewModel checkout;
@@ -38,24 +40,29 @@ final class _StorefrontScopes extends StatelessWidget {
               value: orderDetail,
               child: AccountOrdersViewModelScope.value(
                 value: orders,
-                child: OrderTransferViewModelScope.value(
-                  value: orderTransfer,
-                  child: CartViewModelScope.value(
-                    value: cart,
-                    child: CheckoutViewModelScope.value(
-                      value: checkout,
-                      child: ProductViewModelScope(
-                        args: (_) => ProductViewModelArgs(api: api),
-                        create: (_, args) => ProductViewModel(args),
-                        child: CatalogViewModelScope(
-                          args: (_) => CatalogViewModelArgs(api: api),
-                          create: (_, args) => CatalogViewModel(args),
-                          child: ProductListingViewModelScope(
-                            args: (_) => ProductListingViewModelArgs(api: api),
-                            create: (_, args) => ProductListingViewModel(args),
-                            child: StoreShellViewModelScope.value(
-                              value: shell,
-                              child: child,
+                child: OrderReturnViewModelScope.value(
+                  value: orderReturn,
+                  child: OrderTransferViewModelScope.value(
+                    value: orderTransfer,
+                    child: CartViewModelScope.value(
+                      value: cart,
+                      child: CheckoutViewModelScope.value(
+                        value: checkout,
+                        child: ProductViewModelScope(
+                          args: (_) => ProductViewModelArgs(api: api),
+                          create: (_, args) => ProductViewModel(args),
+                          child: CatalogViewModelScope(
+                            args: (_) => CatalogViewModelArgs(api: api),
+                            create: (_, args) => CatalogViewModel(args),
+                            child: ProductListingViewModelScope(
+                              args: (_) =>
+                                  ProductListingViewModelArgs(api: api),
+                              create: (_, args) =>
+                                  ProductListingViewModel(args),
+                              child: StoreShellViewModelScope.value(
+                                value: shell,
+                                child: child,
+                              ),
                             ),
                           ),
                         ),
