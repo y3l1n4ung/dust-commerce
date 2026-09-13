@@ -10,6 +10,7 @@ import 'package:commerce_server/src/features/catalog/catalog.dart';
 import 'package:commerce_server/src/features/checkout/checkout.dart';
 import 'package:commerce_server/src/features/collection/collection.dart';
 import 'package:commerce_server/src/features/order_transfer/order_transfer.dart';
+import 'package:commerce_server/src/features/order_return/order_return.dart';
 import 'package:commerce_server/src/features/payment/payment.dart';
 import 'package:commerce_server/src/features/region/region.dart';
 import 'package:commerce_server/src/http/http.dart';
@@ -75,6 +76,7 @@ Router buildApp(
     ..nest('/store', cartRoutes())
     ..nest('/store', checkoutRoutes())
     ..nest('/store', orderTransferRoutes())
+    ..nest('/store', orderReturnRoutes())
     ..nest('/store', paymentRoutes())
     ..nest('/store', regionRoutes())
     ..route('/health', get(_health))
@@ -170,6 +172,12 @@ Router buildApp(
         mailer: orderTransferMailer,
       ),
     )
+    ..withState(OrderReturnDeps(
+      database: database,
+      reads: OrderReturnReadRepository(executor),
+      creates: OrderReturnCreateRepository(executor),
+      clock: clock,
+    ))
     ..withState(RegionDeps(regions: SellingRegionRepository(executor)));
 }
 

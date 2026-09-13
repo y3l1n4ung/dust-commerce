@@ -16,6 +16,7 @@ export 'src/features/catalog/catalog.dart';
 export 'src/features/checkout/checkout.dart';
 export 'src/features/collection/collection.dart';
 export 'src/features/order_transfer/order_transfer.dart';
+export 'src/features/order_return/order_return.dart';
 export 'src/features/payment/payment.dart';
 export 'src/features/region/region.dart';
 export 'src/http/http.dart';
