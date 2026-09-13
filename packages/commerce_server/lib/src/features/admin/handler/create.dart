@@ -2,6 +2,7 @@ import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/src/features/account/crypto.dart';
 import 'package:commerce_server/src/features/admin/deps.dart';
 import 'package:commerce_server/src/features/admin/model.dart';
+import 'package:commerce_server/src/features/admin/product_type_model.dart';
 import 'package:commerce_server/src/features/admin/service/service.dart';
 import 'package:dust_dart/db.dart';
 import 'package:dust_server/server.dart';
@@ -14,6 +15,10 @@ const ValidatedExtractable<AdminCredentials> _credentialsBody =
 const ValidatedExtractable<AdminCreateProduct> _createProductBody =
     ValidatedExtractable(
   JsonExtractable<AdminCreateProduct>(AdminCreateProduct.fromJson),
+);
+const ValidatedExtractable<AdminCreateProductType> _createProductTypeBody =
+    ValidatedExtractable(
+  JsonExtractable<AdminCreateProductType>(AdminCreateProductType.fromJson),
 );
 
 /// `POST /auth/admin/emailpass` — exchange admin credentials for a token.
@@ -97,6 +102,29 @@ Future<Result<AdminProductDetailResponse, Rejection>> createAdminProductHandler(
       )),
     Ok(value: Err(error: AdminCreateProductFailure.unavailable)) =>
       const Err(Rejection.internal()),
+    Err() => const Err(Rejection.internal()),
+  };
+}
+
+/// `POST /admin/product-types` — creates one reusable classification.
+Future<Result<AdminProductTypeResponse, Rejection>>
+    createAdminProductTypeHandler(Request request) async {
+  final decoded = await _createProductTypeBody.extract(request);
+  if (decoded case Err(:final error)) return Err(error);
+  final state = await adminDeps(request);
+  if (state case Err(:final error)) return Err(error);
+  final deps = (state as Ok<AdminDeps, Rejection>).value;
+  final result = await createAdminProductType(
+    deps.database,
+    (decoded as Ok<AdminCreateProductType, Rejection>).value,
+    nextId: deps.clock.nextId,
+  );
+  return switch (result) {
+    Ok(value: Ok(value: final productType)) => Ok(productType),
+    Ok(value: Err(error: AdminCreateProductTypeFailure.invalid)) =>
+      const Err(Rejection.status(422, 'Enter a product type')),
+    Ok(value: Err(error: AdminCreateProductTypeFailure.valueConflict)) =>
+      const Err(Rejection.conflict('Another product type uses this value')),
     Err() => const Err(Rejection.internal()),
   };
 }

@@ -63,3 +63,26 @@ VALUES (?, ?, ?)
     );
   }
 }
+
+final class _$AdminProductTypeCreateRepository implements AdminProductTypeCreateRepository {
+  const _$AdminProductTypeCreateRepository(this._db);
+
+  final DatabaseExecutor _db;
+
+  @override
+  Future<Result<AdminProductTypeResponse?, SqlxError>> insertProductType(String id, String value) {
+    return _db.fetchOptional<AdminProductTypeResponse>(
+      r'''
+INSERT INTO product_types (id, value)
+SELECT ?, trim(?)
+WHERE NOT EXISTS (
+  SELECT 1 FROM product_types
+  WHERE lower(value) = lower(trim(?)) AND deleted_at IS NULL
+)
+RETURNING id, value, created_at, updated_at
+''',
+      [id, value, value],
+      const $AdminProductTypeResponseRowDeserializer().deserialize,
+    );
+  }
+}

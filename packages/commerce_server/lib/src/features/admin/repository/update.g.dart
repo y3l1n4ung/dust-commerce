@@ -115,3 +115,26 @@ WHERE id = ? AND deleted_at IS NULL
     );
   }
 }
+
+final class _$AdminProductTypeUpdateRepository implements AdminProductTypeUpdateRepository {
+  const _$AdminProductTypeUpdateRepository(this._db);
+
+  final DatabaseExecutor _db;
+
+  @override
+  Future<Result<ExecResult, SqlxError>> updateProductType(String id, String value) {
+    return _db.execute(
+      r'''
+UPDATE product_types
+SET value = trim(?)
+WHERE id = ? AND deleted_at IS NULL
+  AND NOT EXISTS (
+    SELECT 1 FROM product_types sibling
+    WHERE lower(sibling.value) = lower(trim(?))
+      AND sibling.id <> ? AND sibling.deleted_at IS NULL
+  )
+''',
+      [value, id, value, id],
+    );
+  }
+}

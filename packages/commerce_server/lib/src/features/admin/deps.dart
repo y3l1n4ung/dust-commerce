@@ -18,6 +18,7 @@ final class AdminDeps {
     required this.products,
     required this.productTags,
     required this.productTypes,
+    required this.productTypeReads,
     required this.productOptions,
     required this.productReads,
     required this.productCreates,
@@ -55,6 +56,9 @@ final class AdminDeps {
 
   /// Reusable product-type discovery for filters and selectors.
   final AdminProductTypeRepository productTypes;
+
+  /// Direct product-type detail reads for settings mutations.
+  final AdminProductTypeReadRepository productTypeReads;
 
   /// Global product-option list and detail queries.
   final AdminProductOptionRepository productOptions;

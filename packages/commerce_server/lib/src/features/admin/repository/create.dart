@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/admin/model.dart';
+import 'package:commerce_server/src/features/admin/product_type_model.dart';
 import 'package:dust_dart/db.dart';
 
 part 'create.g.dart';
@@ -53,5 +54,28 @@ VALUES ($1, $2, $3)
     String tokenHash,
     String authIdentityId,
     String expiresAt,
+  );
+}
+
+/// Product-type creation writes kept outside identity persistence.
+@SqlxDao()
+abstract final class AdminProductTypeCreateRepository {
+  /// Binds product-type creation to [db].
+  const factory AdminProductTypeCreateRepository(DatabaseExecutor db) =
+      _$AdminProductTypeCreateRepository;
+
+  /// Inserts one active value unless its normalized label is already owned.
+  @Query(r'''
+INSERT INTO product_types (id, value)
+SELECT $1, trim($2)
+WHERE NOT EXISTS (
+  SELECT 1 FROM product_types
+  WHERE lower(value) = lower(trim($2)) AND deleted_at IS NULL
+)
+RETURNING id, value, created_at, updated_at
+''')
+  Future<Result<AdminProductTypeResponse?, SqlxError>> insertProductType(
+    String id,
+    String value,
   );
 }

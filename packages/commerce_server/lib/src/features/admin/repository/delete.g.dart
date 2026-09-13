@@ -26,3 +26,21 @@ final class _$AdminDeleteRepository implements AdminDeleteRepository {
     );
   }
 }
+
+final class _$AdminProductTypeDeleteRepository implements AdminProductTypeDeleteRepository {
+  const _$AdminProductTypeDeleteRepository(this._db);
+
+  final DatabaseExecutor _db;
+
+  @override
+  Future<Result<ExecResult, SqlxError>> retireProductType(String id) {
+    return _db.execute(
+      r'''
+UPDATE product_types
+SET deleted_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+WHERE id = ? AND deleted_at IS NULL
+''',
+      [id],
+    );
+  }
+}

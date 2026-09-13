@@ -61,3 +61,22 @@ WHERE t.token_hash = ?
     );
   }
 }
+
+final class _$AdminProductTypeReadRepository implements AdminProductTypeReadRepository {
+  const _$AdminProductTypeReadRepository(this._db);
+
+  final DatabaseExecutor _db;
+
+  @override
+  Future<Result<AdminProductTypeResponse?, SqlxError>> findProductType(String id) {
+    return _db.fetchOptional<AdminProductTypeResponse>(
+      r'''
+SELECT id, value, created_at, updated_at
+FROM product_types
+WHERE id = ? AND deleted_at IS NULL
+''',
+      [id],
+      const $AdminProductTypeResponseRowDeserializer().deserialize,
+    );
+  }
+}

@@ -87,6 +87,7 @@ Router buildApp(
         products: AdminProductRepository(executor),
         productTags: AdminProductTagRepository(executor),
         productTypes: AdminProductTypeRepository(executor),
+        productTypeReads: AdminProductTypeReadRepository(executor),
         productOptions: AdminProductOptionRepository(executor),
         productCreates: AdminProductCreateRepository(executor),
         productReads: AdminProductReadRepository(executor),

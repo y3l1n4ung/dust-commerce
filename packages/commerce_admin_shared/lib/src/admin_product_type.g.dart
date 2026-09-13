@@ -15,6 +15,130 @@ part of 'admin_product_type.dart';
 
 const DeepCollectionEquality _adminProductTypeListProductTypesEquality = DeepCollectionEquality();
 
+mixin _$AdminCreateProductType implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as AdminCreateProductType;
+    return 'AdminCreateProductType('
+        'value: ${self.value}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminCreateProductType;
+    return identical(this, other) ||
+        other is AdminCreateProductType &&
+            runtimeType == other.runtimeType &&
+            other.value == self.value;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminCreateProductType;
+    return Object.hashAll([
+      runtimeType,
+      self.value,
+    ]);
+  }
+
+  /// Validates this `AdminCreateProductType`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as AdminCreateProductType;
+    final errors = <ValidationError>[];
+    _AdminCreateProductTypeValidation._validateValue(self.value, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `AdminCreateProductType` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminCreateProductTypeSerialize(this as AdminCreateProductType);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminUpdateProductType implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as AdminUpdateProductType;
+    return 'AdminUpdateProductType('
+        'value: ${self.value}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminUpdateProductType;
+    return identical(this, other) ||
+        other is AdminUpdateProductType &&
+            runtimeType == other.runtimeType &&
+            other.value == self.value;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminUpdateProductType;
+    return Object.hashAll([
+      runtimeType,
+      self.value,
+    ]);
+  }
+
+  /// Validates this `AdminUpdateProductType`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as AdminUpdateProductType;
+    final errors = <ValidationError>[];
+    _AdminUpdateProductTypeValidation._validateValue(self.value, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `AdminUpdateProductType` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminUpdateProductTypeSerialize(this as AdminUpdateProductType);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$AdminProductType implements Serializable {
   @override
   String toString() {
@@ -99,6 +223,58 @@ mixin _$AdminProductTypeList implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+extension _AdminCreateProductTypeValidation on AdminCreateProductType {
+  static void _validateValue(String value, List<ValidationError> errors) {
+    if (value.length < 1) {
+      errors.add(ValidationError(field: 'value', message: 'Enter a product type'));
+    }
+    if (value.length > 255) {
+      errors.add(ValidationError(field: 'value', message: 'Enter a product type'));
+    }
+    if (!RegExp('.*\\S.*').hasMatch(value)) {
+      errors.add(ValidationError(field: 'value', message: 'Enter a product type'));
+    }
+  }
+
+}
+extension _AdminUpdateProductTypeValidation on AdminUpdateProductType {
+  static void _validateValue(String value, List<ValidationError> errors) {
+    if (value.length < 1) {
+      errors.add(ValidationError(field: 'value', message: 'Enter a product type'));
+    }
+    if (value.length > 255) {
+      errors.add(ValidationError(field: 'value', message: 'Enter a product type'));
+    }
+    if (!RegExp('.*\\S.*').hasMatch(value)) {
+      errors.add(ValidationError(field: 'value', message: 'Enter a product type'));
+    }
+  }
+
+}
+final class $AdminCreateProductTypeSerializer implements Serializer<AdminCreateProductType, Map<String, Object?>> {
+  const $AdminCreateProductTypeSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminCreateProductType value) => _$AdminCreateProductTypeSerialize(value);
+}
+final class $AdminCreateProductTypeDeserializer implements Deserializer<AdminCreateProductType, Map<String, Object?>> {
+  const $AdminCreateProductTypeDeserializer();
+
+  @override
+  AdminCreateProductType deserialize(Map<String, Object?> json) => _$AdminCreateProductTypeDeserialize(json);
+}
+final class $AdminUpdateProductTypeSerializer implements Serializer<AdminUpdateProductType, Map<String, Object?>> {
+  const $AdminUpdateProductTypeSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminUpdateProductType value) => _$AdminUpdateProductTypeSerialize(value);
+}
+final class $AdminUpdateProductTypeDeserializer implements Deserializer<AdminUpdateProductType, Map<String, Object?>> {
+  const $AdminUpdateProductTypeDeserializer();
+
+  @override
+  AdminUpdateProductType deserialize(Map<String, Object?> json) => _$AdminUpdateProductTypeDeserialize(json);
+}
 final class $AdminProductTypeSerializer implements Serializer<AdminProductType, Map<String, Object?>> {
   const $AdminProductTypeSerializer();
 
@@ -123,6 +299,44 @@ final class $AdminProductTypeListDeserializer implements Deserializer<AdminProdu
   @override
   AdminProductTypeList deserialize(Map<String, Object?> json) => _$AdminProductTypeListDeserialize(json);
 }
+
+Map<String, Object?> _$AdminCreateProductTypeSerialize(AdminCreateProductType instance) {
+  return <String, Object?>{
+    'value': instance.value,
+  };
+}
+
+Map<String, Object?> _$AdminCreateProductTypeToJson(AdminCreateProductType instance) =>
+    _$AdminCreateProductTypeSerialize(instance);
+
+// factory AdminCreateProductType.fromJson(Map<String, Object?> json) => _$AdminCreateProductTypeFromJson(json);
+AdminCreateProductType _$AdminCreateProductTypeDeserialize(Map<String, Object?> json) {
+  final valueValue = JsonHelper.as<String>(json['value'], 'value', 'String');
+
+  return AdminCreateProductType(value: valueValue);
+}
+
+AdminCreateProductType _$AdminCreateProductTypeFromJson(Map<String, Object?> json) =>
+    _$AdminCreateProductTypeDeserialize(json);
+
+Map<String, Object?> _$AdminUpdateProductTypeSerialize(AdminUpdateProductType instance) {
+  return <String, Object?>{
+    'value': instance.value,
+  };
+}
+
+Map<String, Object?> _$AdminUpdateProductTypeToJson(AdminUpdateProductType instance) =>
+    _$AdminUpdateProductTypeSerialize(instance);
+
+// factory AdminUpdateProductType.fromJson(Map<String, Object?> json) => _$AdminUpdateProductTypeFromJson(json);
+AdminUpdateProductType _$AdminUpdateProductTypeDeserialize(Map<String, Object?> json) {
+  final valueValue = JsonHelper.as<String>(json['value'], 'value', 'String');
+
+  return AdminUpdateProductType(value: valueValue);
+}
+
+AdminUpdateProductType _$AdminUpdateProductTypeFromJson(Map<String, Object?> json) =>
+    _$AdminUpdateProductTypeDeserialize(json);
 
 Map<String, Object?> _$AdminProductTypeSerialize(AdminProductType instance) {
   return <String, Object?>{

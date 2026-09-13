@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/admin/model.dart';
+import 'package:commerce_server/src/features/admin/product_type_model.dart';
 import 'package:dust_dart/db.dart';
 
 export 'read/product.dart';
@@ -47,5 +48,23 @@ WHERE t.token_hash = $1
   Future<Result<AdminUserResponse?, SqlxError>> adminForToken(
     String tokenHash,
     String now,
+  );
+}
+
+/// Product-type detail reads kept separate from list discovery.
+@SqlxDao()
+abstract final class AdminProductTypeReadRepository {
+  /// Binds product-type reads to [db].
+  const factory AdminProductTypeReadRepository(DatabaseExecutor db) =
+      _$AdminProductTypeReadRepository;
+
+  /// Reads one active direct response row by stable identifier.
+  @Query(r'''
+SELECT id, value, created_at, updated_at
+FROM product_types
+WHERE id = $1 AND deleted_at IS NULL
+''')
+  Future<Result<AdminProductTypeResponse?, SqlxError>> findProductType(
+    String id,
   );
 }

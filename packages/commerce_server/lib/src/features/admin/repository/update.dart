@@ -108,3 +108,27 @@ WHERE id = $1 AND deleted_at IS NULL
     String? thumbnail,
   );
 }
+
+/// Product-type replacement writes behind the protected settings route.
+@SqlxDao()
+abstract final class AdminProductTypeUpdateRepository {
+  /// Binds product-type replacement to [db].
+  const factory AdminProductTypeUpdateRepository(DatabaseExecutor db) =
+      _$AdminProductTypeUpdateRepository;
+
+  /// Renames one active type unless another active type owns the value.
+  @Query(r'''
+UPDATE product_types
+SET value = trim($2)
+WHERE id = $1 AND deleted_at IS NULL
+  AND NOT EXISTS (
+    SELECT 1 FROM product_types sibling
+    WHERE lower(sibling.value) = lower(trim($2))
+      AND sibling.id <> $1 AND sibling.deleted_at IS NULL
+  )
+''')
+  Future<Result<ExecResult, SqlxError>> updateProductType(
+    String id,
+    String value,
+  );
+}

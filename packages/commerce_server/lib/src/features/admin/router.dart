@@ -31,7 +31,17 @@ Router adminRoutes() => Router()
         .post(createAdminProductOptionHandler, status: 201),
   )
   ..route('/product-tags', get(listAdminProductTagsHandler))
-  ..route('/product-types', get(listAdminProductTypesHandler))
+  ..route(
+    '/product-types',
+    get(listAdminProductTypesHandler)
+        .post(createAdminProductTypeHandler, status: 201),
+  )
+  ..route(
+    '/product-types/{id}',
+    get(readAdminProductTypeHandler)
+        .patch(updateAdminProductTypeHandler)
+        .delete(deleteAdminProductTypeHandler),
+  )
   ..route(
     '/product-options/{id}',
     get(readAdminProductOptionHandler)

@@ -14,3 +14,23 @@ Future<Result<AdminSessionDeleted, Rejection>> adminSignOutHandler(
   if (revoked case Err()) return const Err(Rejection.internal());
   return const Ok(AdminSessionDeleted(success: true));
 }
+
+/// `DELETE /admin/product-types/{id}` — soft-deletes one classification.
+Future<Result<Response, Rejection>> deleteAdminProductTypeHandler(
+  Request request,
+) async {
+  final id = pathParametersOf(request)['id'];
+  if (id == null || id.isEmpty) {
+    return const Err(Rejection.badRequest('A product type id is required'));
+  }
+  final state = await adminDeps(request);
+  if (state case Err(:final error)) return Err(error);
+  final deps = (state as Ok<AdminDeps, Rejection>).value;
+  final result = await deleteAdminProductType(deps.database, id);
+  return switch (result) {
+    Ok(value: Ok()) => Ok(noContent()),
+    Ok(value: Err(error: AdminDeleteProductTypeFailure.notFound)) =>
+      Err(Rejection.notFound('Product type "$id"')),
+    Err() => const Err(Rejection.internal()),
+  };
+}
