@@ -15,6 +15,7 @@ final class AdminSidebar extends StatelessWidget {
     required this.onSearchRequested,
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
+    required this.onProductTypesRequested,
     required this.selectedSection,
     required this.onSignOut,
     super.key,
@@ -28,6 +29,9 @@ final class AdminSidebar extends StatelessWidget {
 
   /// Opens the global product-options route.
   final VoidCallback onProductOptionsRequested;
+
+  /// Opens product classifications in Settings.
+  final VoidCallback onProductTypesRequested;
 
   /// Revokes the current admin session.
   final VoidCallback? onSignOut;
@@ -88,7 +92,12 @@ final class AdminSidebar extends StatelessWidget {
                 const _NavRow(
                     icon: Icons.list_alt_outlined, label: 'Price Lists'),
                 const Spacer(),
-                const _NavRow(icon: Icons.settings_outlined, label: 'Settings'),
+                _NavRow(
+                  icon: Icons.settings_outlined,
+                  label: 'Settings',
+                  selected: selectedSection == AdminShellSection.productTypes,
+                  onTap: onProductTypesRequested,
+                ),
                 const SizedBox(height: 8),
                 AdminUserMenu(
                   user: user,

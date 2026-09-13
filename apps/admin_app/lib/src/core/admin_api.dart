@@ -43,6 +43,27 @@ abstract interface class AdminApi {
     @Query('offset') int offset,
   );
 
+  /// Creates one reusable product classification.
+  @POST('/admin/product-types')
+  Future<AdminProductType> createProductType(
+    @Body() AdminCreateProductType body,
+  );
+
+  /// Reads one reusable product classification.
+  @GET('/admin/product-types/{id}')
+  Future<AdminProductType> productType(@Path() String id);
+
+  /// Replaces one product classification's merchant-facing value.
+  @PATCH('/admin/product-types/{id}')
+  Future<AdminProductType> updateProductType(
+    @Path() String id,
+    @Body() AdminUpdateProductType body,
+  );
+
+  /// Soft-deletes one reusable product classification.
+  @DELETE('/admin/product-types/{id}')
+  Future<void> deleteProductType(@Path() String id);
+
   /// Lists public product tags for filters and product selectors.
   @GET('/admin/product-tags')
   Future<AdminProductTagList> listProductTags(

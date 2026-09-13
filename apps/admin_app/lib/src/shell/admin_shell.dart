@@ -13,6 +13,7 @@ final class AdminShell extends StatelessWidget {
     required this.onSearchRequested,
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
+    required this.onProductTypesRequested,
     required this.selectedSection,
     required this.onSignOut,
     required this.title,
@@ -31,6 +32,9 @@ final class AdminShell extends StatelessWidget {
 
   /// Opens the global product-options table.
   final VoidCallback onProductOptionsRequested;
+
+  /// Opens product classifications in Settings.
+  final VoidCallback onProductTypesRequested;
 
   /// Revokes the merchant session.
   final VoidCallback? onSignOut;
@@ -57,6 +61,7 @@ final class AdminShell extends StatelessWidget {
             onSearchRequested: onSearchRequested,
             onProductsRequested: onProductsRequested,
             onProductOptionsRequested: onProductOptionsRequested,
+            onProductTypesRequested: onProductTypesRequested,
             selectedSection: selectedSection,
             onSignOut: onSignOut,
           );

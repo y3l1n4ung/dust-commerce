@@ -7,6 +7,8 @@ import 'package:admin_app/src/product_option/admin_product_option_detail_page.da
 import 'package:admin_app/src/product_option/admin_product_option_detail_view_model.dart';
 import 'package:admin_app/src/product_option/admin_product_option_page.dart';
 import 'package:admin_app/src/product_option/admin_product_option_view_model.dart';
+import 'package:admin_app/src/product_type/admin_product_type_page.dart';
+import 'package:admin_app/src/product_type/admin_product_type_view_model.dart';
 import 'package:admin_app/src/session/admin_session_state.dart';
 import 'package:admin_app/src/session/admin_session_view_model.dart';
 import 'package:admin_app/src/session/admin_sign_in.dart';
@@ -59,6 +61,7 @@ final class _AdminHome extends StatefulWidget {
 final class _AdminHomeState extends State<_AdminHome> {
   final _searchFocus = FocusNode();
   final _optionSearchFocus = FocusNode();
+  final _typeSearchFocus = FocusNode();
   _AdminRoute _route = _AdminRoute.products;
   String _selectedId = '';
 
@@ -77,6 +80,7 @@ final class _AdminHomeState extends State<_AdminHome> {
   void dispose() {
     _searchFocus.dispose();
     _optionSearchFocus.dispose();
+    _typeSearchFocus.dispose();
     super.dispose();
   }
 
@@ -95,8 +99,16 @@ final class _AdminHomeState extends State<_AdminHome> {
             Some(value: final option) => 'Options  ›  ${option.title}',
             None() => 'Options',
           },
+        _AdminRoute.productTypes => 'Settings  ›  Product Types',
       },
       onSearchRequested: () {
+        if (_route == _AdminRoute.productTypes) {
+          _showProductTypes();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _typeSearchFocus.requestFocus();
+          });
+          return;
+        }
         final options = _route == _AdminRoute.productOptions ||
             _route == _AdminRoute.productOption;
         if (options) {
@@ -112,6 +124,7 @@ final class _AdminHomeState extends State<_AdminHome> {
       },
       onProductsRequested: _showProducts,
       onProductOptionsRequested: _showProductOptions,
+      onProductTypesRequested: _showProductTypes,
       selectedSection: switch (_route) {
         _AdminRoute.products ||
         _AdminRoute.product =>
@@ -119,6 +132,7 @@ final class _AdminHomeState extends State<_AdminHome> {
         _AdminRoute.productOptions ||
         _AdminRoute.productOption =>
           AdminShellSection.productOptions,
+        _AdminRoute.productTypes => AdminShellSection.productTypes,
       },
       onSignOut: widget.state.isBusy
           ? null
@@ -144,6 +158,8 @@ final class _AdminHomeState extends State<_AdminHome> {
             onBack: _showProductOptions,
             onOpenProduct: _showProduct,
           ),
+        _AdminRoute.productTypes =>
+          AdminProductTypePage(searchFocus: _typeSearchFocus),
       },
     );
   }
@@ -171,6 +187,14 @@ final class _AdminHomeState extends State<_AdminHome> {
         _selectedId = id;
       });
 
+  void _showProductTypes() {
+    context.readAdminProductTypeViewModel().load(offset: 0);
+    setState(() {
+      _route = _AdminRoute.productTypes;
+      _selectedId = '';
+    });
+  }
+
   Future<void> _createProduct() async {
     final created = await showAdminProductCreatePage(context);
     if (!mounted) return;
@@ -187,4 +211,10 @@ final class _AdminHomeState extends State<_AdminHome> {
   }
 }
 
-enum _AdminRoute { products, product, productOptions, productOption }
+enum _AdminRoute {
+  products,
+  product,
+  productOptions,
+  productOption,
+  productTypes,
+}
