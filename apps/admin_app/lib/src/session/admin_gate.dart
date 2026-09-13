@@ -3,6 +3,8 @@ import 'package:admin_app/src/product/admin_product_detail_page.dart';
 import 'package:admin_app/src/product/admin_product_create_page.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/order/admin_order_page.dart';
+import 'package:admin_app/src/order/admin_order_detail_page.dart';
+import 'package:admin_app/src/order/admin_order_detail_view_model.dart';
 import 'package:admin_app/src/order/admin_order_view_model.dart';
 import 'package:admin_app/src/product_option/admin_product_option_create_page.dart';
 import 'package:admin_app/src/product_option/admin_product_option_detail_page.dart';
@@ -23,6 +25,7 @@ import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
+part 'admin_gate_actions.dart';
 part 'admin_gate_navigation.dart';
 
 /// Switches between sign-in and the authenticated admin shell.
@@ -65,7 +68,7 @@ final class _AdminHome extends StatefulWidget {
 }
 
 final class _AdminHomeState extends State<_AdminHome>
-    with _AdminHomeNavigation {
+    with _AdminHomeActions, _AdminHomeNavigation {
   @override
   final _orderSearchFocus = FocusNode();
   @override
@@ -105,6 +108,7 @@ final class _AdminHomeState extends State<_AdminHome>
 
 enum _AdminRoute {
   orders,
+  order,
   products,
   product,
   productOptions,

@@ -9,7 +9,14 @@ import 'package:flutter/material.dart';
 /// Medusa-shaped order route backed by the authenticated Admin API.
 final class AdminOrderPage extends StatefulWidget {
   /// Creates the merchant order table.
-  const AdminOrderPage({required this.searchFocus, super.key});
+  const AdminOrderPage({
+    required this.searchFocus,
+    required this.onOpen,
+    super.key,
+  });
+
+  /// Opens one order on its dedicated detail screen.
+  final ValueChanged<String> onOpen;
 
   /// Focus target shared with the sidebar search action.
   final FocusNode searchFocus;
@@ -95,7 +102,7 @@ final class _AdminOrderPageState extends State<AdminOrderPage> {
     }
     return Stack(
       children: [
-        AdminOrderTable(orders: state.orders),
+        AdminOrderTable(orders: state.orders, onOpen: widget.onOpen),
         if (state.status == AdminOrderListStatus.loading)
           const LinearProgressIndicator(minHeight: 2),
       ],
