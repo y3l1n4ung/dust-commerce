@@ -52,6 +52,7 @@ void main() {
         ...'return_reasons return_requests return_items fulfillments'
             .split(' '),
         'fulfillment_items',
+        'stock_location_addresses',
         'payment_collections',
       ]),
     );
