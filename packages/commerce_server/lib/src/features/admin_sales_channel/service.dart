@@ -53,79 +53,106 @@ enum AdminProductSalesChannelUpdateFailure {
 
   /// The selection is duplicated, malformed, or contains an unknown channel.
   invalid,
+
+  /// Persistence failed before a complete replacement could commit.
+  internal,
 }
 
 /// Atomically replaces one product's complete sales-channel selection.
 Future<
-    Result<
         Result<AdminSalesChannelListResponse,
-            AdminProductSalesChannelUpdateFailure>,
-        SqlxError>> replaceAdminProductSalesChannels(
+            AdminProductSalesChannelUpdateFailure>>
+    replaceAdminProductSalesChannels(
   CommerceDatabase database,
   String productId,
   AdminUpdateProductSalesChannels input, {
   required String Function() nextId,
-}) =>
-    database.transaction((tx) async {
-      final ids = input.salesChannelIds;
-      final uniqueIds = ids.toSet();
-      if (ids.length > 1000 ||
-          uniqueIds.length != ids.length ||
-          ids.any((id) => id.isEmpty || id.trim() != id)) {
-        return const Ok(Err(AdminProductSalesChannelUpdateFailure.invalid));
-      }
+}) async {
+  final transaction =
+      await database.transaction<_ProductSalesChannelUpdateOutcome>((tx) async {
+    final ids = input.salesChannelIds;
+    final uniqueIds = ids.toSet();
+    if (ids.length > 1000 ||
+        uniqueIds.length != ids.length ||
+        ids.any((id) => id.isEmpty || id.trim() != id)) {
+      return const Ok(_ProductSalesChannelRejected(
+        AdminProductSalesChannelUpdateFailure.invalid,
+      ));
+    }
 
-      final repository = AdminSalesChannelRepository(tx);
-      final productCount = await repository.activeProductCount(productId);
-      if (productCount case Err(:final error)) return Err(error);
-      if ((productCount as Ok<int, SqlxError>).value == 0) {
-        return const Ok(
-          Err(AdminProductSalesChannelUpdateFailure.notFound),
+    final repository = AdminSalesChannelRepository(tx);
+    final productCount = await repository.activeProductCount(productId);
+    if (productCount case Err(:final error)) return Err(error);
+    if ((productCount as Ok<int, SqlxError>).value == 0) {
+      return const Ok(_ProductSalesChannelRejected(
+        AdminProductSalesChannelUpdateFailure.notFound,
+      ));
+    }
+    for (final id in ids) {
+      final channelCount = await repository.activeChannelCount(id);
+      if (channelCount case Err(:final error)) return Err(error);
+      if ((channelCount as Ok<int, SqlxError>).value != 1) {
+        return const Ok(_ProductSalesChannelRejected(
+          AdminProductSalesChannelUpdateFailure.invalid,
+        ));
+      }
+    }
+
+    final current = await repository.listForProduct(productId);
+    if (current case Err(:final error)) return Err(error);
+    final currentIds = {
+      for (final channel
+          in (current as Ok<List<AdminSalesChannelResponse>, SqlxError>).value)
+        channel.id,
+    };
+    for (final id in currentIds.difference(uniqueIds)) {
+      final removed = await repository.removeProductChannel(productId, id);
+      if (removed case Err(:final error)) return Err(error);
+    }
+    for (final id in uniqueIds.difference(currentIds)) {
+      final restored = await repository.restoreProductChannel(productId, id);
+      if (restored case Err(:final error)) return Err(error);
+      if ((restored as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
+        final inserted = await repository.insertProductChannel(
+          nextId(),
+          productId,
+          id,
         );
+        if (inserted case Err(:final error)) return Err(error);
       }
-      for (final id in ids) {
-        final channelCount = await repository.activeChannelCount(id);
-        if (channelCount case Err(:final error)) return Err(error);
-        if ((channelCount as Ok<int, SqlxError>).value != 1) {
-          return const Ok(
-            Err(AdminProductSalesChannelUpdateFailure.invalid),
-          );
-        }
-      }
+    }
 
-      final current = await repository.listForProduct(productId);
-      if (current case Err(:final error)) return Err(error);
-      final currentIds = {
-        for (final channel
-            in (current as Ok<List<AdminSalesChannelResponse>, SqlxError>)
-                .value)
-          channel.id,
-      };
-      for (final id in currentIds.difference(uniqueIds)) {
-        final removed = await repository.removeProductChannel(productId, id);
-        if (removed case Err(:final error)) return Err(error);
-      }
-      for (final id in uniqueIds.difference(currentIds)) {
-        final restored = await repository.restoreProductChannel(productId, id);
-        if (restored case Err(:final error)) return Err(error);
-        if ((restored as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
-          final inserted = await repository.insertProductChannel(
-            nextId(),
-            productId,
-            id,
-          );
-          if (inserted case Err(:final error)) return Err(error);
-        }
-      }
-
-      final refreshed = await repository.listForProduct(productId);
-      if (refreshed case Err(:final error)) return Err(error);
-      final channels =
-          (refreshed as Ok<List<AdminSalesChannelResponse>, SqlxError>).value;
-      return Ok(Ok(AdminSalesChannelListResponse(
+    final refreshed = await repository.listForProduct(productId);
+    if (refreshed case Err(:final error)) return Err(error);
+    final channels =
+        (refreshed as Ok<List<AdminSalesChannelResponse>, SqlxError>).value;
+    return Ok(_ProductSalesChannelsUpdated(AdminSalesChannelListResponse(
         salesChannels: channels,
         count: channels.length,
         limit: channels.length,
-        offset: 0,
-      )));
-    });
+        offset: 0)));
+  });
+  return switch (transaction) {
+    Ok(value: _ProductSalesChannelsUpdated(:final response)) => Ok(response),
+    Ok(value: _ProductSalesChannelRejected(:final failure)) => Err(failure),
+    Err() => const Err(AdminProductSalesChannelUpdateFailure.internal),
+  };
+}
+
+sealed class _ProductSalesChannelUpdateOutcome {
+  const _ProductSalesChannelUpdateOutcome();
+}
+
+final class _ProductSalesChannelsUpdated
+    extends _ProductSalesChannelUpdateOutcome {
+  const _ProductSalesChannelsUpdated(this.response);
+
+  final AdminSalesChannelListResponse response;
+}
+
+final class _ProductSalesChannelRejected
+    extends _ProductSalesChannelUpdateOutcome {
+  const _ProductSalesChannelRejected(this.failure);
+
+  final AdminProductSalesChannelUpdateFailure failure;
+}

@@ -57,6 +57,27 @@ done < <(
     || true
 )
 
+# A use case exposes one success/failure boundary. Nested Results force every
+# caller to decode transport and domain failures separately and make `?`-style
+# propagation impossible. Existing debt is a frozen baseline. Removing debt
+# requires shrinking the baseline in the same change, so it cannot return later.
+NESTED_RESULT_BASELINE="scripts/nested_result_baseline.txt"
+NESTED_RESULT_CURRENT="$(mktemp)"
+trap 'rm -f "$NESTED_RESULT_CURRENT"' EXIT
+(
+  rg --count-matches --multiline \
+    'Result\s*<\s*Result\s*<' \
+    packages apps \
+    --glob '*.dart' \
+    --glob '!*.g.dart' \
+    || true
+) | sort > "$NESTED_RESULT_CURRENT"
+if ! diff -u "$NESTED_RESULT_BASELINE" "$NESTED_RESULT_CURRENT"; then
+  echo "::error::nested Result debt differs from its frozen baseline"
+  echo "remove debt and its baseline row together; never add new debt"
+  status=1
+fi
+
 if [[ "$status" -eq 0 ]]; then
   echo "backend structure and response boundaries are valid"
 fi

@@ -16,6 +16,9 @@
    [the backend structure](docs/architecture/backend-structure.md).
 5. **Generated output is committed.** CI runs `dust check` and `dust check --db`
    to prove the committed files match their sources.
+6. **One `Result` per boundary.** Never return `Result<Result<T, DomainError>,
+   DatabaseError>`. Define one feature failure type, include an internal/database
+   variant, and flatten infrastructure errors before returning from the service.
 
 ## Splitting
 

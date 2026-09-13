@@ -57,13 +57,13 @@ Future<Result<AdminSalesChannelListResponse, Rejection>>
     nextId: deps.clock.nextId,
   );
   return switch (result) {
-    Ok(value: Ok(value: final channels)) => Ok(channels),
-    Ok(value: Err(error: AdminProductSalesChannelUpdateFailure.notFound)) =>
+    Ok(:final value) => Ok(value),
+    Err(error: AdminProductSalesChannelUpdateFailure.notFound) =>
       Err(Rejection.notFound('Product "$productId"')),
-    Ok(value: Err(error: AdminProductSalesChannelUpdateFailure.invalid)) =>
-      const Err(
-          Rejection.status(422, 'Choose unique available sales channels')),
-    Err() => const Err(Rejection.internal()),
+    Err(error: AdminProductSalesChannelUpdateFailure.invalid) => const Err(
+        Rejection.status(422, 'Choose unique available sales channels')),
+    Err(error: AdminProductSalesChannelUpdateFailure.internal) =>
+      const Err(Rejection.internal()),
   };
 }
 

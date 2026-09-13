@@ -88,6 +88,15 @@ features/<feature>/
 
 The dependency direction is `router → handler → service → repository`.
 
+## Result boundaries
+
+A service returns one `Result<T, FeatureFailure>`. It never exposes a nested
+`Result<Result<T, DomainFailure>, SqlxError>` to its handler. The feature
+failure type represents not-found, validation, conflict and internal/database
+outcomes in one exhaustive switch; the service flattens transaction errors at
+its boundary. This is the Dart equivalent of a Rust feature error enum with a
+`Database(sqlx::Error)` variant and `From<sqlx::Error>` for `?` propagation.
+
 ## Operation names
 
 Inside `handler/`, `service/` and `repository/` there are **five permitted file
