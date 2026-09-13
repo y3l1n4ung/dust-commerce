@@ -6,6 +6,10 @@ Source visual truth paths:
 - Rendered reference: `https://next.medusajs.com/dk/order/order_qa/transfer/demo-capability?qa=matched-final`
 - Pinned catalogue source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/store/templates/paginated-products.tsx`
 - Rendered catalogue reference: `https://next.medusajs.com/dk/store?qa=store-grid-final`
+- Pinned compact refinement sources: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/store/components/refinement-list/{index.tsx,sort-products/index.tsx}`, `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/common/components/filter-radio-group/index.tsx`
+- Pinned featured-rail source: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/home/components/featured-products/product-rail/index.tsx`
+- Rendered compact Store reference: `https://next.medusajs.com/dk/store?qa=compact-mobile-20260913`
+- Rendered compact home reference: `https://next.medusajs.com/dk?qa=home-compact-20260913`
 - Pinned product source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/products/templates/index.tsx`
 - Rendered product reference: `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`
 - Pinned empty-cart source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/cart/components/empty-cart-message/index.tsx`
@@ -29,7 +33,9 @@ Implementation screenshot paths: in-app browser captures of the transfer route
 `http://127.0.0.1:13001/account?qa=account-register-local`, and
 `http://127.0.0.1:13001/cart`, and
 `http://127.0.0.1:13001/checkout?step=review`, and
-`http://127.0.0.1:13001/checkout?step=delivery`. The browser captures
+`http://127.0.0.1:13001/checkout?step=delivery`, and compact captures of
+`http://127.0.0.1:13001/store?qa=compact-exact-20260913` and
+`http://127.0.0.1:13001/?qa=home-exact-20260913`. The browser captures
 are retained in the task evidence rather than exported into the repository.
 
 Viewport: the matched desktop captures used the same in-app browser surface. The
@@ -43,7 +49,11 @@ equal `1280 x 720` CSS viewport; the final implementation capture came from an
 isolated headless Chrome profile because the interactive Mac session locked.
 The compact collection grid and footer pair used equal `390 x 844` CSS
 viewports. The final menu interaction pass returned to the in-app browser after
-it became available.
+it became available. The final compact Store and featured-rail comparisons used
+equal `375 x 812` output rasters at device-pixel ratio 1. The reference tab was
+requested at `390 x 844`; its visible scrollbar and browser capture crop
+produced the `375 x 812` content raster, so the implementation was recaptured at
+that exact output size before comparison.
 
 Pixel dimensions, CSS size, and density normalization: both captures used the
 in-app browser's default CSS viewport and density. Comparison normalized the
@@ -64,9 +74,13 @@ comparable. The compact collection pair covered the two-column grid through the
 shared footer; source and local taxonomy counts differ because they use separate
 merchant data. The live side-menu comparison additionally covered the inset
 blurred panel, source labels, close button, Escape dismissal and Store
-navigation. Remaining global QA covers the product route at compact width and
-in selected/out-of-stock states,
-`/store` compact sorting, option and paging controls, authenticated
+navigation. The compact Store pair additionally covers the source refinement
+inset, selected sort marker, label baselines and two-column grid. Morrow exposes
+real Color and Size filters that the public Medusa fixture does not, so its
+product heading begins lower by the height of intentional merchant data. Price
+sorting and Black filtering were exercised through the generated route and real
+API; compact paging remains. Remaining global QA covers the product route at
+compact width and in selected/out-of-stock states, authenticated
 `/checkout` with a saved address available, authenticated `/account` with a
 completed profile, saved addresses and recent orders,
 `/account/orders/details/:id`, the authenticated transfer-request form and its
@@ -99,15 +113,15 @@ account, so authenticated head-to-head evidence remains open.
 **Findings**
 
 - [P1] Remaining route groups still lack rendered comparison
-  Location: compact store controls, product and cart layouts; checkout authenticated,
+  Location: compact product and cart layouts; checkout authenticated,
   payment, review and confirmation states; account and order
   views; transfer-request states; mismatch banner; and the global shipping
   popup.
   Evidence: matched comparisons now cover the transfer decision, desktop
-  catalogue, compact collection grid/footer/menu, desktop product structure,
-  empty and populated desktop cart, open cart preview, signed-out account, and
-  the open promotion form. The remaining states listed above do not yet have
-  matched captures.
+  catalogue, compact Store refinements and featured rail, compact collection
+  grid/footer/menu, desktop product structure, empty and populated desktop cart,
+  open cart preview, signed-out account, and the open promotion form. The
+  remaining states listed above do not yet have matched captures.
   Impact: their typography, responsive spacing, imagery and interaction states
   remain visually unverified.
   Fix: capture both sites at matching desktop and mobile viewports, combine
@@ -127,13 +141,18 @@ account, so authenticated head-to-head evidence remains open.
 **Required fidelity surfaces**
 
 - Fonts and typography: the transfer hierarchy, catalogue title/card copy,
-  product information stack, empty and populated-cart hierarchy, cart preview,
-  and public account forms passed; other routes remain pending.
+  compact sort labels, product information stack, empty and populated-cart
+  hierarchy, cart preview, and public account forms passed; other routes remain
+  pending.
 - Spacing and layout rhythm: the transfer's centered column and the catalogue's
   sidebar, 24px gutters, four-column medium grid, 32px row gap and card rhythm
   passed after scrollbar normalization. The compact collection uses the
   source's two-column flow, natural card heights and two-column taxonomy footer;
   its inset menu follows the source width, blur, radius and 24px content inset.
+  Compact Store refinements add the source's second 24px inset, use the selected
+  row's negative 23px marker offset, and retain a 24px two-column product gap.
+  Compact featured rails use natural card height with 24px column and 96px row
+  gaps, matching the source without a constrained-card overflow.
   Product detail now matches the source
   24px inset, 300px side columns, 64px gallery gutters and 192px sticky offset.
   Empty cart matches the source's combined 32px content inset, centered vertical
@@ -146,13 +165,14 @@ account, so authenticated head-to-head evidence remains open.
   source's 122px image track plus 16px content gap.
 - Colors and visual tokens: transfer foreground, zinc-600 copy, gray-200
   borders, exact black primary actions, the cart's neutral quantity pill,
-  red/rose errors and emerald success are source-mapped; other rendered routes
-  remain pending.
+  compact Store muted/selected text, red/rose errors and emerald success are
+  source-mapped; other rendered routes remain pending.
 - Image quality and asset fidelity: the transfer uses the exact source SVG. The
   catalogue uses merchant images from each backend with the source's `9:16`
-  card ratio. The cart and preview use each backend's real product thumbnail at
-  the source's 96px square size; cross-backend product photography is
-  intentionally not compared.
+  card ratio, while featured rails use each backend's real merchant images at
+  the source card ratio and natural height. The cart and preview use each
+  backend's real product thumbnail at the source's 96px square size;
+  cross-backend product photography is intentionally not compared.
 - Copy and content: the transfer heading, paragraphs and actions now match the
   source exactly. Empty-cart copy and its interactive link also match. Morrow
   account membership copy, required markers and toggle punctuation match the
@@ -160,6 +180,9 @@ account, so authenticated head-to-head evidence remains open.
   remove the invented success toast because the timed preview is the source's
   add feedback. The promotion form retains the source's blank input, compact
   row, applied heading, code badge, visible value and post-success open state.
+  Compact Store uses the source's `Sort by`, arrival and price labels. Its extra
+  Color and Size copy reflects real Morrow option data absent from the public
+  reference fixture.
   Morrow branding, privacy-safe omission of the owner email, and
   the temporarily non-actionable content-link text are intentional product
   differences. Guest checkout matches the source field order, required
@@ -174,6 +197,11 @@ The source and implementation transfer pages, then the two catalogue pages,
 were captured from the same in-app browser tab and emitted as matched pairs.
 The transfer composition and controls align. The catalogue title, sidebar,
 four-column grid, source aspect ratios and card spacing align after correction.
+The equal-raster compact Store pair aligns the second 24px refinement inset,
+selected dot, all three sort-label baselines and two-column catalogue. The
+paired home rail captures align natural card heights and the source's 96px
+compact row rhythm. Product and collection names remain expected merchant-data
+differences.
 The equal-width compact collection pair confirms the two-column grid, wrapped
 card metadata and responsive footer. A final in-app browser pass confirms the
 source-shaped menu, both close paths and navigation to `/store`.
@@ -228,8 +256,9 @@ large enough for focused inspection without a lossy crop. Compact collection
 cards, footer columns and the side menu were readable in their full-page
 captures. The selected Manual Payment control was emitted in a same-surface
 pair after both implementations loaded their provider list. Store filters,
-authenticated account forms and remaining checkout controls still require
-focused captures.
+including the selected marker and all labels, remained readable in the paired
+compact full view, so a lossy crop was unnecessary. Authenticated account forms
+and remaining checkout controls still require focused captures.
 
 **Comparison history**
 
@@ -254,6 +283,18 @@ focused captures.
   Medusa's viewport breakpoints, four columns at 1280px, `9:16` catalogue cards,
   `11:14` featured cards and source-shaped title/price visibility. The final
   combined comparison found no remaining P0, P1 or P2 desktop-grid mismatch.
+- The first compact Store comparison exposed P2 drift: refinements missed the
+  source's extra 24px left inset, and every sort row reserved selected-icon
+  space. Mapping `pl-6` and the selected-only `ml-[-23px]` behavior aligns the
+  title, dot and all three label baselines in the final equal-raster pair. Live
+  QA changed the route to `sortBy=price_desc`, selected Black through
+  `optionValueIds=optval_color_black`, returned only the matching product and
+  logged no browser errors.
+- Compact navigation briefly exposed a latent P2 featured-card overflow from a
+  fixed grid extent. Replacing that extent with the source's natural-height
+  grid behavior preserves 24px horizontal and 96px vertical gaps. The final
+  paired rail capture matches the source rhythm and a fresh local tab logs no
+  errors.
 - The initial product comparison exposed P2 column/gutter drift and a missing
   source collection link. The final pair aligns the source 24px page inset,
   300px side columns, 64px gallery gutters, 192px sticky content position and
@@ -338,8 +379,9 @@ focused captures.
 
 - Capture the authenticated transfer-request form at desktop and compact
   widths, including idle, delivery-sent, delivery-pending and safe error states.
-- Capture `/store` at compact width and exercise sorting, option accordions and
-  pagination; compact collection, shared-footer and side-menu QA now pass.
+- Capture compact catalogue page 2 and verify paging retains active sort and
+  option queries; compact sorting, option filtering, collection, shared-footer
+  and side-menu QA now pass.
 - Capture product detail at compact width and exercise selected, unavailable,
   sold-out and add-to-cart feedback states against matched product fixtures.
 - Capture populated cart at compact width and exercise shipping, line-removal

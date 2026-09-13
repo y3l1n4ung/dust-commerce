@@ -128,25 +128,29 @@ class _SortChoice extends StatelessWidget {
           onTap: selected ? null : () => onChanged(value),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 16,
-                  child: selected
-                      ? const Icon(Icons.circle, size: 8)
-                      : const SizedBox.shrink(),
-                ),
-                const SizedBox(width: 7),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: selected
-                        ? StoreColors.foreground
-                        : StoreColors.foregroundSubtle,
+            child: Transform.translate(
+              offset: selected ? const Offset(-23, 0) : Offset.zero,
+              child: Row(
+                children: [
+                  if (selected) ...[
+                    const SizedBox(
+                      width: 16,
+                      child: Icon(Icons.circle, size: 8),
+                    ),
+                    const SizedBox(width: 7),
+                  ],
+                  const SizedBox(width: 6),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: selected
+                          ? StoreColors.foreground
+                          : StoreColors.foregroundSubtle,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -90,7 +90,10 @@ class ProductListingView extends StatelessWidget {
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              refinements,
+                              Padding(
+                                padding: const EdgeInsets.only(left: 24),
+                                child: refinements,
+                              ),
                               const SizedBox(height: 32),
                               products,
                             ],

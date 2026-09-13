@@ -57,21 +57,20 @@ class FeaturedProductRailView extends StatelessWidget {
                     final cardWidth =
                         (constraints.maxWidth - (columns - 1) * spacing) /
                             columns;
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: columns,
-                        mainAxisExtent: cardWidth * 14 / 11 + 40,
-                        crossAxisSpacing: spacing,
-                        mainAxisSpacing: desktop ? 144 : 96,
-                      ),
-                      itemCount: rail.products.length,
-                      itemBuilder: (_, index) => ProductCard(
-                        product: rail.products[index],
-                        currencyCode: currencyCode,
-                        featured: true,
-                      ),
+                    return Wrap(
+                      spacing: spacing,
+                      runSpacing: desktop ? 144 : 96,
+                      children: [
+                        for (final product in rail.products)
+                          SizedBox(
+                            width: cardWidth,
+                            child: ProductCard(
+                              product: product,
+                              currencyCode: currencyCode,
+                              featured: true,
+                            ),
+                          ),
+                      ],
                     );
                   },
                 ),
