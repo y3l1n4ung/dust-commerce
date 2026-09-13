@@ -98,14 +98,19 @@ final class _VariantCardState extends State<_VariantCard> {
 }
 
 final class _VariantDraft {
-  _VariantDraft(this.value);
+  _VariantDraft(this.selections);
 
-  final String value;
+  Map<String, String> selections;
   final sku = TextEditingController();
   final inventory = TextEditingController(text: '0');
   final prices = <String, TextEditingController>{};
   var manageInventory = false;
   var allowBackorder = false;
+
+  String get value => productOptionPermutationTitle(selections);
+
+  static String keyFor(Map<String, String> selections) =>
+      selections.values.map((value) => '${value.length}:$value').join();
 
   void ensureCurrencies(List<String> currencies) {
     for (final currency in currencies) {

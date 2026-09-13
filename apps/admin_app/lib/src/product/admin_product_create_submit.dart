@@ -14,15 +14,25 @@ extension on _AdminProductCreatePageState {
 
   Option<AdminCreateProduct> _product(AdminProductLifecycle status) {
     final formValid = _form.currentState?.validate() ?? false;
-    final optionTitle =
-        _hasVariants ? _optionTitle.text.trim() : 'Default option';
-    final values = _hasVariants ? _parsedValues() : ['Default option value'];
+    final options = _hasVariants
+        ? _parsedOptions()
+        : [
+            (title: 'Default option', values: ['Default option value']),
+          ];
+    final optionsValid = !_hasVariants ||
+        (options.length == _options.length &&
+            _options.indexed.every(
+              (entry) =>
+                  _optionTitleValidator(entry.$1, entry.$2.title.text) ==
+                      null &&
+                  _optionValuesValidator(entry.$2.values.text) == null,
+            ));
     final generalValid = _requiredTitle(_title.text) == null &&
         _optional255(_subtitle.text) == null &&
         _optionalHandle(_handle.text) == null &&
         _optional255(_material.text) == null &&
         _description.text.length <= 20000;
-    if (!formValid || !generalValid || optionTitle.isEmpty || values.isEmpty) {
+    if (!formValid || !generalValid || !optionsValid) {
       if (!generalValid) _rebuild(() => _step = 0);
       _showInputFailure('Complete the required product details.');
       return const None();
@@ -64,7 +74,7 @@ extension on _AdminProductCreatePageState {
         inventoryQuantity: inventory,
         manageInventory: draft.manageInventory,
         allowBackorder: draft.allowBackorder,
-        optionValues: {optionTitle: draft.value},
+        optionValues: Map.unmodifiable(draft.selections),
         prices: prices,
       ));
     }
@@ -86,7 +96,11 @@ extension on _AdminProductCreatePageState {
           ),
       ],
       options: [
-        AdminCreateProductOption(title: optionTitle, values: values),
+        for (final option in options)
+          AdminCreateProductOption(
+            title: option.title,
+            values: option.values,
+          ),
       ],
       variants: variants,
     ));

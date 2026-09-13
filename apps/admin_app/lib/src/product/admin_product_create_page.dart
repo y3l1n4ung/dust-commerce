@@ -1,6 +1,7 @@
 import 'package:admin_app/src/core/admin_money.dart';
 import 'package:admin_app/src/product/admin_product_create_state.dart';
 import 'package:admin_app/src/product/admin_product_create_view_model.dart';
+import 'package:admin_app/src/product/admin_product_option_permutations.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
 import 'package:dust_dart/fp.dart';
@@ -14,6 +15,7 @@ part 'admin_product_create_form_fields.dart';
 part 'admin_product_create_header.dart';
 part 'admin_product_create_media_actions.dart';
 part 'admin_product_create_media_view.dart';
+part 'admin_product_create_options.dart';
 part 'admin_product_create_submit.dart';
 part 'admin_product_create_sync.dart';
 part 'admin_product_create_variant.dart';
@@ -51,10 +53,10 @@ final class _AdminProductCreatePageState extends State<AdminProductCreatePage> {
   final _handle = TextEditingController();
   final _description = TextEditingController();
   final _material = TextEditingController();
-  final _optionTitle = TextEditingController(text: 'Default option');
-  final _optionValues = TextEditingController(text: 'Default option value');
+  final _options = <_OptionDraft>[];
   final _media = <_UploadedMediaDraft>[];
   final _variants = <_VariantDraft>[];
+  final _variantDrafts = <String, _VariantDraft>{};
 
   var _step = 0;
   String? _typeId;
@@ -66,9 +68,13 @@ final class _AdminProductCreatePageState extends State<AdminProductCreatePage> {
   @override
   void initState() {
     super.initState();
+    _options.add(_OptionDraft(
+      title: 'Default option',
+      values: 'Default option value',
+      onChanged: _syncVariants,
+    ));
     _syncVariants();
     _title.addListener(_syncHandle);
-    _optionValues.addListener(_syncVariants);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) context.readAdminProductCreateViewModel().load();
     });
@@ -83,11 +89,10 @@ final class _AdminProductCreatePageState extends State<AdminProductCreatePage> {
     _handle.dispose();
     _description.dispose();
     _material.dispose();
-    _optionTitle.dispose();
-    _optionValues
-      ..removeListener(_syncVariants)
-      ..dispose();
-    for (final variant in _variants) {
+    for (final option in _options) {
+      option.dispose();
+    }
+    for (final variant in _variantDrafts.values) {
       variant.dispose();
     }
     super.dispose();

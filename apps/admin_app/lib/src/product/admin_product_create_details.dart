@@ -117,36 +117,7 @@ extension on _AdminProductCreatePageState {
           ),
           if (_hasVariants) ...[
             const SizedBox(height: 18),
-            LayoutBuilder(builder: (context, constraints) {
-              final option = _field(
-                label: 'Option',
-                controller: _optionTitle,
-                validator: _requiredTitle,
-              );
-              final values = _field(
-                label: 'Values',
-                controller: _optionValues,
-                helper: 'Separate values with commas',
-                validator: _optionValuesValidator,
-              );
-              if (constraints.maxWidth < 620) {
-                return Column(
-                  children: [
-                    option,
-                    const SizedBox(height: 18),
-                    values,
-                  ],
-                );
-              }
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(child: option),
-                  const SizedBox(width: 16),
-                  Expanded(flex: 2, child: values),
-                ],
-              );
-            }),
+            _productOptions(),
           ],
           _failure(state),
         ],
