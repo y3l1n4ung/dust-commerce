@@ -3,7 +3,9 @@
 Source visual truth paths:
 
 - Pinned source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/app/[countryCode]/(main)/order/[id]/transfer/[token]/page.tsx`
+- Pinned compact transfer sources: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/app/[countryCode]/(main)/order/[id]/transfer/[token]/page.tsx` and `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/order/components/{transfer-actions,transfer-image}/index.tsx` at `19e8a6fbefea5a385e9502409908bfbebbecf526`
 - Rendered reference: `https://next.medusajs.com/dk/order/order_qa/transfer/demo-capability?qa=matched-final`
+- Rendered compact transfer reference: `https://next.medusajs.com/dk/order/order_qa/transfer/demo-capability?qa=compact-20260914`
 - Pinned catalogue source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/store/templates/paginated-products.tsx`
 - Pinned pagination source: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/store/components/pagination/index.tsx`
 - Rendered catalogue reference: `https://next.medusajs.com/dk/store?qa=store-grid-final`
@@ -26,6 +28,7 @@ Source visual truth paths:
 - Rendered checkout reference: `https://next.medusajs.com/dk/checkout?step=delivery`
 
 Implementation screenshot paths: in-app browser captures of the transfer route
+`http://127.0.0.1:13001/order/order_qa/transfer/demo-capability?qa=compact-final-20260914`,
 `http://127.0.0.1:13001/store?qa=store-grid-final`, and
 `http://127.0.0.1:13001/products/shorts?qa=product-audit`, and
 `http://127.0.0.1:13001/cart?qa=cart-after-restart`, and
@@ -44,7 +47,10 @@ are retained in the task evidence rather than exported into the repository.
 Viewport: the matched desktop captures used the same in-app browser surface. The
 reference raster was `1265 x 712`; the implementation raster was `1280 x 720`.
 The reference's visible scrollbar produced the small raster-size difference.
-Compact `390 x 844` transfer and authenticated account-form captures remain.
+The compact transfer pair used equal `390 x 844` CSS viewports at density 1.
+The source's fixed two-fifths column produces narrow wrapping and a horizontal
+scrollbar; the implementation intentionally expands to a 24px-inset native
+column at this width. Compact authenticated account-form captures remain.
 The promotion form comparison used the same `736 x 864` browser surface for
 both storefronts. Guest checkout address and initial delivery comparisons also
 used that same `736 x 864` surface. The desktop checkout comparison used an
@@ -215,6 +221,11 @@ The source and implementation transfer pages, then the two catalogue pages,
 were captured from the same in-app browser tab and emitted as matched pairs.
 The transfer composition and controls align. The catalogue title, sidebar,
 four-column grid, source aspect ratios and card spacing align after correction.
+The equal-viewport compact transfer pair confirms the exact illustration, copy,
+divider sequence and action order. The implementation's full-width 24px-inset
+column is an intentional responsive correction to the source's fixed 40%
+column, which wraps excessively and exposes a horizontal scrollbar at 390px.
+A fresh implementation tab rendered without console warnings.
 The equal-raster compact Store pair aligns the second 24px refinement inset,
 selected dot, all three sort-label baselines and two-column catalogue. The
 paired home rail captures align natural card heights and the source's 96px
@@ -315,6 +326,10 @@ unnecessary. The missing rendered source control remains the comparison limit.
   difference. Residual two-to-three-pixel vertical variation is P3 and follows
   browser text rendering; the raster-width difference is the source scrollbar,
   not layout drift.
+- The compact transfer comparison retained source content and action fidelity
+  while classifying the implementation's 24px-inset full-width column as an
+  acceptable native adaptation. The source's fixed 40% column is not copied at
+  390px because it creates severe wrapping and a horizontal scrollbar.
 - The first compact collection pass exposed bottom-overflow stripes on wrapped
   product names and a one-column footer caused by fixed card heights and a
   desktop-sized column gap. Natural-height cards and the source compact footer
@@ -449,8 +464,6 @@ unnecessary. The missing rendered source control remains the comparison limit.
   reference order.
 - Capture a source promotion success state when the reference has a valid code,
   then compare it with the verified local applied and removal states.
-- Capture the public transfer page at `390 x 844` and verify the intentional
-  full-width native adaptation remains usable.
 - Capture signed-out account at compact width after the real customer-service,
   privacy-policy and terms routes are available under #20.
 - Capture the remaining route and interaction states listed above.
