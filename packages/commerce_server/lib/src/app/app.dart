@@ -2,6 +2,7 @@ import 'package:commerce_server/src/features/account/account.dart';
 import 'package:commerce_server/src/features/admin/admin.dart';
 import 'package:commerce_server/src/features/admin_order/admin_order.dart';
 import 'package:commerce_server/src/features/admin_region/admin_region.dart';
+import 'package:commerce_server/src/features/admin_return/admin_return.dart';
 import 'package:commerce_server/src/features/admin_sales_channel/admin_sales_channel.dart';
 import 'package:commerce_server/src/features/admin_shipping_profile/admin_shipping_profile.dart';
 import 'package:commerce_server/src/features/cart/cart.dart';
@@ -18,21 +19,9 @@ import 'package:commerce_server/src/infra/database.dart';
 import 'package:dust_dart/db.dart';
 import 'package:dust_server/server.dart';
 
-/// Mounts every feature's routes and attaches the state they ask for.
+/// Mounts feature routes and attaches their explicit state dependencies.
 ///
-/// This is the only file that knows the shape of the whole application, and it
-/// knows nothing about what any handler does. A feature is added here in two
-/// lines — its routes and its dependencies — or it is not reachable.
-///
-/// Dependencies travel as state rather than as arguments to a handler factory,
-/// which is the pattern dust_server is built around and what a generated
-/// `@State()` parameter lowers to. The trade is real and worth naming: a
-/// dependency nobody attached is a 500 at request time rather than a compile
-/// error here. The feature tests are the guard, because every one of them
-/// builds this router and exercises its routes.
-///
-/// Identifiers and the clock are injected rather than reached for. A test that
-/// cannot choose them has to assert around them instead of on them.
+/// Identifiers and time remain injected so route tests control both.
 Router buildApp(
   CommerceDatabase database, {
   String Function()? nextId,
@@ -110,6 +99,9 @@ Router buildApp(
         exports: AdminOrderExportRepository(executor),
       ),
     )
+    ..withState(AdminReturnDeps(
+      returns: AdminReturnRepository(executor),
+    ))
     ..withState(AdminRegionDeps(regions: AdminRegionRepository(executor)))
     ..withState(AdminSalesChannelDeps(
       salesChannels: AdminSalesChannelRepository(executor),
