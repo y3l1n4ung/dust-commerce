@@ -72,7 +72,7 @@ final class OrderReturnRequestState with _$OrderReturnRequestState {
     this.failure = const None(),
   });
 
-  /// Maximum purchasable quantity keyed by immutable order-item id.
+  /// Maximum currently returnable quantity keyed by immutable order-item id.
   final Map<String, int> availableQuantities;
 
   /// Whether the source-shaped help link has expanded the request form.

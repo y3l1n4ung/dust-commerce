@@ -8,6 +8,7 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'order_return_view_model.g.dart';
+part 'order_return_preparation.dart';
 part 'order_return_reasons.dart';
 
 /// Dependencies for the authenticated customer return form.
@@ -27,23 +28,10 @@ final class OrderReturnViewModel extends $OrderReturnViewModel {
 
   var _generation = 0;
 
-  /// Starts a fresh form only for a completed, captured order.
+  /// Starts a fresh form from the order's current returnable quantities.
   void prepare(Order order) {
     _generation++;
-    if (order.status != OrderStatus.completed || !order.isPaid) {
-      emit(const OrderReturnRequestState(
-        status: OrderReturnRequestStatus.failed,
-        failure: Some(OrderReturnFailure.notEligible),
-      ));
-      return;
-    }
-    emit(OrderReturnRequestState(
-      status: OrderReturnRequestStatus.ready,
-      orderId: Some(order.id),
-      availableQuantities: {
-        for (final item in order.items) item.id: item.quantity,
-      },
-    ));
+    emit(_preparedReturnState(order));
   }
 
   /// Clears form state and ignores a previous in-flight request.

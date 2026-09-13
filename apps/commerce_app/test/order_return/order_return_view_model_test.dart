@@ -43,6 +43,33 @@ void main() {
     model.dispose();
   });
 
+  test('prepares only the quantity remaining after active returns', () {
+    final model = OrderReturnViewModel(
+      OrderReturnViewModelArgs(api: _ReturnApi((_) async => _response)),
+    );
+
+    model.prepare(paidReturnOrder(requestedQuantity: 2));
+    model.toggle('item_1');
+    model.setQuantity('item_1', 2);
+
+    expect(model.state.availableQuantities, const {'item_1': 1});
+    expect(model.state.quantities, const {'item_1': 1});
+    model.dispose();
+  });
+
+  test('fully exhausted order items cannot enter a new return', () {
+    final model = OrderReturnViewModel(
+      OrderReturnViewModelArgs(api: _ReturnApi((_) async => _response)),
+    );
+
+    model.prepare(paidReturnOrder(requestedQuantity: 3));
+    model.toggle('item_1');
+
+    expect(model.state.availableQuantities, isEmpty);
+    expect(model.state.quantities, isEmpty);
+    model.dispose();
+  });
+
   test('return panel presentation remains in generated state', () {
     final model = OrderReturnViewModel(
       OrderReturnViewModelArgs(api: _ReturnApi((_) async => _response)),
