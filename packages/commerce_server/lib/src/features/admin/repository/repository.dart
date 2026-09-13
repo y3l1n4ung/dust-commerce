@@ -92,7 +92,20 @@ SELECT option.id, option.title, option.is_exclusive,
              'id', product.id, 'title', product.title,
              'thumbnail', coalesce(product.thumbnail, ''),
              'collection_title', coalesce(collection.title, ''),
-             'sales_channels', '', 'status', product.status,
+             'sales_channels', json(coalesce((
+               SELECT json_group_array(json(ordered_channel.channel_json))
+               FROM (
+                 SELECT json_object('id', channel.id, 'name', channel.name)
+                          AS channel_json
+                 FROM product_sales_channels channel_link
+                 JOIN sales_channels channel
+                   ON channel.id = channel_link.sales_channel_id
+                 WHERE channel_link.product_id = product.id
+                   AND channel_link.deleted_at IS NULL
+                   AND channel.deleted_at IS NULL
+                 ORDER BY lower(channel.name), channel.id
+               ) ordered_channel
+             ), '[]')), 'status', product.status,
              'variant_count', (SELECT count(*) FROM product_variants variant
                WHERE variant.product_id = product.id
                  AND variant.deleted_at IS NULL)

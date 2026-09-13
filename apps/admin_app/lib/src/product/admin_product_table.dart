@@ -1,4 +1,5 @@
 import 'package:admin_app/src/product/admin_product_actions.dart';
+import 'package:admin_app/src/product/admin_product_sales_channel_cell.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
 
@@ -104,7 +105,11 @@ final class _ProductRow extends StatelessWidget {
                   ),
                 ),
                 Expanded(child: _muted(context, product.collectionTitle)),
-                Expanded(child: _muted(context, product.salesChannels)),
+                Expanded(
+                  child: AdminProductSalesChannelCell(
+                    channels: product.salesChannels,
+                  ),
+                ),
                 Expanded(child: Text('${product.variantCount}')),
                 Expanded(child: _Status(value: product.status)),
                 SizedBox(width: 32, child: _actions()),

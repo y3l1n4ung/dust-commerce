@@ -1,4 +1,4 @@
-import 'package:commerce_admin_shared/src/admin_product.dart';
+import 'package:commerce_admin_shared/src/admin_product_summary.dart';
 import 'package:dust_dart/serde.dart';
 
 part 'admin_product_option.g.dart';

@@ -14,6 +14,7 @@ export 'src/admin_product_deleted.dart';
 export 'src/admin_product_option.dart';
 export 'src/admin_product_organization.dart';
 export 'src/admin_product_query.dart';
+export 'src/admin_product_summary.dart';
 export 'src/admin_product_tag.dart';
 export 'src/admin_product_type.dart';
 export 'src/admin_product_image.dart';

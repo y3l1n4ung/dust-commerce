@@ -3,6 +3,19 @@ import 'dart:convert';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/db.dart';
 
+/// Decodes ordered product sales-channel objects selected as JSON.
+final class AdminProductSalesChannelsFromJson
+    implements SqlxTryFrom<List<AdminSalesChannel>, String> {
+  /// Creates the stateless converter.
+  const AdminProductSalesChannelsFromJson();
+
+  @override
+  List<AdminSalesChannel> decode(String value) => [
+        for (final item in _array(value))
+          AdminSalesChannel.fromJson(item! as Map<String, Object?>),
+      ];
+}
+
 /// Decodes ordered product image objects selected as JSON.
 final class AdminProductImagesFromJson
     implements SqlxTryFrom<List<AdminProductImage>, String> {

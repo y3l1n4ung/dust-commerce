@@ -41,6 +41,28 @@ void main() {
     expect(first, isNot(contains('metadata')));
   });
 
+  test('product list exposes ordered active sales-channel objects', () async {
+    await harness.raw(
+      "INSERT INTO product_sales_channels "
+      "(id, product_id, sales_channel_id) "
+      "VALUES ('prodsc_tshirt_wholesale', 'prod_tshirt', 'sc_wholesale')",
+    );
+    final token = await harness.adminToken();
+    final response =
+        await (harness.client.get('/admin/products?q=t-shirt&limit=20&offset=0')
+              ..bearer(token))
+            .send();
+
+    response.assertOk();
+    final body = response.json! as Map<String, Object?>;
+    final products = body['products']! as List<Object?>;
+    final product = products.single! as Map<String, Object?>;
+    expect(product['sales_channels'], [
+      {'id': 'sc_web', 'name': 'Online Store'},
+      {'id': 'sc_wholesale', 'name': 'Wholesale'},
+    ]);
+  });
+
   test('product list searches title or handle case-insensitively', () async {
     final token = await harness.adminToken();
     final request = harness.client.get('/admin/products?q=SWEAT&limit=20')

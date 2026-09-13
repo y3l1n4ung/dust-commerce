@@ -78,6 +78,9 @@ void main() {
         'variant_count',
       ]),
     );
+    expect((products.first! as Map<String, Object?>)['sales_channels'], [
+      {'id': 'sc_web', 'name': 'Online Store'},
+    ]);
   });
 
   test('unknown option detail returns not found', () async {

@@ -1,4 +1,4 @@
-import 'package:commerce_server/src/features/admin/model.dart';
+import 'package:commerce_server/src/features/admin/product_list_model.dart';
 import 'package:commerce_server/src/features/admin/product_tag_model.dart';
 import 'package:commerce_server/src/features/admin/product_type_model.dart';
 import 'package:dust_dart/db.dart';
@@ -18,7 +18,18 @@ SELECT product.id,
        product.title,
        coalesce(product.thumbnail, '') AS thumbnail,
        coalesce(collection.title, '') AS collection_title,
-       '' AS sales_channels,
+       coalesce((
+         SELECT json_group_array(json(ordered.channel_json))
+         FROM (
+           SELECT json_object('id', channel.id, 'name', channel.name)
+                    AS channel_json
+           FROM product_sales_channels link
+           JOIN sales_channels channel ON channel.id = link.sales_channel_id
+           WHERE link.product_id = product.id AND link.deleted_at IS NULL
+             AND channel.deleted_at IS NULL
+           ORDER BY lower(channel.name), channel.id
+         ) ordered
+       ), '[]') AS sales_channels,
        count(variant.id) AS variant_count,
        product.status
 FROM products product

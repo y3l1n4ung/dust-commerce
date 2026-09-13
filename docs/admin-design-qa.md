@@ -30,6 +30,9 @@
   `hooks/table/query/use-product-table-query.tsx`,
   `hooks/table/filters/use-product-table-filters.tsx`, and the shared
   DataTable filter and order-by components at the pinned commit.
+- Product-list sales-channel source:
+  `components/table/table-cells/product/sales-channels-cell/sales-channels-cell.tsx`
+  and the product table adapter at the pinned commit.
 - Product-detail source:
   `packages/admin/dashboard/src/routes/products/product-detail/product-detail.tsx`
   plus its General, Media, Options, Variants, Sales Channels, Shipping,
@@ -157,8 +160,17 @@ structure and live behavior without claiming same-state pixel parity.
 The product-query comparison uses live Medusa and Morrow product lists in the
 in-app Browser at equal `1280 x 720` viewports, light theme, four published
 products and the filter menu open. Both neutral and menu states were combined
-into `2560 x 720` images before judging. Morrow omits Sales Channel because its
-schema has no such domain; the remaining filter order and labels match source.
+into `2560 x 720` images before judging. The filter order and labels available
+in that earlier slice match source; Sales Channel filtering remains a separate
+query-control slice.
+
+The product-list sales-channel pass uses Medusa's official `1280 x 720`
+product-list image and the running Morrow list at the same capture size. The
+neutral and three-channel focused states were each combined into `2560 x 720`
+images. This directly verifies the source's empty, one/two-name and first-two
+plus `+N more` rules. It does not establish whole-screen pixel parity: Morrow's
+220px shell and 48px rows are roomier than the reference, and unavailable seed
+thumbnails render as placeholders.
 
 The order-list pass uses the pinned Medusa source as structural truth and the
 running Morrow screen at desktop `1440 x 900` plus the app's narrow default
@@ -409,16 +421,25 @@ raster is available, so pixel parity is not claimed.
   summary at narrow and desktop widths, then completed a clean reload with no
   new browser errors. All 59 non-widget Admin and 324 server tests pass;
   analyzer, Dust checks and the release web build pass.
-- Sales Channels and Shipping configuration remain visible and explicitly say
-  `Not configured` because product-channel availability and shipping-profile
-  assignment are not implemented. The schema now preserves the channel used by
-  new carts and orders; no fake product assignment is rendered.
+- Product list and detail now expose active sales-channel assignments as typed
+  `id,name` objects from direct SQLx projections. The list follows Medusa's
+  source cell exactly: no assignment renders `—`, one or two channels render
+  their names, and additional channels render the first two plus `+N more`
+  with the remaining names in the tooltip. QA linked Browser Import Cap to
+  Marketplace, Online Store and Retail and observed `Marketplace, Online
+  Store +1 more`; a completely fresh Flutter process loaded with no new browser
+  errors. All 63 non-widget Admin and 340 server tests pass; Dust checks,
+  analyzers and the release web build are clean. Channel mutation and shipping-
+  profile assignment remain separate unimplemented slices.
 
 ## Open findings
 
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
+- P2 — Product-list channel behavior passes, but whole-screen parity still has
+  visible density and asset drift: Morrow uses a wider sidebar and taller rows,
+  while several local demo thumbnails fall back to placeholders.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
   chip input and post-entry rank organizer. Persisted ordering works, but this
   interaction is not yet a literal copy.
@@ -454,6 +475,10 @@ controls pass API, state, accessibility and same-state live comparison.
 The order list, region filtering, read-only detail and filtered CSV export pass
 protected API, generated-client, responsive layout and live-data behavior
 checks against the pinned source structure.
+The product-list sales-channel slice passes its typed contract, direct SQLx
+projection, source-shaped truncation/tooltip behavior and clean-start browser
+QA. Its whole-screen density and thumbnail differences remain an open visual
+finding.
 Post-create editor, image-variant drawer, variant pricing, product stock and
 product deletion and orders remain blocked on same-state source captures;
 broader Medusa Admin parity is not claimed.
