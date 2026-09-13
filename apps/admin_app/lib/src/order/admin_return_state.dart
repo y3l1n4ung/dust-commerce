@@ -14,6 +14,9 @@ enum AdminReturnLoadStatus {
   /// The requested return list is ready.
   ready,
 
+  /// A merchant receipt command is active.
+  saving,
+
   /// The request failed with a display-safe message.
   failed,
 }
