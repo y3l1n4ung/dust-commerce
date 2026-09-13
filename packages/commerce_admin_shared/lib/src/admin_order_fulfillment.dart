@@ -1,4 +1,5 @@
 import 'package:commerce_admin_shared/src/admin_fulfillment_item.dart';
+import 'package:commerce_admin_shared/src/admin_fulfillment_label.dart';
 import 'package:commerce_admin_shared/src/admin_option.dart';
 import 'package:dust_dart/serde.dart';
 
@@ -26,6 +27,7 @@ final class AdminOrderFulfillment with _$AdminOrderFulfillment {
     required this.createdAt,
     required this.updatedAt,
     required this.items,
+    required this.labels,
   });
 
   /// Decodes one generated Admin fulfillment response.
@@ -56,6 +58,10 @@ final class AdminOrderFulfillment with _$AdminOrderFulfillment {
 
   /// Frozen provider-facing item snapshots.
   final List<AdminFulfillmentItem> items;
+
+  /// Active carrier labels attached when this fulfillment was shipped.
+  @SerDe(defaultValue: <AdminFulfillmentLabel>[])
+  final List<AdminFulfillmentLabel> labels;
 
   /// Active stock location sourcing the items.
   final String locationId;

@@ -70,6 +70,7 @@ void main() {
           'updated_at': '2026-09-14T13:00:00.000Z',
         },
       ],
+      'labels': <Object?>[],
     });
 
     expect(fulfillment.createdAt.isUtc, isTrue);
@@ -78,6 +79,7 @@ void main() {
     expect(fulfillment.metadata, const None<Map<String, Object?>>());
     expect(fulfillment.createdBy, const Some('admin_01'));
     expect(fulfillment.items.single.lineItemId, const Some('item_01'));
+    expect(fulfillment.labels, isEmpty);
     expect(
       fulfillment.items.single.inventoryItemId,
       const None<String>(),

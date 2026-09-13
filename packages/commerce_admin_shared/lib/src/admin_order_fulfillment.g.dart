@@ -15,6 +15,7 @@ part of 'admin_order_fulfillment.dart';
 
 const DeepCollectionEquality _adminOrderFulfillmentDataValueEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminOrderFulfillmentItemsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminOrderFulfillmentLabelsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminOrderFulfillmentMetadataValueEquality = DeepCollectionEquality();
 
 mixin _$AdminOrderFulfillment implements Serializable {
@@ -29,6 +30,7 @@ mixin _$AdminOrderFulfillment implements Serializable {
         'deliveredAtValue: ${self.deliveredAtValue}, '
         'id: ${self.id}, '
         'items: ${self.items}, '
+        'labels: ${self.labels}, '
         'locationId: ${self.locationId}, '
         'markedShippedByValue: ${self.markedShippedByValue}, '
         'metadataValue: ${self.metadataValue}, '
@@ -54,6 +56,7 @@ mixin _$AdminOrderFulfillment implements Serializable {
             other.deliveredAtValue == self.deliveredAtValue &&
             other.id == self.id &&
             _adminOrderFulfillmentItemsEquality.equals(other.items, self.items) &&
+            _adminOrderFulfillmentLabelsEquality.equals(other.labels, self.labels) &&
             other.locationId == self.locationId &&
             other.markedShippedByValue == self.markedShippedByValue &&
             _adminOrderFulfillmentMetadataValueEquality.equals(other.metadataValue, self.metadataValue) &&
@@ -77,6 +80,7 @@ mixin _$AdminOrderFulfillment implements Serializable {
       self.deliveredAtValue,
       self.id,
       _adminOrderFulfillmentItemsEquality.hash(self.items),
+      _adminOrderFulfillmentLabelsEquality.hash(self.labels),
       self.locationId,
       self.markedShippedByValue,
       _adminOrderFulfillmentMetadataValueEquality.hash(self.metadataValue),
@@ -126,6 +130,9 @@ Map<String, Object?> _$AdminOrderFulfillmentSerialize(AdminOrderFulfillment inst
     'items': instance.items
         .map((item) => item.toJson())
         .toList(),
+    'labels': instance.labels
+        .map((item) => item.toJson())
+        .toList(),
     'location_id': instance.locationId,
     'marked_shipped_by': instance.markedShippedByValue,
     'metadata': instance.metadataValue == null
@@ -173,6 +180,10 @@ AdminOrderFulfillment _$AdminOrderFulfillmentDeserialize(Map<String, Object?> js
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final itemsValue = JsonHelper.decodeList(json['items'], 'items',
       (item, itemKey) => AdminFulfillmentItem.fromJson(JsonHelper.asMap(item, itemKey)));
+  final labelsValue = json.containsKey('labels')
+      ? JsonHelper.decodeList(json['labels'], 'labels',
+      (item, itemKey) => AdminFulfillmentLabel.fromJson(JsonHelper.asMap(item, itemKey)))
+      : <AdminFulfillmentLabel>[];
   final locationIdValue = JsonHelper.as<String>(
     json['location_id'],
     'location_id',
@@ -229,6 +240,7 @@ AdminOrderFulfillment _$AdminOrderFulfillmentDeserialize(Map<String, Object?> js
     createdAt: createdAtValue,
     updatedAt: updatedAtValue,
     items: itemsValue,
+    labels: labelsValue,
   );
 }
 
