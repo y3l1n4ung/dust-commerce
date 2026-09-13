@@ -124,6 +124,24 @@ WHERE return_id = ? AND id = ?
   }
 
   @override
+  Future<Result<ExecResult, SqlxError>> restoreStock(String returnId, String itemId, int quantity) {
+    return _db.execute(
+      r'''
+UPDATE product_variants
+SET inventory_quantity = inventory_quantity + ?
+WHERE manage_inventory = 1 AND deleted_at IS NULL AND ? > 0
+  AND id = (
+    SELECT order_item.variant_id
+    FROM return_items returned
+    JOIN order_items order_item ON order_item.id = returned.order_item_id
+    WHERE returned.return_id = ? AND returned.id = ?
+  )
+''',
+      [quantity, quantity, returnId, itemId],
+    );
+  }
+
+  @override
   Future<Result<ExecResult, SqlxError>> finish(String returnId, int noNotification) {
     return _db.execute(
       r'''

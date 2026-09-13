@@ -74,6 +74,14 @@ Future<Result<AdminReturnReceiveOutcome, SqlxError>> _persist(
     if ((updated as Ok<ExecResult, SqlxError>).value.rowsAffected != 1) {
       return Err(SqlxError.decode('Validated return item could not update'));
     }
+    if (item.quantity > 0) {
+      final restored = await returns.restoreStock(
+        returnId,
+        item.id,
+        item.quantity,
+      );
+      if (restored case Err(:final error)) return Err(error);
+    }
   }
   final finalized = await returns.finish(returnId, body.noNotification ? 1 : 0);
   if (finalized case Err(:final error)) return Err(error);

@@ -22,7 +22,7 @@ void main() {
     (await request.send()).assertUnauthorized();
   });
 
-  test('atomically receives intact and damaged units', () async {
+  test('atomically receives and restocks only intact units', () async {
     final request = harness.client.post('/admin/returns/ret_requested/receive')
       ..bearer(await harness.adminToken())
       ..json(_body([
@@ -42,6 +42,22 @@ void main() {
     expect(returned.items.first.receivedQuantity, 1);
     expect(returned.items.first.damagedQuantity, 1);
     expect(returned.items.last.receivedQuantity, 2);
+    expect(await _stock(harness, 'var_cup'), 4);
+    expect(await _stock(harness, 'var_shirt_m'), 9);
+  });
+
+  test('does not restock an unmanaged variant', () async {
+    await harness.raw(
+      "UPDATE product_variants SET manage_inventory = 0 "
+      "WHERE id = 'var_shirt_m'",
+    );
+    final request = harness.client.post('/admin/returns/ret_requested/receive')
+      ..bearer(await harness.adminToken())
+      ..json(_body([_item('reti_shirt', quantity: 2)]));
+
+    (await request.send()).assertOk();
+
+    expect(await _stock(harness, 'var_shirt_m'), 7);
   });
 
   test('partial receipt remains eligible for later units', () async {
@@ -89,12 +105,21 @@ void main() {
       "WHERE return_id = 'ret_requested'",
     );
     expect(rows.single.readIndex<int>(0), 0);
+    expect(await _stock(harness, 'var_cup'), 4);
+    expect(await _stock(harness, 'var_shirt_m'), 7);
 
     final terminal = harness.client.post('/admin/returns/ret_received/receive')
       ..bearer(token)
       ..json(_body([_item('reti_received', quantity: 1)]));
     (await terminal.send()).assertUnprocessable();
   });
+}
+
+Future<int> _stock(AdminHarness harness, String variantId) async {
+  final rows = await harness.raw(
+    "SELECT inventory_quantity FROM product_variants WHERE id = '$variantId'",
+  );
+  return rows.single.readIndex<int>(0);
 }
 
 Map<String, Object?> _body(

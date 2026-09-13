@@ -105,6 +105,24 @@ WHERE return_id = $1 AND id = $2
     int damagedQuantity,
   );
 
+  /// Restores intact units when the historical item still has managed stock.
+  @Query(r'''
+UPDATE product_variants
+SET inventory_quantity = inventory_quantity + $3
+WHERE manage_inventory = 1 AND deleted_at IS NULL AND $3 > 0
+  AND id = (
+    SELECT order_item.variant_id
+    FROM return_items returned
+    JOIN order_items order_item ON order_item.id = returned.order_item_id
+    WHERE returned.return_id = $1 AND returned.id = $2
+  )
+''')
+  Future<Result<ExecResult, SqlxError>> restoreStock(
+    String returnId,
+    String itemId,
+    int quantity,
+  );
+
   /// Derives terminal or partial status after every item update succeeds.
   @Query(r'''
 UPDATE return_requests

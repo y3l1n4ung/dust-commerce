@@ -3,6 +3,19 @@ import 'support.dart';
 /// Inserts requested and received returns for the shared Admin order fixture.
 Future<void> seedAdminReturns(AdminHarness harness) async {
   await harness.raw(r'''
+INSERT INTO products (id, title, handle, status)
+VALUES
+  ('prod_cup', 'Espresso cup', 'espresso-cup-return-fixture', 'published'),
+  ('prod_shirt', 'T-shirt', 't-shirt-return-fixture', 'published')
+''');
+  await harness.raw(r'''
+INSERT INTO product_variants
+  (id, product_id, title, inventory_quantity, manage_inventory)
+VALUES
+  ('var_cup', 'prod_cup', 'Default', 4, 1),
+  ('var_shirt_m', 'prod_shirt', 'M / Black', 7, 1)
+''');
+  await harness.raw(r'''
 INSERT INTO return_reasons (id, value, label)
 VALUES ('reason_fit', 'fit', 'Wrong fit')
 ''');
