@@ -1,0 +1,85 @@
+import 'package:dust_dart/serde.dart';
+
+part 'admin_order_status.g.dart';
+
+/// Merchant-visible order lifecycle values supported by this schema.
+@Derive([Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+enum AdminOrderStatus {
+  /// Placed and still open.
+  pending,
+
+  /// Successfully paid and completed.
+  completed,
+
+  /// Called off before completion.
+  cancelled,
+}
+
+/// Merchant-visible payment state frozen on the order.
+@Derive([Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+enum AdminOrderPaymentStatus {
+  /// Payment has not yet been captured.
+  awaiting,
+
+  /// The complete order total was captured.
+  captured,
+
+  /// Captured funds were returned.
+  refunded,
+}
+
+/// Merchant-visible fulfilment state supported before fulfilment operations.
+@Derive([Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+enum AdminOrderFulfillmentStatus {
+  /// No fulfilment has been created for the order.
+  notFulfilled,
+}
+
+/// Codec used by direct server projections for order lifecycle values.
+final class AdminOrderStatusCodec
+    implements SerDeCodec<AdminOrderStatus, String> {
+  /// Creates the stateless codec.
+  const AdminOrderStatusCodec();
+
+  @override
+  AdminOrderStatus deserialize(String value) =>
+      AdminOrderStatus.values.byName(value);
+
+  @override
+  String serialize(AdminOrderStatus value) => value.name;
+}
+
+/// Codec used by direct server projections for payment state.
+final class AdminOrderPaymentStatusCodec
+    implements SerDeCodec<AdminOrderPaymentStatus, String> {
+  /// Creates the stateless codec.
+  const AdminOrderPaymentStatusCodec();
+
+  @override
+  AdminOrderPaymentStatus deserialize(String value) =>
+      AdminOrderPaymentStatus.values.byName(value);
+
+  @override
+  String serialize(AdminOrderPaymentStatus value) => value.name;
+}
+
+/// Codec used by direct server projections for fulfilment state.
+final class AdminOrderFulfillmentStatusCodec
+    implements SerDeCodec<AdminOrderFulfillmentStatus, String> {
+  /// Creates the stateless codec.
+  const AdminOrderFulfillmentStatusCodec();
+
+  @override
+  AdminOrderFulfillmentStatus deserialize(String value) => switch (value) {
+        'not_fulfilled' => AdminOrderFulfillmentStatus.notFulfilled,
+        _ => throw ArgumentError.value(value, 'value', 'Unknown fulfillment'),
+      };
+
+  @override
+  String serialize(AdminOrderFulfillmentStatus value) => switch (value) {
+        AdminOrderFulfillmentStatus.notFulfilled => 'not_fulfilled',
+      };
+}

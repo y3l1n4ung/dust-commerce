@@ -3,6 +3,9 @@ library;
 
 export 'src/admin_auth.dart';
 export 'src/admin_media.dart';
+export 'src/admin_order.dart';
+export 'src/admin_order_query.dart';
+export 'src/admin_order_status.dart';
 export 'src/admin_product.dart';
 export 'src/admin_product_deleted.dart';
 export 'src/admin_product_option.dart';

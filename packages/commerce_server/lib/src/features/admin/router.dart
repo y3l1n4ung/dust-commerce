@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/admin/extractor.dart';
 import 'package:commerce_server/src/features/admin/handler/handler.dart';
+import 'package:commerce_server/src/features/admin_order/router.dart';
 import 'package:dust_server/server.dart';
 
 /// Authentication routes for the distinct admin actor type.
@@ -16,6 +17,7 @@ Router adminAuthRoutes() {
 /// Merchant-only routes guarded once at the route-tree boundary.
 Router adminRoutes() => Router()
   ..routeLayer(fromExtractor(const AdminAuth()))
+  ..merge(adminOrderRoutes())
   ..route('/users/me', get(readCurrentAdminHandler))
   ..route(
     '/products',

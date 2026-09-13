@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/account/account.dart';
 import 'package:commerce_server/src/features/admin/admin.dart';
+import 'package:commerce_server/src/features/admin_order/admin_order.dart';
 import 'package:commerce_server/src/features/cart/cart.dart';
 import 'package:commerce_server/src/features/category/category.dart';
 import 'package:commerce_server/src/features/catalog/catalog.dart';
@@ -96,6 +97,9 @@ Router buildApp(
         media: AdminMediaRepository(executor),
         mediaStorage: mediaStorage,
       ),
+    )
+    ..withState(
+      AdminOrderDeps(orders: AdminOrderRepository(executor)),
     )
     ..withState(
       CatalogDeps(
