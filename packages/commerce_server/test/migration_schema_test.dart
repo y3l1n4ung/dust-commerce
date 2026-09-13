@@ -54,6 +54,7 @@ void main() {
         'fulfillment_items',
         'stock_location_addresses',
         'stock_locations',
+        'fulfillment_providers',
         'payment_collections',
       ]),
     );
