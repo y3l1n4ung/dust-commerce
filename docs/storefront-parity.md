@@ -14,7 +14,7 @@ and the `Medusa DTC storefront parity` milestone.
 
 | Medusa source | Flutter/Dust owner | Status |
 | :--- | :--- | :--- |
-| `layout/templates/nav` and `footer` | shared storefront shell | implemented in #19 with nav, menu, cart count, API-backed footer taxonomy, Morrow branding, and only `Powered by dust`; the compact menu and collection-footer composition passed rendered comparison |
+| `layout/templates/nav` and `footer` | shared storefront shell | implemented in #19 with nav, menu, cart count, API-backed footer taxonomy, Morrow branding, and only `Powered by dust`; the compact menu and collection-footer composition passed rendered comparison, and the actionable brand now provides an explicit route label without Flutter web semantic warnings |
 | `layout/components/language-select` | storefront language preference | implemented in #19 with Default plus compiled Dust locales, localized names, real SVG flags, durable selection and startup restoration before routing; rendered QA remains |
 | `layout/components/country-select` | shipping-country and selling-region switch | implemented in #24 with alphabetized region countries, real SVG flags, persisted selection, path-preserving navigation, atomic cart repricing, regional shipping reset and currency-aware catalogue reload; rendered QA remains |
 | `home/components/hero` | home hero | implemented in #19 |

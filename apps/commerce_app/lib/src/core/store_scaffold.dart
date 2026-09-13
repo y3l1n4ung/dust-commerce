@@ -15,8 +15,12 @@ class StoreScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brand = context.tr('shop_brand', defaultText: 'MORROW');
+    void openStore() => context.navigator.catalog().go();
+
     return Scaffold(
       appBar: AppBar(
+        excludeHeaderSemantics: true,
         toolbarHeight: 64,
         leadingWidth: 88,
         leading: Builder(
@@ -28,11 +32,17 @@ class StoreScaffold extends StatelessWidget {
             ),
           ),
         ),
-        title: TextButton(
-          onPressed: () => context.navigator.catalog().go(),
-          child: const TranslatedText(
-            'shop_brand',
-            defaultText: 'MORROW',
+        title: Semantics(
+          button: true,
+          container: true,
+          label: brand,
+          namesRoute: true,
+          onTap: openStore,
+          child: ExcludeSemantics(
+            child: TextButton(
+              onPressed: openStore,
+              child: Text(brand),
+            ),
           ),
         ),
         actions: [

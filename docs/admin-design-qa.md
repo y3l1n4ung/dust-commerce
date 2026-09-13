@@ -312,9 +312,11 @@ schema has no such domain; the remaining filter order and labels match source.
   uploaded `Browser Import Cap`, previewed one create and zero updates,
   completed the import, and rendered the new published product with the success
   message. Direct database verification found its one-size SKU plus exact EUR
-  1000 and USD 1500 minor-unit prices; browser warnings and errors were empty.
-  Eight focused preview/confirmation tests, all 310 server tests, and all 50
-  non-widget Admin tests pass.
+  1000 and USD 1500 minor-unit prices. A fresh DTC catalogue reload exposed the
+  product at USD 15.00, and its detail route correctly rendered zero inventory
+  as out of stock. Admin browser warnings and errors were empty. Eight focused
+  preview/confirmation tests, all 310 server tests, and all 50 non-widget Admin
+  tests pass.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
