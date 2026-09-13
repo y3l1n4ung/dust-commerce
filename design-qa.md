@@ -6,6 +6,7 @@ Source visual truth paths:
 - Pinned compact transfer sources: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/app/[countryCode]/(main)/order/[id]/transfer/[token]/page.tsx` and `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/order/components/{transfer-actions,transfer-image}/index.tsx` at `19e8a6fbefea5a385e9502409908bfbebbecf526`
 - Rendered reference: `https://next.medusajs.com/dk/order/order_qa/transfer/demo-capability?qa=matched-final`
 - Rendered compact transfer reference: `https://next.medusajs.com/dk/order/order_qa/transfer/demo-capability?qa=compact-20260914`
+- Pinned transfer-request source: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/account/components/transfer-request-form/index.tsx` at `19e8a6fbefea5a385e9502409908bfbebbecf526`
 - Pinned catalogue source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/store/templates/paginated-products.tsx`
 - Pinned pagination source: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/store/components/pagination/index.tsx`
 - Rendered catalogue reference: `https://next.medusajs.com/dk/store?qa=store-grid-final`
@@ -29,6 +30,7 @@ Source visual truth paths:
 
 Implementation screenshot paths: in-app browser captures of the transfer route
 `http://127.0.0.1:13001/order/order_qa/transfer/demo-capability?qa=compact-final-20260914`,
+the authenticated request form at `http://127.0.0.1:13001/account/orders?qa=transfer-request-fresh-20260914`,
 `http://127.0.0.1:13001/store?qa=store-grid-final`, and
 `http://127.0.0.1:13001/products/shorts?qa=product-audit`, and
 `http://127.0.0.1:13001/cart?qa=cart-after-restart`, and
@@ -50,7 +52,9 @@ The reference's visible scrollbar produced the small raster-size difference.
 The compact transfer pair used equal `390 x 844` CSS viewports at density 1.
 The source's fixed two-fifths column produces narrow wrapping and a horizontal
 scrollbar; the implementation intentionally expands to a 24px-inset native
-column at this width. Compact authenticated account-form captures remain.
+column at this width. The authenticated transfer-request form was captured
+locally at `1280 x 720` and `390 x 844`, both at density 1. A same-state
+authenticated Medusa capture remains unavailable.
 The promotion form comparison used the same `736 x 864` browser surface for
 both storefronts. Guest checkout address and initial delivery comparisons also
 used that same `736 x 864` surface. The desktop checkout comparison used an
@@ -101,9 +105,9 @@ claim a rendered pagination pair. Remaining global QA covers the product route a
 compact width and in selected/out-of-stock states, authenticated
 `/checkout` with a saved address available, authenticated `/account` with a
 completed profile, saved addresses and recent orders,
-`/account/orders/details/:id`, the authenticated transfer-request form and its
-success/error states, the profile password editor, the guest-cart mismatch
-banner, compact cart, shipping interactions, the source promotion-success
+`/account/orders/details/:id`, matched authenticated transfer-request rendering
+and its delivery-sent/pending states, the profile password editor, the
+guest-cart mismatch banner, compact cart, shipping interactions, the source promotion-success
 state, and the global free-shipping popup. Promotion QA now covers the
 source-matched open form plus
 local success, recalculation, removal and safe-error states. The live source
@@ -226,6 +230,12 @@ divider sequence and action order. The implementation's full-width 24px-inset
 column is an intentional responsive correction to the source's fixed 40%
 column, which wraps excessively and exposes a horizontal scrollbar at 390px.
 A fresh implementation tab rendered without console warnings.
+The implementation-only authenticated request-form pass confirms the source
+order, two-column desktop composition, stacked compact composition, empty-order
+context, required-field validation and display-safe unavailable-mail feedback.
+A fresh compact tab produced no new browser warnings or errors. The source code
+matches the visible hierarchy, but no authenticated Medusa reference capture
+was available, so this is not a rendered parity claim.
 The equal-raster compact Store pair aligns the second 24px refinement inset,
 selected dot, all three sort-label baselines and two-column catalogue. The
 paired home rail captures align natural card heights and the source's 96px
@@ -330,6 +340,10 @@ unnecessary. The missing rendered source control remains the comparison limit.
   while classifying the implementation's 24px-inset full-width column as an
   acceptable native adaptation. The source's fixed 40% column is not copied at
   390px because it creates severe wrapping and a horizontal scrollbar.
+- The authenticated request-form pass verified local desktop and compact idle
+  states, required-field validation and safe unavailable-mail feedback against
+  the real API. The public reference had no reusable authenticated account, so
+  delivery success/pending and a same-state visual pair remain blocked.
 - The first compact collection pass exposed bottom-overflow stripes on wrapped
   product names and a one-column footer caused by fixed card heights and a
   desktop-sized column gap. Natural-height cards and the source compact footer
@@ -447,8 +461,9 @@ unnecessary. The missing rendered source control remains the comparison limit.
 
 **Implementation checklist**
 
-- Capture the authenticated transfer-request form at desktop and compact
-  widths, including idle, delivery-sent, delivery-pending and safe error states.
+- Obtain a non-destructive authenticated Medusa request-form capture for the
+  matched desktop and compact pair. Local idle, required-field and safe-error
+  states pass; rendered delivery-sent and delivery-pending states remain.
 - Capture compact catalogue page 2 and verify paging retains active sort and
   option queries; compact sorting, option filtering, collection, shared-footer
   and side-menu QA now pass.
