@@ -270,6 +270,14 @@ schema has no such domain; the remaining filter order and labels match source.
   fixture types, assigned Pants, cleared the type, and restored Shirt; the Store
   boundary still receives only the label. Forty non-widget Admin and 298 server
   tests pass; no widget tests were added.
+- Selecting a Product Type now opens the pinned single-column detail layout:
+  identity actions, a separately searchable and sortable 10-row Products table,
+  then safe Metadata and JSON cards. Live QA opened Shirt with six demo products,
+  narrowed the server result to Sample Pocket Tee, reversed and restored title
+  order, and opened a linked product detail. Browser logs had no errors. The
+  authenticated shell was split below the 180-line gate, reducing legacy LOC
+  failures to twelve. Forty-two non-widget Admin tests pass; no widget tests
+  were added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
