@@ -86,6 +86,46 @@ final class AdminOrderDetailViewModel extends $AdminOrderDetailViewModel {
     }
   }
 
+  /// Marks one fulfillment shipped and replaces state with the refreshed order.
+  Future<bool> createShipment(
+    String orderId,
+    String fulfillmentId,
+    AdminCreateShipment body,
+  ) async {
+    final revision = ++_revision;
+    emit(state.copyWith(
+      status: AdminOrderDetailStatus.saving,
+      failure: const None(),
+    ));
+    try {
+      final order = await args.api.createShipment(
+        orderId,
+        fulfillmentId,
+        body,
+      );
+      if (revision != _revision) return false;
+      emit(AdminOrderDetailState(
+        status: AdminOrderDetailStatus.ready,
+        order: Some(order),
+      ));
+      return true;
+    } on DioException catch (error) {
+      if (revision != _revision) return false;
+      _saveFailure(switch (error.response?.statusCode) {
+        401 => 'Your admin session has expired.',
+        404 => 'This fulfillment no longer exists.',
+        422 => 'Shipment command is invalid.',
+        503 => 'Shipment notification is not configured.',
+        _ => 'Unable to create this shipment. Try again.',
+      });
+      return false;
+    } on Object {
+      if (revision != _revision) return false;
+      _saveFailure('Unable to create this shipment. Try again.');
+      return false;
+    }
+  }
+
   void _fail(String message) => emit(AdminOrderDetailState(
         status: AdminOrderDetailStatus.failed,
         failure: Some(message),

@@ -56,38 +56,65 @@ const adminOrderDetailJson = <String, Object?>{
   'billing_address': null,
 };
 
+const adminFulfillmentJson = <String, Object?>{
+  'id': 'ful_01',
+  'location_id': 'sloc_main',
+  'provider_id': 'manual',
+  'shipping_option_id': 'ship_eu_standard',
+  'requires_shipping': true,
+  'packed_at': null,
+  'shipped_at': null,
+  'delivered_at': null,
+  'canceled_at': null,
+  'data': {'service_code': 'ship_eu_standard'},
+  'metadata': null,
+  'created_by': 'admin_01',
+  'marked_shipped_by': null,
+  'created_at': '2026-09-14T13:00:00.000Z',
+  'updated_at': '2026-09-14T13:00:00.000Z',
+  'labels': <Object?>[],
+  'items': <Object?>[
+    <String, Object?>{
+      'id': 'fulitem_01',
+      'fulfillment_id': 'ful_01',
+      'title': 'Espresso cup',
+      'quantity': 1,
+      'sku': 'CUP-DEFAULT',
+      'barcode': '',
+      'line_item_id': 'item_cup',
+      'inventory_item_id': null,
+      'created_at': '2026-09-14T13:00:00.000Z',
+      'updated_at': '2026-09-14T13:00:00.000Z',
+    },
+  ],
+};
+
 final adminFulfilledOrderDetailJson = <String, Object?>{
   ...adminOrderDetailJson,
   'fulfillment_status': 'partially_fulfilled',
   'fulfillments': <Object?>[
+    adminFulfillmentJson,
+  ],
+};
+
+final adminShippedOrderDetailJson = <String, Object?>{
+  ...adminOrderDetailJson,
+  'fulfillment_status': 'partially_shipped',
+  'fulfillments': <Object?>[
     <String, Object?>{
-      'id': 'ful_01',
-      'location_id': 'sloc_main',
-      'provider_id': 'manual',
-      'shipping_option_id': 'ship_eu_standard',
-      'requires_shipping': true,
-      'packed_at': null,
-      'shipped_at': null,
-      'delivered_at': null,
-      'canceled_at': null,
-      'data': {'service_code': 'ship_eu_standard'},
-      'metadata': null,
-      'created_by': 'admin_01',
-      'marked_shipped_by': null,
-      'created_at': '2026-09-14T13:00:00.000Z',
-      'updated_at': '2026-09-14T13:00:00.000Z',
-      'items': <Object?>[
+      ...adminFulfillmentJson,
+      'shipped_at': '2026-09-14T14:00:00.000Z',
+      'marked_shipped_by': 'admin_01',
+      'updated_at': '2026-09-14T14:00:00.000Z',
+      'labels': <Object?>[
         <String, Object?>{
-          'id': 'fulitem_01',
+          'id': 'fullabel_01',
           'fulfillment_id': 'ful_01',
-          'title': 'Espresso cup',
-          'quantity': 1,
-          'sku': 'CUP-DEFAULT',
-          'barcode': '',
-          'line_item_id': 'item_cup',
-          'inventory_item_id': null,
-          'created_at': '2026-09-14T13:00:00.000Z',
-          'updated_at': '2026-09-14T13:00:00.000Z',
+          'tracking_number': 'TRACK-123',
+          'tracking_url': 'https://carrier.example/TRACK-123',
+          'label_url': '#',
+          'created_at': '2026-09-14T14:00:00.000Z',
+          'updated_at': '2026-09-14T14:00:00.000Z',
         },
       ],
     },

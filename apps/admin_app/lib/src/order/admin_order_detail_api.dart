@@ -42,4 +42,12 @@ abstract interface class AdminOrderDetailApi {
     @Path() String id,
     @Body() AdminCreateFulfillment body,
   );
+
+  /// Marks one pending fulfillment shipped with optional carrier labels.
+  @POST('/admin/orders/{id}/fulfillments/{fulfillment_id}/shipments')
+  Future<AdminOrderDetail> createShipment(
+    @Path() String id,
+    @Path('fulfillment_id') String fulfillmentId,
+    @Body() AdminCreateShipment body,
+  );
 }
