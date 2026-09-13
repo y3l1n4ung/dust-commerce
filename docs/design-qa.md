@@ -51,12 +51,22 @@ quantity returned `These items can no longer be returned.` and did not create a
 second row. This verifies the success, ownership, quantity and atomic rejection
 boundaries against the real API; it does not prove an Admin decision workflow.
 
-The slice passes all 114 non-widget storefront tests, Flutter analysis and all
+The slice passes all 118 non-widget storefront tests, Flutter analysis and all
 47 generated Dust checks. Localization validation has zero errors and five
 inherited warnings. The live desktop form and success/failure regions were
 inspected without overflow or console-visible runtime failure. The pinned DTC
 source provides the help link but no matching customer return form, so this is
 a source-structured capability check rather than a same-state raster claim.
+
+The follow-up reason slice exposes five active merchant reasons through the
+public Store API and keeps the reason optional, matching Medusa's request
+contract. Authenticated browser QA selected the completed order item, observed
+the dedicated `OrderReturnReasonField`, and changed its generated ViewModel
+state to `Changed my mind`. The selected label remained visible in the
+expanded form. No helper method returns a Widget; loading, empty, failure and
+loaded states belong to the dedicated widget class. Reload QA also confirmed
+that the exhausted item remains selectable, so current-request quantities are
+the next required customer boundary rather than a completed claim.
 
 ## Open findings
 
@@ -66,17 +76,17 @@ a source-structured capability check rather than a same-state raster claim.
 - P2 — Continue compact and authenticated account-state comparisons from the
   storefront parity ledger.
 - P2 — Complete same-state Review and order-confirmation comparisons.
-- P1 — Add customer return-reason discovery and current-request visibility so
-  exhausted quantities can be disabled before submission.
+- P1 — Add current-request quantity visibility so exhausted quantities can be
+  disabled before submission; return-reason discovery is complete.
 - P1 — Add the separate Admin return list, detail and processing workflow before
   claiming production return lifecycle parity.
 
 ## Result
 
 The verification interaction, API boundary, local success/failure rendering,
-and navigation pass. Customer return creation and server-side rejection pass
-against the live local stack. Exact code-to-layout translation is implemented
-where the pinned source owns a screen; broader storefront visual parity and a
-complete return lifecycle are not claimed.
+reason selection, and navigation pass. Customer return creation and
+server-side rejection pass against the live local stack. Exact code-to-layout
+translation is implemented where the pinned source owns a screen; broader
+storefront visual parity and a complete return lifecycle are not claimed.
 
 final result: blocked
