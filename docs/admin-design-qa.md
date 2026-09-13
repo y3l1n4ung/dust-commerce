@@ -1,4 +1,4 @@
-# Admin product design QA
+# Admin design QA
 
 ## Source truth
 
@@ -10,6 +10,10 @@
 - Product source:
   `packages/admin/dashboard/src/routes/products/product-list/product-list.tsx`
   and `components/product-list-table/product-list-table.tsx`.
+- Order-list source:
+  `packages/admin/dashboard/src/routes/orders/order-list/components/order-list-table/order-list-table.tsx`
+  plus `hooks/table/columns/use-order-table-columns.tsx` and
+  `hooks/table/filters/use-order-table-filters.tsx` at the pinned commit.
 - Product-query source:
   `hooks/table/query/use-product-table-query.tsx`,
   `hooks/table/filters/use-product-table-filters.tsx`, and the shared
@@ -143,6 +147,12 @@ in-app Browser at equal `1280 x 720` viewports, light theme, four published
 products and the filter menu open. Both neutral and menu states were combined
 into `2560 x 720` images before judging. Morrow omits Sales Channel because its
 schema has no such domain; the remaining filter order and labels match source.
+
+The order-list pass uses the pinned Medusa source as structural truth and the
+running Morrow screen at desktop `1440 x 900` plus the app's narrow default
+viewport. Six local demo orders exercise multiple customers, currencies,
+countries and payment states. No same-state Medusa order raster is available,
+so this pass does not claim pixel parity.
 
 ## Verified
 
@@ -317,6 +327,14 @@ schema has no such domain; the remaining filter order and labels match source.
   as out of stock. Admin browser warnings and errors were empty. Eight focused
   preview/confirmation tests, all 310 server tests, and all 50 non-widget Admin
   tests pass.
+- Orders now open from the selected sidebar row into Medusa's source-ordered
+  Order, Date, Customer, Sales channel, Payment, Fulfillment, Total and Country
+  table. Search narrowed six rows to Ada; the Completed filter returned three
+  rows; removing it restored all six. The narrow drawer closes after navigation,
+  the desktop table retains compact 48px rows, and a clean reload produced no
+  browser warnings or errors. The generated client keeps the Dio-owned bearer,
+  typed `DateTime` and `Option` query state. All 53 non-widget Admin and 314
+  server tests pass; Dust checks and the release web build pass.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -340,6 +358,10 @@ schema has no such domain; the remaining filter order and labels match source.
 - P1 — The filesystem adapter is durable for one server node. Multi-node
   deployment still needs object storage and cleanup for uploads left staged
   after an abandoned browser session.
+- P2 — Orders pass source-structure and live-behavior QA, but need a same-state
+  Medusa order-list capture before pixel parity can be claimed. Order export,
+  sales-channel data, region choices, detail and mutations remain separate
+  feature slices.
 
 ## Result
 
@@ -352,8 +374,10 @@ also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
 live end-to-end behavior checks. Product query behavior, discovery and visible
 controls pass API, state, accessibility and same-state live comparison.
+The order list passes protected API, generated-client, responsive layout,
+search and filter behavior checks against the pinned source structure.
 Post-create editor, image-variant drawer, variant pricing, product stock and
-product deletion remain blocked on same-state source captures; broader Medusa
-Admin parity is not claimed.
+product deletion and orders remain blocked on same-state source captures;
+broader Medusa Admin parity is not claimed.
 
 final result: blocked
