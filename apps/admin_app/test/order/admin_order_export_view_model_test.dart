@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:admin_app/src/core/admin_api.dart';
-import 'package:admin_app/src/order/admin_order_state.dart';
 import 'package:admin_app/src/order/admin_order_export_api.dart';
 import 'package:admin_app/src/order/admin_order_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
@@ -14,11 +13,9 @@ void main() {
   late Directory directory;
   late CommerceDatabase database;
   late TestClient server;
-  late AdminApi api;
-  late AdminOrderViewModel orders;
 
   setUp(() async {
-    directory = await Directory.systemTemp.createTemp('admin_orders');
+    directory = await Directory.systemTemp.createTemp('admin_order_export');
     database = CommerceDatabase.open(
       '${directory.path}/commerce.db',
       options: commerceOptions,
@@ -35,18 +32,6 @@ void main() {
     );
     await _seedOrders(database);
     server = await TestClient.serve(buildApp(database));
-    final anonymous = AdminApi(Dio(), baseUrl: server.origin);
-    final token = await anonymous.signIn(const AdminCredentials(
-      email: 'owner@example.com',
-      password: 'correct horse battery staple',
-    ));
-    final dio = Dio()
-      ..options.headers['authorization'] = 'Bearer ${token.token}';
-    api = AdminApi(dio, baseUrl: server.origin);
-    orders = AdminOrderViewModel(AdminOrderViewModelArgs(
-      api: api,
-      exports: AdminOrderExportApi(dio, baseUrl: server.origin),
-    ));
   });
 
   tearDown(() async {
@@ -55,58 +40,45 @@ void main() {
     await directory.delete(recursive: true);
   });
 
-  test('loads decoded newest-first order summaries', () async {
-    final response = await api.listOrders(
-      '',
-      '',
-      '',
-      '',
-      '',
-      '-created_at',
-      20,
-      0,
-    );
-    await orders.load();
-
-    expect(response.count, 2);
-    expect(orders.state.status, AdminOrderListStatus.ready);
-    expect(orders.state.count, 2);
-    expect(orders.state.orders.map((order) => order.displayId), [1002, 1001]);
-    expect(orders.state.orders.first.createdAt.isUtc, isTrue);
-    expect(orders.state.orders.first.fulfillmentStatus,
-        AdminOrderFulfillmentStatus.notFulfilled);
-  });
-
-  test('keeps Medusa query filters and ordering in state', () async {
-    await orders.search('#1001');
-    await orders.filterByStatuses(const [AdminOrderStatus.completed]);
-    await orders.filterByRegions(const ['reg_eu']);
-    await orders.filterByCreatedAt(
-      from: Some(DateTime.utc(2026, 9, 10)),
-      to: Some(DateTime.utc(2026, 9, 10, 23, 59, 59)),
-    );
-    await orders.orderBy(AdminOrderOrder.displayIdAsc);
-
-    expect(orders.state.query, '#1001');
-    expect(orders.state.statuses, const [AdminOrderStatus.completed]);
-    expect(orders.state.regionIds, const ['reg_eu']);
-    expect(orders.state.order, AdminOrderOrder.displayIdAsc);
-    expect(orders.state.count, 1);
-    expect(orders.state.orders.single.customerName, 'Ada Lovelace');
-  });
-
-  test('reports an expired admin session', () async {
-    final unauthorized = AdminOrderViewModel(AdminOrderViewModelArgs(
-      api: AdminApi(Dio(), baseUrl: server.origin),
-      exports: AdminOrderExportApi(Dio(), baseUrl: server.origin),
+  test('exports the complete set using current order filters', () async {
+    final anonymous = AdminApi(Dio(), baseUrl: server.origin);
+    final token = await anonymous.signIn(const AdminCredentials(
+      email: 'owner@example.com',
+      password: 'correct horse battery staple',
+    ));
+    final dio = Dio()
+      ..options.headers['authorization'] = 'Bearer ${token.token}';
+    final orders = AdminOrderViewModel(AdminOrderViewModelArgs(
+      api: AdminApi(dio, baseUrl: server.origin),
+      exports: AdminOrderExportApi(dio, baseUrl: server.origin),
     ));
 
-    await unauthorized.load();
+    await orders.load(
+      query: '#1001',
+      statuses: const [AdminOrderStatus.completed],
+      regionIds: const ['reg_eu'],
+      order: AdminOrderOrder.displayIdAsc,
+    );
+    final result = await orders.export();
+    final csv = switch (result) {
+      Ok(:final value) => value,
+      Err(:final error) => fail(error),
+    };
 
-    expect(unauthorized.state.status, AdminOrderListStatus.failed);
+    expect(csv, contains('ord_1001,1001,completed,captured'));
+    expect(csv, isNot(contains('ord_1002')));
+  });
+
+  test('maps an expired export session to display-safe copy', () async {
+    final dio = Dio();
+    final orders = AdminOrderViewModel(AdminOrderViewModelArgs(
+      api: AdminApi(dio, baseUrl: server.origin),
+      exports: AdminOrderExportApi(dio, baseUrl: server.origin),
+    ));
+
     expect(
-      unauthorized.state.failure,
-      const Some('Your admin session has expired.'),
+      await orders.export(),
+      const Err<String, String>('Your admin session has expired.'),
     );
   });
 }

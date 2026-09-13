@@ -5,6 +5,7 @@ import 'package:admin_app/src/core/admin_session_store.dart';
 import 'package:admin_app/src/order/admin_order_view_model.dart';
 import 'package:admin_app/src/order/admin_order_detail_api.dart';
 import 'package:admin_app/src/order/admin_order_detail_view_model.dart';
+import 'package:admin_app/src/order/admin_order_export_api.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/product/admin_product_create_view_model.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
@@ -37,7 +38,10 @@ void main() {
     ),
   );
   final products = AdminProductViewModel(AdminProductViewModelArgs(api: api));
-  final orders = AdminOrderViewModel(AdminOrderViewModelArgs(api: api));
+  final orders = AdminOrderViewModel(AdminOrderViewModelArgs(
+    api: api,
+    exports: AdminOrderExportApi(dio, baseUrl: baseUrl),
+  ));
   final orderDetail = AdminOrderDetailViewModel(
     AdminOrderDetailViewModelArgs(
       api: AdminOrderDetailApi(dio, baseUrl: baseUrl),

@@ -1,4 +1,5 @@
 import 'package:admin_app/src/core/admin_api.dart';
+import 'package:admin_app/src/order/admin_order_export_api.dart';
 import 'package:admin_app/src/order/admin_order_state.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
@@ -6,15 +7,23 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'admin_order_view_model.g.dart';
+part 'admin_order_export.dart';
 part 'admin_order_filters.dart';
 
 /// Dependencies for the authenticated merchant order table.
 final class AdminOrderViewModelArgs extends ViewModelArgs {
   /// Creates order-list dependencies.
-  const AdminOrderViewModelArgs({required this.api, super.observer});
+  const AdminOrderViewModelArgs({
+    required this.api,
+    required this.exports,
+    super.observer,
+  });
 
   /// Generated admin-only API client.
   final AdminApi api;
+
+  /// Generated CSV client using the same Dio authorization boundary.
+  final AdminOrderExportApi exports;
 }
 
 /// Loads and pages immutable merchant order summaries.
