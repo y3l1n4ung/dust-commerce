@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/account/account.dart';
 import 'package:commerce_server/src/features/admin/admin.dart';
+import 'package:commerce_server/src/features/admin_fulfillment_context/admin_fulfillment_context.dart';
 import 'package:commerce_server/src/features/admin_order/admin_order.dart';
 import 'package:commerce_server/src/features/admin_region/admin_region.dart';
 import 'package:commerce_server/src/features/admin_return/admin_return.dart';
@@ -51,7 +52,6 @@ Router buildApp(
     passwordWork: resolvedPasswordWork,
     requireEmailVerification: requireEmailVerification,
   );
-
   return Router()
     ..nest('/auth', accountAuthRoutes())
     ..nest('/auth', adminAuthRoutes())
@@ -105,6 +105,9 @@ Router buildApp(
       returns: AdminReturnRepository(executor),
     ))
     ..withState(AdminRegionDeps(regions: AdminRegionRepository(executor)))
+    ..withState(AdminFulfillmentContextDeps(
+      choices: AdminFulfillmentContextRepository(executor),
+    ))
     ..withState(AdminSalesChannelDeps(
       salesChannels: AdminSalesChannelRepository(executor),
       database: database,
@@ -124,9 +127,7 @@ Router buildApp(
         options: CatalogOptionRepository(executor),
       ),
     )
-    ..withState(
-      CategoryDeps(categories: ProductCategoryRepository(executor)),
-    )
+    ..withState(CategoryDeps(categories: ProductCategoryRepository(executor)))
     ..withState(
       CollectionDeps(collections: ProductCollectionRepository(executor)),
     )
@@ -150,12 +151,7 @@ Router buildApp(
         clock: clock,
       ),
     )
-    ..withState(
-      PaymentDeps(
-        database: database,
-        clock: clock,
-      ),
-    )
+    ..withState(PaymentDeps(database: database, clock: clock))
     ..withState(
       OrderTransferDeps(
         database: database,
