@@ -11,6 +11,8 @@ resolution: workspace
 dependencies:
   commerce_admin_shared: ^0.1.0
   commerce_shared: ^0.1.0
+  # RFC 4180 parsing for merchant catalogue imports.
+  csv: ^6.0.0
   # Password hashing and token generation.
   cryptography: ^2.9.0
   dust_dart: ^0.1.4

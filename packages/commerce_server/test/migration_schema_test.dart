@@ -43,6 +43,7 @@ void main() {
             .split(' '),
         ...'product_tags product_tag_products product_types'.split(' '),
         ...'product_variants products promotions provider_identity'.split(' '),
+        'product_imports',
         ...'regions shipping_options shipping_option_price_rules'.split(' '),
         ...'order_transfers variant_option_values variant_prices'.split(' '),
         'payment_collections',

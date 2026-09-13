@@ -26,6 +26,7 @@ Router adminRoutes() => Router()
     get(readAdminProductCreateContextHandler),
   )
   ..route('/products/export', get(exportAdminProductsHandler))
+  ..route('/products/import', post(previewAdminProductImportHandler))
   ..route(
     '/product-options',
     get(listAdminProductOptionsHandler)

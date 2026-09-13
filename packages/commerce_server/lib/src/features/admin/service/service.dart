@@ -10,6 +10,7 @@ export 'delete/product.dart';
 export 'delete/product_type.dart';
 export 'export.dart';
 export 'image_variants.dart';
+export 'create/import_preview.dart';
 export 'list.dart';
 export 'read/product_option.dart';
 export 'read/product_type.dart';

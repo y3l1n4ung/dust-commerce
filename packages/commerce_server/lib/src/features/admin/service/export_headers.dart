@@ -21,6 +21,17 @@ List<String> adminProductExportHeaders({
         'Product Image $index Url',
     ];
 
+/// Whether [value] is a column understood by the Medusa product CSV boundary.
+bool isAdminProductCsvHeader(String value) =>
+    _productHeaders.contains(value) ||
+    _variantHeaders.contains(value) ||
+    value == 'Product Discountable' ||
+    value == 'Product External Id' ||
+    RegExp(r'^Product Tag [1-9]\d*$').hasMatch(value) ||
+    RegExp(r'^Variant Price [A-Z]{3}$').hasMatch(value) ||
+    RegExp(r'^Variant Option [1-9]\d* (Name|Value)$').hasMatch(value) ||
+    RegExp(r'^Product Image [1-9]\d* Url$').hasMatch(value);
+
 const _productHeaders = [
   'Product Id',
   'Product Handle',

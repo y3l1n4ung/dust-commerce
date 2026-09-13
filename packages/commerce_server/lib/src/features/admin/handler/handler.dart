@@ -13,6 +13,7 @@ export 'delete.dart';
 export 'delete/product.dart';
 export 'export.dart';
 export 'image_variants.dart';
+export 'create/import.dart';
 export 'list.dart';
 export 'media.dart';
 export 'read.dart';

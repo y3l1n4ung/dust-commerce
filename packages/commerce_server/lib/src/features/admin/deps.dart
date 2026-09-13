@@ -17,6 +17,7 @@ final class AdminDeps {
     required this.dummyPasswordHash,
     required this.products,
     required this.productExports,
+    required this.productImports,
     required this.productTags,
     required this.productTypes,
     required this.productTypeReads,
@@ -54,6 +55,9 @@ final class AdminDeps {
 
   /// Filtered product graphs used only by CSV export.
   final AdminProductExportRepository productExports;
+
+  /// Validated product CSV staging without catalogue mutation.
+  final AdminProductImportRepository productImports;
 
   /// Reusable product-tag discovery for filters and selectors.
   final AdminProductTagRepository productTags;

@@ -12,6 +12,7 @@ export 'src/admin_product_tag.dart';
 export 'src/admin_product_type.dart';
 export 'src/admin_product_image.dart';
 export 'src/admin_product_image_variants.dart';
+export 'src/admin_product_import.dart';
 export 'src/admin_product_media.dart';
 export 'src/admin_product_variant.dart';
 export 'src/admin_update_product_option.dart';
