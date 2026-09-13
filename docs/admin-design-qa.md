@@ -18,6 +18,11 @@
   `packages/admin/dashboard/src/routes/orders/order-detail/order-detail.tsx`
   plus its General, Summary, Payment, Fulfillment, Customer and Activity
   section components at the pinned commit.
+- Order-shipment source:
+  `packages/admin/dashboard/src/routes/orders/order-detail/components/order-fulfillment-section/order-fulfillment-section.tsx`,
+  `packages/admin/dashboard/src/routes/orders/order-create-shipment/`, and
+  `packages/medusa/src/api/admin/orders/[id]/fulfillments/[fulfillment_id]/shipments/route.ts`
+  at the pinned commit.
 - Order-export source:
   `packages/admin/dashboard/src/routes/orders/order-export/order-export.tsx`,
   `components/export-filters.tsx`, the order API export hook and
@@ -491,6 +496,16 @@ raster is available, so pixel parity is not claimed.
   final status atomically and restores only intact managed inventory; damaged
   and unmanaged units remain out of stock. All 82 non-widget Admin tests and
   all 386 server tests pass; analyzers and both Dust check modes are clean.
+- Fulfillment shipment follows the pinned order-detail card and create-shipment
+  focus form. Live QA created a guest storefront cart and captured order #1,
+  created its fulfillment in Admin, added `MORROW-TRACK-001`, and observed the
+  refreshed order and fulfillment badges change to Shipped. The saved tracking
+  number rendered in the card and both lifecycle actions became disabled.
+  Database and authenticated API reads confirmed the database-owned shipment
+  timestamp, authenticated admin actor and one persisted carrier label. All 97
+  non-widget Admin tests and all 424 server tests pass; analyzer, Dust checks,
+  the widget-composition baseline and release web build are clean. Every new
+  shipment subtree is a dedicated widget class; no widget test was added.
 
 ## Open findings
 
@@ -517,7 +532,9 @@ raster is available, so pixel parity is not claimed.
 - P2 — Orders pass source-structure and live-behavior QA, but need same-state
   Medusa order-list and order-detail captures before pixel parity can be
   claimed. Sales-channel discovery, order query behavior and the source-shaped
-  visible filter are implemented, while channel mutations remain separate;
+  visible filter are implemented, while channel mutations remain separate.
+  Fulfillment and shipment behavior now pass live QA against the pinned source
+  structure, but the shipment form also lacks a same-state Medusa capture.
   Region and Order Export have source-structure and live-behavior coverage but
   also lack same-state Medusa captures.
 - P2 — Shipping-profile assignment passes source-structure and live-behavior
@@ -534,9 +551,9 @@ also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
 live end-to-end behavior checks. Product query behavior, discovery and visible
 controls pass API, state, accessibility and same-state live comparison.
-The order list, region filtering, read-only detail and filtered CSV export pass
-protected API, generated-client, responsive layout and live-data behavior
-checks against the pinned source structure.
+The order list, region filtering, detail, fulfillment shipment and filtered CSV
+export pass protected API, generated-client, responsive layout and live-data
+behavior checks against the pinned source structure.
 The product-list sales-channel slice passes its typed contract, direct SQLx
 projection, source-shaped truncation/tooltip behavior and clean-start browser
 QA. Its whole-screen density and thumbnail differences remain an open visual
