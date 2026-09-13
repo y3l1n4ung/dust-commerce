@@ -24,11 +24,11 @@ mixin _$AdminOrderItem implements Serializable {
         'productHandle: ${self.productHandle}, '
         'productId: ${self.productId}, '
         'quantity: ${self.quantity}, '
-        'thumbnail: ${self.thumbnail}, '
+        'thumbnailValue: ${self.thumbnailValue}, '
         'title: ${self.title}, '
         'unitAmount: ${self.unitAmount}, '
         'variantId: ${self.variantId}, '
-        'variantTitle: ${self.variantTitle}'
+        'variantTitleValue: ${self.variantTitleValue}'
         ')';
   }
 
@@ -44,11 +44,11 @@ mixin _$AdminOrderItem implements Serializable {
             other.productHandle == self.productHandle &&
             other.productId == self.productId &&
             other.quantity == self.quantity &&
-            other.thumbnail == self.thumbnail &&
+            other.thumbnailValue == self.thumbnailValue &&
             other.title == self.title &&
             other.unitAmount == self.unitAmount &&
             other.variantId == self.variantId &&
-            other.variantTitle == self.variantTitle;
+            other.variantTitleValue == self.variantTitleValue;
   }
 
   @override
@@ -62,11 +62,11 @@ mixin _$AdminOrderItem implements Serializable {
       self.productHandle,
       self.productId,
       self.quantity,
-      self.thumbnail,
+      self.thumbnailValue,
       self.title,
       self.unitAmount,
       self.variantId,
-      self.variantTitle,
+      self.variantTitleValue,
     ]);
   }
 
@@ -97,17 +97,11 @@ Map<String, Object?> _$AdminOrderItemSerialize(AdminOrderItem instance) {
     'product_handle': instance.productHandle,
     'product_id': instance.productId,
     'quantity': instance.quantity,
-    'thumbnail': JsonHelper.encodeWithCodec<Option<String>, Object?>(
-      (AdminOptionalStringCodec()),
-      instance.thumbnail,
-    ),
+    'thumbnail': instance.thumbnailValue,
     'title': instance.title,
     'unit_amount': instance.unitAmount,
     'variant_id': instance.variantId,
-    'variant_title': JsonHelper.encodeWithCodec<Option<String>, Object?>(
-      (AdminOptionalStringCodec()),
-      instance.variantTitle,
-    ),
+    'variant_title': instance.variantTitleValue,
   };
 }
 
@@ -137,11 +131,9 @@ AdminOrderItem _$AdminOrderItemDeserialize(Map<String, Object?> json) {
     'String',
   );
   final quantityValue = JsonHelper.as<int>(json['quantity'], 'quantity', 'int');
-  final thumbnailValue = JsonHelper.decodeWithCodec<Option<String>, Object?>(
-    (AdminOptionalStringCodec()),
-    json['thumbnail'],
-    'thumbnail',
-  );
+  final thumbnailValueValue = json['thumbnail'] == null
+      ? null
+      : JsonHelper.as<String>(json['thumbnail'], 'thumbnail', 'String');
   final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
   final unitAmountValue = JsonHelper.as<int>(
     json['unit_amount'],
@@ -153,20 +145,18 @@ AdminOrderItem _$AdminOrderItemDeserialize(Map<String, Object?> json) {
     'variant_id',
     'String',
   );
-  final variantTitleValue = JsonHelper.decodeWithCodec<Option<String>, Object?>(
-    (AdminOptionalStringCodec()),
-    json['variant_title'],
-    'variant_title',
-  );
+  final variantTitleValueValue = json['variant_title'] == null
+      ? null
+      : JsonHelper.as<String>(json['variant_title'], 'variant_title', 'String');
 
   return AdminOrderItem(
     id: idValue,
     variantId: variantIdValue,
     productId: productIdValue,
     productHandle: productHandleValue,
-    thumbnail: thumbnailValue,
+    thumbnailValue: thumbnailValueValue,
     title: titleValue,
-    variantTitle: variantTitleValue,
+    variantTitleValue: variantTitleValueValue,
     unitAmount: unitAmountValue,
     currencyCode: currencyCodeValue,
     quantity: quantityValue,

@@ -117,26 +117,3 @@ final class AdminOrderFulfillmentStatusCodec
         AdminOrderFulfillmentStatus.notFulfilled => 'not_fulfilled',
       };
 }
-
-/// Nullable JSON codec for the optional provider payment record state.
-final class AdminOptionalPaymentRecordStatusCodec
-    implements SerDeCodec<Option<AdminOrderPaymentRecordStatus>, Object?> {
-  /// Creates the stateless codec.
-  const AdminOptionalPaymentRecordStatusCodec();
-
-  @override
-  Option<AdminOrderPaymentRecordStatus> deserialize(Object? json) =>
-      switch (json) {
-        null => const None(),
-        final String value => Some(AdminOrderPaymentRecordStatus.values
-            .firstWhere((status) => status.name == value)),
-        _ => throw FormatException('Expected a payment status or null'),
-      };
-
-  @override
-  Object? serialize(Option<AdminOrderPaymentRecordStatus> value) =>
-      switch (value) {
-        Some(:final value) => value.name,
-        None() => null,
-      };
-}

@@ -25,28 +25,28 @@ final class AdminOrderDetail with _$AdminOrderDetail {
     required this.status,
     required this.paymentStatus,
     required this.fulfillmentStatus,
-    required this.shippingName,
-    required this.promotionCode,
+    required this.shippingNameValue,
+    required this.promotionCodeValue,
     required this.placedAt,
     required this.createdAt,
     required this.updatedAt,
     required this.items,
-    required this.shippingAddress,
-    required this.billingAddress,
-    required this.paymentProvider,
-    required this.paymentAmount,
-    required this.paymentRecordStatus,
-    required this.paymentCreatedAt,
-    required this.paymentCapturedAt,
+    required this.shippingAddressValue,
+    required this.billingAddressValue,
+    required this.paymentProviderValue,
+    required this.paymentAmountValue,
+    required this.paymentRecordStatusValue,
+    required this.paymentCreatedAtValue,
+    required this.paymentCapturedAtValue,
   });
 
   /// Decodes one generated Admin order response.
   factory AdminOrderDetail.fromJson(Map<String, Object?> json) =>
       _$AdminOrderDetailFromJson(json);
 
-  /// Billing destination, absent only for legacy snapshots.
-  @SerDe(using: AdminOptionalOrderAddressCodec())
-  final Option<AdminOrderAddress> billingAddress;
+  /// Nullable JSON backing for [billingAddress].
+  @SerDe(rename: 'billing_address')
+  final AdminOrderAddress? billingAddressValue;
 
   /// Database-generated order creation instant.
   final DateTime createdAt;
@@ -76,25 +76,28 @@ final class AdminOrderDetail with _$AdminOrderDetail {
   /// Frozen line-item snapshots in creation order.
   final List<AdminOrderItem> items;
 
-  /// Amount recorded by the provider adapter, when present.
-  @SerDe(using: AdminOptionalIntCodec())
-  final Option<int> paymentAmount;
+  /// Nullable JSON backing for [paymentAmount].
+  @SerDe(rename: 'payment_amount')
+  final int? paymentAmountValue;
 
-  /// Provider capture instant, when funds moved.
-  @SerDe(using: AdminOptionalDateTimeCodec())
-  final Option<DateTime> paymentCapturedAt;
+  /// Nullable JSON backing for [paymentCapturedAt].
+  @SerDe(rename: 'payment_captured_at')
+  final DateTime? paymentCapturedAtValue;
 
-  /// Provider record creation instant, when present.
-  @SerDe(using: AdminOptionalDateTimeCodec())
-  final Option<DateTime> paymentCreatedAt;
+  /// Nullable JSON backing for [paymentCreatedAt].
+  @SerDe(rename: 'payment_created_at')
+  final DateTime? paymentCreatedAtValue;
 
-  /// Public payment adapter identifier, when present.
-  @SerDe(using: AdminOptionalStringCodec())
-  final Option<String> paymentProvider;
+  /// Nullable JSON backing for [paymentProvider].
+  @SerDe(rename: 'payment_provider')
+  final String? paymentProviderValue;
 
-  /// Provider payment record lifecycle, when present.
-  @SerDe(using: AdminOptionalPaymentRecordStatusCodec())
-  final Option<AdminOrderPaymentRecordStatus> paymentRecordStatus;
+  /// Nullable JSON backing for [paymentRecordStatus].
+  @SerDe(
+    rename: 'payment_record_status',
+    using: AdminOrderPaymentRecordStatusCodec(),
+  )
+  final AdminOrderPaymentRecordStatus? paymentRecordStatusValue;
 
   /// Order-level payment lifecycle.
   @SerDe(using: AdminOrderPaymentStatusCodec())
@@ -103,17 +106,17 @@ final class AdminOrderDetail with _$AdminOrderDetail {
   /// Business placement instant.
   final DateTime placedAt;
 
-  /// Applied promotion code, when one was frozen.
-  @SerDe(using: AdminOptionalStringCodec())
-  final Option<String> promotionCode;
+  /// Nullable JSON backing for [promotionCode].
+  @SerDe(rename: 'promotion_code')
+  final String? promotionCodeValue;
 
-  /// Shipping destination, absent only for legacy snapshots.
-  @SerDe(using: AdminOptionalOrderAddressCodec())
-  final Option<AdminOrderAddress> shippingAddress;
+  /// Nullable JSON backing for [shippingAddress].
+  @SerDe(rename: 'shipping_address')
+  final AdminOrderAddress? shippingAddressValue;
 
-  /// Selected delivery label, when one was frozen.
-  @SerDe(using: AdminOptionalStringCodec())
-  final Option<String> shippingName;
+  /// Nullable JSON backing for [shippingName].
+  @SerDe(rename: 'shipping_name')
+  final String? shippingNameValue;
 
   /// Frozen delivery amount in minor units.
   final int shippingTotal;
@@ -133,25 +136,35 @@ final class AdminOrderDetail with _$AdminOrderDetail {
 
   /// Database-generated last mutation instant.
   final DateTime updatedAt;
-}
 
-/// Nullable JSON codec for one order address.
-final class AdminOptionalOrderAddressCodec
-    implements SerDeCodec<Option<AdminOrderAddress>, Object?> {
-  /// Creates the stateless codec.
-  const AdminOptionalOrderAddressCodec();
+  /// Billing destination, absent only for legacy snapshots.
+  Option<AdminOrderAddress> get billingAddress =>
+      adminOptionOf(billingAddressValue);
 
-  @override
-  Option<AdminOrderAddress> deserialize(Object? json) => switch (json) {
-        null => const None(),
-        final Map<String, Object?> value =>
-          Some(AdminOrderAddress.fromJson(value)),
-        _ => throw FormatException('Expected an address object or null'),
-      };
+  /// Amount recorded by the provider adapter, when present.
+  Option<int> get paymentAmount => adminOptionOf(paymentAmountValue);
 
-  @override
-  Object? serialize(Option<AdminOrderAddress> value) => switch (value) {
-        Some(:final value) => value.toJson(),
-        None() => null,
-      };
+  /// Provider capture instant, when funds moved.
+  Option<DateTime> get paymentCapturedAt =>
+      adminOptionOf(paymentCapturedAtValue);
+
+  /// Provider record creation instant, when present.
+  Option<DateTime> get paymentCreatedAt => adminOptionOf(paymentCreatedAtValue);
+
+  /// Public payment adapter identifier, when present.
+  Option<String> get paymentProvider => adminOptionOf(paymentProviderValue);
+
+  /// Provider payment record lifecycle, when present.
+  Option<AdminOrderPaymentRecordStatus> get paymentRecordStatus =>
+      adminOptionOf(paymentRecordStatusValue);
+
+  /// Applied promotion code, when one was frozen.
+  Option<String> get promotionCode => adminOptionOf(promotionCodeValue);
+
+  /// Shipping destination, absent only for legacy snapshots.
+  Option<AdminOrderAddress> get shippingAddress =>
+      adminOptionOf(shippingAddressValue);
+
+  /// Selected delivery label, when one was frozen.
+  Option<String> get shippingName => adminOptionOf(shippingNameValue);
 }

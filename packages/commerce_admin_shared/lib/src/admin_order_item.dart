@@ -13,9 +13,9 @@ final class AdminOrderItem with _$AdminOrderItem {
     required this.variantId,
     required this.productId,
     required this.productHandle,
-    required this.thumbnail,
+    required this.thumbnailValue,
     required this.title,
-    required this.variantTitle,
+    required this.variantTitleValue,
     required this.unitAmount,
     required this.currencyCode,
     required this.quantity,
@@ -44,9 +44,9 @@ final class AdminOrderItem with _$AdminOrderItem {
   /// Number of units purchased.
   final int quantity;
 
-  /// Optional product image frozen at checkout.
-  @SerDe(using: AdminOptionalStringCodec())
-  final Option<String> thumbnail;
+  /// Nullable JSON backing for [thumbnail].
+  @SerDe(rename: 'thumbnail')
+  final String? thumbnailValue;
 
   /// Product title frozen at checkout.
   final String title;
@@ -57,7 +57,13 @@ final class AdminOrderItem with _$AdminOrderItem {
   /// Catalog variant identifier frozen at checkout.
   final String variantId;
 
+  /// Nullable JSON backing for [variantTitle].
+  @SerDe(rename: 'variant_title')
+  final String? variantTitleValue;
+
+  /// Optional product image frozen at checkout.
+  Option<String> get thumbnail => adminOptionOf(thumbnailValue);
+
   /// Optional variant label frozen at checkout.
-  @SerDe(using: AdminOptionalStringCodec())
-  final Option<String> variantTitle;
+  Option<String> get variantTitle => adminOptionOf(variantTitleValue);
 }

@@ -19,15 +19,15 @@ mixin _$AdminOrderAddress implements Serializable {
     final self = this as AdminOrderAddress;
     return 'AdminOrderAddress('
         'city: ${self.city}, '
-        'company: ${self.company}, '
+        'companyValue: ${self.companyValue}, '
         'countryCode: ${self.countryCode}, '
         'firstName: ${self.firstName}, '
         'lastName: ${self.lastName}, '
         'line1: ${self.line1}, '
-        'line2: ${self.line2}, '
-        'phone: ${self.phone}, '
+        'line2Value: ${self.line2Value}, '
+        'phoneValue: ${self.phoneValue}, '
         'postalCode: ${self.postalCode}, '
-        'province: ${self.province}'
+        'provinceValue: ${self.provinceValue}'
         ')';
   }
 
@@ -38,15 +38,15 @@ mixin _$AdminOrderAddress implements Serializable {
         other is AdminOrderAddress &&
             runtimeType == other.runtimeType &&
             other.city == self.city &&
-            other.company == self.company &&
+            other.companyValue == self.companyValue &&
             other.countryCode == self.countryCode &&
             other.firstName == self.firstName &&
             other.lastName == self.lastName &&
             other.line1 == self.line1 &&
-            other.line2 == self.line2 &&
-            other.phone == self.phone &&
+            other.line2Value == self.line2Value &&
+            other.phoneValue == self.phoneValue &&
             other.postalCode == self.postalCode &&
-            other.province == self.province;
+            other.provinceValue == self.provinceValue;
   }
 
   @override
@@ -55,15 +55,15 @@ mixin _$AdminOrderAddress implements Serializable {
     return Object.hashAll([
       runtimeType,
       self.city,
-      self.company,
+      self.companyValue,
       self.countryCode,
       self.firstName,
       self.lastName,
       self.line1,
-      self.line2,
-      self.phone,
+      self.line2Value,
+      self.phoneValue,
       self.postalCode,
-      self.province,
+      self.provinceValue,
     ]);
   }
 
@@ -89,27 +89,15 @@ final class $AdminOrderAddressDeserializer implements Deserializer<AdminOrderAdd
 Map<String, Object?> _$AdminOrderAddressSerialize(AdminOrderAddress instance) {
   return <String, Object?>{
     'city': instance.city,
-    'company': JsonHelper.encodeWithCodec<Option<String>, Object?>(
-      (AdminOptionalStringCodec()),
-      instance.company,
-    ),
+    'company': instance.companyValue,
     'country_code': instance.countryCode,
     'first_name': instance.firstName,
     'last_name': instance.lastName,
     'line1': instance.line1,
-    'line2': JsonHelper.encodeWithCodec<Option<String>, Object?>(
-      (AdminOptionalStringCodec()),
-      instance.line2,
-    ),
-    'phone': JsonHelper.encodeWithCodec<Option<String>, Object?>(
-      (AdminOptionalStringCodec()),
-      instance.phone,
-    ),
+    'line2': instance.line2Value,
+    'phone': instance.phoneValue,
     'postal_code': instance.postalCode,
-    'province': JsonHelper.encodeWithCodec<Option<String>, Object?>(
-      (AdminOptionalStringCodec()),
-      instance.province,
-    ),
+    'province': instance.provinceValue,
   };
 }
 
@@ -119,11 +107,9 @@ Map<String, Object?> _$AdminOrderAddressToJson(AdminOrderAddress instance) =>
 // factory AdminOrderAddress.fromJson(Map<String, Object?> json) => _$AdminOrderAddressFromJson(json);
 AdminOrderAddress _$AdminOrderAddressDeserialize(Map<String, Object?> json) {
   final cityValue = JsonHelper.as<String>(json['city'], 'city', 'String');
-  final companyValue = JsonHelper.decodeWithCodec<Option<String>, Object?>(
-    (AdminOptionalStringCodec()),
-    json['company'],
-    'company',
-  );
+  final companyValueValue = json['company'] == null
+      ? null
+      : JsonHelper.as<String>(json['company'], 'company', 'String');
   final countryCodeValue = JsonHelper.as<String>(
     json['country_code'],
     'country_code',
@@ -140,38 +126,32 @@ AdminOrderAddress _$AdminOrderAddressDeserialize(Map<String, Object?> json) {
     'String',
   );
   final line1Value = JsonHelper.as<String>(json['line1'], 'line1', 'String');
-  final line2Value = JsonHelper.decodeWithCodec<Option<String>, Object?>(
-    (AdminOptionalStringCodec()),
-    json['line2'],
-    'line2',
-  );
-  final phoneValue = JsonHelper.decodeWithCodec<Option<String>, Object?>(
-    (AdminOptionalStringCodec()),
-    json['phone'],
-    'phone',
-  );
+  final line2ValueValue = json['line2'] == null
+      ? null
+      : JsonHelper.as<String>(json['line2'], 'line2', 'String');
+  final phoneValueValue = json['phone'] == null
+      ? null
+      : JsonHelper.as<String>(json['phone'], 'phone', 'String');
   final postalCodeValue = JsonHelper.as<String>(
     json['postal_code'],
     'postal_code',
     'String',
   );
-  final provinceValue = JsonHelper.decodeWithCodec<Option<String>, Object?>(
-    (AdminOptionalStringCodec()),
-    json['province'],
-    'province',
-  );
+  final provinceValueValue = json['province'] == null
+      ? null
+      : JsonHelper.as<String>(json['province'], 'province', 'String');
 
   return AdminOrderAddress(
     firstName: firstNameValue,
     lastName: lastNameValue,
-    company: companyValue,
+    companyValue: companyValueValue,
     line1: line1Value,
-    line2: line2Value,
+    line2Value: line2ValueValue,
     city: cityValue,
-    province: provinceValue,
+    provinceValue: provinceValueValue,
     postalCode: postalCodeValue,
     countryCode: countryCodeValue,
-    phone: phoneValue,
+    phoneValue: phoneValueValue,
   );
 }
 

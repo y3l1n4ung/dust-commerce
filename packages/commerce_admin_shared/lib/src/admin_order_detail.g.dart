@@ -20,7 +20,7 @@ mixin _$AdminOrderDetail implements Serializable {
   String toString() {
     final self = this as AdminOrderDetail;
     return 'AdminOrderDetail('
-        'billingAddress: ${self.billingAddress}, '
+        'billingAddressValue: ${self.billingAddressValue}, '
         'createdAt: ${self.createdAt}, '
         'currencyCode: ${self.currencyCode}, '
         'customerName: ${self.customerName}, '
@@ -30,16 +30,16 @@ mixin _$AdminOrderDetail implements Serializable {
         'fulfillmentStatus: ${self.fulfillmentStatus}, '
         'id: ${self.id}, '
         'items: ${self.items}, '
-        'paymentAmount: ${self.paymentAmount}, '
-        'paymentCapturedAt: ${self.paymentCapturedAt}, '
-        'paymentCreatedAt: ${self.paymentCreatedAt}, '
-        'paymentProvider: ${self.paymentProvider}, '
-        'paymentRecordStatus: ${self.paymentRecordStatus}, '
+        'paymentAmountValue: ${self.paymentAmountValue}, '
+        'paymentCapturedAtValue: ${self.paymentCapturedAtValue}, '
+        'paymentCreatedAtValue: ${self.paymentCreatedAtValue}, '
+        'paymentProviderValue: ${self.paymentProviderValue}, '
+        'paymentRecordStatusValue: ${self.paymentRecordStatusValue}, '
         'paymentStatus: ${self.paymentStatus}, '
         'placedAt: ${self.placedAt}, '
-        'promotionCode: ${self.promotionCode}, '
-        'shippingAddress: ${self.shippingAddress}, '
-        'shippingName: ${self.shippingName}, '
+        'promotionCodeValue: ${self.promotionCodeValue}, '
+        'shippingAddressValue: ${self.shippingAddressValue}, '
+        'shippingNameValue: ${self.shippingNameValue}, '
         'shippingTotal: ${self.shippingTotal}, '
         'status: ${self.status}, '
         'subtotal: ${self.subtotal}, '
@@ -55,7 +55,7 @@ mixin _$AdminOrderDetail implements Serializable {
     return identical(this, other) ||
         other is AdminOrderDetail &&
             runtimeType == other.runtimeType &&
-            other.billingAddress == self.billingAddress &&
+            other.billingAddressValue == self.billingAddressValue &&
             other.createdAt == self.createdAt &&
             other.currencyCode == self.currencyCode &&
             other.customerName == self.customerName &&
@@ -65,16 +65,16 @@ mixin _$AdminOrderDetail implements Serializable {
             other.fulfillmentStatus == self.fulfillmentStatus &&
             other.id == self.id &&
             _adminOrderDetailItemsEquality.equals(other.items, self.items) &&
-            other.paymentAmount == self.paymentAmount &&
-            other.paymentCapturedAt == self.paymentCapturedAt &&
-            other.paymentCreatedAt == self.paymentCreatedAt &&
-            other.paymentProvider == self.paymentProvider &&
-            other.paymentRecordStatus == self.paymentRecordStatus &&
+            other.paymentAmountValue == self.paymentAmountValue &&
+            other.paymentCapturedAtValue == self.paymentCapturedAtValue &&
+            other.paymentCreatedAtValue == self.paymentCreatedAtValue &&
+            other.paymentProviderValue == self.paymentProviderValue &&
+            other.paymentRecordStatusValue == self.paymentRecordStatusValue &&
             other.paymentStatus == self.paymentStatus &&
             other.placedAt == self.placedAt &&
-            other.promotionCode == self.promotionCode &&
-            other.shippingAddress == self.shippingAddress &&
-            other.shippingName == self.shippingName &&
+            other.promotionCodeValue == self.promotionCodeValue &&
+            other.shippingAddressValue == self.shippingAddressValue &&
+            other.shippingNameValue == self.shippingNameValue &&
             other.shippingTotal == self.shippingTotal &&
             other.status == self.status &&
             other.subtotal == self.subtotal &&
@@ -88,7 +88,7 @@ mixin _$AdminOrderDetail implements Serializable {
     final self = this as AdminOrderDetail;
     return Object.hashAll([
       runtimeType,
-      self.billingAddress,
+      self.billingAddressValue,
       self.createdAt,
       self.currencyCode,
       self.customerName,
@@ -98,16 +98,16 @@ mixin _$AdminOrderDetail implements Serializable {
       self.fulfillmentStatus,
       self.id,
       _adminOrderDetailItemsEquality.hash(self.items),
-      self.paymentAmount,
-      self.paymentCapturedAt,
-      self.paymentCreatedAt,
-      self.paymentProvider,
-      self.paymentRecordStatus,
+      self.paymentAmountValue,
+      self.paymentCapturedAtValue,
+      self.paymentCreatedAtValue,
+      self.paymentProviderValue,
+      self.paymentRecordStatusValue,
       self.paymentStatus,
       self.placedAt,
-      self.promotionCode,
-      self.shippingAddress,
-      self.shippingName,
+      self.promotionCodeValue,
+      self.shippingAddressValue,
+      self.shippingNameValue,
       self.shippingTotal,
       self.status,
       self.subtotal,
@@ -138,10 +138,9 @@ final class $AdminOrderDetailDeserializer implements Deserializer<AdminOrderDeta
 
 Map<String, Object?> _$AdminOrderDetailSerialize(AdminOrderDetail instance) {
   return <String, Object?>{
-    'billing_address': JsonHelper.encodeWithCodec<Option<AdminOrderAddress>, Object?>(
-      (AdminOptionalOrderAddressCodec()),
-      instance.billingAddress,
-    ),
+    'billing_address': instance.billingAddressValue == null
+        ? null
+        : (instance.billingAddressValue!).toJson(),
     'created_at': instance.createdAt.toIso8601String(),
     'currency_code': instance.currencyCode,
     'customer_name': instance.customerName,
@@ -156,43 +155,27 @@ Map<String, Object?> _$AdminOrderDetailSerialize(AdminOrderDetail instance) {
     'items': instance.items
         .map((item) => item.toJson())
         .toList(),
-    'payment_amount': JsonHelper.encodeWithCodec<Option<int>, Object?>(
-      (AdminOptionalIntCodec()),
-      instance.paymentAmount,
-    ),
-    'payment_captured_at': JsonHelper.encodeWithCodec<Option<DateTime>, Object?>(
-      (AdminOptionalDateTimeCodec()),
-      instance.paymentCapturedAt,
-    ),
-    'payment_created_at': JsonHelper.encodeWithCodec<Option<DateTime>, Object?>(
-      (AdminOptionalDateTimeCodec()),
-      instance.paymentCreatedAt,
-    ),
-    'payment_provider': JsonHelper.encodeWithCodec<Option<String>, Object?>(
-      (AdminOptionalStringCodec()),
-      instance.paymentProvider,
-    ),
-    'payment_record_status': JsonHelper.encodeWithCodec<Option<AdminOrderPaymentRecordStatus>, Object?>(
-      (AdminOptionalPaymentRecordStatusCodec()),
-      instance.paymentRecordStatus,
-    ),
+    'payment_amount': instance.paymentAmountValue,
+    'payment_captured_at': instance.paymentCapturedAtValue == null
+        ? null
+        : (instance.paymentCapturedAtValue!).toIso8601String(),
+    'payment_created_at': instance.paymentCreatedAtValue == null
+        ? null
+        : (instance.paymentCreatedAtValue!).toIso8601String(),
+    'payment_provider': instance.paymentProviderValue,
+    'payment_record_status': instance.paymentRecordStatusValue == null
+        ? null
+        : JsonHelper.encodeWithCodec<AdminOrderPaymentRecordStatus, Object?>((AdminOrderPaymentRecordStatusCodec()), instance.paymentRecordStatusValue!),
     'payment_status': JsonHelper.encodeWithCodec<AdminOrderPaymentStatus, Object?>(
       (AdminOrderPaymentStatusCodec()),
       instance.paymentStatus,
     ),
     'placed_at': instance.placedAt.toIso8601String(),
-    'promotion_code': JsonHelper.encodeWithCodec<Option<String>, Object?>(
-      (AdminOptionalStringCodec()),
-      instance.promotionCode,
-    ),
-    'shipping_address': JsonHelper.encodeWithCodec<Option<AdminOrderAddress>, Object?>(
-      (AdminOptionalOrderAddressCodec()),
-      instance.shippingAddress,
-    ),
-    'shipping_name': JsonHelper.encodeWithCodec<Option<String>, Object?>(
-      (AdminOptionalStringCodec()),
-      instance.shippingName,
-    ),
+    'promotion_code': instance.promotionCodeValue,
+    'shipping_address': instance.shippingAddressValue == null
+        ? null
+        : (instance.shippingAddressValue!).toJson(),
+    'shipping_name': instance.shippingNameValue,
     'shipping_total': instance.shippingTotal,
     'status': JsonHelper.encodeWithCodec<AdminOrderStatus, Object?>(
       (AdminOrderStatusCodec()),
@@ -210,11 +193,9 @@ Map<String, Object?> _$AdminOrderDetailToJson(AdminOrderDetail instance) =>
 
 // factory AdminOrderDetail.fromJson(Map<String, Object?> json) => _$AdminOrderDetailFromJson(json);
 AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
-  final billingAddressValue = JsonHelper.decodeWithCodec<Option<AdminOrderAddress>, Object?>(
-    (AdminOptionalOrderAddressCodec()),
-    json['billing_address'],
-    'billing_address',
-  );
+  final billingAddressValueValue = json['billing_address'] == null
+      ? null
+      : AdminOrderAddress.fromJson(JsonHelper.asMap(json['billing_address'], 'billing_address'));
   final createdAtValue = JsonHelper.asDateTime(
     json['created_at'],
     'created_at',
@@ -248,52 +229,36 @@ AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final itemsValue = JsonHelper.decodeList(json['items'], 'items',
       (item, itemKey) => AdminOrderItem.fromJson(JsonHelper.asMap(item, itemKey)));
-  final paymentAmountValue = JsonHelper.decodeWithCodec<Option<int>, Object?>(
-    (AdminOptionalIntCodec()),
-    json['payment_amount'],
-    'payment_amount',
-  );
-  final paymentCapturedAtValue = JsonHelper.decodeWithCodec<Option<DateTime>, Object?>(
-    (AdminOptionalDateTimeCodec()),
-    json['payment_captured_at'],
-    'payment_captured_at',
-  );
-  final paymentCreatedAtValue = JsonHelper.decodeWithCodec<Option<DateTime>, Object?>(
-    (AdminOptionalDateTimeCodec()),
-    json['payment_created_at'],
-    'payment_created_at',
-  );
-  final paymentProviderValue = JsonHelper.decodeWithCodec<Option<String>, Object?>(
-    (AdminOptionalStringCodec()),
-    json['payment_provider'],
-    'payment_provider',
-  );
-  final paymentRecordStatusValue = JsonHelper.decodeWithCodec<Option<AdminOrderPaymentRecordStatus>, Object?>(
-    (AdminOptionalPaymentRecordStatusCodec()),
-    json['payment_record_status'],
-    'payment_record_status',
-  );
+  final paymentAmountValueValue = json['payment_amount'] == null
+      ? null
+      : JsonHelper.as<int>(json['payment_amount'], 'payment_amount', 'int');
+  final paymentCapturedAtValueValue = json['payment_captured_at'] == null
+      ? null
+      : JsonHelper.asDateTime(json['payment_captured_at'], 'payment_captured_at');
+  final paymentCreatedAtValueValue = json['payment_created_at'] == null
+      ? null
+      : JsonHelper.asDateTime(json['payment_created_at'], 'payment_created_at');
+  final paymentProviderValueValue = json['payment_provider'] == null
+      ? null
+      : JsonHelper.as<String>(json['payment_provider'], 'payment_provider', 'String');
+  final paymentRecordStatusValueValue = json['payment_record_status'] == null
+      ? null
+      : JsonHelper.decodeWithCodec<AdminOrderPaymentRecordStatus, Object?>((AdminOrderPaymentRecordStatusCodec()), json['payment_record_status'], 'payment_record_status');
   final paymentStatusValue = JsonHelper.decodeWithCodec<AdminOrderPaymentStatus, Object?>(
     (AdminOrderPaymentStatusCodec()),
     json['payment_status'],
     'payment_status',
   );
   final placedAtValue = JsonHelper.asDateTime(json['placed_at'], 'placed_at');
-  final promotionCodeValue = JsonHelper.decodeWithCodec<Option<String>, Object?>(
-    (AdminOptionalStringCodec()),
-    json['promotion_code'],
-    'promotion_code',
-  );
-  final shippingAddressValue = JsonHelper.decodeWithCodec<Option<AdminOrderAddress>, Object?>(
-    (AdminOptionalOrderAddressCodec()),
-    json['shipping_address'],
-    'shipping_address',
-  );
-  final shippingNameValue = JsonHelper.decodeWithCodec<Option<String>, Object?>(
-    (AdminOptionalStringCodec()),
-    json['shipping_name'],
-    'shipping_name',
-  );
+  final promotionCodeValueValue = json['promotion_code'] == null
+      ? null
+      : JsonHelper.as<String>(json['promotion_code'], 'promotion_code', 'String');
+  final shippingAddressValueValue = json['shipping_address'] == null
+      ? null
+      : AdminOrderAddress.fromJson(JsonHelper.asMap(json['shipping_address'], 'shipping_address'));
+  final shippingNameValueValue = json['shipping_name'] == null
+      ? null
+      : JsonHelper.as<String>(json['shipping_name'], 'shipping_name', 'String');
   final shippingTotalValue = JsonHelper.as<int>(
     json['shipping_total'],
     'shipping_total',
@@ -326,19 +291,19 @@ AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
     status: statusValue,
     paymentStatus: paymentStatusValue,
     fulfillmentStatus: fulfillmentStatusValue,
-    shippingName: shippingNameValue,
-    promotionCode: promotionCodeValue,
+    shippingNameValue: shippingNameValueValue,
+    promotionCodeValue: promotionCodeValueValue,
     placedAt: placedAtValue,
     createdAt: createdAtValue,
     updatedAt: updatedAtValue,
     items: itemsValue,
-    shippingAddress: shippingAddressValue,
-    billingAddress: billingAddressValue,
-    paymentProvider: paymentProviderValue,
-    paymentAmount: paymentAmountValue,
-    paymentRecordStatus: paymentRecordStatusValue,
-    paymentCreatedAt: paymentCreatedAtValue,
-    paymentCapturedAt: paymentCapturedAtValue,
+    shippingAddressValue: shippingAddressValueValue,
+    billingAddressValue: billingAddressValueValue,
+    paymentProviderValue: paymentProviderValueValue,
+    paymentAmountValue: paymentAmountValueValue,
+    paymentRecordStatusValue: paymentRecordStatusValueValue,
+    paymentCreatedAtValue: paymentCreatedAtValueValue,
+    paymentCapturedAtValue: paymentCapturedAtValueValue,
   );
 }
 

@@ -11,14 +11,14 @@ final class AdminOrderAddress with _$AdminOrderAddress {
   const AdminOrderAddress({
     required this.firstName,
     required this.lastName,
-    required this.company,
+    required this.companyValue,
     required this.line1,
-    required this.line2,
+    required this.line2Value,
     required this.city,
-    required this.province,
+    required this.provinceValue,
     required this.postalCode,
     required this.countryCode,
-    required this.phone,
+    required this.phoneValue,
   });
 
   /// Decodes one generated Admin address response.
@@ -28,9 +28,9 @@ final class AdminOrderAddress with _$AdminOrderAddress {
   /// Town or city captured at checkout.
   final String city;
 
-  /// Optional company distinct from the secondary street line.
-  @SerDe(using: AdminOptionalStringCodec())
-  final Option<String> company;
+  /// Nullable JSON backing for [company].
+  @SerDe(rename: 'company')
+  final String? companyValue;
 
   /// Lowercase ISO 3166-1 alpha-2 country code.
   final String countryCode;
@@ -44,18 +44,30 @@ final class AdminOrderAddress with _$AdminOrderAddress {
   /// Primary street line.
   final String line1;
 
-  /// Optional apartment, suite, or unit.
-  @SerDe(using: AdminOptionalStringCodec())
-  final Option<String> line2;
+  /// Nullable JSON backing for [line2].
+  @SerDe(rename: 'line2')
+  final String? line2Value;
 
-  /// Optional courier contact number.
-  @SerDe(using: AdminOptionalStringCodec())
-  final Option<String> phone;
+  /// Nullable JSON backing for [phone].
+  @SerDe(rename: 'phone')
+  final String? phoneValue;
 
   /// Postal or ZIP code.
   final String postalCode;
 
+  /// Nullable JSON backing for [province].
+  @SerDe(rename: 'province')
+  final String? provinceValue;
+
+  /// Optional company distinct from the secondary street line.
+  Option<String> get company => adminOptionOf(companyValue);
+
+  /// Optional apartment, suite, or unit.
+  Option<String> get line2 => adminOptionOf(line2Value);
+
+  /// Optional courier contact number.
+  Option<String> get phone => adminOptionOf(phoneValue);
+
   /// Optional state, province, or region.
-  @SerDe(using: AdminOptionalStringCodec())
-  final Option<String> province;
+  Option<String> get province => adminOptionOf(provinceValue);
 }
