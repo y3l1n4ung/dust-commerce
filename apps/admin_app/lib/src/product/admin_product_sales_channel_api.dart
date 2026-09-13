@@ -32,4 +32,12 @@ abstract interface class AdminProductSalesChannelApi {
     @Query('limit') int limit,
     @Query('offset') int offset,
   );
+
+  /// Reads the full rows displayed by the Medusa-shaped assignment editor.
+  @GET('/admin/sales-channels')
+  Future<AdminSalesChannelDetailList> editorSalesChannels(
+    @Query('q') String query,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
 }

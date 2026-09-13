@@ -21,14 +21,14 @@ WHERE deleted_at IS NULL
 
   /// Lists enabled and disabled choices for current and historical orders.
   @Query(r'''
-SELECT id, name
+SELECT id, name, description, is_disabled, created_at, updated_at
 FROM sales_channels
 WHERE deleted_at IS NULL
   AND ($1 = '' OR lower(name) LIKE '%' || lower($1) || '%')
 ORDER BY lower(name), id
 LIMIT $2 OFFSET $3
 ''')
-  Future<Result<List<AdminSalesChannelResponse>, SqlxError>> list(
+  Future<Result<List<AdminSalesChannelDetailResponse>, SqlxError>> list(
     String query,
     int limit,
     int offset,

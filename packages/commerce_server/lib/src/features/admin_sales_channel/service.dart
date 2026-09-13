@@ -5,7 +5,8 @@ import 'package:commerce_server/src/infra/database.dart';
 import 'package:dust_dart/db.dart';
 
 /// Lists one bounded page of merchant-visible sales-channel choices.
-Future<Result<AdminSalesChannelListResponse, SqlxError>> listAdminSalesChannels(
+Future<Result<AdminSalesChannelDetailListResponse, SqlxError>>
+    listAdminSalesChannels(
   AdminSalesChannelRepository salesChannels, {
   required String query,
   required int limit,
@@ -16,9 +17,9 @@ Future<Result<AdminSalesChannelListResponse, SqlxError>> listAdminSalesChannels(
   if (rows case Err(:final error)) return Err(error);
   final count = await salesChannels.count(normalized);
   if (count case Err(:final error)) return Err(error);
-  return Ok(AdminSalesChannelListResponse(
+  return Ok(AdminSalesChannelDetailListResponse(
     salesChannels:
-        (rows as Ok<List<AdminSalesChannelResponse>, SqlxError>).value,
+        (rows as Ok<List<AdminSalesChannelDetailResponse>, SqlxError>).value,
     count: (count as Ok<int, SqlxError>).value,
     limit: limit,
     offset: offset,

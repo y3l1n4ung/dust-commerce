@@ -14,7 +14,7 @@ const ValidatedExtractable<AdminUpdateProductSalesChannels>
 );
 
 /// `GET /admin/sales-channels` — lists choices for a proven merchant.
-Future<Result<AdminSalesChannelListResponse, Rejection>>
+Future<Result<AdminSalesChannelDetailListResponse, Rejection>>
     listAdminSalesChannelsHandler(Request request) async {
   final actor = await const Extension<AuthenticatedAdmin>().extract(request);
   if (actor case Err(:final error)) return Err(error);

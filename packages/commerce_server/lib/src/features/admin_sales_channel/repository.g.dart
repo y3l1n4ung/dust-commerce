@@ -32,10 +32,10 @@ WHERE deleted_at IS NULL
   }
 
   @override
-  Future<Result<List<AdminSalesChannelResponse>, SqlxError>> list(String query, int limit, int offset) {
-    return _db.fetchAll<AdminSalesChannelResponse>(
+  Future<Result<List<AdminSalesChannelDetailResponse>, SqlxError>> list(String query, int limit, int offset) {
+    return _db.fetchAll<AdminSalesChannelDetailResponse>(
       r'''
-SELECT id, name
+SELECT id, name, description, is_disabled, created_at, updated_at
 FROM sales_channels
 WHERE deleted_at IS NULL
   AND (? = '' OR lower(name) LIKE '%' || lower(?) || '%')
@@ -43,7 +43,7 @@ ORDER BY lower(name), id
 LIMIT ? OFFSET ?
 ''',
       [query, query, limit, offset],
-      const $AdminSalesChannelResponseRowDeserializer().deserialize,
+      const $AdminSalesChannelDetailResponseRowDeserializer().deserialize,
     );
   }
 

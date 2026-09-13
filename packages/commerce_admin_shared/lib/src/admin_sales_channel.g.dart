@@ -14,6 +14,7 @@
 part of 'admin_sales_channel.dart';
 
 const DeepCollectionEquality _adminSalesChannelListSalesChannelsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminSalesChannelDetailListSalesChannelsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminUpdateProductSalesChannelsSalesChannelIdsEquality = DeepCollectionEquality();
 
 mixin _$AdminSalesChannel implements Serializable {
@@ -90,6 +91,96 @@ mixin _$AdminSalesChannelList implements Serializable {
 
   Map<String, Object?> serialize() =>
       _$AdminSalesChannelListSerialize(this as AdminSalesChannelList);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminSalesChannelDetail implements Serializable {
+  @override
+  String toString() {
+    final self = this as AdminSalesChannelDetail;
+    return 'AdminSalesChannelDetail('
+        'createdAt: ${self.createdAt}, '
+        'descriptionValue: ${self.descriptionValue}, '
+        'id: ${self.id}, '
+        'isDisabled: ${self.isDisabled}, '
+        'name: ${self.name}, '
+        'updatedAt: ${self.updatedAt}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminSalesChannelDetail;
+    return identical(this, other) ||
+        other is AdminSalesChannelDetail &&
+            runtimeType == other.runtimeType &&
+            other.createdAt == self.createdAt &&
+            other.descriptionValue == self.descriptionValue &&
+            other.id == self.id &&
+            other.isDisabled == self.isDisabled &&
+            other.name == self.name &&
+            other.updatedAt == self.updatedAt;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminSalesChannelDetail;
+    return Object.hashAll([
+      runtimeType,
+      self.createdAt,
+      self.descriptionValue,
+      self.id,
+      self.isDisabled,
+      self.name,
+      self.updatedAt,
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminSalesChannelDetailSerialize(this as AdminSalesChannelDetail);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminSalesChannelDetailList implements Serializable {
+  @override
+  String toString() {
+    final self = this as AdminSalesChannelDetailList;
+    return 'AdminSalesChannelDetailList('
+        'count: ${self.count}, '
+        'limit: ${self.limit}, '
+        'offset: ${self.offset}, '
+        'salesChannels: ${self.salesChannels}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminSalesChannelDetailList;
+    return identical(this, other) ||
+        other is AdminSalesChannelDetailList &&
+            runtimeType == other.runtimeType &&
+            other.count == self.count &&
+            other.limit == self.limit &&
+            other.offset == self.offset &&
+            _adminSalesChannelDetailListSalesChannelsEquality.equals(other.salesChannels, self.salesChannels);
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminSalesChannelDetailList;
+    return Object.hashAll([
+      runtimeType,
+      self.count,
+      self.limit,
+      self.offset,
+      _adminSalesChannelDetailListSalesChannelsEquality.hash(self.salesChannels),
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminSalesChannelDetailListSerialize(this as AdminSalesChannelDetailList);
 
   Map<String, Object?> toJson() => serialize();
 }
@@ -188,6 +279,30 @@ final class $AdminSalesChannelListDeserializer implements Deserializer<AdminSale
   @override
   AdminSalesChannelList deserialize(Map<String, Object?> json) => _$AdminSalesChannelListDeserialize(json);
 }
+final class $AdminSalesChannelDetailSerializer implements Serializer<AdminSalesChannelDetail, Map<String, Object?>> {
+  const $AdminSalesChannelDetailSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminSalesChannelDetail value) => _$AdminSalesChannelDetailSerialize(value);
+}
+final class $AdminSalesChannelDetailDeserializer implements Deserializer<AdminSalesChannelDetail, Map<String, Object?>> {
+  const $AdminSalesChannelDetailDeserializer();
+
+  @override
+  AdminSalesChannelDetail deserialize(Map<String, Object?> json) => _$AdminSalesChannelDetailDeserialize(json);
+}
+final class $AdminSalesChannelDetailListSerializer implements Serializer<AdminSalesChannelDetailList, Map<String, Object?>> {
+  const $AdminSalesChannelDetailListSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminSalesChannelDetailList value) => _$AdminSalesChannelDetailListSerialize(value);
+}
+final class $AdminSalesChannelDetailListDeserializer implements Deserializer<AdminSalesChannelDetailList, Map<String, Object?>> {
+  const $AdminSalesChannelDetailListDeserializer();
+
+  @override
+  AdminSalesChannelDetailList deserialize(Map<String, Object?> json) => _$AdminSalesChannelDetailListDeserialize(json);
+}
 final class $AdminUpdateProductSalesChannelsSerializer implements Serializer<AdminUpdateProductSalesChannels, Map<String, Object?>> {
   const $AdminUpdateProductSalesChannelsSerializer();
 
@@ -254,6 +369,87 @@ AdminSalesChannelList _$AdminSalesChannelListDeserialize(Map<String, Object?> js
 
 AdminSalesChannelList _$AdminSalesChannelListFromJson(Map<String, Object?> json) =>
     _$AdminSalesChannelListDeserialize(json);
+
+Map<String, Object?> _$AdminSalesChannelDetailSerialize(AdminSalesChannelDetail instance) {
+  return <String, Object?>{
+    'created_at': instance.createdAt.toIso8601String(),
+    'description': instance.descriptionValue,
+    'id': instance.id,
+    'is_disabled': instance.isDisabled,
+    'name': instance.name,
+    'updated_at': instance.updatedAt.toIso8601String(),
+  };
+}
+
+Map<String, Object?> _$AdminSalesChannelDetailToJson(AdminSalesChannelDetail instance) =>
+    _$AdminSalesChannelDetailSerialize(instance);
+
+// factory AdminSalesChannelDetail.fromJson(Map<String, Object?> json) => _$AdminSalesChannelDetailFromJson(json);
+AdminSalesChannelDetail _$AdminSalesChannelDetailDeserialize(Map<String, Object?> json) {
+  final createdAtValue = JsonHelper.asDateTime(
+    json['created_at'],
+    'created_at',
+  );
+  final descriptionValueValue = json['description'] == null
+      ? null
+      : JsonHelper.as<String>(json['description'], 'description', 'String');
+  final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final isDisabledValue = JsonHelper.as<bool>(
+    json['is_disabled'],
+    'is_disabled',
+    'bool',
+  );
+  final nameValue = JsonHelper.as<String>(json['name'], 'name', 'String');
+  final updatedAtValue = JsonHelper.asDateTime(
+    json['updated_at'],
+    'updated_at',
+  );
+
+  return AdminSalesChannelDetail(
+    id: idValue,
+    name: nameValue,
+    descriptionValue: descriptionValueValue,
+    isDisabled: isDisabledValue,
+    createdAt: createdAtValue,
+    updatedAt: updatedAtValue,
+  );
+}
+
+AdminSalesChannelDetail _$AdminSalesChannelDetailFromJson(Map<String, Object?> json) =>
+    _$AdminSalesChannelDetailDeserialize(json);
+
+Map<String, Object?> _$AdminSalesChannelDetailListSerialize(AdminSalesChannelDetailList instance) {
+  return <String, Object?>{
+    'count': instance.count,
+    'limit': instance.limit,
+    'offset': instance.offset,
+    'sales_channels': instance.salesChannels
+        .map((item) => _$AdminSalesChannelDetailSerialize(item))
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$AdminSalesChannelDetailListToJson(AdminSalesChannelDetailList instance) =>
+    _$AdminSalesChannelDetailListSerialize(instance);
+
+// factory AdminSalesChannelDetailList.fromJson(Map<String, Object?> json) => _$AdminSalesChannelDetailListFromJson(json);
+AdminSalesChannelDetailList _$AdminSalesChannelDetailListDeserialize(Map<String, Object?> json) {
+  final countValue = JsonHelper.as<int>(json['count'], 'count', 'int');
+  final limitValue = JsonHelper.as<int>(json['limit'], 'limit', 'int');
+  final offsetValue = JsonHelper.as<int>(json['offset'], 'offset', 'int');
+  final salesChannelsValue = JsonHelper.decodeList(json['sales_channels'], 'sales_channels',
+      (item, itemKey) => _$AdminSalesChannelDetailDeserialize(JsonHelper.asMap(item, itemKey)));
+
+  return AdminSalesChannelDetailList(
+    salesChannels: salesChannelsValue,
+    count: countValue,
+    limit: limitValue,
+    offset: offsetValue,
+  );
+}
+
+AdminSalesChannelDetailList _$AdminSalesChannelDetailListFromJson(Map<String, Object?> json) =>
+    _$AdminSalesChannelDetailListDeserialize(json);
 
 Map<String, Object?> _$AdminUpdateProductSalesChannelsSerialize(AdminUpdateProductSalesChannels instance) {
   return <String, Object?>{

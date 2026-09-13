@@ -27,6 +27,20 @@ mixin _$AdminSalesChannelListResponse implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$AdminSalesChannelDetailResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$AdminSalesChannelDetailResponseSerialize(this as AdminSalesChannelDetailResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$AdminSalesChannelDetailListResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$AdminSalesChannelDetailListResponseSerialize(this as AdminSalesChannelDetailListResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 final class $AdminSalesChannelResponseSerializer implements Serializer<AdminSalesChannelResponse, Map<String, Object?>> {
   const $AdminSalesChannelResponseSerializer();
 
@@ -38,6 +52,18 @@ final class $AdminSalesChannelListResponseSerializer implements Serializer<Admin
 
   @override
   Map<String, Object?> serialize(AdminSalesChannelListResponse value) => _$AdminSalesChannelListResponseSerialize(value);
+}
+final class $AdminSalesChannelDetailResponseSerializer implements Serializer<AdminSalesChannelDetailResponse, Map<String, Object?>> {
+  const $AdminSalesChannelDetailResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminSalesChannelDetailResponse value) => _$AdminSalesChannelDetailResponseSerialize(value);
+}
+final class $AdminSalesChannelDetailListResponseSerializer implements Serializer<AdminSalesChannelDetailListResponse, Map<String, Object?>> {
+  const $AdminSalesChannelDetailListResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminSalesChannelDetailListResponse value) => _$AdminSalesChannelDetailListResponseSerialize(value);
 }
 AdminSalesChannelResponse _$AdminSalesChannelResponseFromRow(Row row) {
   return AdminSalesChannelResponse(
@@ -72,6 +98,43 @@ extension $AdminSalesChannelResponseQuery on QueryAs<AdminSalesChannelResponse> 
       fetchAllWith(db, _$AdminSalesChannelResponseFromRow);
 }
 
+AdminSalesChannelDetailResponse _$AdminSalesChannelDetailResponseFromRow(Row row) {
+  return AdminSalesChannelDetailResponse(
+    id: row.read<String>('id'),
+    name: row.read<String>('name'),
+    description: row.readNullable<String>('description'),
+    isDisabled: _AdminSalesChannelBoolFromInt().decode(row.read<int>('is_disabled')),
+    createdAt: _AdminSalesChannelUtcDateTime().decode(row.read<String>('created_at')),
+    updatedAt: _AdminSalesChannelUtcDateTime().decode(row.read<String>('updated_at')),
+  );
+}
+
+/// Row deserializer for [AdminSalesChannelDetailResponse].
+final class $AdminSalesChannelDetailResponseRowDeserializer implements RowDeserializer<AdminSalesChannelDetailResponse> {
+  const $AdminSalesChannelDetailResponseRowDeserializer();
+
+  @override
+  AdminSalesChannelDetailResponse deserialize(Row row) => _$AdminSalesChannelDetailResponseFromRow(row);
+}
+
+/// Typed row query terminals for [AdminSalesChannelDetailResponse].
+///
+/// Resolved from the static type of the receiver, so a row type with no
+/// `FromRow` has no terminals and the call does not compile.
+extension $AdminSalesChannelDetailResponseQuery on QueryAs<AdminSalesChannelDetailResponse> {
+  /// Fetches exactly one row.
+  Future<AdminSalesChannelDetailResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$AdminSalesChannelDetailResponseFromRow);
+
+  /// Fetches zero or one row.
+  Future<AdminSalesChannelDetailResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$AdminSalesChannelDetailResponseFromRow);
+
+  /// Fetches every row.
+  Future<List<AdminSalesChannelDetailResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$AdminSalesChannelDetailResponseFromRow);
+}
+
 Map<String, Object?> _$AdminSalesChannelResponseSerialize(AdminSalesChannelResponse instance) {
   return <String, Object?>{
     'id': instance.id,
@@ -95,3 +158,31 @@ Map<String, Object?> _$AdminSalesChannelListResponseSerialize(AdminSalesChannelL
 
 Map<String, Object?> _$AdminSalesChannelListResponseToJson(AdminSalesChannelListResponse instance) =>
     _$AdminSalesChannelListResponseSerialize(instance);
+
+Map<String, Object?> _$AdminSalesChannelDetailResponseSerialize(AdminSalesChannelDetailResponse instance) {
+  return <String, Object?>{
+    'created_at': instance.createdAt.toIso8601String(),
+    'description': instance.description,
+    'id': instance.id,
+    'is_disabled': instance.isDisabled,
+    'name': instance.name,
+    'updated_at': instance.updatedAt.toIso8601String(),
+  };
+}
+
+Map<String, Object?> _$AdminSalesChannelDetailResponseToJson(AdminSalesChannelDetailResponse instance) =>
+    _$AdminSalesChannelDetailResponseSerialize(instance);
+
+Map<String, Object?> _$AdminSalesChannelDetailListResponseSerialize(AdminSalesChannelDetailListResponse instance) {
+  return <String, Object?>{
+    'count': instance.count,
+    'limit': instance.limit,
+    'offset': instance.offset,
+    'sales_channels': instance.salesChannels
+        .map((item) => _$AdminSalesChannelDetailResponseSerialize(item))
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$AdminSalesChannelDetailListResponseToJson(AdminSalesChannelDetailListResponse instance) =>
+    _$AdminSalesChannelDetailListResponseSerialize(instance);

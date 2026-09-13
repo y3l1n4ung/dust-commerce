@@ -18,7 +18,8 @@ UPDATE sales_channels SET is_disabled = 1 WHERE id = 'sc_wholesale'
         .assertUnauthorized();
   });
 
-  test('sales channel discovery returns only ordered filter fields', () async {
+  test('sales channel discovery returns ordered Medusa editor fields',
+      () async {
     final token = await harness.adminToken();
     final response =
         await (harness.client.get('/admin/sales-channels?limit=1000&offset=0')
@@ -30,10 +31,28 @@ UPDATE sales_channels SET is_disabled = 1 WHERE id = 'sc_wholesale'
     expect(body, containsPair('count', 2));
     expect(body, containsPair('limit', 1000));
     expect(body, containsPair('offset', 0));
-    expect(body['sales_channels'], [
-      {'id': 'sc_web', 'name': 'Online Store'},
-      {'id': 'sc_wholesale', 'name': 'Wholesale'},
-    ]);
+    final channels = body['sales_channels']! as List<Object?>;
+    final online = channels.first! as Map<String, Object?>;
+    final wholesale = channels.last! as Map<String, Object?>;
+    expect(online.keys.toSet(), {
+      'id',
+      'name',
+      'description',
+      'is_disabled',
+      'created_at',
+      'updated_at',
+    });
+    expect(online, containsPair('id', 'sc_web'));
+    expect(online, containsPair('name', 'Online Store'));
+    expect(
+      online,
+      containsPair('description', 'Primary direct-to-consumer storefront'),
+    );
+    expect(online, containsPair('is_disabled', false));
+    expect(DateTime.parse(online['created_at']! as String).isUtc, isTrue);
+    expect(DateTime.parse(online['updated_at']! as String).isUtc, isTrue);
+    expect(wholesale, containsPair('id', 'sc_wholesale'));
+    expect(wholesale, containsPair('is_disabled', true));
   });
 
   test('sales channel discovery searches before bounded paging', () async {
@@ -47,9 +66,12 @@ UPDATE sales_channels SET is_disabled = 1 WHERE id = 'sc_wholesale'
     final body = response.json! as Map<String, Object?>;
     expect(body, containsPair('count', 1));
     expect(body, containsPair('limit', 1000));
-    expect(body['sales_channels'], [
-      {'id': 'sc_wholesale', 'name': 'Wholesale'},
-    ]);
+    final channels = body['sales_channels']! as List<Object?>;
+    expect(channels, hasLength(1));
+    expect(
+      channels.single! as Map<String, Object?>,
+      containsPair('id', 'sc_wholesale'),
+    );
   });
 
   test('product sales channels require a proven admin bearer', () async {
