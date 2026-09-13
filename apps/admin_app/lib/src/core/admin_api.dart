@@ -21,6 +21,19 @@ abstract interface class AdminApi {
   @GET('/admin/users/me')
   Future<AdminUser> currentUser();
 
+  /// Lists merchant-visible orders with server-owned paging and filtering.
+  @GET('/admin/orders')
+  Future<AdminOrderList> listOrders(
+    @Query('q') String query,
+    @Query('status') String statuses,
+    @Query('region_id') String regionIds,
+    @Query('created_at') String createdAt,
+    @Query('updated_at') String updatedAt,
+    @Query('order') String order,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
+
   /// Lists merchant-visible products with server-owned paging and search.
   @GET('/admin/products')
   Future<AdminProductList> listProducts(

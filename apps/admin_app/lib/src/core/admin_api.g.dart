@@ -131,6 +131,59 @@ final class _$AdminApi implements AdminApi {
   }
 
   @override
+  Future<AdminOrderList> listOrders(
+    String query,
+    String statuses,
+    String regionIds,
+    String createdAt,
+    String updatedAt,
+    String order,
+    int limit,
+    int offset,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    _queryParameters['q'] = query;
+    _queryParameters['status'] = statuses;
+    _queryParameters['region_id'] = regionIds;
+    _queryParameters['created_at'] = createdAt;
+    _queryParameters['updated_at'] = updatedAt;
+    _queryParameters['order'] = order;
+    _queryParameters['limit'] = limit;
+    _queryParameters['offset'] = offset;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminOrderList>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/orders',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminOrderList.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<AdminProductList> listProducts(
     String query,
     String statuses,
