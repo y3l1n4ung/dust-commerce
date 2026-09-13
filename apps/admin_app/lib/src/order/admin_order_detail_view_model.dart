@@ -1,5 +1,6 @@
 import 'package:admin_app/src/order/admin_order_detail_api.dart';
 import 'package:admin_app/src/order/admin_order_detail_state.dart';
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
@@ -50,7 +51,47 @@ final class AdminOrderDetailViewModel extends $AdminOrderDetailViewModel {
     }
   }
 
+  /// Creates one fulfillment and replaces state with the refreshed order.
+  Future<bool> createFulfillment(
+    String orderId,
+    AdminCreateFulfillment body,
+  ) async {
+    final revision = ++_revision;
+    emit(state.copyWith(
+      status: AdminOrderDetailStatus.saving,
+      failure: const None(),
+    ));
+    try {
+      final order = await args.api.createFulfillment(orderId, body);
+      if (revision != _revision) return false;
+      emit(AdminOrderDetailState(
+        status: AdminOrderDetailStatus.ready,
+        order: Some(order),
+      ));
+      return true;
+    } on DioException catch (error) {
+      if (revision != _revision) return false;
+      _saveFailure(switch (error.response?.statusCode) {
+        401 => 'Your admin session has expired.',
+        404 => 'This order no longer exists.',
+        422 => 'Fulfillment command is invalid.',
+        503 => 'Fulfillment notification is not configured.',
+        _ => 'Unable to create this fulfillment. Try again.',
+      });
+      return false;
+    } on Object {
+      if (revision != _revision) return false;
+      _saveFailure('Unable to create this fulfillment. Try again.');
+      return false;
+    }
+  }
+
   void _fail(String message) => emit(AdminOrderDetailState(
+        status: AdminOrderDetailStatus.failed,
+        failure: Some(message),
+      ));
+
+  void _saveFailure(String message) => emit(state.copyWith(
         status: AdminOrderDetailStatus.failed,
         failure: Some(message),
       ));

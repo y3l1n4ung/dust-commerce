@@ -17,4 +17,11 @@ abstract interface class AdminOrderDetailApi {
   /// Reads one complete merchant-visible order snapshot.
   @GET('/admin/orders/{id}')
   Future<AdminOrderDetail> order(@Path() String id);
+
+  /// Creates one fulfillment and returns the refreshed merchant order.
+  @POST('/admin/orders/{id}/fulfillments')
+  Future<AdminOrderDetail> createFulfillment(
+    @Path() String id,
+    @Body() AdminCreateFulfillment body,
+  );
 }

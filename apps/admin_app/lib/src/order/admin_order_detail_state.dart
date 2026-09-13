@@ -14,6 +14,9 @@ enum AdminOrderDetailStatus {
   /// The complete order snapshot is ready.
   ready,
 
+  /// A merchant fulfillment command is in flight.
+  saving,
+
   /// The request failed with display-safe copy.
   failed,
 }

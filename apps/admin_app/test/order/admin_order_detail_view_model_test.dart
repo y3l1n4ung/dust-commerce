@@ -69,6 +69,60 @@ void main() {
       const Some('Your admin session has expired.'),
     );
   });
+
+  test('create fulfillment publishes the refreshed typed order', () async {
+    final detail = AdminOrderDetailViewModel(
+      AdminOrderDetailViewModelArgs(api: _api(origin, authorized: true)),
+    );
+    await detail.load('ord_detail');
+
+    final created = await detail.createFulfillment(
+      'ord_detail',
+      _fulfillment,
+    );
+
+    expect(created, isTrue);
+    expect(detail.state.status, AdminOrderDetailStatus.ready);
+    final order = (detail.state.order as Some<AdminOrderDetail>).value;
+    expect(order.fulfillmentStatus,
+        AdminOrderFulfillmentStatus.partiallyFulfilled);
+    expect(order.fulfillments.single.providerId, 'manual');
+  });
+
+  test('create failure preserves the loaded order and maps safe copy',
+      () async {
+    final detail = AdminOrderDetailViewModel(
+      AdminOrderDetailViewModelArgs(api: _api(origin, authorized: true)),
+    );
+    await detail.load('ord_detail');
+    const invalid = AdminCreateFulfillment(
+      items: [AdminCreateFulfillmentItem(id: 'invalid', quantity: 1)],
+      locationId: 'sloc_main',
+      noNotification: true,
+      shippingOptionIdValue: 'ship_eu_standard',
+    );
+
+    expect(await detail.createFulfillment('ord_detail', invalid), isFalse);
+
+    expect(detail.state.status, AdminOrderDetailStatus.failed);
+    expect(detail.state.order, isA<Some<AdminOrderDetail>>());
+    expect(
+      detail.state.failure,
+      const Some('Fulfillment command is invalid.'),
+    );
+
+    const notify = AdminCreateFulfillment(
+      items: [AdminCreateFulfillmentItem(id: 'item_cup', quantity: 1)],
+      locationId: 'sloc_main',
+      noNotification: false,
+      shippingOptionIdValue: 'ship_eu_standard',
+    );
+    expect(await detail.createFulfillment('ord_detail', notify), isFalse);
+    expect(
+      detail.state.failure,
+      const Some('Fulfillment notification is not configured.'),
+    );
+  });
 }
 
 AdminOrderDetailApi _api(Uri origin, {required bool authorized}) {
@@ -81,6 +135,19 @@ Future<void> _respond(HttpRequest request) async {
   request.response.headers.contentType = ContentType.json;
   if (request.headers.value('authorization') != 'Bearer test-token') {
     request.response.statusCode = HttpStatus.unauthorized;
+  } else if (request.method == 'POST') {
+    final json = jsonDecode(await utf8.decoder.bind(request).join())
+        as Map<String, Object?>;
+    final items = json['items']! as List<Object?>;
+    final item = items.single! as Map<String, Object?>;
+    if (json['no_notification'] == false) {
+      request.response.statusCode = HttpStatus.serviceUnavailable;
+    } else if (item['id'] == 'invalid') {
+      request.response.statusCode = HttpStatus.unprocessableEntity;
+    } else {
+      expect(json, _fulfillment.toJson());
+      request.response.write(jsonEncode(adminFulfilledOrderDetailJson));
+    }
   } else if (request.uri.path == '/admin/orders/ord_detail') {
     request.response.write(jsonEncode(adminOrderDetailJson));
   } else {
@@ -88,3 +155,10 @@ Future<void> _respond(HttpRequest request) async {
   }
   await request.response.close();
 }
+
+const _fulfillment = AdminCreateFulfillment(
+  items: [AdminCreateFulfillmentItem(id: 'item_cup', quantity: 1)],
+  locationId: 'sloc_main',
+  noNotification: true,
+  shippingOptionIdValue: 'ship_eu_standard',
+);

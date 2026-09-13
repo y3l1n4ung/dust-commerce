@@ -12,6 +12,7 @@ const adminOrderDetailJson = <String, Object?>{
   'status': 'completed',
   'payment_status': 'captured',
   'fulfillment_status': 'not_fulfilled',
+  'fulfillments': <Object?>[],
   'shipping_name': 'Standard shipping',
   'promotion_code': 'WELCOME10',
   'placed_at': '2026-09-10T10:00:00.000Z',
@@ -50,4 +51,42 @@ const adminOrderDetailJson = <String, Object?>{
     'phone': '+45 12345678',
   },
   'billing_address': null,
+};
+
+final adminFulfilledOrderDetailJson = <String, Object?>{
+  ...adminOrderDetailJson,
+  'fulfillment_status': 'partially_fulfilled',
+  'fulfillments': <Object?>[
+    <String, Object?>{
+      'id': 'ful_01',
+      'location_id': 'sloc_main',
+      'provider_id': 'manual',
+      'shipping_option_id': 'ship_eu_standard',
+      'requires_shipping': true,
+      'packed_at': null,
+      'shipped_at': null,
+      'delivered_at': null,
+      'canceled_at': null,
+      'data': {'service_code': 'ship_eu_standard'},
+      'metadata': null,
+      'created_by': 'admin_01',
+      'marked_shipped_by': null,
+      'created_at': '2026-09-14T13:00:00.000Z',
+      'updated_at': '2026-09-14T13:00:00.000Z',
+      'items': <Object?>[
+        <String, Object?>{
+          'id': 'fulitem_01',
+          'fulfillment_id': 'ful_01',
+          'title': 'Espresso cup',
+          'quantity': 1,
+          'sku': 'CUP-DEFAULT',
+          'barcode': '',
+          'line_item_id': 'item_cup',
+          'inventory_item_id': null,
+          'created_at': '2026-09-14T13:00:00.000Z',
+          'updated_at': '2026-09-14T13:00:00.000Z',
+        },
+      ],
+    },
+  ],
 };
