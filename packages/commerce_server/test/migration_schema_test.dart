@@ -52,7 +52,8 @@ void main() {
         ...'return_reasons return_requests return_items fulfillments'
             .split(' '),
         'fulfillment_items',
-        'stock_location_addresses',
+        ...'stock_location_addresses shipping_option_fulfillment_provider'
+            .split(' '),
         ...'stock_locations fulfillment_providers stock_location_fulfillment_providers'
             .split(' '),
         'payment_collections',
