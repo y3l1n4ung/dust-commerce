@@ -63,7 +63,9 @@ done < <(
 # requires shrinking the baseline in the same change, so it cannot return later.
 NESTED_RESULT_BASELINE="scripts/nested_result_baseline.txt"
 NESTED_RESULT_CURRENT="$(mktemp)"
-trap 'rm -f "$NESTED_RESULT_CURRENT"' EXIT
+WIDGET_BUILDER_BASELINE="scripts/widget_builder_baseline.txt"
+WIDGET_BUILDER_CURRENT="$(mktemp)"
+trap 'rm -f "$NESTED_RESULT_CURRENT" "$WIDGET_BUILDER_CURRENT"' EXIT
 (
   rg --count-matches --multiline \
     'Result\s*<\s*Result\s*<' \
@@ -75,6 +77,23 @@ trap 'rm -f "$NESTED_RESULT_CURRENT"' EXIT
 if ! diff -u "$NESTED_RESULT_BASELINE" "$NESTED_RESULT_CURRENT"; then
   echo "::error::nested Result debt differs from its frozen baseline"
   echo "remove debt and its baseline row together; never add new debt"
+  status=1
+fi
+
+# Widget subtrees are real widget classes. Private methods returning Widget
+# hide composition and rebuild boundaries inside a parent State. Existing debt
+# is frozen by file so a touched feature can pay it down without a broad rewrite.
+(
+  rg --count-matches \
+    '^\s*Widget\s+_[A-Za-z][A-Za-z0-9_]*\s*\(' \
+    apps \
+    --glob '*.dart' \
+    --glob '!*.g.dart' \
+    || true
+) | sort > "$WIDGET_BUILDER_CURRENT"
+if ! diff -u "$WIDGET_BUILDER_BASELINE" "$WIDGET_BUILDER_CURRENT"; then
+  echo "::error::private Widget builder debt differs from its frozen baseline"
+  echo "replace builders with widget classes and shrink the baseline; never add debt"
   status=1
 fi
 

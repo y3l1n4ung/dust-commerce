@@ -19,6 +19,10 @@
 6. **One `Result` per boundary.** Never return `Result<Result<T, DomainError>,
    DatabaseError>`. Define one feature failure type, include an internal/database
    variant, and flatten infrastructure errors before returning from the service.
+7. **Widget subtrees are widget classes.** Do not hide UI composition in a
+   private function or method returning `Widget`. Give the subtree a focused
+   `StatelessWidget` or `StatefulWidget` so ownership, lifecycle and rebuild
+   boundaries stay visible.
 
 ## Splitting
 
