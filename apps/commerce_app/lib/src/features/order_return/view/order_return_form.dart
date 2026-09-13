@@ -6,6 +6,7 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'order_return_feedback.dart';
+import 'order_return_exhausted_state.dart';
 import 'order_return_item_choice.dart';
 
 /// Expanded item-selection form for one eligible order.
@@ -45,72 +46,79 @@ final class OrderReturnForm extends StatelessWidget {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 4),
-          const TranslatedText(
-            'shop_account_return_choose_items',
-            defaultText: 'Choose the items and quantities you want to return.',
-            style: TextStyle(color: StoreColors.foregroundSubtle),
-          ),
-          const SizedBox(height: 16),
-          for (final item in order.items)
-            OrderReturnItemChoice(
-              item: item,
-              quantity: state.quantities[item.id],
-              reasonId: state.reasonIds[item.id],
-              reasons: state.reasons,
-              reasonStatus: state.reasonStatus,
-              disabled: pending,
+          if (state.availableQuantities.isEmpty)
+            const OrderReturnExhaustedState()
+          else ...[
+            const TranslatedText(
+              'shop_account_return_choose_items',
+              defaultText:
+                  'Choose the items and quantities you want to return.',
+              style: TextStyle(color: StoreColors.foregroundSubtle),
             ),
-          const SizedBox(height: 12),
-          TextFormField(
-            initialValue: state.note.unwrapOr(''),
-            enabled: !pending,
-            minLines: 2,
-            maxLines: 4,
-            maxLength: 2000,
-            onChanged: context.readOrderReturnViewModel().setNote,
-            decoration: InputDecoration(
-              labelText: context.tr(
-                'shop_account_return_note',
-                defaultText: 'Note (optional)',
-              ),
-              border: const OutlineInputBorder(),
-            ),
-          ),
-          if (state.status == OrderReturnRequestStatus.failed) ...[
-            const SizedBox(height: 8),
-            OrderReturnFailureText(failure: state.failure),
-          ],
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed:
-                    pending ? null : context.readOrderReturnViewModel().close,
-                child: const TranslatedText(
-                  'shop_cancel',
-                  defaultText: 'Cancel',
+            const SizedBox(height: 16),
+            for (final item in order.items)
+              if (state.availableQuantities[item.id] case final maximum?)
+                OrderReturnItemChoice(
+                  item: item,
+                  availableQuantity: maximum,
+                  quantity: state.quantities[item.id],
+                  reasonId: state.reasonIds[item.id],
+                  reasons: state.reasons,
+                  reasonStatus: state.reasonStatus,
+                  disabled: pending,
                 ),
+            const SizedBox(height: 12),
+            TextFormField(
+              initialValue: state.note.unwrapOr(''),
+              enabled: !pending,
+              minLines: 2,
+              maxLines: 4,
+              maxLength: 2000,
+              onChanged: context.readOrderReturnViewModel().setNote,
+              decoration: InputDecoration(
+                labelText: context.tr(
+                  'shop_account_return_note',
+                  defaultText: 'Note (optional)',
+                ),
+                border: const OutlineInputBorder(),
               ),
-              const SizedBox(width: 8),
-              FilledButton(
-                onPressed: pending || state.quantities.isEmpty
-                    ? null
-                    : () => unawaited(
-                          context.readOrderReturnViewModel().submit(),
-                        ),
-                child: pending
-                    ? const SizedBox.square(
-                        dimension: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const TranslatedText(
-                        'shop_account_submit_return',
-                        defaultText: 'Submit return',
-                      ),
-              ),
+            ),
+            if (state.status == OrderReturnRequestStatus.failed) ...[
+              const SizedBox(height: 8),
+              OrderReturnFailureText(failure: state.failure),
             ],
-          ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed:
+                      pending ? null : context.readOrderReturnViewModel().close,
+                  child: const TranslatedText(
+                    'shop_cancel',
+                    defaultText: 'Cancel',
+                  ),
+                ),
+                const SizedBox(width: 8),
+                FilledButton(
+                  onPressed: pending || state.quantities.isEmpty
+                      ? null
+                      : () => unawaited(
+                            context.readOrderReturnViewModel().submit(),
+                          ),
+                  child: pending
+                      ? const SizedBox.square(
+                          dimension: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const TranslatedText(
+                          'shop_account_submit_return',
+                          defaultText: 'Submit return',
+                        ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

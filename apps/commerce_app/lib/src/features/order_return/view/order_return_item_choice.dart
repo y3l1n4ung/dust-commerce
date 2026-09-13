@@ -8,6 +8,7 @@ final class OrderReturnItemChoice extends StatelessWidget {
   /// Creates an item choice controlled by the generated ViewModel state.
   const OrderReturnItemChoice({
     required this.item,
+    required this.availableQuantity,
     required this.quantity,
     required this.reasonId,
     required this.reasons,
@@ -15,6 +16,9 @@ final class OrderReturnItemChoice extends StatelessWidget {
     required this.disabled,
     super.key,
   });
+
+  /// Units that can still enter a new return request.
+  final int availableQuantity;
 
   /// Whether controls are disabled during submission.
   final bool disabled;
@@ -85,7 +89,7 @@ final class OrderReturnItemChoice extends StatelessWidget {
                             }
                           },
                     items: [
-                      for (var value = 1; value <= item.quantity; value++)
+                      for (var value = 1; value <= availableQuantity; value++)
                         DropdownMenuItem(
                           value: value,
                           child: Text(context.tr(
