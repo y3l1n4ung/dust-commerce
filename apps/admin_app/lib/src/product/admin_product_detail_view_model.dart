@@ -1,6 +1,7 @@
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:admin_app/src/product/admin_product_sales_channel_api.dart';
+import 'package:admin_app/src/product/admin_product_shipping_profile_api.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
 import 'package:dust_dart/fp.dart';
@@ -11,6 +12,7 @@ part 'admin_product_detail_media_view_model.dart';
 part 'admin_product_detail_organization_view_model.dart';
 part 'admin_product_detail_pricing_view_model.dart';
 part 'admin_product_detail_sales_channel_view_model.dart';
+part 'admin_product_detail_shipping_profile_view_model.dart';
 part 'admin_product_detail_stock_view_model.dart';
 part 'admin_product_detail_variant_view_model.dart';
 
@@ -20,6 +22,7 @@ final class AdminProductDetailViewModelArgs extends ViewModelArgs {
   const AdminProductDetailViewModelArgs({
     required this.api,
     required this.salesChannels,
+    required this.shippingProfiles,
     super.observer,
   });
 
@@ -28,6 +31,9 @@ final class AdminProductDetailViewModelArgs extends ViewModelArgs {
 
   /// Product-specific and global channel reads sharing Dio authorization.
   final AdminProductSalesChannelApi salesChannels;
+
+  /// Product fulfillment reads and writes sharing Dio authorization.
+  final AdminProductShippingProfileApi shippingProfiles;
 }
 
 /// Loads one product without exposing Dio responses to widgets.
@@ -130,6 +136,8 @@ final class AdminProductDetailViewModel extends $AdminProductDetailViewModel {
       ));
 
   void _emitSalesChannels(AdminProductDetailState value) => emit(value);
+
+  void _emitShippingProfile(AdminProductDetailState value) => emit(value);
 
   void _emitVariant(AdminProductDetailState value) => emit(value.copyWith(
         salesChannels: state.salesChannels,

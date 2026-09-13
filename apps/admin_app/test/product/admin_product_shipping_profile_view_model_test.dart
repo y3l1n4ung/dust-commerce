@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:admin_app/src/core/admin_api.dart';
-import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
 import 'package:admin_app/src/product/admin_product_sales_channel_api.dart';
 import 'package:admin_app/src/product/admin_product_shipping_profile_api.dart';
@@ -18,12 +17,17 @@ void main() {
   late AdminProductDetailViewModel detail;
 
   setUp(() async {
-    directory = await Directory.systemTemp.createTemp('admin_product_channel');
+    directory = await Directory.systemTemp.createTemp('admin_product_profile');
     database = CommerceDatabase.open(
       '${directory.path}/commerce.db',
       options: commerceOptions,
     );
     await seedDevelopmentStore(database);
+    await queryExecute(
+      "INSERT INTO shipping_profile (id, name, type) "
+      "VALUES ('sp_fragile', 'Fragile', 'fragile')",
+      [],
+    ).execute(database.executor);
     await bootstrapAdmin(
       database,
       const AdminCredentials(
@@ -63,75 +67,76 @@ void main() {
     await directory.delete(recursive: true);
   });
 
-  test('loads product availability and the total channel count', () async {
+  test('loads typed profile choices and embedded assignment', () async {
     await detail.load('prod_tshirt');
 
-    expect(detail.state.status, AdminProductDetailStatus.ready);
-    expect(
-      detail.state.salesChannels.map((channel) => channel.name),
-      ['Online Store'],
-    );
-    expect(detail.state.totalSalesChannels, const Some(2));
+    final choices = await detail.shippingProfileChoices(query: 'frag');
+
+    expect(_profile(_product(detail)).id, 'sp_default');
+    final page = switch (choices) {
+      Some(:final value) => value,
+      None() => fail('Expected shipping-profile choices'),
+    };
+    expect(page.shippingProfiles.single.name, 'Fragile');
+    expect(page.count, 1);
   });
 
-  test('publishes the complete saved channel selection', () async {
+  test('replaces and refreshes the product profile', () async {
     await detail.load('prod_tshirt');
 
-    final saved = await detail.updateSalesChannels(
+    final saved = await detail.updateShippingProfile(
       'prod_tshirt',
-      const AdminUpdateProductSalesChannels(
-        salesChannelIds: ['sc_wholesale'],
+      const AdminUpdateProductShippingProfile(
+        shippingProfileIdValue: 'sp_fragile',
       ),
     );
 
     expect(saved, isTrue);
-    expect(detail.state.status, AdminProductDetailStatus.ready);
-    expect(
-      detail.state.salesChannels.map((channel) => channel.name),
-      ['Wholesale'],
-    );
-    expect(detail.state.totalSalesChannels, const Some(2));
+    expect(_profile(_product(detail)).id, 'sp_fragile');
     expect(detail.state.failure, const None<String>());
   });
 
-  test('loads typed editor rows without exposing nullable descriptions',
-      () async {
+  test('clears the optional assignment', () async {
     await detail.load('prod_tshirt');
 
-    final result = await detail.salesChannelChoices();
-    final page = switch (result) {
-      Some(:final value) => value,
-      None() => fail('Expected sales-channel choices'),
-    };
-
-    expect(page.salesChannels, hasLength(2));
-    expect(
-      page.salesChannels.first.description,
-      const Some('Primary direct-to-consumer storefront'),
+    final saved = await detail.updateShippingProfile(
+      'prod_tshirt',
+      const AdminUpdateProductShippingProfile(
+        shippingProfileIdValue: null,
+      ),
     );
-    expect(page.salesChannels.first.createdAt.isUtc, isTrue);
-    expect(page.salesChannels.first.updatedAt.isUtc, isTrue);
+
+    expect(saved, isTrue);
+    expect(_product(detail).shippingProfile, const None());
   });
 
-  test('keeps loaded detail when the selection is invalid', () async {
+  test('keeps loaded detail when the profile is invalid', () async {
     await detail.load('prod_tshirt');
 
-    final saved = await detail.updateSalesChannels(
+    final saved = await detail.updateShippingProfile(
       'prod_tshirt',
-      const AdminUpdateProductSalesChannels(
-        salesChannelIds: ['sc_web', 'sc_web'],
+      const AdminUpdateProductShippingProfile(
+        shippingProfileIdValue: 'sp_missing',
       ),
     );
 
     expect(saved, isFalse);
-    expect(detail.state.product, isA<Some<AdminProductDetail>>());
+    expect(_profile(_product(detail)).id, 'sp_default');
     expect(
       detail.state.failure,
-      const Some('Choose unique available sales channels.'),
-    );
-    expect(
-      detail.state.salesChannels.map((channel) => channel.id),
-      ['sc_web'],
+      const Some('Choose an active shipping profile.'),
     );
   });
 }
+
+AdminProductDetail _product(AdminProductDetailViewModel detail) =>
+    switch (detail.state.product) {
+      Some(:final value) => value,
+      None() => throw StateError('Expected loaded product'),
+    };
+
+AdminShippingProfile _profile(AdminProductDetail product) =>
+    switch (product.shippingProfile) {
+      Some(:final value) => value,
+      None() => throw StateError('Expected assigned shipping profile'),
+    };

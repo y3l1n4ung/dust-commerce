@@ -37,6 +37,10 @@
   `packages/admin/dashboard/src/routes/products/product-detail/product-detail.tsx`
   plus its General, Media, Options, Variants, Sales Channels, Shipping,
   Organization and Attributes section components.
+- Product shipping-profile source:
+  `packages/admin/dashboard/src/routes/products/product-detail/components/product-shipping-profile-section/`
+  and `packages/admin/dashboard/src/routes/products/product-shipping-profile/`
+  at the pinned commit.
 - Product-delete source:
   `components/product-list-table/product-list-table-actions.tsx`, the detail
   `product-general-section.tsx`, `hooks/api/products.tsx`, and the English
@@ -150,6 +154,14 @@ variant title/SKU rows and sticky Cancel/Save footer, but maps the location
 columns to its real aggregate inventory model instead of showing fake stock
 locations. The Morrow screen and end-to-end mutation were captured live; the
 local Medusa tab again timed out, so pixel parity is not claimed.
+
+The product shipping-profile pass uses Medusa's pinned detail section and
+RouteDrawer form as source truth. The running Morrow Admin was exercised at its
+narrow local viewport with a default profile plus a second temporary profile:
+the server-backed search narrowed to Fragile Goods, Save refreshed the detail
+card, and Unassigned cleared the scalar relationship. No same-state Medusa
+drawer raster was captured, so this proves source structure and live behavior,
+not pixel parity.
 
 The product-delete pass uses the pinned list and detail action-group source as
 structural truth. Morrow exposes Edit followed by a separately divided Delete
@@ -441,6 +453,15 @@ raster is available, so pixel parity is not claimed.
   treatment. All 66 non-widget Admin tests pass; analyzer, Dust and the release
   web build are clean. Widget subtrees in this slice are concrete widget
   classes rather than private methods returning `Widget`.
+- Product shipping-profile editing now follows Medusa's source hierarchy: a
+  Shipping Profile card, merchant label and type, right-side drawer, searchable
+  server choices, explicit Unassigned state, and sticky Cancel/Save actions.
+  Live QA changed Default Shipping Profile to Fragile Goods, then cleared the
+  assignment; the card refreshed after each save and browser warnings/errors
+  remained empty. All 70 non-widget Admin and 354 server tests pass; analyzer,
+  Dust, the widget-composition guard and the release web build are clean. The
+  touched sidebar's two private `Widget` builders were replaced with concrete
+  widget classes and removed from the frozen debt baseline.
 
 ## Open findings
 
@@ -470,6 +491,9 @@ raster is available, so pixel parity is not claimed.
   visible filter are implemented, while channel mutations remain separate;
   Region and Order Export have source-structure and live-behavior coverage but
   also lack same-state Medusa captures.
+- P2 — Shipping-profile assignment passes source-structure and live-behavior
+  QA, but needs an equivalent live Medusa product/profile state and combined
+  capture before pixel parity can be claimed.
 
 ## Result
 
@@ -492,6 +516,9 @@ finding.
 Product sales-channel editing passes typed state, direct authenticated API,
 complete-selection mutation and live browser behavior against the pinned
 Medusa source structure; same-state source raster comparison remains open.
+Product shipping-profile editing passes protected list/update behavior, typed
+`Option` state, source-shaped card/drawer composition and live replace/clear
+QA; same-state Medusa raster comparison remains open.
 Post-create editor, image-variant drawer, variant pricing, product stock and
 product deletion and orders remain blocked on same-state source captures;
 broader Medusa Admin parity is not claimed.

@@ -1,5 +1,6 @@
 import 'package:admin_app/src/product/detail/admin_product_detail_section.dart';
 import 'package:admin_app/src/product/detail/admin_product_sales_channel_section.dart';
+import 'package:admin_app/src/product/detail/admin_product_shipping_profile_section.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ final class AdminProductSidebarSections extends StatelessWidget {
     required this.totalSalesChannels,
     required this.onEditOrganization,
     required this.onEditSalesChannels,
+    required this.onEditShippingProfile,
     required this.onUnavailable,
     super.key,
   });
@@ -32,6 +34,9 @@ final class AdminProductSidebarSections extends StatelessWidget {
   /// Opens the product sales-channel focus editor.
   final VoidCallback onEditSalesChannels;
 
+  /// Opens the scalar shipping-profile editor.
+  final VoidCallback onEditShippingProfile;
+
   /// Reports controls whose domain is not implemented yet.
   final VoidCallback onUnavailable;
 
@@ -44,11 +49,9 @@ final class AdminProductSidebarSections extends StatelessWidget {
             onEdit: onEditSalesChannels,
           ),
           const SizedBox(height: 12),
-          _UnavailableSection(
-            title: 'Shipping configuration',
-            icon: Icons.shopping_bag_outlined,
-            message: 'Not configured',
-            onUnavailable: onUnavailable,
+          AdminProductShippingProfileSection(
+            shippingProfile: product.shippingProfile,
+            onEdit: onEditShippingProfile,
           ),
           const SizedBox(height: 12),
           AdminProductDetailSection(
@@ -56,14 +59,16 @@ final class AdminProductSidebarSections extends StatelessWidget {
             action: adminSectionAction(onEditOrganization),
             child: Column(
               children: [
-                _badges(context, 'Tags', product.tags),
-                _badges(context, 'Type', [product.productType ?? '']),
-                _badges(
-                  context,
-                  'Collection',
-                  [product.collectionTitle ?? ''],
+                _BadgeRow(label: 'Tags', values: product.tags),
+                _BadgeRow(label: 'Type', values: [product.productType ?? '']),
+                _BadgeRow(
+                  label: 'Collection',
+                  values: [product.collectionTitle ?? ''],
                 ),
-                _badges(context, 'Categories', product.categories),
+                _BadgeRow(
+                  label: 'Categories',
+                  values: product.categories,
+                ),
               ],
             ),
           ),
@@ -73,24 +78,42 @@ final class AdminProductSidebarSections extends StatelessWidget {
             action: adminSectionAction(onUnavailable),
             child: Column(
               children: [
-                _row(context, 'Height', product.height),
-                _row(context, 'Width', product.width),
-                _row(context, 'Length', product.length),
-                _row(context, 'Weight', product.weight),
-                _row(context, 'Country of Origin', product.originCountry),
+                _AttributeRow(label: 'Height', value: product.height),
+                _AttributeRow(label: 'Width', value: product.width),
+                _AttributeRow(label: 'Length', value: product.length),
+                _AttributeRow(label: 'Weight', value: product.weight),
+                _AttributeRow(
+                  label: 'Country of Origin',
+                  value: product.originCountry,
+                ),
               ],
             ),
           ),
         ],
       );
+}
 
-  Widget _row(BuildContext context, String label, Object? value) =>
-      AdminProductDetailRow(
+final class _AttributeRow extends StatelessWidget {
+  const _AttributeRow({required this.label, required this.value});
+
+  final String label;
+  final Object? value;
+
+  @override
+  Widget build(BuildContext context) => AdminProductDetailRow(
         label: label,
         value: adminDetailText(context, value),
       );
+}
 
-  Widget _badges(BuildContext context, String label, List<String> values) {
+final class _BadgeRow extends StatelessWidget {
+  const _BadgeRow({required this.label, required this.values});
+
+  final String label;
+  final List<String> values;
+
+  @override
+  Widget build(BuildContext context) {
     final present = values.where((value) => value.trim().isNotEmpty).toList();
     return AdminProductDetailRow(
       label: label,
@@ -103,47 +126,6 @@ final class AdminProductSidebarSections extends StatelessWidget {
             ),
     );
   }
-}
-
-final class _UnavailableSection extends StatelessWidget {
-  const _UnavailableSection({
-    required this.title,
-    required this.icon,
-    required this.message,
-    required this.onUnavailable,
-  });
-
-  final IconData icon;
-  final String message;
-  final VoidCallback onUnavailable;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) => AdminProductDetailSection(
-        title: title,
-        action: adminSectionAction(onUnavailable),
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Icon(icon, size: 16),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              message,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      );
 }
 
 final class _Badge extends StatelessWidget {

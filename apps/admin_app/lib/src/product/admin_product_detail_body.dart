@@ -127,6 +127,8 @@ final class _DetailBody extends StatelessWidget {
         product,
         salesChannels,
       ),
+      onEditShippingProfile: () =>
+          editAdminProductShippingProfile(context, product),
       onUnavailable: () => showAdminUnavailable(context),
     );
 
