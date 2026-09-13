@@ -29,6 +29,11 @@ void main() {
     expect(await _count(database, 'product_images'), 10);
     expect(await _count(database, 'shipping_options'), 6);
     expect(await _count(database, 'shipping_option_price_rules'), 2);
+    expect(await _count(database, 'stock_location_addresses'), 1);
+    expect(await _count(database, 'stock_locations'), 1);
+    expect(await _count(database, 'fulfillment_providers'), 1);
+    expect(await _count(database, 'stock_location_fulfillment_providers'), 1);
+    expect(await _count(database, 'shipping_option_fulfillment_provider'), 6);
     expect(await _count(database, 'promotions'), 1);
     expect(await _count(database, 'regions'), 2);
     expect(await _count(database, 'sales_channels'), 2);

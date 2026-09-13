@@ -5,6 +5,7 @@ part 'development_pricing_seed.dart';
 part 'development_product_option_seed.dart';
 part 'development_demo_catalog_seed.dart';
 part 'development_demo_relation_seed.dart';
+part 'development_fulfillment_seed.dart';
 
 /// Inserts the deterministic catalogue used for local storefront development.
 ///
@@ -62,6 +63,7 @@ VALUES
   ('reg_eu', 'manual'),
   ('reg_us', 'manual')
 '''),
+  ..._fulfillmentProviderStatements,
   ..._taxonomyBeforeProducts,
   const _Statement(r'''
 INSERT OR IGNORE INTO products
@@ -134,6 +136,7 @@ WHERE image.product_id = 'prod_tshirt'
   )
 '''),
   ..._shippingPriceStatements,
+  ..._shippingOptionProviderStatements,
   const _Statement(r'''
 INSERT OR IGNORE INTO promotions
   (id, code, type, value)
