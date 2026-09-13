@@ -10,6 +10,7 @@ export 'src/admin_order_item.dart';
 export 'src/admin_order_query.dart';
 export 'src/admin_order_status.dart';
 export 'src/admin_product.dart';
+export 'src/admin_product_detail.dart';
 export 'src/admin_product_deleted.dart';
 export 'src/admin_product_option.dart';
 export 'src/admin_product_organization.dart';
