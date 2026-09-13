@@ -1,5 +1,6 @@
 import 'package:admin_app/src/core/admin_money.dart';
 import 'package:admin_app/src/order/admin_order_detail_item_row.dart';
+import 'package:admin_app/src/order/admin_order_return_action.dart';
 import 'package:admin_app/src/product/detail/admin_product_detail_section.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
@@ -51,6 +52,7 @@ final class AdminOrderSummarySection extends StatelessWidget {
             ),
             _TotalRow(label: 'Tax', value: _money(order.tax)),
             _TotalRow(label: 'Total', value: _money(order.total), strong: true),
+            AdminOrderReturnAction(order: order),
           ],
         ),
       );

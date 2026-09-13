@@ -2,6 +2,7 @@ import 'package:admin_app/src/order/admin_order_activity_section.dart';
 import 'package:admin_app/src/order/admin_order_customer_section.dart';
 import 'package:admin_app/src/order/admin_order_detail_state.dart';
 import 'package:admin_app/src/order/admin_order_detail_view_model.dart';
+import 'package:admin_app/src/order/admin_return_view_model.dart';
 import 'package:admin_app/src/order/admin_order_fulfillment_section.dart';
 import 'package:admin_app/src/order/admin_order_general_section.dart';
 import 'package:admin_app/src/order/admin_order_payment_section.dart';
@@ -47,6 +48,7 @@ final class _AdminOrderDetailPageState extends State<AdminOrderDetailPage> {
   void _load() => WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           context.readAdminOrderDetailViewModel().load(widget.orderId);
+          context.readAdminReturnViewModel().loadRequested(widget.orderId);
         }
       });
 

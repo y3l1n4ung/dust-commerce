@@ -8,6 +8,8 @@ import 'package:admin_app/src/order/admin_order_detail_view_model.dart';
 import 'package:admin_app/src/order/admin_order_export_api.dart';
 import 'package:admin_app/src/order/admin_order_region_api.dart';
 import 'package:admin_app/src/order/admin_order_sales_channel_api.dart';
+import 'package:admin_app/src/order/admin_return_api.dart';
+import 'package:admin_app/src/order/admin_return_view_model.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/product/admin_product_create_view_model.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
@@ -56,6 +58,9 @@ void main() {
       api: AdminOrderDetailApi(dio, baseUrl: baseUrl),
     ),
   );
+  final returns = AdminReturnViewModel(
+    AdminReturnViewModelArgs(api: AdminReturnApi(dio, baseUrl: baseUrl)),
+  );
   final productDetail = AdminProductDetailViewModel(
     AdminProductDetailViewModelArgs(
       api: api,
@@ -93,26 +98,30 @@ void main() {
         value: orders,
         child: AdminOrderDetailViewModelScope.value(
           value: orderDetail,
-          child: AdminProductViewModelScope.value(
-            value: products,
-            child: AdminProductDetailViewModelScope.value(
-              value: productDetail,
-              child: AdminProductCreateViewModelScope.value(
-                value: productCreate,
-                child: AdminProductOptionViewModelScope.value(
-                  value: productOptions,
-                  child: AdminProductOptionDetailViewModelScope.value(
-                    value: productOptionDetail,
-                    child: AdminProductTypeViewModelScope.value(
-                      value: productTypes,
-                      child: AdminProductTypeDetailViewModelScope.value(
-                        value: productTypeDetail,
-                        child: AdminShippingProfileViewModelScope.value(
-                          value: shippingProfiles,
-                          child: AdminShippingProfileDetailViewModelScope.value(
-                            value: shippingProfileDetail,
+          child: AdminReturnViewModelScope.value(
+            value: returns,
+            child: AdminProductViewModelScope.value(
+              value: products,
+              child: AdminProductDetailViewModelScope.value(
+                value: productDetail,
+                child: AdminProductCreateViewModelScope.value(
+                  value: productCreate,
+                  child: AdminProductOptionViewModelScope.value(
+                    value: productOptions,
+                    child: AdminProductOptionDetailViewModelScope.value(
+                      value: productOptionDetail,
+                      child: AdminProductTypeViewModelScope.value(
+                        value: productTypes,
+                        child: AdminProductTypeDetailViewModelScope.value(
+                          value: productTypeDetail,
+                          child: AdminShippingProfileViewModelScope.value(
+                            value: shippingProfiles,
                             child:
-                                MorrowAdminApp(themes: AdminThemeController()),
+                                AdminShippingProfileDetailViewModelScope.value(
+                              value: shippingProfileDetail,
+                              child: MorrowAdminApp(
+                                  themes: AdminThemeController()),
+                            ),
                           ),
                         ),
                       ),
