@@ -82,7 +82,7 @@ class CartSummary extends StatelessWidget {
           FilledButton(
             onPressed: state.status == CartStatus.loading
                 ? null
-                : () => context.navigator.checkout().go(),
+                : () => context.pushCheckoutStep(checkoutEntryStep(view.cart)),
             child: const TranslatedText(
               'shop_cart_checkout',
               defaultText: 'Go to checkout',
