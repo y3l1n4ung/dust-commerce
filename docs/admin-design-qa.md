@@ -360,7 +360,11 @@ raster is available, so pixel parity is not claimed.
   product at USD 15.00, and its detail route correctly rendered zero inventory
   as out of stock. Admin browser warnings and errors were empty. Eight focused
   preview/confirmation tests, all 310 server tests, and all 50 non-widget Admin
-  tests pass.
+  tests pass. A later live stock pass opened that same imported product through
+  Product details, changed its managed one-size variant from zero to 25, and
+  immediately exposed Add to cart in the DTC route. Adding one unit produced a
+  USD 15.00 cart line and Cart (1). The four protected/atomic server stock tests
+  and both non-widget Admin stock-state tests pass; no new widget test was added.
 - Orders now open from the selected sidebar row into Medusa's source-ordered
   Order, Date, Customer, Sales channel, Payment, Fulfillment, Total and Country
   table. Search narrowed six rows to Ada; the Completed filter returned three
