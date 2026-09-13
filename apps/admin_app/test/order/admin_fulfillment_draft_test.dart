@@ -1,4 +1,5 @@
 import 'package:admin_app/src/order/admin_fulfillment_draft.dart';
+import 'package:admin_app/src/order/admin_fulfillment_selection.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -82,6 +83,45 @@ void main() {
         quantities: const {'item_cup': 2},
       ),
       const None<AdminCreateFulfillment>(),
+    );
+  });
+
+  test('prefers requested, checkout, then first compatible method', () {
+    const standard = AdminFulfillmentShippingOption(
+      id: 'ship_standard',
+      name: 'Standard shipping',
+      shippingProfileId: 'sp_default',
+    );
+    const express = AdminFulfillmentShippingOption(
+      id: 'ship_express',
+      name: 'Express shipping',
+      shippingProfileId: 'sp_default',
+    );
+    const options = [standard, express];
+
+    expect(
+      resolveAdminFulfillmentShippingOption(
+        options,
+        const Some('ship_express'),
+        const Some('ship_standard'),
+      ),
+      const Some(express),
+    );
+    expect(
+      resolveAdminFulfillmentShippingOption(
+        options,
+        const None(),
+        const Some('ship_standard'),
+      ),
+      const Some(standard),
+    );
+    expect(
+      resolveAdminFulfillmentShippingOption(
+        options,
+        const Some('missing'),
+        const None(),
+      ),
+      const Some(standard),
     );
   });
 }
