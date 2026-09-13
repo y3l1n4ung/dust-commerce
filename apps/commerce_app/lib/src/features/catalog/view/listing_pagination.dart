@@ -2,6 +2,38 @@ import 'package:commerce_app/src/core/store_theme.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+const _paginationTextStyle = TextStyle(
+  fontSize: 18,
+  height: 1.6,
+  fontWeight: FontWeight.w500,
+);
+const _paginationMutedTextStyle = TextStyle(
+  color: StoreColors.foregroundMuted,
+  fontSize: 18,
+  height: 1.6,
+  fontWeight: FontWeight.w500,
+);
+
+/// One visible entry in the bounded Medusa pagination sequence.
+sealed class ListingPaginationItem {
+  const ListingPaginationItem();
+}
+
+/// A selectable one-based page entry.
+final class ListingPage extends ListingPaginationItem {
+  /// Creates a page entry.
+  const ListingPage(this.page);
+
+  /// One-based destination page.
+  final int page;
+}
+
+/// A non-interactive gap between distant page ranges.
+final class ListingEllipsis extends ListingPaginationItem {
+  /// Creates an ellipsis entry.
+  const ListingEllipsis();
+}
+
 /// Medusa pagination with edge pages and bounded ellipses.
 class ListingPagination extends StatelessWidget {
   /// Creates a one-based pagination control.
@@ -27,45 +59,84 @@ class ListingPagination extends StatelessWidget {
         crossAxisAlignment: WrapCrossAlignment.end,
         spacing: 12,
         children: [
-          for (final item in _items(currentPage, totalPages))
+          for (final item in listingPaginationItems(currentPage, totalPages))
             switch (item) {
-              0 => const TranslatedText.dynamic(
-                  'shop_pagination_ellipsis',
-                  fallback: '...',
-                  style: TextStyle(
-                    color: StoreColors.foregroundMuted,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              final page => TextButton(
-                  onPressed:
-                      page == currentPage ? null : () => onPageChanged(page),
-                  style: TextButton.styleFrom(
-                    foregroundColor: page == currentPage
-                        ? StoreColors.foreground
-                        : StoreColors.foregroundMuted,
-                    disabledForegroundColor: StoreColors.foreground,
-                    textStyle: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  child: TranslatedText.dynamic(
-                    'shop_page_$page',
-                    fallback: '$page',
-                  ),
+              ListingEllipsis() => const _PaginationEllipsis(),
+              ListingPage(:final page) => _PaginationPageButton(
+                  page: page,
+                  current: page == currentPage,
+                  onPressed: () => onPageChanged(page),
                 ),
             },
         ],
       );
 }
 
-List<int> _items(int page, int total) {
-  if (total <= 7) return [for (var value = 1; value <= total; value++) value];
-  if (page <= 4) return [1, 2, 3, 4, 5, 0, total];
-  if (page >= total - 3) {
-    return [1, 0, for (var value = total - 4; value <= total; value++) value];
+/// Builds the exact bounded page sequence used by the pinned Medusa source.
+List<ListingPaginationItem> listingPaginationItems(int page, int total) {
+  ListingPage item(int value) => ListingPage(value);
+  if (total <= 7) {
+    return [for (var value = 1; value <= total; value++) item(value)];
   }
-  return [1, 0, page - 1, page, page + 1, 0, total];
+  if (page <= 4) {
+    return [
+      for (var value = 1; value <= 5; value++) item(value),
+      const ListingEllipsis(),
+      item(total),
+    ];
+  }
+  if (page >= total - 3) {
+    return [
+      item(1),
+      const ListingEllipsis(),
+      for (var value = total - 4; value <= total; value++) item(value),
+    ];
+  }
+  return [
+    item(1),
+    const ListingEllipsis(),
+    for (var value = page - 1; value <= page + 1; value++) item(value),
+    const ListingEllipsis(),
+    item(total),
+  ];
+}
+
+final class _PaginationPageButton extends StatelessWidget {
+  const _PaginationPageButton({
+    required this.page,
+    required this.current,
+    required this.onPressed,
+  });
+
+  final bool current;
+  final VoidCallback onPressed;
+  final int page;
+
+  @override
+  Widget build(BuildContext context) => TextButton(
+        onPressed: current ? null : onPressed,
+        style: TextButton.styleFrom(
+          foregroundColor: StoreColors.foregroundMuted,
+          disabledForegroundColor: StoreColors.foreground,
+          minimumSize: Size.zero,
+          padding: EdgeInsets.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          textStyle: _paginationTextStyle,
+        ),
+        child: TranslatedText.dynamic(
+          'shop_page_$page',
+          fallback: '$page',
+        ),
+      );
+}
+
+final class _PaginationEllipsis extends StatelessWidget {
+  const _PaginationEllipsis();
+
+  @override
+  Widget build(BuildContext context) => const TranslatedText.dynamic(
+        'shop_pagination_ellipsis',
+        fallback: '...',
+        style: _paginationMutedTextStyle,
+      );
 }

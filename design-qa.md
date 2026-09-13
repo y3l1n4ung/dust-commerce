@@ -5,6 +5,7 @@ Source visual truth paths:
 - Pinned source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/app/[countryCode]/(main)/order/[id]/transfer/[token]/page.tsx`
 - Rendered reference: `https://next.medusajs.com/dk/order/order_qa/transfer/demo-capability?qa=matched-final`
 - Pinned catalogue source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/store/templates/paginated-products.tsx`
+- Pinned pagination source: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/store/components/pagination/index.tsx`
 - Rendered catalogue reference: `https://next.medusajs.com/dk/store?qa=store-grid-final`
 - Pinned compact refinement sources: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/store/components/refinement-list/{index.tsx,sort-products/index.tsx}`, `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/common/components/filter-radio-group/index.tsx`
 - Pinned featured-rail source: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/home/components/featured-products/product-rail/index.tsx`
@@ -35,7 +36,9 @@ Implementation screenshot paths: in-app browser captures of the transfer route
 `http://127.0.0.1:13001/checkout?step=review`, and
 `http://127.0.0.1:13001/checkout?step=delivery`, and compact captures of
 `http://127.0.0.1:13001/store?qa=compact-exact-20260913` and
-`http://127.0.0.1:13001/?qa=home-exact-20260913`. The browser captures
+`http://127.0.0.1:13001/?qa=home-exact-20260913`, plus the compact page-two
+state at `http://127.0.0.1:13001/store?page=2&sortBy=price_desc&qa=pagination-final`.
+The browser captures
 are retained in the task evidence rather than exported into the repository.
 
 Viewport: the matched desktop captures used the same in-app browser surface. The
@@ -53,7 +56,8 @@ it became available. The final compact Store and featured-rail comparisons used
 equal `375 x 812` output rasters at device-pixel ratio 1. The reference tab was
 requested at `390 x 844`; its visible scrollbar and browser capture crop
 produced the `375 x 812` content raster, so the implementation was recaptured at
-that exact output size before comparison.
+that exact output size before comparison. The pagination interaction pass used
+a `375 x 812` CSS viewport at density 1.
 
 Pixel dimensions, CSS size, and density normalization: both captures used the
 in-app browser's default CSS viewport and density. Comparison normalized the
@@ -79,7 +83,15 @@ inset, selected sort marker, label baselines and two-column grid. Morrow exposes
 real Color and Size filters that the public Medusa fixture does not, so its
 product heading begins lower by the height of intentional merchant data. Price
 sorting and Black filtering were exercised through the generated route and real
-API; compact paging remains. Remaining global QA covers the product route at
+API. Compact page 2 retained `price_desc`, returned the remaining eight
+lower-priced products, disabled page 2, and kept the source's 12px visible gap
+between its 18px/28.8px labels. Selecting Black from page 2 removed the page query
+while retaining `price_desc` and the selected option-value id. The pinned
+`@medusajs/ui-preset@2.20.1` token defines this type as 18px with a 28.8px line
+box and weight 500. The live Medusa
+fixture exposes fewer than thirteen products, so its pagination never renders;
+this pass proves pinned source-code and local interaction parity but does not
+claim a rendered pagination pair. Remaining global QA covers the product route at
 compact width and in selected/out-of-stock states, authenticated
 `/checkout` with a saved address available, authenticated `/account` with a
 completed profile, saved addresses and recent orders,
@@ -141,7 +153,8 @@ account, so authenticated head-to-head evidence remains open.
 **Required fidelity surfaces**
 
 - Fonts and typography: the transfer hierarchy, catalogue title/card copy,
-  compact sort labels, product information stack, empty and populated-cart
+  compact sort labels, 18px medium pagination with a 28.8px line box, product
+  information stack, empty and populated-cart
   hierarchy, cart preview, and public account forms passed; other routes remain
   pending.
 - Spacing and layout rhythm: the transfer's centered column and the catalogue's
@@ -152,7 +165,9 @@ account, so authenticated head-to-head evidence remains open.
   Compact Store refinements add the source's second 24px inset, use the selected
   row's negative 23px marker offset, and retain a 24px two-column product gap.
   Compact featured rails use natural card height with 24px column and 96px row
-  gaps, matching the source without a constrained-card overflow.
+  gaps, matching the source without a constrained-card overflow. Compact
+  pagination removes Material's implicit button padding so its rendered labels
+  have the source's exact 12px visible gap and 48px grid-to-control margin.
   Product detail now matches the source
   24px inset, 300px side columns, 64px gallery gutters and 192px sticky offset.
   Empty cart matches the source's combined 32px content inset, centered vertical
@@ -165,7 +180,8 @@ account, so authenticated head-to-head evidence remains open.
   source's 122px image track plus 16px content gap.
 - Colors and visual tokens: transfer foreground, zinc-600 copy, gray-200
   borders, exact black primary actions, the cart's neutral quantity pill,
-  compact Store muted/selected text, red/rose errors and emerald success are
+  compact Store muted/selected text including the active pagination number,
+  red/rose errors and emerald success are
   source-mapped; other rendered routes remain pending.
 - Image quality and asset fidelity: the transfer uses the exact source SVG. The
   catalogue uses merchant images from each backend with the source's `9:16`
@@ -182,7 +198,9 @@ account, so authenticated head-to-head evidence remains open.
   row, applied heading, code badge, visible value and post-success open state.
   Compact Store uses the source's `Sort by`, arrival and price labels. Its extra
   Color and Size copy reflects real Morrow option data absent from the public
-  reference fixture.
+  reference fixture. Pagination uses only the source number and ellipsis copy;
+  the two-page development catalogue therefore renders `1 2` without invented
+  next/previous labels.
   Morrow branding, privacy-safe omission of the owner email, and
   the temporarily non-actionable content-link text are intentional product
   differences. Guest checkout matches the source field order, required
@@ -202,6 +220,10 @@ selected dot, all three sort-label baselines and two-column catalogue. The
 paired home rail captures align natural card heights and the source's 96px
 compact row rhythm. Product and collection names remain expected merchant-data
 differences.
+The compact page-two capture is implementation-only because the public source
+fixture never exceeds one page. It confirms the source-authored type, spacing,
+selected state and footer rhythm, while the live interaction proves page and
+refinement navigation. No rendered head-to-head pagination claim is made.
 The equal-width compact collection pair confirms the two-column grid, wrapped
 card metadata and responsive footer. A final in-app browser pass confirms the
 source-shaped menu, both close paths and navigation to `/store`.
@@ -259,6 +281,10 @@ pair after both implementations loaded their provider list. Store filters,
 including the selected marker and all labels, remained readable in the paired
 compact full view, so a lossy crop was unnecessary. Authenticated account forms
 and remaining checkout controls still require focused captures.
+Pagination labels were measured directly at density 1 after the final token
+change: each single digit is `10.10 x 29` rendered CSS pixels, the rounded form
+of the 28.8px line box, with `12.01px` of clear space. A separate lossy crop is
+unnecessary. The missing rendered source control remains the comparison limit.
 
 **Comparison history**
 
@@ -283,6 +309,12 @@ and remaining checkout controls still require focused captures.
   Medusa's viewport breakpoints, four columns at 1280px, `9:16` catalogue cards,
   `11:14` featured cards and source-shaped title/price visibility. The final
   combined comparison found no remaining P0, P1 or P2 desktop-grid mismatch.
+- The compact pagination pass replaced default Material button constraints with
+  dedicated page-button widgets and typed page/ellipsis entries. Source-range
+  unit tests cover all, leading, middle and trailing sequences. Browser QA then
+  proved page-two data, retained sort, current-page disabling and refinement
+  reset with zero observed console errors. Rendered source comparison remains
+  unavailable because Medusa's public catalogue exposes only one page.
 - The first compact Store comparison exposed P2 drift: refinements missed the
   source's extra 24px left inset, and every sort row reserved selected-icon
   space. Mapping `pl-6` and the selected-only `ml-[-23px]` behavior aligns the
