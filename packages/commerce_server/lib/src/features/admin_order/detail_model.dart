@@ -1,4 +1,5 @@
 import 'dart:convert';
+// ignore_for_file: public_member_api_docs
 
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/src/features/admin_order/detail_address_response.dart';
@@ -31,6 +32,7 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
     required this.paymentStatus,
     required this.fulfillmentStatus,
     required this.shippingName,
+    required this.shippingOptionId,
     required this.promotionCode,
     required this.placedAt,
     required this.createdAt,
@@ -54,27 +56,21 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   )
   final AdminOrderAddressResponse? billingAddress;
 
-  /// Database-generated order creation instant.
   @Sqlx(rename: 'created_at', tryFrom: _AdminOrderDateTimeFromString())
   final DateTime createdAt;
 
-  /// Lowercase ISO 4217 currency for every amount.
   @Sqlx(rename: 'currency_code')
   final String currencyCode;
 
-  /// Human-readable customer identity with email fallback.
   @Sqlx(rename: 'customer_name')
   final String customerName;
 
-  /// Frozen discount in minor units.
   @Sqlx(rename: 'discount_total')
   final int discountTotal;
 
-  /// Short merchant-facing order number.
   @Sqlx(rename: 'display_id')
   final int displayId;
 
-  /// Contact email frozen at checkout.
   final String email;
 
   /// Fulfilment state represented by the current schema.
@@ -85,8 +81,8 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   )
   final AdminOrderFulfillmentStatus fulfillmentStatus;
 
-  /// Stable opaque order identifier.
   final String id;
+
   /// Active fulfillment records and their frozen item snapshots.
   @Sqlx(rename: 'fulfillments_json', tryFrom: _AdminFulfillmentsFromString())
   final List<AdminOrderFulfillmentResponse> fulfillments;
@@ -94,9 +90,10 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   /// Frozen line-item snapshots in creation order.
   @Sqlx(rename: 'items_json', tryFrom: _AdminOrderItemsFromString())
   final List<AdminOrderItemResponse> items;
-  /// Selling region that constrains fulfillment shipping methods.
+
   @Sqlx(rename: 'region_id')
   final String regionId;
+
   /// Amount recorded by the provider adapter, when present.
   @Sqlx(rename: 'payment_amount')
   final int? paymentAmount;
@@ -129,6 +126,7 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
     tryFrom: _AdminOrderPaymentRecordStatusFromString(),
   )
   final AdminOrderPaymentRecordStatus? paymentRecordStatus;
+
   /// Order-level payment lifecycle.
   @SerDe(using: AdminOrderPaymentStatusCodec())
   @Sqlx(
@@ -157,6 +155,10 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   @Sqlx(rename: 'shipping_name')
   final String? shippingName;
 
+  /// Original checkout shipping method, when the order required delivery.
+  @Sqlx(rename: 'shipping_option_id')
+  final String? shippingOptionId;
+
   /// Frozen delivery amount in minor units.
   @Sqlx(rename: 'shipping_total')
   final int shippingTotal;
@@ -166,14 +168,12 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   @Sqlx(tryFrom: _AdminOrderStatusFromString())
   final AdminOrderStatus status;
 
-  /// Frozen goods subtotal in minor units.
   final int subtotal;
 
-  /// Frozen tax amount in minor units.
   final int tax;
 
-  /// Frozen charged total in minor units.
   final int total;
+
   /// Database-generated last mutation instant.
   @Sqlx(rename: 'updated_at', tryFrom: _AdminOrderDateTimeFromString())
   final DateTime updatedAt;

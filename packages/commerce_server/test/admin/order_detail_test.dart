@@ -48,6 +48,7 @@ void main() {
       'region_id',
       'shipping_address',
       'shipping_name',
+      'shipping_option_id',
       'shipping_total',
       'status',
       'subtotal',
@@ -60,6 +61,7 @@ void main() {
     expect(order, containsPair('payment_provider', 'manual'));
     expect(order, containsPair('payment_record_status', 'captured'));
     expect(order, containsPair('region_id', 'reg_eu'));
+    expect(order, containsPair('shipping_option_id', 'so_standard'));
     expect(order, containsPair('fulfillment_status', 'partially_fulfilled'));
     expect(order, isNot(contains('cart_id')));
     expect(order, isNot(contains('customer_id')));

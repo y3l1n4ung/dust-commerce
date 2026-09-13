@@ -23,12 +23,12 @@ final class _$AdminOrderDetailRepository implements AdminOrderDetailRepository {
     return _db.fetchOptional<AdminOrderDetailResponse>(
       r'''
 SELECT order_row.id, order_row.region_id, order_row.display_id, order_row.email,
+       order_row.shipping_option_id, order_row.currency_code, order_row.subtotal,
        coalesce(
          nullif(trim(coalesce(customer.first_name, '') || ' ' ||
                      coalesce(customer.last_name, '')), ''),
          order_row.email
        ) AS customer_name,
-       order_row.currency_code, order_row.subtotal,
        order_row.shipping_total,
        order_row.discount_total,
        order_row.tax,

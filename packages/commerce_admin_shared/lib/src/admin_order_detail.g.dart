@@ -43,6 +43,7 @@ mixin _$AdminOrderDetail implements Serializable {
         'promotionCodeValue: ${self.promotionCodeValue}, '
         'shippingAddressValue: ${self.shippingAddressValue}, '
         'shippingNameValue: ${self.shippingNameValue}, '
+        'shippingOptionIdValue: ${self.shippingOptionIdValue}, '
         'shippingTotal: ${self.shippingTotal}, '
         'status: ${self.status}, '
         'subtotal: ${self.subtotal}, '
@@ -80,6 +81,7 @@ mixin _$AdminOrderDetail implements Serializable {
             other.promotionCodeValue == self.promotionCodeValue &&
             other.shippingAddressValue == self.shippingAddressValue &&
             other.shippingNameValue == self.shippingNameValue &&
+            other.shippingOptionIdValue == self.shippingOptionIdValue &&
             other.shippingTotal == self.shippingTotal &&
             other.status == self.status &&
             other.subtotal == self.subtotal &&
@@ -115,6 +117,7 @@ mixin _$AdminOrderDetail implements Serializable {
       self.promotionCodeValue,
       self.shippingAddressValue,
       self.shippingNameValue,
+      self.shippingOptionIdValue,
       self.shippingTotal,
       self.status,
       self.subtotal,
@@ -187,6 +190,7 @@ Map<String, Object?> _$AdminOrderDetailSerialize(AdminOrderDetail instance) {
         ? null
         : (instance.shippingAddressValue!).toJson(),
     'shipping_name': instance.shippingNameValue,
+    'shipping_option_id': instance.shippingOptionIdValue,
     'shipping_total': instance.shippingTotal,
     'status': JsonHelper.encodeWithCodec<AdminOrderStatus, Object?>(
       (AdminOrderStatusCodec()),
@@ -277,6 +281,9 @@ AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
   final shippingNameValueValue = json['shipping_name'] == null
       ? null
       : JsonHelper.as<String>(json['shipping_name'], 'shipping_name', 'String');
+  final shippingOptionIdValueValue = json['shipping_option_id'] == null
+      ? null
+      : JsonHelper.as<String>(json['shipping_option_id'], 'shipping_option_id', 'String');
   final shippingTotalValue = JsonHelper.as<int>(
     json['shipping_total'],
     'shipping_total',
@@ -311,6 +318,7 @@ AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
     paymentStatus: paymentStatusValue,
     fulfillmentStatus: fulfillmentStatusValue,
     shippingNameValue: shippingNameValueValue,
+    shippingOptionIdValue: shippingOptionIdValueValue,
     promotionCodeValue: promotionCodeValueValue,
     placedAt: placedAtValue,
     createdAt: createdAtValue,

@@ -43,6 +43,7 @@ AdminOrderDetailResponse _$AdminOrderDetailResponseFromRow(Row row) {
     paymentStatus: _AdminOrderPaymentStatusFromString().decode(row.read<String>('payment_status')),
     fulfillmentStatus: _AdminOrderFulfillmentStatusFromString().decode(row.read<String>('fulfillment_status')),
     shippingName: row.readNullable<String>('shipping_name'),
+    shippingOptionId: row.readNullable<String>('shipping_option_id'),
     promotionCode: row.readNullable<String>('promotion_code'),
     placedAt: _AdminOrderDateTimeFromString().decode(row.read<String>('placed_at')),
     createdAt: _AdminOrderDateTimeFromString().decode(row.read<String>('created_at')),
@@ -129,6 +130,7 @@ Map<String, Object?> _$AdminOrderDetailResponseSerialize(AdminOrderDetailRespons
         ? null
         : (instance.shippingAddress!).toJson(),
     'shipping_name': instance.shippingName,
+    'shipping_option_id': instance.shippingOptionId,
     'shipping_total': instance.shippingTotal,
     'status': JsonHelper.encodeWithCodec<AdminOrderStatus, Object?>(
       (AdminOrderStatusCodec()),

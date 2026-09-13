@@ -6,6 +6,7 @@ import 'package:commerce_admin_shared/src/admin_order_status.dart';
 import 'package:dust_dart/serde.dart';
 
 part 'admin_order_detail.g.dart';
+part 'admin_order_detail_options.dart';
 
 /// Complete read-only merchant view of one frozen order.
 @Derive([ToString(), Eq(), Serialize(), Deserialize()])
@@ -28,6 +29,7 @@ final class AdminOrderDetail with _$AdminOrderDetail {
     required this.paymentStatus,
     required this.fulfillmentStatus,
     required this.shippingNameValue,
+    required this.shippingOptionIdValue,
     required this.promotionCodeValue,
     required this.placedAt,
     required this.createdAt,
@@ -127,6 +129,10 @@ final class AdminOrderDetail with _$AdminOrderDetail {
   @SerDe(rename: 'shipping_name')
   final String? shippingNameValue;
 
+  /// Nullable JSON backing for [shippingOptionId].
+  @SerDe(rename: 'shipping_option_id')
+  final String? shippingOptionIdValue;
+
   /// Frozen delivery amount in minor units.
   final int shippingTotal;
 
@@ -145,35 +151,4 @@ final class AdminOrderDetail with _$AdminOrderDetail {
 
   /// Database-generated last mutation instant.
   final DateTime updatedAt;
-
-  /// Billing destination, absent only for legacy snapshots.
-  Option<AdminOrderAddress> get billingAddress =>
-      adminOptionOf(billingAddressValue);
-
-  /// Amount recorded by the provider adapter, when present.
-  Option<int> get paymentAmount => adminOptionOf(paymentAmountValue);
-
-  /// Provider capture instant, when funds moved.
-  Option<DateTime> get paymentCapturedAt =>
-      adminOptionOf(paymentCapturedAtValue);
-
-  /// Provider record creation instant, when present.
-  Option<DateTime> get paymentCreatedAt => adminOptionOf(paymentCreatedAtValue);
-
-  /// Public payment adapter identifier, when present.
-  Option<String> get paymentProvider => adminOptionOf(paymentProviderValue);
-
-  /// Provider payment record lifecycle, when present.
-  Option<AdminOrderPaymentRecordStatus> get paymentRecordStatus =>
-      adminOptionOf(paymentRecordStatusValue);
-
-  /// Applied promotion code, when one was frozen.
-  Option<String> get promotionCode => adminOptionOf(promotionCodeValue);
-
-  /// Shipping destination, absent only for legacy snapshots.
-  Option<AdminOrderAddress> get shippingAddress =>
-      adminOptionOf(shippingAddressValue);
-
-  /// Selected delivery label, when one was frozen.
-  Option<String> get shippingName => adminOptionOf(shippingNameValue);
 }

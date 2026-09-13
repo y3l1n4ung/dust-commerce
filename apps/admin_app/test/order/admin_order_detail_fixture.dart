@@ -15,6 +15,7 @@ const adminOrderDetailJson = <String, Object?>{
   'fulfillment_status': 'not_fulfilled',
   'fulfillments': <Object?>[],
   'shipping_name': 'Standard shipping',
+  'shipping_option_id': 'ship_eu_standard',
   'promotion_code': 'WELCOME10',
   'placed_at': '2026-09-10T10:00:00.000Z',
   'created_at': '2026-09-10T10:00:00.000Z',
