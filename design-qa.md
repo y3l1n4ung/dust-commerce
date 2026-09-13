@@ -233,7 +233,9 @@ The compact product pass exercised the pinned `OptionSelect`, `ProductActions`
 and `MobileActions` contracts at `390 x 844`. Morrow kept all six offered option
 buttons enabled, changed `v_id` while preserving the unrelated `qa` query, and
 rendered its deterministic sold-out product with a disabled `Out of stock`
-action. The live Medusa catalog has no sparse option combination, and browser
+action. The compact option route now announces `Select options`, exposes a
+labelled Close control and opens without browser console warnings. The live
+Medusa catalog has no sparse option combination, and browser
 policy rejected the local two-raster comparison board, so compact visual parity
 and the unavailable-combination rendered pair remain blocked rather than
 inferred from separate captures.

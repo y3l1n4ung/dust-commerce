@@ -2,6 +2,8 @@ import 'package:commerce_app/commerce_app.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+import 'mobile_product_options_dialog.dart';
+
 /// Fixed purchase controls translated from Medusa DTC MobileActions.
 class MobileProductActions extends StatelessWidget {
   /// Creates the sticky mobile purchase surface.
@@ -53,7 +55,7 @@ class MobileProductActions extends StatelessWidget {
                   if (hasOptions) ...[
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () => _showOptions(context),
+                        onPressed: () => showMobileProductOptions(context),
                         child: Row(
                           children: [
                             Expanded(
@@ -88,60 +90,5 @@ class MobileProductActions extends StatelessWidget {
     return values.length == product.options.length
         ? values.join(' / ')
         : context.tr('shop_select_options', defaultText: 'Select options');
-  }
-
-  Future<void> _showOptions(BuildContext context) => showModalBottomSheet<void>(
-        context: context,
-        isScrollControlled: true,
-        barrierColor: StoreColors.foregroundSubtle.withValues(alpha: 0.75),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        builder: (_) => const _MobileOptionsSheet(),
-      );
-}
-
-class _MobileOptionsSheet extends StatelessWidget {
-  const _MobileOptionsSheet();
-
-  @override
-  Widget build(BuildContext context) {
-    final state = context.watchProductViewModel().value;
-    final busy =
-        context.watchCartViewModel().value.status == CartStatus.loading;
-    if (state.product == null) return const SizedBox.shrink();
-    return SafeArea(
-      top: false,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 24),
-            child: Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: Material(
-                color: StoreColors.base,
-                shape: const CircleBorder(),
-                child: SizedBox.square(
-                  dimension: 48,
-                  child: IconButton(
-                    onPressed: Navigator.of(context).pop,
-                    icon: const Icon(Icons.close),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          ColoredBox(
-            color: StoreColors.base,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(24, 48, 24, 48),
-              child: ProductOptionGroups(state: state, disabled: busy),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
