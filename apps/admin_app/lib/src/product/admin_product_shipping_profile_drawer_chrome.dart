@@ -21,11 +21,11 @@ final class _ShippingProfileDrawerFrame extends StatelessWidget {
   final VoidCallback onClose;
   final VoidCallback onLoadMore;
   final VoidCallback onSave;
-  final ValueChanged<Option<String>> onSelect;
+  final ValueChanged<Option<AdminShippingProfile>> onSelect;
   final ValueChanged<String> onSearchChanged;
   final AdminShippingProfileList page;
   final TextEditingController search;
-  final Option<String> selected;
+  final Option<AdminShippingProfile> selected;
 
   @override
   Widget build(BuildContext context) => Material(
@@ -81,7 +81,7 @@ final class _ShippingProfileDrawerHeader extends StatelessWidget {
         child: Row(children: [
           Expanded(
             child: Text(
-              'Edit shipping profile',
+              'Shipping Configuration',
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ),

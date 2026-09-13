@@ -517,4 +517,106 @@ open Add filter menu. Exact combined evidence remains in the task at
 
 Product query-controls slice result: passed
 
+## Admin product shipping-profile slice
+
+Source visual truth path: Medusa's official Shipping Configuration Section
+raster at
+`https://res.cloudinary.com/dza7lstvk/image/upload/fl_lossy/f_auto/r_16/ar_16:9,c_pad/v1/User%20Guide/Screenshot_2025-02-17_at_6.38.17_PM_ko3a9x.png`
+and pinned source commit `bda24b9725ac697ec5e8f706b503013e20babf12`,
+specifically `product-shipping-profile-section.tsx`, `sidebar-link.tsx`,
+`product-shipping-profile.tsx`, `product-shipping-profile-form.tsx`, and the
+English `products.shippingProfile` translations.
+
+Implementation screenshot path: in-app Browser captures of the authenticated
+Morrow product detail and Shipping Configuration drawer at
+`http://127.0.0.1:13002/`. The captures are retained in the task evidence rather
+than exported into the repository.
+
+Viewport: source and implementation full views used equal `1280 x 720` CSS
+viewports. Both browser captures are `1280 x 720` JPEG rasters at the browser's
+normalized capture density. The official source asset is `910 x 512` WebP and
+is letterboxed at native size inside its full-view capture.
+
+State: authenticated light-theme product detail with an assigned Fragile Goods
+profile. The source raster uses the Default profile and a one-channel catalogue;
+those are merchant-data differences. The Morrow drawer additionally exercised
+open, server-backed search for `def`, selection, clear, restored selection,
+loading and successful Save states.
+
+**Findings**
+
+- [P1] Shipping-profile destination is not implemented
+  Location: Shipping configuration profile row.
+  Evidence: Medusa's `SidebarLink` navigates to the selected shipping profile's
+  settings detail. Morrow renders the source chevron but has no Shipping Profile
+  settings route to open.
+  Impact: the row visually promises navigation that is not yet available.
+  Fix: deliver the Shipping Profile settings list/detail slice, then make the
+  row a semantic link to the real profile route.
+
+- [P2] Drawer pixel comparison has no source visual
+  Location: Shipping Configuration drawer.
+  Evidence: Medusa publishes the detail-card raster but no same-state drawer
+  raster was found. The pinned code establishes the title, field, clearable
+  combobox and footer structure, but not rendered pixels.
+  Impact: drawer typography, overlay geometry and token fidelity cannot receive
+  a visual pass.
+  Fix: capture a live Medusa drawer at the same viewport and state, combine it
+  with Morrow, and repeat the comparison loop.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: card heading, profile label/type hierarchy and drawer
+  label match the pinned source structure; drawer pixel fidelity remains open.
+- Spacing and layout rhythm: the card now uses the source's 8px outer inset,
+  raised component surface, 16px row inset, compact avatar and rounded corners.
+  The drawer retains the 560px right-side surface and sticky header/footer.
+- Colors and visual tokens: neutral component fill, subtle border/shadow,
+  muted profile type and black Save action follow the existing Medusa-mapped
+  Admin theme.
+- Image quality and asset fidelity: this component has no product imagery. Its
+  shopping-bag and chevron use the existing Material icon family; a drawer
+  source raster is still required before icon pixel fidelity can pass.
+- Copy and content: `Shipping configuration`, `Shipping Configuration`,
+  `Shipping Profile`, `Cancel`, and `Save` now match the pinned English source.
+
+**Full-view comparison evidence**
+
+The official raster and revised Morrow detail were emitted together at equal
+`1280 x 720` viewports. The source raster is intrinsically letterboxed, so the
+pair establishes hierarchy and component composition rather than pixel identity.
+
+**Focused region comparison evidence**
+
+The source card (`910 x 253` crop) and implementation card (`305 x 125` crop)
+were emitted together. Their different rendered widths were treated as a scale
+difference; heading order, inset surface, icon, label/type stack, chevron,
+radii and adjacent Organize card were compared without filing pixel-distance
+findings.
+
+**Comparison history**
+
+- The first pair found P2 copy and surface drift: Morrow said `Shipping Profile`
+  and rendered a flat divided row. The revised card uses the exact source
+  heading and inset elevated link surface; the second pair found no remaining
+  P0-P2 card-style mismatch.
+- The first revised-route browser pass exposed a zero-width web image that
+  produced NaN constraints and flex overflows in the adjacent Media section.
+  Explicit image dimensions fixed the layout, and the command bar became a
+  dedicated widget class. A fresh browser rendered selection actions with zero
+  warnings or errors.
+- Pinned source review then found the drawer title and always-open choice list
+  diverged from Medusa. Morrow now uses `Shipping Configuration` and a clearable
+  searchable combobox. Live search, select, clear and Save passed; the missing
+  Medusa drawer raster keeps the visual comparison blocked.
+
+**Implementation checklist**
+
+- Add real Shipping Profile settings list/detail navigation.
+- Capture the same drawer state from a runnable Medusa Admin.
+- Repeat the equal-viewport full and focused comparison before marking this
+  slice passed.
+
+Admin product shipping-profile slice result: blocked
+
 final result: blocked

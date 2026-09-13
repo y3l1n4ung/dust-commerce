@@ -3,7 +3,7 @@ part of 'admin_product_shipping_profile_drawer.dart';
 mixin _ShippingProfileDrawerActions on State<_ShippingProfileDrawer> {
   final _search = TextEditingController();
   late AdminShippingProfileList _page;
-  late Option<String> _selected;
+  late Option<AdminShippingProfile> _selected;
   Option<String> _failure = const None();
   Timer? _debounce;
   bool _loading = false;
@@ -13,10 +13,7 @@ mixin _ShippingProfileDrawerActions on State<_ShippingProfileDrawer> {
   void initState() {
     super.initState();
     _page = widget.initialPage;
-    _selected = switch (widget.product.shippingProfile) {
-      Some(:final value) => Some(value.id),
-      None() => const None(),
-    };
+    _selected = widget.product.shippingProfile;
   }
 
   @override
@@ -67,7 +64,7 @@ mixin _ShippingProfileDrawerActions on State<_ShippingProfileDrawer> {
 
   Future<void> _save() async {
     final id = switch (_selected) {
-      Some(:final value) => value,
+      Some(:final value) => value.id,
       None() => null,
     };
     final saved =
@@ -87,5 +84,6 @@ mixin _ShippingProfileDrawerActions on State<_ShippingProfileDrawer> {
     }
   }
 
-  void _select(Option<String> value) => setState(() => _selected = value);
+  void _select(Option<AdminShippingProfile> value) =>
+      setState(() => _selected = value);
 }

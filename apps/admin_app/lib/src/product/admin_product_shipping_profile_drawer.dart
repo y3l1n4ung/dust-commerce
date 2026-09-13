@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 part 'admin_product_shipping_profile_drawer_actions.dart';
 part 'admin_product_shipping_profile_drawer_body.dart';
 part 'admin_product_shipping_profile_drawer_chrome.dart';
+part 'admin_product_shipping_profile_combobox.dart';
 
 /// Loads choices and opens Medusa's right-side shipping-profile editor.
 Future<bool?> showAdminProductShippingProfileDrawer(

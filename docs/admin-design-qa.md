@@ -155,13 +155,14 @@ columns to its real aggregate inventory model instead of showing fake stock
 locations. The Morrow screen and end-to-end mutation were captured live; the
 local Medusa tab again timed out, so pixel parity is not claimed.
 
-The product shipping-profile pass uses Medusa's pinned detail section and
-RouteDrawer form as source truth. The running Morrow Admin was exercised at its
-narrow local viewport with a default profile plus a second temporary profile:
-the server-backed search narrowed to Fragile Goods, Save refreshed the detail
-card, and Unassigned cleared the scalar relationship. No same-state Medusa
-drawer raster was captured, so this proves source structure and live behavior,
-not pixel parity.
+The product shipping-profile card uses Medusa's official Shipping configuration
+raster plus the pinned detail section as source truth. An equal `1280 x 720`
+comparison corrected the heading, inset component surface, spacing and label
+weight. The drawer now follows the pinned title and clearable searchable
+combobox instead of exposing its choices permanently. Live QA narrowed the
+server results, selected and cleared the optional relationship, restored
+Fragile Goods, and saved with no browser warnings or errors. No same-state
+Medusa drawer raster is available, so drawer pixel parity remains unproven.
 
 The product-delete pass uses the pinned list and detail action-group source as
 structural truth. Morrow exposes Edit followed by a separately divided Delete
