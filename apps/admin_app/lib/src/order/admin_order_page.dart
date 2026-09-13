@@ -1,4 +1,5 @@
 import 'package:admin_app/src/order/admin_order_pagination.dart';
+import 'package:admin_app/src/order/admin_order_export_drawer.dart';
 import 'package:admin_app/src/order/admin_order_state.dart';
 import 'package:admin_app/src/order/admin_order_table.dart';
 import 'package:admin_app/src/order/admin_order_toolbar.dart';
@@ -55,7 +56,7 @@ final class _AdminOrderPageState extends State<AdminOrderPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const _Header(),
+                _Header(onExport: () => _export(state)),
                 Divider(height: 1, color: Theme.of(context).dividerColor),
                 AdminOrderToolbar(
                   controller: _query,
@@ -108,10 +109,20 @@ final class _AdminOrderPageState extends State<AdminOrderPage> {
       ],
     );
   }
+
+  Future<void> _export(AdminOrderState state) async {
+    final exported = await showAdminOrderExportDrawer(context, state);
+    if (!mounted || exported != true) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Order export downloaded.')),
+    );
+  }
 }
 
 final class _Header extends StatelessWidget {
-  const _Header();
+  const _Header({required this.onExport});
+
+  final VoidCallback onExport;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -120,10 +131,7 @@ final class _Header extends StatelessWidget {
           children: [
             Text('Orders', style: Theme.of(context).textTheme.headlineSmall),
             const Spacer(),
-            const Tooltip(
-              message: 'Order export is not available yet',
-              child: OutlinedButton(onPressed: null, child: Text('Export')),
-            ),
+            OutlinedButton(onPressed: onExport, child: const Text('Export')),
           ],
         ),
       );
