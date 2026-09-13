@@ -17,6 +17,7 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   /// Creates the explicit merchant response without a domain-model conversion.
   const AdminOrderDetailResponse({
     required this.id,
+    required this.regionId,
     required this.displayId,
     required this.email,
     required this.customerName,
@@ -86,7 +87,6 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
 
   /// Stable opaque order identifier.
   final String id;
-
   /// Active fulfillment records and their frozen item snapshots.
   @Sqlx(rename: 'fulfillments_json', tryFrom: _AdminFulfillmentsFromString())
   final List<AdminOrderFulfillmentResponse> fulfillments;
@@ -94,7 +94,9 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   /// Frozen line-item snapshots in creation order.
   @Sqlx(rename: 'items_json', tryFrom: _AdminOrderItemsFromString())
   final List<AdminOrderItemResponse> items;
-
+  /// Selling region that constrains fulfillment shipping methods.
+  @Sqlx(rename: 'region_id')
+  final String regionId;
   /// Amount recorded by the provider adapter, when present.
   @Sqlx(rename: 'payment_amount')
   final int? paymentAmount;
@@ -127,7 +129,6 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
     tryFrom: _AdminOrderPaymentRecordStatusFromString(),
   )
   final AdminOrderPaymentRecordStatus? paymentRecordStatus;
-
   /// Order-level payment lifecycle.
   @SerDe(using: AdminOrderPaymentStatusCodec())
   @Sqlx(
@@ -173,7 +174,6 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
 
   /// Frozen charged total in minor units.
   final int total;
-
   /// Database-generated last mutation instant.
   @Sqlx(rename: 'updated_at', tryFrom: _AdminOrderDateTimeFromString())
   final DateTime updatedAt;

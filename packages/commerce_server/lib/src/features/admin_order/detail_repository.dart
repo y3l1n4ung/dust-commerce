@@ -11,7 +11,7 @@ abstract final class AdminOrderDetailRepository {
 
   /// Selects only the fields required by the read-only Admin detail screen.
   @Query(r'''
-SELECT order_row.id,
+SELECT order_row.id, order_row.region_id,
        order_row.display_id,
        order_row.email,
        coalesce(

@@ -22,7 +22,7 @@ final class _$AdminOrderDetailRepository implements AdminOrderDetailRepository {
   Future<Result<AdminOrderDetailResponse?, SqlxError>> find(String id) {
     return _db.fetchOptional<AdminOrderDetailResponse>(
       r'''
-SELECT order_row.id,
+SELECT order_row.id, order_row.region_id,
        order_row.display_id,
        order_row.email,
        coalesce(

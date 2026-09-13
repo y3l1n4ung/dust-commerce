@@ -29,6 +29,7 @@ final class $AdminOrderDetailResponseSerializer implements Serializer<AdminOrder
 AdminOrderDetailResponse _$AdminOrderDetailResponseFromRow(Row row) {
   return AdminOrderDetailResponse(
     id: row.read<String>('id'),
+    regionId: row.read<String>('region_id'),
     displayId: row.read<int>('display_id'),
     email: row.read<String>('email'),
     customerName: row.read<String>('customer_name'),
@@ -106,6 +107,7 @@ Map<String, Object?> _$AdminOrderDetailResponseSerialize(AdminOrderDetailRespons
     'items': instance.items
         .map((item) => item.toJson())
         .toList(),
+    'region_id': instance.regionId,
     'payment_amount': instance.paymentAmount,
     'payment_captured_at': instance.paymentCapturedAt == null
         ? null

@@ -1,5 +1,6 @@
 const adminOrderDetailJson = <String, Object?>{
   'id': 'ord_detail',
+  'region_id': 'reg_eu',
   'display_id': 1001,
   'email': 'ada@example.com',
   'customer_name': 'Ada Lovelace',

@@ -30,6 +30,7 @@ mixin _$AdminOrderDetail implements Serializable {
         'email: ${self.email}, '
         'fulfillmentStatus: ${self.fulfillmentStatus}, '
         'id: ${self.id}, '
+        'regionId: ${self.regionId}, '
         'fulfillments: ${self.fulfillments}, '
         'items: ${self.items}, '
         'paymentAmountValue: ${self.paymentAmountValue}, '
@@ -66,6 +67,7 @@ mixin _$AdminOrderDetail implements Serializable {
             other.email == self.email &&
             other.fulfillmentStatus == self.fulfillmentStatus &&
             other.id == self.id &&
+            other.regionId == self.regionId &&
             _adminOrderDetailFulfillmentsEquality.equals(other.fulfillments, self.fulfillments) &&
             _adminOrderDetailItemsEquality.equals(other.items, self.items) &&
             other.paymentAmountValue == self.paymentAmountValue &&
@@ -100,6 +102,7 @@ mixin _$AdminOrderDetail implements Serializable {
       self.email,
       self.fulfillmentStatus,
       self.id,
+      self.regionId,
       _adminOrderDetailFulfillmentsEquality.hash(self.fulfillments),
       _adminOrderDetailItemsEquality.hash(self.items),
       self.paymentAmountValue,
@@ -156,6 +159,7 @@ Map<String, Object?> _$AdminOrderDetailSerialize(AdminOrderDetail instance) {
       instance.fulfillmentStatus,
     ),
     'id': instance.id,
+    'region_id': instance.regionId,
     'fulfillments': instance.fulfillments
         .map((item) => item.toJson())
         .toList(),
@@ -234,6 +238,11 @@ AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
     'fulfillment_status',
   );
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final regionIdValue = JsonHelper.as<String>(
+    json['region_id'],
+    'region_id',
+    'String',
+  );
   final fulfillmentsValue = JsonHelper.decodeList(json['fulfillments'], 'fulfillments',
       (item, itemKey) => AdminOrderFulfillment.fromJson(JsonHelper.asMap(item, itemKey)));
   final itemsValue = JsonHelper.decodeList(json['items'], 'items',
@@ -288,6 +297,7 @@ AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
 
   return AdminOrderDetail(
     id: idValue,
+    regionId: regionIdValue,
     displayId: displayIdValue,
     email: emailValue,
     customerName: customerNameValue,

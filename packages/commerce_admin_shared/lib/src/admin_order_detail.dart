@@ -14,6 +14,7 @@ final class AdminOrderDetail with _$AdminOrderDetail {
   /// Creates the explicit Admin detail contract.
   const AdminOrderDetail({
     required this.id,
+    required this.regionId,
     required this.displayId,
     required this.email,
     required this.customerName,
@@ -74,6 +75,9 @@ final class AdminOrderDetail with _$AdminOrderDetail {
 
   /// Stable opaque order identifier.
   final String id;
+
+  /// Selling region that constrains fulfillment shipping methods.
+  final String regionId;
 
   /// Active fulfillment records and their frozen item snapshots.
   final List<AdminOrderFulfillment> fulfillments;
