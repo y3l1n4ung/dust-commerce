@@ -1,5 +1,6 @@
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/order/admin_order_export_api.dart';
+import 'package:admin_app/src/order/admin_order_region_api.dart';
 import 'package:admin_app/src/order/admin_order_state.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
@@ -16,6 +17,7 @@ final class AdminOrderViewModelArgs extends ViewModelArgs {
   const AdminOrderViewModelArgs({
     required this.api,
     required this.exports,
+    required this.regions,
     super.observer,
   });
 
@@ -24,6 +26,9 @@ final class AdminOrderViewModelArgs extends ViewModelArgs {
 
   /// Generated CSV client using the same Dio authorization boundary.
   final AdminOrderExportApi exports;
+
+  /// Generated region client using the same Dio authorization boundary.
+  final AdminOrderRegionApi regions;
 }
 
 /// Loads and pages immutable merchant order summaries.
@@ -33,6 +38,32 @@ final class AdminOrderViewModel extends $AdminOrderViewModel {
   AdminOrderViewModel(super.args);
 
   int _revision = 0;
+
+  /// Loads the real selling-region choices used by Medusa's filter menu.
+  Future<void> loadFilterOptions() async {
+    if (state.filterOptionsStatus == AdminOrderFilterOptionsStatus.loading ||
+        state.filterOptionsStatus == AdminOrderFilterOptionsStatus.ready) {
+      return;
+    }
+    emit(state.copyWith(
+      filterOptionsStatus: AdminOrderFilterOptionsStatus.loading,
+      filterOptionsFailure: const None(),
+    ));
+    try {
+      final result = await args.regions.listRegions('', 1000, 0);
+      emit(state.copyWith(
+        filterOptionsStatus: AdminOrderFilterOptionsStatus.ready,
+        filterOptionsFailure: const None(),
+        regions: List.unmodifiable(result.regions),
+      ));
+    } on DioException catch (error) {
+      _filterOptionsFailed(error.response?.statusCode == 401
+          ? 'Your admin session has expired.'
+          : 'Unable to load filter choices. Try again.');
+    } on Object {
+      _filterOptionsFailed('Unable to load filter choices. Try again.');
+    }
+  }
 
   /// Loads the first page for [query].
   Future<void> search(String query) => load(query: query, offset: 0);
@@ -107,5 +138,10 @@ final class AdminOrderViewModel extends $AdminOrderViewModel {
   void _fail(String message) => emit(state.copyWith(
         status: AdminOrderListStatus.failed,
         failure: Some(message),
+      ));
+
+  void _filterOptionsFailed(String message) => emit(state.copyWith(
+        filterOptionsStatus: AdminOrderFilterOptionsStatus.failed,
+        filterOptionsFailure: Some(message),
       ));
 }

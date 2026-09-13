@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/order/admin_order_state.dart';
 import 'package:admin_app/src/order/admin_order_export_api.dart';
+import 'package:admin_app/src/order/admin_order_region_api.dart';
 import 'package:admin_app/src/order/admin_order_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/commerce_server.dart';
@@ -15,6 +16,7 @@ void main() {
   late CommerceDatabase database;
   late TestClient server;
   late AdminApi api;
+  late AdminOrderRegionApi regionApi;
   late AdminOrderViewModel orders;
 
   setUp(() async {
@@ -43,9 +45,11 @@ void main() {
     final dio = Dio()
       ..options.headers['authorization'] = 'Bearer ${token.token}';
     api = AdminApi(dio, baseUrl: server.origin);
+    regionApi = AdminOrderRegionApi(dio, baseUrl: server.origin);
     orders = AdminOrderViewModel(AdminOrderViewModelArgs(
       api: api,
       exports: AdminOrderExportApi(dio, baseUrl: server.origin),
+      regions: regionApi,
     ));
   });
 
@@ -95,17 +99,38 @@ void main() {
     expect(orders.state.orders.single.customerName, 'Ada Lovelace');
   });
 
+  test('loads real selling-region filter choices', () async {
+    final response = await regionApi.listRegions('', 1000, 0);
+    await orders.loadFilterOptions();
+
+    expect(response.regions.map((region) => region.name), [
+      'Europe',
+      'United States',
+    ]);
+    expect(
+      orders.state.filterOptionsStatus,
+      AdminOrderFilterOptionsStatus.ready,
+    );
+    expect(orders.state.regions, response.regions);
+  });
+
   test('reports an expired admin session', () async {
     final unauthorized = AdminOrderViewModel(AdminOrderViewModelArgs(
       api: AdminApi(Dio(), baseUrl: server.origin),
       exports: AdminOrderExportApi(Dio(), baseUrl: server.origin),
+      regions: AdminOrderRegionApi(Dio(), baseUrl: server.origin),
     ));
 
     await unauthorized.load();
+    await unauthorized.loadFilterOptions();
 
     expect(unauthorized.state.status, AdminOrderListStatus.failed);
     expect(
       unauthorized.state.failure,
+      const Some('Your admin session has expired.'),
+    );
+    expect(
+      unauthorized.state.filterOptionsFailure,
       const Some('Your admin session has expired.'),
     );
   });

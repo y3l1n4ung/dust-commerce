@@ -18,6 +18,21 @@ enum AdminOrderListStatus {
   failed,
 }
 
+/// Lifecycle of selling-region choices loaded from the Admin API.
+enum AdminOrderFilterOptionsStatus {
+  /// Region choices have not been requested.
+  idle,
+
+  /// Region choices are loading.
+  loading,
+
+  /// Region choices are ready for selection.
+  ready,
+
+  /// Choices could not be loaded; static filters remain usable.
+  failed,
+}
+
 /// Immutable state for the Medusa-shaped order table.
 @Derive([ToString(), Eq(), CopyWith()])
 final class AdminOrderState with _$AdminOrderState {
@@ -35,6 +50,9 @@ final class AdminOrderState with _$AdminOrderState {
     this.updatedAt = const AdminDateFilter(),
     this.order = AdminOrderOrder.createdAtDesc,
     this.failure = const None(),
+    this.filterOptionsFailure = const None(),
+    this.filterOptionsStatus = AdminOrderFilterOptionsStatus.idle,
+    this.regions = const [],
   });
 
   /// Total rows matching the active query.
@@ -45,6 +63,12 @@ final class AdminOrderState with _$AdminOrderState {
 
   /// Display-safe request failure.
   final Option<String> failure;
+
+  /// Display-safe failure for dynamic region choices.
+  final Option<String> filterOptionsFailure;
+
+  /// Loading state kept separate from the order table request.
+  final AdminOrderFilterOptionsStatus filterOptionsStatus;
 
   /// Server-owned page size.
   final int limit;
@@ -60,6 +84,9 @@ final class AdminOrderState with _$AdminOrderState {
 
   /// Normalized display-id, customer, or email search.
   final String query;
+
+  /// Server-owned selling-region choices used by the Medusa filter menu.
+  final List<AdminRegion> regions;
 
   /// Selected selling-region identifiers.
   final List<String> regionIds;
