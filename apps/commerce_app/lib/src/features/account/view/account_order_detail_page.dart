@@ -59,25 +59,40 @@ final class _AccountOrderDetailPageState extends State<AccountOrderDetailPage> {
               customer: customer,
               state: account,
               active: AccountSection.orders,
-              child: _body(context, state),
+              child: _AccountOrderDetailBody(id: widget.id, state: state),
             ),
     );
   }
+}
 
-  Widget _body(BuildContext context, AccountOrderDetailState state) =>
-      switch (state.status) {
+final class _AccountOrderDetailBody extends StatelessWidget {
+  const _AccountOrderDetailBody({required this.id, required this.state});
+
+  final String id;
+  final AccountOrderDetailState state;
+
+  @override
+  Widget build(BuildContext context) => switch (state.status) {
         AccountOrderDetailStatus.idle ||
         AccountOrderDetailStatus.loading =>
           const Center(child: CircularProgressIndicator()),
         AccountOrderDetailStatus.ready => state.order.match(
             some: (order) => AccountOrderDetailContent(order: order),
-            none: () => _failure(context, state),
+            none: () => _AccountOrderDetailFailure(id: id, state: state),
           ),
-        AccountOrderDetailStatus.failed => _failure(context, state),
+        AccountOrderDetailStatus.failed =>
+          _AccountOrderDetailFailure(id: id, state: state),
       };
+}
 
-  Widget _failure(BuildContext context, AccountOrderDetailState state) =>
-      Column(
+final class _AccountOrderDetailFailure extends StatelessWidget {
+  const _AccountOrderDetailFailure({required this.id, required this.state});
+
+  final String id;
+  final AccountOrderDetailState state;
+
+  @override
+  Widget build(BuildContext context) => Column(
         children: [
           Text(state.failure.match(
             some: (failure) => switch (failure) {
@@ -103,8 +118,7 @@ final class _AccountOrderDetailPageState extends State<AccountOrderDetailPage> {
           )),
           const SizedBox(height: 16),
           OutlinedButton(
-            onPressed: () =>
-                context.readAccountOrderDetailViewModel().load(widget.id),
+            onPressed: () => context.readAccountOrderDetailViewModel().load(id),
             child: const TranslatedText('shop_retry', defaultText: 'Try again'),
           ),
         ],

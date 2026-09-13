@@ -69,19 +69,19 @@ final class AccountOrderDetailContent extends StatelessWidget {
             spacing: 24,
             runSpacing: 8,
             children: [
-              _status(
-                context.tr(
+              _OrderStatusText(
+                title: context.tr(
                   'shop_account_order_status',
                   defaultText: 'Order status',
                 ),
-                _orderStatus(context),
+                value: _orderStatus(context),
               ),
-              _status(
-                context.tr(
+              _OrderStatusText(
+                title: context.tr(
                   'shop_account_payment_status',
                   defaultText: 'Payment status',
                 ),
-                _paymentStatus(context),
+                value: _paymentStatus(context),
               ),
             ],
           ),
@@ -116,16 +116,6 @@ final class AccountOrderDetailContent extends StatelessWidget {
         ],
       );
 
-  Widget _status(String title, String value) => Text.rich(
-        TextSpan(children: [
-          TextSpan(text: '$title: '),
-          TextSpan(
-            text: value,
-            style: const TextStyle(color: StoreColors.foregroundSubtle),
-          ),
-        ]),
-      );
-
   String _orderStatus(BuildContext context) => switch (order.status) {
         OrderStatus.pending => context.tr(
             'shop_account_status_pending',
@@ -155,4 +145,22 @@ final class AccountOrderDetailContent extends StatelessWidget {
             defaultText: 'Refunded',
           ),
       };
+}
+
+final class _OrderStatusText extends StatelessWidget {
+  const _OrderStatusText({required this.title, required this.value});
+
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Text.rich(
+        TextSpan(children: [
+          TextSpan(text: '$title: '),
+          TextSpan(
+            text: value,
+            style: const TextStyle(color: StoreColors.foregroundSubtle),
+          ),
+        ]),
+      );
 }
