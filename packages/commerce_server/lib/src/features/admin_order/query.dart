@@ -70,11 +70,14 @@ Result<AdminDateFilter, Rejection> _date(Request request, String name) {
 
 Result<List<AdminOrderStatus>, Rejection> _statuses(Request request) {
   final raw = request.requestedUri.queryParametersAll['status'] ?? const [];
-  if (raw.isEmpty) return const Ok([]);
+  final values = raw
+      .expand((entry) => entry.split(','))
+      .map((value) => value.trim())
+      .where((value) => value.isNotEmpty);
   final result = <AdminOrderStatus>[];
-  for (final value in raw.expand((entry) => entry.split(','))) {
+  for (final value in values) {
     final matches = AdminOrderStatus.values.where((status) =>
-        const AdminOrderStatusCodec().serialize(status) == value.trim());
+        const AdminOrderStatusCodec().serialize(status) == value);
     if (matches.isEmpty) {
       return const Err(Rejection.badRequest('Unknown order status'));
     }
@@ -89,8 +92,10 @@ Result<List<String>, Rejection> _ids(
   String label,
 ) {
   final raw = request.requestedUri.queryParametersAll[parameter] ?? const [];
-  if (raw.isEmpty) return const Ok([]);
-  final values = raw.expand((entry) => entry.split(',')).map((id) => id.trim());
+  final values = raw
+      .expand((entry) => entry.split(','))
+      .map((id) => id.trim())
+      .where((id) => id.isNotEmpty);
   final ids = values.toSet();
   final valid = RegExp(r'^[A-Za-z0-9_:-]{1,100}$');
   if (ids.length > 100 || ids.any((id) => !valid.hasMatch(id))) {

@@ -17,6 +17,19 @@ void main() {
     (await harness.client.get('/admin/orders').send()).assertUnauthorized();
   });
 
+  test('order list accepts generated-client empty optional filters', () async {
+    final token = await harness.adminToken();
+    final request = harness.client.get(
+      '/admin/orders?q=&status=&region_id=&created_at=&updated_at='
+      '&order=-created_at&limit=20&offset=0',
+    )..bearer(token);
+
+    final response = await request.send();
+
+    response.assertOk();
+    expect(response.json, containsPair('count', 2));
+  });
+
   test('order list exposes a bounded newest-first merchant allowlist',
       () async {
     final token = await harness.adminToken();
