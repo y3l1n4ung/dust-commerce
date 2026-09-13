@@ -65,7 +65,7 @@ final class _AdminProductPageState extends State<AdminProductPage> {
               children: [
                 AdminProductPageHeader(
                   onExport: () => _export(state),
-                  onImport: () => showAdminProductImportDrawer(context),
+                  onImport: _import,
                   onCreate: widget.onCreateProduct,
                 ),
                 Divider(height: 1, color: Theme.of(context).dividerColor),
@@ -128,6 +128,16 @@ final class _AdminProductPageState extends State<AdminProductPage> {
     if (!mounted || exported != true) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Product export downloaded.')),
+    );
+  }
+
+  Future<void> _import() async {
+    final imported = await showAdminProductImportDrawer(context);
+    if (!mounted || imported != true) return;
+    await context.readAdminProductViewModel().load();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Product import completed.')),
     );
   }
 }

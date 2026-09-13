@@ -8,8 +8,8 @@ import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
 /// Opens Medusa's right-side product-import preview flow.
-Future<void> showAdminProductImportDrawer(BuildContext context) =>
-    showGeneralDialog<void>(
+Future<bool?> showAdminProductImportDrawer(BuildContext context) =>
+    showGeneralDialog<bool>(
       context: context,
       barrierDismissible: true,
       barrierLabel: 'Close product import',
@@ -54,6 +54,7 @@ final class _ProductImportDrawerState extends State<_ProductImportDrawer> {
         onPick: _busy ? null : _pick,
         onRemove: _busy ? null : _remove,
         onDownloadTemplate: _busy ? null : _downloadTemplate,
+        onImport: _busy || _preview == null ? null : _confirm,
         onClose: _busy ? null : () => Navigator.pop(context),
       );
 
@@ -125,6 +126,28 @@ final class _ProductImportDrawerState extends State<_ProductImportDrawer> {
       if (mounted) {
         setState(() => _failure = 'Unable to save the template. Try again.');
       }
+    }
+  }
+
+  Future<void> _confirm() async {
+    final preview = _preview;
+    if (preview == null) return;
+    setState(() {
+      _busy = true;
+      _failure = null;
+    });
+    final result = await context
+        .readAdminProductViewModel()
+        .confirmImport(preview.transactionId);
+    if (!mounted) return;
+    switch (result) {
+      case Ok():
+        Navigator.pop(context, true);
+      case Err(:final error):
+        setState(() {
+          _busy = false;
+          _failure = error;
+        });
     }
   }
 }

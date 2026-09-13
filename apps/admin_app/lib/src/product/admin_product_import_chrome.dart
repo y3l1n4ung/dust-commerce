@@ -15,6 +15,7 @@ final class AdminProductImportChrome extends StatelessWidget {
     required this.onPick,
     required this.onRemove,
     required this.onDownloadTemplate,
+    required this.onImport,
     required this.onClose,
     super.key,
   });
@@ -36,6 +37,9 @@ final class AdminProductImportChrome extends StatelessWidget {
 
   /// Opens the platform CSV picker.
   final VoidCallback? onPick;
+
+  /// Atomically consumes the staged import after a successful preview.
+  final VoidCallback? onImport;
 
   /// Removes the current local and staged preview.
   final VoidCallback? onRemove;
@@ -132,9 +136,14 @@ final class AdminProductImportChrome extends StatelessWidget {
         child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           OutlinedButton(onPressed: onClose, child: const Text('Cancel')),
           const SizedBox(width: 8),
-          const Tooltip(
-            message: 'Confirmation is delivered in the next isolated slice.',
-            child: FilledButton(onPressed: null, child: Text('Import')),
+          FilledButton(
+            onPressed: onImport,
+            child: busy
+                ? const SizedBox.square(
+                    dimension: 15,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Import'),
           ),
         ]),
       );
