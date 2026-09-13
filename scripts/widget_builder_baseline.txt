@@ -43,7 +43,6 @@ apps/commerce_app/lib/src/features/account/view/customer_address_form.dart:3
 apps/commerce_app/lib/src/features/account/view/mobile_account_navigation.dart:1
 apps/commerce_app/lib/src/features/account/view/profile_name_editor.dart:1
 apps/commerce_app/lib/src/features/account/view/profile_password_editor.dart:1
-apps/commerce_app/lib/src/features/cart/view/free_shipping_price_nudge.dart:2
 apps/commerce_app/lib/src/features/checkout/view/checkout_address_fields.dart:3
 apps/commerce_app/lib/src/features/checkout/view/checkout_address_section.dart:1
 apps/commerce_app/lib/src/features/checkout/view/checkout_contact_fields.dart:1
