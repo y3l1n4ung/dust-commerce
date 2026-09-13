@@ -3,6 +3,28 @@ import 'package:dust_dart/serde.dart';
 
 part 'admin_shipping_profile.g.dart';
 
+/// Merchant input for creating one fulfillment requirement group.
+@Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class AdminCreateShippingProfile with _$AdminCreateShippingProfile {
+  /// Creates validated shipping-profile input.
+  const AdminCreateShippingProfile({required this.name, required this.type});
+
+  /// Decodes one generated Admin request.
+  factory AdminCreateShippingProfile.fromJson(Map<String, Object?> json) =>
+      _$AdminCreateShippingProfileFromJson(json);
+
+  /// Merchant-facing profile label.
+  @Validate(length: Length(min: 1, max: 255), message: 'Enter a name')
+  @Validate(regex: r'.*\S.*', message: 'Enter a name')
+  final String name;
+
+  /// Open fulfillment behavior classification matching Medusa.
+  @Validate(length: Length(min: 1, max: 255), message: 'Enter a type')
+  @Validate(regex: r'.*\S.*', message: 'Enter a type')
+  final String type;
+}
+
 /// Explicit merchant-facing fulfillment profile.
 @Derive([ToString(), Eq(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)

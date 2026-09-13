@@ -3,7 +3,16 @@ import 'package:dust_server/server.dart';
 
 /// Shipping-profile routes merged below the parent Admin authentication layer.
 Router adminShippingProfileRoutes() => Router()
-  ..route('/shipping-profiles', get(listAdminShippingProfilesHandler))
+  ..route(
+    '/shipping-profiles',
+    get(listAdminShippingProfilesHandler)
+        .post(createAdminShippingProfileHandler, status: 201),
+  )
+  ..route(
+    '/shipping-profiles/{id}',
+    get(readAdminShippingProfileHandler)
+        .delete(deleteAdminShippingProfileHandler),
+  )
   ..route(
     '/products/{id}/shipping-profile',
     patch(updateAdminProductShippingProfileHandler),

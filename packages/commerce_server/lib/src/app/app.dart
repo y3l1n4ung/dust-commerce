@@ -116,6 +116,7 @@ Router buildApp(
     ))
     ..withState(AdminShippingProfileDeps(
       database: database,
+      management: AdminShippingProfileManagementRepository(executor),
       profiles: AdminShippingProfileRepository(executor),
       clock: clock,
     ))

@@ -15,6 +15,72 @@ part of 'admin_shipping_profile.dart';
 
 const DeepCollectionEquality _adminShippingProfileListShippingProfilesEquality = DeepCollectionEquality();
 
+mixin _$AdminCreateShippingProfile implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as AdminCreateShippingProfile;
+    return 'AdminCreateShippingProfile('
+        'name: ${self.name}, '
+        'type: ${self.type}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminCreateShippingProfile;
+    return identical(this, other) ||
+        other is AdminCreateShippingProfile &&
+            runtimeType == other.runtimeType &&
+            other.name == self.name &&
+            other.type == self.type;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminCreateShippingProfile;
+    return Object.hashAll([
+      runtimeType,
+      self.name,
+      self.type,
+    ]);
+  }
+
+  /// Validates this `AdminCreateShippingProfile`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as AdminCreateShippingProfile;
+    final errors = <ValidationError>[];
+    _AdminCreateShippingProfileValidation._validateName(self.name, errors);
+    _AdminCreateShippingProfileValidation._validateType(self.type, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `AdminCreateShippingProfile` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminCreateShippingProfileSerialize(this as AdminCreateShippingProfile);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$AdminShippingProfile implements Serializable {
   @override
   String toString() {
@@ -196,7 +262,45 @@ mixin _$AdminUpdateProductShippingProfile implements Validatable, Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+extension _AdminCreateShippingProfileValidation on AdminCreateShippingProfile {
+  static void _validateName(String name, List<ValidationError> errors) {
+    if (name.length < 1) {
+      errors.add(ValidationError(field: 'name', message: 'Enter a name'));
+    }
+    if (name.length > 255) {
+      errors.add(ValidationError(field: 'name', message: 'Enter a name'));
+    }
+    if (!RegExp('.*\\S.*').hasMatch(name)) {
+      errors.add(ValidationError(field: 'name', message: 'Enter a name'));
+    }
+  }
+
+  static void _validateType(String type, List<ValidationError> errors) {
+    if (type.length < 1) {
+      errors.add(ValidationError(field: 'type', message: 'Enter a type'));
+    }
+    if (type.length > 255) {
+      errors.add(ValidationError(field: 'type', message: 'Enter a type'));
+    }
+    if (!RegExp('.*\\S.*').hasMatch(type)) {
+      errors.add(ValidationError(field: 'type', message: 'Enter a type'));
+    }
+  }
+
+}
 extension _AdminUpdateProductShippingProfileValidation on AdminUpdateProductShippingProfile {
+}
+final class $AdminCreateShippingProfileSerializer implements Serializer<AdminCreateShippingProfile, Map<String, Object?>> {
+  const $AdminCreateShippingProfileSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminCreateShippingProfile value) => _$AdminCreateShippingProfileSerialize(value);
+}
+final class $AdminCreateShippingProfileDeserializer implements Deserializer<AdminCreateShippingProfile, Map<String, Object?>> {
+  const $AdminCreateShippingProfileDeserializer();
+
+  @override
+  AdminCreateShippingProfile deserialize(Map<String, Object?> json) => _$AdminCreateShippingProfileDeserialize(json);
 }
 final class $AdminShippingProfileSerializer implements Serializer<AdminShippingProfile, Map<String, Object?>> {
   const $AdminShippingProfileSerializer();
@@ -246,6 +350,27 @@ final class $AdminUpdateProductShippingProfileDeserializer implements Deserializ
   @override
   AdminUpdateProductShippingProfile deserialize(Map<String, Object?> json) => _$AdminUpdateProductShippingProfileDeserialize(json);
 }
+
+Map<String, Object?> _$AdminCreateShippingProfileSerialize(AdminCreateShippingProfile instance) {
+  return <String, Object?>{
+    'name': instance.name,
+    'type': instance.type,
+  };
+}
+
+Map<String, Object?> _$AdminCreateShippingProfileToJson(AdminCreateShippingProfile instance) =>
+    _$AdminCreateShippingProfileSerialize(instance);
+
+// factory AdminCreateShippingProfile.fromJson(Map<String, Object?> json) => _$AdminCreateShippingProfileFromJson(json);
+AdminCreateShippingProfile _$AdminCreateShippingProfileDeserialize(Map<String, Object?> json) {
+  final nameValue = JsonHelper.as<String>(json['name'], 'name', 'String');
+  final typeValue = JsonHelper.as<String>(json['type'], 'type', 'String');
+
+  return AdminCreateShippingProfile(name: nameValue, type: typeValue);
+}
+
+AdminCreateShippingProfile _$AdminCreateShippingProfileFromJson(Map<String, Object?> json) =>
+    _$AdminCreateShippingProfileDeserialize(json);
 
 Map<String, Object?> _$AdminShippingProfileSerialize(AdminShippingProfile instance) {
   return <String, Object?>{
