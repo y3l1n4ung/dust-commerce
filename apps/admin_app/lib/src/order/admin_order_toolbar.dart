@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 part 'admin_order_sort_menu.dart';
 part 'admin_order_filter_controls.dart';
 part 'admin_order_region_filter.dart';
+part 'admin_order_sales_channel_filter.dart';
 
 /// Search, filters, and ordering backed by the Admin order query.
 final class AdminOrderToolbar extends StatelessWidget {
@@ -54,6 +55,13 @@ final class AdminOrderToolbar extends StatelessWidget {
                     selected: state.regionIds,
                     onChanged:
                         context.readAdminOrderViewModel().filterByRegions,
+                  ),
+                if (state.salesChannelIds.isNotEmpty)
+                  _SalesChannelFilterChip(
+                    salesChannels: state.salesChannels,
+                    selected: state.salesChannelIds,
+                    onChanged:
+                        context.readAdminOrderViewModel().filterBySalesChannels,
                   ),
                 if (!state.createdAt.isEmpty)
                   _ActiveFilterChip(

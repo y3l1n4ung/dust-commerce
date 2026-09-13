@@ -14,6 +14,13 @@ final class _AddFilter extends StatelessWidget {
               selected: state.regionIds,
               onChanged: context.readAdminOrderViewModel().filterByRegions,
             ),
+          if (state.salesChannelIds.isEmpty && state.salesChannels.isNotEmpty)
+            _SalesChannelFilterSubmenu(
+              salesChannels: state.salesChannels,
+              selected: state.salesChannelIds,
+              onChanged:
+                  context.readAdminOrderViewModel().filterBySalesChannels,
+            ),
           for (final status in AdminOrderStatus.values)
             MenuItemButton(
               onPressed: () => _select(context, 'status:${status.name}'),

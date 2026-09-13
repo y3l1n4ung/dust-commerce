@@ -21,6 +21,12 @@ extension AdminOrderFilters on AdminOrderViewModel {
         offset: 0,
       );
 
+  /// Applies selected commercial-origin identifiers and resets paging.
+  Future<void> filterBySalesChannels(List<String> salesChannelIds) => load(
+        salesChannelIds: List.unmodifiable(salesChannelIds.toSet()),
+        offset: 0,
+      );
+
   /// Applies selected lifecycle states and resets paging.
   Future<void> filterByStatuses(List<AdminOrderStatus> statuses) => load(
         statuses: List.unmodifiable(statuses.toSet()),
@@ -47,6 +53,7 @@ extension AdminOrderFilters on AdminOrderViewModel {
   Future<void> clearFilters() => load(
         statuses: const [],
         regionIds: const [],
+        salesChannelIds: const [],
         createdAt: const AdminDateFilter(),
         updatedAt: const AdminDateFilter(),
         offset: 0,

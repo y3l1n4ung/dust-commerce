@@ -4,6 +4,7 @@ import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/order/admin_order_state.dart';
 import 'package:admin_app/src/order/admin_order_export_api.dart';
 import 'package:admin_app/src/order/admin_order_region_api.dart';
+import 'package:admin_app/src/order/admin_order_sales_channel_api.dart';
 import 'package:admin_app/src/order/admin_order_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/commerce_server.dart';
@@ -17,6 +18,7 @@ void main() {
   late TestClient server;
   late AdminApi api;
   late AdminOrderRegionApi regionApi;
+  late AdminOrderSalesChannelApi salesChannelApi;
   late AdminOrderViewModel orders;
 
   setUp(() async {
@@ -46,10 +48,12 @@ void main() {
       ..options.headers['authorization'] = 'Bearer ${token.token}';
     api = AdminApi(dio, baseUrl: server.origin);
     regionApi = AdminOrderRegionApi(dio, baseUrl: server.origin);
+    salesChannelApi = AdminOrderSalesChannelApi(dio, baseUrl: server.origin);
     orders = AdminOrderViewModel(AdminOrderViewModelArgs(
       api: api,
       exports: AdminOrderExportApi(dio, baseUrl: server.origin),
       regions: regionApi,
+      salesChannels: salesChannelApi,
     ));
   });
 
@@ -61,6 +65,7 @@ void main() {
 
   test('loads decoded newest-first order summaries', () async {
     final response = await api.listOrders(
+      '',
       '',
       '',
       '',
@@ -119,6 +124,7 @@ void main() {
       api: AdminApi(Dio(), baseUrl: server.origin),
       exports: AdminOrderExportApi(Dio(), baseUrl: server.origin),
       regions: AdminOrderRegionApi(Dio(), baseUrl: server.origin),
+      salesChannels: AdminOrderSalesChannelApi(Dio(), baseUrl: server.origin),
     ));
 
     await unauthorized.load();

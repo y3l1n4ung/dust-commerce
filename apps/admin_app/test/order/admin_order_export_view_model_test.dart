@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/order/admin_order_export_api.dart';
 import 'package:admin_app/src/order/admin_order_region_api.dart';
+import 'package:admin_app/src/order/admin_order_sales_channel_api.dart';
 import 'package:admin_app/src/order/admin_order_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/commerce_server.dart';
@@ -53,6 +54,7 @@ void main() {
       api: AdminApi(dio, baseUrl: server.origin),
       exports: AdminOrderExportApi(dio, baseUrl: server.origin),
       regions: AdminOrderRegionApi(dio, baseUrl: server.origin),
+      salesChannels: AdminOrderSalesChannelApi(dio, baseUrl: server.origin),
     ));
 
     await orders.load(
@@ -77,6 +79,7 @@ void main() {
       api: AdminApi(dio, baseUrl: server.origin),
       exports: AdminOrderExportApi(dio, baseUrl: server.origin),
       regions: AdminOrderRegionApi(dio, baseUrl: server.origin),
+      salesChannels: AdminOrderSalesChannelApi(dio, baseUrl: server.origin),
     ));
 
     expect(

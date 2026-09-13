@@ -1,6 +1,7 @@
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/order/admin_order_export_api.dart';
 import 'package:admin_app/src/order/admin_order_region_api.dart';
+import 'package:admin_app/src/order/admin_order_sales_channel_api.dart';
 import 'package:admin_app/src/order/admin_order_state.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
@@ -18,6 +19,7 @@ final class AdminOrderViewModelArgs extends ViewModelArgs {
     required this.api,
     required this.exports,
     required this.regions,
+    required this.salesChannels,
     super.observer,
   });
 
@@ -29,6 +31,9 @@ final class AdminOrderViewModelArgs extends ViewModelArgs {
 
   /// Generated region client using the same Dio authorization boundary.
   final AdminOrderRegionApi regions;
+
+  /// Generated sales-channel client sharing Dio authorization.
+  final AdminOrderSalesChannelApi salesChannels;
 }
 
 /// Loads and pages immutable merchant order summaries.
@@ -39,7 +44,7 @@ final class AdminOrderViewModel extends $AdminOrderViewModel {
 
   int _revision = 0;
 
-  /// Loads the real selling-region choices used by Medusa's filter menu.
+  /// Loads the real region and sales-channel choices used by Medusa's filters.
   Future<void> loadFilterOptions() async {
     if (state.filterOptionsStatus == AdminOrderFilterOptionsStatus.loading ||
         state.filterOptionsStatus == AdminOrderFilterOptionsStatus.ready) {
@@ -50,11 +55,14 @@ final class AdminOrderViewModel extends $AdminOrderViewModel {
       filterOptionsFailure: const None(),
     ));
     try {
-      final result = await args.regions.listRegions('', 1000, 0);
+      final regions = await args.regions.listRegions('', 1000, 0);
+      final salesChannels =
+          await args.salesChannels.listSalesChannels('', 1000, 0);
       emit(state.copyWith(
         filterOptionsStatus: AdminOrderFilterOptionsStatus.ready,
         filterOptionsFailure: const None(),
-        regions: List.unmodifiable(result.regions),
+        regions: List.unmodifiable(regions.regions),
+        salesChannels: List.unmodifiable(salesChannels.salesChannels),
       ));
     } on DioException catch (error) {
       _filterOptionsFailed(error.response?.statusCode == 401
@@ -74,6 +82,7 @@ final class AdminOrderViewModel extends $AdminOrderViewModel {
     int? offset,
     List<AdminOrderStatus>? statuses,
     List<String>? regionIds,
+    List<String>? salesChannelIds,
     AdminDateFilter? createdAt,
     AdminDateFilter? updatedAt,
     AdminOrderOrder? order,
@@ -82,6 +91,7 @@ final class AdminOrderViewModel extends $AdminOrderViewModel {
     final nextOffset = (offset ?? state.offset).clamp(0, 1 << 31);
     final nextStatuses = statuses ?? state.statuses;
     final nextRegionIds = regionIds ?? state.regionIds;
+    final nextSalesChannelIds = salesChannelIds ?? state.salesChannelIds;
     final nextCreatedAt = createdAt ?? state.createdAt;
     final nextUpdatedAt = updatedAt ?? state.updatedAt;
     final nextOrder = order ?? state.order;
@@ -92,6 +102,7 @@ final class AdminOrderViewModel extends $AdminOrderViewModel {
       query: nextQuery,
       statuses: nextStatuses,
       regionIds: nextRegionIds,
+      salesChannelIds: nextSalesChannelIds,
       createdAt: nextCreatedAt,
       updatedAt: nextUpdatedAt,
       order: nextOrder,
@@ -102,6 +113,7 @@ final class AdminOrderViewModel extends $AdminOrderViewModel {
         nextQuery,
         nextStatuses.map((status) => status.name).join(','),
         nextRegionIds.join(','),
+        nextSalesChannelIds.join(','),
         nextCreatedAt.isEmpty ? '' : nextCreatedAt.parameter,
         nextUpdatedAt.isEmpty ? '' : nextUpdatedAt.parameter,
         nextOrder.parameter,

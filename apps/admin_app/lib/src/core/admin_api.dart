@@ -27,6 +27,7 @@ abstract interface class AdminApi {
     @Query('q') String query,
     @Query('status') String statuses,
     @Query('region_id') String regionIds,
+    @Query('sales_channel_id') String salesChannelIds,
     @Query('created_at') String createdAt,
     @Query('updated_at') String updatedAt,
     @Query('order') String order,

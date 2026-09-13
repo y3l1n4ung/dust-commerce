@@ -373,6 +373,15 @@ raster is available, so pixel parity is not claimed.
   browser warnings or errors. The generated client keeps the Dio-owned bearer,
   typed `DateTime` and `Option` query state. All 53 non-widget Admin and 314
   server tests pass; Dust checks and the release web build pass.
+- Sales-channel order parity now follows Medusa's source hook and cell: the
+  Admin loads `id,name` choices through the same Dio bearer owner, exposes a
+  searchable multi-select using `sales_channel_id`, carries it into CSV export
+  and renders the channel name with `-` only for legacy unlinked orders. Live
+  QA on a clean current-schema database showed Online Store and Wholesale,
+  then narrowed two labeled rows to the single Wholesale order with `1 — 1 of
+  1 results`; browser errors were empty. All 60 non-widget Admin tests and all
+  333 server tests pass; Dust, analyzer and the release web build are clean,
+  with no widget test added.
 - Selecting order #1002 now opens a protected read-only detail with Medusa's
   General, Summary, Payment and Fulfillment main column plus Customer and
   Activity sidebar. Desktop keeps the 7:3 composition and the narrow viewport
@@ -426,8 +435,8 @@ raster is available, so pixel parity is not claimed.
   after an abandoned browser session.
 - P2 — Orders pass source-structure and live-behavior QA, but need same-state
   Medusa order-list and order-detail captures before pixel parity can be
-  claimed. Sales-channel discovery and order query behavior are implemented,
-  while its visible filter and mutations remain separate feature slices;
+  claimed. Sales-channel discovery, order query behavior and the source-shaped
+  visible filter are implemented, while channel mutations remain separate;
   Region and Order Export have source-structure and live-behavior coverage but
   also lack same-state Medusa captures.
 

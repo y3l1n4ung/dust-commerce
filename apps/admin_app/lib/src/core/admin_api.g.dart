@@ -135,6 +135,7 @@ final class _$AdminApi implements AdminApi {
     String query,
     String statuses,
     String regionIds,
+    String salesChannelIds,
     String createdAt,
     String updatedAt,
     String order,
@@ -148,6 +149,7 @@ final class _$AdminApi implements AdminApi {
     _queryParameters['q'] = query;
     _queryParameters['status'] = statuses;
     _queryParameters['region_id'] = regionIds;
+    _queryParameters['sales_channel_id'] = salesChannelIds;
     _queryParameters['created_at'] = createdAt;
     _queryParameters['updated_at'] = updatedAt;
     _queryParameters['order'] = order;

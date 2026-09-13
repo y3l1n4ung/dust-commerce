@@ -16,6 +16,8 @@ part of 'admin_order_state.dart';
 const DeepCollectionEquality _adminOrderStateOrdersEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminOrderStateRegionsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminOrderStateRegionIdsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminOrderStateSalesChannelsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminOrderStateSalesChannelIdsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminOrderStateStatusesEquality = DeepCollectionEquality();
 
 mixin _$AdminOrderState {
@@ -35,6 +37,8 @@ mixin _$AdminOrderState {
         'query: ${self.query}, '
         'regions: ${self.regions}, '
         'regionIds: ${self.regionIds}, '
+        'salesChannels: ${self.salesChannels}, '
+        'salesChannelIds: ${self.salesChannelIds}, '
         'status: ${self.status}, '
         'statuses: ${self.statuses}, '
         'updatedAt: ${self.updatedAt}'
@@ -59,6 +63,8 @@ mixin _$AdminOrderState {
             other.query == self.query &&
             _adminOrderStateRegionsEquality.equals(other.regions, self.regions) &&
             _adminOrderStateRegionIdsEquality.equals(other.regionIds, self.regionIds) &&
+            _adminOrderStateSalesChannelsEquality.equals(other.salesChannels, self.salesChannels) &&
+            _adminOrderStateSalesChannelIdsEquality.equals(other.salesChannelIds, self.salesChannelIds) &&
             other.status == self.status &&
             _adminOrderStateStatusesEquality.equals(other.statuses, self.statuses) &&
             other.updatedAt == self.updatedAt;
@@ -81,6 +87,8 @@ mixin _$AdminOrderState {
       self.query,
       _adminOrderStateRegionsEquality.hash(self.regions),
       _adminOrderStateRegionIdsEquality.hash(self.regionIds),
+      _adminOrderStateSalesChannelsEquality.hash(self.salesChannels),
+      _adminOrderStateSalesChannelIdsEquality.hash(self.salesChannelIds),
       self.status,
       _adminOrderStateStatusesEquality.hash(self.statuses),
       self.updatedAt,
@@ -114,6 +122,8 @@ abstract class _$AdminOrderStateCopyWith<$Res> {
     String? query,
     List<AdminRegion>? regions,
     List<String>? regionIds,
+    List<AdminSalesChannel>? salesChannels,
+    List<String>? salesChannelIds,
     AdminOrderListStatus? status,
     List<AdminOrderStatus>? statuses,
     AdminDateFilter? updatedAt,
@@ -142,6 +152,8 @@ final class _$AdminOrderStateCopyWithImpl<$Res> implements _$AdminOrderStateCopy
     Object? query = null,
     Object? regions = null,
     Object? regionIds = null,
+    Object? salesChannels = null,
+    Object? salesChannelIds = null,
     Object? status = null,
     Object? statuses = null,
     Object? updatedAt = null,
@@ -156,6 +168,7 @@ final class _$AdminOrderStateCopyWithImpl<$Res> implements _$AdminOrderStateCopy
         query: query == null ? _self.query : query as String,
         statuses: statuses == null ? _self.statuses : statuses as List<AdminOrderStatus>,
         regionIds: regionIds == null ? _self.regionIds : regionIds as List<String>,
+        salesChannelIds: salesChannelIds == null ? _self.salesChannelIds : salesChannelIds as List<String>,
         createdAt: createdAt == null ? _self.createdAt : createdAt as AdminDateFilter,
         updatedAt: updatedAt == null ? _self.updatedAt : updatedAt as AdminDateFilter,
         order: order == null ? _self.order : order as AdminOrderOrder,
@@ -163,6 +176,7 @@ final class _$AdminOrderStateCopyWithImpl<$Res> implements _$AdminOrderStateCopy
         filterOptionsFailure: filterOptionsFailure == null ? _self.filterOptionsFailure : filterOptionsFailure as Option<String>,
         filterOptionsStatus: filterOptionsStatus == null ? _self.filterOptionsStatus : filterOptionsStatus as AdminOrderFilterOptionsStatus,
         regions: regions == null ? _self.regions : regions as List<AdminRegion>,
+        salesChannels: salesChannels == null ? _self.salesChannels : salesChannels as List<AdminSalesChannel>,
       )
     );
   }

@@ -10,6 +10,7 @@ extension AdminOrderExport on AdminOrderViewModel {
         current.query,
         current.statuses.map((status) => status.name).join(','),
         current.regionIds.join(','),
+        current.salesChannelIds.join(','),
         current.createdAt.isEmpty ? '' : current.createdAt.parameter,
         current.updatedAt.isEmpty ? '' : current.updatedAt.parameter,
         current.order.parameter,

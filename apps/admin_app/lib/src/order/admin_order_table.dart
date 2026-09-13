@@ -108,7 +108,13 @@ final class _OrderRow extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const Expanded(flex: 3, child: _MutedText(value: '—')),
+              Expanded(
+                flex: 3,
+                child: order.salesChannelName.match(
+                  some: (name) => Text(name, overflow: TextOverflow.ellipsis),
+                  none: () => const _MutedText(value: '-'),
+                ),
+              ),
               Expanded(
                 flex: 3,
                 child: _PaymentStatus(value: order.paymentStatus),

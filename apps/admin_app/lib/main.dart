@@ -7,6 +7,7 @@ import 'package:admin_app/src/order/admin_order_detail_api.dart';
 import 'package:admin_app/src/order/admin_order_detail_view_model.dart';
 import 'package:admin_app/src/order/admin_order_export_api.dart';
 import 'package:admin_app/src/order/admin_order_region_api.dart';
+import 'package:admin_app/src/order/admin_order_sales_channel_api.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/product/admin_product_create_view_model.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
@@ -43,6 +44,7 @@ void main() {
     api: api,
     exports: AdminOrderExportApi(dio, baseUrl: baseUrl),
     regions: AdminOrderRegionApi(dio, baseUrl: baseUrl),
+    salesChannels: AdminOrderSalesChannelApi(dio, baseUrl: baseUrl),
   ));
   final orderDetail = AdminOrderDetailViewModel(
     AdminOrderDetailViewModelArgs(

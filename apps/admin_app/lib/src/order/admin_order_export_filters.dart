@@ -52,6 +52,14 @@ final class AdminOrderExportFilters extends StatelessWidget {
             label: 'Region',
             value: _regionNames(state.regions, state.regionIds),
           ),
+        if (state.salesChannelIds.isNotEmpty)
+          (
+            label: 'Sales channel',
+            value: _salesChannelNames(
+              state.salesChannels,
+              state.salesChannelIds,
+            ),
+          ),
         if (!state.createdAt.isEmpty)
           (label: 'Created', value: _dateFilter(state.createdAt)),
         if (!state.updatedAt.isEmpty)
@@ -110,6 +118,17 @@ String _regionNames(List<AdminRegion> regions, List<String> selected) {
   final names = [
     for (final region in regions)
       if (selected.contains(region.id)) region.name,
+  ];
+  return names.isEmpty ? selected.join(', ') : names.join(', ');
+}
+
+String _salesChannelNames(
+  List<AdminSalesChannel> channels,
+  List<String> selected,
+) {
+  final names = [
+    for (final channel in channels)
+      if (selected.contains(channel.id)) channel.name,
   ];
   return names.isEmpty ? selected.join(', ') : names.join(', ');
 }

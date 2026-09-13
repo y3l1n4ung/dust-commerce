@@ -229,7 +229,8 @@ visible source-ordered Type, Tag, Status, Created and Updated controls. Active
 filters, Clear all, source pagination copy and all six supported sort choices
 are wired. Sales Channel now has final channel, cart-link and order-snapshot
 tables plus protected discovery and real order list/export filtering. The
-visible order control and product-channel availability remain pending.
+visible searchable order control, export summary and row label are wired;
+product-channel availability remains pending.
 Product-type CRUD/assignment remains outside the implemented boundary.
 
 ### Order transfers keep the capability out of the database

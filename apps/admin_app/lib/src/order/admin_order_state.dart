@@ -46,6 +46,7 @@ final class AdminOrderState with _$AdminOrderState {
     this.query = '',
     this.statuses = const [],
     this.regionIds = const [],
+    this.salesChannelIds = const [],
     this.createdAt = const AdminDateFilter(),
     this.updatedAt = const AdminDateFilter(),
     this.order = AdminOrderOrder.createdAtDesc,
@@ -53,6 +54,7 @@ final class AdminOrderState with _$AdminOrderState {
     this.filterOptionsFailure = const None(),
     this.filterOptionsStatus = AdminOrderFilterOptionsStatus.idle,
     this.regions = const [],
+    this.salesChannels = const [],
   });
 
   /// Total rows matching the active query.
@@ -91,6 +93,12 @@ final class AdminOrderState with _$AdminOrderState {
   /// Selected selling-region identifiers.
   final List<String> regionIds;
 
+  /// Server-owned sales-channel choices used by the Medusa filter menu.
+  final List<AdminSalesChannel> salesChannels;
+
+  /// Selected commercial-origin identifiers.
+  final List<String> salesChannelIds;
+
   /// Current request lifecycle.
   final AdminOrderListStatus status;
 
@@ -110,6 +118,7 @@ final class AdminOrderState with _$AdminOrderState {
   bool get hasFilters =>
       statuses.isNotEmpty ||
       regionIds.isNotEmpty ||
+      salesChannelIds.isNotEmpty ||
       !createdAt.isEmpty ||
       !updatedAt.isEmpty;
 }
