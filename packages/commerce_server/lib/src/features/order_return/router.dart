@@ -2,7 +2,13 @@ import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/order_return/handler/handler.dart';
 import 'package:dust_server/server.dart';
 
-/// Authenticated Store return routes.
-Router orderReturnRoutes() => Router()
-  ..routeLayer(fromExtractor(const CustomerAuth()))
-  ..route('/returns', post(createOrderReturnHandler, status: 201));
+/// Public discovery and authenticated Store return routes.
+Router orderReturnRoutes() {
+  final authenticated = Router()
+    ..routeLayer(fromExtractor(const CustomerAuth()))
+    ..route('/returns', post(createOrderReturnHandler, status: 201));
+
+  return Router()
+    ..route('/return-reasons', get(listReturnReasonsHandler))
+    ..merge(authenticated);
+}

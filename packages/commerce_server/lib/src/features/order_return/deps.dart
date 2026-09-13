@@ -11,6 +11,7 @@ final class OrderReturnDeps {
   OrderReturnDeps({
     required this.database,
     required this.reads,
+    required this.lists,
     required this.creates,
     required this.clock,
   });
@@ -23,6 +24,9 @@ final class OrderReturnDeps {
 
   /// Database used for one atomic validation/write transaction.
   final CommerceDatabase database;
+
+  /// Public active return-reason discovery.
+  final OrderReturnListRepository lists;
 
   /// Owned order, item, reason and response reads.
   final OrderReturnReadRepository reads;

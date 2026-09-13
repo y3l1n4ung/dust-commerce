@@ -175,6 +175,7 @@ Router buildApp(
     ..withState(OrderReturnDeps(
       database: database,
       reads: OrderReturnReadRepository(executor),
+      lists: OrderReturnListRepository(executor),
       creates: OrderReturnCreateRepository(executor),
       clock: clock,
     ))

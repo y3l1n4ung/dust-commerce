@@ -20,11 +20,37 @@ mixin _$OrderReturnResponse implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$ReturnReasonResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$ReturnReasonResponseSerialize(this as ReturnReasonResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+mixin _$ReturnReasonListResponse implements Serializable {
+  Map<String, Object?> serialize() =>
+      _$ReturnReasonListResponseSerialize(this as ReturnReasonListResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 final class $OrderReturnResponseSerializer implements Serializer<OrderReturnResponse, Map<String, Object?>> {
   const $OrderReturnResponseSerializer();
 
   @override
   Map<String, Object?> serialize(OrderReturnResponse value) => _$OrderReturnResponseSerialize(value);
+}
+final class $ReturnReasonResponseSerializer implements Serializer<ReturnReasonResponse, Map<String, Object?>> {
+  const $ReturnReasonResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(ReturnReasonResponse value) => _$ReturnReasonResponseSerialize(value);
+}
+final class $ReturnReasonListResponseSerializer implements Serializer<ReturnReasonListResponse, Map<String, Object?>> {
+  const $ReturnReasonListResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(ReturnReasonListResponse value) => _$ReturnReasonListResponseSerialize(value);
 }
 OrderReturnCandidate _$OrderReturnCandidateFromRow(Row row) {
   return OrderReturnCandidate(
@@ -130,6 +156,44 @@ extension $OrderReturnResponseQuery on QueryAs<OrderReturnResponse> {
       fetchAllWith(db, _$OrderReturnResponseFromRow);
 }
 
+ReturnReasonResponse _$ReturnReasonResponseFromRow(Row row) {
+  return ReturnReasonResponse(
+    id: row.read<String>('id'),
+    value: row.read<String>('value'),
+    label: row.read<String>('label'),
+    createdAt: row.readDateTime('created_at'),
+    updatedAt: row.readDateTime('updated_at'),
+    description: row.readNullable<String>('description'),
+    parentReturnReasonId: row.readNullable<String>('parent_return_reason_id'),
+  );
+}
+
+/// Row deserializer for [ReturnReasonResponse].
+final class $ReturnReasonResponseRowDeserializer implements RowDeserializer<ReturnReasonResponse> {
+  const $ReturnReasonResponseRowDeserializer();
+
+  @override
+  ReturnReasonResponse deserialize(Row row) => _$ReturnReasonResponseFromRow(row);
+}
+
+/// Typed row query terminals for [ReturnReasonResponse].
+///
+/// Resolved from the static type of the receiver, so a row type with no
+/// `FromRow` has no terminals and the call does not compile.
+extension $ReturnReasonResponseQuery on QueryAs<ReturnReasonResponse> {
+  /// Fetches exactly one row.
+  Future<ReturnReasonResponse> fetchOne(DatabaseExecutor db) =>
+      fetchOneWith(db, _$ReturnReasonResponseFromRow);
+
+  /// Fetches zero or one row.
+  Future<ReturnReasonResponse?> fetchOptional(DatabaseExecutor db) =>
+      fetchOptionalWith(db, _$ReturnReasonResponseFromRow);
+
+  /// Fetches every row.
+  Future<List<ReturnReasonResponse>> fetchAll(DatabaseExecutor db) =>
+      fetchAllWith(db, _$ReturnReasonResponseFromRow);
+}
+
 Map<String, Object?> _$OrderReturnResponseSerialize(OrderReturnResponse instance) {
   return <String, Object?>{
     'display_id': instance.displayId,
@@ -146,3 +210,32 @@ Map<String, Object?> _$OrderReturnResponseSerialize(OrderReturnResponse instance
 
 Map<String, Object?> _$OrderReturnResponseToJson(OrderReturnResponse instance) =>
     _$OrderReturnResponseSerialize(instance);
+
+Map<String, Object?> _$ReturnReasonResponseSerialize(ReturnReasonResponse instance) {
+  return <String, Object?>{
+    'created_at': instance.createdAt.toIso8601String(),
+    'description': instance.description,
+    'id': instance.id,
+    'label': instance.label,
+    'parent_return_reason_id': instance.parentReturnReasonId,
+    'updated_at': instance.updatedAt.toIso8601String(),
+    'value': instance.value,
+  };
+}
+
+Map<String, Object?> _$ReturnReasonResponseToJson(ReturnReasonResponse instance) =>
+    _$ReturnReasonResponseSerialize(instance);
+
+Map<String, Object?> _$ReturnReasonListResponseSerialize(ReturnReasonListResponse instance) {
+  return <String, Object?>{
+    'count': instance.count,
+    'limit': instance.limit,
+    'offset': instance.offset,
+    'return_reasons': instance.returnReasons
+        .map((item) => _$ReturnReasonResponseSerialize(item))
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$ReturnReasonListResponseToJson(ReturnReasonListResponse instance) =>
+    _$ReturnReasonListResponseSerialize(instance);

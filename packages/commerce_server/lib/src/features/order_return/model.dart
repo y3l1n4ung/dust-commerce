@@ -79,6 +79,71 @@ final class OrderReturnResponse with _$OrderReturnResponse {
   final OrderReturnStatus status;
 }
 
+/// Explicit active Store return reason populated directly from SQLx.
+@Derive([FromRow(), Serialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class ReturnReasonResponse with _$ReturnReasonResponse {
+  /// Creates one customer-safe reason allowlist.
+  const ReturnReasonResponse({
+    required this.id,
+    required this.value,
+    required this.label,
+    required this.createdAt,
+    required this.updatedAt,
+    this.description,
+    this.parentReturnReasonId,
+  });
+
+  /// When the merchant created this reason.
+  @Sqlx(rename: 'created_at')
+  final DateTime createdAt;
+
+  /// Optional customer guidance.
+  final String? description;
+
+  /// Stable identifier accepted by a return item.
+  final String id;
+
+  /// Customer-facing reason label.
+  final String label;
+
+  /// Optional parent used to group the taxonomy.
+  @Sqlx(rename: 'parent_return_reason_id')
+  final String? parentReturnReasonId;
+
+  /// When the merchant last changed this reason.
+  @Sqlx(rename: 'updated_at')
+  final DateTime updatedAt;
+
+  /// Stable machine value retained across label edits.
+  final String value;
+}
+
+/// Paginated Store return-reason response.
+@Derive([Serialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class ReturnReasonListResponse with _$ReturnReasonListResponse {
+  /// Creates one complete active reason page.
+  const ReturnReasonListResponse({
+    required this.returnReasons,
+    required this.count,
+    required this.limit,
+    required this.offset,
+  });
+
+  /// Total active reasons matching this list.
+  final int count;
+
+  /// Maximum rows requested for this page.
+  final int limit;
+
+  /// Number of active rows skipped before this page.
+  final int offset;
+
+  /// Explicit customer-safe reason allowlists.
+  final List<ReturnReasonResponse> returnReasons;
+}
+
 final class _OrderReturnStatusCodec
     implements SerDeCodec<OrderReturnStatus, String> {
   const _OrderReturnStatusCodec();
