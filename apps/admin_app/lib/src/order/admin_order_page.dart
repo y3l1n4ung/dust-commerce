@@ -1,0 +1,123 @@
+import 'package:admin_app/src/order/admin_order_pagination.dart';
+import 'package:admin_app/src/order/admin_order_state.dart';
+import 'package:admin_app/src/order/admin_order_table.dart';
+import 'package:admin_app/src/order/admin_order_toolbar.dart';
+import 'package:admin_app/src/order/admin_order_view_model.dart';
+import 'package:dust_dart/fp.dart';
+import 'package:flutter/material.dart';
+
+/// Medusa-shaped order route backed by the authenticated Admin API.
+final class AdminOrderPage extends StatefulWidget {
+  /// Creates the merchant order table.
+  const AdminOrderPage({required this.searchFocus, super.key});
+
+  /// Focus target shared with the sidebar search action.
+  final FocusNode searchFocus;
+
+  @override
+  State<AdminOrderPage> createState() => _AdminOrderPageState();
+}
+
+final class _AdminOrderPageState extends State<AdminOrderPage> {
+  final _query = TextEditingController();
+
+  @override
+  void dispose() {
+    _query.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watchAdminOrderViewModel().value;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(12),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1600),
+          child: Material(
+            color: Theme.of(context).colorScheme.surface,
+            elevation: 1,
+            shadowColor: const Color(0x16000000),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: Theme.of(context).dividerColor),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const _Header(),
+                Divider(height: 1, color: Theme.of(context).dividerColor),
+                AdminOrderToolbar(
+                  controller: _query,
+                  focusNode: widget.searchFocus,
+                  state: state,
+                  onSearch: () =>
+                      context.readAdminOrderViewModel().search(_query.text),
+                ),
+                Divider(height: 1, color: Theme.of(context).dividerColor),
+                _body(context, state),
+                AdminOrderPagination(state: state),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _body(BuildContext context, AdminOrderState state) {
+    if (state.status == AdminOrderListStatus.loading && state.orders.isEmpty) {
+      return const SizedBox(
+        height: 160,
+        child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      );
+    }
+    if (state.failure case Some(value: final message)
+        when state.orders.isEmpty) {
+      return SizedBox(
+        height: 160,
+        child: Center(
+          child: OutlinedButton(
+            onPressed: context.readAdminOrderViewModel().load,
+            child: Text('$message Retry'),
+          ),
+        ),
+      );
+    }
+    if (state.orders.isEmpty) {
+      return const SizedBox(
+        height: 160,
+        child: Center(child: Text('No orders found')),
+      );
+    }
+    return Stack(
+      children: [
+        AdminOrderTable(orders: state.orders),
+        if (state.status == AdminOrderListStatus.loading)
+          const LinearProgressIndicator(minHeight: 2),
+      ],
+    );
+  }
+}
+
+final class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: Row(
+          children: [
+            Text('Orders', style: Theme.of(context).textTheme.headlineSmall),
+            const Spacer(),
+            const Tooltip(
+              message: 'Order export is not available yet',
+              child: OutlinedButton(onPressed: null, child: Text('Export')),
+            ),
+          ],
+        ),
+      );
+}

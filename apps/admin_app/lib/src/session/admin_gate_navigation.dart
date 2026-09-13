@@ -2,6 +2,7 @@ part of 'admin_gate.dart';
 
 /// Keeps route transitions out of the authenticated shell composition.
 mixin _AdminHomeNavigation on State<_AdminHome> {
+  FocusNode get _orderSearchFocus;
   FocusNode get _optionSearchFocus;
   _AdminRoute get _route;
   set _route(_AdminRoute value);
@@ -19,6 +20,7 @@ mixin _AdminHomeNavigation on State<_AdminHome> {
       user: widget.user,
       themes: widget.themes,
       title: switch (_route) {
+        _AdminRoute.orders => 'Orders',
         _AdminRoute.products => 'Products',
         _AdminRoute.product => 'Product details',
         _AdminRoute.productOptions => 'Options',
@@ -33,10 +35,12 @@ mixin _AdminHomeNavigation on State<_AdminHome> {
           },
       },
       onSearchRequested: _requestSearch,
+      onOrdersRequested: _showOrders,
       onProductsRequested: _showProducts,
       onProductOptionsRequested: _showProductOptions,
       onProductTypesRequested: _showProductTypes,
       selectedSection: switch (_route) {
+        _AdminRoute.orders => AdminShellSection.orders,
         _AdminRoute.products ||
         _AdminRoute.product =>
           AdminShellSection.products,
@@ -51,6 +55,7 @@ mixin _AdminHomeNavigation on State<_AdminHome> {
           ? null
           : context.readAdminSessionViewModel().signOut,
       child: switch (_route) {
+        _AdminRoute.orders => AdminOrderPage(searchFocus: _orderSearchFocus),
         _AdminRoute.product => AdminProductDetailPage(
             productId: _selectedId,
             onBack: _showProducts,
@@ -85,6 +90,13 @@ mixin _AdminHomeNavigation on State<_AdminHome> {
   }
 
   void _requestSearch() {
+    if (_route == _AdminRoute.orders) {
+      _showOrders();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _orderSearchFocus.requestFocus();
+      });
+      return;
+    }
     if (_route == _AdminRoute.productTypes ||
         _route == _AdminRoute.productType) {
       _showProductTypes();
@@ -107,6 +119,14 @@ mixin _AdminHomeNavigation on State<_AdminHome> {
         _route = _AdminRoute.products;
         _selectedId = '';
       });
+
+  void _showOrders() {
+    context.readAdminOrderViewModel().load(offset: 0);
+    setState(() {
+      _route = _AdminRoute.orders;
+      _selectedId = '';
+    });
+  }
 
   void _showProduct(String id) => setState(() {
         _route = _AdminRoute.product;

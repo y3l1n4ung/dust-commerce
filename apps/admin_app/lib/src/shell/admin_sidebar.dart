@@ -13,6 +13,7 @@ final class AdminSidebar extends StatelessWidget {
     required this.user,
     required this.themes,
     required this.onSearchRequested,
+    required this.onOrdersRequested,
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
     required this.onProductTypesRequested,
@@ -23,6 +24,9 @@ final class AdminSidebar extends StatelessWidget {
 
   /// Focuses the active product search field.
   final VoidCallback onSearchRequested;
+
+  /// Opens the merchant order table.
+  final VoidCallback onOrdersRequested;
 
   /// Returns to the product catalogue route.
   final VoidCallback onProductsRequested;
@@ -67,8 +71,12 @@ final class AdminSidebar extends StatelessWidget {
                   shortcut: '⌘K',
                   onTap: onSearchRequested,
                 ),
-                const _NavRow(
-                    icon: Icons.receipt_long_outlined, label: 'Orders'),
+                _NavRow(
+                  icon: Icons.receipt_long_outlined,
+                  label: 'Orders',
+                  selected: selectedSection == AdminShellSection.orders,
+                  onTap: onOrdersRequested,
+                ),
                 _NavRow(
                   icon: Icons.inventory_2_outlined,
                   label: 'Products',
@@ -134,56 +142,6 @@ final class _StoreHeader extends StatelessWidget {
               icon: const Icon(Icons.more_horiz_rounded, size: 17),
             ),
           ],
-        ),
-      );
-}
-
-final class _NavRow extends StatelessWidget {
-  const _NavRow({
-    required this.icon,
-    required this.label,
-    this.selected = false,
-    this.shortcut,
-    this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback? onTap;
-  final bool selected;
-  final String? shortcut;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 2),
-        child: Material(
-          color: selected
-              ? Theme.of(context).colorScheme.surface
-              : Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
-            side: selected
-                ? BorderSide(color: Theme.of(context).dividerColor)
-                : BorderSide.none,
-          ),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(6),
-            onTap: onTap,
-            child: SizedBox(
-              height: 30,
-              child: Row(
-                children: [
-                  const SizedBox(width: 8),
-                  Icon(icon, size: 16),
-                  const SizedBox(width: 9),
-                  Expanded(child: Text(label)),
-                  if (shortcut case final value?)
-                    Text(value, style: Theme.of(context).textTheme.bodySmall),
-                  const SizedBox(width: 8),
-                ],
-              ),
-            ),
-          ),
         ),
       );
 }

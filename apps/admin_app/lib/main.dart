@@ -2,6 +2,7 @@ import 'package:admin_app/src/admin_app.dart';
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/core/admin_authorization_interceptor.dart';
 import 'package:admin_app/src/core/admin_session_store.dart';
+import 'package:admin_app/src/order/admin_order_view_model.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/product/admin_product_create_view_model.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
@@ -34,6 +35,7 @@ void main() {
     ),
   );
   final products = AdminProductViewModel(AdminProductViewModelArgs(api: api));
+  final orders = AdminOrderViewModel(AdminOrderViewModelArgs(api: api));
   final productDetail = AdminProductDetailViewModel(
     AdminProductDetailViewModelArgs(api: api),
   );
@@ -56,21 +58,24 @@ void main() {
   runApp(
     AdminSessionViewModelScope.value(
       value: session,
-      child: AdminProductViewModelScope.value(
-        value: products,
-        child: AdminProductDetailViewModelScope.value(
-          value: productDetail,
-          child: AdminProductCreateViewModelScope.value(
-            value: productCreate,
-            child: AdminProductOptionViewModelScope.value(
-              value: productOptions,
-              child: AdminProductOptionDetailViewModelScope.value(
-                value: productOptionDetail,
-                child: AdminProductTypeViewModelScope.value(
-                  value: productTypes,
-                  child: AdminProductTypeDetailViewModelScope.value(
-                    value: productTypeDetail,
-                    child: MorrowAdminApp(themes: AdminThemeController()),
+      child: AdminOrderViewModelScope.value(
+        value: orders,
+        child: AdminProductViewModelScope.value(
+          value: products,
+          child: AdminProductDetailViewModelScope.value(
+            value: productDetail,
+            child: AdminProductCreateViewModelScope.value(
+              value: productCreate,
+              child: AdminProductOptionViewModelScope.value(
+                value: productOptions,
+                child: AdminProductOptionDetailViewModelScope.value(
+                  value: productOptionDetail,
+                  child: AdminProductTypeViewModelScope.value(
+                    value: productTypes,
+                    child: AdminProductTypeDetailViewModelScope.value(
+                      value: productTypeDetail,
+                      child: MorrowAdminApp(themes: AdminThemeController()),
+                    ),
                   ),
                 ),
               ),

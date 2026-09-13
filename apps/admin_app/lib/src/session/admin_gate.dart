@@ -2,6 +2,8 @@ import 'package:admin_app/src/product/admin_product_page.dart';
 import 'package:admin_app/src/product/admin_product_detail_page.dart';
 import 'package:admin_app/src/product/admin_product_create_page.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
+import 'package:admin_app/src/order/admin_order_page.dart';
+import 'package:admin_app/src/order/admin_order_view_model.dart';
 import 'package:admin_app/src/product_option/admin_product_option_create_page.dart';
 import 'package:admin_app/src/product_option/admin_product_option_detail_page.dart';
 import 'package:admin_app/src/product_option/admin_product_option_detail_view_model.dart';
@@ -65,6 +67,8 @@ final class _AdminHome extends StatefulWidget {
 final class _AdminHomeState extends State<_AdminHome>
     with _AdminHomeNavigation {
   @override
+  final _orderSearchFocus = FocusNode();
+  @override
   final _searchFocus = FocusNode();
   @override
   final _optionSearchFocus = FocusNode();
@@ -88,6 +92,7 @@ final class _AdminHomeState extends State<_AdminHome>
 
   @override
   void dispose() {
+    _orderSearchFocus.dispose();
     _searchFocus.dispose();
     _optionSearchFocus.dispose();
     _typeSearchFocus.dispose();
@@ -99,6 +104,7 @@ final class _AdminHomeState extends State<_AdminHome>
 }
 
 enum _AdminRoute {
+  orders,
   products,
   product,
   productOptions,

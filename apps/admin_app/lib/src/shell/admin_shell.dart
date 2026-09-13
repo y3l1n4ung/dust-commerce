@@ -11,6 +11,7 @@ final class AdminShell extends StatelessWidget {
     required this.user,
     required this.themes,
     required this.onSearchRequested,
+    required this.onOrdersRequested,
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
     required this.onProductTypesRequested,
@@ -26,6 +27,9 @@ final class AdminShell extends StatelessWidget {
 
   /// Focuses the active route search field.
   final VoidCallback onSearchRequested;
+
+  /// Opens the merchant order table.
+  final VoidCallback onOrdersRequested;
 
   /// Returns to the product catalogue route.
   final VoidCallback onProductsRequested;
@@ -59,6 +63,7 @@ final class AdminShell extends StatelessWidget {
             user: user,
             themes: themes,
             onSearchRequested: onSearchRequested,
+            onOrdersRequested: onOrdersRequested,
             onProductsRequested: onProductsRequested,
             onProductOptionsRequested: onProductOptionsRequested,
             onProductTypesRequested: onProductTypesRequested,
