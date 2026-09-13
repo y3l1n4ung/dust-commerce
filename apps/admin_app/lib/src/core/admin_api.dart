@@ -54,6 +54,10 @@ abstract interface class AdminApi {
     @Part('file') MultipartFile file,
   );
 
+  /// Atomically consumes one staged product import.
+  @POST('/admin/products/import/{transactionId}/confirm')
+  Future<void> confirmProductImport(@Path() String transactionId);
+
   /// Lists normalized product types for filters and product selectors.
   @GET('/admin/product-types')
   Future<AdminProductTypeList> listProductTypes(

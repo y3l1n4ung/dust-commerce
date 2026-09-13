@@ -76,6 +76,24 @@ void main() {
           'The product CSV is invalid.',
         ));
   });
+
+  test('confirms the staged import through the generated client once',
+      () async {
+    final before = await _productCount(database);
+    final preview = await products.previewImport(_csvFile(_validCsv));
+    final transactionId = switch (preview) {
+      Ok(:final value) => value.transactionId,
+      Err(:final error) => fail(error),
+    };
+
+    final confirmed = await products.confirmImport(transactionId);
+    expect(confirmed, const Ok<void, String>(null));
+    expect(await _productCount(database), before + 1);
+    expect(
+      await products.confirmImport(transactionId),
+      const Err<void, String>('This product import is no longer available.'),
+    );
+  });
 }
 
 MultipartFile _csvFile(String value) => MultipartFile.fromString(
@@ -90,6 +108,9 @@ Future<int> _productCount(CommerceDatabase database) async {
   return rows.single.readIndex<int>(0);
 }
 
-const _validCsv = 'Product Id,Product Handle,Product Title\r\n'
-    'prod_tshirt,t-shirt,Essential T-Shirt\r\n'
-    ',new-cap,New Cap\r\n';
+const _validCsv =
+    'Product Id,Product Handle,Product Title,Product Status,Variant Id,'
+    'Variant Title,Variant SKU,Variant Price EUR,Variant Price USD\r\n'
+    'prod_tshirt,t-shirt,Essential T-Shirt,published,var_tshirt_s_black,'
+    'S / Black,TSHIRT-S-BLACK,10.00,15.00\r\n'
+    ',new-cap,New Cap,published,,One size,NEW-CAP,10.00,15.00\r\n';
