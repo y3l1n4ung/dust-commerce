@@ -14,6 +14,10 @@
   `packages/admin/dashboard/src/routes/orders/order-list/components/order-list-table/order-list-table.tsx`
   plus `hooks/table/columns/use-order-table-columns.tsx` and
   `hooks/table/filters/use-order-table-filters.tsx` at the pinned commit.
+- Order-detail source:
+  `packages/admin/dashboard/src/routes/orders/order-detail/order-detail.tsx`
+  plus its General, Summary, Payment, Fulfillment, Customer and Activity
+  section components at the pinned commit.
 - Product-query source:
   `hooks/table/query/use-product-table-query.tsx`,
   `hooks/table/filters/use-product-table-filters.tsx`, and the shared
@@ -153,6 +157,13 @@ running Morrow screen at desktop `1440 x 900` plus the app's narrow default
 viewport. Six local demo orders exercise multiple customers, currencies,
 countries and payment states. No same-state Medusa order raster is available,
 so this pass does not claim pixel parity.
+
+The order-detail pass uses the same pinned source and a complete local order at
+desktop `1440 x 900` plus the app's narrow default viewport. Two frozen line
+items, captured payment, shipping/billing addresses and distinct activity
+timestamps exercise every implemented section. No same-state Medusa order
+detail raster is available, so this pass proves source hierarchy, responsive
+behavior and real-data rendering without claiming pixel parity.
 
 ## Verified
 
@@ -335,6 +346,15 @@ so this pass does not claim pixel parity.
   browser warnings or errors. The generated client keeps the Dio-owned bearer,
   typed `DateTime` and `Option` query state. All 53 non-widget Admin and 314
   server tests pass; Dust checks and the release web build pass.
+- Selecting order #1002 now opens a protected read-only detail with Medusa's
+  General, Summary, Payment and Fulfillment main column plus Customer and
+  Activity sidebar. Desktop keeps the 7:3 composition and the narrow viewport
+  stacks every card. The browser rendered two real item snapshots, an exact
+  USD 68.00 total, captured Stripe record, both frozen addresses and persisted
+  timestamps; navigation back to Orders remains available. The generated
+  feature client shares the Dio-owned bearer and widgets receive only typed
+  `Option` values. All 56 non-widget Admin and 318 server tests pass; analyzer,
+  Dust checks and the release web build pass, and no widget tests were added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -358,10 +378,10 @@ so this pass does not claim pixel parity.
 - P1 — The filesystem adapter is durable for one server node. Multi-node
   deployment still needs object storage and cleanup for uploads left staged
   after an abandoned browser session.
-- P2 — Orders pass source-structure and live-behavior QA, but need a same-state
-  Medusa order-list capture before pixel parity can be claimed. Order export,
-  sales-channel data, region choices, detail and mutations remain separate
-  feature slices.
+- P2 — Orders pass source-structure and live-behavior QA, but need same-state
+  Medusa order-list and order-detail captures before pixel parity can be
+  claimed. Order export, sales-channel data, region choices and mutations
+  remain separate feature slices.
 
 ## Result
 
@@ -374,8 +394,9 @@ also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
 live end-to-end behavior checks. Product query behavior, discovery and visible
 controls pass API, state, accessibility and same-state live comparison.
-The order list passes protected API, generated-client, responsive layout,
-search and filter behavior checks against the pinned source structure.
+The order list and read-only detail pass protected API, generated-client,
+responsive layout and live-data behavior checks against the pinned source
+structure.
 Post-create editor, image-variant drawer, variant pricing, product stock and
 product deletion and orders remain blocked on same-state source captures;
 broader Medusa Admin parity is not claimed.
