@@ -47,6 +47,13 @@ abstract interface class AdminApi {
     @Query('order') String order,
   );
 
+  /// Validates and stages one Medusa product CSV without catalogue mutation.
+  @POST('/admin/products/import')
+  @MultiPart()
+  Future<AdminProductImportPreview> previewProductImport(
+    @Part('file') MultipartFile file,
+  );
+
   /// Lists normalized product types for filters and product selectors.
   @GET('/admin/product-types')
   Future<AdminProductTypeList> listProductTypes(

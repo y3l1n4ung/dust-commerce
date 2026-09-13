@@ -1,5 +1,6 @@
 import 'package:admin_app/src/product/admin_product_delete.dart';
 import 'package:admin_app/src/product/admin_product_export_drawer.dart';
+import 'package:admin_app/src/product/admin_product_import_drawer.dart';
 import 'package:admin_app/src/product/admin_product_page_header.dart';
 import 'package:admin_app/src/product/admin_product_state.dart';
 import 'package:admin_app/src/product/admin_product_pagination.dart';
@@ -64,7 +65,7 @@ final class _AdminProductPageState extends State<AdminProductPage> {
               children: [
                 AdminProductPageHeader(
                   onExport: () => _export(state),
-                  onImport: () => _unavailable(context),
+                  onImport: () => showAdminProductImportDrawer(context),
                   onCreate: widget.onCreateProduct,
                 ),
                 Divider(height: 1, color: Theme.of(context).dividerColor),
@@ -119,13 +120,6 @@ final class _AdminProductPageState extends State<AdminProductPage> {
         if (state.status == AdminProductStatus.loading)
           const LinearProgressIndicator(minHeight: 2),
       ],
-    );
-  }
-
-  void _unavailable(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('This action needs the next Admin API slice.')),
     );
   }
 

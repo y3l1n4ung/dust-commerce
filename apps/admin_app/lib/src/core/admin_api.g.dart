@@ -237,6 +237,44 @@ final class _$AdminApi implements AdminApi {
   }
 
   @override
+  Future<AdminProductImportPreview> previewProductImport(MultipartFile file) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final _data = FormData.fromMap(<String, dynamic>{
+      'file': file,
+    });
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminProductImportPreview>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/products/import',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminProductImportPreview.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<AdminProductTypeList> listProductTypes(
     String query,
     int limit,
