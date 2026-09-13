@@ -189,9 +189,13 @@ tags and images with exact ISO currency exponents and escaped boundaries. The
 right-side Admin drawer presents read-only active filters and downloads
 `product-export.csv` through the Dio-owned bearer pipeline.
 
-The next #31 slice is product import preview: accept and validate a CSV, then
-show Medusa's create/update summary without mutating the catalogue. Import
-confirmation remains a separate following slice.
+Product import preview now follows Medusa's guarded multipart and drawer flow.
+The server accepts one bounded RFC 4180 CSV, validates supported Medusa headers,
+typed cells and unambiguous product identities, then stores normalized rows in
+the import's own final table. It returns an opaque transaction id and unique
+create/update counts without changing the catalogue. The Admin shows the
+selected file, server-owned summary and downloadable template; Dio still owns
+the bearer. Import confirmation remains the next isolated #31 slice.
 Sales Channels and Shipping configuration are shown as not configured until
 their actual schemas and APIs exist. Schema growth must remain one final table
 per reversible migration, without appended `ALTER TABLE` migrations.

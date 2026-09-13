@@ -295,6 +295,14 @@ schema has no such domain; the remaining filter order and labels match source.
   one direct SQLx projection and emits ordered Medusa-shaped CSV fields with
   exact currency exponents and quoting. Forty-seven non-widget Admin and 301
   server tests pass; no widget tests were added and LOC debt remains eleven.
+- Product import now opens Medusa's right-side preview drawer with one bounded
+  CSV picker, selected-file processing, create/update summary, template
+  download and sticky footer. The guarded preview writes only a merchant-owned
+  staged transaction; focused tests prove the product count does not change.
+  Live QA verified the empty drawer and disabled confirmation state. Forty-nine
+  non-widget Admin and 305 server tests pass; the 40-migration schema and
+  contract checks plus Dust generation checks pass, and no widget tests were
+  added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -304,7 +312,8 @@ schema has no such domain; the remaining filter order and labels match source.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Product import preview and confirmation remain unavailable.
+- P1 — Product import confirmation is not implemented; the preview drawer keeps
+  Import disabled until the atomic confirmation slice lands.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
   chip input and post-entry rank organizer. Persisted ordering works, but this
   interaction is not yet a literal copy.
