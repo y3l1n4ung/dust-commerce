@@ -1,5 +1,6 @@
 import 'package:admin_app/src/product/admin_product_thumbnail_badge.dart';
 import 'package:admin_app/src/product/detail/admin_product_detail_section.dart';
+import 'package:admin_app/src/product/detail/admin_product_media_command_bar.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
 
@@ -64,40 +65,17 @@ final class _AdminProductMediaSectionState
                   ),
                   if (_selection.isNotEmpty) ...[
                     const SizedBox(height: 16),
-                    Center(child: _commandBar()),
+                    Center(
+                      child: AdminProductMediaCommandBar(
+                        count: _selection.length,
+                        onDelete: _delete,
+                        onManageVariants:
+                            _selection.length == 1 ? _manageVariants : null,
+                      ),
+                    ),
                   ],
                 ],
               ),
-      );
-
-  Widget _commandBar() => Material(
-        color: const Color(0xFF202020),
-        borderRadius: BorderRadius.circular(8),
-        elevation: 8,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${_selection.length} selected',
-                style: const TextStyle(color: Colors.white),
-              ),
-              const SizedBox(width: 8),
-              TextButton(
-                onPressed: _delete,
-                style: TextButton.styleFrom(foregroundColor: Colors.white),
-                child: const Text('Delete'),
-              ),
-              if (_selection.length == 1)
-                TextButton(
-                  onPressed: _manageVariants,
-                  style: TextButton.styleFrom(foregroundColor: Colors.white),
-                  child: const Text('Manage associated variants'),
-                ),
-            ],
-          ),
-        ),
       );
 
   Future<void> _delete() async {
@@ -157,6 +135,8 @@ final class _MediaTile extends StatelessWidget {
               color: Theme.of(context).colorScheme.surfaceContainerHighest,
               child: Image.network(
                 image.url,
+                width: 108,
+                height: 108,
                 fit: BoxFit.cover,
                 webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                 errorBuilder: (_, __, ___) => const Icon(Icons.image_outlined),
