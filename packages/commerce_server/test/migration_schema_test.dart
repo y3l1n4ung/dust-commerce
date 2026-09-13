@@ -53,6 +53,7 @@ void main() {
             .split(' '),
         'fulfillment_items',
         'stock_location_addresses',
+        'stock_locations',
         'payment_collections',
       ]),
     );
