@@ -45,6 +45,7 @@ void main() {
         ...'product_variants products promotions provider_identity'.split(' '),
         'product_imports',
         ...'regions shipping_options shipping_option_price_rules'.split(' '),
+        ...'shipping_profile product_shipping_profile'.split(' '),
         ...'sales_channels cart_sales_channels'.split(' '),
         ...'order_sales_channels product_sales_channels'.split(' '),
         ...'order_transfers variant_option_values variant_prices'.split(' '),

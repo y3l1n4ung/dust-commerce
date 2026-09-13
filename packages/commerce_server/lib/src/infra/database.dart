@@ -7,7 +7,8 @@ part 'database.g.dart';
 ///
 /// Separate from the queries because the two have different owners. This is
 /// opened once at startup; a DAO is what a handler is given, and a handler
-/// has no business closing a connection.
+/// has no business closing a connection. Its generated companion embeds the
+/// ordered one-shot migration manifest used at startup.
 @SqlxDatabase(type: SqlxDatabaseType.sqlite, migrations: './migrations')
 abstract class CommerceDatabase implements DatabaseClient {
   /// Opens the database at [path], applying any unapplied migrations.
