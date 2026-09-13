@@ -30,11 +30,12 @@ Future<void> main() async {
 
   final databasePath = environment['COMMERCE_DATABASE_PATH'] ?? 'commerce.db';
   await File(databasePath).parent.create(recursive: true);
-  final database = CommerceDatabase.open(
+  final database = CommerceDatabase.connectSqlx(
     databasePath,
-    options: commerceOptions,
+    options: commerceSqlxOptions,
   );
   try {
+    await requireCommerceSqlxMigrations(database);
     final result = await bootstrapAdmin(
       database,
       credentials,

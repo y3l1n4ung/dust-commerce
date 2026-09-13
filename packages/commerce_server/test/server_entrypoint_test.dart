@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:commerce_server/commerce_server.dart';
 import 'package:test/test.dart';
+
+import 'support/sqlx_database.dart';
 
 void main() {
   test('production entrypoint starts, seeds, and restarts cleanly', () async {
@@ -10,6 +13,15 @@ void main() {
     final databasePath = '${directory.path}/commerce.db';
     final port = await _availablePort();
     addTearDown(() => directory.delete(recursive: true));
+    final database = CommerceDatabase.open(
+      databasePath,
+      options: commerceOptions,
+    );
+    await recordSqlxHistoryForTest(
+      database,
+      commerceSqlxMigrationVersions,
+    );
+    await database.close();
 
     final first = await _RunningServer.start(databasePath, port);
     addTearDown(first.close);

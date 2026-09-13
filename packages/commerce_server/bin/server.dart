@@ -23,9 +23,9 @@ Future<void> main() async {
     );
   }
   await File(config.databasePath).parent.create(recursive: true);
-  final database = CommerceDatabase.open(
+  final database = CommerceDatabase.connectSqlx(
     config.databasePath,
-    options: commerceOptions,
+    options: commerceSqlxOptions,
   );
   final mediaStorage = LocalAdminMediaStorage(
     root: Directory(config.mediaPath),
@@ -35,6 +35,7 @@ Future<void> main() async {
   await mediaStorage.prepare();
 
   try {
+    await requireCommerceSqlxMigrations(database);
     if (config.seed) {
       await seedDevelopmentStore(database);
       await seedDevelopmentDemoCatalog(database);

@@ -97,6 +97,9 @@ dust build --root apps/admin_app
 Start a local API with the deterministic development catalogue:
 
 ```bash
+mkdir -p .data
+DATABASE_URL='sqlite://.data/commerce.db?mode=rwc' \
+  sqlx migrate run --source packages/commerce_server/migrations
 COMMERCE_SEED=true \
   COMMERCE_ALLOWED_ORIGINS=http://127.0.0.1:13001,http://127.0.0.1:13002 \
   COMMERCE_DATABASE_PATH=.data/commerce.db \
@@ -204,9 +207,12 @@ DATABASE_URL=sqlite://commerce.db sqlx migrate revert \
   --source packages/commerce_server/migrations
 ```
 
-Dust embeds and applies the `.up.sql` files at server startup. It does not run
-down migrations automatically. The baseline contains no appended `ALTER TABLE`
-steps: each table's up file is its complete initial definition.
+SQLx is the only migration owner for the production server and admin bootstrap.
+Both entrypoints verify that `_sqlx_migrations` exactly matches the migrations
+embedded in the binary, require the database file to already exist, then connect
+without replaying SQL. Dust's embedded migrator remains available only to
+isolated tests. The baseline contains no appended `ALTER TABLE` steps: each
+table's up file is its complete definition.
 
 ## Licence
 
