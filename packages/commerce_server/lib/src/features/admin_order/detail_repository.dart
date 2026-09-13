@@ -11,16 +11,13 @@ abstract final class AdminOrderDetailRepository {
 
   /// Selects only the fields required by the read-only Admin detail screen.
   @Query(r'''
-SELECT order_row.id, order_row.region_id,
-       order_row.display_id,
-       order_row.email,
+SELECT order_row.id, order_row.region_id, order_row.display_id, order_row.email,
        coalesce(
          nullif(trim(coalesce(customer.first_name, '') || ' ' ||
                      coalesce(customer.last_name, '')), ''),
          order_row.email
        ) AS customer_name,
-       order_row.currency_code,
-       order_row.subtotal,
+       order_row.currency_code, order_row.subtotal,
        order_row.shipping_total,
        order_row.discount_total,
        order_row.tax,
@@ -47,8 +44,7 @@ SELECT order_row.id, order_row.region_id,
          ) THEN 'canceled'
          ELSE 'not_fulfilled'
        END AS fulfillment_status,
-       order_row.shipping_name,
-       order_row.promotion_code,
+       order_row.shipping_name, order_row.promotion_code,
        order_row.placed_at,
        order_row.created_at,
        order_row.updated_at,
@@ -62,6 +58,7 @@ SELECT order_row.id, order_row.region_id,
            'id', item.id,
            'variant_id', item.variant_id,
            'product_id', item.product_id,
+           'shipping_profile_id', item.shipping_profile_id,
            'product_handle', item.product_handle,
            'thumbnail', item.thumbnail,
            'title', item.title,
@@ -72,7 +69,11 @@ SELECT order_row.id, order_row.region_id,
            'created_at', item.created_at
          ))
          FROM (
-           SELECT * FROM order_items
+           SELECT item_row.*, profile_link.shipping_profile_id
+           FROM order_items item_row
+           LEFT JOIN product_shipping_profile profile_link
+             ON profile_link.product_id = item_row.product_id
+            AND profile_link.deleted_at IS NULL
            WHERE order_id = order_row.id
            ORDER BY created_at, id
          ) item
@@ -120,8 +121,8 @@ SELECT order_row.id, order_row.region_id,
                ORDER BY created_at, id
              ) item
            ), '[]') AS items_json
-           FROM fulfillments record
-           WHERE record.order_id = order_row.id AND record.deleted_at IS NULL
+           FROM fulfillments record WHERE record.order_id = order_row.id
+             AND record.deleted_at IS NULL
            ORDER BY record.created_at, record.id
          ) fulfillment
        ), '[]') AS fulfillments_json,
@@ -159,8 +160,7 @@ LEFT JOIN order_addresses billing
 LEFT JOIN payment_collections payment
   ON payment.order_id = order_row.id AND payment.deleted_at IS NULL
 LEFT JOIN (
-  SELECT order_id, sum(quantity) AS order_quantity FROM order_items
-  GROUP BY order_id
+  SELECT order_id, sum(quantity) AS order_quantity FROM order_items GROUP BY order_id
 ) order_summary ON order_summary.order_id = order_row.id
 LEFT JOIN (
   SELECT fulfillment.order_id,

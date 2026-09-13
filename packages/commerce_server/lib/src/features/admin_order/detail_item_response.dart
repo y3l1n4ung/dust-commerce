@@ -11,6 +11,7 @@ final class AdminOrderItemResponse with _$AdminOrderItemResponse {
     required this.id,
     required this.variantId,
     required this.productId,
+    required this.shippingProfileId,
     required this.productHandle,
     required this.thumbnail,
     required this.title,
@@ -42,6 +43,9 @@ final class AdminOrderItemResponse with _$AdminOrderItemResponse {
 
   /// Number of purchased units.
   final int quantity;
+
+  /// Product fulfillment profile when the catalog relation still exists.
+  final String? shippingProfileId;
 
   /// Optional product image frozen at checkout.
   final String? thumbnail;

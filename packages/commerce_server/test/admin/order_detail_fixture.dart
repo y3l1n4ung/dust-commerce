@@ -29,10 +29,10 @@ INSERT INTO order_items
   (id, order_id, variant_id, product_id, product_handle, thumbnail, title,
    variant_title, unit_amount, currency_code, quantity, created_at)
 VALUES
-  ('item_cup', 'ord_detail', 'var_cup', 'prod_cup', 'espresso-cup',
+  ('item_cup', 'ord_detail', 'var_cup', 'prod_tshirt', 'espresso-cup',
    'https://images.example/cup.jpg', 'Espresso cup', 'Default',
    1500, 'eur', 1, '2026-09-10T10:00:00.000Z'),
-  ('item_shirt', 'ord_detail', 'var_shirt_m', 'prod_shirt', 't-shirt',
+  ('item_shirt', 'ord_detail', 'var_shirt_m', 'prod_sweatshirt', 't-shirt',
    NULL, 'T-shirt', 'M / Black', 1500, 'eur', 2,
    '2026-09-10T10:00:01.000Z')
 ''');

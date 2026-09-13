@@ -41,6 +41,7 @@ Map<String, Object?> _$AdminOrderItemResponseSerialize(AdminOrderItemResponse in
     'product_handle': instance.productHandle,
     'product_id': instance.productId,
     'quantity': instance.quantity,
+    'shipping_profile_id': instance.shippingProfileId,
     'thumbnail': instance.thumbnail,
     'title': instance.title,
     'unit_amount': instance.unitAmount,
@@ -75,6 +76,9 @@ AdminOrderItemResponse _$AdminOrderItemResponseDeserialize(Map<String, Object?> 
     'String',
   );
   final quantityValue = JsonHelper.as<int>(json['quantity'], 'quantity', 'int');
+  final shippingProfileIdValue = json['shipping_profile_id'] == null
+      ? null
+      : JsonHelper.as<String>(json['shipping_profile_id'], 'shipping_profile_id', 'String');
   final thumbnailValue = json['thumbnail'] == null
       ? null
       : JsonHelper.as<String>(json['thumbnail'], 'thumbnail', 'String');
@@ -97,6 +101,7 @@ AdminOrderItemResponse _$AdminOrderItemResponseDeserialize(Map<String, Object?> 
     id: idValue,
     variantId: variantIdValue,
     productId: productIdValue,
+    shippingProfileId: shippingProfileIdValue,
     productHandle: productHandleValue,
     thumbnail: thumbnailValue,
     title: titleValue,

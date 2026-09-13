@@ -72,6 +72,7 @@ void main() {
       ['item_cup', 'item_shirt'],
     );
     expect(items.first, isNot(contains('metadata')));
+    expect(items.first, containsPair('shipping_profile_id', 'sp_default'));
     expect(
       order['shipping_address'],
       containsPair('country_code', 'dk'),

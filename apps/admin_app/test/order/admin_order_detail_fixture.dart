@@ -29,6 +29,7 @@ const adminOrderDetailJson = <String, Object?>{
       'id': 'item_cup',
       'variant_id': 'var_cup',
       'product_id': 'prod_cup',
+      'shipping_profile_id': 'sp_default',
       'product_handle': 'espresso-cup',
       'thumbnail': null,
       'title': 'Espresso cup',

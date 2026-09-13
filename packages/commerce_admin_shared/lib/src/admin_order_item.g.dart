@@ -24,6 +24,7 @@ mixin _$AdminOrderItem implements Serializable {
         'productHandle: ${self.productHandle}, '
         'productId: ${self.productId}, '
         'quantity: ${self.quantity}, '
+        'shippingProfileIdValue: ${self.shippingProfileIdValue}, '
         'thumbnailValue: ${self.thumbnailValue}, '
         'title: ${self.title}, '
         'unitAmount: ${self.unitAmount}, '
@@ -44,6 +45,7 @@ mixin _$AdminOrderItem implements Serializable {
             other.productHandle == self.productHandle &&
             other.productId == self.productId &&
             other.quantity == self.quantity &&
+            other.shippingProfileIdValue == self.shippingProfileIdValue &&
             other.thumbnailValue == self.thumbnailValue &&
             other.title == self.title &&
             other.unitAmount == self.unitAmount &&
@@ -62,6 +64,7 @@ mixin _$AdminOrderItem implements Serializable {
       self.productHandle,
       self.productId,
       self.quantity,
+      self.shippingProfileIdValue,
       self.thumbnailValue,
       self.title,
       self.unitAmount,
@@ -97,6 +100,7 @@ Map<String, Object?> _$AdminOrderItemSerialize(AdminOrderItem instance) {
     'product_handle': instance.productHandle,
     'product_id': instance.productId,
     'quantity': instance.quantity,
+    'shipping_profile_id': instance.shippingProfileIdValue,
     'thumbnail': instance.thumbnailValue,
     'title': instance.title,
     'unit_amount': instance.unitAmount,
@@ -131,6 +135,9 @@ AdminOrderItem _$AdminOrderItemDeserialize(Map<String, Object?> json) {
     'String',
   );
   final quantityValue = JsonHelper.as<int>(json['quantity'], 'quantity', 'int');
+  final shippingProfileIdValueValue = json['shipping_profile_id'] == null
+      ? null
+      : JsonHelper.as<String>(json['shipping_profile_id'], 'shipping_profile_id', 'String');
   final thumbnailValueValue = json['thumbnail'] == null
       ? null
       : JsonHelper.as<String>(json['thumbnail'], 'thumbnail', 'String');
@@ -153,6 +160,7 @@ AdminOrderItem _$AdminOrderItemDeserialize(Map<String, Object?> json) {
     id: idValue,
     variantId: variantIdValue,
     productId: productIdValue,
+    shippingProfileIdValue: shippingProfileIdValueValue,
     productHandle: productHandleValue,
     thumbnailValue: thumbnailValueValue,
     title: titleValue,

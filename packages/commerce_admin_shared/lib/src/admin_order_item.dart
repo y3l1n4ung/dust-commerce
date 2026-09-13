@@ -12,6 +12,7 @@ final class AdminOrderItem with _$AdminOrderItem {
     required this.id,
     required this.variantId,
     required this.productId,
+    required this.shippingProfileIdValue,
     required this.productHandle,
     required this.thumbnailValue,
     required this.title,
@@ -44,6 +45,10 @@ final class AdminOrderItem with _$AdminOrderItem {
   /// Number of units purchased.
   final int quantity;
 
+  /// Nullable JSON backing for [shippingProfileId].
+  @SerDe(rename: 'shipping_profile_id')
+  final String? shippingProfileIdValue;
+
   /// Nullable JSON backing for [thumbnail].
   @SerDe(rename: 'thumbnail')
   final String? thumbnailValue;
@@ -63,6 +68,9 @@ final class AdminOrderItem with _$AdminOrderItem {
 
   /// Optional product image frozen at checkout.
   Option<String> get thumbnail => adminOptionOf(thumbnailValue);
+
+  /// Product fulfillment profile used to filter shipping methods.
+  Option<String> get shippingProfileId => adminOptionOf(shippingProfileIdValue);
 
   /// Optional variant label frozen at checkout.
   Option<String> get variantTitle => adminOptionOf(variantTitleValue);
