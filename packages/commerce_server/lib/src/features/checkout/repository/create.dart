@@ -81,14 +81,16 @@ VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
     String? phone,
   );
 
-  /// Takes stock for a variant, but only if there is enough.
+  /// Takes managed stock for a variant, but only if there is enough.
   ///
   /// The check is in the WHERE clause rather than in Dart: two checkouts
   /// racing for the last unit both read "one left", and only the write can
   /// decide which of them gets it. A zero row count is how the loser finds out.
   @Query(r'''
 UPDATE product_variants
-SET inventory_quantity = inventory_quantity - $2
+SET inventory_quantity = inventory_quantity - CASE
+      WHEN manage_inventory = 1 THEN $2 ELSE 0
+    END
 WHERE id = $1
   AND (manage_inventory = 0 OR allow_backorder = 1
        OR inventory_quantity >= $2)

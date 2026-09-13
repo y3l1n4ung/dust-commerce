@@ -66,7 +66,9 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     return _db.execute(
       r'''
 UPDATE product_variants
-SET inventory_quantity = inventory_quantity - ?
+SET inventory_quantity = inventory_quantity - CASE
+      WHEN manage_inventory = 1 THEN ? ELSE 0
+    END
 WHERE id = ?
   AND (manage_inventory = 0 OR allow_backorder = 1
        OR inventory_quantity >= ?)
