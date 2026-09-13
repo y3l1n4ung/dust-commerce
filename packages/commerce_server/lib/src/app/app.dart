@@ -96,6 +96,8 @@ Router buildApp(
         orders: AdminOrderRepository(executor),
         details: AdminOrderDetailRepository(executor),
         exports: AdminOrderExportRepository(executor),
+        database: database,
+        nextId: clock.nextId,
       ),
     )
     ..withState(AdminReturnDeps(

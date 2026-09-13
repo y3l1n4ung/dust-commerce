@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/admin_order/handler.dart';
+import 'package:commerce_server/src/features/admin_order/create_fulfillment_handler.dart';
 import 'package:commerce_server/src/features/admin_order/detail_handler.dart';
 import 'package:commerce_server/src/features/admin_order/export_handler.dart';
 import 'package:dust_server/server.dart';
@@ -7,4 +8,8 @@ import 'package:dust_server/server.dart';
 Router adminOrderRoutes() => Router()
   ..route('/orders', get(listAdminOrdersHandler))
   ..route('/orders/export', get(exportAdminOrdersHandler))
-  ..route('/orders/{id}', get(readAdminOrderHandler));
+  ..route('/orders/{id}', get(readAdminOrderHandler))
+  ..route(
+    '/orders/{id}/fulfillments',
+    post(createAdminOrderFulfillmentHandler),
+  );

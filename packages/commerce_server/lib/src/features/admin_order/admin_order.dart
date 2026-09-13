@@ -2,6 +2,12 @@
 library;
 
 export 'deps.dart';
+export 'create_fulfillment_failure.dart';
+export 'create_fulfillment_handler.dart';
+export 'create_fulfillment_model.dart';
+export 'create_fulfillment_outcome.dart';
+export 'create_fulfillment_repository.dart';
+export 'create_fulfillment_service.dart';
 export 'detail_address_response.dart';
 export 'detail_handler.dart';
 export 'detail_item_response.dart';
