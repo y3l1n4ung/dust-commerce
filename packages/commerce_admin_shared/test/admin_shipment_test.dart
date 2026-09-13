@@ -2,6 +2,20 @@ import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('round trips Medusa mark-delivered input and its default', () {
+    const suppressed = AdminMarkFulfillmentDelivered(noNotification: true);
+
+    expect(suppressed.toJson(), {'no_notification': true});
+    expect(
+      AdminMarkFulfillmentDelivered.fromJson(suppressed.toJson()),
+      suppressed,
+    );
+    expect(
+      AdminMarkFulfillmentDelivered.fromJson(const {}).noNotification,
+      isFalse,
+    );
+  });
+
   test('round trips Medusa order shipment input', () {
     const shipment = AdminCreateShipment(
       items: [

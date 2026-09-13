@@ -7,6 +7,7 @@ export 'src/admin_create_shipment.dart';
 export 'src/admin_fulfillment_item.dart';
 export 'src/admin_fulfillment_label.dart';
 export 'src/admin_fulfillment_context.dart';
+export 'src/admin_mark_fulfillment_delivered.dart';
 export 'src/admin_media.dart';
 export 'src/admin_order.dart';
 export 'src/admin_order_address.dart';
