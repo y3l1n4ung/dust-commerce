@@ -3,6 +3,8 @@ import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+import 'order_receipt_total_row.dart';
+
 /// Immutable line snapshots shown on the confirmation receipt.
 final class OrderReceiptItems extends StatelessWidget {
   /// Creates the order line list.
@@ -76,42 +78,47 @@ final class OrderReceiptTotals extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          _row(context.tr('shop_checkout_subtotal', defaultText: 'Subtotal'),
-              order.subtotal),
-          _row(context.tr('shop_checkout_shipping', defaultText: 'Shipping'),
-              order.shippingTotal),
+          OrderReceiptTotalRow(
+            label: context.tr(
+              'shop_checkout_subtotal',
+              defaultText: 'Subtotal',
+            ),
+            value: order.subtotal,
+          ),
+          OrderReceiptTotalRow(
+            label: context.tr(
+              'shop_checkout_shipping',
+              defaultText: 'Shipping',
+            ),
+            value: order.shippingTotal,
+          ),
           if (!order.discountTotal.isZero)
-            _row(context.tr('shop_checkout_discount', defaultText: 'Discount'),
-                order.discountTotal,
-                discount: true),
-          _row(context.tr('shop_checkout_taxes', defaultText: 'Taxes'),
-              order.tax),
+            OrderReceiptTotalRow(
+              label: context.tr(
+                'shop_checkout_discount',
+                defaultText: 'Discount',
+              ),
+              value: order.discountTotal,
+              discount: true,
+            ),
+          OrderReceiptTotalRow(
+            label: context.tr(
+              'shop_checkout_taxes',
+              defaultText: 'Taxes',
+            ),
+            value: order.tax,
+          ),
           const SizedBox(height: 12),
           const Divider(),
           const SizedBox(height: 12),
-          _row(context.tr('shop_checkout_total', defaultText: 'Total'),
-              order.total,
-              strong: true),
-        ],
-      );
-
-  Widget _row(String label, Money value,
-          {bool discount = false, bool strong = false}) =>
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label,
-                style: TextStyle(fontWeight: strong ? FontWeight.w600 : null)),
-            Text(
-              '${discount ? '- ' : ''}${formatMoney(value)}',
-              style: TextStyle(
-                color: discount ? StoreColors.interactive : null,
-                fontWeight: strong ? FontWeight.w600 : null,
-              ),
+          OrderReceiptTotalRow(
+            label: context.tr(
+              'shop_checkout_total',
+              defaultText: 'Total',
             ),
-          ],
-        ),
+            value: order.total,
+            strong: true,
+          ),
+        ],
       );
 }

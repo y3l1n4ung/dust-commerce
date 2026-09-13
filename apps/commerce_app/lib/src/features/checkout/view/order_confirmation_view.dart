@@ -3,6 +3,7 @@ import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+import 'order_payment_details.dart';
 import 'order_receipt_details.dart';
 import 'order_receipt_items.dart';
 
