@@ -149,7 +149,7 @@ foreign key. The guarded list route returns only id, label and typed audit
 timestamps, while `type_id` filtering applies before count and paging. Store
 and Admin product responses continue to expose the merchant-facing label as
 `product_type`, so neither contract leaks the persistence identifier. The real
-SQLx CLI applies and reverts all 57 migrations without leaving application
+SQLx CLI applies and reverts all 58 migrations without leaving application
 tables; no appended migration mutates `products` after creation. Production
 entrypoints require that exact successful SQLx history and never replay Dust's
 separate embedded-migration ledger.
