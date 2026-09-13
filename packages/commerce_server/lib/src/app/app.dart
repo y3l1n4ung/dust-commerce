@@ -102,6 +102,7 @@ Router buildApp(
       AdminOrderDeps(
         orders: AdminOrderRepository(executor),
         details: AdminOrderDetailRepository(executor),
+        exports: AdminOrderExportRepository(executor),
       ),
     )
     ..withState(
