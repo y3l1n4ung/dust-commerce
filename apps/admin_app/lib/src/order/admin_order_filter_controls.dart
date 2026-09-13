@@ -8,6 +8,12 @@ final class _AddFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MenuAnchor(
         menuChildren: [
+          if (state.regionIds.isEmpty && state.regions.isNotEmpty)
+            _RegionFilterSubmenu(
+              regions: state.regions,
+              selected: state.regionIds,
+              onChanged: context.readAdminOrderViewModel().filterByRegions,
+            ),
           for (final status in AdminOrderStatus.values)
             MenuItemButton(
               onPressed: () => _select(context, 'status:${status.name}'),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 part 'admin_order_sort_menu.dart';
 part 'admin_order_filter_controls.dart';
+part 'admin_order_region_filter.dart';
 
 /// Search, filters, and ordering backed by the Admin order query.
 final class AdminOrderToolbar extends StatelessWidget {
@@ -47,6 +48,13 @@ final class AdminOrderToolbar extends StatelessWidget {
                         .readAdminOrderViewModel()
                         .filterByStatuses(const []),
                   ),
+                if (state.regionIds.isNotEmpty)
+                  _RegionFilterChip(
+                    regions: state.regions,
+                    selected: state.regionIds,
+                    onChanged:
+                        context.readAdminOrderViewModel().filterByRegions,
+                  ),
                 if (!state.createdAt.isEmpty)
                   _ActiveFilterChip(
                     label: const Text('Created: last 30 days'),
@@ -61,6 +69,23 @@ final class AdminOrderToolbar extends StatelessWidget {
                   TextButton(
                     onPressed: context.readAdminOrderViewModel().clearFilters,
                     child: const Text('Clear all'),
+                  ),
+                if (state.filterOptionsStatus ==
+                    AdminOrderFilterOptionsStatus.loading)
+                  const SizedBox.square(
+                    dimension: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                if (state.filterOptionsStatus ==
+                    AdminOrderFilterOptionsStatus.failed)
+                  IconButton(
+                    tooltip: state.filterOptionsFailure.match(
+                      some: (message) => '$message Retry',
+                      none: () => 'Retry filter choices',
+                    ),
+                    onPressed:
+                        context.readAdminOrderViewModel().loadFilterOptions,
+                    icon: const Icon(Icons.refresh_rounded, size: 17),
                   ),
               ],
             );

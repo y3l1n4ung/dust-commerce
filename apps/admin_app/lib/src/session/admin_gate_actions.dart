@@ -45,7 +45,9 @@ mixin _AdminHomeActions on State<_AdminHome> {
       });
 
   void _showOrders() {
-    context.readAdminOrderViewModel().load(offset: 0);
+    context.readAdminOrderViewModel()
+      ..load(offset: 0)
+      ..loadFilterOptions();
     setState(() {
       _route = _AdminRoute.orders;
       _selectedId = '';

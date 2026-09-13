@@ -48,7 +48,10 @@ final class AdminOrderExportFilters extends StatelessWidget {
             value: state.statuses.map((value) => _title(value.name)).join(', '),
           ),
         if (state.regionIds.isNotEmpty)
-          (label: 'Region', value: state.regionIds.join(', ')),
+          (
+            label: 'Region',
+            value: _regionNames(state.regions, state.regionIds),
+          ),
         if (!state.createdAt.isEmpty)
           (label: 'Created', value: _dateFilter(state.createdAt)),
         if (!state.updatedAt.isEmpty)
@@ -102,3 +105,11 @@ String _order(AdminOrderOrder value) => switch (value) {
 
 String _title(String value) =>
     '${value[0].toUpperCase()}${value.substring(1).toLowerCase()}';
+
+String _regionNames(List<AdminRegion> regions, List<String> selected) {
+  final names = [
+    for (final region in regions)
+      if (selected.contains(region.id)) region.name,
+  ];
+  return names.isEmpty ? selected.join(', ') : names.join(', ');
+}
