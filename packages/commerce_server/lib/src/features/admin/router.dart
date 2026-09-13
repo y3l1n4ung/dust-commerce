@@ -28,6 +28,10 @@ Router adminRoutes() => Router()
   ..route('/products/export', get(exportAdminProductsHandler))
   ..route('/products/import', post(previewAdminProductImportHandler))
   ..route(
+    '/products/import/{transaction_id}/confirm',
+    post(confirmAdminProductImportHandler),
+  )
+  ..route(
     '/product-options',
     get(listAdminProductOptionsHandler)
         .post(createAdminProductOptionHandler, status: 201),

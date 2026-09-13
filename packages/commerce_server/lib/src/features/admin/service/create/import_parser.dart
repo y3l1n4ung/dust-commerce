@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:commerce_server/src/features/admin/service/export_headers.dart';
+import 'package:commerce_server/src/features/admin/service/create/import_validation.dart';
 import 'package:csv/csv.dart';
 import 'package:dust_dart/fp.dart';
 
@@ -52,7 +53,7 @@ Result<AdminProductImportDocument, String> parseAdminProductImport(
     if (headerError != null) return Err(headerError);
 
     final rows = <Map<String, String>>[];
-    final products = <String, ({String id, String title})>{};
+    final products = <String, ({String id, String title, String signature})>{};
     for (final cells in parsed.skip(1)) {
       if (cells.every((cell) => cell.trim().isEmpty)) continue;
       if (cells.length != headers.length) {
@@ -102,7 +103,7 @@ String? _validateHeaders(List<String> headers) {
 
 String? _validateRow(
   Map<String, String> row,
-  Map<String, ({String id, String title})> products,
+  Map<String, ({String id, String title, String signature})> products,
 ) {
   if (row.values.any((value) => value.length > 10000)) {
     return 'CSV contains a cell longer than 10000 characters';
@@ -122,46 +123,20 @@ String? _validateRow(
   if (id.isNotEmpty && !RegExp(r'^[A-Za-z0-9_-]{1,128}$').hasMatch(id)) {
     return 'Product ids contain unsupported characters';
   }
+  final signature = jsonEncode({
+    for (final entry in row.entries)
+      if (entry.key.startsWith('Product ') &&
+          !entry.key.startsWith('Product Image '))
+        entry.key: entry.value,
+    for (final entry in row.entries)
+      if (entry.key.startsWith('Product Image ') ||
+          entry.key.startsWith('Product Tag '))
+        entry.key: entry.value,
+  });
   final previous = products[handle];
-  if (previous != null && (previous.id != id || previous.title != title)) {
-    return 'Rows for one product must use the same id, handle, and title';
+  if (previous != null && previous.signature != signature) {
+    return 'Rows for one product must use the same product values';
   }
-  products[handle] = (id: id, title: title);
-  return _validateTypedCells(row);
-}
-
-String? _validateTypedCells(Map<String, String> row) {
-  final status = row['Product Status'];
-  if (status != null &&
-      status.isNotEmpty &&
-      !const {'draft', 'published', 'rejected', 'proposed'}.contains(status)) {
-    return 'Product Status is invalid';
-  }
-  for (final entry in row.entries) {
-    final value = entry.value;
-    if (value.isEmpty) continue;
-    if (entry.key.endsWith('Weight') ||
-        entry.key.endsWith('Length') ||
-        entry.key.endsWith('Width') ||
-        entry.key.endsWith('Height')) {
-      final number = int.tryParse(value);
-      if (number == null || number < 0) {
-        return '${entry.key} must be a non-negative integer';
-      }
-    }
-    if ((entry.key == 'Product Discountable' ||
-            entry.key == 'Variant Allow Backorder' ||
-            entry.key == 'Variant Manage Inventory') &&
-        value != 'true' &&
-        value != 'false') {
-      return '${entry.key} must be true or false';
-    }
-    if (entry.key.startsWith('Variant Price ')) {
-      final amount = num.tryParse(value);
-      if (amount == null || !amount.isFinite || amount < 0) {
-        return '${entry.key} must be a non-negative number';
-      }
-    }
-  }
-  return null;
+  products[handle] = (id: id, title: title, signature: signature);
+  return validateAdminProductImportCells(row);
 }

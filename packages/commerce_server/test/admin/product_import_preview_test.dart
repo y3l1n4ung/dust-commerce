@@ -73,10 +73,11 @@ FROM product_imports
   });
 }
 
-const _validCsv = 'Product Id,Product Handle,Product Title,Variant Id\r\n'
-    'prod_tshirt,t-shirt,Essential T-Shirt,var_tshirt_s_black\r\n'
-    ',new-cap,New Cap,var_new_cap_small\r\n'
-    ',new-cap,New Cap,var_new_cap_large\r\n';
+const _validCsv =
+    'Product Id,Product Handle,Product Title,Variant Id,Variant Title\r\n'
+    'prod_tshirt,t-shirt,Essential T-Shirt,var_tshirt_s_black,S / Black\r\n'
+    ',new-cap,New Cap,,Small\r\n'
+    ',new-cap,New Cap,,Large\r\n';
 
 Future<TestResponse> _preview(AdminHarness harness, String csv) async {
   final token = await harness.adminToken();

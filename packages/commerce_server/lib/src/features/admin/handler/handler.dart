@@ -14,6 +14,7 @@ export 'delete/product.dart';
 export 'export.dart';
 export 'image_variants.dart';
 export 'create/import.dart';
+export 'create/import_confirm.dart';
 export 'list.dart';
 export 'media.dart';
 export 'read.dart';

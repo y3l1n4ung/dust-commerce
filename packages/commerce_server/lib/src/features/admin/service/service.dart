@@ -11,6 +11,8 @@ export 'delete/product_type.dart';
 export 'export.dart';
 export 'image_variants.dart';
 export 'create/import_preview.dart';
+export 'create/import_confirm.dart';
+export 'create/import_prepared.dart';
 export 'list.dart';
 export 'read/product_option.dart';
 export 'read/product_type.dart';
