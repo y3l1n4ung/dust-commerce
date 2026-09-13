@@ -34,6 +34,15 @@ void main() {
     expect(await _count(database, 'fulfillment_providers'), 1);
     expect(await _count(database, 'stock_location_fulfillment_providers'), 1);
     expect(await _count(database, 'shipping_option_fulfillment_provider'), 6);
+    expect(await _count(database, 'shipping_option_shipping_profile'), 6);
+    expect(
+      await _where(
+        database,
+        'shipping_option_shipping_profile',
+        "shipping_profile_id = 'sp_default' AND deleted_at IS NULL",
+      ),
+      6,
+    );
     expect(await _count(database, 'promotions'), 1);
     expect(await _count(database, 'regions'), 2);
     expect(await _count(database, 'sales_channels'), 2);

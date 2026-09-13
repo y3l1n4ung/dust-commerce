@@ -37,4 +37,15 @@ WHERE id IN (
   'ship_eu_free', 'ship_eu_standard', 'ship_eu_express'
 )
 '''),
+  _Statement(r'''
+INSERT OR IGNORE INTO shipping_option_shipping_profile (
+  shipping_option_id, shipping_profile_id
+)
+SELECT id, 'sp_default'
+FROM shipping_options
+WHERE id IN (
+  'ship_free', 'ship_standard', 'ship_express',
+  'ship_eu_free', 'ship_eu_standard', 'ship_eu_express'
+)
+'''),
 ];
