@@ -86,7 +86,7 @@ void main() {
 
       expect(stored.readIndex<String>(0), await Tokens.fingerprint(token));
       expect(stored.readIndex<String>(0), isNot(token));
-      expect(body['expires_at'], '2026-09-12T12:00:00.000Z');
+      expect(body['expires_at'], '2100-01-08T12:00:00.000Z');
       expect(stored.readIndex<String>(1), body['expires_at']);
 
       final me = harness.client.get('/store/customers/me')..bearer(token);
@@ -152,7 +152,7 @@ final class _AccountHarness {
       TestClient(buildApp(
         database,
         nextId: () => 'id_${++id}',
-        now: () => DateTime.utc(2026, 9, 5, 12),
+        now: () => DateTime.utc(2100, 1, 1, 12),
       )),
     );
   }

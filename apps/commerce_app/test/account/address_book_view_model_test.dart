@@ -17,7 +17,7 @@ void main() {
   late MemoryAuthSessionStore sessions;
   late CommerceApi api;
   late AddressBookViewModel addresses;
-  final now = DateTime.utc(2026, 9, 5, 12);
+  final now = DateTime.utc(2100, 1, 1, 12);
 
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('address_book_model');

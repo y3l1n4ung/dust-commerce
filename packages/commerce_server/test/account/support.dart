@@ -21,7 +21,7 @@ final class AccountTestHarness {
       TestClient(buildApp(
         database,
         nextId: () => 'id_${++id}',
-        now: () => DateTime.utc(2026, 9, 5, 12),
+        now: () => DateTime.utc(2100, 1, 1, 12),
       )),
     );
   }

@@ -15,7 +15,7 @@ void main() {
   late MemoryAuthSessionStore sessions;
   late Dio dio;
   late CommerceApi api;
-  final now = DateTime.utc(2026, 9, 5, 12);
+  final now = DateTime.utc(2100, 1, 1, 12);
 
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('account_view_model');

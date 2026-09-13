@@ -69,7 +69,7 @@ void main() {
 
   test('expired capability is rejected and finalised', () async {
     await scenario.stop();
-    var now = DateTime.utc(2026, 9, 5, 12);
+    var now = DateTime.utc(2100, 1, 1, 12);
     scenario = await TransferScenario.start(now: () => now);
     final order = await scenario.ownedOrder();
     (await scenario.request(order.orderId, order.targetToken))

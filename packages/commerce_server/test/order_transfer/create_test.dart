@@ -22,7 +22,7 @@ void main() {
       'order_id': order.orderId,
       'status': 'requested',
       'delivery_status': 'sent',
-      'expires_at': '2026-09-06T12:00:00.000Z',
+      'expires_at': '2100-01-02T12:00:00.000Z',
     });
     expect(scenario.mailer.attempts.single.recipient, 'owner@example.com');
     expect(scenario.mailer.attempts.single.orderId, order.orderId);

@@ -30,7 +30,7 @@ final class CheckoutHarness {
       buildApp(
         database,
         nextId: () => 'id_${++counter}',
-        now: now ?? () => DateTime.utc(2026, 9, 5, 12),
+        now: now ?? () => DateTime.utc(2100, 1, 1, 12),
         orderTransferMailer: orderTransferMailer,
       ),
     );
