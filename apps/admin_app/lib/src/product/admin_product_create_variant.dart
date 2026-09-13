@@ -14,64 +14,66 @@ final class _VariantCardState extends State<_VariantCard> {
   @override
   Widget build(BuildContext context) {
     final draft = widget.draft;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        border: Border.all(color: Theme.of(context).dividerColor),
+    return Material(
+      color: Theme.of(context).colorScheme.surface,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Theme.of(context).dividerColor),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(draft.value, style: Theme.of(context).textTheme.labelLarge),
-          const SizedBox(height: 14),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: [
-              _compactField('SKU', draft.sku, width: 180),
-              _compactField(
-                'Inventory',
-                draft.inventory,
-                width: 120,
-                enabled: draft.manageInventory,
-              ),
-              for (final currency in widget.currencies)
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(draft.value, style: Theme.of(context).textTheme.labelLarge),
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                _compactField('SKU', draft.sku, width: 180),
                 _compactField(
-                  '${currency.toUpperCase()} price',
-                  draft.prices[currency]!,
-                  width: 140,
+                  'Inventory',
+                  draft.inventory,
+                  width: 120,
+                  enabled: draft.manageInventory,
                 ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 24,
-            children: [
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                controlAffinity: ListTileControlAffinity.leading,
-                title: const Text('Manage inventory'),
-                value: draft.manageInventory,
-                onChanged: (value) => setState(() {
-                  draft.manageInventory = value ?? false;
-                }),
-              ),
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                controlAffinity: ListTileControlAffinity.leading,
-                title: const Text('Allow backorders'),
-                value: draft.allowBackorder,
-                onChanged: (value) => setState(() {
-                  draft.allowBackorder = value ?? false;
-                }),
-              ),
-            ].map((child) => SizedBox(width: 210, child: child)).toList(),
-          ),
-        ],
+                for (final currency in widget.currencies)
+                  _compactField(
+                    '${currency.toUpperCase()} price',
+                    draft.prices[currency]!,
+                    width: 140,
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 24,
+              children: [
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: const Text('Manage inventory'),
+                  value: draft.manageInventory,
+                  onChanged: (value) => setState(() {
+                    draft.manageInventory = value ?? false;
+                  }),
+                ),
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: const Text('Allow backorders'),
+                  value: draft.allowBackorder,
+                  onChanged: (value) => setState(() {
+                    draft.allowBackorder = value ?? false;
+                  }),
+                ),
+              ].map((child) => SizedBox(width: 210, child: child)).toList(),
+            ),
+          ],
+        ),
       ),
     );
   }
