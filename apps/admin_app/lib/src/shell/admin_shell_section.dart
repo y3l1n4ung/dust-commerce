@@ -11,4 +11,7 @@ enum AdminShellSection {
 
   /// Settings routes for reusable product classifications.
   productTypes,
+
+  /// Settings routes for fulfillment requirement groups.
+  shippingProfiles,
 }

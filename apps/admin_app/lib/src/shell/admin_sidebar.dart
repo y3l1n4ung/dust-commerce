@@ -17,6 +17,7 @@ final class AdminSidebar extends StatelessWidget {
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
     required this.onProductTypesRequested,
+    required this.onShippingProfilesRequested,
     required this.selectedSection,
     required this.onSignOut,
     super.key,
@@ -36,6 +37,9 @@ final class AdminSidebar extends StatelessWidget {
 
   /// Opens product classifications in Settings.
   final VoidCallback onProductTypesRequested;
+
+  /// Opens fulfillment profiles in Settings.
+  final VoidCallback onShippingProfilesRequested;
 
   /// Revokes the current admin session.
   final VoidCallback? onSignOut;
@@ -103,8 +107,15 @@ final class AdminSidebar extends StatelessWidget {
                 _NavRow(
                   icon: Icons.settings_outlined,
                   label: 'Settings',
-                  selected: selectedSection == AdminShellSection.productTypes,
+                  selected: selectedSection == AdminShellSection.productTypes ||
+                      selectedSection == AdminShellSection.shippingProfiles,
                   onTap: onProductTypesRequested,
+                ),
+                _SubNav(
+                  label: 'Shipping Profiles',
+                  selected:
+                      selectedSection == AdminShellSection.shippingProfiles,
+                  onTap: onShippingProfilesRequested,
                 ),
                 const SizedBox(height: 8),
                 AdminUserMenu(

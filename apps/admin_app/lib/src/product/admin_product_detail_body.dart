@@ -8,10 +8,12 @@ final class _DetailBody extends StatelessWidget {
     required this.totalSalesChannels,
     required this.onBack,
     required this.onOpenOption,
+    required this.onOpenShippingProfile,
   });
 
   final VoidCallback onBack;
   final ValueChanged<String> onOpenOption;
+  final ValueChanged<String> onOpenShippingProfile;
   final AdminProductDetail product;
   final List<AdminSalesChannel> salesChannels;
   final Option<int> totalSalesChannels;
@@ -129,6 +131,7 @@ final class _DetailBody extends StatelessWidget {
       ),
       onEditShippingProfile: () =>
           editAdminProductShippingProfile(context, product),
+      onOpenShippingProfile: onOpenShippingProfile,
       onUnavailable: () => showAdminUnavailable(context),
     );
 

@@ -34,6 +34,7 @@ final class AdminProductDetailPage extends StatefulWidget {
     required this.productId,
     required this.onBack,
     required this.onOpenOption,
+    required this.onOpenShippingProfile,
     super.key,
   });
 
@@ -42,6 +43,9 @@ final class AdminProductDetailPage extends StatefulWidget {
 
   /// Opens one linked option on its dedicated Medusa route.
   final ValueChanged<String> onOpenOption;
+
+  /// Opens the current shipping profile in Settings.
+  final ValueChanged<String> onOpenShippingProfile;
 
   /// Stable product identifier loaded from the admin API.
   final String productId;
@@ -71,6 +75,7 @@ final class _AdminProductDetailPageState extends State<AdminProductDetailPage> {
           totalSalesChannels: state.totalSalesChannels,
           onBack: widget.onBack,
           onOpenOption: widget.onOpenOption,
+          onOpenShippingProfile: widget.onOpenShippingProfile,
         ),
       None() when state.status == AdminProductDetailStatus.loading =>
         const Center(child: CircularProgressIndicator(strokeWidth: 2)),

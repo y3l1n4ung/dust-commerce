@@ -18,6 +18,9 @@ import 'package:admin_app/src/product_option/admin_product_option_view_model.dar
 import 'package:admin_app/src/product_type/admin_product_type_view_model.dart';
 import 'package:admin_app/src/product_type/admin_product_type_detail_view_model.dart';
 import 'package:admin_app/src/session/admin_session_view_model.dart';
+import 'package:admin_app/src/shipping_profile/admin_shipping_profile_api.dart';
+import 'package:admin_app/src/shipping_profile/admin_shipping_profile_detail_view_model.dart';
+import 'package:admin_app/src/shipping_profile/admin_shipping_profile_view_model.dart';
 import 'package:admin_app/src/theme/admin_theme.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +78,13 @@ void main() {
   final productTypeDetail = AdminProductTypeDetailViewModel(
     AdminProductTypeDetailViewModelArgs(api: api),
   );
+  final shippingProfileApi = AdminShippingProfileApi(dio, baseUrl: baseUrl);
+  final shippingProfiles = AdminShippingProfileViewModel(
+    AdminShippingProfileViewModelArgs(api: shippingProfileApi),
+  );
+  final shippingProfileDetail = AdminShippingProfileDetailViewModel(
+    AdminShippingProfileDetailViewModelArgs(api: shippingProfileApi),
+  );
 
   runApp(
     AdminSessionViewModelScope.value(
@@ -97,7 +107,14 @@ void main() {
                       value: productTypes,
                       child: AdminProductTypeDetailViewModelScope.value(
                         value: productTypeDetail,
-                        child: MorrowAdminApp(themes: AdminThemeController()),
+                        child: AdminShippingProfileViewModelScope.value(
+                          value: shippingProfiles,
+                          child: AdminShippingProfileDetailViewModelScope.value(
+                            value: shippingProfileDetail,
+                            child:
+                                MorrowAdminApp(themes: AdminThemeController()),
+                          ),
+                        ),
                       ),
                     ),
                   ),

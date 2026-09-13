@@ -8,6 +8,10 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
     final orderDetail = context.watchAdminOrderDetailViewModel().value.order;
     final typeDetail =
         context.watchAdminProductTypeDetailViewModel().value.productType;
+    final profileDetail = context
+        .watchAdminShippingProfileDetailViewModel()
+        .value
+        .shippingProfile;
     return AdminShell(
       user: widget.user,
       themes: widget.themes,
@@ -29,12 +33,18 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
             Some(value: final type) => 'Product Types  ›  ${type.value}',
             None() => 'Product Types',
           },
+        _AdminRoute.shippingProfiles => 'Settings  ›  Shipping Profiles',
+        _AdminRoute.shippingProfile => switch (profileDetail) {
+            Some(:final value) => 'Shipping Profiles  ›  ${value.name}',
+            None() => 'Shipping Profiles',
+          },
       },
       onSearchRequested: _requestSearch,
       onOrdersRequested: _showOrders,
       onProductsRequested: _showProducts,
       onProductOptionsRequested: _showProductOptions,
       onProductTypesRequested: _showProductTypes,
+      onShippingProfilesRequested: _showShippingProfiles,
       selectedSection: switch (_route) {
         _AdminRoute.orders || _AdminRoute.order => AdminShellSection.orders,
         _AdminRoute.products ||
@@ -46,6 +56,9 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
         _AdminRoute.productTypes ||
         _AdminRoute.productType =>
           AdminShellSection.productTypes,
+        _AdminRoute.shippingProfiles ||
+        _AdminRoute.shippingProfile =>
+          AdminShellSection.shippingProfiles,
       },
       onSignOut: widget.state.isBusy
           ? null
@@ -63,6 +76,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
             productId: selectedIdForNavigation,
             onBack: _showProducts,
             onOpenOption: _showProductOption,
+            onOpenShippingProfile: _showShippingProfile,
           ),
         _AdminRoute.products => AdminProductPage(
             searchFocus: _searchFocus,
@@ -87,6 +101,14 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
             productTypeId: selectedIdForNavigation,
             onBack: _showProductTypes,
             onOpenProduct: _showProduct,
+          ),
+        _AdminRoute.shippingProfiles => AdminShippingProfilePage(
+            searchFocus: _profileSearchFocus,
+            onOpen: _showShippingProfile,
+          ),
+        _AdminRoute.shippingProfile => AdminShippingProfileDetailPage(
+            shippingProfileId: selectedIdForNavigation,
+            onBack: _showShippingProfiles,
           ),
       },
     );

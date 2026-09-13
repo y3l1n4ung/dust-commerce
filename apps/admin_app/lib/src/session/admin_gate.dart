@@ -18,6 +18,10 @@ import 'package:admin_app/src/product_type/admin_product_type_view_model.dart';
 import 'package:admin_app/src/session/admin_session_state.dart';
 import 'package:admin_app/src/session/admin_session_view_model.dart';
 import 'package:admin_app/src/session/admin_sign_in.dart';
+import 'package:admin_app/src/shipping_profile/admin_shipping_profile_detail_page.dart';
+import 'package:admin_app/src/shipping_profile/admin_shipping_profile_detail_view_model.dart';
+import 'package:admin_app/src/shipping_profile/admin_shipping_profile_page.dart';
+import 'package:admin_app/src/shipping_profile/admin_shipping_profile_view_model.dart';
 import 'package:admin_app/src/shell/admin_shell.dart';
 import 'package:admin_app/src/shell/admin_shell_section.dart';
 import 'package:admin_app/src/theme/admin_theme.dart';
@@ -78,6 +82,8 @@ final class _AdminHomeState extends State<_AdminHome>
   @override
   final _typeSearchFocus = FocusNode();
   @override
+  final _profileSearchFocus = FocusNode();
+  @override
   _AdminRoute _route = _AdminRoute.products;
   @override
   String _selectedId = '';
@@ -99,6 +105,7 @@ final class _AdminHomeState extends State<_AdminHome>
     _searchFocus.dispose();
     _optionSearchFocus.dispose();
     _typeSearchFocus.dispose();
+    _profileSearchFocus.dispose();
     super.dispose();
   }
 
@@ -115,4 +122,6 @@ enum _AdminRoute {
   productOption,
   productTypes,
   productType,
+  shippingProfiles,
+  shippingProfile,
 }

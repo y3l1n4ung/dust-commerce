@@ -15,6 +15,7 @@ final class AdminProductSidebarSections extends StatelessWidget {
     required this.onEditOrganization,
     required this.onEditSalesChannels,
     required this.onEditShippingProfile,
+    required this.onOpenShippingProfile,
     required this.onUnavailable,
     super.key,
   });
@@ -37,6 +38,9 @@ final class AdminProductSidebarSections extends StatelessWidget {
   /// Opens the scalar shipping-profile editor.
   final VoidCallback onEditShippingProfile;
 
+  /// Opens one profile on its Settings detail route.
+  final ValueChanged<String> onOpenShippingProfile;
+
   /// Reports controls whose domain is not implemented yet.
   final VoidCallback onUnavailable;
 
@@ -52,6 +56,7 @@ final class AdminProductSidebarSections extends StatelessWidget {
           AdminProductShippingProfileSection(
             shippingProfile: product.shippingProfile,
             onEdit: onEditShippingProfile,
+            onOpen: onOpenShippingProfile,
           ),
           const SizedBox(height: 12),
           AdminProductDetailSection(

@@ -10,6 +10,7 @@ mixin _AdminHomeActions on State<_AdminHome> {
   String get _selectedId;
   set _selectedId(String value);
   FocusNode get _typeSearchFocus;
+  FocusNode get _profileSearchFocus;
 
   String get selectedIdForNavigation => _selectedId;
 
@@ -26,6 +27,14 @@ mixin _AdminHomeActions on State<_AdminHome> {
       _showProductTypes();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _typeSearchFocus.requestFocus();
+      });
+      return;
+    }
+    if (_route == _AdminRoute.shippingProfiles ||
+        _route == _AdminRoute.shippingProfile) {
+      _showShippingProfiles();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _profileSearchFocus.requestFocus();
       });
       return;
     }
@@ -87,6 +96,19 @@ mixin _AdminHomeActions on State<_AdminHome> {
 
   void _showProductType(String id) => setState(() {
         _route = _AdminRoute.productType;
+        _selectedId = id;
+      });
+
+  void _showShippingProfiles() {
+    context.readAdminShippingProfileViewModel().load(offset: 0);
+    setState(() {
+      _route = _AdminRoute.shippingProfiles;
+      _selectedId = '';
+    });
+  }
+
+  void _showShippingProfile(String id) => setState(() {
+        _route = _AdminRoute.shippingProfile;
         _selectedId = id;
       });
 

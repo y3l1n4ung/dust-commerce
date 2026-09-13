@@ -41,6 +41,9 @@
   `packages/admin/dashboard/src/routes/products/product-detail/components/product-shipping-profile-section/`
   and `packages/admin/dashboard/src/routes/products/product-shipping-profile/`
   at the pinned commit.
+- Shipping-profile settings source:
+  `packages/admin/dashboard/src/routes/shipping-profiles/` at the pinned commit,
+  plus Medusa's official Shipping Profiles list, create and detail screenshots.
 - Product-delete source:
   `components/product-list-table/product-list-table-actions.tsx`, the detail
   `product-general-section.tsx`, `hooks/api/products.tsx`, and the English
@@ -163,6 +166,16 @@ combobox instead of exposing its choices permanently. Live QA narrowed the
 server results, selected and cleared the optional relationship, restored
 Fragile Goods, and saved with no browser warnings or errors. No same-state
 Medusa drawer raster is available, so drawer pixel parity remains unproven.
+
+The Shipping Profiles settings slice now follows Medusa's list, focus create,
+detail and typed deletion source. Live QA searched and paged the protected list,
+created Bulky Goods, opened its direct response, deleted it after typing the
+exact name, returned to the refreshed list, and followed Default Shipping
+Profile from the product card into Settings. No post-restart browser error was
+recorded. The official list screenshot confirms heading, copy, two-column table,
+row actions, paging density and card geometry. Medusa also visibly includes Add
+filter and ordering controls; those are absent until the next query-control
+slice, so visual parity remains blocked.
 
 The product-delete pass uses the pinned list and detail action-group source as
 structural truth. Morrow exposes Edit followed by a separately divided Delete
@@ -463,6 +476,12 @@ raster is available, so pixel parity is not claimed.
   Dust, the widget-composition guard and the release web build are clean. The
   touched sidebar's two private `Widget` builders were replaced with concrete
   widget classes and removed from the frozen debt baseline.
+- Shipping-profile settings now provide real list, create, detail and delete
+  navigation, including the previously decorative product-card destination.
+  Every new visual responsibility is a concrete widget class; no private method
+  returns `Widget`. Live create/delete and product-link journeys passed at
+  `1280 x 720`, while the official source comparison exposed the remaining
+  filter/order control gap.
 
 ## Open findings
 
@@ -495,6 +514,9 @@ raster is available, so pixel parity is not claimed.
 - P2 — Shipping-profile assignment passes source-structure and live-behavior
   QA, but needs an equivalent live Medusa product/profile state and combined
   capture before pixel parity can be claimed.
+- P2 — Shipping-profile settings omit Medusa's visible Add filter and ordering
+  controls. Search, paging and CRUD are real, but the list cannot yet filter by
+  name/type/date or choose an allowlisted order.
 
 ## Result
 
@@ -520,6 +542,9 @@ Medusa source structure; same-state source raster comparison remains open.
 Product shipping-profile editing passes protected list/update behavior, typed
 `Option` state, source-shaped card/drawer composition and live replace/clear
 QA; same-state Medusa raster comparison remains open.
+Shipping-profile settings pass protected CRUD behavior, typed ViewModel state,
+product-card navigation and the live merchant journey. List visual parity is
+blocked on the source's missing filter and ordering controls.
 Post-create editor, image-variant drawer, variant pricing, product stock and
 product deletion and orders remain blocked on same-state source captures;
 broader Medusa Admin parity is not claimed.

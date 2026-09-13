@@ -15,6 +15,7 @@ final class AdminShell extends StatelessWidget {
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
     required this.onProductTypesRequested,
+    required this.onShippingProfilesRequested,
     required this.selectedSection,
     required this.onSignOut,
     required this.title,
@@ -39,6 +40,9 @@ final class AdminShell extends StatelessWidget {
 
   /// Opens product classifications in Settings.
   final VoidCallback onProductTypesRequested;
+
+  /// Opens fulfillment profiles in Settings.
+  final VoidCallback onShippingProfilesRequested;
 
   /// Revokes the merchant session.
   final VoidCallback? onSignOut;
@@ -67,6 +71,7 @@ final class AdminShell extends StatelessWidget {
             onProductsRequested: onProductsRequested,
             onProductOptionsRequested: onProductOptionsRequested,
             onProductTypesRequested: onProductTypesRequested,
+            onShippingProfilesRequested: onShippingProfilesRequested,
             selectedSection: selectedSection,
             onSignOut: onSignOut,
           );

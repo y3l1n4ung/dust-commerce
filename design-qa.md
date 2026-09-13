@@ -619,4 +619,80 @@ findings.
 
 Admin product shipping-profile slice result: blocked
 
+## Admin Shipping Profiles settings list and detail
+
+Source visual truth paths:
+
+- Pinned source: `/private/tmp/dust-commerce-medusa-reference-20260913/packages/admin/dashboard/src/routes/shipping-profiles/`
+- Official list raster: `https://res.cloudinary.com/dza7lstvk/image/upload/fl_lossy/f_auto/r_16/ar_16:9,c_pad/v1/User%20Guide/Screenshot_2025-02-19_at_7.09.44_PM_cq0cwe.png?_a=DATAalkSZAA0`
+- Official create raster: `https://res.cloudinary.com/dza7lstvk/image/upload/fl_lossy/f_auto/r_16/ar_16:9,c_pad/v1/User%20Guide/Screenshot_2025-02-19_at_7.13.21_PM_wjp2tm.png?_a=DATAalkSZAA0`
+- Official detail raster: `https://res.cloudinary.com/dza7lstvk/image/upload/fl_lossy/f_auto/r_16/ar_16:9,c_pad/v1/User%20Guide/Screenshot_2025-02-19_at_7.14.33_PM_g7egem.png?_a=DATAalkSZAA0`
+
+Implementation screenshot path: in-app browser capture retained in task evidence
+for `http://127.0.0.1:13002/` with Shipping Profiles selected.
+
+Viewport: source and implementation were displayed in the same `1280 x 720`
+in-app browser surface. The official source file is `2870 x 1614`; the Morrow
+capture is `1280 x 720`, both at browser density 1 for the visible comparison.
+
+State: light theme, active list, two Morrow profiles versus four Medusa example
+profiles. Merchant data differs; heading, controls, columns, row density and
+paging are comparable.
+
+**Findings**
+
+- [P2] Query controls are incomplete
+  Location: Shipping Profiles table toolbar.
+  Evidence: the official Medusa raster shows Add filter on the left and a sort
+  menu beside Search. Morrow currently renders only server-backed Search.
+  Impact: merchants cannot reproduce Medusa's name, type, created or updated
+  filtering and ordering workflow.
+  Fix: add validated filter/order query contracts, SQLx conditions, generated
+  client state and working toolbar controls before repeating visual QA.
+
+- [P2] Combined comparison export was blocked
+  Location: in-app browser evidence board.
+  Evidence: both equal-viewport captures opened successfully, but the browser
+  security policy rejected the data URL used to place them in one comparison
+  board and prohibited an indirect workaround.
+  Impact: separate captures support the concrete toolbar finding but do not
+  satisfy the blocking combined-image gate.
+  Fix: use an allowed native comparison surface in the next QA pass.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: title, subtitle, table labels, row copy and paging use
+  the established Medusa-mapped Admin type scale; a combined crop remains due.
+- Spacing and layout rhythm: 24px horizontal card inset, 16px header padding,
+  compact rows, divider rhythm, radius and full-width single column follow the
+  official raster.
+- Colors and visual tokens: neutral surfaces, borders, muted copy and destructive
+  red action use the existing Admin semantic theme.
+- Image quality and asset fidelity: the list/detail/create surfaces contain no
+  raster product assets; Material icons remain an intentional library mapping.
+- Copy and content: list heading/subtitle, create heading/hint, Type label and
+  typed delete copy match the pinned English source.
+
+**Full-view comparison evidence**
+
+The official list and live Morrow list were captured separately at equal
+`1280 x 720` viewports. The attempted side-by-side board was blocked by browser
+URL policy, so no pass is claimed from separate views.
+
+**Focused region comparison evidence**
+
+No valid combined focused crop exists. The table toolbar is therefore retained
+as an explicit P2 blocker.
+
+**Comparison history**
+
+- Source-code review established the exact list, create, detail and typed-delete
+  responsibilities before implementation.
+- Live browser QA passed list, create, detail, typed delete, refresh and product
+  link navigation. A hot-reload-only scope error was resolved by the required
+  hot restart; no browser errors occurred afterward.
+- Official raster review exposed the missing Add filter and sort controls.
+
+Admin Shipping Profiles settings result: blocked
+
 final result: blocked
