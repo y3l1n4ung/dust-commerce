@@ -9,6 +9,7 @@ Future<Result<String, SqlxError>> exportAdminOrders(
   required String query,
   required List<AdminOrderStatus> statuses,
   required List<String> regionIds,
+  required List<String> salesChannelIds,
   required AdminDateFilter createdAt,
   required AdminDateFilter updatedAt,
   required AdminOrderOrder order,
@@ -21,6 +22,7 @@ Future<Result<String, SqlxError>> exportAdminOrders(
         .map((status) => const AdminOrderStatusCodec().serialize(status))
         .join(','),
     regionIds.join(','),
+    salesChannelIds.join(','),
     _value(createdAt.greaterThan),
     _value(createdAt.greaterThanOrEqual),
     _value(createdAt.lessThan),

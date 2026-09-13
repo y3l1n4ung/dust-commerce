@@ -23,6 +23,7 @@ Future<Result<Response, Rejection>> exportAdminOrdersHandler(
     query: value.query,
     statuses: value.statuses,
     regionIds: value.regionIds,
+    salesChannelIds: value.salesChannelIds,
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
     order: value.order,

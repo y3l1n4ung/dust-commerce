@@ -31,6 +31,7 @@ void main() {
     expect(await _count(database, 'shipping_option_price_rules'), 2);
     expect(await _count(database, 'promotions'), 1);
     expect(await _count(database, 'regions'), 2);
+    expect(await _count(database, 'sales_channels'), 2);
     expect(await _count(database, 'region_payment_providers'), 2);
     expect(await _count(database, 'customers'), 0);
     expect(await _count(database, 'auth_identity'), 0);

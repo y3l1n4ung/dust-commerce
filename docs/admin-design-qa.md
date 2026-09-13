@@ -426,7 +426,8 @@ raster is available, so pixel parity is not claimed.
   after an abandoned browser session.
 - P2 — Orders pass source-structure and live-behavior QA, but need same-state
   Medusa order-list and order-detail captures before pixel parity can be
-  claimed. Sales-channel data and mutations remain separate feature slices;
+  claimed. Sales-channel discovery and order query behavior are implemented,
+  while its visible filter and mutations remain separate feature slices;
   Region and Order Export have source-structure and live-behavior coverage but
   also lack same-state Medusa captures.
 

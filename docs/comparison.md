@@ -228,7 +228,8 @@ count and paging. A separate guarded tag-discovery route now supplies the
 visible source-ordered Type, Tag, Status, Created and Updated controls. Active
 filters, Clear all, source pagination copy and all six supported sort choices
 are wired. Sales Channel now has final channel, cart-link and order-snapshot
-tables, while its protected discovery and visible filter remain pending.
+tables plus protected discovery and real order list/export filtering. The
+visible order control and product-channel availability remain pending.
 Product-type CRUD/assignment remains outside the implemented boundary.
 
 ### Order transfers keep the capability out of the database

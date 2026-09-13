@@ -8,6 +8,7 @@ final class AdminOrderQuery {
     required this.query,
     required this.statuses,
     required this.regionIds,
+    required this.salesChannelIds,
     required this.createdAt,
     required this.updatedAt,
     required this.order,
@@ -25,6 +26,9 @@ final class AdminOrderQuery {
   /// Selected selling-region identifiers.
   final List<String> regionIds;
 
+  /// Selected commercial-origin identifiers.
+  final List<String> salesChannelIds;
+
   /// Selected order lifecycle states.
   final List<AdminOrderStatus> statuses;
 
@@ -38,6 +42,12 @@ Result<AdminOrderQuery, Rejection> adminOrderQueryOf(Request request) {
   if (statuses case Err(:final error)) return Err(error);
   final regionIds = _ids(request, 'region_id', 'region');
   if (regionIds case Err(:final error)) return Err(error);
+  final salesChannelIds = _ids(
+    request,
+    'sales_channel_id',
+    'sales channel',
+  );
+  if (salesChannelIds case Err(:final error)) return Err(error);
   final createdAt = _date(request, 'created_at');
   if (createdAt case Err(:final error)) return Err(error);
   final updatedAt = _date(request, 'updated_at');
@@ -52,6 +62,7 @@ Result<AdminOrderQuery, Rejection> adminOrderQueryOf(Request request) {
     query: request.requestedUri.queryParameters['q'] ?? '',
     statuses: (statuses as Ok<List<AdminOrderStatus>, Rejection>).value,
     regionIds: (regionIds as Ok<List<String>, Rejection>).value,
+    salesChannelIds: (salesChannelIds as Ok<List<String>, Rejection>).value,
     createdAt: (createdAt as Ok<AdminDateFilter, Rejection>).value,
     updatedAt: (updatedAt as Ok<AdminDateFilter, Rejection>).value,
     order: (order as Some<AdminOrderOrder>).value,
@@ -76,8 +87,8 @@ Result<List<AdminOrderStatus>, Rejection> _statuses(Request request) {
       .where((value) => value.isNotEmpty);
   final result = <AdminOrderStatus>[];
   for (final value in values) {
-    final matches = AdminOrderStatus.values.where((status) =>
-        const AdminOrderStatusCodec().serialize(status) == value);
+    final matches = AdminOrderStatus.values.where(
+        (status) => const AdminOrderStatusCodec().serialize(status) == value);
     if (matches.isEmpty) {
       return const Err(Rejection.badRequest('Unknown order status'));
     }

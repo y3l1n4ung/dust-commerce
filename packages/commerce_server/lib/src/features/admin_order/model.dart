@@ -22,11 +22,16 @@ final class AdminOrderResponse with _$AdminOrderResponse {
     required this.total,
     required this.currencyCode,
     this.countryCode,
+    this.salesChannelName,
   });
 
   /// Shipping destination country when an address exists.
   @Sqlx(rename: 'country_code')
   final String? countryCode;
+
+  /// Merchant-facing commercial origin, absent for legacy orders.
+  @Sqlx(rename: 'sales_channel_name')
+  final String? salesChannelName;
 
   /// Database-generated creation instant decoded from SQLite UTC text.
   @Sqlx(rename: 'created_at', tryFrom: _AdminOrderUtcDateTime())

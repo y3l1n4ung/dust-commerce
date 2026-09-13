@@ -21,6 +21,7 @@ mixin _$AdminOrder implements Serializable {
     final self = this as AdminOrder;
     return 'AdminOrder('
         'countryCode: ${self.countryCode}, '
+        'salesChannelNameValue: ${self.salesChannelNameValue}, '
         'createdAt: ${self.createdAt}, '
         'currencyCode: ${self.currencyCode}, '
         'customerName: ${self.customerName}, '
@@ -42,6 +43,7 @@ mixin _$AdminOrder implements Serializable {
         other is AdminOrder &&
             runtimeType == other.runtimeType &&
             other.countryCode == self.countryCode &&
+            other.salesChannelNameValue == self.salesChannelNameValue &&
             other.createdAt == self.createdAt &&
             other.currencyCode == self.currencyCode &&
             other.customerName == self.customerName &&
@@ -61,6 +63,7 @@ mixin _$AdminOrder implements Serializable {
     return Object.hashAll([
       runtimeType,
       self.countryCode,
+      self.salesChannelNameValue,
       self.createdAt,
       self.currencyCode,
       self.customerName,
@@ -150,6 +153,7 @@ final class $AdminOrderListDeserializer implements Deserializer<AdminOrderList, 
 Map<String, Object?> _$AdminOrderSerialize(AdminOrder instance) {
   return <String, Object?>{
     'country_code': instance.countryCode,
+    'sales_channel_name': instance.salesChannelNameValue,
     'created_at': instance.createdAt.toIso8601String(),
     'currency_code': instance.currencyCode,
     'customer_name': instance.customerName,
@@ -181,6 +185,9 @@ AdminOrder _$AdminOrderDeserialize(Map<String, Object?> json) {
   final countryCodeValue = json['country_code'] == null
       ? null
       : JsonHelper.as<String>(json['country_code'], 'country_code', 'String');
+  final salesChannelNameValueValue = json['sales_channel_name'] == null
+      ? null
+      : JsonHelper.as<String>(json['sales_channel_name'], 'sales_channel_name', 'String');
   final createdAtValue = JsonHelper.asDateTime(
     json['created_at'],
     'created_at',
@@ -235,6 +242,7 @@ AdminOrder _$AdminOrderDeserialize(Map<String, Object?> json) {
     fulfillmentStatus: fulfillmentStatusValue,
     total: totalValue,
     currencyCode: currencyCodeValue,
+    salesChannelNameValue: salesChannelNameValueValue,
     countryCode: countryCodeValue,
   );
 }

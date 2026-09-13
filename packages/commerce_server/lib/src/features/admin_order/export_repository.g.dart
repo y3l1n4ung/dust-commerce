@@ -19,7 +19,7 @@ final class _$AdminOrderExportRepository implements AdminOrderExportRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<AdminOrderExportRow>, SqlxError>> list(String query, String statuses, String regionIds, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo, String order) {
+  Future<Result<List<AdminOrderExportRow>, SqlxError>> list(String query, String statuses, String regionIds, String salesChannelIds, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo, String order) {
     return _db.fetchAll<AdminOrderExportRow>(
       r'''
 SELECT order_row.id AS order_id, order_row.display_id, order_row.status,
@@ -63,6 +63,8 @@ LEFT JOIN order_addresses billing
   ON billing.order_id=order_row.id AND billing.kind='billing'
 LEFT JOIN payment_collections payment
   ON payment.order_id=order_row.id AND payment.deleted_at IS NULL
+LEFT JOIN order_sales_channels channel_link
+  ON channel_link.order_id=order_row.id
 WHERE order_row.deleted_at IS NULL
   AND (?='' OR lower(order_row.id) LIKE '%'||lower(?)||'%'
        OR cast(order_row.display_id AS TEXT) LIKE '%'||?||'%'
@@ -73,6 +75,8 @@ WHERE order_row.deleted_at IS NULL
                      coalesce(customer.last_name,''))) LIKE '%'||lower(?)||'%')
   AND (?='' OR instr(','||?||',', ','||order_row.status||',')>0)
   AND (?='' OR instr(','||?||',', ','||order_row.region_id||',')>0)
+  AND (?='' OR instr(','||?||',',
+                      ','||channel_link.sales_channel_id||',')>0)
   AND (?='' OR order_row.created_at>?)
   AND (?='' OR order_row.created_at>=?)
   AND (?='' OR order_row.created_at<?)
@@ -90,7 +94,7 @@ ORDER BY
   CASE WHEN ?='-updated_at' THEN order_row.updated_at END DESC,
   order_row.display_id DESC, item.created_at, item.id
 ''',
-      [query, query, query, query, query, query, query, statuses, statuses, regionIds, regionIds, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo, order, order, order, order, order, order],
+      [query, query, query, query, query, query, query, statuses, statuses, regionIds, regionIds, salesChannelIds, salesChannelIds, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo, order, order, order, order, order, order],
       const $AdminOrderExportRowRowDeserializer().deserialize,
     );
   }

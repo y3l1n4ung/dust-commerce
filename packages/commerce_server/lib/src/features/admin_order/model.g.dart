@@ -53,6 +53,7 @@ AdminOrderResponse _$AdminOrderResponseFromRow(Row row) {
     total: row.read<int>('total'),
     currencyCode: row.read<String>('currency_code'),
     countryCode: row.readNullable<String>('country_code'),
+    salesChannelName: row.readNullable<String>('sales_channel_name'),
   );
 }
 
@@ -85,6 +86,7 @@ extension $AdminOrderResponseQuery on QueryAs<AdminOrderResponse> {
 Map<String, Object?> _$AdminOrderResponseSerialize(AdminOrderResponse instance) {
   return <String, Object?>{
     'country_code': instance.countryCode,
+    'sales_channel_name': instance.salesChannelName,
     'created_at': instance.createdAt.toIso8601String(),
     'currency_code': instance.currencyCode,
     'customer_name': instance.customerName,

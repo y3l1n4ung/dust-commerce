@@ -9,6 +9,7 @@ Future<Result<AdminOrderListResponse, SqlxError>> listAdminOrders(
   required String query,
   required List<AdminOrderStatus> statuses,
   required List<String> regionIds,
+  required List<String> salesChannelIds,
   required AdminDateFilter createdAt,
   required AdminDateFilter updatedAt,
   required AdminOrderOrder order,
@@ -23,6 +24,7 @@ Future<Result<AdminOrderListResponse, SqlxError>> listAdminOrders(
         .map((status) => const AdminOrderStatusCodec().serialize(status))
         .join(','),
     regionIds.join(','),
+    salesChannelIds.join(','),
     _value(createdAt.greaterThan),
     _value(createdAt.greaterThanOrEqual),
     _value(createdAt.lessThan),
@@ -42,6 +44,7 @@ Future<Result<AdminOrderListResponse, SqlxError>> listAdminOrders(
         .map((status) => const AdminOrderStatusCodec().serialize(status))
         .join(','),
     regionIds.join(','),
+    salesChannelIds.join(','),
     _value(createdAt.greaterThan),
     _value(createdAt.greaterThanOrEqual),
     _value(createdAt.lessThan),

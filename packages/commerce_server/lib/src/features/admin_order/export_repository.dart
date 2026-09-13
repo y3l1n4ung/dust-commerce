@@ -53,6 +53,8 @@ LEFT JOIN order_addresses billing
   ON billing.order_id=order_row.id AND billing.kind='billing'
 LEFT JOIN payment_collections payment
   ON payment.order_id=order_row.id AND payment.deleted_at IS NULL
+LEFT JOIN order_sales_channels channel_link
+  ON channel_link.order_id=order_row.id
 WHERE order_row.deleted_at IS NULL
   AND ($1='' OR lower(order_row.id) LIKE '%'||lower($1)||'%'
        OR cast(order_row.display_id AS TEXT) LIKE '%'||$1||'%'
@@ -63,27 +65,30 @@ WHERE order_row.deleted_at IS NULL
                      coalesce(customer.last_name,''))) LIKE '%'||lower($1)||'%')
   AND ($2='' OR instr(','||$2||',', ','||order_row.status||',')>0)
   AND ($3='' OR instr(','||$3||',', ','||order_row.region_id||',')>0)
-  AND ($4='' OR order_row.created_at>$4)
-  AND ($5='' OR order_row.created_at>=$5)
-  AND ($6='' OR order_row.created_at<$6)
-  AND ($7='' OR order_row.created_at<=$7)
-  AND ($8='' OR order_row.updated_at>$8)
-  AND ($9='' OR order_row.updated_at>=$9)
-  AND ($10='' OR order_row.updated_at<$10)
-  AND ($11='' OR order_row.updated_at<=$11)
+  AND ($4='' OR instr(','||$4||',',
+                      ','||channel_link.sales_channel_id||',')>0)
+  AND ($5='' OR order_row.created_at>$5)
+  AND ($6='' OR order_row.created_at>=$6)
+  AND ($7='' OR order_row.created_at<$7)
+  AND ($8='' OR order_row.created_at<=$8)
+  AND ($9='' OR order_row.updated_at>$9)
+  AND ($10='' OR order_row.updated_at>=$10)
+  AND ($11='' OR order_row.updated_at<$11)
+  AND ($12='' OR order_row.updated_at<=$12)
 ORDER BY
-  CASE WHEN $12='display_id' THEN order_row.display_id END ASC,
-  CASE WHEN $12='-display_id' THEN order_row.display_id END DESC,
-  CASE WHEN $12='created_at' THEN order_row.created_at END ASC,
-  CASE WHEN $12='-created_at' THEN order_row.created_at END DESC,
-  CASE WHEN $12='updated_at' THEN order_row.updated_at END ASC,
-  CASE WHEN $12='-updated_at' THEN order_row.updated_at END DESC,
+  CASE WHEN $13='display_id' THEN order_row.display_id END ASC,
+  CASE WHEN $13='-display_id' THEN order_row.display_id END DESC,
+  CASE WHEN $13='created_at' THEN order_row.created_at END ASC,
+  CASE WHEN $13='-created_at' THEN order_row.created_at END DESC,
+  CASE WHEN $13='updated_at' THEN order_row.updated_at END ASC,
+  CASE WHEN $13='-updated_at' THEN order_row.updated_at END DESC,
   order_row.display_id DESC, item.created_at, item.id
 ''')
   Future<Result<List<AdminOrderExportRow>, SqlxError>> list(
     String query,
     String statuses,
     String regionIds,
+    String salesChannelIds,
     String createdAfter,
     String createdFrom,
     String createdBefore,

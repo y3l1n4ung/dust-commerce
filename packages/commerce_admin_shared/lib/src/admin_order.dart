@@ -1,4 +1,5 @@
 import 'package:commerce_admin_shared/src/admin_order_status.dart';
+import 'package:commerce_admin_shared/src/admin_option.dart';
 import 'package:dust_dart/serde.dart';
 
 part 'admin_order.g.dart';
@@ -20,6 +21,7 @@ final class AdminOrder with _$AdminOrder {
     required this.fulfillmentStatus,
     required this.total,
     required this.currencyCode,
+    required this.salesChannelNameValue,
     this.countryCode,
   });
 
@@ -29,6 +31,13 @@ final class AdminOrder with _$AdminOrder {
 
   /// Shipping destination country when the order has one.
   final String? countryCode;
+
+  /// Nullable JSON backing for [salesChannelName].
+  @SerDe(rename: 'sales_channel_name')
+  final String? salesChannelNameValue;
+
+  /// Merchant-facing commercial origin, absent for legacy orders.
+  Option<String> get salesChannelName => adminOptionOf(salesChannelNameValue);
 
   /// Database-generated order creation instant.
   final DateTime createdAt;

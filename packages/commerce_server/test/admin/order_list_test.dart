@@ -20,8 +20,8 @@ void main() {
   test('order list accepts generated-client empty optional filters', () async {
     final token = await harness.adminToken();
     final request = harness.client.get(
-      '/admin/orders?q=&status=&region_id=&created_at=&updated_at='
-      '&order=-created_at&limit=20&offset=0',
+      '/admin/orders?q=&status=&region_id=&sales_channel_id=&created_at='
+      '&updated_at=&order=-created_at&limit=20&offset=0',
     )..bearer(token);
 
     final response = await request.send();
@@ -55,6 +55,7 @@ void main() {
       'fulfillment_status',
       'id',
       'payment_status',
+      'sales_channel_name',
       'status',
       'total',
       'updated_at',
