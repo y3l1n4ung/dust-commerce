@@ -278,6 +278,12 @@ schema has no such domain; the remaining filter order and labels match source.
   authenticated shell was split below the 180-line gate, reducing legacy LOC
   failures to twelve. Forty-two non-widget Admin tests pass; no widget tests
   were added.
+- Product creation now reproduces Medusa's option permutation behavior across
+  multiple axes. Live QA generated Size × Color in source order, reduced four
+  combinations to two, and proved the surviving S / Black variant retained its
+  entered EUR price. A protected integration test round-trips the same complete
+  graph. Forty-six non-widget Admin and 299 server tests pass; splitting the
+  create screen reduced legacy LOC failures to eleven.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -287,7 +293,7 @@ schema has no such domain; the remaining filter order and labels match source.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Product creation still lacks multiple option axes and import/export.
+- P1 — Product import/export remains unavailable.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
   chip input and post-entry rank organizer. Persisted ordering works, but this
   interaction is not yet a literal copy.
