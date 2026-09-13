@@ -75,6 +75,27 @@ control. No additional return was submitted. The current simplified lifecycle
 maps a completed captured order to delivered; real fulfillment records remain
 a separate production capability.
 
+## Admin return receipt slice
+
+The pinned Admin source has no standalone Returns page. Order detail queries
+requested returns and exposes `Receive return` from the Summary, so Morrow uses
+that same hierarchy. The separate Admin contract and generated client list only
+merchant-safe return fields through the shared Dio bearer, while the server
+keeps both a route-level guard and authenticated handler extraction.
+
+Live Admin QA against requested return `#1` rendered the Summary action and the
+receipt dialog with intact, damaged and notification inputs. Cancel closed the
+dialog without consuming the reusable fixture. Server tests submit the actual
+command and prove that every item is validated before writes, partial and final
+statuses are derived atomically, intact managed units are restored to stock,
+and damaged or unmanaged units are not. Invalid mixed receipts roll back both
+return progress and inventory.
+
+The UI slice adds no widget test and no helper method returning `Widget`; each
+subtree is a concrete widget class. All 82 non-widget Admin tests and all 386
+server tests pass. Admin and server analyzers, normal Dust checks and SQLx Dust
+checks are clean.
+
 ## Open findings
 
 - P2 — Repeat the verification success/failure capture against the live Medusa
@@ -83,8 +104,8 @@ a separate production capability.
 - P2 — Continue compact and authenticated account-state comparisons from the
   storefront parity ledger.
 - P2 — Complete same-state Review and order-confirmation comparisons.
-- P1 — Add the separate Admin return list, detail and processing workflow before
-  claiming production return lifecycle parity.
+- P1 — Add refund decisions and real fulfillment records before claiming a
+  complete production return lifecycle; labels and exchanges remain separate.
 - P1 — Replace the simplified completed-equals-delivered mapping when a real
   fulfillment lifecycle is introduced.
 
@@ -94,7 +115,8 @@ The verification interaction, API boundary, local success/failure rendering,
 reason selection, and navigation pass. Customer return creation and
 server-side rejection pass against the live local stack. Exhausted quantities
 are also disabled before submission. Exact code-to-layout translation is
-implemented where the pinned source owns a screen; broader storefront visual
-parity and a complete Admin/fulfillment return lifecycle are not claimed.
+implemented where the pinned source owns a screen. Admin requested-return
+receipt and intact inventory restoration pass, while broader storefront visual
+parity and a complete refund/fulfillment return lifecycle are not claimed.
 
 final result: blocked

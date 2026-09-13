@@ -484,6 +484,13 @@ raster is available, so pixel parity is not claimed.
   returns `Widget`. Live create/delete and product-link journeys passed at
   `1280 x 720`, while the official source comparison exposed the remaining
   filter/order control gap.
+- Requested-return receipt follows the pinned order Summary rather than adding
+  a standalone Returns page. Live QA rendered `Receive return` for return `#1`,
+  then opened intact, damaged and notification inputs and canceled without
+  consuming the reusable fixture. The protected command advances partial or
+  final status atomically and restores only intact managed inventory; damaged
+  and unmanaged units remain out of stock. All 82 non-widget Admin tests and
+  all 386 server tests pass; analyzers and both Dust check modes are clean.
 
 ## Open findings
 
