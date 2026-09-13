@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/src/features/admin_order/detail_address_response.dart';
 import 'package:commerce_server/src/features/admin_order/detail_item_response.dart';
+import 'package:commerce_server/src/features/admin_order/fulfillment_response.dart';
 import 'package:dust_dart/db.dart';
 import 'package:dust_dart/serde.dart';
 
@@ -34,6 +35,7 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
     required this.createdAt,
     required this.updatedAt,
     required this.items,
+    required this.fulfillments,
     required this.shippingAddress,
     required this.billingAddress,
     required this.paymentProvider,
@@ -84,6 +86,10 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
 
   /// Stable opaque order identifier.
   final String id;
+
+  /// Active fulfillment records and their frozen item snapshots.
+  @Sqlx(rename: 'fulfillments_json', tryFrom: _AdminFulfillmentsFromString())
+  final List<AdminOrderFulfillmentResponse> fulfillments;
 
   /// Frozen line-item snapshots in creation order.
   @Sqlx(rename: 'items_json', tryFrom: _AdminOrderItemsFromString())

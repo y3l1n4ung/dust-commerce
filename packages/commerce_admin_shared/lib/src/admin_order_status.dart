@@ -30,12 +30,33 @@ enum AdminOrderPaymentStatus {
   refunded,
 }
 
-/// Merchant-visible fulfilment state supported before fulfilment operations.
+/// Merchant-visible fulfillment state matching Medusa's order lifecycle.
 @Derive([Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)
 enum AdminOrderFulfillmentStatus {
   /// No fulfilment has been created for the order.
   notFulfilled,
+
+  /// Some, but not all, order quantities have fulfillment records.
+  partiallyFulfilled,
+
+  /// Every order quantity has an active fulfillment record.
+  fulfilled,
+
+  /// Some, but not all, order quantities have shipped.
+  partiallyShipped,
+
+  /// Every order quantity has shipped.
+  shipped,
+
+  /// Some, but not all, order quantities have been delivered.
+  partiallyDelivered,
+
+  /// Every order quantity has been delivered.
+  delivered,
+
+  /// Fulfillment was canceled without an active replacement.
+  canceled,
 }
 
 /// Persistence lifecycle of the order's provider payment collection.
@@ -109,11 +130,25 @@ final class AdminOrderFulfillmentStatusCodec
   @override
   AdminOrderFulfillmentStatus deserialize(String value) => switch (value) {
         'not_fulfilled' => AdminOrderFulfillmentStatus.notFulfilled,
+        'partially_fulfilled' => AdminOrderFulfillmentStatus.partiallyFulfilled,
+        'fulfilled' => AdminOrderFulfillmentStatus.fulfilled,
+        'partially_shipped' => AdminOrderFulfillmentStatus.partiallyShipped,
+        'shipped' => AdminOrderFulfillmentStatus.shipped,
+        'partially_delivered' => AdminOrderFulfillmentStatus.partiallyDelivered,
+        'delivered' => AdminOrderFulfillmentStatus.delivered,
+        'canceled' => AdminOrderFulfillmentStatus.canceled,
         _ => throw ArgumentError.value(value, 'value', 'Unknown fulfillment'),
       };
 
   @override
   String serialize(AdminOrderFulfillmentStatus value) => switch (value) {
         AdminOrderFulfillmentStatus.notFulfilled => 'not_fulfilled',
+        AdminOrderFulfillmentStatus.partiallyFulfilled => 'partially_fulfilled',
+        AdminOrderFulfillmentStatus.fulfilled => 'fulfilled',
+        AdminOrderFulfillmentStatus.partiallyShipped => 'partially_shipped',
+        AdminOrderFulfillmentStatus.shipped => 'shipped',
+        AdminOrderFulfillmentStatus.partiallyDelivered => 'partially_delivered',
+        AdminOrderFulfillmentStatus.delivered => 'delivered',
+        AdminOrderFulfillmentStatus.canceled => 'canceled',
       };
 }

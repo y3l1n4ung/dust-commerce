@@ -1,6 +1,8 @@
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
 
+import 'admin_order_fulfillment_status.dart';
+
 /// Compact lifecycle badge used by Medusa-shaped order detail sections.
 final class AdminOrderLifecycleBadge extends StatelessWidget {
   /// Creates an order lifecycle badge.
@@ -56,9 +58,9 @@ final class AdminOrderFulfillmentBadge extends StatelessWidget {
   final AdminOrderFulfillmentStatus status;
 
   @override
-  Widget build(BuildContext context) => const _StatusBadge(
-        label: 'Not fulfilled',
-        color: Color(0xFF71717A),
+  Widget build(BuildContext context) => _StatusBadge(
+        label: adminOrderFulfillmentLabel(status),
+        color: adminOrderFulfillmentColor(status),
       );
 }
 

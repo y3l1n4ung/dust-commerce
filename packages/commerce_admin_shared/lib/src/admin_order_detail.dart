@@ -1,6 +1,7 @@
 import 'package:commerce_admin_shared/src/admin_option.dart';
 import 'package:commerce_admin_shared/src/admin_order_address.dart';
 import 'package:commerce_admin_shared/src/admin_order_item.dart';
+import 'package:commerce_admin_shared/src/admin_order_fulfillment.dart';
 import 'package:commerce_admin_shared/src/admin_order_status.dart';
 import 'package:dust_dart/serde.dart';
 
@@ -31,6 +32,7 @@ final class AdminOrderDetail with _$AdminOrderDetail {
     required this.createdAt,
     required this.updatedAt,
     required this.items,
+    required this.fulfillments,
     required this.shippingAddressValue,
     required this.billingAddressValue,
     required this.paymentProviderValue,
@@ -72,6 +74,9 @@ final class AdminOrderDetail with _$AdminOrderDetail {
 
   /// Stable opaque order identifier.
   final String id;
+
+  /// Active fulfillment records and their frozen item snapshots.
+  final List<AdminOrderFulfillment> fulfillments;
 
   /// Frozen line-item snapshots in creation order.
   final List<AdminOrderItem> items;

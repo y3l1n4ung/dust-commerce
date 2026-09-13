@@ -111,6 +111,13 @@ AdminOrderPaymentStatus _$AdminOrderPaymentStatusFromJson(Object? json, [String 
 Object? _$AdminOrderFulfillmentStatusSerialize(AdminOrderFulfillmentStatus instance) {
   return switch (instance) {
     AdminOrderFulfillmentStatus.notFulfilled => 'not_fulfilled',
+    AdminOrderFulfillmentStatus.partiallyFulfilled => 'partially_fulfilled',
+    AdminOrderFulfillmentStatus.fulfilled => 'fulfilled',
+    AdminOrderFulfillmentStatus.partiallyShipped => 'partially_shipped',
+    AdminOrderFulfillmentStatus.shipped => 'shipped',
+    AdminOrderFulfillmentStatus.partiallyDelivered => 'partially_delivered',
+    AdminOrderFulfillmentStatus.delivered => 'delivered',
+    AdminOrderFulfillmentStatus.canceled => 'canceled',
   };
 }
 
@@ -120,6 +127,13 @@ Object? _$AdminOrderFulfillmentStatusToJson(AdminOrderFulfillmentStatus instance
 AdminOrderFulfillmentStatus _$AdminOrderFulfillmentStatusDeserialize(Object? json, [String key = 'json']) {
   return switch (json) {
     'not_fulfilled' => AdminOrderFulfillmentStatus.notFulfilled,
+    'partially_fulfilled' => AdminOrderFulfillmentStatus.partiallyFulfilled,
+    'fulfilled' => AdminOrderFulfillmentStatus.fulfilled,
+    'partially_shipped' => AdminOrderFulfillmentStatus.partiallyShipped,
+    'shipped' => AdminOrderFulfillmentStatus.shipped,
+    'partially_delivered' => AdminOrderFulfillmentStatus.partiallyDelivered,
+    'delivered' => AdminOrderFulfillmentStatus.delivered,
+    'canceled' => AdminOrderFulfillmentStatus.canceled,
     _ => throw ArgumentError.value(json, key, 'unknown value for AdminOrderFulfillmentStatus at $key'),
   };
 }

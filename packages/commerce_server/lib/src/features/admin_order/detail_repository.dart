@@ -1,6 +1,5 @@
 import 'package:commerce_server/src/features/admin_order/detail_model.dart';
 import 'package:dust_dart/db.dart';
-
 part 'detail_repository.g.dart';
 
 /// Protected persistence for one complete merchant order snapshot.
@@ -28,7 +27,26 @@ SELECT order_row.id,
        order_row.total,
        order_row.status,
        order_row.payment_status,
-       'not_fulfilled' AS fulfillment_status,
+       CASE
+         WHEN coalesce(fulfillment_summary.delivered_quantity, 0) >=
+              order_summary.order_quantity THEN 'delivered'
+         WHEN coalesce(fulfillment_summary.delivered_quantity, 0) > 0
+           THEN 'partially_delivered'
+         WHEN coalesce(fulfillment_summary.shipped_quantity, 0) >=
+              order_summary.order_quantity THEN 'shipped'
+         WHEN coalesce(fulfillment_summary.shipped_quantity, 0) > 0
+           THEN 'partially_shipped'
+         WHEN coalesce(fulfillment_summary.fulfilled_quantity, 0) >=
+              order_summary.order_quantity THEN 'fulfilled'
+         WHEN coalesce(fulfillment_summary.fulfilled_quantity, 0) > 0
+           THEN 'partially_fulfilled'
+         WHEN order_row.status = 'cancelled' AND EXISTS (
+           SELECT 1 FROM fulfillments canceled
+           WHERE canceled.order_id = order_row.id
+             AND canceled.canceled_at IS NOT NULL
+         ) THEN 'canceled'
+         ELSE 'not_fulfilled'
+       END AS fulfillment_status,
        order_row.shipping_name,
        order_row.promotion_code,
        order_row.placed_at,
@@ -59,6 +77,54 @@ SELECT order_row.id,
            ORDER BY created_at, id
          ) item
        ), '[]') AS items_json,
+       coalesce((
+         SELECT json_group_array(json_object(
+           'id', fulfillment.id,
+           'location_id', fulfillment.location_id,
+           'provider_id', fulfillment.provider_id,
+           'shipping_option_id', fulfillment.shipping_option_id,
+           'requires_shipping', json(iif(
+             fulfillment.requires_shipping = 1, 'true', 'false'
+           )),
+           'packed_at', fulfillment.packed_at,
+           'shipped_at', fulfillment.shipped_at,
+           'delivered_at', fulfillment.delivered_at,
+           'canceled_at', fulfillment.canceled_at,
+           'data', CASE WHEN fulfillment.data IS NULL THEN NULL
+                        ELSE json(fulfillment.data) END,
+           'metadata', CASE WHEN fulfillment.metadata IS NULL THEN NULL
+                            ELSE json(fulfillment.metadata) END,
+           'created_by', fulfillment.created_by,
+           'marked_shipped_by', fulfillment.marked_shipped_by,
+           'created_at', fulfillment.created_at,
+           'updated_at', fulfillment.updated_at,
+           'items', json(fulfillment.items_json)
+         ))
+         FROM (
+           SELECT record.*, coalesce((
+             SELECT json_group_array(json_object(
+               'id', item.id,
+               'fulfillment_id', item.fulfillment_id,
+               'title', item.title,
+               'quantity', item.quantity,
+               'sku', item.sku,
+               'barcode', item.barcode,
+               'line_item_id', item.line_item_id,
+               'inventory_item_id', item.inventory_item_id,
+               'created_at', item.created_at,
+               'updated_at', item.updated_at
+             ))
+             FROM (
+               SELECT * FROM fulfillment_items
+               WHERE fulfillment_id = record.id AND deleted_at IS NULL
+               ORDER BY created_at, id
+             ) item
+           ), '[]') AS items_json
+           FROM fulfillments record
+           WHERE record.order_id = order_row.id AND record.deleted_at IS NULL
+           ORDER BY record.created_at, record.id
+         ) fulfillment
+       ), '[]') AS fulfillments_json,
        CASE WHEN shipping.order_id IS NULL THEN NULL ELSE json_object(
          'first_name', shipping.first_name,
          'last_name', shipping.last_name,
@@ -92,6 +158,22 @@ LEFT JOIN order_addresses billing
   ON billing.order_id = order_row.id AND billing.kind = 'billing'
 LEFT JOIN payment_collections payment
   ON payment.order_id = order_row.id AND payment.deleted_at IS NULL
+LEFT JOIN (
+  SELECT order_id, sum(quantity) AS order_quantity FROM order_items
+  GROUP BY order_id
+) order_summary ON order_summary.order_id = order_row.id
+LEFT JOIN (
+  SELECT fulfillment.order_id,
+         sum(item.quantity) AS fulfilled_quantity,
+         sum(iif(fulfillment.shipped_at IS NULL, 0, item.quantity))
+           AS shipped_quantity,
+         sum(iif(fulfillment.delivered_at IS NULL, 0, item.quantity))
+           AS delivered_quantity
+  FROM fulfillments fulfillment
+  JOIN fulfillment_items item ON item.fulfillment_id = fulfillment.id AND item.deleted_at IS NULL
+  WHERE fulfillment.deleted_at IS NULL AND fulfillment.canceled_at IS NULL
+  GROUP BY fulfillment.order_id
+) fulfillment_summary ON fulfillment_summary.order_id = order_row.id
 WHERE order_row.id = $1 AND order_row.deleted_at IS NULL
 ''')
   Future<Result<AdminOrderDetailResponse?, SqlxError>> find(String id);

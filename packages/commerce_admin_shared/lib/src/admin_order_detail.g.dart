@@ -13,6 +13,7 @@
 
 part of 'admin_order_detail.dart';
 
+const DeepCollectionEquality _adminOrderDetailFulfillmentsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminOrderDetailItemsEquality = DeepCollectionEquality();
 
 mixin _$AdminOrderDetail implements Serializable {
@@ -29,6 +30,7 @@ mixin _$AdminOrderDetail implements Serializable {
         'email: ${self.email}, '
         'fulfillmentStatus: ${self.fulfillmentStatus}, '
         'id: ${self.id}, '
+        'fulfillments: ${self.fulfillments}, '
         'items: ${self.items}, '
         'paymentAmountValue: ${self.paymentAmountValue}, '
         'paymentCapturedAtValue: ${self.paymentCapturedAtValue}, '
@@ -64,6 +66,7 @@ mixin _$AdminOrderDetail implements Serializable {
             other.email == self.email &&
             other.fulfillmentStatus == self.fulfillmentStatus &&
             other.id == self.id &&
+            _adminOrderDetailFulfillmentsEquality.equals(other.fulfillments, self.fulfillments) &&
             _adminOrderDetailItemsEquality.equals(other.items, self.items) &&
             other.paymentAmountValue == self.paymentAmountValue &&
             other.paymentCapturedAtValue == self.paymentCapturedAtValue &&
@@ -97,6 +100,7 @@ mixin _$AdminOrderDetail implements Serializable {
       self.email,
       self.fulfillmentStatus,
       self.id,
+      _adminOrderDetailFulfillmentsEquality.hash(self.fulfillments),
       _adminOrderDetailItemsEquality.hash(self.items),
       self.paymentAmountValue,
       self.paymentCapturedAtValue,
@@ -152,6 +156,9 @@ Map<String, Object?> _$AdminOrderDetailSerialize(AdminOrderDetail instance) {
       instance.fulfillmentStatus,
     ),
     'id': instance.id,
+    'fulfillments': instance.fulfillments
+        .map((item) => item.toJson())
+        .toList(),
     'items': instance.items
         .map((item) => item.toJson())
         .toList(),
@@ -227,6 +234,8 @@ AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
     'fulfillment_status',
   );
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final fulfillmentsValue = JsonHelper.decodeList(json['fulfillments'], 'fulfillments',
+      (item, itemKey) => AdminOrderFulfillment.fromJson(JsonHelper.asMap(item, itemKey)));
   final itemsValue = JsonHelper.decodeList(json['items'], 'items',
       (item, itemKey) => AdminOrderItem.fromJson(JsonHelper.asMap(item, itemKey)));
   final paymentAmountValueValue = json['payment_amount'] == null
@@ -297,6 +306,7 @@ AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
     createdAt: createdAtValue,
     updatedAt: updatedAtValue,
     items: itemsValue,
+    fulfillments: fulfillmentsValue,
     shippingAddressValue: shippingAddressValueValue,
     billingAddressValue: billingAddressValueValue,
     paymentProviderValue: paymentProviderValueValue,

@@ -47,6 +47,7 @@ AdminOrderDetailResponse _$AdminOrderDetailResponseFromRow(Row row) {
     createdAt: _AdminOrderDateTimeFromString().decode(row.read<String>('created_at')),
     updatedAt: _AdminOrderDateTimeFromString().decode(row.read<String>('updated_at')),
     items: _AdminOrderItemsFromString().decode(row.read<String>('items_json')),
+    fulfillments: _AdminFulfillmentsFromString().decode(row.read<String>('fulfillments_json')),
     shippingAddress: row.readNullable<Object?>('shipping_address_json') == null ? null : _AdminOrderAddressFromString().decode(row.read<String>('shipping_address_json')),
     billingAddress: row.readNullable<Object?>('billing_address_json') == null ? null : _AdminOrderAddressFromString().decode(row.read<String>('billing_address_json')),
     paymentProvider: row.readNullable<String>('payment_provider'),
@@ -99,6 +100,9 @@ Map<String, Object?> _$AdminOrderDetailResponseSerialize(AdminOrderDetailRespons
       instance.fulfillmentStatus,
     ),
     'id': instance.id,
+    'fulfillments': instance.fulfillments
+        .map((item) => item.toJson())
+        .toList(),
     'items': instance.items
         .map((item) => item.toJson())
         .toList(),

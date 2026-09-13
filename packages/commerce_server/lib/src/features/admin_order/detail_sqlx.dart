@@ -31,6 +31,19 @@ final class _AdminOrderItemsFromString
           .toList(growable: false);
 }
 
+final class _AdminFulfillmentsFromString
+    implements SqlxTryFrom<List<AdminOrderFulfillmentResponse>, String> {
+  const _AdminFulfillmentsFromString();
+
+  @override
+  List<AdminOrderFulfillmentResponse> decode(String value) =>
+      (jsonDecode(value) as List<Object?>)
+          .map((item) => AdminOrderFulfillmentResponse.fromJson(
+                item! as Map<String, Object?>,
+              ))
+          .toList(growable: false);
+}
+
 final class _AdminOrderPaymentRecordStatusFromString
     implements SqlxTryFrom<AdminOrderPaymentRecordStatus, String> {
   const _AdminOrderPaymentRecordStatusFromString();

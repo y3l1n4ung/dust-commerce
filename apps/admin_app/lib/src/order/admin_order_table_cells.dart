@@ -40,10 +40,8 @@ final class _FulfillmentStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => _StatusCell(
-        label: switch (value) {
-          AdminOrderFulfillmentStatus.notFulfilled => 'Not fulfilled',
-        },
-        color: const Color(0xFF71717A),
+        label: adminOrderFulfillmentLabel(value),
+        color: adminOrderFulfillmentColor(value),
       );
 }
 

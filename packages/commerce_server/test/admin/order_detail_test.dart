@@ -34,6 +34,7 @@ void main() {
       'display_id',
       'email',
       'fulfillment_status',
+      'fulfillments',
       'id',
       'items',
       'payment_amount',
@@ -57,7 +58,7 @@ void main() {
     expect(order, containsPair('total', 5400));
     expect(order, containsPair('payment_provider', 'manual'));
     expect(order, containsPair('payment_record_status', 'captured'));
-    expect(order, containsPair('fulfillment_status', 'not_fulfilled'));
+    expect(order, containsPair('fulfillment_status', 'partially_fulfilled'));
     expect(order, isNot(contains('cart_id')));
     expect(order, isNot(contains('customer_id')));
     expect(order, isNot(contains('metadata')));
@@ -76,6 +77,35 @@ void main() {
     expect(
       order['billing_address'],
       containsPair('company', 'Analytical Engines'),
+    );
+    final fulfillments = order['fulfillments']! as List<Object?>;
+    expect(fulfillments, hasLength(1));
+    final fulfillment = fulfillments.single! as Map<String, Object?>;
+    expect(fulfillment.keys, {
+      'canceled_at',
+      'created_at',
+      'created_by',
+      'data',
+      'delivered_at',
+      'id',
+      'items',
+      'location_id',
+      'marked_shipped_by',
+      'metadata',
+      'packed_at',
+      'provider_id',
+      'requires_shipping',
+      'shipped_at',
+      'shipping_option_id',
+      'updated_at',
+    });
+    expect(fulfillment, containsPair('provider_id', 'manual'));
+    expect(fulfillment, containsPair('created_by', 'admin_1'));
+    final fulfilledItems = fulfillment['items']! as List<Object?>;
+    expect(fulfilledItems, hasLength(1));
+    expect(
+      fulfilledItems.single,
+      containsPair('line_item_id', 'item_cup'),
     );
   });
 
