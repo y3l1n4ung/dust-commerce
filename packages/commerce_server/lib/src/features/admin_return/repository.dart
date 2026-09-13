@@ -42,12 +42,14 @@ SELECT request.id,
 FROM return_requests request
 WHERE request.deleted_at IS NULL
   AND request.status IN ('requested', 'received', 'partially_received', 'canceled')
-  AND ($1 = '' OR request.order_id = $1)
-  AND ($2 = '' OR instr(',' || $2 || ',', ',' || request.status || ',') > 0)
+  AND ($1 = '' OR request.id = $1)
+  AND ($2 = '' OR request.order_id = $2)
+  AND ($3 = '' OR instr(',' || $3 || ',', ',' || request.status || ',') > 0)
 ORDER BY request.requested_at DESC, request.id DESC
-LIMIT $3 OFFSET $4
+LIMIT $4 OFFSET $5
 ''')
   Future<Result<List<AdminReturnResponse>, SqlxError>> list(
+    String returnId,
     String orderId,
     String statuses,
     int limit,
@@ -64,4 +66,61 @@ WHERE request.deleted_at IS NULL
   AND ($2 = '' OR instr(',' || $2 || ',', ',' || request.status || ',') > 0)
 ''')
   Future<Result<int, SqlxError>> count(String orderId, String statuses);
+
+  /// Confirms the return is active and still accepts received quantities.
+  @Query(r'''
+SELECT count(*)
+FROM return_requests
+WHERE id = $1 AND deleted_at IS NULL
+  AND status IN ('requested', 'partially_received')
+''')
+  Future<Result<int, SqlxError>> receivable(String returnId);
+
+  /// Reads units that remain receivable for one item owned by the return.
+  @Query(r'''
+SELECT quantity - received_quantity
+FROM return_items
+WHERE return_id = $1 AND id = $2
+''')
+  Future<Result<int?, SqlxError>> remaining(String returnId, String itemId);
+
+  /// Adds newly received intact and damaged units when they remain available.
+  @Query(r'''
+UPDATE return_items
+SET received_quantity = received_quantity + $3 + $4,
+    damaged_quantity = damaged_quantity + $4
+WHERE return_id = $1 AND id = $2
+  AND $3 >= 0 AND $4 >= 0 AND $3 + $4 > 0
+  AND received_quantity + $3 + $4 <= quantity
+  AND EXISTS (
+    SELECT 1 FROM return_requests request
+    WHERE request.id = $1 AND request.deleted_at IS NULL
+      AND request.status IN ('requested', 'partially_received')
+  )
+''')
+  Future<Result<ExecResult, SqlxError>> receiveItem(
+    String returnId,
+    String itemId,
+    int quantity,
+    int damagedQuantity,
+  );
+
+  /// Derives terminal or partial status after every item update succeeds.
+  @Query(r'''
+UPDATE return_requests
+SET status = CASE WHEN EXISTS (
+      SELECT 1 FROM return_items item
+      WHERE item.return_id = $1 AND item.received_quantity < item.quantity
+    ) THEN 'partially_received' ELSE 'received' END,
+    received_at = coalesce(
+      received_at, strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+    ),
+    no_notification = $2
+WHERE id = $1 AND deleted_at IS NULL
+  AND status IN ('requested', 'partially_received')
+''')
+  Future<Result<ExecResult, SqlxError>> finish(
+    String returnId,
+    int noNotification,
+  );
 }

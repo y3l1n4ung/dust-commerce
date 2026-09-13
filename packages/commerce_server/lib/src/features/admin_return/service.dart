@@ -14,7 +14,7 @@ Future<Result<AdminReturnListResponse, SqlxError>> listAdminReturns(
   final statusNames = statuses
       .map((status) => const AdminReturnStatusCodec().serialize(status))
       .join(',');
-  final page = await returns.list(orderId, statusNames, limit, offset);
+  final page = await returns.list('', orderId, statusNames, limit, offset);
   if (page case Err(:final error)) return Err(error);
   final count = await returns.count(orderId, statusNames);
   if (count case Err(:final error)) return Err(error);

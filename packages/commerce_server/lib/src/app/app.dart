@@ -20,7 +20,6 @@ import 'package:dust_dart/db.dart';
 import 'package:dust_server/server.dart';
 
 /// Mounts feature routes and attaches their explicit state dependencies.
-///
 /// Identifiers and time remain injected so route tests control both.
 Router buildApp(
   CommerceDatabase database, {
@@ -100,6 +99,7 @@ Router buildApp(
       ),
     )
     ..withState(AdminReturnDeps(
+      database: database,
       returns: AdminReturnRepository(executor),
     ))
     ..withState(AdminRegionDeps(regions: AdminRegionRepository(executor)))

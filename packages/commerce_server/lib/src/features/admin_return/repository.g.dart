@@ -19,7 +19,7 @@ final class _$AdminReturnRepository implements AdminReturnRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<AdminReturnResponse>, SqlxError>> list(String orderId, String statuses, int limit, int offset) {
+  Future<Result<List<AdminReturnResponse>, SqlxError>> list(String returnId, String orderId, String statuses, int limit, int offset) {
     return _db.fetchAll<AdminReturnResponse>(
       r'''
 SELECT request.id,
@@ -52,12 +52,13 @@ SELECT request.id,
 FROM return_requests request
 WHERE request.deleted_at IS NULL
   AND request.status IN ('requested', 'received', 'partially_received', 'canceled')
+  AND (? = '' OR request.id = ?)
   AND (? = '' OR request.order_id = ?)
   AND (? = '' OR instr(',' || ? || ',', ',' || request.status || ',') > 0)
 ORDER BY request.requested_at DESC, request.id DESC
 LIMIT ? OFFSET ?
 ''',
-      [orderId, orderId, statuses, statuses, limit, offset],
+      [returnId, returnId, orderId, orderId, statuses, statuses, limit, offset],
       const $AdminReturnResponseRowDeserializer().deserialize,
     );
   }
@@ -74,6 +75,71 @@ WHERE request.deleted_at IS NULL
   AND (? = '' OR instr(',' || ? || ',', ',' || request.status || ',') > 0)
 ''',
       [orderId, orderId, statuses, statuses],
+    );
+  }
+
+  @override
+  Future<Result<int, SqlxError>> receivable(String returnId) {
+    return _db.fetchScalar<int>(
+      r'''
+SELECT count(*)
+FROM return_requests
+WHERE id = ? AND deleted_at IS NULL
+  AND status IN ('requested', 'partially_received')
+''',
+      [returnId],
+    );
+  }
+
+  @override
+  Future<Result<int?, SqlxError>> remaining(String returnId, String itemId) {
+    return _db.fetchScalar<int?>(
+      r'''
+SELECT quantity - received_quantity
+FROM return_items
+WHERE return_id = ? AND id = ?
+''',
+      [returnId, itemId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> receiveItem(String returnId, String itemId, int quantity, int damagedQuantity) {
+    return _db.execute(
+      r'''
+UPDATE return_items
+SET received_quantity = received_quantity + ? + ?,
+    damaged_quantity = damaged_quantity + ?
+WHERE return_id = ? AND id = ?
+  AND ? >= 0 AND ? >= 0 AND ? + ? > 0
+  AND received_quantity + ? + ? <= quantity
+  AND EXISTS (
+    SELECT 1 FROM return_requests request
+    WHERE request.id = ? AND request.deleted_at IS NULL
+      AND request.status IN ('requested', 'partially_received')
+  )
+''',
+      [quantity, damagedQuantity, damagedQuantity, returnId, itemId, quantity, damagedQuantity, quantity, damagedQuantity, quantity, damagedQuantity, returnId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> finish(String returnId, int noNotification) {
+    return _db.execute(
+      r'''
+UPDATE return_requests
+SET status = CASE WHEN EXISTS (
+      SELECT 1 FROM return_items item
+      WHERE item.return_id = ? AND item.received_quantity < item.quantity
+    ) THEN 'partially_received' ELSE 'received' END,
+    received_at = coalesce(
+      received_at, strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+    ),
+    no_notification = ?
+WHERE id = ? AND deleted_at IS NULL
+  AND status IN ('requested', 'partially_received')
+''',
+      [returnId, noNotification, returnId],
     );
   }
 }
