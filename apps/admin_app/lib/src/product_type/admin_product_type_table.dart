@@ -7,6 +7,7 @@ final class AdminProductTypeTable extends StatelessWidget {
   /// Creates the allowlisted product-type table.
   const AdminProductTypeTable({
     required this.productTypes,
+    required this.onOpen,
     required this.onEdit,
     required this.onDelete,
     super.key,
@@ -14,6 +15,9 @@ final class AdminProductTypeTable extends StatelessWidget {
 
   /// Opens the edit drawer for one row.
   final ValueChanged<AdminProductType> onEdit;
+
+  /// Opens one complete product-type detail route.
+  final ValueChanged<String> onOpen;
 
   /// Confirms and retires one row.
   final ValueChanged<AdminProductType> onDelete;
@@ -29,6 +33,7 @@ final class AdminProductTypeTable extends StatelessWidget {
           for (final productType in productTypes)
             _Row(
               productType: productType,
+              onOpen: onOpen,
               onEdit: onEdit,
               onDelete: onDelete,
             ),
@@ -58,19 +63,21 @@ final class _Header extends StatelessWidget {
 final class _Row extends StatelessWidget {
   const _Row({
     required this.productType,
+    required this.onOpen,
     required this.onEdit,
     required this.onDelete,
   });
 
   final ValueChanged<AdminProductType> onDelete;
   final ValueChanged<AdminProductType> onEdit;
+  final ValueChanged<String> onOpen;
   final AdminProductType productType;
 
   @override
   Widget build(BuildContext context) => Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => onEdit(productType),
+          onTap: () => onOpen(productType.id),
           child: Container(
             height: 48,
             padding: const EdgeInsets.symmetric(horizontal: 24),

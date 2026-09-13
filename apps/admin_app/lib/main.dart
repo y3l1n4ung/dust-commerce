@@ -8,6 +8,7 @@ import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
 import 'package:admin_app/src/product_option/admin_product_option_detail_view_model.dart';
 import 'package:admin_app/src/product_option/admin_product_option_view_model.dart';
 import 'package:admin_app/src/product_type/admin_product_type_view_model.dart';
+import 'package:admin_app/src/product_type/admin_product_type_detail_view_model.dart';
 import 'package:admin_app/src/session/admin_session_view_model.dart';
 import 'package:admin_app/src/theme/admin_theme.dart';
 import 'package:dio/dio.dart';
@@ -48,6 +49,9 @@ void main() {
   final productTypes = AdminProductTypeViewModel(
     AdminProductTypeViewModelArgs(api: api),
   );
+  final productTypeDetail = AdminProductTypeDetailViewModel(
+    AdminProductTypeDetailViewModelArgs(api: api),
+  );
 
   runApp(
     AdminSessionViewModelScope.value(
@@ -64,7 +68,10 @@ void main() {
                 value: productOptionDetail,
                 child: AdminProductTypeViewModelScope.value(
                   value: productTypes,
-                  child: MorrowAdminApp(themes: AdminThemeController()),
+                  child: AdminProductTypeDetailViewModelScope.value(
+                    value: productTypeDetail,
+                    child: MorrowAdminApp(themes: AdminThemeController()),
+                  ),
                 ),
               ),
             ),

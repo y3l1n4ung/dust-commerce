@@ -13,7 +13,14 @@ import 'package:flutter/material.dart';
 /// Medusa's product-types settings route backed by the authenticated API.
 final class AdminProductTypePage extends StatefulWidget {
   /// Creates the product-types route.
-  const AdminProductTypePage({required this.searchFocus, super.key});
+  const AdminProductTypePage({
+    required this.searchFocus,
+    required this.onOpen,
+    super.key,
+  });
+
+  /// Opens one complete product-type detail route.
+  final ValueChanged<String> onOpen;
 
   /// Focus target shared with the sidebar search action.
   final FocusNode searchFocus;
@@ -100,6 +107,7 @@ final class _AdminProductTypePageState extends State<AdminProductTypePage> {
       children: [
         AdminProductTypeTable(
           productTypes: state.productTypes,
+          onOpen: widget.onOpen,
           onEdit: (productType) => _edit(context, productType),
           onDelete: (productType) => _delete(context, productType),
         ),
