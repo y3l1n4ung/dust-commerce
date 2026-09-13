@@ -429,8 +429,18 @@ raster is available, so pixel parity is not claimed.
   Marketplace, Online Store and Retail and observed `Marketplace, Online
   Store +1 more`; a completely fresh Flutter process loaded with no new browser
   errors. All 63 non-widget Admin and 340 server tests pass; Dust checks,
-  analyzers and the release web build are clean. Channel mutation and shipping-
-  profile assignment remain separate unimplemented slices.
+  analyzers and the release web build are clean. Shipping-profile assignment
+  remains a separate unimplemented slice.
+- Product sales-channel editing now mirrors Medusa's pinned source structure:
+  a full-screen focus modal, autofocus search with 250ms debounce, 50-row
+  server paging, cross-page selection, Name, Description, Status, Created At
+  and Updated At columns, and a complete-selection save. Live QA assigned both
+  Online Store and Wholesale to Classic White Tee, observed `2 of 2` on the
+  detail page, reopened the editor, and narrowed the server result to Wholesale.
+  The final fresh build retained both selections and the theme-token status
+  treatment. All 66 non-widget Admin tests pass; analyzer, Dust and the release
+  web build are clean. Widget subtrees in this slice are concrete widget
+  classes rather than private methods returning `Widget`.
 
 ## Open findings
 
@@ -479,6 +489,9 @@ The product-list sales-channel slice passes its typed contract, direct SQLx
 projection, source-shaped truncation/tooltip behavior and clean-start browser
 QA. Its whole-screen density and thumbnail differences remain an open visual
 finding.
+Product sales-channel editing passes typed state, direct authenticated API,
+complete-selection mutation and live browser behavior against the pinned
+Medusa source structure; same-state source raster comparison remains open.
 Post-create editor, image-variant drawer, variant pricing, product stock and
 product deletion and orders remain blocked on same-state source captures;
 broader Medusa Admin parity is not claimed.

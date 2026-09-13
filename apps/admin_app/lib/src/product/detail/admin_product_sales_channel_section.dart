@@ -9,15 +9,15 @@ final class AdminProductSalesChannelSection extends StatelessWidget {
   const AdminProductSalesChannelSection({
     required this.channels,
     required this.totalChannels,
-    required this.onUnavailable,
+    required this.onEdit,
     super.key,
   });
 
   /// Channels explicitly attached to this product.
   final List<AdminSalesChannel> channels;
 
-  /// Opens the standard unavailable notice until channel editing lands.
-  final VoidCallback onUnavailable;
+  /// Opens the full-screen channel assignment editor.
+  final VoidCallback onEdit;
 
   /// Total configured channels when the supporting request succeeded.
   final Option<int> totalChannels;
@@ -28,7 +28,7 @@ final class AdminProductSalesChannelSection extends StatelessWidget {
     final hidden = channels.skip(3).map((channel) => channel.name).toList();
     return AdminProductDetailSection(
       title: 'Sales Channels',
-      action: adminSectionAction(onUnavailable),
+      action: adminSectionAction(onEdit),
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

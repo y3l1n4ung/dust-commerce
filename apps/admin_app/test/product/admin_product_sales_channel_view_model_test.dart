@@ -14,6 +14,7 @@ void main() {
   late Directory directory;
   late CommerceDatabase database;
   late TestClient server;
+  late AdminProductDetailViewModel detail;
 
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('admin_product_channel');
@@ -32,6 +33,23 @@ void main() {
       passwordWork: PasswordWorkLimiter(),
     );
     server = await TestClient.serve(buildApp(database));
+    final token = await AdminApi(Dio(), baseUrl: server.origin).signIn(
+      const AdminCredentials(
+        email: 'owner@example.com',
+        password: 'correct horse battery staple',
+      ),
+    );
+    final dio = Dio()
+      ..options.headers['authorization'] = 'Bearer ${token.token}';
+    detail = AdminProductDetailViewModel(
+      AdminProductDetailViewModelArgs(
+        api: AdminApi(dio, baseUrl: server.origin),
+        salesChannels: AdminProductSalesChannelApi(
+          dio,
+          baseUrl: server.origin,
+        ),
+      ),
+    );
   });
 
   tearDown(() async {
@@ -41,24 +59,6 @@ void main() {
   });
 
   test('loads product availability and the total channel count', () async {
-    final token = await AdminApi(Dio(), baseUrl: server.origin).signIn(
-      const AdminCredentials(
-        email: 'owner@example.com',
-        password: 'correct horse battery staple',
-      ),
-    );
-    final dio = Dio()
-      ..options.headers['authorization'] = 'Bearer ${token.token}';
-    final detail = AdminProductDetailViewModel(
-      AdminProductDetailViewModelArgs(
-        api: AdminApi(dio, baseUrl: server.origin),
-        salesChannels: AdminProductSalesChannelApi(
-          dio,
-          baseUrl: server.origin,
-        ),
-      ),
-    );
-
     await detail.load('prod_tshirt');
 
     expect(detail.state.status, AdminProductDetailStatus.ready);
@@ -67,5 +67,66 @@ void main() {
       ['Online Store'],
     );
     expect(detail.state.totalSalesChannels, const Some(2));
+  });
+
+  test('publishes the complete saved channel selection', () async {
+    await detail.load('prod_tshirt');
+
+    final saved = await detail.updateSalesChannels(
+      'prod_tshirt',
+      const AdminUpdateProductSalesChannels(
+        salesChannelIds: ['sc_wholesale'],
+      ),
+    );
+
+    expect(saved, isTrue);
+    expect(detail.state.status, AdminProductDetailStatus.ready);
+    expect(
+      detail.state.salesChannels.map((channel) => channel.name),
+      ['Wholesale'],
+    );
+    expect(detail.state.totalSalesChannels, const Some(2));
+    expect(detail.state.failure, const None<String>());
+  });
+
+  test('loads typed editor rows without exposing nullable descriptions',
+      () async {
+    await detail.load('prod_tshirt');
+
+    final result = await detail.salesChannelChoices();
+    final page = switch (result) {
+      Some(:final value) => value,
+      None() => fail('Expected sales-channel choices'),
+    };
+
+    expect(page.salesChannels, hasLength(2));
+    expect(
+      page.salesChannels.first.description,
+      const Some('Primary direct-to-consumer storefront'),
+    );
+    expect(page.salesChannels.first.createdAt.isUtc, isTrue);
+    expect(page.salesChannels.first.updatedAt.isUtc, isTrue);
+  });
+
+  test('keeps loaded detail when the selection is invalid', () async {
+    await detail.load('prod_tshirt');
+
+    final saved = await detail.updateSalesChannels(
+      'prod_tshirt',
+      const AdminUpdateProductSalesChannels(
+        salesChannelIds: ['sc_web', 'sc_web'],
+      ),
+    );
+
+    expect(saved, isFalse);
+    expect(detail.state.product, isA<Some<AdminProductDetail>>());
+    expect(
+      detail.state.failure,
+      const Some('Choose unique available sales channels.'),
+    );
+    expect(
+      detail.state.salesChannels.map((channel) => channel.id),
+      ['sc_web'],
+    );
   });
 }

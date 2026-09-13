@@ -12,6 +12,7 @@ final class AdminProductSidebarSections extends StatelessWidget {
     required this.salesChannels,
     required this.totalSalesChannels,
     required this.onEditOrganization,
+    required this.onEditSalesChannels,
     required this.onUnavailable,
     super.key,
   });
@@ -28,6 +29,9 @@ final class AdminProductSidebarSections extends StatelessWidget {
   /// Opens the product-type organization editor.
   final VoidCallback onEditOrganization;
 
+  /// Opens the product sales-channel focus editor.
+  final VoidCallback onEditSalesChannels;
+
   /// Reports controls whose domain is not implemented yet.
   final VoidCallback onUnavailable;
 
@@ -37,7 +41,7 @@ final class AdminProductSidebarSections extends StatelessWidget {
           AdminProductSalesChannelSection(
             channels: salesChannels,
             totalChannels: totalSalesChannels,
-            onUnavailable: onUnavailable,
+            onEdit: onEditSalesChannels,
           ),
           const SizedBox(height: 12),
           _UnavailableSection(

@@ -8,6 +8,7 @@ import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
 import 'package:admin_app/src/product/admin_product_edit_drawer.dart';
 import 'package:admin_app/src/product/admin_product_media_editor.dart';
 import 'package:admin_app/src/product/admin_product_organization_drawer.dart';
+import 'package:admin_app/src/product/admin_product_sales_channel_actions.dart';
 import 'package:admin_app/src/product/admin_product_stock_page.dart';
 import 'package:admin_app/src/product/admin_product_variant_edit_drawer.dart';
 import 'package:admin_app/src/product/admin_product_variant_pricing_page.dart';

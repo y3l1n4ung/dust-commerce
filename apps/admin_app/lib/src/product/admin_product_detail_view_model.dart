@@ -10,6 +10,7 @@ part 'admin_product_detail_view_model.g.dart';
 part 'admin_product_detail_media_view_model.dart';
 part 'admin_product_detail_organization_view_model.dart';
 part 'admin_product_detail_pricing_view_model.dart';
+part 'admin_product_detail_sales_channel_view_model.dart';
 part 'admin_product_detail_stock_view_model.dart';
 part 'admin_product_detail_variant_view_model.dart';
 
@@ -127,6 +128,8 @@ final class AdminProductDetailViewModel extends $AdminProductDetailViewModel {
         salesChannels: state.salesChannels,
         totalSalesChannels: state.totalSalesChannels,
       ));
+
+  void _emitSalesChannels(AdminProductDetailState value) => emit(value);
 
   void _emitVariant(AdminProductDetailState value) => emit(value.copyWith(
         salesChannels: state.salesChannels,
