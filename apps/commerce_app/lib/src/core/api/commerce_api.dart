@@ -246,4 +246,10 @@ abstract interface class CommerceApi {
   /// One order owned by the authenticated customer.
   @GET('/store/orders/{id}')
   Future<Order> order(@Path() String id);
+
+  /// Requests return processing for items from an authenticated owned order.
+  @POST('/store/returns')
+  Future<OrderReturnView> requestOrderReturn(
+    @Body() OrderReturnRequestBody body,
+  );
 }
