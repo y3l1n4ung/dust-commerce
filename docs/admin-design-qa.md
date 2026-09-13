@@ -263,6 +263,13 @@ schema has no such domain; the remaining filter order and labels match source.
   filtered the table to Shirt, proved the removal button's accessible label,
   and restored all four products. Thirty-six non-widget Admin and 287 server
   tests pass; all 39 migrations apply and revert without remaining tables.
+- Product Types now have the pinned Settings list, create focus modal and edit
+  drawer backed by guarded CRUD routes. Product creation and the detail
+  Organize drawer select the same stable ids, support explicit Unassigned, and
+  refresh the allowlisted product detail after save. Live QA exposed all five
+  fixture types, assigned Pants, cleared the type, and restored Shirt; the Store
+  boundary still receives only the label. Forty non-widget Admin and 298 server
+  tests pass; no widget tests were added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -272,8 +279,7 @@ schema has no such domain; the remaining filter order and labels match source.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Product creation still lacks multiple option axes, product-type
-  assignment and import/export.
+- P1 — Product creation still lacks multiple option axes and import/export.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
   chip input and post-entry rank organizer. Persisted ordering works, but this
   interaction is not yet a literal copy.
