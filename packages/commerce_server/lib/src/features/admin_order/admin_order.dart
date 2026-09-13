@@ -2,6 +2,12 @@
 library;
 
 export 'deps.dart';
+export 'detail_address_response.dart';
+export 'detail_handler.dart';
+export 'detail_item_response.dart';
+export 'detail_model.dart';
+export 'detail_repository.dart';
+export 'detail_service.dart';
 export 'handler.dart';
 export 'model.dart';
 export 'query.dart';

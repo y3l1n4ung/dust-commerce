@@ -1,11 +1,15 @@
 import 'package:commerce_server/src/features/admin_order/repository.dart';
+import 'package:commerce_server/src/features/admin_order/detail_repository.dart';
 import 'package:commerce_server/src/http/http.dart';
 import 'package:dust_server/server.dart';
 
 /// Persistence required only by merchant order routes.
 final class AdminOrderDeps {
   /// Creates the focused order dependency bundle.
-  const AdminOrderDeps({required this.orders});
+  const AdminOrderDeps({required this.orders, required this.details});
+
+  /// Complete protected order snapshot reads.
+  final AdminOrderDetailRepository details;
 
   /// Protected order-list reads.
   final AdminOrderRepository orders;

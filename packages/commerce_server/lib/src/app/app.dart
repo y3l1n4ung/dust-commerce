@@ -99,7 +99,10 @@ Router buildApp(
       ),
     )
     ..withState(
-      AdminOrderDeps(orders: AdminOrderRepository(executor)),
+      AdminOrderDeps(
+        orders: AdminOrderRepository(executor),
+        details: AdminOrderDetailRepository(executor),
+      ),
     )
     ..withState(
       CatalogDeps(

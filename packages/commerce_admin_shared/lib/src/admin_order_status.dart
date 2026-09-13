@@ -38,6 +38,26 @@ enum AdminOrderFulfillmentStatus {
   notFulfilled,
 }
 
+/// Persistence lifecycle of the order's provider payment collection.
+@Derive([Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+enum AdminOrderPaymentRecordStatus {
+  /// A provider attempt has not yet authorized funds.
+  pending,
+
+  /// Funds are authorized but not captured.
+  authorized,
+
+  /// Funds have been captured.
+  captured,
+
+  /// The provider attempt was cancelled.
+  cancelled,
+
+  /// The provider attempt failed.
+  failed,
+}
+
 /// Codec used by direct server projections for order lifecycle values.
 final class AdminOrderStatusCodec
     implements SerDeCodec<AdminOrderStatus, String> {
@@ -66,6 +86,20 @@ final class AdminOrderPaymentStatusCodec
   String serialize(AdminOrderPaymentStatus value) => value.name;
 }
 
+/// Codec used by direct server projections for provider payment state.
+final class AdminOrderPaymentRecordStatusCodec
+    implements SerDeCodec<AdminOrderPaymentRecordStatus, String> {
+  /// Creates the stateless codec.
+  const AdminOrderPaymentRecordStatusCodec();
+
+  @override
+  AdminOrderPaymentRecordStatus deserialize(String value) =>
+      AdminOrderPaymentRecordStatus.values.byName(value);
+
+  @override
+  String serialize(AdminOrderPaymentRecordStatus value) => value.name;
+}
+
 /// Codec used by direct server projections for fulfilment state.
 final class AdminOrderFulfillmentStatusCodec
     implements SerDeCodec<AdminOrderFulfillmentStatus, String> {
@@ -81,5 +115,28 @@ final class AdminOrderFulfillmentStatusCodec
   @override
   String serialize(AdminOrderFulfillmentStatus value) => switch (value) {
         AdminOrderFulfillmentStatus.notFulfilled => 'not_fulfilled',
+      };
+}
+
+/// Nullable JSON codec for the optional provider payment record state.
+final class AdminOptionalPaymentRecordStatusCodec
+    implements SerDeCodec<Option<AdminOrderPaymentRecordStatus>, Object?> {
+  /// Creates the stateless codec.
+  const AdminOptionalPaymentRecordStatusCodec();
+
+  @override
+  Option<AdminOrderPaymentRecordStatus> deserialize(Object? json) =>
+      switch (json) {
+        null => const None(),
+        final String value => Some(AdminOrderPaymentRecordStatus.values
+            .firstWhere((status) => status.name == value)),
+        _ => throw FormatException('Expected a payment status or null'),
+      };
+
+  @override
+  Object? serialize(Option<AdminOrderPaymentRecordStatus> value) =>
+      switch (value) {
+        Some(:final value) => value.name,
+        None() => null,
       };
 }

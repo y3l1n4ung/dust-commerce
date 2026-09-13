@@ -49,6 +49,18 @@ final class $AdminOrderFulfillmentStatusDeserializer implements Deserializer<Adm
   @override
   AdminOrderFulfillmentStatus deserialize(Object? json) => _$AdminOrderFulfillmentStatusDeserialize(json);
 }
+final class $AdminOrderPaymentRecordStatusSerializer implements Serializer<AdminOrderPaymentRecordStatus, Object?> {
+  const $AdminOrderPaymentRecordStatusSerializer();
+
+  @override
+  Object? serialize(AdminOrderPaymentRecordStatus value) => _$AdminOrderPaymentRecordStatusSerialize(value);
+}
+final class $AdminOrderPaymentRecordStatusDeserializer implements Deserializer<AdminOrderPaymentRecordStatus, Object?> {
+  const $AdminOrderPaymentRecordStatusDeserializer();
+
+  @override
+  AdminOrderPaymentRecordStatus deserialize(Object? json) => _$AdminOrderPaymentRecordStatusDeserialize(json);
+}
 
 Object? _$AdminOrderStatusSerialize(AdminOrderStatus instance) {
   return switch (instance) {
@@ -114,3 +126,30 @@ AdminOrderFulfillmentStatus _$AdminOrderFulfillmentStatusDeserialize(Object? jso
 
 AdminOrderFulfillmentStatus _$AdminOrderFulfillmentStatusFromJson(Object? json, [String key = 'json']) =>
     _$AdminOrderFulfillmentStatusDeserialize(json, key);
+
+Object? _$AdminOrderPaymentRecordStatusSerialize(AdminOrderPaymentRecordStatus instance) {
+  return switch (instance) {
+    AdminOrderPaymentRecordStatus.pending => 'pending',
+    AdminOrderPaymentRecordStatus.authorized => 'authorized',
+    AdminOrderPaymentRecordStatus.captured => 'captured',
+    AdminOrderPaymentRecordStatus.cancelled => 'cancelled',
+    AdminOrderPaymentRecordStatus.failed => 'failed',
+  };
+}
+
+Object? _$AdminOrderPaymentRecordStatusToJson(AdminOrderPaymentRecordStatus instance) =>
+    _$AdminOrderPaymentRecordStatusSerialize(instance);
+
+AdminOrderPaymentRecordStatus _$AdminOrderPaymentRecordStatusDeserialize(Object? json, [String key = 'json']) {
+  return switch (json) {
+    'pending' => AdminOrderPaymentRecordStatus.pending,
+    'authorized' => AdminOrderPaymentRecordStatus.authorized,
+    'captured' => AdminOrderPaymentRecordStatus.captured,
+    'cancelled' => AdminOrderPaymentRecordStatus.cancelled,
+    'failed' => AdminOrderPaymentRecordStatus.failed,
+    _ => throw ArgumentError.value(json, key, 'unknown value for AdminOrderPaymentRecordStatus at $key'),
+  };
+}
+
+AdminOrderPaymentRecordStatus _$AdminOrderPaymentRecordStatusFromJson(Object? json, [String key = 'json']) =>
+    _$AdminOrderPaymentRecordStatusDeserialize(json, key);
