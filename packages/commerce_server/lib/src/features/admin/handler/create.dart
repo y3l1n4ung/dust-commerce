@@ -85,6 +85,8 @@ Future<Result<AdminProductDetailResponse, Rejection>> createAdminProductHandler(
         422,
         'Use unique product images returned by the upload endpoint',
       )),
+    Ok(value: Err(error: AdminCreateProductFailure.invalidProductType)) =>
+      const Err(Rejection.status(422, 'Choose an active product type')),
     Ok(value: Err(error: AdminCreateProductFailure.invalidHandle)) =>
       const Err(Rejection.status(
         422,

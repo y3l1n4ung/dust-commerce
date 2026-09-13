@@ -35,6 +35,7 @@ void main() {
       'options',
       'origin_country',
       'product_type',
+      'product_type_id',
       'status',
       'subtitle',
       'tags',
@@ -46,6 +47,7 @@ void main() {
     });
     expect(json['title'], 'Relaxed Sweatpants');
     expect(json['product_type'], 'Pants');
+    expect(json['product_type_id'], 'ptyp_pants');
     expect(json['categories'], ['Pants']);
     expect(json['tags'], ['Apparel', 'Cotton']);
     expect(json['images'], hasLength(2));

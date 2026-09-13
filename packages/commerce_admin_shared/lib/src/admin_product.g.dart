@@ -254,6 +254,7 @@ mixin _$AdminCreateProduct implements Validatable, Serializable {
         'options: ${self.options}, '
         'status: ${self.status}, '
         'subtitle: ${self.subtitle}, '
+        'typeId: ${self.typeId}, '
         'title: ${self.title}, '
         'variants: ${self.variants}'
         ')';
@@ -273,6 +274,7 @@ mixin _$AdminCreateProduct implements Validatable, Serializable {
             _adminCreateProductOptionsEquality.equals(other.options, self.options) &&
             other.status == self.status &&
             other.subtitle == self.subtitle &&
+            other.typeId == self.typeId &&
             other.title == self.title &&
             _adminCreateProductVariantsEquality.equals(other.variants, self.variants);
   }
@@ -290,6 +292,7 @@ mixin _$AdminCreateProduct implements Validatable, Serializable {
       _adminCreateProductOptionsEquality.hash(self.options),
       self.status,
       self.subtitle,
+      self.typeId,
       self.title,
       _adminCreateProductVariantsEquality.hash(self.variants),
     ]);
@@ -311,6 +314,7 @@ mixin _$AdminCreateProduct implements Validatable, Serializable {
     _AdminCreateProductValidation._validateHandle(self.handle, errors);
     _AdminCreateProductValidation._validateMaterial(self.material, errors);
     _AdminCreateProductValidation._validateSubtitle(self.subtitle, errors);
+    _AdminCreateProductValidation._validateTypeId(self.typeId, errors);
     _AdminCreateProductValidation._validateTitle(self.title, errors);
     return errors.isEmpty ? const Valid() : Invalid(errors);
   }
@@ -601,6 +605,7 @@ mixin _$AdminProductDetail implements Serializable {
         'options: ${self.options}, '
         'originCountry: ${self.originCountry}, '
         'productType: ${self.productType}, '
+        'productTypeId: ${self.productTypeId}, '
         'status: ${self.status}, '
         'subtitle: ${self.subtitle}, '
         'tags: ${self.tags}, '
@@ -631,6 +636,7 @@ mixin _$AdminProductDetail implements Serializable {
             _adminProductDetailOptionsEquality.equals(other.options, self.options) &&
             other.originCountry == self.originCountry &&
             other.productType == self.productType &&
+            other.productTypeId == self.productTypeId &&
             other.status == self.status &&
             other.subtitle == self.subtitle &&
             _adminProductDetailTagsEquality.equals(other.tags, self.tags) &&
@@ -659,6 +665,7 @@ mixin _$AdminProductDetail implements Serializable {
       _adminProductDetailOptionsEquality.hash(self.options),
       self.originCountry,
       self.productType,
+      self.productTypeId,
       self.status,
       self.subtitle,
       _adminProductDetailTagsEquality.hash(self.tags),
@@ -772,6 +779,14 @@ extension _AdminCreateProductValidation on AdminCreateProduct {
     if (subtitle != null) {
       if (subtitle.length > 255) {
         errors.add(ValidationError(field: 'subtitle', message: 'Use at most 255 characters'));
+      }
+    }
+  }
+
+  static void _validateTypeId(String? typeId, List<ValidationError> errors) {
+    if (typeId != null) {
+      if (typeId.length > 255) {
+        errors.add(ValidationError(field: 'typeId', message: 'Choose a valid product type'));
       }
     }
   }
@@ -1096,6 +1111,7 @@ Map<String, Object?> _$AdminCreateProductSerialize(AdminCreateProduct instance) 
         .toList(),
     'status': _$AdminProductLifecycleSerialize(instance.status),
     'subtitle': instance.subtitle,
+    'type_id': instance.typeId,
     'title': instance.title,
     'variants': instance.variants
         .map((item) => _$AdminCreateProductVariantSerialize(item))
@@ -1133,6 +1149,9 @@ AdminCreateProduct _$AdminCreateProductDeserialize(Map<String, Object?> json) {
   final subtitleValue = json['subtitle'] == null
       ? null
       : JsonHelper.as<String>(json['subtitle'], 'subtitle', 'String');
+  final typeIdValue = json['type_id'] == null
+      ? null
+      : JsonHelper.as<String>(json['type_id'], 'type_id', 'String');
   final titleValue = JsonHelper.as<String>(json['title'], 'title', 'String');
   final variantsValue = JsonHelper.decodeList(json['variants'], 'variants',
       (item, itemKey) => _$AdminCreateProductVariantDeserialize(JsonHelper.asMap(item, itemKey)));
@@ -1148,6 +1167,7 @@ AdminCreateProduct _$AdminCreateProductDeserialize(Map<String, Object?> json) {
     subtitle: subtitleValue,
     material: materialValue,
     description: descriptionValue,
+    typeId: typeIdValue,
   );
 }
 
@@ -1370,6 +1390,7 @@ Map<String, Object?> _$AdminProductDetailSerialize(AdminProductDetail instance) 
         .toList(),
     'origin_country': instance.originCountry,
     'product_type': instance.productType,
+    'product_type_id': instance.productTypeId,
     'status': _$AdminProductLifecycleSerialize(instance.status),
     'subtitle': instance.subtitle,
     'tags': instance.tags
@@ -1424,6 +1445,9 @@ AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
   final productTypeValue = json['product_type'] == null
       ? null
       : JsonHelper.as<String>(json['product_type'], 'product_type', 'String');
+  final productTypeIdValue = json['product_type_id'] == null
+      ? null
+      : JsonHelper.as<String>(json['product_type_id'], 'product_type_id', 'String');
   final statusValue = _$AdminProductLifecycleDeserialize(
     json['status'],
     'status',
@@ -1463,6 +1487,7 @@ AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
     material: materialValue,
     originCountry: originCountryValue,
     productType: productTypeValue,
+    productTypeId: productTypeIdValue,
     collectionTitle: collectionTitleValue,
     weight: weightValue,
     length: lengthValue,

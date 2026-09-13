@@ -7,12 +7,16 @@ final class AdminProductSidebarSections extends StatelessWidget {
   /// Creates product sidebar cards.
   const AdminProductSidebarSections({
     required this.product,
+    required this.onEditOrganization,
     required this.onUnavailable,
     super.key,
   });
 
   /// Complete admin product allowlist.
   final AdminProductDetail product;
+
+  /// Opens the product-type organization editor.
+  final VoidCallback onEditOrganization;
 
   /// Reports controls whose domain is not implemented yet.
   final VoidCallback onUnavailable;
@@ -36,7 +40,7 @@ final class AdminProductSidebarSections extends StatelessWidget {
           const SizedBox(height: 12),
           AdminProductDetailSection(
             title: 'Organize',
-            action: adminSectionAction(onUnavailable),
+            action: adminSectionAction(onEditOrganization),
             child: Column(
               children: [
                 _badges(context, 'Tags', product.tags),

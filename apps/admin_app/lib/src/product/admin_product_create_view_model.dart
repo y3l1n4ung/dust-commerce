@@ -31,7 +31,10 @@ final class AdminProductCreateViewModel extends $AdminProductCreateViewModel {
       status: AdminProductCreateStatus.loading,
     ));
     try {
-      final context = await args.api.productCreateContext();
+      final (context, types) = await (
+        args.api.productCreateContext(),
+        args.api.listProductTypes('', 1000, 0),
+      ).wait;
       if (context.currencyCodes.isEmpty) {
         _fail('Configure an active selling region before creating products.');
         return;
@@ -39,6 +42,7 @@ final class AdminProductCreateViewModel extends $AdminProductCreateViewModel {
       emit(AdminProductCreateState(
         status: AdminProductCreateStatus.ready,
         currencyCodes: context.currencyCodes,
+        productTypes: types.productTypes,
       ));
     } on DioException catch (error) {
       _fail(error.response?.statusCode == 401
@@ -52,29 +56,36 @@ final class AdminProductCreateViewModel extends $AdminProductCreateViewModel {
   /// Persists [input] and retains the explicit created-product allowlist.
   Future<Option<AdminProductDetail>> create(AdminCreateProduct input) async {
     final currencies = state.currencyCodes;
+    final productTypes = state.productTypes;
     emit(AdminProductCreateState(
       status: AdminProductCreateStatus.saving,
       currencyCodes: currencies,
+      productTypes: productTypes,
     ));
     try {
       final product = await args.api.createProduct(input);
       emit(AdminProductCreateState(
         status: AdminProductCreateStatus.ready,
         currencyCodes: currencies,
+        productTypes: productTypes,
         created: Some(product),
       ));
       return Some(product);
     } on DioException catch (error) {
       final message = switch (error.response?.statusCode) {
         409 => 'That handle or SKU is already in use.',
-        422 => 'Check the options, variants, and regional prices.',
+        422 => 'Check the product type, options, variants, and prices.',
         401 => 'Your admin session has expired.',
         _ => 'Unable to create this product. Try again.',
       };
-      _createFailed(currencies, message);
+      _createFailed(currencies, productTypes, message);
       return const None();
     } on Object {
-      _createFailed(currencies, 'Unable to create this product. Try again.');
+      _createFailed(
+        currencies,
+        productTypes,
+        'Unable to create this product. Try again.',
+      );
       return const None();
     }
   }
@@ -85,15 +96,18 @@ final class AdminProductCreateViewModel extends $AdminProductCreateViewModel {
   ) async {
     if (files.isEmpty) return const None();
     final currencies = state.currencyCodes;
+    final productTypes = state.productTypes;
     emit(AdminProductCreateState(
       status: AdminProductCreateStatus.uploading,
       currencyCodes: currencies,
+      productTypes: productTypes,
     ));
     try {
       final uploaded = await args.api.uploadMedia(files);
       emit(AdminProductCreateState(
         status: AdminProductCreateStatus.ready,
         currencyCodes: currencies,
+        productTypes: productTypes,
       ));
       return Some(uploaded.files);
     } on DioException catch (error) {
@@ -104,10 +118,14 @@ final class AdminProductCreateViewModel extends $AdminProductCreateViewModel {
         503 => 'Product media storage is not configured.',
         _ => 'Unable to upload these images. Try again.',
       };
-      _createFailed(currencies, message);
+      _createFailed(currencies, productTypes, message);
       return const None();
     } on Object {
-      _createFailed(currencies, 'Unable to upload these images. Try again.');
+      _createFailed(
+        currencies,
+        productTypes,
+        'Unable to upload these images. Try again.',
+      );
       return const None();
     }
   }
@@ -120,6 +138,7 @@ final class AdminProductCreateViewModel extends $AdminProductCreateViewModel {
     } on Object {
       _createFailed(
         state.currencyCodes,
+        state.productTypes,
         'Unable to remove this image. Try again.',
       );
       return false;
@@ -130,12 +149,19 @@ final class AdminProductCreateViewModel extends $AdminProductCreateViewModel {
   void clearFailure() => emit(AdminProductCreateState(
         status: AdminProductCreateStatus.ready,
         currencyCodes: state.currencyCodes,
+        productTypes: state.productTypes,
       ));
 
-  void _createFailed(List<String> currencies, String message) => emit(
+  void _createFailed(
+    List<String> currencies,
+    List<AdminProductType> productTypes,
+    String message,
+  ) =>
+      emit(
         AdminProductCreateState(
           status: AdminProductCreateStatus.ready,
           currencyCodes: currencies,
+          productTypes: productTypes,
           failure: Some(message),
         ),
       );

@@ -15,6 +15,7 @@ abstract final class AdminProductReadRepository {
 SELECT product.id, product.title, product.subtitle, product.handle,
        product.description, product.discountable, product.thumbnail,
        product.material, product.origin_country,
+       product.type_id AS product_type_id,
        product_type.value AS product_type,
        product.weight, product.length, product.width,
        product.height, product.status, collection.title AS collection_title,

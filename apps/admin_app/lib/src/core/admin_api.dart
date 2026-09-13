@@ -131,6 +131,13 @@ abstract interface class AdminApi {
     @Body() AdminUpdateProduct body,
   );
 
+  /// Replaces only the reusable classification assigned to one product.
+  @PATCH('/admin/products/{id}/organization')
+  Future<AdminProductDetail> updateProductOrganization(
+    @Path() String id,
+    @Body() AdminUpdateProductOrganization body,
+  );
+
   /// Soft-deletes one active product and returns a typed acknowledgement.
   @DELETE('/admin/products/{id}')
   Future<AdminProductDeleted> deleteProduct(@Path() String id);

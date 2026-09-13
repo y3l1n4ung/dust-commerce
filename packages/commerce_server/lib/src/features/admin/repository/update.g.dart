@@ -45,6 +45,22 @@ WHERE id = ?
   }
 
   @override
+  Future<Result<ExecResult, SqlxError>> updateOrganization(String productId, String? typeId) {
+    return _db.execute(
+      r'''
+UPDATE products
+SET type_id = ?
+WHERE id = ? AND deleted_at IS NULL
+  AND (? IS NULL OR EXISTS (
+    SELECT 1 FROM product_types
+    WHERE id = ? AND deleted_at IS NULL
+  ))
+''',
+      [typeId, productId, typeId, typeId],
+    );
+  }
+
+  @override
   Future<Result<int, SqlxError>> maxImageRank(String productId) {
     return _db.fetchScalar<int>(
       r'''

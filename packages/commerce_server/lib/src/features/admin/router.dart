@@ -55,6 +55,10 @@ Router adminRoutes() => Router()
         .delete(deleteAdminProductHandler),
   )
   ..route(
+    '/products/{id}/organization',
+    patch(updateAdminProductOrganizationHandler),
+  )
+  ..route(
     '/products/{id}/media',
     put(updateAdminProductMediaHandler),
   )

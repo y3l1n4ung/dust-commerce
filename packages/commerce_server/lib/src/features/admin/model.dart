@@ -150,6 +150,7 @@ final class AdminProductDetailResponse with _$AdminProductDetailResponse {
     this.material,
     this.originCountry,
     this.productType,
+    this.productTypeId,
     this.collectionTitle,
     this.weight,
     this.length,
@@ -202,6 +203,10 @@ final class AdminProductDetailResponse with _$AdminProductDetailResponse {
   /// Optional merchant classification.
   @Sqlx(rename: 'product_type')
   final String? productType;
+
+  /// Stable classification identifier used by Admin mutation contracts.
+  @Sqlx(rename: 'product_type_id')
+  final String? productTypeId;
 
   /// Merchant lifecycle state.
   @SerDe(using: AdminProductLifecycleCodec())

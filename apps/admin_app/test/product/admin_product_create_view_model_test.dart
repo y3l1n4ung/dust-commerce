@@ -66,8 +66,14 @@ void main() {
 
     expect(create.state.status, AdminProductCreateStatus.ready);
     expect(create.state.currencyCodes, ['eur', 'usd']);
+    expect(create.state.productTypes.map((item) => item.value), [
+      'Pants',
+      'Shirt',
+      'Shorts',
+      'Sweatshirt',
+    ]);
 
-    final created = await create.create(_product());
+    final created = await create.create(_product(typeId: 'ptyp_shirt'));
 
     expect(created, isA<Some<AdminProductDetail>>());
     expect(create.state.status, AdminProductCreateStatus.ready);
@@ -75,6 +81,10 @@ void main() {
     expect(
       (create.state.created as Some<AdminProductDetail>).value.handle,
       'desk-lamp',
+    );
+    expect(
+      (create.state.created as Some<AdminProductDetail>).value.productTypeId,
+      'ptyp_shirt',
     );
   });
 
@@ -107,17 +117,18 @@ void main() {
   });
 }
 
-AdminCreateProduct _product() => const AdminCreateProduct(
+AdminCreateProduct _product({String? typeId}) => AdminCreateProduct(
       status: AdminProductLifecycle.published,
       title: 'Desk Lamp',
       handle: 'desk-lamp',
+      typeId: typeId,
       discountable: true,
       media: [],
       options: [
-        AdminCreateProductOption(title: 'Finish', values: ['Black']),
+        const AdminCreateProductOption(title: 'Finish', values: ['Black']),
       ],
       variants: [
-        AdminCreateProductVariant(
+        const AdminCreateProductVariant(
           title: 'Black',
           sku: 'LAMP-BLACK',
           inventoryQuantity: 5,

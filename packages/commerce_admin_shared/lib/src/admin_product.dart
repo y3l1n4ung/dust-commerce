@@ -144,6 +144,7 @@ final class AdminCreateProduct with _$AdminCreateProduct {
     this.subtitle,
     this.material,
     this.description,
+    this.typeId,
   });
 
   /// Decodes the generated product input without handwritten JSON mapping.
@@ -181,6 +182,10 @@ final class AdminCreateProduct with _$AdminCreateProduct {
   /// Optional secondary merchant-facing product name.
   @Validate(length: Length(max: 255), message: 'Use at most 255 characters')
   final String? subtitle;
+
+  /// Stable active product classification selected by the merchant.
+  @Validate(length: Length(max: 255), message: 'Choose a valid product type')
+  final String? typeId;
 
   /// Required product name shown to merchants and customers.
   @Validate(length: Length(min: 1, max: 255), message: 'Enter a title')
@@ -374,6 +379,7 @@ final class AdminProductDetail with _$AdminProductDetail {
     this.material,
     this.originCountry,
     this.productType,
+    this.productTypeId,
     this.collectionTitle,
     this.weight,
     this.length,
@@ -423,6 +429,9 @@ final class AdminProductDetail with _$AdminProductDetail {
 
   /// Optional merchant product classification.
   final String? productType;
+
+  /// Stable classification identifier used by Admin mutation contracts.
+  final String? productTypeId;
 
   /// Merchant lifecycle state.
   final AdminProductLifecycle status;

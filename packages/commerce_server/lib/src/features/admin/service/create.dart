@@ -35,6 +35,9 @@ enum AdminCreateProductFailure {
   /// Uploaded media is malformed, duplicated, or not owned by this server.
   invalidMedia,
 
+  /// The requested product type is missing or retired.
+  invalidProductType,
+
   /// Another active product already owns the requested handle.
   handleConflict,
 
@@ -77,6 +80,13 @@ Future<
       final writes = AdminProductCreateRepository(tx);
       final currencies = await writes.activeCurrencies();
       if (currencies case Err(:final error)) return Err(error);
+      if (input.typeId case final typeId?) {
+        final typeCount = await writes.activeProductTypeCount(typeId);
+        if (typeCount case Err(:final error)) return Err(error);
+        if ((typeCount as Ok<int, SqlxError>).value == 0) {
+          return const Ok(Err(AdminCreateProductFailure.invalidProductType));
+        }
+      }
       final prepared = _prepareProduct(
         input,
         (currencies as Ok<List<AdminProductCurrencyResponse>, SqlxError>)
@@ -97,6 +107,7 @@ Future<
         product.material,
         product.description,
         product.thumbnail,
+        input.typeId,
         product.discountable ? 1 : 0,
         product.status.name,
       );

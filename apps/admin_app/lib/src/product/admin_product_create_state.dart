@@ -31,6 +31,7 @@ final class AdminProductCreateState with _$AdminProductCreateState {
   const AdminProductCreateState({
     this.status = AdminProductCreateStatus.idle,
     this.currencyCodes = const [],
+    this.productTypes = const [],
     this.created = const None(),
     this.failure = const None(),
   });
@@ -43,6 +44,9 @@ final class AdminProductCreateState with _$AdminProductCreateState {
 
   /// Display-safe create or context failure.
   final Option<String> failure;
+
+  /// Active classifications available in Medusa's Organize step.
+  final List<AdminProductType> productTypes;
 
   /// Current create lifecycle.
   final AdminProductCreateStatus status;

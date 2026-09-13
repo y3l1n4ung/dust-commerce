@@ -243,6 +243,7 @@ AdminProductDetailResponse _$AdminProductDetailResponseFromRow(Row row) {
     material: row.readNullable<String>('material'),
     originCountry: row.readNullable<String>('origin_country'),
     productType: row.readNullable<String>('product_type'),
+    productTypeId: row.readNullable<String>('product_type_id'),
     collectionTitle: row.readNullable<String>('collection_title'),
     weight: row.readNullable<int>('weight'),
     length: row.readNullable<int>('length'),
@@ -342,6 +343,7 @@ Map<String, Object?> _$AdminProductDetailResponseSerialize(AdminProductDetailRes
         .toList(),
     'origin_country': instance.originCountry,
     'product_type': instance.productType,
+    'product_type_id': instance.productTypeId,
     'status': JsonHelper.encodeWithCodec<AdminProductLifecycle, Object?>(
       (AdminProductLifecycleCodec()),
       instance.status,

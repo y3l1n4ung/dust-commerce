@@ -14,6 +14,7 @@
 part of 'admin_product_create_state.dart';
 
 const DeepCollectionEquality _adminProductCreateStateCurrencyCodesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminProductCreateStateProductTypesEquality = DeepCollectionEquality();
 
 mixin _$AdminProductCreateState {
   @override
@@ -23,6 +24,7 @@ mixin _$AdminProductCreateState {
         'created: ${self.created}, '
         'currencyCodes: ${self.currencyCodes}, '
         'failure: ${self.failure}, '
+        'productTypes: ${self.productTypes}, '
         'status: ${self.status}'
         ')';
   }
@@ -36,6 +38,7 @@ mixin _$AdminProductCreateState {
             other.created == self.created &&
             _adminProductCreateStateCurrencyCodesEquality.equals(other.currencyCodes, self.currencyCodes) &&
             other.failure == self.failure &&
+            _adminProductCreateStateProductTypesEquality.equals(other.productTypes, self.productTypes) &&
             other.status == self.status;
   }
 
@@ -47,6 +50,7 @@ mixin _$AdminProductCreateState {
       self.created,
       _adminProductCreateStateCurrencyCodesEquality.hash(self.currencyCodes),
       self.failure,
+      _adminProductCreateStateProductTypesEquality.hash(self.productTypes),
       self.status,
     ]);
   }
@@ -69,6 +73,7 @@ abstract class _$AdminProductCreateStateCopyWith<$Res> {
     Option<AdminProductDetail>? created,
     List<String>? currencyCodes,
     Option<String>? failure,
+    List<AdminProductType>? productTypes,
     AdminProductCreateStatus? status,
   });
 }
@@ -86,12 +91,14 @@ final class _$AdminProductCreateStateCopyWithImpl<$Res> implements _$AdminProduc
     Object? created = null,
     Object? currencyCodes = null,
     Object? failure = null,
+    Object? productTypes = null,
     Object? status = null,
   }) {
     return _then(
       AdminProductCreateState(
         status: status == null ? _self.status : status as AdminProductCreateStatus,
         currencyCodes: currencyCodes == null ? _self.currencyCodes : currencyCodes as List<String>,
+        productTypes: productTypes == null ? _self.productTypes : productTypes as List<AdminProductType>,
         created: created == null ? _self.created : created as Option<AdminProductDetail>,
         failure: failure == null ? _self.failure : failure as Option<String>,
       )

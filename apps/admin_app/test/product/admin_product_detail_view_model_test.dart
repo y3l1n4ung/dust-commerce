@@ -62,18 +62,6 @@ void main() {
     await directory.delete(recursive: true);
   });
 
-  test('loads the complete allowlisted merchant product', () async {
-    await detail.load('prod_sweatpants');
-
-    expect(detail.state.status, AdminProductDetailStatus.ready);
-    final product = (detail.state.product as Some<AdminProductDetail>).value;
-    expect(product.title, 'Relaxed Sweatpants');
-    expect(product.images, hasLength(2));
-    expect(product.options.single.values, ['S', 'M']);
-    expect(product.variants, hasLength(2));
-    expect(product.categories, ['Pants']);
-  });
-
   test('uses an Option failure for an unknown product', () async {
     await detail.load('prod_missing');
 

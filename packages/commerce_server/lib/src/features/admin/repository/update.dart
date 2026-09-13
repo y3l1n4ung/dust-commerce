@@ -43,6 +43,21 @@ WHERE id = $1
     String status,
   );
 
+  /// Replaces only the product type when the requested type remains active.
+  @Query(r'''
+UPDATE products
+SET type_id = $2
+WHERE id = $1 AND deleted_at IS NULL
+  AND ($2 IS NULL OR EXISTS (
+    SELECT 1 FROM product_types
+    WHERE id = $2 AND deleted_at IS NULL
+  ))
+''')
+  Future<Result<ExecResult, SqlxError>> updateOrganization(
+    String productId,
+    String? typeId,
+  );
+
   /// Returns the largest rank, including history rows kept after removal.
   @Query(r'''
 SELECT coalesce(max(rank), -1)

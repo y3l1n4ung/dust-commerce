@@ -49,6 +49,7 @@ final class _AdminProductCreatePageState extends State<AdminProductCreatePage> {
   final _variants = <_VariantDraft>[];
 
   var _step = 0;
+  String? _typeId;
   var _discountable = true;
   var _hasVariants = true;
   var _handleEdited = false;
@@ -334,6 +335,27 @@ final class _AdminProductCreatePageState extends State<AdminProductCreatePage> {
         children: [
           Text('Organize', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 32),
+          Text('Product Type', style: Theme.of(context).textTheme.labelLarge),
+          const SizedBox(height: 6),
+          DropdownButtonFormField<String?>(
+            initialValue: _typeId,
+            decoration: const InputDecoration(),
+            items: [
+              const DropdownMenuItem<String?>(
+                value: null,
+                child: Text('Unassigned'),
+              ),
+              for (final productType in state.productTypes)
+                DropdownMenuItem<String?>(
+                  value: productType.id,
+                  child: Text(productType.value),
+                ),
+            ],
+            onChanged: state.isBusy
+                ? null
+                : (value) => setState(() => _typeId = value),
+          ),
+          const SizedBox(height: 24),
           _field(
             label: 'Material',
             optional: true,
@@ -531,6 +553,7 @@ final class _AdminProductCreatePageState extends State<AdminProductCreatePage> {
       subtitle: _subtitle.text,
       material: _material.text,
       description: _description.text,
+      typeId: _typeId,
       discountable: _discountable,
       media: [
         for (final item in _media)
@@ -670,68 +693,77 @@ final class _CreateHeader extends StatelessWidget {
               color: Theme.of(context).dividerColor,
             ),
             for (var index = 0; index < 3; index++)
-              InkWell(
-                onTap: saving ? null : () => onStep(index),
-                child: Container(
-                  height: 56,
-                  constraints: const BoxConstraints(minWidth: 180),
-                  padding: const EdgeInsets.symmetric(horizontal: 18),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      right: BorderSide(color: Theme.of(context).dividerColor),
+              Expanded(
+                child: InkWell(
+                  onTap: saving ? null : () => onStep(index),
+                  child: Container(
+                    height: 56,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      border: Border(
+                        right:
+                            BorderSide(color: Theme.of(context).dividerColor),
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 16,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: index < step
-                              ? Theme.of(context).colorScheme.primary
-                              : Colors.transparent,
-                          border: Border.all(
-                            color: index <= step
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 16,
+                          height: 16,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: index < step
                                 ? Theme.of(context).colorScheme.primary
-                                : Theme.of(context).dividerColor,
+                                : Colors.transparent,
+                            border: Border.all(
+                              color: index <= step
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).dividerColor,
+                            ),
+                          ),
+                          child: index < step
+                              ? Icon(
+                                  Icons.check_rounded,
+                                  size: 11,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                )
+                              : index == step
+                                  ? Center(
+                                      child: Container(
+                                        width: 6,
+                                        height: 6,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
+                                      ),
+                                    )
+                                  : null,
+                        ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            const ['Details', 'Organize', 'Variants'][index],
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(
+                                  color: step == index
+                                      ? Theme.of(context).colorScheme.onSurface
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                ),
                           ),
                         ),
-                        child: index < step
-                            ? Icon(
-                                Icons.check_rounded,
-                                size: 11,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              )
-                            : index == step
-                                ? Center(
-                                    child: Container(
-                                      width: 6,
-                                      height: 6,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                      ),
-                                    ),
-                                  )
-                                : null,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        const ['Details', 'Organize', 'Variants'][index],
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              color: step == index
-                                  ? Theme.of(context).colorScheme.onSurface
-                                  : Theme.of(context)
-                                      .colorScheme
-                                      .onSurfaceVariant,
-                            ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

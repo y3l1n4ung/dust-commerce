@@ -28,6 +28,24 @@ final class _DetailBody extends StatelessWidget {
       _updated(context, 'Product media updated.');
     }
 
+    Future<void> editOrganization() async {
+      final types = context.readAdminProductTypeViewModel();
+      await types.load(offset: 0);
+      if (!context.mounted) return;
+      if (types.state.status == AdminProductTypeStatus.failed) {
+        _updated(context, 'Unable to load product types. Try again.');
+        return;
+      }
+      final saved = await showAdminProductOrganizationDrawer(
+        context,
+        product,
+        types.state.productTypes,
+      );
+      if (saved != true || !context.mounted) return;
+      unawaited(context.readAdminProductViewModel().load());
+      _updated(context, 'Product organization updated.');
+    }
+
     Future<void> editVariant(AdminProductVariant variant) async {
       final saved = await showAdminProductVariantEditDrawer(
         context,
@@ -97,6 +115,7 @@ final class _DetailBody extends StatelessWidget {
     ]);
     final side = AdminProductSidebarSections(
       product: product,
+      onEditOrganization: editOrganization,
       onUnavailable: () => showAdminUnavailable(context),
     );
 

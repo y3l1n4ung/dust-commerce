@@ -15,6 +15,7 @@ export 'read/product_type.dart';
 export 'read.dart';
 export 'update.dart';
 export 'update/product_option.dart';
+export 'update/organization.dart';
 export 'update/product_type.dart';
 export 'update/price.dart';
 export 'update/stock.dart';

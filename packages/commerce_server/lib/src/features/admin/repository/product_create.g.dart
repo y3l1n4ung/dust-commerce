@@ -33,20 +33,32 @@ ORDER BY currency_code
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> insertProduct(String id, String title, String handle, String? subtitle, String? material, String? description, String? thumbnail, int discountable, String status) {
+  Future<Result<int, SqlxError>> activeProductTypeCount(String id) {
+    return _db.fetchScalar<int>(
+      r'''
+SELECT count(*)
+FROM product_types
+WHERE id = ? AND deleted_at IS NULL
+''',
+      [id],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> insertProduct(String id, String title, String handle, String? subtitle, String? material, String? description, String? thumbnail, String? typeId, int discountable, String status) {
     return _db.execute(
       r'''
 INSERT INTO products
-  (id, title, handle, subtitle, material, description, thumbnail,
+  (id, title, handle, subtitle, material, description, thumbnail, type_id,
    discountable, status)
 SELECT ?, trim(?), ?, nullif(trim(?), ''), nullif(trim(?), ''),
-       nullif(trim(?), ''), ?, ?, ?
+       nullif(trim(?), ''), ?, ?, ?, ?
 WHERE NOT EXISTS (
   SELECT 1 FROM products
   WHERE handle = ? AND deleted_at IS NULL
 )
 ''',
-      [id, title, handle, subtitle, material, description, thumbnail, discountable, status, handle],
+      [id, title, handle, subtitle, material, description, thumbnail, typeId, discountable, status, handle],
     );
   }
 

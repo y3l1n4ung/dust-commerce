@@ -20,13 +20,21 @@ ORDER BY currency_code
   Future<Result<List<AdminProductCurrencyResponse>, SqlxError>>
       activeCurrencies();
 
+  /// Confirms a requested classification is currently merchant-selectable.
+  @Query(r'''
+SELECT count(*)
+FROM product_types
+WHERE id = $1 AND deleted_at IS NULL
+''')
+  Future<Result<int, SqlxError>> activeProductTypeCount(String id);
+
   /// Inserts the product only when no active row owns [handle].
   @Query(r'''
 INSERT INTO products
-  (id, title, handle, subtitle, material, description, thumbnail,
+  (id, title, handle, subtitle, material, description, thumbnail, type_id,
    discountable, status)
 SELECT $1, trim($2), $3, nullif(trim($4), ''), nullif(trim($5), ''),
-       nullif(trim($6), ''), $7, $8, $9
+       nullif(trim($6), ''), $7, $8, $9, $10
 WHERE NOT EXISTS (
   SELECT 1 FROM products
   WHERE handle = $3 AND deleted_at IS NULL
@@ -40,6 +48,7 @@ WHERE NOT EXISTS (
     String? material,
     String? description,
     String? thumbnail,
+    String? typeId,
     int discountable,
     String status,
   );
