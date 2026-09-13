@@ -38,6 +38,7 @@ mixin _$AdminProductDetail implements Serializable {
         'originCountry: ${self.originCountry}, '
         'productType: ${self.productType}, '
         'productTypeId: ${self.productTypeId}, '
+        'shippingProfileValue: ${self.shippingProfileValue}, '
         'status: ${self.status}, '
         'subtitle: ${self.subtitle}, '
         'tags: ${self.tags}, '
@@ -69,6 +70,7 @@ mixin _$AdminProductDetail implements Serializable {
             other.originCountry == self.originCountry &&
             other.productType == self.productType &&
             other.productTypeId == self.productTypeId &&
+            other.shippingProfileValue == self.shippingProfileValue &&
             other.status == self.status &&
             other.subtitle == self.subtitle &&
             _adminProductDetailTagsEquality.equals(other.tags, self.tags) &&
@@ -98,6 +100,7 @@ mixin _$AdminProductDetail implements Serializable {
       self.originCountry,
       self.productType,
       self.productTypeId,
+      self.shippingProfileValue,
       self.status,
       self.subtitle,
       _adminProductDetailTagsEquality.hash(self.tags),
@@ -150,6 +153,9 @@ Map<String, Object?> _$AdminProductDetailSerialize(AdminProductDetail instance) 
     'origin_country': instance.originCountry,
     'product_type': instance.productType,
     'product_type_id': instance.productTypeId,
+    'shipping_profile': instance.shippingProfileValue == null
+        ? null
+        : (instance.shippingProfileValue!).toJson(),
     'status': JsonHelper.encodeWithCodec<AdminProductLifecycle, Object?>(
       (AdminProductLifecycleCodec()),
       instance.status,
@@ -210,6 +216,9 @@ AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
   final productTypeIdValue = json['product_type_id'] == null
       ? null
       : JsonHelper.as<String>(json['product_type_id'], 'product_type_id', 'String');
+  final shippingProfileValueValue = json['shipping_profile'] == null
+      ? null
+      : AdminShippingProfile.fromJson(JsonHelper.asMap(json['shipping_profile'], 'shipping_profile'));
   final statusValue = JsonHelper.decodeWithCodec<AdminProductLifecycle, Object?>(
     (AdminProductLifecycleCodec()),
     json['status'],
@@ -251,6 +260,7 @@ AdminProductDetail _$AdminProductDetailDeserialize(Map<String, Object?> json) {
     originCountry: originCountryValue,
     productType: productTypeValue,
     productTypeId: productTypeIdValue,
+    shippingProfileValue: shippingProfileValueValue,
     collectionTitle: collectionTitleValue,
     weight: weightValue,
     length: lengthValue,

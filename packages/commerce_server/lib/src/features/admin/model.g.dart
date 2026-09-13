@@ -42,24 +42,11 @@ mixin _$AdminUserResponse implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
-mixin _$AdminProductDetailResponse implements Serializable {
-  Map<String, Object?> serialize() =>
-      _$AdminProductDetailResponseSerialize(this as AdminProductDetailResponse);
-
-  Map<String, Object?> toJson() => serialize();
-}
-
 final class $AdminUserResponseSerializer implements Serializer<AdminUserResponse, Map<String, Object?>> {
   const $AdminUserResponseSerializer();
 
   @override
   Map<String, Object?> serialize(AdminUserResponse value) => _$AdminUserResponseSerialize(value);
-}
-final class $AdminProductDetailResponseSerializer implements Serializer<AdminProductDetailResponse, Map<String, Object?>> {
-  const $AdminProductDetailResponseSerializer();
-
-  @override
-  Map<String, Object?> serialize(AdminProductDetailResponse value) => _$AdminProductDetailResponseSerialize(value);
 }
 AdminPasswordCredential _$AdminPasswordCredentialFromRow(Row row) {
   return AdminPasswordCredential(
@@ -161,59 +148,6 @@ extension $AdminProductCurrencyResponseQuery on QueryAs<AdminProductCurrencyResp
       fetchAllWith(db, _$AdminProductCurrencyResponseFromRow);
 }
 
-AdminProductDetailResponse _$AdminProductDetailResponseFromRow(Row row) {
-  return AdminProductDetailResponse(
-    id: row.read<String>('id'),
-    title: row.read<String>('title'),
-    handle: row.read<String>('handle'),
-    status: _AdminProductLifecycleSqlx().decode(row.read<String>('status')),
-    images: _AdminProductImagesSqlxJson().decode(row.read<String>('images')),
-    options: _AdminProductOptionsSqlxJson().decode(row.read<String>('options')),
-    variants: _AdminProductVariantsSqlxJson().decode(row.read<String>('variants')),
-    categories: _AdminProductStringsSqlxJson().decode(row.read<String>('categories')),
-    tags: _AdminProductStringsSqlxJson().decode(row.read<String>('tags')),
-    discountable: _AdminBoolFromInt().decode(row.read<int>('discountable')),
-    description: row.readNullable<String>('description'),
-    subtitle: row.readNullable<String>('subtitle'),
-    thumbnail: row.readNullable<String>('thumbnail'),
-    material: row.readNullable<String>('material'),
-    originCountry: row.readNullable<String>('origin_country'),
-    productType: row.readNullable<String>('product_type'),
-    productTypeId: row.readNullable<String>('product_type_id'),
-    collectionTitle: row.readNullable<String>('collection_title'),
-    weight: row.readNullable<int>('weight'),
-    length: row.readNullable<int>('length'),
-    width: row.readNullable<int>('width'),
-    height: row.readNullable<int>('height'),
-  );
-}
-
-/// Row deserializer for [AdminProductDetailResponse].
-final class $AdminProductDetailResponseRowDeserializer implements RowDeserializer<AdminProductDetailResponse> {
-  const $AdminProductDetailResponseRowDeserializer();
-
-  @override
-  AdminProductDetailResponse deserialize(Row row) => _$AdminProductDetailResponseFromRow(row);
-}
-
-/// Typed row query terminals for [AdminProductDetailResponse].
-///
-/// Resolved from the static type of the receiver, so a row type with no
-/// `FromRow` has no terminals and the call does not compile.
-extension $AdminProductDetailResponseQuery on QueryAs<AdminProductDetailResponse> {
-  /// Fetches exactly one row.
-  Future<AdminProductDetailResponse> fetchOne(DatabaseExecutor db) =>
-      fetchOneWith(db, _$AdminProductDetailResponseFromRow);
-
-  /// Fetches zero or one row.
-  Future<AdminProductDetailResponse?> fetchOptional(DatabaseExecutor db) =>
-      fetchOptionalWith(db, _$AdminProductDetailResponseFromRow);
-
-  /// Fetches every row.
-  Future<List<AdminProductDetailResponse>> fetchAll(DatabaseExecutor db) =>
-      fetchAllWith(db, _$AdminProductDetailResponseFromRow);
-}
-
 Map<String, Object?> _$AdminUserResponseSerialize(AdminUserResponse instance) {
   return <String, Object?>{
     'email': instance.email,
@@ -225,46 +159,3 @@ Map<String, Object?> _$AdminUserResponseSerialize(AdminUserResponse instance) {
 
 Map<String, Object?> _$AdminUserResponseToJson(AdminUserResponse instance) =>
     _$AdminUserResponseSerialize(instance);
-
-Map<String, Object?> _$AdminProductDetailResponseSerialize(AdminProductDetailResponse instance) {
-  return <String, Object?>{
-    'categories': instance.categories
-        .map((item) => item)
-        .toList(),
-    'collection_title': instance.collectionTitle,
-    'description': instance.description,
-    'discountable': instance.discountable,
-    'height': instance.height,
-    'handle': instance.handle,
-    'id': instance.id,
-    'images': instance.images
-        .map((item) => item.toJson())
-        .toList(),
-    'length': instance.length,
-    'material': instance.material,
-    'options': instance.options
-        .map((item) => item.toJson())
-        .toList(),
-    'origin_country': instance.originCountry,
-    'product_type': instance.productType,
-    'product_type_id': instance.productTypeId,
-    'status': JsonHelper.encodeWithCodec<AdminProductLifecycle, Object?>(
-      (AdminProductLifecycleCodec()),
-      instance.status,
-    ),
-    'subtitle': instance.subtitle,
-    'tags': instance.tags
-        .map((item) => item)
-        .toList(),
-    'thumbnail': instance.thumbnail,
-    'title': instance.title,
-    'variants': instance.variants
-        .map((item) => item.toJson())
-        .toList(),
-    'weight': instance.weight,
-    'width': instance.width,
-  };
-}
-
-Map<String, Object?> _$AdminProductDetailResponseToJson(AdminProductDetailResponse instance) =>
-    _$AdminProductDetailResponseSerialize(instance);

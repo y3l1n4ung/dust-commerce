@@ -9,6 +9,7 @@ export 'src/features/account/account.dart';
 export 'src/features/admin/admin.dart';
 export 'src/features/admin_order/admin_order.dart';
 export 'src/features/admin_sales_channel/admin_sales_channel.dart';
+export 'src/features/admin_shipping_profile/admin_shipping_profile.dart';
 export 'src/features/cart/cart.dart';
 export 'src/features/category/category.dart';
 export 'src/features/catalog/catalog.dart';

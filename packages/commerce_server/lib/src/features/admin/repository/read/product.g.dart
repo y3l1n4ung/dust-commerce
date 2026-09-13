@@ -30,6 +30,22 @@ SELECT product.id, product.title, product.subtitle, product.handle,
        product.weight, product.length, product.width,
        product.height, product.status, collection.title AS collection_title,
        coalesce((
+         SELECT json_object(
+           'id', profile.id,
+           'name', profile.name,
+           'type', profile.type,
+           'created_at', profile.created_at,
+           'updated_at', profile.updated_at
+         )
+         FROM product_shipping_profile link
+         JOIN shipping_profile profile
+           ON profile.id = link.shipping_profile_id
+         WHERE link.product_id = product.id
+           AND link.deleted_at IS NULL
+           AND profile.deleted_at IS NULL
+         LIMIT 1
+       ), 'null') AS shipping_profile,
+       coalesce((
          SELECT json_group_array(json(ordered.image_json))
          FROM (
            SELECT json_object(

@@ -1,7 +1,25 @@
 import 'dart:convert';
 
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
+import 'package:commerce_server/src/features/admin_shipping_profile/model.dart';
 import 'package:dust_dart/db.dart';
+
+/// Decodes an optional product shipping profile selected as JSON.
+final class AdminProductShippingProfileFromJson
+    implements SqlxTryFrom<AdminShippingProfileResponse?, String> {
+  /// Creates the stateless converter.
+  const AdminProductShippingProfileFromJson();
+
+  @override
+  AdminShippingProfileResponse? decode(String value) {
+    final decoded = jsonDecode(value);
+    return decoded == null
+        ? null
+        : AdminShippingProfileResponse.fromJson(
+            decoded as Map<String, Object?>,
+          );
+  }
+}
 
 /// Decodes ordered product sales-channel objects selected as JSON.
 final class AdminProductSalesChannelsFromJson

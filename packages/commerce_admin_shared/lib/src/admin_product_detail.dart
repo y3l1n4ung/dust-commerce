@@ -1,6 +1,8 @@
 import 'package:commerce_admin_shared/src/admin_product.dart';
 import 'package:commerce_admin_shared/src/admin_product_image.dart';
 import 'package:commerce_admin_shared/src/admin_product_variant.dart';
+import 'package:commerce_admin_shared/src/admin_option.dart';
+import 'package:commerce_admin_shared/src/admin_shipping_profile.dart';
 import 'package:dust_dart/serde.dart';
 
 part 'admin_product_detail.g.dart';
@@ -28,6 +30,7 @@ final class AdminProductDetail with _$AdminProductDetail {
     this.originCountry,
     this.productType,
     this.productTypeId,
+    this.shippingProfileValue,
     this.collectionTitle,
     this.weight,
     this.length,
@@ -80,6 +83,14 @@ final class AdminProductDetail with _$AdminProductDetail {
 
   /// Stable classification identifier used by Admin mutation contracts.
   final String? productTypeId;
+
+  /// Nullable JSON backing for [shippingProfile].
+  @SerDe(rename: 'shipping_profile')
+  final AdminShippingProfile? shippingProfileValue;
+
+  /// Optional fulfillment behavior without nullable business state.
+  Option<AdminShippingProfile> get shippingProfile =>
+      adminOptionOf(shippingProfileValue);
 
   /// Merchant lifecycle state.
   @SerDe(using: AdminProductLifecycleCodec())

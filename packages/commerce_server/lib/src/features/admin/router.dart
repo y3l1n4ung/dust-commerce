@@ -3,6 +3,7 @@ import 'package:commerce_server/src/features/admin/handler/handler.dart';
 import 'package:commerce_server/src/features/admin_order/router.dart';
 import 'package:commerce_server/src/features/admin_region/router.dart';
 import 'package:commerce_server/src/features/admin_sales_channel/router.dart';
+import 'package:commerce_server/src/features/admin_shipping_profile/router.dart';
 import 'package:dust_server/server.dart';
 
 /// Authentication routes for the distinct admin actor type.
@@ -22,6 +23,7 @@ Router adminRoutes() => Router()
   ..merge(adminOrderRoutes())
   ..merge(adminRegionRoutes())
   ..merge(adminSalesChannelRoutes())
+  ..merge(adminShippingProfileRoutes())
   ..route('/users/me', get(readCurrentAdminHandler))
   ..route(
     '/products',

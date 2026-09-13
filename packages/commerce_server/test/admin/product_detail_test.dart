@@ -36,6 +36,7 @@ void main() {
       'origin_country',
       'product_type',
       'product_type_id',
+      'shipping_profile',
       'status',
       'subtitle',
       'tags',
