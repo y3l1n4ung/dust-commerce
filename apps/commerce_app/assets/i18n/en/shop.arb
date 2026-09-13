@@ -221,6 +221,26 @@
     "description": "Selected return item quantity.",
     "placeholders": {"quantity": {"example": "2"}}
   },
+  "account_return_reason": "Reason (optional)",
+  "@account_return_reason": {
+    "description": "Optional merchant-controlled reason field."
+  },
+  "account_return_reason_choose": "Choose a reason",
+  "@account_return_reason_choose": {
+    "description": "Empty choice in the return-reason selector."
+  },
+  "account_return_reason_empty": "No return reasons are available.",
+  "@account_return_reason_empty": {
+    "description": "Valid empty merchant reason listing."
+  },
+  "account_return_reason_failed": "Return reasons could not be loaded.",
+  "@account_return_reason_failed": {
+    "description": "Non-blocking return-reason discovery failure."
+  },
+  "account_return_reason_loading": "Loading return reasons",
+  "@account_return_reason_loading": {
+    "description": "Accessible return-reason loading label."
+  },
   "account_return_received": "Return request #{id} received",
   "@account_return_received": {
     "description": "Persisted return acknowledgement heading.",

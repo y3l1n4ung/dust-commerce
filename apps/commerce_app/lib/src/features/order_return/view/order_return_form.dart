@@ -55,6 +55,9 @@ final class OrderReturnForm extends StatelessWidget {
             OrderReturnItemChoice(
               item: item,
               quantity: state.quantities[item.id],
+              reasonId: state.reasonIds[item.id],
+              reasons: state.reasons,
+              reasonStatus: state.reasonStatus,
               disabled: pending,
             ),
           const SizedBox(height: 12),
