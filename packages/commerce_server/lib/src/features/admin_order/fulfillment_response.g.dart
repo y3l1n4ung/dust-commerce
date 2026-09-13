@@ -51,6 +51,9 @@ Map<String, Object?> _$AdminOrderFulfillmentResponseSerialize(AdminOrderFulfillm
     'items': instance.items
         .map((item) => item.toJson())
         .toList(),
+    'labels': instance.labels
+        .map((item) => item.toJson())
+        .toList(),
     'location_id': instance.locationId,
     'marked_shipped_by': instance.markedShippedBy,
     'metadata': instance.metadata == null
@@ -98,6 +101,8 @@ AdminOrderFulfillmentResponse _$AdminOrderFulfillmentResponseDeserialize(Map<Str
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final itemsValue = JsonHelper.decodeList(json['items'], 'items',
       (item, itemKey) => AdminFulfillmentItemResponse.fromJson(JsonHelper.asMap(item, itemKey)));
+  final labelsValue = JsonHelper.decodeList(json['labels'], 'labels',
+      (item, itemKey) => AdminFulfillmentLabelResponse.fromJson(JsonHelper.asMap(item, itemKey)));
   final locationIdValue = JsonHelper.as<String>(
     json['location_id'],
     'location_id',
@@ -154,6 +159,7 @@ AdminOrderFulfillmentResponse _$AdminOrderFulfillmentResponseDeserialize(Map<Str
     createdAt: createdAtValue,
     updatedAt: updatedAtValue,
     items: itemsValue,
+    labels: labelsValue,
   );
 }
 

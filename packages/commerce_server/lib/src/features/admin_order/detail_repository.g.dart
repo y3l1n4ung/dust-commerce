@@ -23,29 +23,22 @@ final class _$AdminOrderDetailRepository implements AdminOrderDetailRepository {
     return _db.fetchOptional<AdminOrderDetailResponse>(
       r'''
 SELECT order_row.id, order_row.region_id, order_row.display_id, order_row.email,
-       order_row.shipping_option_id, order_row.currency_code, order_row.subtotal,
-       coalesce(
-         nullif(trim(coalesce(customer.first_name, '') || ' ' ||
-                     coalesce(customer.last_name, '')), ''),
-         order_row.email
-       ) AS customer_name,
-       order_row.shipping_total,
-       order_row.discount_total,
-       order_row.tax,
-       order_row.total,
-       order_row.status,
-       order_row.payment_status,
+       order_row.shipping_option_id, order_row.currency_code,
+       order_row.subtotal, order_row.shipping_total, order_row.discount_total,
+       order_row.tax, order_row.total, order_row.status, order_row.payment_status,
+       coalesce(nullif(trim(coalesce(customer.first_name, '') || ' ' ||
+         coalesce(customer.last_name, '')), ''), order_row.email) AS customer_name,
        CASE
          WHEN coalesce(fulfillment_summary.delivered_quantity, 0) >=
-              order_summary.order_quantity THEN 'delivered'
+           order_summary.order_quantity THEN 'delivered'
          WHEN coalesce(fulfillment_summary.delivered_quantity, 0) > 0
            THEN 'partially_delivered'
          WHEN coalesce(fulfillment_summary.shipped_quantity, 0) >=
-              order_summary.order_quantity THEN 'shipped'
+           order_summary.order_quantity THEN 'shipped'
          WHEN coalesce(fulfillment_summary.shipped_quantity, 0) > 0
            THEN 'partially_shipped'
          WHEN coalesce(fulfillment_summary.fulfilled_quantity, 0) >=
-              order_summary.order_quantity THEN 'fulfilled'
+           order_summary.order_quantity THEN 'fulfilled'
          WHEN coalesce(fulfillment_summary.fulfilled_quantity, 0) > 0
            THEN 'partially_fulfilled'
          WHEN order_row.status = 'cancelled' AND EXISTS (
@@ -55,14 +48,10 @@ SELECT order_row.id, order_row.region_id, order_row.display_id, order_row.email,
          ) THEN 'canceled'
          ELSE 'not_fulfilled'
        END AS fulfillment_status,
-       order_row.shipping_name, order_row.promotion_code,
-       order_row.placed_at,
-       order_row.created_at,
-       order_row.updated_at,
-       payment.provider AS payment_provider,
-       payment.amount AS payment_amount,
-       payment.status AS payment_record_status,
-       payment.created_at AS payment_created_at,
+       order_row.shipping_name, order_row.promotion_code, order_row.placed_at,
+       order_row.created_at, order_row.updated_at,
+       payment.provider AS payment_provider, payment.amount AS payment_amount,
+       payment.status AS payment_record_status, payment.created_at AS payment_created_at,
        payment.captured_at AS payment_captured_at,
        coalesce((
          SELECT json_group_array(json_object(
@@ -110,7 +99,8 @@ SELECT order_row.id, order_row.region_id, order_row.display_id, order_row.email,
            'marked_shipped_by', fulfillment.marked_shipped_by,
            'created_at', fulfillment.created_at,
            'updated_at', fulfillment.updated_at,
-           'items', json(fulfillment.items_json)
+           'items', json(fulfillment.items_json),
+           'labels', json(fulfillment.labels_json)
          ))
          FROM (
            SELECT record.*, coalesce((
@@ -131,33 +121,38 @@ SELECT order_row.id, order_row.region_id, order_row.display_id, order_row.email,
                WHERE fulfillment_id = record.id AND deleted_at IS NULL
                ORDER BY created_at, id
              ) item
-           ), '[]') AS items_json
+           ), '[]') AS items_json,
+           coalesce((
+             SELECT json_group_array(json_object(
+               'id', label.id, 'fulfillment_id', label.fulfillment_id,
+               'tracking_number', label.tracking_number,
+               'tracking_url', label.tracking_url, 'label_url', label.label_url,
+               'created_at', label.created_at, 'updated_at', label.updated_at
+             ))
+             FROM (
+               SELECT * FROM fulfillment_labels
+               WHERE fulfillment_id = record.id AND deleted_at IS NULL
+               ORDER BY created_at, id
+             ) label
+           ), '[]') AS labels_json
            FROM fulfillments record WHERE record.order_id = order_row.id
              AND record.deleted_at IS NULL
            ORDER BY record.created_at, record.id
          ) fulfillment
        ), '[]') AS fulfillments_json,
        CASE WHEN shipping.order_id IS NULL THEN NULL ELSE json_object(
-         'first_name', shipping.first_name,
-         'last_name', shipping.last_name,
-         'company', shipping.company,
-         'line1', shipping.line1,
-         'line2', shipping.line2,
-         'city', shipping.city,
-         'province', shipping.province,
-         'postal_code', shipping.postal_code,
+         'first_name', shipping.first_name, 'last_name', shipping.last_name,
+         'company', shipping.company, 'line1', shipping.line1,
+         'line2', shipping.line2, 'city', shipping.city,
+         'province', shipping.province, 'postal_code', shipping.postal_code,
          'country_code', shipping.country_code,
          'phone', shipping.phone
        ) END AS shipping_address_json,
        CASE WHEN billing.order_id IS NULL THEN NULL ELSE json_object(
-         'first_name', billing.first_name,
-         'last_name', billing.last_name,
-         'company', billing.company,
-         'line1', billing.line1,
-         'line2', billing.line2,
-         'city', billing.city,
-         'province', billing.province,
-         'postal_code', billing.postal_code,
+         'first_name', billing.first_name, 'last_name', billing.last_name,
+         'company', billing.company, 'line1', billing.line1,
+         'line2', billing.line2, 'city', billing.city,
+         'province', billing.province, 'postal_code', billing.postal_code,
          'country_code', billing.country_code,
          'phone', billing.phone
        ) END AS billing_address_json

@@ -72,4 +72,14 @@ VALUES
    'item_cup', '2026-09-10T10:03:00.000Z',
    '2026-09-10T10:03:00.000Z')
 ''');
+  await harness.raw(r'''
+INSERT INTO fulfillment_labels (
+  id, fulfillment_id, tracking_number, tracking_url, label_url,
+  created_at, updated_at
+) VALUES (
+  'fullabel_detail', 'ful_detail', 'TRACK-123',
+  'https://carrier.example/TRACK-123', '#',
+  '2026-09-10T10:04:00.000Z', '2026-09-10T10:04:00.000Z'
+)
+''');
 }

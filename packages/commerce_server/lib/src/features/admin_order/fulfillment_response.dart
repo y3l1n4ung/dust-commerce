@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/admin_order/fulfillment_item_response.dart';
+import 'package:commerce_server/src/features/admin_order/fulfillment_label_response.dart';
 import 'package:dust_dart/serde.dart';
 
 part 'fulfillment_response.g.dart';
@@ -25,6 +26,7 @@ final class AdminOrderFulfillmentResponse with _$AdminOrderFulfillmentResponse {
     required this.createdAt,
     required this.updatedAt,
     required this.items,
+    required this.labels,
   });
 
   /// Decodes one JSON object selected by SQLite.
@@ -51,6 +53,9 @@ final class AdminOrderFulfillmentResponse with _$AdminOrderFulfillmentResponse {
 
   /// Frozen provider-facing item snapshots.
   final List<AdminFulfillmentItemResponse> items;
+
+  /// Active carrier labels in creation order.
+  final List<AdminFulfillmentLabelResponse> labels;
 
   /// Active stock location sourcing the items.
   final String locationId;

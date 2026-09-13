@@ -94,6 +94,7 @@ void main() {
       'delivered_at',
       'id',
       'items',
+      'labels',
       'location_id',
       'marked_shipped_by',
       'metadata',
@@ -112,6 +113,20 @@ void main() {
       fulfilledItems.single,
       containsPair('line_item_id', 'item_cup'),
     );
+    final labels = fulfillment['labels']! as List<Object?>;
+    expect(labels, hasLength(1));
+    final label = labels.single! as Map<String, Object?>;
+    expect(label.keys, {
+      'created_at',
+      'fulfillment_id',
+      'id',
+      'label_url',
+      'tracking_number',
+      'tracking_url',
+      'updated_at',
+    });
+    expect(label, containsPair('tracking_number', 'TRACK-123'));
+    expect(label, isNot(contains('deleted_at')));
   });
 
   test('unknown and soft-deleted orders are not found', () async {

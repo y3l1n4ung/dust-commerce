@@ -21,6 +21,7 @@ export 'export_model.dart';
 export 'export_repository.dart';
 export 'export_service.dart';
 export 'fulfillment_item_response.dart';
+export 'fulfillment_label_response.dart';
 export 'fulfillment_response.dart';
 export 'handler.dart';
 export 'model.dart';
