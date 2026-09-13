@@ -6,6 +6,7 @@ Dust routes, state, HTTP clients, and shared Dart models.
 Run the seeded API from the repository root, then start the web storefront:
 
 ```bash
+cd apps/commerce_app
 flutter run -d web-server \
   --web-hostname 127.0.0.1 \
   --web-port 13001 \

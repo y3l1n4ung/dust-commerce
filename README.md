@@ -130,6 +130,7 @@ the replacement stack has started and passed `/health`.
 In a second terminal, start the Flutter web storefront:
 
 ```bash
+cd apps/commerce_app
 flutter run -d web-server \
   --web-hostname 127.0.0.1 \
   --web-port 13001 \
@@ -150,11 +151,11 @@ COMMERCE_ADMIN_EMAIL=owner@example.com \
 Start the separate merchant app in a third terminal:
 
 ```bash
+cd apps/admin_app
 flutter run -d web-server \
   --web-hostname 127.0.0.1 \
   --web-port 13002 \
-  --dart-define=API_BASE_URL=http://127.0.0.1:3878 \
-  -t apps/admin_app/lib/main.dart
+  --dart-define=API_BASE_URL=http://127.0.0.1:3878
 ```
 
 The repository-owned development ports are `13001` for the storefront,
@@ -167,7 +168,8 @@ Then the same checks CI runs:
 ```
 
 The process-level smoke starts the real server entrypoint against a temporary
-database, waits for health, verifies the four-product catalogue, shuts it down
+database, waits for health, verifies the twenty-product public catalogue,
+shuts it down
 gracefully, and restarts it against the same database to prove seeding remains
 idempotent:
 
