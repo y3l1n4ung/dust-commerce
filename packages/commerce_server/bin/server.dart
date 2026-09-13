@@ -35,7 +35,10 @@ Future<void> main() async {
   await mediaStorage.prepare();
 
   try {
-    if (config.seed) await seedDevelopmentStore(database);
+    if (config.seed) {
+      await seedDevelopmentStore(database);
+      await seedDevelopmentDemoCatalog(database);
+    }
     final app = buildApp(
       database,
       emailVerificationMailer: verificationMailer,

@@ -54,10 +54,52 @@ void main() {
     ).fetchOne(database.executor);
     expect(images, 4);
   });
+
+  test('demo catalogue adds a varied second admin page', () async {
+    final directory = await Directory.systemTemp.createTemp('commerce_demo');
+    final database = CommerceDatabase.open(
+      '${directory.path}/commerce.db',
+      options: commerceOptions,
+    );
+    addTearDown(() async {
+      await database.close();
+      await directory.delete(recursive: true);
+    });
+
+    await seedDevelopmentStore(database);
+    await seedDevelopmentDemoCatalog(database);
+    await seedDevelopmentDemoCatalog(database);
+
+    expect(await _count(database, 'products'), 24);
+    expect(await _count(database, 'product_variants'), 34);
+    expect(await _count(database, 'variant_prices'), 68);
+    expect(await _count(database, 'product_images'), 30);
+    expect(await _where(database, 'products', "status = 'published'"), 20);
+    expect(await _where(database, 'products', "status = 'draft'"), 2);
+    expect(await _where(database, 'products', "status = 'proposed'"), 1);
+    expect(await _where(database, 'products', "status = 'rejected'"), 1);
+    expect(await _where(database, 'products', "id LIKE 'prod_demo_%'"), 20);
+    expect(
+      await _where(database, 'product_variants', "sku LIKE 'DEMO-%'"),
+      20,
+    );
+  });
 }
 
 Future<int> _count(CommerceDatabase database, String table) async {
   final rows = await queryRaw('SELECT COUNT(*) FROM $table', const [])
       .fetch(database.connection as Executor);
+  return rows.single.readIndex<int>(0);
+}
+
+Future<int> _where(
+  CommerceDatabase database,
+  String table,
+  String predicate,
+) async {
+  final rows = await queryRaw(
+    'SELECT COUNT(*) FROM $table WHERE $predicate',
+    const [],
+  ).fetch(database.connection as Executor);
   return rows.single.readIndex<int>(0);
 }

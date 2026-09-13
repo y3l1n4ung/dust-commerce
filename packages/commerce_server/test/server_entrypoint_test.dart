@@ -22,7 +22,7 @@ void main() {
     final catalogue = await first.get('/store/products?limit=100');
     expect(catalogue.status, HttpStatus.ok);
     final firstPage = jsonDecode(catalogue.body) as Map<String, Object?>;
-    expect(firstPage['total'], 4);
+    expect(firstPage['total'], 20);
     await first.close();
 
     final restarted = await _RunningServer.start(databasePath, port);
@@ -32,7 +32,7 @@ void main() {
     final repeated = await restarted.get('/store/products?limit=100');
     expect(repeated.status, HttpStatus.ok);
     final repeatedPage = jsonDecode(repeated.body) as Map<String, Object?>;
-    expect(repeatedPage['total'], 4);
+    expect(repeatedPage['total'], 20);
   }, timeout: const Timeout(Duration(minutes: 1)));
 }
 

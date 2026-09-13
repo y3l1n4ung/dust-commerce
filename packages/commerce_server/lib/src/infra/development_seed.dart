@@ -3,6 +3,8 @@ import 'package:dust_dart/db.dart';
 part 'development_taxonomy_seed.dart';
 part 'development_pricing_seed.dart';
 part 'development_product_option_seed.dart';
+part 'development_demo_catalog_seed.dart';
+part 'development_demo_relation_seed.dart';
 
 /// Inserts the deterministic catalogue used for local storefront development.
 ///
@@ -10,8 +12,25 @@ part 'development_product_option_seed.dart';
 /// seeding enabled twice never duplicates merchant data. This is deliberately
 /// opt-in: production startup must never invent catalogue records.
 Future<void> seedDevelopmentStore(DatabaseClient database) async {
+  await _seed(database, _statements, 'Development seed');
+}
+
+/// Adds enough varied records to exercise real Admin paging and filters.
+///
+/// This remains a separate, idempotent development layer so focused tests can
+/// keep using the four-product baseline. Server startup enables both layers
+/// only when `COMMERCE_SEED=true`; production never calls either function.
+Future<void> seedDevelopmentDemoCatalog(DatabaseClient database) async {
+  await _seed(database, _demoStatements, 'Development demo catalogue seed');
+}
+
+Future<void> _seed(
+  DatabaseClient database,
+  List<_Statement> statements,
+  String label,
+) async {
   final seeded = await database.transaction<Unit>((transaction) async {
-    for (final statement in _statements) {
+    for (final statement in statements) {
       final result = await transaction.execute(statement.sql, const []);
       if (result case Err(:final error)) return Err(error);
     }
@@ -19,7 +38,7 @@ Future<void> seedDevelopmentStore(DatabaseClient database) async {
   });
 
   if (seeded case Err(:final error)) {
-    throw StateError('Development seed failed: $error');
+    throw StateError('$label failed: $error');
   }
 }
 
