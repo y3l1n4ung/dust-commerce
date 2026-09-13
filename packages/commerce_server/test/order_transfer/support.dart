@@ -41,8 +41,29 @@ final class TransferScenario {
   final CheckoutHarness harness;
   final RecordingTransferMailer mailer;
 
-  Future<({String orderId, String ownerToken, String targetToken})>
-      ownedOrder() async {
+  OrderTransferDeps serviceDeps() {
+    final executor = harness.database.executor;
+    return OrderTransferDeps(
+      database: harness.database,
+      reads: OrderTransferReadRepository(executor),
+      creates: OrderTransferCreateRepository(executor),
+      updates: OrderTransferUpdateRepository(executor),
+      clock: Clock(
+        now: () => DateTime.utc(2100, 1, 1, 12),
+        nextId: () => 'transfer_${Tokens.issue()}',
+      ),
+      mailer: mailer,
+    );
+  }
+
+  Future<
+      ({
+        String orderId,
+        String ownerId,
+        String ownerToken,
+        String targetId,
+        String targetToken,
+      })> ownedOrder() async {
     final owner = await harness.account('owner@example.com');
     final target = await harness.account('target@example.com');
     final cart = await harness.cartWith('var_small', token: owner.token);
@@ -51,7 +72,9 @@ final class TransferScenario {
     final order = Order.fromJson(placed.json! as Map<String, Object?>);
     return (
       orderId: order.id,
+      ownerId: owner.customerId,
       ownerToken: owner.token,
+      targetId: target.customerId,
       targetToken: target.token,
     );
   }

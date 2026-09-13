@@ -22,7 +22,5 @@ packages/commerce_server/lib/src/features/admin/service/update/stock.dart:1
 packages/commerce_server/lib/src/features/admin/service/update_media.dart:1
 packages/commerce_server/lib/src/features/admin/service/update_variant.dart:1
 packages/commerce_server/lib/src/features/checkout/service/create.dart:1
-packages/commerce_server/lib/src/features/order_transfer/service/create.dart:3
-packages/commerce_server/lib/src/features/order_transfer/service/update.dart:2
 packages/commerce_server/lib/src/features/payment/service/create.dart:1
 packages/commerce_server/lib/src/features/payment/service/update.dart:1

@@ -1,33 +1,16 @@
 import 'package:commerce_server/src/features/account/crypto.dart';
 import 'package:commerce_server/src/features/order_transfer/deps.dart';
+import 'package:commerce_server/src/features/order_transfer/failure.dart';
 import 'package:commerce_server/src/features/order_transfer/mail.dart';
 import 'package:commerce_server/src/features/order_transfer/model.dart';
+import 'package:commerce_server/src/features/order_transfer/outcome.dart';
 import 'package:commerce_server/src/features/order_transfer/repository/repository.dart';
 import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
 
-/// Why an authenticated customer could not request an ownership transfer.
-enum RequestOrderTransferFailure {
-  /// No active order has the supplied identifier.
-  noOrder,
-
-  /// A cancelled order can no longer change owner.
-  cancelled,
-
-  /// The requesting account already owns the order.
-  alreadyOwner,
-
-  /// Another account already has an undecided request for this order.
-  activeForAnotherCustomer,
-
-  /// This server cannot deliver the owner decision capability.
-  deliveryUnavailable,
-}
-
 /// Creates or retries the target customer's active transfer request.
-Future<
-    Result<Result<OrderTransferResponse, RequestOrderTransferFailure>,
-        SqlxError>> requestOrderTransfer(
+Future<Result<OrderTransferResponse, RequestOrderTransferError>>
+    requestOrderTransfer(
   OrderTransferDeps deps, {
   required String orderId,
   required String customerId,
@@ -35,13 +18,14 @@ Future<
   Duration deliveryLease = const Duration(seconds: 30),
 }) async {
   if (!deps.mailer.isAvailable) {
-    return const Ok(Err(RequestOrderTransferFailure.deliveryUnavailable));
+    return const Err(RequestOrderTransferRejected(
+      RequestOrderTransferFailure.deliveryUnavailable,
+    ));
   }
 
   final now = deps.clock.now().toUtc();
-  final persisted = await deps.database
-      .transaction<Result<OrderTransferResponse, RequestOrderTransferFailure>>(
-          (tx) async {
+  final persisted =
+      await deps.database.transaction<RequestOrderTransferOutcome>((tx) async {
     final reads = OrderTransferReadRepository(tx);
     final creates = OrderTransferCreateRepository(tx);
     final updates = OrderTransferUpdateRepository(tx);
@@ -54,23 +38,29 @@ Future<
       (found as Ok<OrderTransferCandidate?, SqlxError>).value,
     );
     if (candidate case None()) {
-      return const Ok(Err(RequestOrderTransferFailure.noOrder));
+      return const Ok(RequestOrderTransferDenied(
+        RequestOrderTransferFailure.noOrder,
+      ));
     }
     final order = (candidate as Some<OrderTransferCandidate>).value;
     if (order.orderStatus == 'cancelled') {
-      return const Ok(Err(RequestOrderTransferFailure.cancelled));
+      return const Ok(RequestOrderTransferDenied(
+        RequestOrderTransferFailure.cancelled,
+      ));
     }
     if (optionOf(order.orderCustomerId) == Some(customerId)) {
-      return const Ok(Err(RequestOrderTransferFailure.alreadyOwner));
+      return const Ok(RequestOrderTransferDenied(
+        RequestOrderTransferFailure.alreadyOwner,
+      ));
     }
 
     final active = await reads.activeCustomer(orderId);
     if (active case Err(:final error)) return Err(error);
     final activeCustomer = optionOf((active as Ok<String?, SqlxError>).value);
     if (activeCustomer case Some(value: final id) when id != customerId) {
-      return const Ok(
-        Err(RequestOrderTransferFailure.activeForAnotherCustomer),
-      );
+      return const Ok(RequestOrderTransferDenied(
+        RequestOrderTransferFailure.activeForAnotherCustomer,
+      ));
     }
     if (activeCustomer case Some()) {
       return _activeResponse(reads, orderId);
@@ -89,14 +79,15 @@ Future<
     if (inserted case Err(:final error)) return Err(error);
     return _response(reads, transferId);
   });
-  if (persisted case Err(:final error)) return Err(error);
-  final outcome = (persisted as Ok<
-          Result<OrderTransferResponse, RequestOrderTransferFailure>,
-          SqlxError>)
-      .value;
-  if (outcome case Err()) return Ok(outcome);
-  final transfer =
-      (outcome as Ok<OrderTransferResponse, RequestOrderTransferFailure>).value;
+  if (persisted case Err(:final error)) {
+    return Err(RequestOrderTransferStorage(error));
+  }
+  final outcome =
+      (persisted as Ok<RequestOrderTransferOutcome, SqlxError>).value;
+  if (outcome case RequestOrderTransferDenied(:final failure)) {
+    return Err(RequestOrderTransferRejected(failure));
+  }
+  final transfer = (outcome as RequestOrderTransferReady).response;
 
   final delivery = await _deliver(
     deps,
@@ -104,20 +95,23 @@ Future<
     now,
     deliveryLease,
   );
-  if (delivery case Err(:final error)) return Err(error);
+  if (delivery case Err(:final error)) {
+    return Err(RequestOrderTransferStorage(error));
+  }
   final refreshed = await deps.reads.response(transfer.id);
-  if (refreshed case Err(:final error)) return Err(error);
+  if (refreshed case Err(:final error)) {
+    return Err(RequestOrderTransferStorage(error));
+  }
   return switch (optionOf(
     (refreshed as Ok<OrderTransferResponse?, SqlxError>).value,
   )) {
-    Some(:final value) => Ok(Ok(value)),
-    None() => Err(SqlxError.decode('Transfer disappeared after delivery')),
+    Some(:final value) => Ok(value),
+    None() => Err(RequestOrderTransferStorage(
+        SqlxError.decode('Transfer disappeared after delivery'))),
   };
 }
 
-Future<
-    Result<Result<OrderTransferResponse, RequestOrderTransferFailure>,
-        SqlxError>> _activeResponse(
+Future<Result<RequestOrderTransferOutcome, SqlxError>> _activeResponse(
   OrderTransferReadRepository reads,
   String orderId,
 ) async {
@@ -126,14 +120,12 @@ Future<
   return switch (optionOf(
     (found as Ok<OrderTransferResponse?, SqlxError>).value,
   )) {
-    Some(:final value) => Ok(Ok(value)),
+    Some(:final value) => Ok(RequestOrderTransferReady(value)),
     None() => Err(SqlxError.decode('Active transfer could not be read')),
   };
 }
 
-Future<
-    Result<Result<OrderTransferResponse, RequestOrderTransferFailure>,
-        SqlxError>> _response(
+Future<Result<RequestOrderTransferOutcome, SqlxError>> _response(
   OrderTransferReadRepository reads,
   String transferId,
 ) async {
@@ -142,7 +134,7 @@ Future<
   return switch (optionOf(
     (found as Ok<OrderTransferResponse?, SqlxError>).value,
   )) {
-    Some(:final value) => Ok(Ok(value)),
+    Some(:final value) => Ok(RequestOrderTransferReady(value)),
     None() => Err(SqlxError.decode('Created transfer could not be read')),
   };
 }

@@ -25,27 +25,45 @@ Future<Result<OrderTransferResponse, Rejection>> requestOrderTransferHandler(
   );
 
   return switch (result) {
-    Ok(value: Ok(value: final transfer)) => Ok(transfer),
-    Ok(value: Err(error: RequestOrderTransferFailure.noOrder)) =>
+    Ok(:final value) => Ok(value),
+    Err(
+      error: RequestOrderTransferRejected(
+        failure: RequestOrderTransferFailure.noOrder,
+      )
+    ) =>
       Err(Rejection.notFound('Order "$orderId"')),
-    Ok(value: Err(error: RequestOrderTransferFailure.cancelled)) => const Err(
+    Err(
+      error: RequestOrderTransferRejected(
+        failure: RequestOrderTransferFailure.cancelled,
+      )
+    ) =>
+      const Err(
         Rejection.status(422, 'A cancelled order cannot be transferred'),
       ),
-    Ok(value: Err(error: RequestOrderTransferFailure.alreadyOwner)) =>
+    Err(
+      error: RequestOrderTransferRejected(
+        failure: RequestOrderTransferFailure.alreadyOwner,
+      )
+    ) =>
       const Err(Rejection.status(422, 'This account already owns the order')),
-    Ok(
-      value: Err(
-        error: RequestOrderTransferFailure.activeForAnotherCustomer,
+    Err(
+      error: RequestOrderTransferRejected(
+        failure: RequestOrderTransferFailure.activeForAnotherCustomer,
       )
     ) =>
       const Err(
         Rejection.conflict('Another transfer request is already active'),
       ),
-    Ok(value: Err(error: RequestOrderTransferFailure.deliveryUnavailable)) =>
+    Err(
+      error: RequestOrderTransferRejected(
+        failure: RequestOrderTransferFailure.deliveryUnavailable,
+      )
+    ) =>
       const Err(Rejection.status(
         503,
         'Order transfer email is not configured',
       )),
-    Err() => const Err(Rejection.internal()),
+    Err(error: RequestOrderTransferStorage()) =>
+      const Err(Rejection.internal()),
   };
 }

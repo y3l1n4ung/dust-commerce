@@ -45,16 +45,28 @@ Future<Result<OrderTransferResponse, Rejection>> _decide(
   );
 
   return switch (result) {
-    Ok(value: Ok(value: final transfer)) => Ok(transfer),
-    Ok(value: Err(error: DecideOrderTransferFailure.invalid)) =>
+    Ok(:final value) => Ok(value),
+    Err(
+      error: DecideOrderTransferRejected(
+        failure: DecideOrderTransferFailure.invalid,
+      )
+    ) =>
       const Err(Rejection.notFound('Order transfer')),
-    Ok(value: Err(error: DecideOrderTransferFailure.alreadyDecided)) =>
+    Err(
+      error: DecideOrderTransferRejected(
+        failure: DecideOrderTransferFailure.alreadyDecided,
+      )
+    ) =>
       const Err(Rejection.conflict(
         'This transfer already has a different decision',
       )),
-    Ok(value: Err(error: DecideOrderTransferFailure.orderUnavailable)) =>
+    Err(
+      error: DecideOrderTransferRejected(
+        failure: DecideOrderTransferFailure.orderUnavailable,
+      )
+    ) =>
       const Err(
           Rejection.status(422, 'The order can no longer be transferred')),
-    Err() => const Err(Rejection.internal()),
+    Err(error: DecideOrderTransferStorage()) => const Err(Rejection.internal()),
   };
 }
