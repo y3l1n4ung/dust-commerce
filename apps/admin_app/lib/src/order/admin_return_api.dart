@@ -21,4 +21,11 @@ abstract interface class AdminReturnApi {
     @Query('limit') int limit,
     @Query('offset') int offset,
   );
+
+  /// Atomically records intact and damaged units received for one return.
+  @POST('/admin/returns/{id}/receive')
+  Future<AdminReturn> receive(
+    @Path() String id,
+    @Body() AdminReceiveReturn body,
+  );
 }

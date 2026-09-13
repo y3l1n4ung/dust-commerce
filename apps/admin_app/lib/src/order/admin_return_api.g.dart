@@ -102,4 +102,40 @@ final class _$AdminReturnApi implements AdminReturnApi {
     );
     return AdminReturnList.fromJson(_result.data as Map<String, dynamic>);
   }
+
+  @override
+  Future<AdminReturn> receive(String id, AdminReceiveReturn body) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminReturn>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/returns/' + Uri.encodeComponent(id.toString()) + '/receive',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminReturn.fromJson(_result.data as Map<String, dynamic>);
+  }
 }
