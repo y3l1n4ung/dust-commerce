@@ -33,6 +33,16 @@ void main() {
     expect(await _count(database, 'regions'), 2);
     expect(await _count(database, 'sales_channels'), 2);
     expect(await _count(database, 'region_payment_providers'), 2);
+    expect(await _count(database, 'return_reasons'), 5);
+    expect(
+      await _where(
+        database,
+        'return_reasons',
+        "value IN ('wrong_size', 'damaged', 'not_as_described', "
+            "'changed_mind', 'other')",
+      ),
+      5,
+    );
     expect(await _count(database, 'customers'), 0);
     expect(await _count(database, 'auth_identity'), 0);
     expect(await _count(database, 'auth_tokens'), 0);

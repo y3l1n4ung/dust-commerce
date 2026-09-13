@@ -139,6 +139,20 @@ INSERT OR IGNORE INTO promotions
   (id, code, type, value)
 VALUES ('promo_welcome', 'WELCOME10', 'percentage', 1000)
 '''),
+  const _Statement(r'''
+INSERT OR IGNORE INTO return_reasons (id, value, label, description)
+VALUES
+  ('reason_wrong_size', 'wrong_size', 'Wrong size',
+   'The size or fit is not right.'),
+  ('reason_damaged', 'damaged', 'Damaged',
+   'The item arrived damaged or defective.'),
+  ('reason_not_as_described', 'not_as_described', 'Not as described',
+   'The item differs from its product description.'),
+  ('reason_changed_mind', 'changed_mind', 'Changed my mind',
+   'The item is no longer wanted.'),
+  ('reason_other', 'other', 'Other',
+   'Another reason not listed above.')
+'''),
 ];
 
 final class _Statement {
