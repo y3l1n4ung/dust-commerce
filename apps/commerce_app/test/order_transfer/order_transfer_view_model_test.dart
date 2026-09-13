@@ -30,6 +30,45 @@ void main() {
     model.dispose();
   });
 
+  test('request exposes queued delivery as accepted but still pending email',
+      () async {
+    final model = OrderTransferViewModel(OrderTransferViewModelArgs(
+      api: _RequestApi((id) async => _view(
+            id,
+            delivery: OrderTransferDeliveryStatus.queued,
+          )),
+    ));
+
+    await model.request('order_queued');
+
+    expect(model.state.status, OrderTransferActionStatus.succeeded);
+    expect(
+      model.state.deliveryStatus,
+      const Some(OrderTransferDeliveryStatus.queued),
+    );
+    model.dispose();
+  });
+
+  test('invalid request maps one protocol failure for the form', () async {
+    final request = RequestOptions(path: '/store/orders/missing/transfer');
+    final error = DioException(
+      requestOptions: request,
+      response: Response<void>(requestOptions: request, statusCode: 422),
+    );
+    final model = OrderTransferViewModel(OrderTransferViewModelArgs(
+      api: _RequestApi((_) => Future<OrderTransferView>.error(error)),
+    ));
+
+    await model.request('missing');
+
+    expect(model.state.status, OrderTransferActionStatus.failed);
+    expect(
+      model.state.failure,
+      const Some(OrderTransferFailure.invalidRequest),
+    );
+    model.dispose();
+  });
+
   test('decision capability never enters generated state', () async {
     const capability = 'secret-capability';
     var submittedToken = '';
