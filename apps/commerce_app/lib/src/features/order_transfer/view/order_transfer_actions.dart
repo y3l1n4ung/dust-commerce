@@ -5,6 +5,8 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+import 'order_transfer_button_content.dart';
+
 /// Source-shaped accept and decline controls for an emailed capability.
 final class OrderTransferActions extends StatelessWidget {
   /// Creates decision controls for [orderId] without storing [token] in state.
@@ -46,9 +48,9 @@ final class OrderTransferActions extends StatelessWidget {
                 child: FilledButton(
                   style: _largeButtonStyle(),
                   onPressed: pending ? null : () => _accept(context),
-                  child: _buttonContent(
-                    context,
-                    action: OrderTransferAction.accept,
+                  child: OrderTransferButtonContent(
+                    active: pending &&
+                        state.action == const Some(OrderTransferAction.accept),
                     label: context.tr(
                       'shop_order_transfer_accept',
                       defaultText: 'Accept transfer',
@@ -61,9 +63,9 @@ final class OrderTransferActions extends StatelessWidget {
                 child: OutlinedButton(
                   style: _largeButtonStyle(),
                   onPressed: pending ? null : () => _decline(context),
-                  child: _buttonContent(
-                    context,
-                    action: OrderTransferAction.decline,
+                  child: OrderTransferButtonContent(
+                    active: pending &&
+                        state.action == const Some(OrderTransferAction.decline),
                     label: context.tr(
                       'shop_order_transfer_decline',
                       defaultText: 'Decline transfer',
@@ -85,21 +87,6 @@ final class OrderTransferActions extends StatelessWidget {
         ],
       ],
     );
-  }
-
-  Widget _buttonContent(
-    BuildContext context, {
-    required OrderTransferAction action,
-    required String label,
-  }) {
-    final active = state.status == OrderTransferActionStatus.pending &&
-        state.action == Some(action);
-    return active
-        ? const SizedBox.square(
-            dimension: 18,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          )
-        : Text(label);
   }
 
   ButtonStyle _largeButtonStyle() => const ButtonStyle(
