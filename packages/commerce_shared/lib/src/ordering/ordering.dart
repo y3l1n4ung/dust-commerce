@@ -6,6 +6,7 @@ export 'cart_payment_session.dart';
 export 'checkout_request.dart';
 export 'line_item.dart';
 export 'order.dart';
+export 'order_return.dart';
 export 'order_transfer.dart';
 export 'promotion.dart';
 export 'shipping_method.dart';
