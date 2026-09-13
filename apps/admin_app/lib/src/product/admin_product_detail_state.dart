@@ -29,6 +29,8 @@ final class AdminProductDetailState with _$AdminProductDetailState {
     this.status = AdminProductDetailStatus.idle,
     this.product = const None(),
     this.failure = const None(),
+    this.salesChannels = const [],
+    this.totalSalesChannels = const None(),
   });
 
   /// Display-safe failure copy.
@@ -37,8 +39,14 @@ final class AdminProductDetailState with _$AdminProductDetailState {
   /// Explicit admin product allowlist when loaded.
   final Option<AdminProductDetail> product;
 
+  /// Explicit channels through which this product is currently available.
+  final List<AdminSalesChannel> salesChannels;
+
   /// Current request lifecycle.
   final AdminProductDetailStatus status;
+
+  /// Total configured channels, absent only when availability could not load.
+  final Option<int> totalSalesChannels;
 
   /// Whether the general-details drawer must disable mutation controls.
   bool get isSaving => status == AdminProductDetailStatus.saving;

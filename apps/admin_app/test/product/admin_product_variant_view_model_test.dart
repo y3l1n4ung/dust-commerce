@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
+import 'package:admin_app/src/product/admin_product_sales_channel_api.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/commerce_server.dart';
 import 'package:dio/dio.dart';
@@ -52,6 +53,10 @@ void main() {
     detail = AdminProductDetailViewModel(
       AdminProductDetailViewModelArgs(
         api: AdminApi(dio, baseUrl: server.origin),
+        salesChannels: AdminProductSalesChannelApi(
+          dio,
+          baseUrl: server.origin,
+        ),
       ),
     );
   });

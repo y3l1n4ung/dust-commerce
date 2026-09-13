@@ -1,5 +1,6 @@
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/product/admin_product_detail_state.dart';
+import 'package:admin_app/src/product/admin_product_sales_channel_api.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
 import 'package:dust_dart/fp.dart';
@@ -15,10 +16,17 @@ part 'admin_product_detail_variant_view_model.dart';
 /// Dependencies for one authenticated merchant product detail.
 final class AdminProductDetailViewModelArgs extends ViewModelArgs {
   /// Creates product detail dependencies.
-  const AdminProductDetailViewModelArgs({required this.api, super.observer});
+  const AdminProductDetailViewModelArgs({
+    required this.api,
+    required this.salesChannels,
+    super.observer,
+  });
 
   /// Generated admin-only API client.
   final AdminApi api;
+
+  /// Product-specific and global channel reads sharing Dio authorization.
+  final AdminProductSalesChannelApi salesChannels;
 }
 
 /// Loads one product without exposing Dio responses to widgets.
@@ -40,10 +48,13 @@ final class AdminProductDetailViewModel extends $AdminProductDetailViewModel {
     ));
     try {
       final product = await args.api.product(id);
+      final channels = await _loadSalesChannels(id);
       if (revision != _revision) return;
       emit(AdminProductDetailState(
         status: AdminProductDetailStatus.ready,
         product: Some(product),
+        salesChannels: channels.$1,
+        totalSalesChannels: channels.$2,
       ));
     } on DioException catch (error) {
       if (revision != _revision) return;
@@ -64,12 +75,16 @@ final class AdminProductDetailViewModel extends $AdminProductDetailViewModel {
     emit(AdminProductDetailState(
       status: AdminProductDetailStatus.saving,
       product: current,
+      salesChannels: state.salesChannels,
+      totalSalesChannels: state.totalSalesChannels,
     ));
     try {
       final product = await args.api.updateProduct(id, input);
       emit(AdminProductDetailState(
         status: AdminProductDetailStatus.ready,
         product: Some(product),
+        salesChannels: state.salesChannels,
+        totalSalesChannels: state.totalSalesChannels,
       ));
       return true;
     } on DioException catch (error) {
@@ -84,6 +99,8 @@ final class AdminProductDetailViewModel extends $AdminProductDetailViewModel {
         status: AdminProductDetailStatus.ready,
         product: current,
         failure: Some(message),
+        salesChannels: state.salesChannels,
+        totalSalesChannels: state.totalSalesChannels,
       ));
       return false;
     } on Object {
@@ -91,6 +108,8 @@ final class AdminProductDetailViewModel extends $AdminProductDetailViewModel {
         status: AdminProductDetailStatus.ready,
         product: current,
         failure: const Some('Unable to save this product. Try again.'),
+        salesChannels: state.salesChannels,
+        totalSalesChannels: state.totalSalesChannels,
       ));
       return false;
     }
@@ -100,21 +119,45 @@ final class AdminProductDetailViewModel extends $AdminProductDetailViewModel {
   void clearFailure() => emit(AdminProductDetailState(
         status: state.status,
         product: state.product,
+        salesChannels: state.salesChannels,
+        totalSalesChannels: state.totalSalesChannels,
       ));
 
-  void _emitMedia(AdminProductDetailState value) => emit(value);
+  void _emitMedia(AdminProductDetailState value) => emit(value.copyWith(
+        salesChannels: state.salesChannels,
+        totalSalesChannels: state.totalSalesChannels,
+      ));
 
-  void _emitVariant(AdminProductDetailState value) => emit(value);
+  void _emitVariant(AdminProductDetailState value) => emit(value.copyWith(
+        salesChannels: state.salesChannels,
+        totalSalesChannels: state.totalSalesChannels,
+      ));
 
   void _updateFailed(Option<AdminProductDetail> product, String message) =>
       emit(AdminProductDetailState(
         status: AdminProductDetailStatus.ready,
         product: product,
         failure: Some(message),
+        salesChannels: state.salesChannels,
+        totalSalesChannels: state.totalSalesChannels,
       ));
 
   void _fail(String message) => emit(AdminProductDetailState(
         status: AdminProductDetailStatus.failed,
         failure: Some(message),
       ));
+
+  Future<(List<AdminSalesChannel>, Option<int>)> _loadSalesChannels(
+    String id,
+  ) async {
+    try {
+      final results = await Future.wait([
+        args.salesChannels.productSalesChannels(id),
+        args.salesChannels.allSalesChannels('', 1000, 0),
+      ]);
+      return (results.first.salesChannels, Some(results.last.count));
+    } on Object {
+      return (const <AdminSalesChannel>[], const None<int>());
+    }
+  }
 }

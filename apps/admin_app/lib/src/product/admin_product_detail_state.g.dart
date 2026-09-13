@@ -13,6 +13,8 @@
 
 part of 'admin_product_detail_state.dart';
 
+const DeepCollectionEquality _adminProductDetailStateSalesChannelsEquality = DeepCollectionEquality();
+
 mixin _$AdminProductDetailState {
   @override
   String toString() {
@@ -20,7 +22,9 @@ mixin _$AdminProductDetailState {
     return 'AdminProductDetailState('
         'failure: ${self.failure}, '
         'product: ${self.product}, '
-        'status: ${self.status}'
+        'salesChannels: ${self.salesChannels}, '
+        'status: ${self.status}, '
+        'totalSalesChannels: ${self.totalSalesChannels}'
         ')';
   }
 
@@ -32,7 +36,9 @@ mixin _$AdminProductDetailState {
             runtimeType == other.runtimeType &&
             other.failure == self.failure &&
             other.product == self.product &&
-            other.status == self.status;
+            _adminProductDetailStateSalesChannelsEquality.equals(other.salesChannels, self.salesChannels) &&
+            other.status == self.status &&
+            other.totalSalesChannels == self.totalSalesChannels;
   }
 
   @override
@@ -42,7 +48,9 @@ mixin _$AdminProductDetailState {
       runtimeType,
       self.failure,
       self.product,
+      _adminProductDetailStateSalesChannelsEquality.hash(self.salesChannels),
       self.status,
+      self.totalSalesChannels,
     ]);
   }
 
@@ -63,7 +71,9 @@ abstract class _$AdminProductDetailStateCopyWith<$Res> {
   $Res call({
     Option<String>? failure,
     Option<AdminProductDetail>? product,
+    List<AdminSalesChannel>? salesChannels,
     AdminProductDetailStatus? status,
+    Option<int>? totalSalesChannels,
   });
 }
 
@@ -79,13 +89,17 @@ final class _$AdminProductDetailStateCopyWithImpl<$Res> implements _$AdminProduc
   $Res call({
     Object? failure = null,
     Object? product = null,
+    Object? salesChannels = null,
     Object? status = null,
+    Object? totalSalesChannels = null,
   }) {
     return _then(
       AdminProductDetailState(
         status: status == null ? _self.status : status as AdminProductDetailStatus,
         product: product == null ? _self.product : product as Option<AdminProductDetail>,
         failure: failure == null ? _self.failure : failure as Option<String>,
+        salesChannels: salesChannels == null ? _self.salesChannels : salesChannels as List<AdminSalesChannel>,
+        totalSalesChannels: totalSalesChannels == null ? _self.totalSalesChannels : totalSalesChannels as Option<int>,
       )
     );
   }

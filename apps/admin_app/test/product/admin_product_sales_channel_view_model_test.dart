@@ -14,10 +14,9 @@ void main() {
   late Directory directory;
   late CommerceDatabase database;
   late TestClient server;
-  late AdminProductDetailViewModel detail;
 
   setUp(() async {
-    directory = await Directory.systemTemp.createTemp('product_organization');
+    directory = await Directory.systemTemp.createTemp('admin_product_channel');
     database = CommerceDatabase.open(
       '${directory.path}/commerce.db',
       options: commerceOptions,
@@ -33,23 +32,6 @@ void main() {
       passwordWork: PasswordWorkLimiter(),
     );
     server = await TestClient.serve(buildApp(database));
-    final token = await AdminApi(Dio(), baseUrl: server.origin).signIn(
-      const AdminCredentials(
-        email: 'owner@example.com',
-        password: 'correct horse battery staple',
-      ),
-    );
-    final dio = Dio()
-      ..options.headers['authorization'] = 'Bearer ${token.token}';
-    detail = AdminProductDetailViewModel(
-      AdminProductDetailViewModelArgs(
-        api: AdminApi(dio, baseUrl: server.origin),
-        salesChannels: AdminProductSalesChannelApi(
-          dio,
-          baseUrl: server.origin,
-        ),
-      ),
-    );
   });
 
   tearDown(() async {
@@ -58,42 +40,32 @@ void main() {
     await directory.delete(recursive: true);
   });
 
-  test('loads the complete allowlisted merchant product', () async {
-    await detail.load('prod_sweatpants');
+  test('loads product availability and the total channel count', () async {
+    final token = await AdminApi(Dio(), baseUrl: server.origin).signIn(
+      const AdminCredentials(
+        email: 'owner@example.com',
+        password: 'correct horse battery staple',
+      ),
+    );
+    final dio = Dio()
+      ..options.headers['authorization'] = 'Bearer ${token.token}';
+    final detail = AdminProductDetailViewModel(
+      AdminProductDetailViewModelArgs(
+        api: AdminApi(dio, baseUrl: server.origin),
+        salesChannels: AdminProductSalesChannelApi(
+          dio,
+          baseUrl: server.origin,
+        ),
+      ),
+    );
+
+    await detail.load('prod_tshirt');
 
     expect(detail.state.status, AdminProductDetailStatus.ready);
-    final product = (detail.state.product as Some<AdminProductDetail>).value;
-    expect(product.title, 'Relaxed Sweatpants');
-    expect(product.images, hasLength(2));
-    expect(product.options.single.values, ['S', 'M']);
-    expect(product.variants, hasLength(2));
-    expect(product.categories, ['Pants']);
-    expect(product.productTypeId, 'ptyp_pants');
-  });
-
-  test('replaces and clears the product classification', () async {
-    await detail.load('prod_sweatpants');
-
     expect(
-      await detail.updateOrganization(
-        'prod_sweatpants',
-        const AdminUpdateProductOrganization(typeId: 'ptyp_shirt'),
-      ),
-      isTrue,
+      detail.state.salesChannels.map((channel) => channel.name),
+      ['Online Store'],
     );
-    var product = (detail.state.product as Some<AdminProductDetail>).value;
-    expect(product.productTypeId, 'ptyp_shirt');
-    expect(product.productType, 'Shirt');
-
-    expect(
-      await detail.updateOrganization(
-        'prod_sweatpants',
-        const AdminUpdateProductOrganization(typeId: null),
-      ),
-      isTrue,
-    );
-    product = (detail.state.product as Some<AdminProductDetail>).value;
-    expect(product.productTypeId, isNull);
-    expect(product.productType, isNull);
+    expect(detail.state.totalSalesChannels, const Some(2));
   });
 }

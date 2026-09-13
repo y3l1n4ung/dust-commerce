@@ -1,5 +1,7 @@
 import 'package:admin_app/src/product/detail/admin_product_detail_section.dart';
+import 'package:admin_app/src/product/detail/admin_product_sales_channel_section.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
+import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
 /// Medusa-shaped product sidebar backed only by modeled product data.
@@ -7,6 +9,8 @@ final class AdminProductSidebarSections extends StatelessWidget {
   /// Creates product sidebar cards.
   const AdminProductSidebarSections({
     required this.product,
+    required this.salesChannels,
+    required this.totalSalesChannels,
     required this.onEditOrganization,
     required this.onUnavailable,
     super.key,
@@ -14,6 +18,12 @@ final class AdminProductSidebarSections extends StatelessWidget {
 
   /// Complete admin product allowlist.
   final AdminProductDetail product;
+
+  /// Channels through which this product is available.
+  final List<AdminSalesChannel> salesChannels;
+
+  /// Total configured channels, absent when the supporting request failed.
+  final Option<int> totalSalesChannels;
 
   /// Opens the product-type organization editor.
   final VoidCallback onEditOrganization;
@@ -24,10 +34,9 @@ final class AdminProductSidebarSections extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          _UnavailableSection(
-            title: 'Sales Channels',
-            icon: Icons.hub_outlined,
-            message: 'Not configured',
+          AdminProductSalesChannelSection(
+            channels: salesChannels,
+            totalChannels: totalSalesChannels,
             onUnavailable: onUnavailable,
           ),
           const SizedBox(height: 12),

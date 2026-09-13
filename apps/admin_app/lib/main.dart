@@ -11,6 +11,7 @@ import 'package:admin_app/src/order/admin_order_sales_channel_api.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:admin_app/src/product/admin_product_create_view_model.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
+import 'package:admin_app/src/product/admin_product_sales_channel_api.dart';
 import 'package:admin_app/src/product_option/admin_product_option_detail_view_model.dart';
 import 'package:admin_app/src/product_option/admin_product_option_view_model.dart';
 import 'package:admin_app/src/product_type/admin_product_type_view_model.dart';
@@ -52,7 +53,10 @@ void main() {
     ),
   );
   final productDetail = AdminProductDetailViewModel(
-    AdminProductDetailViewModelArgs(api: api),
+    AdminProductDetailViewModelArgs(
+      api: api,
+      salesChannels: AdminProductSalesChannelApi(dio, baseUrl: baseUrl),
+    ),
   );
   final productCreate = AdminProductCreateViewModel(
     AdminProductCreateViewModelArgs(api: api),

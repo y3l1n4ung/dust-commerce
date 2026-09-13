@@ -65,6 +65,8 @@ final class _AdminProductDetailPageState extends State<AdminProductDetailPage> {
     return switch (state.product) {
       Some(value: final product) => _DetailBody(
           product: product,
+          salesChannels: state.salesChannels,
+          totalSalesChannels: state.totalSalesChannels,
           onBack: widget.onBack,
           onOpenOption: widget.onOpenOption,
         ),

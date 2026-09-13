@@ -4,6 +4,8 @@ part of 'admin_product_detail_page.dart';
 final class _DetailBody extends StatelessWidget {
   const _DetailBody({
     required this.product,
+    required this.salesChannels,
+    required this.totalSalesChannels,
     required this.onBack,
     required this.onOpenOption,
   });
@@ -11,6 +13,8 @@ final class _DetailBody extends StatelessWidget {
   final VoidCallback onBack;
   final ValueChanged<String> onOpenOption;
   final AdminProductDetail product;
+  final List<AdminSalesChannel> salesChannels;
+  final Option<int> totalSalesChannels;
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +119,8 @@ final class _DetailBody extends StatelessWidget {
     ]);
     final side = AdminProductSidebarSections(
       product: product,
+      salesChannels: salesChannels,
+      totalSalesChannels: totalSalesChannels,
       onEditOrganization: editOrganization,
       onUnavailable: () => showAdminUnavailable(context),
     );
