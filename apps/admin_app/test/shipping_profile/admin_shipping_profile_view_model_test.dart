@@ -102,4 +102,21 @@ void main() {
       const Some('Another shipping profile already uses this name.'),
     );
   });
+
+  test('retains profile filters and order across paging state', () async {
+    await profiles.filterByName('Default');
+
+    expect(profiles.state.name, 'Default');
+    expect(profiles.state.count, 1);
+    expect(profiles.state.shippingProfiles.single.id, 'sp_default');
+
+    await profiles.orderBy(AdminShippingProfileOrder.nameDesc);
+    expect(profiles.state.order, AdminShippingProfileOrder.nameDesc);
+
+    await profiles.clearFilters();
+    expect(profiles.state.name, '');
+    expect(profiles.state.type, '');
+    expect(profiles.state.createdAt.isEmpty, isTrue);
+    expect(profiles.state.updatedAt.isEmpty, isTrue);
+  });
 }

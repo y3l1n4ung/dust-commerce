@@ -21,12 +21,17 @@ mixin _$AdminShippingProfileState {
     final self = this as AdminShippingProfileState;
     return 'AdminShippingProfileState('
         'count: ${self.count}, '
+        'createdAt: ${self.createdAt}, '
         'failure: ${self.failure}, '
         'limit: ${self.limit}, '
+        'name: ${self.name}, '
         'offset: ${self.offset}, '
+        'order: ${self.order}, '
         'query: ${self.query}, '
         'shippingProfiles: ${self.shippingProfiles}, '
-        'status: ${self.status}'
+        'status: ${self.status}, '
+        'type: ${self.type}, '
+        'updatedAt: ${self.updatedAt}'
         ')';
   }
 
@@ -37,12 +42,17 @@ mixin _$AdminShippingProfileState {
         other is AdminShippingProfileState &&
             runtimeType == other.runtimeType &&
             other.count == self.count &&
+            other.createdAt == self.createdAt &&
             other.failure == self.failure &&
             other.limit == self.limit &&
+            other.name == self.name &&
             other.offset == self.offset &&
+            other.order == self.order &&
             other.query == self.query &&
             _adminShippingProfileStateShippingProfilesEquality.equals(other.shippingProfiles, self.shippingProfiles) &&
-            other.status == self.status;
+            other.status == self.status &&
+            other.type == self.type &&
+            other.updatedAt == self.updatedAt;
   }
 
   @override
@@ -51,12 +61,17 @@ mixin _$AdminShippingProfileState {
     return Object.hashAll([
       runtimeType,
       self.count,
+      self.createdAt,
       self.failure,
       self.limit,
+      self.name,
       self.offset,
+      self.order,
       self.query,
       _adminShippingProfileStateShippingProfilesEquality.hash(self.shippingProfiles),
       self.status,
+      self.type,
+      self.updatedAt,
     ]);
   }
 
@@ -76,12 +91,17 @@ mixin _$AdminShippingProfileState {
 abstract class _$AdminShippingProfileStateCopyWith<$Res> {
   $Res call({
     int? count,
+    AdminDateFilter? createdAt,
     Option<String>? failure,
     int? limit,
+    String? name,
     int? offset,
+    AdminShippingProfileOrder? order,
     String? query,
     List<AdminShippingProfile>? shippingProfiles,
     AdminShippingProfileStatus? status,
+    String? type,
+    AdminDateFilter? updatedAt,
   });
 }
 
@@ -96,12 +116,17 @@ final class _$AdminShippingProfileStateCopyWithImpl<$Res> implements _$AdminShip
   @pragma('vm:prefer-inline')
   $Res call({
     Object? count = null,
+    Object? createdAt = null,
     Object? failure = null,
     Object? limit = null,
+    Object? name = null,
     Object? offset = null,
+    Object? order = null,
     Object? query = null,
     Object? shippingProfiles = null,
     Object? status = null,
+    Object? type = null,
+    Object? updatedAt = null,
   }) {
     return _then(
       AdminShippingProfileState(
@@ -111,6 +136,11 @@ final class _$AdminShippingProfileStateCopyWithImpl<$Res> implements _$AdminShip
         limit: limit == null ? _self.limit : limit as int,
         offset: offset == null ? _self.offset : offset as int,
         query: query == null ? _self.query : query as String,
+        name: name == null ? _self.name : name as String,
+        type: type == null ? _self.type : type as String,
+        createdAt: createdAt == null ? _self.createdAt : createdAt as AdminDateFilter,
+        updatedAt: updatedAt == null ? _self.updatedAt : updatedAt as AdminDateFilter,
+        order: order == null ? _self.order : order as AdminShippingProfileOrder,
         failure: failure == null ? _self.failure : failure as Option<String>,
       )
     );

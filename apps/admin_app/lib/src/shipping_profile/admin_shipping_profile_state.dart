@@ -29,11 +29,19 @@ final class AdminShippingProfileState with _$AdminShippingProfileState {
     this.limit = 20,
     this.offset = 0,
     this.query = '',
+    this.name = '',
+    this.type = '',
+    this.createdAt = const AdminDateFilter(),
+    this.updatedAt = const AdminDateFilter(),
+    this.order = AdminShippingProfileOrder.nameAsc,
     this.failure = const None(),
   });
 
   /// Total rows matching [query].
   final int count;
+
+  /// Creation-time comparison applied by the server.
+  final AdminDateFilter createdAt;
 
   /// Display-safe failure message.
   final Option<String> failure;
@@ -41,8 +49,14 @@ final class AdminShippingProfileState with _$AdminShippingProfileState {
   /// Server-owned page size.
   final int limit;
 
+  /// Dedicated normalized profile-name filter.
+  final String name;
+
   /// Number of matching rows skipped.
   final int offset;
+
+  /// Server-owned stable profile ordering.
+  final AdminShippingProfileOrder order;
 
   /// Current normalized name-or-type search.
   final String query;
@@ -53,9 +67,22 @@ final class AdminShippingProfileState with _$AdminShippingProfileState {
   /// Current request lifecycle.
   final AdminShippingProfileStatus status;
 
+  /// Dedicated normalized fulfillment-type filter.
+  final String type;
+
+  /// Update-time comparison applied by the server.
+  final AdminDateFilter updatedAt;
+
   /// Whether another server page exists.
   bool get hasNext => offset + shippingProfiles.length < count;
 
   /// Whether a preceding server page exists.
   bool get hasPrevious => offset > 0;
+
+  /// Whether a profile filter, excluding search and ordering, is active.
+  bool get hasFilters =>
+      name.isNotEmpty ||
+      type.isNotEmpty ||
+      !createdAt.isEmpty ||
+      !updatedAt.isEmpty;
 }

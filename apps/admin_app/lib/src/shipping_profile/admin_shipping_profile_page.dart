@@ -2,6 +2,7 @@ import 'package:admin_app/src/shipping_profile/admin_shipping_profile_create_pag
 import 'package:admin_app/src/shipping_profile/admin_shipping_profile_delete.dart';
 import 'package:admin_app/src/shipping_profile/admin_shipping_profile_page_header.dart';
 import 'package:admin_app/src/shipping_profile/admin_shipping_profile_pagination.dart';
+import 'package:admin_app/src/shipping_profile/admin_shipping_profile_query_bar.dart';
 import 'package:admin_app/src/shipping_profile/admin_shipping_profile_table_body.dart';
 import 'package:admin_app/src/shipping_profile/admin_shipping_profile_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
@@ -29,14 +30,6 @@ final class AdminShippingProfilePage extends StatefulWidget {
 
 final class _AdminShippingProfilePageState
     extends State<AdminShippingProfilePage> {
-  final _query = TextEditingController();
-
-  @override
-  void dispose() {
-    _query.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final state = context.watchAdminShippingProfileViewModel().value;
@@ -58,12 +51,9 @@ final class _AdminShippingProfilePageState
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               AdminShippingProfilePageHeader(onCreate: _create),
               Divider(height: 1, color: Theme.of(context).dividerColor),
-              AdminShippingProfileSearch(
-                controller: _query,
-                focusNode: widget.searchFocus,
-                onSearch: () => context
-                    .readAdminShippingProfileViewModel()
-                    .search(_query.text),
+              AdminShippingProfileQueryBar(
+                state: state,
+                searchFocus: widget.searchFocus,
               ),
               Divider(height: 1, color: Theme.of(context).dividerColor),
               AdminShippingProfileTableBody(

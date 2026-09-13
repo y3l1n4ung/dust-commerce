@@ -9,13 +9,47 @@ Future<Result<AdminShippingProfileListResponse, SqlxError>>
     listAdminShippingProfiles(
   AdminShippingProfileRepository profiles, {
   required String query,
+  required String name,
+  required String type,
+  required AdminDateFilter createdAt,
+  required AdminDateFilter updatedAt,
+  required AdminShippingProfileOrder order,
   required int limit,
   required int offset,
 }) async {
   final normalized = query.trim();
-  final rows = await profiles.list(normalized, limit, offset);
+  final normalizedName = name.trim();
+  final normalizedType = type.trim();
+  final rows = await profiles.list(
+    normalized,
+    normalizedName,
+    normalizedType,
+    _value(createdAt.greaterThan),
+    _value(createdAt.greaterThanOrEqual),
+    _value(createdAt.lessThan),
+    _value(createdAt.lessThanOrEqual),
+    _value(updatedAt.greaterThan),
+    _value(updatedAt.greaterThanOrEqual),
+    _value(updatedAt.lessThan),
+    _value(updatedAt.lessThanOrEqual),
+    order.parameter,
+    limit,
+    offset,
+  );
   if (rows case Err(:final error)) return Err(error);
-  final count = await profiles.count(normalized);
+  final count = await profiles.count(
+    normalized,
+    normalizedName,
+    normalizedType,
+    _value(createdAt.greaterThan),
+    _value(createdAt.greaterThanOrEqual),
+    _value(createdAt.lessThan),
+    _value(createdAt.lessThanOrEqual),
+    _value(updatedAt.greaterThan),
+    _value(updatedAt.greaterThanOrEqual),
+    _value(updatedAt.lessThan),
+    _value(updatedAt.lessThanOrEqual),
+  );
   if (count case Err(:final error)) return Err(error);
   return Ok(AdminShippingProfileListResponse(
     shippingProfiles:
@@ -25,6 +59,11 @@ Future<Result<AdminShippingProfileListResponse, SqlxError>>
     offset: offset,
   ));
 }
+
+String _value(Option<DateTime> value) => switch (value) {
+      Some(value: final instant) => instant.toIso8601String(),
+      None() => '',
+    };
 
 /// Business reason a product profile replacement could not commit.
 enum AdminProductShippingProfileUpdateFailure {

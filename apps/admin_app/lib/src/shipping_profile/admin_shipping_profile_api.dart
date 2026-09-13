@@ -18,6 +18,11 @@ abstract interface class AdminShippingProfileApi {
   @GET('/admin/shipping-profiles')
   Future<AdminShippingProfileList> list(
     @Query('q') String query,
+    @Query('name') String name,
+    @Query('type') String type,
+    @Query('created_at') String createdAt,
+    @Query('updated_at') String updatedAt,
+    @Query('order') String order,
     @Query('limit') int limit,
     @Query('offset') int offset,
   );

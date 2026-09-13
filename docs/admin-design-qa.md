@@ -171,11 +171,13 @@ The Shipping Profiles settings slice now follows Medusa's list, focus create,
 detail and typed deletion source. Live QA searched and paged the protected list,
 created Bulky Goods, opened its direct response, deleted it after typing the
 exact name, returned to the refreshed list, and followed Default Shipping
-Profile from the product card into Settings. No post-restart browser error was
-recorded. The official list screenshot confirms heading, copy, two-column table,
-row actions, paging density and card geometry. Medusa also visibly includes Add
-filter and ordering controls; those are absent until the next query-control
-slice, so visual parity remains blocked.
+Profile from the product card into Settings. A second clean-start pass applied
+the Type filter, observed only Fragile Goods, changed the server order and
+cleared the filters with no browser errors. The official list screenshot
+confirms heading, copy, Add filter, search, ordering, two-column table, row
+actions, paging density and card geometry. Name, type and date filters plus all
+eight orders are real API operations; a same-state combined source capture is
+still unavailable, so whole-screen pixel parity is not claimed.
 
 The product-delete pass uses the pinned list and detail action-group source as
 structural truth. Morrow exposes Edit followed by a separately divided Delete
@@ -514,10 +516,6 @@ raster is available, so pixel parity is not claimed.
 - P2 — Shipping-profile assignment passes source-structure and live-behavior
   QA, but needs an equivalent live Medusa product/profile state and combined
   capture before pixel parity can be claimed.
-- P2 — Shipping-profile settings omit Medusa's visible Add filter and ordering
-  controls. Search, paging and CRUD are real, but the list cannot yet filter by
-  name/type/date or choose an allowlisted order.
-
 ## Result
 
 Passed for the implemented product-list, product-detail, general-edit,
@@ -542,9 +540,10 @@ Medusa source structure; same-state source raster comparison remains open.
 Product shipping-profile editing passes protected list/update behavior, typed
 `Option` state, source-shaped card/drawer composition and live replace/clear
 QA; same-state Medusa raster comparison remains open.
-Shipping-profile settings pass protected CRUD behavior, typed ViewModel state,
-product-card navigation and the live merchant journey. List visual parity is
-blocked on the source's missing filter and ordering controls.
+Shipping-profile settings pass protected CRUD and query behavior, typed
+ViewModel state, product-card navigation and the live merchant journey. The
+Add filter, active chips, Clear all and order menu match the source structure;
+same-state combined source capture remains open.
 Post-create editor, image-variant drawer, variant pricing, product stock and
 product deletion and orders remain blocked on same-state source captures;
 broader Medusa Admin parity is not claimed.

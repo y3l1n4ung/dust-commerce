@@ -6,6 +6,7 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'admin_shipping_profile_view_model.g.dart';
+part 'admin_shipping_profile_filters.dart';
 
 /// Typed result of a shipping-profile deletion attempt.
 enum AdminShippingProfileDeleteOutcome {
@@ -89,18 +90,45 @@ final class AdminShippingProfileViewModel
   }
 
   /// Loads one bounded shipping-profile page.
-  Future<void> load({String? query, int? offset}) async {
+  Future<void> load({
+    String? query,
+    int? offset,
+    String? name,
+    String? type,
+    AdminDateFilter? createdAt,
+    AdminDateFilter? updatedAt,
+    AdminShippingProfileOrder? order,
+  }) async {
     final nextQuery = (query ?? state.query).trim();
     final nextOffset = (offset ?? state.offset).clamp(0, 1 << 31);
+    final nextName = (name ?? state.name).trim();
+    final nextType = (type ?? state.type).trim();
+    final nextCreatedAt = createdAt ?? state.createdAt;
+    final nextUpdatedAt = updatedAt ?? state.updatedAt;
+    final nextOrder = order ?? state.order;
     final revision = ++_revision;
     emit(state.copyWith(
       status: AdminShippingProfileStatus.loading,
       offset: nextOffset,
       query: nextQuery,
+      name: nextName,
+      type: nextType,
+      createdAt: nextCreatedAt,
+      updatedAt: nextUpdatedAt,
+      order: nextOrder,
       failure: const None(),
     ));
     try {
-      final page = await args.api.list(nextQuery, state.limit, nextOffset);
+      final page = await args.api.list(
+        nextQuery,
+        nextName,
+        nextType,
+        nextCreatedAt.isEmpty ? '' : nextCreatedAt.parameter,
+        nextUpdatedAt.isEmpty ? '' : nextUpdatedAt.parameter,
+        nextOrder.parameter,
+        state.limit,
+        nextOffset,
+      );
       if (revision != _revision) return;
       emit(AdminShippingProfileState(
         status: AdminShippingProfileStatus.ready,
@@ -109,6 +137,11 @@ final class AdminShippingProfileViewModel
         limit: page.limit,
         offset: page.offset,
         query: nextQuery,
+        name: nextName,
+        type: nextType,
+        createdAt: nextCreatedAt,
+        updatedAt: nextUpdatedAt,
+        order: nextOrder,
       ));
     } on DioException catch (error) {
       if (revision != _revision) return;

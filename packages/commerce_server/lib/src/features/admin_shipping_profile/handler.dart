@@ -3,6 +3,7 @@ import 'package:commerce_server/src/features/admin/extractor.dart';
 import 'package:commerce_server/src/features/admin_shipping_profile/deps.dart';
 import 'package:commerce_server/src/features/admin_shipping_profile/model.dart';
 import 'package:commerce_server/src/features/admin_shipping_profile/management_service.dart';
+import 'package:commerce_server/src/features/admin_shipping_profile/query.dart';
 import 'package:commerce_server/src/features/admin_shipping_profile/service.dart';
 import 'package:commerce_server/src/http/http.dart';
 import 'package:dust_server/server.dart';
@@ -102,13 +103,21 @@ Future<Result<AdminShippingProfileListResponse, Rejection>>
   if (actor case Err(:final error)) return Err(error);
   final state = await adminShippingProfileDeps(request);
   if (state case Err(:final error)) return Err(error);
+  final filters = adminShippingProfileQueryOf(request);
+  if (filters case Err(:final error)) return Err(error);
   final query = request.requestedUri.queryParameters;
   final limit = int.tryParse(query['limit'] ?? '') ?? defaultLimit;
   final offset = int.tryParse(query['offset'] ?? '') ?? 0;
   final deps = (state as Ok<AdminShippingProfileDeps, Rejection>).value;
+  final parsed = (filters as Ok<AdminShippingProfileQuery, Rejection>).value;
   final result = await listAdminShippingProfiles(
     deps.profiles,
-    query: query['q'] ?? '',
+    query: parsed.query,
+    name: parsed.name,
+    type: parsed.type,
+    createdAt: parsed.createdAt,
+    updatedAt: parsed.updatedAt,
+    order: parsed.order,
     limit: limit.clamp(1, 1000),
     offset: offset < 0 ? 0 : offset,
   );

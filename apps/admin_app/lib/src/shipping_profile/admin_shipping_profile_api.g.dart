@@ -61,6 +61,11 @@ final class _$AdminShippingProfileApi implements AdminShippingProfileApi {
   @override
   Future<AdminShippingProfileList> list(
     String query,
+    String name,
+    String type,
+    String createdAt,
+    String updatedAt,
+    String order,
     int limit,
     int offset,
   ) async {
@@ -69,6 +74,11 @@ final class _$AdminShippingProfileApi implements AdminShippingProfileApi {
     final _extra = <String, dynamic>{};
     _headers['accept'] = 'application/json';
     _queryParameters['q'] = query;
+    _queryParameters['name'] = name;
+    _queryParameters['type'] = type;
+    _queryParameters['created_at'] = createdAt;
+    _queryParameters['updated_at'] = updatedAt;
+    _queryParameters['order'] = order;
     _queryParameters['limit'] = limit;
     _queryParameters['offset'] = offset;
     final Object? _data = null;

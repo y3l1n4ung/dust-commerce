@@ -19,7 +19,7 @@ final class _$AdminShippingProfileRepository implements AdminShippingProfileRepo
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<AdminShippingProfileResponse>, SqlxError>> list(String query, int limit, int offset) {
+  Future<Result<List<AdminShippingProfileResponse>, SqlxError>> list(String query, String name, String type, String createdAfter, String createdFrom, String createdBefore, String createdThrough, String updatedAfter, String updatedFrom, String updatedBefore, String updatedThrough, String order, int limit, int offset) {
     return _db.fetchAll<AdminShippingProfileResponse>(
       r'''
 SELECT id, name, type, created_at, updated_at
@@ -27,16 +27,35 @@ FROM shipping_profile
 WHERE deleted_at IS NULL
   AND (? = '' OR lower(name) LIKE '%' || lower(?) || '%'
        OR lower(type) LIKE '%' || lower(?) || '%')
-ORDER BY lower(name), id
+  AND (? = '' OR lower(name) LIKE '%' || lower(?) || '%')
+  AND (? = '' OR lower(type) LIKE '%' || lower(?) || '%')
+  AND (? = '' OR created_at > ?)
+  AND (? = '' OR created_at >= ?)
+  AND (? = '' OR created_at < ?)
+  AND (? = '' OR created_at <= ?)
+  AND (? = '' OR updated_at > ?)
+  AND (? = '' OR updated_at >= ?)
+  AND (? = '' OR updated_at < ?)
+  AND (? = '' OR updated_at <= ?)
+ORDER BY
+  CASE WHEN ? = 'name' THEN lower(name) END ASC,
+  CASE WHEN ? = '-name' THEN lower(name) END DESC,
+  CASE WHEN ? = 'type' THEN lower(type) END ASC,
+  CASE WHEN ? = '-type' THEN lower(type) END DESC,
+  CASE WHEN ? = 'created_at' THEN created_at END ASC,
+  CASE WHEN ? = '-created_at' THEN created_at END DESC,
+  CASE WHEN ? = 'updated_at' THEN updated_at END ASC,
+  CASE WHEN ? = '-updated_at' THEN updated_at END DESC,
+  lower(name), id
 LIMIT ? OFFSET ?
 ''',
-      [query, query, query, limit, offset],
+      [query, query, query, name, name, type, type, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdThrough, createdThrough, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedThrough, updatedThrough, order, order, order, order, order, order, order, order, limit, offset],
       const $AdminShippingProfileResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<int, SqlxError>> count(String query) {
+  Future<Result<int, SqlxError>> count(String query, String name, String type, String createdAfter, String createdFrom, String createdBefore, String createdThrough, String updatedAfter, String updatedFrom, String updatedBefore, String updatedThrough) {
     return _db.fetchScalar<int>(
       r'''
 SELECT count(*)
@@ -44,8 +63,18 @@ FROM shipping_profile
 WHERE deleted_at IS NULL
   AND (? = '' OR lower(name) LIKE '%' || lower(?) || '%'
        OR lower(type) LIKE '%' || lower(?) || '%')
+  AND (? = '' OR lower(name) LIKE '%' || lower(?) || '%')
+  AND (? = '' OR lower(type) LIKE '%' || lower(?) || '%')
+  AND (? = '' OR created_at > ?)
+  AND (? = '' OR created_at >= ?)
+  AND (? = '' OR created_at < ?)
+  AND (? = '' OR created_at <= ?)
+  AND (? = '' OR updated_at > ?)
+  AND (? = '' OR updated_at >= ?)
+  AND (? = '' OR updated_at < ?)
+  AND (? = '' OR updated_at <= ?)
 ''',
-      [query, query, query],
+      [query, query, query, name, name, type, type, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdThrough, createdThrough, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedThrough, updatedThrough],
     );
   }
 

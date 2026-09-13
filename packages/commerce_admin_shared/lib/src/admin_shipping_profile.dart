@@ -3,6 +3,46 @@ import 'package:dust_dart/serde.dart';
 
 part 'admin_shipping_profile.g.dart';
 
+/// Shipping-profile order values accepted by the Medusa-shaped Admin API.
+enum AdminShippingProfileOrder {
+  /// Profile name A to Z.
+  nameAsc('name'),
+
+  /// Profile name Z to A.
+  nameDesc('-name'),
+
+  /// Profile type A to Z.
+  typeAsc('type'),
+
+  /// Profile type Z to A.
+  typeDesc('-type'),
+
+  /// Oldest profiles first.
+  createdAtAsc('created_at'),
+
+  /// Newest profiles first.
+  createdAtDesc('-created_at'),
+
+  /// Least recently updated profiles first.
+  updatedAtAsc('updated_at'),
+
+  /// Most recently updated profiles first.
+  updatedAtDesc('-updated_at');
+
+  const AdminShippingProfileOrder(this.parameter);
+
+  /// Stable Admin API query value.
+  final String parameter;
+
+  /// Parses one allowlisted Admin API query value.
+  static Option<AdminShippingProfileOrder> parse(String parameter) {
+    for (final order in values) {
+      if (order.parameter == parameter) return Some(order);
+    }
+    return const None();
+  }
+}
+
 /// Merchant input for creating one fulfillment requirement group.
 @Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)

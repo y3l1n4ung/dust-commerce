@@ -10,31 +10,83 @@ abstract final class AdminShippingProfileRepository {
   const factory AdminShippingProfileRepository(DatabaseExecutor db) =
       _$AdminShippingProfileRepository;
 
-  /// Lists active profiles matching Medusa's name-or-type search.
+  /// Lists active profiles after applying the Admin query boundary.
   @Query(r'''
 SELECT id, name, type, created_at, updated_at
 FROM shipping_profile
 WHERE deleted_at IS NULL
   AND ($1 = '' OR lower(name) LIKE '%' || lower($1) || '%'
        OR lower(type) LIKE '%' || lower($1) || '%')
-ORDER BY lower(name), id
-LIMIT $2 OFFSET $3
+  AND ($2 = '' OR lower(name) LIKE '%' || lower($2) || '%')
+  AND ($3 = '' OR lower(type) LIKE '%' || lower($3) || '%')
+  AND ($4 = '' OR created_at > $4)
+  AND ($5 = '' OR created_at >= $5)
+  AND ($6 = '' OR created_at < $6)
+  AND ($7 = '' OR created_at <= $7)
+  AND ($8 = '' OR updated_at > $8)
+  AND ($9 = '' OR updated_at >= $9)
+  AND ($10 = '' OR updated_at < $10)
+  AND ($11 = '' OR updated_at <= $11)
+ORDER BY
+  CASE WHEN $12 = 'name' THEN lower(name) END ASC,
+  CASE WHEN $12 = '-name' THEN lower(name) END DESC,
+  CASE WHEN $12 = 'type' THEN lower(type) END ASC,
+  CASE WHEN $12 = '-type' THEN lower(type) END DESC,
+  CASE WHEN $12 = 'created_at' THEN created_at END ASC,
+  CASE WHEN $12 = '-created_at' THEN created_at END DESC,
+  CASE WHEN $12 = 'updated_at' THEN updated_at END ASC,
+  CASE WHEN $12 = '-updated_at' THEN updated_at END DESC,
+  lower(name), id
+LIMIT $13 OFFSET $14
 ''')
   Future<Result<List<AdminShippingProfileResponse>, SqlxError>> list(
     String query,
+    String name,
+    String type,
+    String createdAfter,
+    String createdFrom,
+    String createdBefore,
+    String createdThrough,
+    String updatedAfter,
+    String updatedFrom,
+    String updatedBefore,
+    String updatedThrough,
+    String order,
     int limit,
     int offset,
   );
 
-  /// Counts the same active profile search result.
+  /// Counts the same filtered profile result before paging.
   @Query(r'''
 SELECT count(*)
 FROM shipping_profile
 WHERE deleted_at IS NULL
   AND ($1 = '' OR lower(name) LIKE '%' || lower($1) || '%'
        OR lower(type) LIKE '%' || lower($1) || '%')
+  AND ($2 = '' OR lower(name) LIKE '%' || lower($2) || '%')
+  AND ($3 = '' OR lower(type) LIKE '%' || lower($3) || '%')
+  AND ($4 = '' OR created_at > $4)
+  AND ($5 = '' OR created_at >= $5)
+  AND ($6 = '' OR created_at < $6)
+  AND ($7 = '' OR created_at <= $7)
+  AND ($8 = '' OR updated_at > $8)
+  AND ($9 = '' OR updated_at >= $9)
+  AND ($10 = '' OR updated_at < $10)
+  AND ($11 = '' OR updated_at <= $11)
 ''')
-  Future<Result<int, SqlxError>> count(String query);
+  Future<Result<int, SqlxError>> count(
+    String query,
+    String name,
+    String type,
+    String createdAfter,
+    String createdFrom,
+    String createdBefore,
+    String createdThrough,
+    String updatedAfter,
+    String updatedFrom,
+    String updatedBefore,
+    String updatedThrough,
+  );
 
   /// Confirms the routed product exists without leaking soft-deleted rows.
   @Query(r'''
