@@ -52,6 +52,7 @@ void main() {
         ...'return_reasons return_requests return_items fulfillments'
             .split(' '),
         'fulfillment_items',
+        'fulfillment_labels',
         ...'stock_location_addresses shipping_option_fulfillment_provider shipping_option_shipping_profile'
             .split(' '),
         ...'stock_locations fulfillment_providers stock_location_fulfillment_providers'
