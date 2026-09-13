@@ -1,12 +1,13 @@
 import 'package:commerce_shared/src/customers/address.dart';
 import 'package:commerce_shared/src/money.dart';
 import 'package:commerce_shared/src/ordering/cart.dart';
-import 'package:commerce_shared/src/ordering/line_item.dart';
+import 'package:commerce_shared/src/ordering/order_line_item.dart';
 import 'package:commerce_shared/src/ordering/shipping_method.dart';
 import 'package:commerce_shared/src/region.dart';
 import 'package:dust_dart/serde.dart';
 
 part 'order.g.dart';
+part 'order_values.dart';
 
 /// Where an order sits in its lifecycle.
 @Derive([Serialize(), Deserialize()])
@@ -107,36 +108,15 @@ class Order with _$Order {
     required Address shippingAddress,
     required DateTime placedAt,
     Address? billingAddress,
-  }) {
-    if (cart.isEmpty) {
-      throw ArgumentError.value(cart, 'cart', 'an empty cart is not an order');
-    }
-    final email = cart.email;
-    if (email == null || email.isEmpty) {
-      throw ArgumentError.value(
-        cart,
-        'cart',
-        'an order needs an email to reach the buyer on',
+  }) =>
+      _orderFromCart(
+        id: id,
+        displayId: displayId,
+        cart: cart,
+        shippingAddress: shippingAddress,
+        billingAddress: billingAddress,
+        placedAt: placedAt,
       );
-    }
-    return Order(
-      id: id,
-      displayId: displayId,
-      email: email,
-      customerId: cart.customerId,
-      region: cart.region,
-      items: List<LineItem>.unmodifiable(cart.items),
-      subtotal: cart.subtotal,
-      shippingTotal: cart.shippingTotal,
-      discountTotal: cart.discountTotal,
-      shippingMethod: cart.shippingMethod,
-      tax: cart.tax,
-      total: cart.total,
-      shippingAddress: shippingAddress,
-      billingAddress: billingAddress ?? shippingAddress,
-      placedAt: placedAt,
-    );
-  }
 
   /// Creates an [Order] from JSON.
   factory Order.fromJson(Map<String, Object?> json) => _$OrderFromJson(json);
@@ -157,7 +137,7 @@ class Order with _$Order {
   final String id;
 
   /// The lines as they stood at checkout.
-  final List<LineItem> items;
+  final List<OrderLineItem> items;
 
   /// Whether the money has moved.
   final PaymentStatus paymentStatus;
@@ -194,35 +174,4 @@ class Order with _$Order {
 
   /// The frozen amount charged.
   final Money total;
-
-  /// Whether the money has been taken.
-  bool get isPaid => paymentStatus == PaymentStatus.captured;
-
-  /// The number of units ordered.
-  int get itemCount => items.fold(0, (count, item) => count + item.quantity);
-
-  /// This order with payment captured, which completes it.
-  ///
-  /// Throws [StateError] when the order was cancelled: taking money for
-  /// something called off is the failure this guard exists to prevent.
-  Order captured() {
-    if (status == OrderStatus.cancelled) {
-      throw StateError('cannot capture payment on a cancelled order');
-    }
-    return copyWith(
-      status: OrderStatus.completed,
-      paymentStatus: PaymentStatus.captured,
-    );
-  }
-
-  /// This order cancelled.
-  ///
-  /// Throws [StateError] once payment has been captured; that path is a
-  /// refund, which is a different operation with different accounting.
-  Order cancelled() {
-    if (isPaid) {
-      throw StateError('a paid order is refunded, not cancelled');
-    }
-    return copyWith(status: OrderStatus.cancelled);
-  }
 }

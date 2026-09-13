@@ -6,6 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'support.dart';
+
 void main() {
   test('prepares only paid orders and owns item selection', () {
     final model = OrderReturnViewModel(
@@ -143,50 +145,7 @@ final _response = OrderReturnView(
   orderId: 'order_1',
   status: OrderReturnStatus.requested,
   itemQuantity: 2,
-  requestedAt: _instant,
+  requestedAt: returnInstant,
 );
 
-final _paidOrder = Order(
-  id: 'order_1',
-  displayId: 1,
-  email: 'ada@example.com',
-  customerId: 'cus_ada',
-  region: const Region(
-    id: 'reg_us',
-    name: 'United States',
-    currencyCode: 'usd',
-    taxRate: 0,
-    countries: ['us'],
-  ),
-  items: const [
-    LineItem(
-      id: 'item_1',
-      variantId: 'var_1',
-      productId: 'prod_1',
-      productHandle: 'shirt',
-      title: 'Shirt',
-      unitPrice: Money(amount: 2000, currencyCode: 'usd'),
-      quantity: 3,
-    ),
-  ],
-  subtotal: const Money(amount: 6000, currencyCode: 'usd'),
-  shippingTotal: const Money(amount: 0, currencyCode: 'usd'),
-  discountTotal: const Money(amount: 0, currencyCode: 'usd'),
-  tax: const Money(amount: 0, currencyCode: 'usd'),
-  total: const Money(amount: 6000, currencyCode: 'usd'),
-  shippingAddress: _address,
-  billingAddress: _address,
-  placedAt: _instant,
-  status: OrderStatus.completed,
-  paymentStatus: PaymentStatus.captured,
-);
-
-const _address = Address(
-  firstName: 'Ada',
-  lastName: 'Lovelace',
-  line1: '12 Analytical Way',
-  city: 'Washington',
-  postalCode: '20001',
-  countryCode: 'us',
-);
-final _instant = DateTime.utc(2026, 9, 14, 12);
+final Order _paidOrder = paidReturnOrder();

@@ -108,6 +108,26 @@ void main() {
         .assertUnprocessable();
   });
 
+  test('owned order detail reports quantities reserved by active returns',
+      () async {
+    final owned = await scenario.order();
+    expect(owned.order.items.single.detail.deliveredQuantity, 3);
+    (await scenario.request(owned.order, owned.token, quantity: 2).send())
+        .assertCreated();
+
+    final request = scenario.client.get('/store/orders/${owned.order.id}')
+      ..bearer(owned.token);
+    final response = await request.send();
+    response.assertOk();
+    final order = Order.fromJson(response.json! as Map<String, Object?>);
+
+    expect(order.items.single.detail.deliveredQuantity, 3);
+    expect(order.items.single.detail.returnRequestedQuantity, 2);
+    expect(order.items.single.detail.returnReceivedQuantity, 0);
+    expect(order.items.single.detail.returnDismissedQuantity, 0);
+    expect(order.items.single.detail.returnableQuantity, 1);
+  });
+
   test('concurrent requests receive distinct monotonic display numbers',
       () async {
     final first = await scenario.order(email: 'first@example.com');

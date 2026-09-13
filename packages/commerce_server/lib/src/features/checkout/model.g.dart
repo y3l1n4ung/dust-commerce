@@ -13,19 +13,6 @@
 
 part of 'model.dart';
 
-mixin _$OrderListResponse implements Serializable {
-  Map<String, Object?> serialize() =>
-      _$OrderListResponseSerialize(this as OrderListResponse);
-
-  Map<String, Object?> toJson() => serialize();
-}
-
-final class $OrderListResponseSerializer implements Serializer<OrderListResponse, Map<String, Object?>> {
-  const $OrderListResponseSerializer();
-
-  @override
-  Map<String, Object?> serialize(OrderListResponse value) => _$OrderListResponseSerialize(value);
-}
 OrderResponse _$OrderResponseFromRow(Row row) {
   return OrderResponse(
     orderId: row.read<String>('id'),
@@ -45,7 +32,7 @@ OrderResponse _$OrderResponseFromRow(Row row) {
     regionTaxRate: row.read<int>('tax_rate'),
     regionTaxInclusive: row.read<int>('tax_inclusive'),
     regionCountries: row.read<String>('countries'),
-    itemsJson: row.read<String>('items_json'),
+    items: OrderLineItemsFromJson().decode(row.read<String>('items_json')),
     shippingAddressJson: row.read<String>('shipping_address_json'),
     billingAddressJson: row.read<String>('billing_address_json'),
     orderCustomerId: row.readNullable<String>('customer_id'),
@@ -82,15 +69,3 @@ extension $OrderResponseQuery on QueryAs<OrderResponse> {
   Future<List<OrderResponse>> fetchAll(DatabaseExecutor db) =>
       fetchAllWith(db, _$OrderResponseFromRow);
 }
-
-Map<String, Object?> _$OrderListResponseSerialize(OrderListResponse instance) {
-  return <String, Object?>{
-    'count': instance.count,
-    'orders': instance.orders
-        .map((item) => item.toJson())
-        .toList(),
-  };
-}
-
-Map<String, Object?> _$OrderListResponseToJson(OrderListResponse instance) =>
-    _$OrderListResponseSerialize(instance);

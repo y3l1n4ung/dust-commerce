@@ -63,6 +63,7 @@ void main() {
       expect(emptied.items, isEmpty);
       expect(order.items, hasLength(1));
       expect(order.items.single.unitPrice, Money.of(1000, 'eur'));
+      expect(order.items.single, isA<OrderLineItem>());
     });
 
     test('refuses an empty cart, which is nothing to order', () {
@@ -98,6 +99,7 @@ void main() {
       expect(captured.paymentStatus, PaymentStatus.captured);
       expect(captured.isPaid, isTrue);
       expect(captured.status, OrderStatus.completed);
+      expect(captured.items.single.detail.deliveredQuantity, 2);
     });
 
     test('cancelling a pending order leaves the payment awaiting', () {

@@ -89,7 +89,7 @@ final _order = Order(
     countries: ['us'],
   ),
   items: const [
-    LineItem(
+    OrderLineItem(
       id: 'item_1',
       variantId: 'var_1',
       productId: 'prod_1',
@@ -98,6 +98,12 @@ final _order = Order(
       variantTitle: 'Small',
       unitPrice: Money(amount: 2000, currencyCode: 'usd'),
       quantity: 1,
+      detail: OrderLineItemDetail(
+        deliveredQuantity: 0,
+        returnRequestedQuantity: 0,
+        returnReceivedQuantity: 0,
+        returnDismissedQuantity: 0,
+      ),
     ),
   ],
   subtotal: const Money(amount: 2000, currencyCode: 'usd'),

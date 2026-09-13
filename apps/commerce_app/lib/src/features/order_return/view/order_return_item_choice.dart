@@ -20,7 +20,7 @@ final class OrderReturnItemChoice extends StatelessWidget {
   final bool disabled;
 
   /// Frozen line item shown to the customer.
-  final LineItem item;
+  final OrderLineItem item;
 
   /// Selected quantity, or absent when the item is not selected.
   final int? quantity;

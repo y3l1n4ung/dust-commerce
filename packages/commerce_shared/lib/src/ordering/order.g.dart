@@ -204,7 +204,7 @@ abstract class _$OrderCopyWith<$Res> {
     String? email,
     int? displayId,
     String? id,
-    List<LineItem>? items,
+    List<OrderLineItem>? items,
     PaymentStatus? paymentStatus,
     OrderPayment? payment,
     DateTime? placedAt,
@@ -257,7 +257,7 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
         displayId: displayId == null ? _self.displayId : displayId as int,
         email: email == null ? _self.email : email as String,
         region: region == null ? _self.region : region as Region,
-        items: items == null ? _self.items : items as List<LineItem>,
+        items: items == null ? _self.items : items as List<OrderLineItem>,
         subtotal: subtotal == null ? _self.subtotal : subtotal as Money,
         shippingTotal: shippingTotal == null ? _self.shippingTotal : shippingTotal as Money,
         discountTotal: discountTotal == null ? _self.discountTotal : discountTotal as Money,
@@ -428,7 +428,7 @@ Order _$OrderDeserialize(Map<String, Object?> json) {
   );
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final itemsValue = JsonHelper.decodeList(json['items'], 'items',
-      (item, itemKey) => LineItem.fromJson(JsonHelper.asMap(item, itemKey)));
+      (item, itemKey) => OrderLineItem.fromJson(JsonHelper.asMap(item, itemKey)));
   final paymentStatusValue = _$PaymentStatusDeserialize(
     json['payment_status'],
     'payment_status',
