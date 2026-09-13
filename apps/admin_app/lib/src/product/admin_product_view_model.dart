@@ -6,6 +6,7 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'admin_product_view_model.g.dart';
+part 'admin_product_export.dart';
 part 'admin_product_filters.dart';
 
 /// Dependencies for the authenticated merchant catalogue.

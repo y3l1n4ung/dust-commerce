@@ -1,4 +1,6 @@
 import 'package:admin_app/src/product/admin_product_delete.dart';
+import 'package:admin_app/src/product/admin_product_export_drawer.dart';
+import 'package:admin_app/src/product/admin_product_page_header.dart';
 import 'package:admin_app/src/product/admin_product_state.dart';
 import 'package:admin_app/src/product/admin_product_pagination.dart';
 import 'package:admin_app/src/product/admin_product_table.dart';
@@ -60,8 +62,9 @@ final class _AdminProductPageState extends State<AdminProductPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _Header(
-                  onUnavailable: () => _unavailable(context),
+                AdminProductPageHeader(
+                  onExport: () => _export(state),
+                  onImport: () => _unavailable(context),
                   onCreate: widget.onCreateProduct,
                 ),
                 Divider(height: 1, color: Theme.of(context).dividerColor),
@@ -125,33 +128,12 @@ final class _AdminProductPageState extends State<AdminProductPage> {
           content: Text('This action needs the next Admin API slice.')),
     );
   }
-}
 
-final class _Header extends StatelessWidget {
-  const _Header({required this.onUnavailable, required this.onCreate});
-
-  final VoidCallback onCreate;
-  final VoidCallback onUnavailable;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Row(
-          children: [
-            Text('Products', style: Theme.of(context).textTheme.headlineSmall),
-            const Spacer(),
-            OutlinedButton(
-              onPressed: onUnavailable,
-              child: const Text('Export'),
-            ),
-            const SizedBox(width: 8),
-            OutlinedButton(
-              onPressed: onUnavailable,
-              child: const Text('Import'),
-            ),
-            const SizedBox(width: 8),
-            OutlinedButton(onPressed: onCreate, child: const Text('Create')),
-          ],
-        ),
-      );
+  Future<void> _export(AdminProductState state) async {
+    final exported = await showAdminProductExportDrawer(context, state);
+    if (!mounted || exported != true) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Product export downloaded.')),
+    );
+  }
 }

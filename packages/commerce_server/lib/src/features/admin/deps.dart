@@ -16,6 +16,7 @@ final class AdminDeps {
     required this.passwordWork,
     required this.dummyPasswordHash,
     required this.products,
+    required this.productExports,
     required this.productTags,
     required this.productTypes,
     required this.productTypeReads,
@@ -50,6 +51,9 @@ final class AdminDeps {
 
   /// Merchant catalogue listing queries.
   final AdminProductRepository products;
+
+  /// Filtered product graphs used only by CSV export.
+  final AdminProductExportRepository productExports;
 
   /// Reusable product-tag discovery for filters and selectors.
   final AdminProductTagRepository productTags;

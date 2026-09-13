@@ -11,6 +11,7 @@ import 'package:dust_server/server.dart';
 export 'create.dart';
 export 'delete.dart';
 export 'delete/product.dart';
+export 'export.dart';
 export 'image_variants.dart';
 export 'list.dart';
 export 'media.dart';

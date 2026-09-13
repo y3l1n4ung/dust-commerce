@@ -35,6 +35,18 @@ abstract interface class AdminApi {
     @Query('offset') int offset,
   );
 
+  /// Downloads every product matching the active Admin table query.
+  @GET('/admin/products/export')
+  Future<String> exportProducts(
+    @Query('q') String query,
+    @Query('status') String statuses,
+    @Query('tag_id') String tagIds,
+    @Query('type_id') String typeIds,
+    @Query('created_at') String createdAt,
+    @Query('updated_at') String updatedAt,
+    @Query('order') String order,
+  );
+
   /// Lists normalized product types for filters and product selectors.
   @GET('/admin/product-types')
   Future<AdminProductTypeList> listProductTypes(

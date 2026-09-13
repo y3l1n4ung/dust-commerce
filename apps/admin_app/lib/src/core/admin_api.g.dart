@@ -186,6 +186,57 @@ final class _$AdminApi implements AdminApi {
   }
 
   @override
+  Future<String> exportProducts(
+    String query,
+    String statuses,
+    String tagIds,
+    String typeIds,
+    String createdAt,
+    String updatedAt,
+    String order,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    _queryParameters['q'] = query;
+    _queryParameters['status'] = statuses;
+    _queryParameters['tag_id'] = tagIds;
+    _queryParameters['type_id'] = typeIds;
+    _queryParameters['created_at'] = createdAt;
+    _queryParameters['updated_at'] = updatedAt;
+    _queryParameters['order'] = order;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<String>(
+      _setStreamType<String>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/products/export',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return _result.data as String;
+  }
+
+  @override
   Future<AdminProductTypeList> listProductTypes(
     String query,
     int limit,

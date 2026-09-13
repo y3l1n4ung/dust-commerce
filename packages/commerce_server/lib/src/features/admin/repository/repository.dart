@@ -8,6 +8,7 @@ export 'create.dart';
 export 'delete.dart';
 export 'delete/product.dart';
 export 'delete/product_option.dart';
+export 'export.dart';
 export 'image_variants.dart';
 export 'list.dart';
 export 'media.dart';
