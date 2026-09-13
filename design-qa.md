@@ -15,7 +15,7 @@ Source visual truth paths:
 - Rendered product reference: `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`
 - Pinned empty-cart source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/cart/components/empty-cart-message/index.tsx`
 - Rendered empty-cart reference: `https://next.medusajs.com/dk/cart?qa=cart-empty-audit`
-- Pinned populated-cart sources: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/cart/templates/{index,items,summary}.tsx`, `components/{item,sign-in-prompt}/index.tsx`, and `modules/layout/components/cart-dropdown/index.tsx`
+- Pinned populated-cart sources: `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/cart/templates/{index,items,summary}.tsx`, `components/{cart-item-select,item,sign-in-prompt}/index.tsx`, and `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/shipping/components/free-shipping-price-nudge/index.tsx` at `19e8a6fbefea5a385e9502409908bfbebbecf526`
 - Rendered populated-cart reference: `https://next.medusajs.com/dk/cart?qa=populated-cart-source`
 - Rendered cart-preview reference: `https://next.medusajs.com/dk/products/iphone-16-bundle?qa=cart-preview-source-ready`
 - Pinned promotion source: `/private/tmp/dtc-starter.9KjRyK/source/apps/storefront/src/modules/checkout/components/discount-code/index.tsx`
@@ -239,6 +239,14 @@ Medusa catalog has no sparse option combination, and browser
 policy rejected the local two-raster comparison board, so compact visual parity
 and the unavailable-combination rendered pair remain blocked rather than
 inferred from separate captures.
+The implementation-only compact cart pass used a `390 x 844` CSS viewport with
+one anonymous line. Changing quantity from one to two updated the cart count,
+line total, subtotal, tax and total from the server, and checkout opened
+`/checkout?step=address`. The pinned source confirms the same quantity and
+first-incomplete-step contracts. A fresh live Medusa add-to-cart attempt ended
+in a production Server Components error, so no same-state compact pair is
+claimed; browser removal remains open while the real API/ViewModel test covers
+the mutation and resulting empty cart.
 The empty-cart pair confirms the source content inset, copy, vertical placement,
 blue diagonal-arrow link and footer divider. The signed-out account pairs
 confirm the sign-in and registration compositions, exact control rhythm,
@@ -360,6 +368,11 @@ unnecessary. The missing rendered source control remains the comparison limit.
   quantity control, extra final-row divider and 14px actions. The final pair
   matches the source heading weights, table tracks, neutral pill and 16px/40px
   controls with no remaining P0, P1 or P2 desktop-cart mismatch.
+- The compact populated-cart implementation keeps the source's 24px inset,
+  mobile Item/Quantity/Total columns and stacked Summary. Browser interaction
+  changed quantity one to two and recomputed `USD 30.00` subtotal, `USD 3.00`
+  tax and `USD 33.00` total before entering the address step. The live source
+  mutation failed, so this is interaction evidence rather than a visual pass.
 - The initial cart-preview comparison exposed P2 viewport-edge anchoring,
   compressed thumbnail-to-copy spacing, a 40px instead of 48px primary action,
   an invented success toast and premature dismissal when the pointer was away.
@@ -427,8 +440,9 @@ unnecessary. The missing rendered source control remains the comparison limit.
 - Capture a matched compact product pair for unavailable-combination and
   add-to-cart feedback states; selected, option-sheet, query-preservation and
   sold-out behavior are now browser-verified separately.
-- Capture populated cart at compact width and exercise shipping, line-removal
-  and checkout actions against matching anonymous fixtures.
+- Retry the matched compact populated-cart capture when the live source can add
+  a line; local quantity, authoritative totals and address-step handoff pass,
+  while browser line removal and a same-state shipping popup remain open.
 - Capture authenticated checkout against a non-destructive reference account;
   retry the payment/review pair when the reference delivery
   mutation works, then capture confirmation without placing an unintended
