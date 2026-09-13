@@ -247,6 +247,13 @@ abstract interface class CommerceApi {
   @GET('/store/orders/{id}')
   Future<Order> order(@Path() String id);
 
+  /// Active merchant-controlled reasons available to return items.
+  @GET('/store/return-reasons')
+  Future<ReturnReasonListView> returnReasons({
+    @Query('limit') int? limit,
+    @Query('offset') int? offset,
+  });
+
   /// Requests return processing for items from an authenticated owned order.
   @POST('/store/returns')
   Future<OrderReturnView> requestOrderReturn(

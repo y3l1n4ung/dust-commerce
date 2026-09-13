@@ -1511,6 +1511,44 @@ final class _$CommerceApi implements CommerceApi {
   }
 
   @override
+  Future<ReturnReasonListView> returnReasons({int? limit, int? offset}) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    if (limit != null) _queryParameters['limit'] = limit;
+    if (offset != null) _queryParameters['offset'] = offset;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<ReturnReasonListView>(
+        _options
+            .compose(
+              _dio.options,
+              '/store/return-reasons',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return ReturnReasonListView.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<OrderReturnView> requestOrderReturn(OrderReturnRequestBody body) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
