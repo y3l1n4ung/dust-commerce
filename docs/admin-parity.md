@@ -174,6 +174,13 @@ routes; unavailable Sales Channels are omitted instead of fabricated. Active
 filters are removable, Clear all preserves search and ordering, pagination
 uses the source copy and density, and Dio remains the only bearer owner.
 
+The Sales Channel foundation now matches Medusa's channel fields and nullable
+cart/order association semantics without rewriting committed tables. New carts
+atomically select the first enabled channel in the current single-store
+boundary, and checkout freezes that link onto the order. Protected Admin
+discovery and query controls remain the next slice, so the product filter is
+still omitted rather than rendered with fake options.
+
 Product creation now follows Medusa's option permutation contract: merchants can
 add and remove option axes, comma values normalize without changing first-entry
 order, and the variant step generates every left-to-right Cartesian selection.

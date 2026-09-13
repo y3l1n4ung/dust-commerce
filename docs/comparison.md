@@ -227,7 +227,8 @@ allowlisted discovery route, and filters by the same Medusa query key before
 count and paging. A separate guarded tag-discovery route now supplies the
 visible source-ordered Type, Tag, Status, Created and Updated controls. Active
 filters, Clear all, source pagination copy and all six supported sort choices
-are wired; Sales Channel remains absent because that domain is not modeled.
+are wired. Sales Channel now has final channel, cart-link and order-snapshot
+tables, while its protected discovery and visible filter remain pending.
 Product-type CRUD/assignment remains outside the implemented boundary.
 
 ### Order transfers keep the capability out of the database
@@ -262,7 +263,8 @@ than copying this SQLite representation.
 ## Not attempted
 
 Fulfilment and returns, external payment integrations or saved payment methods,
-provider-driven taxes, inventory locations, sales channels, product-type CRUD,
+provider-driven taxes, inventory locations, sales-channel management and
+product availability by channel, product-type CRUD,
 search, password reset, email verification,
 MFA, OAuth providers, API keys, admin RBAC, most admin catalogue mutations,
 admin order/customer/operations APIs, workflow engine, plugin system,

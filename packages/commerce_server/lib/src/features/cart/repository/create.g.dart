@@ -30,6 +30,31 @@ VALUES (?, ?, ?, ?)
   }
 
   @override
+  Future<Result<ExecResult, SqlxError>> linkSalesChannel(String cartId, String salesChannelId) {
+    return _db.execute(
+      r'''
+INSERT INTO cart_sales_channels (cart_id, sales_channel_id)
+VALUES (?, ?)
+''',
+      [cartId, salesChannelId],
+    );
+  }
+
+  @override
+  Future<Result<String?, SqlxError>> firstSalesChannelId() {
+    return _db.fetchScalar<String?>(
+      r'''
+SELECT id
+FROM sales_channels
+WHERE is_disabled = 0 AND deleted_at IS NULL
+ORDER BY id
+LIMIT 1
+''',
+      [],
+    );
+  }
+
+  @override
   Future<Result<RegionResponse?, SqlxError>> regionById(String id) {
     return _db.fetchOptional<RegionResponse>(
       r'''

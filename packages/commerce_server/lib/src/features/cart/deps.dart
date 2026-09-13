@@ -8,7 +8,6 @@ import 'package:dust_server/server.dart';
 final class CartDeps {
   /// Creates a [CartDeps].
   const CartDeps({
-    required this.creates,
     required this.reads,
     required this.lists,
     required this.writes,
@@ -27,9 +26,6 @@ final class CartDeps {
 
   /// Database owner used for atomic cart mutations.
   final CommerceDatabase database;
-
-  /// Starting a cart.
-  final CartCreateRepository creates;
 
   /// What a region offers.
   final CartListRepository lists;

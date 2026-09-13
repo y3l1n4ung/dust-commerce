@@ -45,6 +45,7 @@ void main() {
         ...'product_variants products promotions provider_identity'.split(' '),
         'product_imports',
         ...'regions shipping_options shipping_option_price_rules'.split(' '),
+        ...'sales_channels cart_sales_channels order_sales_channels'.split(' '),
         ...'order_transfers variant_option_values variant_prices'.split(' '),
         'payment_collections',
       ]),
@@ -78,6 +79,37 @@ void main() {
     final columns = rows.map((row) => row.readIndex<String>(1)).toList();
 
     expect(columns, containsAll(<String>['id', 'display_id', 'cart_id']));
+  });
+
+  test('sales channels keep Medusa fields and one cart/order association',
+      () async {
+    final channelRows = await queryRaw(
+      'PRAGMA table_info(sales_channels)',
+      [],
+    ).fetch(database.connection as Executor);
+    final channelColumns =
+        channelRows.map((row) => row.readIndex<String>(1)).toList();
+
+    expect(
+      channelColumns,
+      containsAll(<String>[
+        'id',
+        'name',
+        'description',
+        'is_disabled',
+        'metadata',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+      ]),
+    );
+    for (final table in ['cart_sales_channels', 'order_sales_channels']) {
+      final rows = await queryRaw('PRAGMA table_info($table)', [])
+          .fetch(database.connection as Executor);
+      final columns = rows.map((row) => row.readIndex<String>(1)).toList();
+      expect(columns, contains('sales_channel_id'));
+      expect(rows.singleWhere((row) => row.readIndex<int>(5) == 1), isNotNull);
+    }
   });
 
   test('product variants contain the complete Medusa detail fields', () async {

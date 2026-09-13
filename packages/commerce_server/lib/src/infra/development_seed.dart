@@ -44,6 +44,10 @@ Future<void> _seed(
 
 final _statements = <_Statement>[
   const _Statement(r'''
+INSERT OR IGNORE INTO sales_channels (id, name, description)
+VALUES ('sc_web', 'Online Store', 'Primary direct-to-consumer storefront')
+'''),
+  const _Statement(r'''
 INSERT OR IGNORE INTO regions
   (id, name, currency_code, tax_rate, countries)
 VALUES

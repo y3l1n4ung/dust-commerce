@@ -22,6 +22,26 @@ VALUES ($1, $2, $3, $4)
     String? email,
   );
 
+  /// Associates a cart with the selected selling channel.
+  @Query(r'''
+INSERT INTO cart_sales_channels (cart_id, sales_channel_id)
+VALUES ($1, $2)
+''')
+  Future<Result<ExecResult, SqlxError>> linkSalesChannel(
+    String cartId,
+    String salesChannelId,
+  );
+
+  /// The deterministic enabled channel for the current single-store boundary.
+  @Query(r'''
+SELECT id
+FROM sales_channels
+WHERE is_disabled = 0 AND deleted_at IS NULL
+ORDER BY id
+LIMIT 1
+''')
+  Future<Result<String?, SqlxError>> firstSalesChannelId();
+
   /// One region by id, for a storefront that has chosen one.
   @Query(r'''
 SELECT id, name, currency_code,

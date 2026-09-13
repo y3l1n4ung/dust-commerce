@@ -123,7 +123,6 @@ Router buildApp(
     )
     ..withState(
       CartDeps(
-        creates: CartCreateRepository(executor),
         reads: CartReadRepository(executor),
         lists: CartListRepository(executor),
         writes: CartUpdateRepository(executor),

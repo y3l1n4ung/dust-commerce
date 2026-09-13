@@ -401,8 +401,9 @@ raster is available, so pixel parity is not claimed.
   new browser errors. All 59 non-widget Admin and 324 server tests pass;
   analyzer, Dust checks and the release web build pass.
 - Sales Channels and Shipping configuration remain visible and explicitly say
-  `Not configured` because those Medusa domains do not yet exist in this
-  schema. No fake merchant data is rendered.
+  `Not configured` because product-channel availability and shipping-profile
+  assignment are not implemented. The schema now preserves the channel used by
+  new carts and orders; no fake product assignment is rendered.
 
 ## Open findings
 

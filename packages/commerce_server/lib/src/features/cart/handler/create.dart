@@ -39,7 +39,7 @@ Future<Result<CartViewResponse, Rejection>> createCartHandler(
   final deps = (state as Ok<CartDeps, Rejection>).value;
 
   final result = await createCart(
-    deps.creates,
+    deps.database,
     id: deps.clock.nextId(),
     regionId: body.regionId,
     email: actor.match(

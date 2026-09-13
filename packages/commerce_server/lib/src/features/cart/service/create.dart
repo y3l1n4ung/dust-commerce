@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
+import 'package:commerce_server/src/infra/database.dart';
 import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
 
@@ -13,6 +14,21 @@ import 'package:dust_dart/db.dart';
 /// Returns [None] when the named region does not exist, or when the shop has no
 /// regions at all.
 Future<Result<Option<CartResponse>, SqlxError>> createCart(
+  CommerceDatabase database, {
+  required String id,
+  String? regionId,
+  String? email,
+  String? customerId,
+}) =>
+    database.transaction((tx) => _createCart(
+          CartCreateRepository(tx),
+          id: id,
+          regionId: regionId,
+          email: email,
+          customerId: customerId,
+        ));
+
+Future<Result<Option<CartResponse>, SqlxError>> _createCart(
   CartCreateRepository writes, {
   required String id,
   String? regionId,
@@ -37,6 +53,16 @@ Future<Result<Option<CartResponse>, SqlxError>> createCart(
     email,
   );
   if (written case Err(:final error)) return Err(error);
+
+  final channelResult = await writes.firstSalesChannelId();
+  if (channelResult case Err(:final error)) return Err(error);
+  final channel = optionOf(
+    (channelResult as Ok<String?, SqlxError>).value,
+  );
+  if (channel case Some(value: final salesChannelId)) {
+    final linked = await writes.linkSalesChannel(id, salesChannelId);
+    if (linked case Err(:final error)) return Err(error);
+  }
 
   return Ok(
     Some<CartResponse>(CartResponse(
