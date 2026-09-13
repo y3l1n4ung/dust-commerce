@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:commerce_app/src/core/api/api.dart';
 import 'package:commerce_app/src/features/order_return/model/model.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -6,6 +8,7 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'order_return_view_model.g.dart';
+part 'order_return_reasons.dart';
 
 /// Dependencies for the authenticated customer return form.
 final class OrderReturnViewModelArgs extends ViewModelArgs {
@@ -53,6 +56,10 @@ final class OrderReturnViewModel extends $OrderReturnViewModel {
   void open() {
     if (state.orderId case Some()) {
       emit(state.copyWith(expanded: true));
+      if (state.reasonStatus
+          case OrderReturnReasonStatus.idle || OrderReturnReasonStatus.failed) {
+        unawaited(loadReasons());
+      }
     }
   }
 
@@ -69,10 +76,14 @@ final class OrderReturnViewModel extends $OrderReturnViewModel {
       return;
     }
     final quantities = {...state.quantities};
-    quantities.containsKey(itemId)
-        ? quantities.remove(itemId)
-        : quantities[itemId] = 1;
-    _edit(quantities: quantities);
+    final reasons = {...state.reasonIds};
+    if (quantities.containsKey(itemId)) {
+      quantities.remove(itemId);
+      reasons.remove(itemId);
+    } else {
+      quantities[itemId] = 1;
+    }
+    _edit(quantities: quantities, reasonIds: reasons);
   }
 
   /// Replaces the quantity of an already-selected item when valid.
@@ -109,7 +120,7 @@ final class OrderReturnViewModel extends $OrderReturnViewModel {
       ));
       return;
     }
-    final generation = ++_generation;
+    final generation = _generation;
     emit(state.copyWith(
       status: OrderReturnRequestStatus.submitting,
       failure: const None(),
@@ -123,6 +134,7 @@ final class OrderReturnViewModel extends $OrderReturnViewModel {
               OrderReturnItemInput(
                 itemId: entry.key,
                 quantity: entry.value,
+                reasonIdValue: state.reasonIds[entry.key],
               ),
           ],
           noteValue: state.note.match(some: (value) => value, none: () => null),
@@ -148,15 +160,19 @@ final class OrderReturnViewModel extends $OrderReturnViewModel {
 
   void _edit({
     Map<String, int>? quantities,
+    Map<String, String>? reasonIds,
     Option<String>? note,
   }) =>
       emit(state.copyWith(
         status: OrderReturnRequestStatus.ready,
         quantities: quantities ?? state.quantities,
+        reasonIds: reasonIds ?? state.reasonIds,
         note: note ?? state.note,
         request: const None(),
         failure: const None(),
       ));
+
+  void _set(OrderReturnRequestState next) => emit(next);
 }
 
 OrderReturnFailure _classifyReturnFailure(Object error) {

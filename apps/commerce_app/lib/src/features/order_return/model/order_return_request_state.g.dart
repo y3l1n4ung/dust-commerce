@@ -15,6 +15,8 @@ part of 'order_return_request_state.dart';
 
 const DeepCollectionEquality _orderReturnRequestStateAvailableQuantitiesEquality = DeepCollectionEquality();
 const DeepCollectionEquality _orderReturnRequestStateQuantitiesEquality = DeepCollectionEquality();
+const DeepCollectionEquality _orderReturnRequestStateReasonIdsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _orderReturnRequestStateReasonsEquality = DeepCollectionEquality();
 
 mixin _$OrderReturnRequestState {
   @override
@@ -27,6 +29,9 @@ mixin _$OrderReturnRequestState {
         'note: ${self.note}, '
         'orderId: ${self.orderId}, '
         'quantities: ${self.quantities}, '
+        'reasonIds: ${self.reasonIds}, '
+        'reasons: ${self.reasons}, '
+        'reasonStatus: ${self.reasonStatus}, '
         'request: ${self.request}, '
         'status: ${self.status}'
         ')';
@@ -44,6 +49,9 @@ mixin _$OrderReturnRequestState {
             other.note == self.note &&
             other.orderId == self.orderId &&
             _orderReturnRequestStateQuantitiesEquality.equals(other.quantities, self.quantities) &&
+            _orderReturnRequestStateReasonIdsEquality.equals(other.reasonIds, self.reasonIds) &&
+            _orderReturnRequestStateReasonsEquality.equals(other.reasons, self.reasons) &&
+            other.reasonStatus == self.reasonStatus &&
             other.request == self.request &&
             other.status == self.status;
   }
@@ -59,6 +67,9 @@ mixin _$OrderReturnRequestState {
       self.note,
       self.orderId,
       _orderReturnRequestStateQuantitiesEquality.hash(self.quantities),
+      _orderReturnRequestStateReasonIdsEquality.hash(self.reasonIds),
+      _orderReturnRequestStateReasonsEquality.hash(self.reasons),
+      self.reasonStatus,
       self.request,
       self.status,
     ]);
@@ -85,6 +96,9 @@ abstract class _$OrderReturnRequestStateCopyWith<$Res> {
     Option<String>? note,
     Option<String>? orderId,
     Map<String, int>? quantities,
+    Map<String, String>? reasonIds,
+    List<ReturnReasonView>? reasons,
+    OrderReturnReasonStatus? reasonStatus,
     Option<OrderReturnView>? request,
     OrderReturnRequestStatus? status,
   });
@@ -106,6 +120,9 @@ final class _$OrderReturnRequestStateCopyWithImpl<$Res> implements _$OrderReturn
     Object? note = null,
     Object? orderId = null,
     Object? quantities = null,
+    Object? reasonIds = null,
+    Object? reasons = null,
+    Object? reasonStatus = null,
     Object? request = null,
     Object? status = null,
   }) {
@@ -116,6 +133,9 @@ final class _$OrderReturnRequestStateCopyWithImpl<$Res> implements _$OrderReturn
         orderId: orderId == null ? _self.orderId : orderId as Option<String>,
         availableQuantities: availableQuantities == null ? _self.availableQuantities : availableQuantities as Map<String, int>,
         quantities: quantities == null ? _self.quantities : quantities as Map<String, int>,
+        reasonIds: reasonIds == null ? _self.reasonIds : reasonIds as Map<String, String>,
+        reasons: reasons == null ? _self.reasons : reasons as List<ReturnReasonView>,
+        reasonStatus: reasonStatus == null ? _self.reasonStatus : reasonStatus as OrderReturnReasonStatus,
         note: note == null ? _self.note : note as Option<String>,
         request: request == null ? _self.request : request as Option<OrderReturnView>,
         failure: failure == null ? _self.failure : failure as Option<OrderReturnFailure>,

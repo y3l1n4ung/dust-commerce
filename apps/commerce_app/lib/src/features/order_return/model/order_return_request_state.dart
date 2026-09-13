@@ -21,6 +21,21 @@ enum OrderReturnRequestStatus {
   failed,
 }
 
+/// Lifecycle of optional merchant-controlled return-reason discovery.
+enum OrderReturnReasonStatus {
+  /// The form has not requested reasons.
+  idle,
+
+  /// One or more reason pages are loading.
+  loading,
+
+  /// Discovery completed, including a valid empty result.
+  loaded,
+
+  /// Discovery failed without disabling reason-optional submission.
+  failed,
+}
+
 /// Display-safe reason a return request did not complete.
 enum OrderReturnFailure {
   /// No valid order item has been selected.
@@ -49,6 +64,9 @@ final class OrderReturnRequestState with _$OrderReturnRequestState {
     this.orderId = const None(),
     this.availableQuantities = const {},
     this.quantities = const {},
+    this.reasonIds = const {},
+    this.reasons = const [],
+    this.reasonStatus = OrderReturnReasonStatus.idle,
     this.note = const None(),
     this.request = const None(),
     this.failure = const None(),
@@ -71,6 +89,15 @@ final class OrderReturnRequestState with _$OrderReturnRequestState {
 
   /// Selected quantity keyed by immutable order-item id.
   final Map<String, int> quantities;
+
+  /// Selected active reason id keyed by immutable order-item id.
+  final Map<String, String> reasonIds;
+
+  /// Active merchant-controlled reasons in stable taxonomy order.
+  final List<ReturnReasonView> reasons;
+
+  /// Current reason-discovery lifecycle.
+  final OrderReturnReasonStatus reasonStatus;
 
   /// Persisted acknowledgement returned by the Store API.
   final Option<OrderReturnView> request;
