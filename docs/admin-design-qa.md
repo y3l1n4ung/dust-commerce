@@ -29,6 +29,9 @@
 - Product-create source:
   `packages/admin/dashboard/src/routes/products/product-create/product-create.tsx`
   and the Details, Organize and Variants form components beneath it.
+- Product-export source:
+  `packages/admin/dashboard/src/routes/products/product-export/product-export.tsx`
+  and `components/export-filters.tsx` at the pinned commit.
 - Product-media source:
   `packages/admin/dashboard/src/routes/products/product-media/` and the
   product-detail `product-media-section.tsx` at the pinned commit.
@@ -284,6 +287,14 @@ schema has no such domain; the remaining filter order and labels match source.
   entered EUR price. A protected integration test round-trips the same complete
   graph. Forty-six non-widget Admin and 299 server tests pass; splitting the
   create screen reduced legacy LOC failures to eleven.
+- Product export now opens Medusa's 560px right-side drawer with read-only
+  active query controls and sticky Cancel/Export actions. Live QA searched the
+  24-product catalogue for `pocket`, observed one matching row and the same
+  search/order summary in the drawer, then verified a fresh browser blob named
+  `product-export.csv` and the success message. A route-level guarded API uses
+  one direct SQLx projection and emits ordered Medusa-shaped CSV fields with
+  exact currency exponents and quoting. Forty-seven non-widget Admin and 301
+  server tests pass; no widget tests were added and LOC debt remains eleven.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -293,7 +304,7 @@ schema has no such domain; the remaining filter order and labels match source.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Product import/export remains unavailable.
+- P1 — Product import preview and confirmation remain unavailable.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
   chip input and post-entry rank organizer. Persisted ordering works, but this
   interaction is not yet a literal copy.
