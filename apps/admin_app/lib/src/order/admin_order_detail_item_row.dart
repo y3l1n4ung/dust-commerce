@@ -65,6 +65,8 @@ final class _Thumbnail extends StatelessWidget {
             Some(:final value) => Image.network(
                 value,
                 fit: BoxFit.cover,
+                // Medusa's public seed CDN omits CORS headers on web.
+                webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                 errorBuilder: (context, error, stackTrace) =>
                     const _ImageFallback(),
               ),
