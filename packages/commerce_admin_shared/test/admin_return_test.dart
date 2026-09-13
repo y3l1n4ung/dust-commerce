@@ -77,4 +77,29 @@ void main() {
     expect(decoded.items.single.receivedQuantity, 2);
     expect(decoded.items.single.damagedQuantity, 1);
   });
+
+  test('encodes one atomic intact and damaged receipt operation', () {
+    const body = AdminReceiveReturn(
+      items: [
+        AdminReceiveReturnItem(
+          id: 'reti_02',
+          quantity: 1,
+          damagedQuantity: 1,
+        ),
+      ],
+      noNotification: true,
+    );
+
+    expect(body.toJson(), {
+      'items': [
+        {
+          'damaged_quantity': 1,
+          'id': 'reti_02',
+          'quantity': 1,
+        },
+      ],
+      'no_notification': true,
+    });
+    expect(AdminReceiveReturn.fromJson(body.toJson()), body);
+  });
 }
