@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/admin_order/handler.dart';
 import 'package:commerce_server/src/features/admin_order/create_fulfillment_handler.dart';
+import 'package:commerce_server/src/features/admin_order/create_shipment_handler.dart';
 import 'package:commerce_server/src/features/admin_order/detail_handler.dart';
 import 'package:commerce_server/src/features/admin_order/export_handler.dart';
 import 'package:dust_server/server.dart';
@@ -12,4 +13,8 @@ Router adminOrderRoutes() => Router()
   ..route(
     '/orders/{id}/fulfillments',
     post(createAdminOrderFulfillmentHandler),
+  )
+  ..route(
+    '/orders/{id}/fulfillments/{fulfillment_id}/shipments',
+    post(createAdminOrderShipmentHandler),
   );
