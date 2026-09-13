@@ -307,9 +307,14 @@ schema has no such domain; the remaining filter order and labels match source.
   operation matching Medusa's `POST /admin/products/import/:id/confirm`
   boundary and 202 empty response. One SQLx transaction applies the complete
   supported product graph, consumes the staged row once, and rolls back on
-  conflicts. Eight focused preview/confirmation tests and all 310 server tests
-  pass; the Admin button remains intentionally disabled for the next stacked
-  client-and-view-model slice.
+  conflicts. The generated Admin client, view model, and drawer now submit that
+  transaction and refresh the product list after success. Live browser QA
+  uploaded `Browser Import Cap`, previewed one create and zero updates,
+  completed the import, and rendered the new published product with the success
+  message. Direct database verification found its one-size SKU plus exact EUR
+  1000 and USD 1500 minor-unit prices; browser warnings and errors were empty.
+  Eight focused preview/confirmation tests, all 310 server tests, and all 50
+  non-widget Admin tests pass.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -319,9 +324,6 @@ schema has no such domain; the remaining filter order and labels match source.
 - P2 — Capture an unletterboxed Medusa source at the same content width before
   declaring pixel parity. The current combined comparison passes structural
   design QA, not a pixel-diff threshold.
-- P1 — Product import confirmation is implemented server-side; the preview
-  drawer keeps Import disabled until its generated client and view-model slice
-  lands.
 - P3 — Global option creation uses comma entry rather than Medusa's interactive
   chip input and post-entry rank organizer. Persisted ordering works, but this
   interaction is not yet a literal copy.
