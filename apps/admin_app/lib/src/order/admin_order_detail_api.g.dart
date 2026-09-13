@@ -95,6 +95,96 @@ final class _$AdminOrderDetailApi implements AdminOrderDetailApi {
   }
 
   @override
+  Future<AdminStockLocationList> stockLocations(
+    String query,
+    int limit,
+    int offset,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    _queryParameters['q'] = query;
+    _queryParameters['limit'] = limit;
+    _queryParameters['offset'] = offset;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminStockLocationList>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/stock-locations',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminStockLocationList.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<AdminFulfillmentShippingOptionList> fulfillmentShippingOptions(
+    String stockLocationId,
+    String regionId,
+    String query,
+    int limit,
+    int offset,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    _queryParameters['stock_location_id'] = stockLocationId;
+    _queryParameters['region_id'] = regionId;
+    _queryParameters['q'] = query;
+    _queryParameters['limit'] = limit;
+    _queryParameters['offset'] = offset;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminFulfillmentShippingOptionList>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/shipping-options',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminFulfillmentShippingOptionList.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<AdminOrderDetail> createFulfillment(
     String id,
     AdminCreateFulfillment body,

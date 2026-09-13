@@ -18,6 +18,24 @@ abstract interface class AdminOrderDetailApi {
   @GET('/admin/orders/{id}')
   Future<AdminOrderDetail> order(@Path() String id);
 
+  /// Lists active stock locations for the fulfillment form.
+  @GET('/admin/stock-locations')
+  Future<AdminStockLocationList> stockLocations(
+    @Query('q') String query,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
+
+  /// Lists methods compatible with one location and the order region.
+  @GET('/admin/shipping-options')
+  Future<AdminFulfillmentShippingOptionList> fulfillmentShippingOptions(
+    @Query('stock_location_id') String stockLocationId,
+    @Query('region_id') String regionId,
+    @Query('q') String query,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
+
   /// Creates one fulfillment and returns the refreshed merchant order.
   @POST('/admin/orders/{id}/fulfillments')
   Future<AdminOrderDetail> createFulfillment(
