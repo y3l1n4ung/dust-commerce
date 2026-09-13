@@ -160,7 +160,7 @@ class _CommerceAppState extends State<CommerceApp> {
       routerConfig: _routerConfig,
     );
 
-    return _storefrontScopes(
+    return _StorefrontScopes(
       api: widget.api,
       account: _account,
       addresses: _addresses,

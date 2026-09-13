@@ -33,7 +33,6 @@ apps/admin_app/lib/src/product_type/admin_product_type_detail_page.dart:2
 apps/admin_app/lib/src/product_type/admin_product_type_edit_drawer.dart:2
 apps/admin_app/lib/src/product_type/admin_product_type_page.dart:1
 apps/admin_app/lib/src/product_type/detail/admin_product_type_products_section.dart:1
-apps/commerce_app/lib/src/app/view_model_scopes.dart:1
 apps/commerce_app/lib/src/features/account/view/account_form_fields.dart:1
 apps/commerce_app/lib/src/features/account/view/account_navigation.dart:1
 apps/commerce_app/lib/src/features/account/view/customer_address_form.dart:3
