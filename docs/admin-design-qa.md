@@ -22,6 +22,10 @@
   `packages/admin/dashboard/src/routes/orders/order-export/order-export.tsx`,
   `components/export-filters.tsx`, the order API export hook and
   `packages/medusa/src/api/admin/orders/export/route.ts` at the pinned commit.
+- Order-region-filter source:
+  `hooks/table/filters/use-order-table-filters.tsx`,
+  `hooks/table/query/use-order-table-query.tsx`, `hooks/api/regions.tsx`, and
+  `packages/medusa/src/api/admin/regions/route.ts` at the pinned commit.
 - Product-query source:
   `hooks/table/query/use-product-table-query.tsx`,
   `hooks/table/filters/use-product-table-filters.tsx`, and the shared
@@ -176,6 +180,13 @@ visible `Search · Ada` and `Order · Created newest` chips prove the export use
 the current query. No same-state Medusa raster is available; source structure,
 responsive behavior and the real CSV download are verified without claiming
 pixel parity.
+
+The order-region pass uses Medusa's separate region discovery hook and
+searchable multi-select definition as source truth. The running Morrow Admin
+was exercised at desktop `1440 x 900` and the app's narrow default viewport;
+Europe reduced six demo orders to the three real EUR-region rows and the export
+drawer rendered the same merchant-facing region name. No same-state Medusa
+raster is available, so pixel parity is not claimed.
 
 ## Verified
 
@@ -376,6 +387,15 @@ pixel parity.
   exact ISO currency exponents without exposing internal ids or metadata. All
   58 non-widget Admin and 321 server tests pass; analyzer, Dust checks and the
   release web build pass, and no widget tests were added.
+- Order Region filtering now loads the real Europe and United States choices
+  from a protected direct-SQLx Admin response instead of reusing Store data or
+  hard-coding ids. The generated client shares Dio authorization, keeps loading
+  and failure state separate from order rows, and the source-shaped submenu is
+  searchable and multi-select. Live QA searched for Europe, reduced six orders
+  to #1001, #1004 and #1006, verified the `Region: Europe` chip and export
+  summary at narrow and desktop widths, then completed a clean reload with no
+  new browser errors. All 59 non-widget Admin and 324 server tests pass;
+  analyzer, Dust checks and the release web build pass.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -401,9 +421,9 @@ pixel parity.
   after an abandoned browser session.
 - P2 — Orders pass source-structure and live-behavior QA, but need same-state
   Medusa order-list and order-detail captures before pixel parity can be
-  claimed. Sales-channel data, region choices and mutations remain separate
-  feature slices; Order Export has source-structure and live-download coverage
-  but also lacks a same-state Medusa capture.
+  claimed. Sales-channel data and mutations remain separate feature slices;
+  Region and Order Export have source-structure and live-behavior coverage but
+  also lack same-state Medusa captures.
 
 ## Result
 
@@ -416,9 +436,9 @@ also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
 live end-to-end behavior checks. Product query behavior, discovery and visible
 controls pass API, state, accessibility and same-state live comparison.
-The order list, read-only detail and filtered CSV export pass protected API,
-generated-client, responsive layout and live-data behavior checks against the
-pinned source structure.
+The order list, region filtering, read-only detail and filtered CSV export pass
+protected API, generated-client, responsive layout and live-data behavior
+checks against the pinned source structure.
 Post-create editor, image-variant drawer, variant pricing, product stock and
 product deletion and orders remain blocked on same-state source captures;
 broader Medusa Admin parity is not claimed.
