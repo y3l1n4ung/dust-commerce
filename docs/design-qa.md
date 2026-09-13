@@ -33,6 +33,31 @@ same-state pair, the in-app browser proxy returned
 the pinned local clone, but source code is not a substitute for a same-state
 rendered comparison.
 
+## Customer-return request slice
+
+The pinned order-detail source keeps `Returns & Exchanges` in the compact
+`Need help?` block. Morrow preserves that hierarchy and turns the link into an
+authenticated, API-backed expansion rather than inventing a separate route.
+Only completed or captured orders expose the control. The form freezes the
+owned order items, requires at least one selected quantity, accepts an optional
+note, prevents duplicate submission while pending, and reports only
+display-safe server failures.
+
+Authenticated browser QA created and captured order display id `1`, submitted
+one Essential T-Shirt with the note `Customer return browser QA`, and received
+return request `#1`. The database retained exactly one request and one item for
+the signed-in customer. Reopening the form and requesting the already exhausted
+quantity returned `These items can no longer be returned.` and did not create a
+second row. This verifies the success, ownership, quantity and atomic rejection
+boundaries against the real API; it does not prove an Admin decision workflow.
+
+The slice passes all 114 non-widget storefront tests, Flutter analysis and all
+47 generated Dust checks. Localization validation has zero errors and five
+inherited warnings. The live desktop form and success/failure regions were
+inspected without overflow or console-visible runtime failure. The pinned DTC
+source provides the help link but no matching customer return form, so this is
+a source-structured capability check rather than a same-state raster claim.
+
 ## Open findings
 
 - P2 — Repeat the verification success/failure capture against the live Medusa
@@ -41,12 +66,17 @@ rendered comparison.
 - P2 — Continue compact and authenticated account-state comparisons from the
   storefront parity ledger.
 - P2 — Complete same-state Review and order-confirmation comparisons.
+- P1 — Add customer return-reason discovery and current-request visibility so
+  exhausted quantities can be disabled before submission.
+- P1 — Add the separate Admin return list, detail and processing workflow before
+  claiming production return lifecycle parity.
 
 ## Result
 
 The verification interaction, API boundary, local success/failure rendering,
-and navigation pass. Exact code-to-layout translation is implemented. Final
-same-state Medusa rendered comparison remains blocked by the reference preview
-connection failure, so broader storefront visual parity is not claimed.
+and navigation pass. Customer return creation and server-side rejection pass
+against the live local stack. Exact code-to-layout translation is implemented
+where the pinned source owns a screen; broader storefront visual parity and a
+complete return lifecycle are not claimed.
 
 final result: blocked
