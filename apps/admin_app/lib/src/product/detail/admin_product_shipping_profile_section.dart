@@ -20,7 +20,7 @@ final class AdminProductShippingProfileSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AdminProductDetailSection(
-        title: 'Shipping Profile',
+        title: 'Shipping configuration',
         action: adminSectionAction(onEdit),
         child: switch (shippingProfile) {
           Some(:final value) => _ShippingProfileLink(profile: value),
@@ -36,40 +36,55 @@ final class _ShippingProfileLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Row(
-          children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHigh,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: Theme.of(context).dividerColor),
-              ),
-              child: const Icon(Icons.shopping_bag_outlined, size: 16),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(profile.name),
-                  Text(
-                    profile.type,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+        child: Material(
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
+          elevation: 1,
+          shadowColor: const Color(0x12000000),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+            side: BorderSide(color: Theme.of(context).dividerColor),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Container(
+                  width: 30,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Theme.of(context).dividerColor),
                   ),
-                ],
-              ),
+                  child: const Icon(Icons.shopping_bag_outlined, size: 16),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        profile.name,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        profile.type,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ],
             ),
-            Icon(
-              Icons.chevron_right_rounded,
-              size: 18,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ],
+          ),
         ),
       );
 }
