@@ -38,4 +38,50 @@ void main() {
     expect(command.shippingOptionId, const None<String>());
     expect(command.noNotification, isTrue);
   });
+
+  test('decodes the explicit fulfillment response and item snapshots', () {
+    final fulfillment = AdminOrderFulfillment.fromJson({
+      'id': 'ful_01',
+      'location_id': 'sloc_main',
+      'provider_id': 'manual',
+      'shipping_option_id': 'ship_standard',
+      'requires_shipping': true,
+      'packed_at': null,
+      'shipped_at': null,
+      'delivered_at': null,
+      'canceled_at': null,
+      'data': {'service_code': 'ship_standard'},
+      'metadata': null,
+      'created_by': 'admin_01',
+      'marked_shipped_by': null,
+      'created_at': '2026-09-14T13:00:00.000Z',
+      'updated_at': '2026-09-14T13:00:00.000Z',
+      'items': [
+        {
+          'id': 'fulitem_01',
+          'fulfillment_id': 'ful_01',
+          'title': 'T-Shirt',
+          'quantity': 1,
+          'sku': 'TSHIRT-M-BLACK',
+          'barcode': '',
+          'line_item_id': 'item_01',
+          'inventory_item_id': null,
+          'created_at': '2026-09-14T13:00:00.000Z',
+          'updated_at': '2026-09-14T13:00:00.000Z',
+        },
+      ],
+    });
+
+    expect(fulfillment.createdAt.isUtc, isTrue);
+    expect(fulfillment.shippingOptionId, const Some('ship_standard'));
+    expect(fulfillment.packedAt, const None<DateTime>());
+    expect(fulfillment.metadata, const None<Map<String, Object?>>());
+    expect(fulfillment.createdBy, const Some('admin_01'));
+    expect(fulfillment.items.single.lineItemId, const Some('item_01'));
+    expect(
+      fulfillment.items.single.inventoryItemId,
+      const None<String>(),
+    );
+    expect(AdminOrderFulfillment.fromJson(fulfillment.toJson()), fulfillment);
+  });
 }

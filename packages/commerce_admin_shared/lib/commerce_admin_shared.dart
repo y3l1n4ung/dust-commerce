@@ -3,10 +3,12 @@ library;
 
 export 'src/admin_auth.dart';
 export 'src/admin_create_fulfillment.dart';
+export 'src/admin_fulfillment_item.dart';
 export 'src/admin_media.dart';
 export 'src/admin_order.dart';
 export 'src/admin_order_address.dart';
 export 'src/admin_order_detail.dart';
+export 'src/admin_order_fulfillment.dart';
 export 'src/admin_order_item.dart';
 export 'src/admin_order_query.dart';
 export 'src/admin_order_status.dart';
