@@ -77,4 +77,62 @@ ORDER BY lower(channel.name), channel.id
       const $AdminSalesChannelResponseRowDeserializer().deserialize,
     );
   }
+
+  @override
+  Future<Result<int, SqlxError>> activeChannelCount(String salesChannelId) {
+    return _db.fetchScalar<int>(
+      r'''
+SELECT count(*)
+FROM sales_channels
+WHERE id = ? AND deleted_at IS NULL
+''',
+      [salesChannelId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> removeProductChannel(String productId, String salesChannelId) {
+    return _db.execute(
+      r'''
+UPDATE product_sales_channels
+SET deleted_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+WHERE product_id = ? AND sales_channel_id = ? AND deleted_at IS NULL
+''',
+      [productId, salesChannelId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> restoreProductChannel(String productId, String salesChannelId) {
+    return _db.execute(
+      r'''
+UPDATE product_sales_channels
+SET deleted_at = NULL
+WHERE id = (
+  SELECT id
+  FROM product_sales_channels
+  WHERE product_id = ? AND sales_channel_id = ? AND deleted_at IS NOT NULL
+  ORDER BY created_at DESC, id DESC
+  LIMIT 1
+)
+AND NOT EXISTS (
+  SELECT 1 FROM product_sales_channels active
+  WHERE active.product_id = ? AND active.sales_channel_id = ?
+    AND active.deleted_at IS NULL
+)
+''',
+      [productId, salesChannelId, productId, salesChannelId],
+    );
+  }
+
+  @override
+  Future<Result<ExecResult, SqlxError>> insertProductChannel(String id, String productId, String salesChannelId) {
+    return _db.execute(
+      r'''
+INSERT INTO product_sales_channels (id, product_id, sales_channel_id)
+VALUES (?, ?, ?)
+''',
+      [id, productId, salesChannelId],
+    );
+  }
 }

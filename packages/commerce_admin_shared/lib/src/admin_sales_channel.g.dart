@@ -14,6 +14,7 @@
 part of 'admin_sales_channel.dart';
 
 const DeepCollectionEquality _adminSalesChannelListSalesChannelsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminUpdateProductSalesChannelsSalesChannelIdsEquality = DeepCollectionEquality();
 
 mixin _$AdminSalesChannel implements Serializable {
   @override
@@ -93,6 +94,76 @@ mixin _$AdminSalesChannelList implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$AdminUpdateProductSalesChannels implements Validatable, Serializable {
+  @override
+  String toString() {
+    final self = this as AdminUpdateProductSalesChannels;
+    return 'AdminUpdateProductSalesChannels('
+        'salesChannelIds: ${self.salesChannelIds}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminUpdateProductSalesChannels;
+    return identical(this, other) ||
+        other is AdminUpdateProductSalesChannels &&
+            runtimeType == other.runtimeType &&
+            _adminUpdateProductSalesChannelsSalesChannelIdsEquality.equals(other.salesChannelIds, self.salesChannelIds);
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminUpdateProductSalesChannels;
+    return Object.hashAll([
+      runtimeType,
+      _adminUpdateProductSalesChannelsSalesChannelIdsEquality.hash(self.salesChannelIds),
+    ]);
+  }
+
+  /// Validates this `AdminUpdateProductSalesChannels`.
+  ///
+  /// Usage:
+  /// ```dart
+  /// final result = value.validate();
+  /// if (result case Invalid(:final errors)) {
+  ///   print(errors.first.message);
+  /// }
+  /// ```
+  ValidationResult validate() {
+    final self = this as AdminUpdateProductSalesChannels;
+    final errors = <ValidationError>[];
+    _AdminUpdateProductSalesChannelsValidation._validateSalesChannelIds(self.salesChannelIds, errors);
+    return errors.isEmpty ? const Valid() : Invalid(errors);
+  }
+
+  /// Throws [ValidationException] when this `AdminUpdateProductSalesChannels` is invalid.
+  ///
+  /// Usage:
+  /// ```dart
+  /// value.validateOrThrow();
+  /// ```
+  void validateOrThrow() {
+    final result = validate();
+    if (result case Invalid(errors: final errors)) {
+      throw ValidationException(errors);
+    }
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminUpdateProductSalesChannelsSerialize(this as AdminUpdateProductSalesChannels);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
+extension _AdminUpdateProductSalesChannelsValidation on AdminUpdateProductSalesChannels {
+  static void _validateSalesChannelIds(List<String> salesChannelIds, List<ValidationError> errors) {
+    if (salesChannelIds.length > 1000) {
+      errors.add(ValidationError(field: 'salesChannelIds', message: 'Choose at most 1000 sales channels'));
+    }
+  }
+
+}
 final class $AdminSalesChannelSerializer implements Serializer<AdminSalesChannel, Map<String, Object?>> {
   const $AdminSalesChannelSerializer();
 
@@ -116,6 +187,18 @@ final class $AdminSalesChannelListDeserializer implements Deserializer<AdminSale
 
   @override
   AdminSalesChannelList deserialize(Map<String, Object?> json) => _$AdminSalesChannelListDeserialize(json);
+}
+final class $AdminUpdateProductSalesChannelsSerializer implements Serializer<AdminUpdateProductSalesChannels, Map<String, Object?>> {
+  const $AdminUpdateProductSalesChannelsSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminUpdateProductSalesChannels value) => _$AdminUpdateProductSalesChannelsSerialize(value);
+}
+final class $AdminUpdateProductSalesChannelsDeserializer implements Deserializer<AdminUpdateProductSalesChannels, Map<String, Object?>> {
+  const $AdminUpdateProductSalesChannelsDeserializer();
+
+  @override
+  AdminUpdateProductSalesChannels deserialize(Map<String, Object?> json) => _$AdminUpdateProductSalesChannelsDeserialize(json);
 }
 
 Map<String, Object?> _$AdminSalesChannelSerialize(AdminSalesChannel instance) {
@@ -171,3 +254,25 @@ AdminSalesChannelList _$AdminSalesChannelListDeserialize(Map<String, Object?> js
 
 AdminSalesChannelList _$AdminSalesChannelListFromJson(Map<String, Object?> json) =>
     _$AdminSalesChannelListDeserialize(json);
+
+Map<String, Object?> _$AdminUpdateProductSalesChannelsSerialize(AdminUpdateProductSalesChannels instance) {
+  return <String, Object?>{
+    'sales_channel_ids': instance.salesChannelIds
+        .map((item) => item)
+        .toList(),
+  };
+}
+
+Map<String, Object?> _$AdminUpdateProductSalesChannelsToJson(AdminUpdateProductSalesChannels instance) =>
+    _$AdminUpdateProductSalesChannelsSerialize(instance);
+
+// factory AdminUpdateProductSalesChannels.fromJson(Map<String, Object?> json) => _$AdminUpdateProductSalesChannelsFromJson(json);
+AdminUpdateProductSalesChannels _$AdminUpdateProductSalesChannelsDeserialize(Map<String, Object?> json) {
+  final salesChannelIdsValue = JsonHelper.decodeList(json['sales_channel_ids'], 'sales_channel_ids',
+      (item, itemKey) => JsonHelper.as<String>(item, itemKey, 'String'));
+
+  return AdminUpdateProductSalesChannels(salesChannelIds: salesChannelIdsValue);
+}
+
+AdminUpdateProductSalesChannels _$AdminUpdateProductSalesChannelsFromJson(Map<String, Object?> json) =>
+    _$AdminUpdateProductSalesChannelsDeserialize(json);

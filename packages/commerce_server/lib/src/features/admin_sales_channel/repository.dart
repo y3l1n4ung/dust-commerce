@@ -57,4 +57,56 @@ ORDER BY lower(channel.name), channel.id
   Future<Result<List<AdminSalesChannelResponse>, SqlxError>> listForProduct(
     String productId,
   );
+
+  /// Confirms that one selectable channel has not been soft-deleted.
+  @Query(r'''
+SELECT count(*)
+FROM sales_channels
+WHERE id = $1 AND deleted_at IS NULL
+''')
+  Future<Result<int, SqlxError>> activeChannelCount(String salesChannelId);
+
+  /// Soft-deletes one active assignment while the database owns its timestamp.
+  @Query(r'''
+UPDATE product_sales_channels
+SET deleted_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+WHERE product_id = $1 AND sales_channel_id = $2 AND deleted_at IS NULL
+''')
+  Future<Result<ExecResult, SqlxError>> removeProductChannel(
+    String productId,
+    String salesChannelId,
+  );
+
+  /// Restores the newest historical assignment instead of duplicating it.
+  @Query(r'''
+UPDATE product_sales_channels
+SET deleted_at = NULL
+WHERE id = (
+  SELECT id
+  FROM product_sales_channels
+  WHERE product_id = $1 AND sales_channel_id = $2 AND deleted_at IS NOT NULL
+  ORDER BY created_at DESC, id DESC
+  LIMIT 1
+)
+AND NOT EXISTS (
+  SELECT 1 FROM product_sales_channels active
+  WHERE active.product_id = $1 AND active.sales_channel_id = $2
+    AND active.deleted_at IS NULL
+)
+''')
+  Future<Result<ExecResult, SqlxError>> restoreProductChannel(
+    String productId,
+    String salesChannelId,
+  );
+
+  /// Creates the first durable assignment for one product/channel pair.
+  @Query(r'''
+INSERT INTO product_sales_channels (id, product_id, sales_channel_id)
+VALUES ($1, $2, $3)
+''')
+  Future<Result<ExecResult, SqlxError>> insertProductChannel(
+    String id,
+    String productId,
+    String salesChannelId,
+  );
 }

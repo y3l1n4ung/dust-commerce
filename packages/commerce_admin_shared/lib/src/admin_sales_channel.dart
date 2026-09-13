@@ -48,3 +48,25 @@ final class AdminSalesChannelList with _$AdminSalesChannelList {
   /// Explicit sales-channel choices.
   final List<AdminSalesChannel> salesChannels;
 }
+
+/// Complete replacement of one product's sales-channel availability.
+@Derive([ToString(), Eq(), Validate(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class AdminUpdateProductSalesChannels
+    with _$AdminUpdateProductSalesChannels {
+  /// Creates one bounded product-channel selection.
+  const AdminUpdateProductSalesChannels({required this.salesChannelIds});
+
+  /// Decodes the generated Admin request.
+  factory AdminUpdateProductSalesChannels.fromJson(
+    Map<String, Object?> json,
+  ) =>
+      _$AdminUpdateProductSalesChannelsFromJson(json);
+
+  /// Stable channel ids to keep attached; empty removes every assignment.
+  @Validate(
+    length: Length(max: 1000),
+    message: 'Choose at most 1000 sales channels',
+  )
+  final List<String> salesChannelIds;
+}

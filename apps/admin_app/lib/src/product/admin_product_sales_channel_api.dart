@@ -18,6 +18,13 @@ abstract interface class AdminProductSalesChannelApi {
   @GET('/admin/products/{id}/sales-channels')
   Future<AdminSalesChannelList> productSalesChannels(@Path() String id);
 
+  /// Atomically replaces every channel attached to one product.
+  @PUT('/admin/products/{id}/sales-channels')
+  Future<AdminSalesChannelList> updateProductSalesChannels(
+    @Path() String id,
+    @Body() AdminUpdateProductSalesChannels body,
+  );
+
   /// Reads the total non-deleted channel count used by Medusa's section copy.
   @GET('/admin/sales-channels')
   Future<AdminSalesChannelList> allSalesChannels(

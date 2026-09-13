@@ -110,6 +110,8 @@ Router buildApp(
     ..withState(AdminRegionDeps(regions: AdminRegionRepository(executor)))
     ..withState(AdminSalesChannelDeps(
       salesChannels: AdminSalesChannelRepository(executor),
+      database: database,
+      clock: clock,
     ))
     ..withState(
       CatalogDeps(

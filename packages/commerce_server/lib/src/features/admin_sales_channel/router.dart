@@ -6,5 +6,6 @@ Router adminSalesChannelRoutes() => Router()
   ..route('/sales-channels', get(listAdminSalesChannelsHandler))
   ..route(
     '/products/{id}/sales-channels',
-    get(readAdminProductSalesChannelsHandler),
+    get(readAdminProductSalesChannelsHandler)
+        .put(updateAdminProductSalesChannelsHandler),
   );
