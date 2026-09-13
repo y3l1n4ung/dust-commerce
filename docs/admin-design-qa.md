@@ -18,6 +18,10 @@
   `packages/admin/dashboard/src/routes/orders/order-detail/order-detail.tsx`
   plus its General, Summary, Payment, Fulfillment, Customer and Activity
   section components at the pinned commit.
+- Order-export source:
+  `packages/admin/dashboard/src/routes/orders/order-export/order-export.tsx`,
+  `components/export-filters.tsx`, the order API export hook and
+  `packages/medusa/src/api/admin/orders/export/route.ts` at the pinned commit.
 - Product-query source:
   `hooks/table/query/use-product-table-query.tsx`,
   `hooks/table/filters/use-product-table-filters.tsx`, and the shared
@@ -164,6 +168,14 @@ items, captured payment, shipping/billing addresses and distinct activity
 timestamps exercise every implemented section. No same-state Medusa order
 detail raster is available, so this pass proves source hierarchy, responsive
 behavior and real-data rendering without claiming pixel parity.
+
+The order-export pass uses the pinned drawer and filter-summary source plus the
+running Morrow Admin at desktop `1440 x 900` and the app's narrow default
+viewport. The live table was narrowed to Ada before opening the drawer, so the
+visible `Search · Ada` and `Order · Created newest` chips prove the export uses
+the current query. No same-state Medusa raster is available; source structure,
+responsive behavior and the real CSV download are verified without claiming
+pixel parity.
 
 ## Verified
 
@@ -355,6 +367,15 @@ behavior and real-data rendering without claiming pixel parity.
   feature client shares the Dio-owned bearer and widgets receive only typed
   `Option` values. All 56 non-widget Admin and 318 server tests pass; analyzer,
   Dust checks and the release web build pass, and no widget tests were added.
+- Order Export now opens Medusa's 560px right-side drawer with the active order
+  query rendered as read-only chips and sticky Cancel/Export actions. Live QA
+  narrowed six demo orders to Ada, verified the same query in narrow and
+  `1440 x 900` layouts, and produced a browser blob named `order-export.csv`
+  with no browser errors. The guarded endpoint reuses list filters and one
+  direct SQLx projection, returns one escaped CSV row per frozen item and uses
+  exact ISO currency exponents without exposing internal ids or metadata. All
+  58 non-widget Admin and 321 server tests pass; analyzer, Dust checks and the
+  release web build pass, and no widget tests were added.
 - Sales Channels and Shipping configuration remain visible and explicitly say
   `Not configured` because those Medusa domains do not yet exist in this
   schema. No fake merchant data is rendered.
@@ -380,8 +401,9 @@ behavior and real-data rendering without claiming pixel parity.
   after an abandoned browser session.
 - P2 — Orders pass source-structure and live-behavior QA, but need same-state
   Medusa order-list and order-detail captures before pixel parity can be
-  claimed. Order export, sales-channel data, region choices and mutations
-  remain separate feature slices.
+  claimed. Sales-channel data, region choices and mutations remain separate
+  feature slices; Order Export has source-structure and live-download coverage
+  but also lacks a same-state Medusa capture.
 
 ## Result
 
@@ -394,9 +416,9 @@ also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
 live end-to-end behavior checks. Product query behavior, discovery and visible
 controls pass API, state, accessibility and same-state live comparison.
-The order list and read-only detail pass protected API, generated-client,
-responsive layout and live-data behavior checks against the pinned source
-structure.
+The order list, read-only detail and filtered CSV export pass protected API,
+generated-client, responsive layout and live-data behavior checks against the
+pinned source structure.
 Post-create editor, image-variant drawer, variant pricing, product stock and
 product deletion and orders remain blocked on same-state source captures;
 broader Medusa Admin parity is not claimed.
