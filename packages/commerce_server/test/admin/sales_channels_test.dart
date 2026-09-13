@@ -51,4 +51,41 @@ UPDATE sales_channels SET is_disabled = 1 WHERE id = 'sc_wholesale'
       {'id': 'sc_wholesale', 'name': 'Wholesale'},
     ]);
   });
+
+  test('product sales channels require a proven admin bearer', () async {
+    final response = await harness.client
+        .get('/admin/products/prod_tshirt/sales-channels')
+        .send();
+
+    response.assertUnauthorized();
+  });
+
+  test('product sales channels return only the attached explicit rows',
+      () async {
+    final token = await harness.adminToken();
+    final response =
+        await (harness.client.get('/admin/products/prod_tshirt/sales-channels')
+              ..bearer(token))
+            .send();
+
+    response.assertOk();
+    expect(response.json, {
+      'sales_channels': [
+        {'id': 'sc_web', 'name': 'Online Store'},
+      ],
+      'count': 1,
+      'limit': 1,
+      'offset': 0,
+    });
+  });
+
+  test('product sales channels hide an unknown product', () async {
+    final token = await harness.adminToken();
+    final response =
+        await (harness.client.get('/admin/products/prod_missing/sales-channels')
+              ..bearer(token))
+            .send();
+
+    response.assertNotFound();
+  });
 }

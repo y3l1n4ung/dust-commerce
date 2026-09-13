@@ -33,4 +33,28 @@ LIMIT $2 OFFSET $3
     int limit,
     int offset,
   );
+
+  /// Confirms the product exists without leaking a channel-less distinction.
+  @Query(r'''
+SELECT count(*)
+FROM products
+WHERE id = $1 AND deleted_at IS NULL
+''')
+  Future<Result<int, SqlxError>> activeProductCount(String productId);
+
+  /// Lists only active channel links for one active product.
+  @Query(r'''
+SELECT channel.id, channel.name
+FROM product_sales_channels link
+JOIN sales_channels channel ON channel.id = link.sales_channel_id
+JOIN products product ON product.id = link.product_id
+WHERE link.product_id = $1
+  AND link.deleted_at IS NULL
+  AND channel.deleted_at IS NULL
+  AND product.deleted_at IS NULL
+ORDER BY lower(channel.name), channel.id
+''')
+  Future<Result<List<AdminSalesChannelResponse>, SqlxError>> listForProduct(
+    String productId,
+  );
 }

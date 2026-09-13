@@ -46,4 +46,35 @@ LIMIT ? OFFSET ?
       const $AdminSalesChannelResponseRowDeserializer().deserialize,
     );
   }
+
+  @override
+  Future<Result<int, SqlxError>> activeProductCount(String productId) {
+    return _db.fetchScalar<int>(
+      r'''
+SELECT count(*)
+FROM products
+WHERE id = ? AND deleted_at IS NULL
+''',
+      [productId],
+    );
+  }
+
+  @override
+  Future<Result<List<AdminSalesChannelResponse>, SqlxError>> listForProduct(String productId) {
+    return _db.fetchAll<AdminSalesChannelResponse>(
+      r'''
+SELECT channel.id, channel.name
+FROM product_sales_channels link
+JOIN sales_channels channel ON channel.id = link.sales_channel_id
+JOIN products product ON product.id = link.product_id
+WHERE link.product_id = ?
+  AND link.deleted_at IS NULL
+  AND channel.deleted_at IS NULL
+  AND product.deleted_at IS NULL
+ORDER BY lower(channel.name), channel.id
+''',
+      [productId],
+      const $AdminSalesChannelResponseRowDeserializer().deserialize,
+    );
+  }
 }

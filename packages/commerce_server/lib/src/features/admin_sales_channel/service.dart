@@ -22,3 +22,24 @@ Future<Result<AdminSalesChannelListResponse, SqlxError>> listAdminSalesChannels(
     offset: offset,
   ));
 }
+
+/// Reads a product's explicit channel allowlist or [None] when it is unknown.
+Future<Result<Option<AdminSalesChannelListResponse>, SqlxError>>
+    readAdminProductSalesChannels(
+  AdminSalesChannelRepository salesChannels,
+  String productId,
+) async {
+  final exists = await salesChannels.activeProductCount(productId);
+  if (exists case Err(:final error)) return Err(error);
+  if ((exists as Ok<int, SqlxError>).value == 0) return const Ok(None());
+  final rows = await salesChannels.listForProduct(productId);
+  if (rows case Err(:final error)) return Err(error);
+  final channels =
+      (rows as Ok<List<AdminSalesChannelResponse>, SqlxError>).value;
+  return Ok(Some(AdminSalesChannelListResponse(
+    salesChannels: channels,
+    count: channels.length,
+    limit: channels.length,
+    offset: 0,
+  )));
+}
