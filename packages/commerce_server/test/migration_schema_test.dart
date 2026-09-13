@@ -53,8 +53,8 @@ void main() {
             .split(' '),
         'fulfillment_items',
         'stock_location_addresses',
-        'stock_locations',
-        'fulfillment_providers',
+        ...'stock_locations fulfillment_providers stock_location_fulfillment_providers'
+            .split(' '),
         'payment_collections',
       ]),
     );
