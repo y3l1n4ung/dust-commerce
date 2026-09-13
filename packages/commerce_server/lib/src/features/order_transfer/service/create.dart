@@ -169,7 +169,7 @@ Future<Result<bool, SqlxError>> _deliver(
       recipient: message.recipientEmail,
       orderId: message.orderId,
       token: message.token,
-      expiresAt: DateTime.parse(message.expiresAt).toUtc(),
+      expiresAt: message.expiresAt,
     ));
   } on Object {
     final released = await deps.updates.releaseDelivery(

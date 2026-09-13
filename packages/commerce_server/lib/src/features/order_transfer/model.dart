@@ -43,9 +43,9 @@ final class OrderTransferResponse with _$OrderTransferResponse {
   @Sqlx(rename: 'delivery_status')
   final String deliveryStatus;
 
-  /// UTC transfer deadline represented as ISO-8601 text.
+  /// UTC transfer deadline decoded directly from the SQLx row.
   @Sqlx(rename: 'expires_at')
-  final String expiresAt;
+  final DateTime expiresAt;
 
   /// Opaque transfer identifier, never the decision token.
   final String id;
@@ -70,9 +70,9 @@ final class OrderTransferDelivery {
     required this.expiresAt,
   });
 
-  /// UTC decision deadline encoded for the email copy.
+  /// UTC decision deadline decoded directly from the SQLx row.
   @Sqlx(rename: 'expires_at')
-  final String expiresAt;
+  final DateTime expiresAt;
 
   /// Transfer identifier used to complete or release the lease.
   final String id;

@@ -66,7 +66,7 @@ OrderTransferResponse _$OrderTransferResponseFromRow(Row row) {
     orderId: row.read<String>('order_id'),
     status: row.read<String>('status'),
     deliveryStatus: row.read<String>('delivery_status'),
-    expiresAt: row.read<String>('expires_at'),
+    expiresAt: row.readDateTime('expires_at'),
   );
 }
 
@@ -102,7 +102,7 @@ OrderTransferDelivery _$OrderTransferDeliveryFromRow(Row row) {
     orderId: row.read<String>('order_id'),
     recipientEmail: row.read<String>('recipient_email'),
     token: row.read<String>('token'),
-    expiresAt: row.read<String>('expires_at'),
+    expiresAt: row.readDateTime('expires_at'),
   );
 }
 
@@ -168,7 +168,7 @@ extension $OrderTransferDecisionRowQuery on QueryAs<OrderTransferDecisionRow> {
 Map<String, Object?> _$OrderTransferResponseSerialize(OrderTransferResponse instance) {
   return <String, Object?>{
     'delivery_status': instance.deliveryStatus,
-    'expires_at': instance.expiresAt,
+    'expires_at': instance.expiresAt.toIso8601String(),
     'id': instance.id,
     'order_id': instance.orderId,
     'status': instance.status,

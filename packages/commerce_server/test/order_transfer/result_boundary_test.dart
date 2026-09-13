@@ -22,6 +22,9 @@ void main() {
       result,
       isA<Ok<OrderTransferResponse, RequestOrderTransferError>>(),
     );
+    final response =
+        (result as Ok<OrderTransferResponse, RequestOrderTransferError>).value;
+    expect(_expiresAt(response), DateTime.utc(2100, 1, 2, 12));
   });
 
   test('request rejection is one error value, not a nested result', () async {
@@ -114,3 +117,5 @@ void main() {
     expect((error as DecideOrderTransferStorage).cause, isA<SqlxError>());
   });
 }
+
+DateTime _expiresAt(OrderTransferResponse response) => response.expiresAt;
