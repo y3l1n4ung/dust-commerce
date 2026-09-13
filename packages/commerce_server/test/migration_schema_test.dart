@@ -49,7 +49,7 @@ void main() {
         ...'sales_channels cart_sales_channels'.split(' '),
         ...'order_sales_channels product_sales_channels'.split(' '),
         ...'order_transfers variant_option_values variant_prices'.split(' '),
-        ...'return_reasons return_requests return_items'.split(' '),
+        ...'return_reasons return_requests return_items fulfillments'.split(' '),
         'payment_collections',
       ]),
     );
