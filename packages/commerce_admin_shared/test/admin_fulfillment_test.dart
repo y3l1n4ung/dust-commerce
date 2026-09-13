@@ -84,4 +84,38 @@ void main() {
     );
     expect(AdminOrderFulfillment.fromJson(fulfillment.toJson()), fulfillment);
   });
+
+  test('decodes only the Admin fulfillment selection fields', () {
+    final locations = AdminStockLocationList.fromJson({
+      'stock_locations': [
+        {'id': 'sloc_main', 'name': 'Morrow Warehouse'},
+      ],
+      'count': 1,
+      'limit': 20,
+      'offset': 0,
+    });
+    final options = AdminFulfillmentShippingOptionList.fromJson({
+      'shipping_options': [
+        {
+          'id': 'ship_standard',
+          'name': 'Standard shipping',
+          'shipping_profile_id': 'sp_default',
+        },
+      ],
+      'count': 1,
+      'limit': 20,
+      'offset': 0,
+    });
+
+    expect(locations.stockLocations.single.name, 'Morrow Warehouse');
+    expect(options.shippingOptions.single.shippingProfileId, 'sp_default');
+    expect(
+      AdminStockLocationList.fromJson(locations.toJson()),
+      locations,
+    );
+    expect(
+      AdminFulfillmentShippingOptionList.fromJson(options.toJson()),
+      options,
+    );
+  });
 }
