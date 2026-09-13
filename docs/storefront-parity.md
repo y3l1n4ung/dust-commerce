@@ -21,8 +21,8 @@ and the `Medusa DTC storefront parity` milestone.
 | `featured-products/product-rail` | featured product grid | implemented in #18 with source-ordered, API-backed collection rails; the compact two-column grid now uses natural-height cards and passed rendered comparison with the source's 24px column and 96px row gaps without overflow |
 | `products/components/product-preview` | product card | implemented in #19 |
 | `store/templates` | catalogue | partial in #18 and #19; source sorting, 12-item paging, stable option-value filtering, and optional filter discovery implemented; desktop grid and compact refinement geometry passed rendered source comparison. Compact page controls now match the pinned 18px/28.8px medium type and exact 12px visible gap, page 2 retains sort and repeated option queries, and refinement changes reset to page 1 against the real API. The public Medusa fixture has too few products to render its control, so rendered pagination comparison remains unavailable. |
-| `products/templates` | product detail route | implemented in #22; source-ordered mobile and sticky desktop composition plus variant-specific image filtering, with desktop geometry passing rendered source comparison; compact and remaining interaction-state QA remain |
-| `products/components/product-actions` | variant state and add to cart | implemented in #22, including `v_id`, unavailable combinations, variant-associated gallery reloads and sticky mobile actions |
+| `products/templates` | product detail route | implemented in #22; source-ordered mobile and sticky desktop composition plus variant-specific image filtering, with desktop geometry passing rendered source comparison; compact selected and sold-out states are browser-verified, while a combined compact visual comparison remains blocked |
+| `products/components/product-actions` | variant state and add to cart | implemented in #22, including source-selectable option values, exact-variant resolution, query-preserving `v_id`, unavailable combinations, variant-associated gallery reloads and sticky mobile actions |
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |
 | `layout/components/cart-dropdown` | cart preview | implemented in #21 with hover, five-second post-add feedback, live removal, subtotal and empty state; the populated desktop preview passed rendered source comparison |
 | `shipping/components/free-shipping-price-nudge` | global shipping progress popup | implemented in #21 with API-backed item-total rules, session dismissal, source actions, server-enforced eligibility, and source-timed unlocked feedback; local threshold interactions pass, while matched source rendering awaits a conditional source price |
@@ -58,8 +58,10 @@ names so components do not invent close-but-different greys.
 `OptionSelect` is copied behaviorally rather than replaced by Material chips:
 each value is an equal-width 40px rectangle on the subtle background, the
 selected value changes only to the interactive border, and an unselected
-hover receives the Medusa card-rest shadow treatment. Invalid combinations are
-disabled by the product state before an interaction reaches the API.
+hover receives the Medusa card-rest shadow treatment. Every value offered by an
+option remains selectable, as in Medusa. A complete combination without an
+exact variant clears only `v_id`, preserves unrelated query parameters and
+keeps purchase disabled.
 
 The pinned DTC query requests `*variants.images`; Dust's direct SQLx response
 mirrors that shape. The public `StoreProductImage` contract contains only stable

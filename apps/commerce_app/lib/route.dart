@@ -110,6 +110,24 @@ final class CustomerSessionRouterRefresh implements Listenable {
   }
 }
 
+/// Returns the active product URL with only its Medusa `v_id` changed.
+Uri productVariantLocation(
+  Uri current, {
+  required String handle,
+  required String? variantId,
+}) {
+  final query = <String, List<String>>{...current.queryParametersAll};
+  if (variantId == null) {
+    query.remove('v_id');
+  } else {
+    query['v_id'] = [variantId];
+  }
+  return Uri(
+    pathSegments: ['', 'products', handle],
+    queryParameters: query.isEmpty ? null : query,
+  );
+}
+
 /// Medusa-compatible product variant URL behavior.
 extension CommerceProductRouteContext on BuildContext {
   /// Selected `v_id` preserved on the active product route, if any.
@@ -122,11 +140,13 @@ extension CommerceProductRouteContext on BuildContext {
 
   /// Replaces the product URL with the selected Medusa `v_id`.
   void replaceProductVariant(String handle, String? variantId) {
-    final uri = Uri(
-      pathSegments: ['products', handle],
-      queryParameters: variantId == null ? null : {'v_id': variantId},
+    final controller = RouterController.of<CommerceRoute>(this);
+    final uri = productVariantLocation(
+      Uri.parse(controller.currentRoute.location),
+      handle: handle,
+      variantId: variantId,
     );
-    RouterController.of<CommerceRoute>(this).replace(parseCommerceRoute(uri));
+    controller.replace(parseCommerceRoute(uri));
   }
 }
 

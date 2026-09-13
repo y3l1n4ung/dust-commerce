@@ -229,6 +229,14 @@ card metadata and responsive footer. A final in-app browser pass confirms the
 source-shaped menu, both close paths and navigation to `/store`.
 The product detail pair confirms the source column geometry and information
 stack; product content and action controls differ with the two seed products.
+The compact product pass exercised the pinned `OptionSelect`, `ProductActions`
+and `MobileActions` contracts at `390 x 844`. Morrow kept all six offered option
+buttons enabled, changed `v_id` while preserving the unrelated `qa` query, and
+rendered its deterministic sold-out product with a disabled `Out of stock`
+action. The live Medusa catalog has no sparse option combination, and browser
+policy rejected the local two-raster comparison board, so compact visual parity
+and the unavailable-combination rendered pair remain blocked rather than
+inferred from separate captures.
 The empty-cart pair confirms the source content inset, copy, vertical placement,
 blue diagonal-arrow link and footer divider. The signed-out account pairs
 confirm the sign-in and registration compositions, exact control rhythm,
@@ -414,8 +422,9 @@ unnecessary. The missing rendered source control remains the comparison limit.
 - Capture compact catalogue page 2 and verify paging retains active sort and
   option queries; compact sorting, option filtering, collection, shared-footer
   and side-menu QA now pass.
-- Capture product detail at compact width and exercise selected, unavailable,
-  sold-out and add-to-cart feedback states against matched product fixtures.
+- Capture a matched compact product pair for unavailable-combination and
+  add-to-cart feedback states; selected, option-sheet, query-preservation and
+  sold-out behavior are now browser-verified separately.
 - Capture populated cart at compact width and exercise shipping, line-removal
   and checkout actions against matching anonymous fixtures.
 - Capture authenticated checkout against a non-destructive reference account;

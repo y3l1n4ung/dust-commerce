@@ -26,6 +26,30 @@ void main() {
     );
   });
 
+  test('variant replacement changes only the Medusa v_id query', () {
+    final selected = productVariantLocation(
+      Uri.parse(
+        '/products/t-shirt?v_id=old&qa=compact&facet=black&facet=cotton',
+      ),
+      handle: 't-shirt',
+      variantId: 'var_tshirt_l_white',
+    );
+    final unavailable = productVariantLocation(
+      selected,
+      handle: 't-shirt',
+      variantId: null,
+    );
+
+    expect(
+      selected.toString(),
+      '/products/t-shirt?v_id=var_tshirt_l_white&qa=compact&facet=black&facet=cotton',
+    );
+    expect(
+      unavailable.toString(),
+      '/products/t-shirt?qa=compact&facet=black&facet=cotton',
+    );
+  });
+
   test('generated listing routes retain sort and page queries', () {
     final store = parseCommerceRoute(
       Uri.parse(

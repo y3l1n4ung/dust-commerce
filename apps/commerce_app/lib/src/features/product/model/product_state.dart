@@ -81,15 +81,16 @@ class ProductDetailState with _$ProductDetailState {
     return current.variantFor(selection);
   }
 
-  /// Whether [value] can still produce a real variant with current choices.
+  /// Whether [value] is offered by the addressed product option.
+  ///
+  /// Medusa keeps every offered value selectable. A complete combination that
+  /// has no matching variant is represented by [selectedVariant] being null.
   bool canSelect(String optionId, String value) {
     final current = product;
     if (current == null) return false;
-    final candidate = {...selection, optionId: value};
-    return current.variants.any(
-      (variant) => candidate.entries.every(
-        (choice) => variant.optionValues[choice.key] == choice.value,
-      ),
-    );
+    for (final option in current.options) {
+      if (option.id == optionId) return option.offers(value);
+    }
+    return false;
   }
 }

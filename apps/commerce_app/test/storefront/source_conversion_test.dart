@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_server/commerce_server.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/http.dart';
 import 'package:dust_server/testing.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../core/support.dart';
+import 'support.dart';
 
 void main() {
   late Directory directory;
@@ -108,7 +110,7 @@ void main() {
 
   test('a related-products failure leaves the main product usable', () async {
     final product = ProductViewModel(
-      ProductViewModelArgs(api: _RelatedFailureApi(api)),
+      ProductViewModelArgs(api: RelatedFailureApi(api)),
     );
 
     await product.load('t-shirt');
@@ -119,7 +121,8 @@ void main() {
     expect(product.state.relatedMessage, isNotNull);
   });
 
-  test('option choices exclude combinations no variant can fulfil', () async {
+  test('offered values permit a source-visible unavailable combination',
+      () async {
     final product = await api.product('t-shirt', currency: 'usd');
     final sparse = product.copyWith(
       variants: product.variants
@@ -135,7 +138,14 @@ void main() {
     );
 
     expect(state.canSelect('opt_color', 'Black'), isTrue);
-    expect(state.canSelect('opt_color', 'White'), isFalse);
+    expect(state.canSelect('opt_color', 'White'), isTrue);
+    expect(
+      state.copyWith(selection: const {
+        'opt_size': 'S',
+        'opt_color': 'White',
+      }).selectedVariant,
+      isNull,
+    );
   });
 
   test('selected variant creates a server cart and line item', () async {
@@ -143,7 +153,7 @@ void main() {
     final cart = CartViewModel(
       CartViewModelArgs(
         api: api,
-        cartIds: _MemoryCartIdStore(),
+        cartIds: MemoryCartIdStore(),
         selectedRegion: () => const None(),
       ),
     );
@@ -162,45 +172,4 @@ void main() {
     );
     expect(cart.state.cart?.total.amount, greaterThan(0));
   });
-}
-
-final class _RelatedFailureApi implements CommerceApi {
-  const _RelatedFailureApi(this.delegate);
-
-  final CommerceApi delegate;
-
-  @override
-  Future<Product> product(String handle, {String? currency}) =>
-      delegate.product(handle, currency: currency);
-
-  @override
-  Future<ProductPageView> products({
-    String? currency,
-    String? collection,
-    String? category,
-    String? tag,
-    List<String> optionValueIds = const [],
-    int? limit,
-    int? offset,
-  }) =>
-      Future.error(StateError('recommendations unavailable'));
-
-  @override
-  Object? noSuchMethod(Invocation invocation) =>
-      throw UnsupportedError('unused API method');
-}
-
-final class _MemoryCartIdStore implements CartIdStore {
-  final Map<String, String> _values = {};
-
-  @override
-  Future<void> clear(String scope) async => _values.remove(scope);
-
-  @override
-  Future<String?> read(String scope) async => _values[scope];
-
-  @override
-  Future<void> write(String scope, String cartId) async {
-    _values[scope] = cartId;
-  }
 }
