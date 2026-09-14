@@ -1,3 +1,4 @@
+import 'package:admin_app/src/customer/admin_customer_address_actions_menu.dart';
 import 'package:admin_app/src/customer/admin_customer_presenter.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ final class AdminCustomerAddressSection extends StatelessWidget {
   const AdminCustomerAddressSection({
     required this.customer,
     required this.onAdd,
+    required this.onDelete,
     super.key,
   });
 
@@ -16,6 +18,9 @@ final class AdminCustomerAddressSection extends StatelessWidget {
 
   /// Opens the focused address creation form.
   final VoidCallback onAdd;
+
+  /// Opens typed confirmation for one address when deletion is available.
+  final ValueChanged<AdminCustomerAddress>? onDelete;
 
   @override
   Widget build(BuildContext context) => Material(
@@ -44,7 +49,10 @@ final class AdminCustomerAddressSection extends StatelessWidget {
             const _AdminCustomerNoAddresses()
           else
             for (final address in customer.addresses)
-              _AdminCustomerAddressRow(address: address),
+              _AdminCustomerAddressRow(
+                address: address,
+                onDelete: onDelete,
+              ),
         ]),
       );
 }
@@ -65,9 +73,13 @@ final class _AdminCustomerNoAddresses extends StatelessWidget {
 }
 
 final class _AdminCustomerAddressRow extends StatelessWidget {
-  const _AdminCustomerAddressRow({required this.address});
+  const _AdminCustomerAddressRow({
+    required this.address,
+    required this.onDelete,
+  });
 
   final AdminCustomerAddress address;
+  final ValueChanged<AdminCustomerAddress>? onDelete;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -105,12 +117,8 @@ final class _AdminCustomerAddressRow extends StatelessWidget {
               ],
             ),
           ),
-          const Tooltip(
-            message: 'Address deletion is not available yet',
-            child: IconButton(
-              onPressed: null,
-              icon: Icon(Icons.more_horiz_rounded, size: 18),
-            ),
+          AdminCustomerAddressActionsMenu(
+            onDelete: onDelete == null ? null : () => onDelete!(address),
           ),
         ]),
       );

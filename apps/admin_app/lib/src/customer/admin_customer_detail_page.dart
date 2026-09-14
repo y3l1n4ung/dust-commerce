@@ -1,4 +1,6 @@
 import 'package:admin_app/src/customer/admin_customer_address_create_page.dart';
+import 'package:admin_app/src/customer/admin_customer_address_delete_dialog.dart';
+import 'package:admin_app/src/customer/admin_customer_address_delete_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_layout.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_state.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
@@ -58,11 +60,16 @@ final class _AdminCustomerDetailPageState
   Widget build(BuildContext context) {
     final state = context.watchAdminCustomerDetailViewModel().value;
     final deletion = context.watchAdminCustomerDeleteViewModel().value;
+    final addressDeletion =
+        context.watchAdminCustomerAddressDeleteViewModel().value;
     return switch (state.customer) {
       Some(value: final customer) => AdminCustomerDetailLayout(
           customer: customer,
           state: state,
           onAddAddress: () => _addAddress(customer),
+          onDeleteAddress: addressDeletion.isBusy
+              ? null
+              : (address) => _deleteAddress(customer.id, address),
           onEditCustomer: () => _edit(customer),
           onDeleteCustomer: deletion.isBusy ? null : () => _delete(customer),
           onOpenOrder: widget.onOpenOrder,
@@ -113,6 +120,28 @@ final class _AdminCustomerDetailPageState
           content: Text(failure.match(
             some: (message) => message,
             none: () => 'Unable to delete this customer. Try again.',
+          )),
+        ));
+    }
+  }
+
+  Future<void> _deleteAddress(
+      String customerId, AdminCustomerAddress address) async {
+    final confirmed = await confirmAdminCustomerAddressDelete(context, address);
+    if (!confirmed || !mounted) return;
+    final viewModel = context.readAdminCustomerAddressDeleteViewModel();
+    final result = await viewModel.delete(customerId, address.id);
+    if (!mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    switch (result) {
+      case Some():
+        messenger.showSnackBar(const SnackBar(content: Text('Success')));
+        await context.readAdminCustomerDetailViewModel().load(customerId);
+      case None():
+        messenger.showSnackBar(SnackBar(
+          content: Text(viewModel.state.failure.match(
+            some: (message) => message,
+            none: () => 'Unable to delete this address. Try again.',
           )),
         ));
     }
