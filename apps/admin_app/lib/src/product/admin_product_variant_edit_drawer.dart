@@ -1,62 +1,25 @@
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
-import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
-part 'admin_product_variant_edit_fields.dart';
-part 'admin_product_variant_edit_inventory.dart';
 part 'admin_product_variant_edit_attributes.dart';
 part 'admin_product_variant_edit_chrome.dart';
 part 'admin_product_variant_edit_countries.dart';
+part 'admin_product_variant_edit_country_picker.dart';
+part 'admin_product_variant_edit_field.dart';
+part 'admin_product_variant_edit_fields.dart';
+part 'admin_product_variant_edit_inventory.dart';
+part 'admin_product_variant_edit_route.dart';
 part 'admin_product_variant_edit_values.dart';
-
-/// Opens the Medusa-shaped right-side variant editor.
-Future<bool?> showAdminProductVariantEditDrawer(
-  BuildContext context,
-  AdminProductDetail product,
-  AdminProductVariant variant,
-) =>
-    showGeneralDialog<bool>(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: 'Close variant editor',
-      barrierColor: Colors.black.withValues(alpha: 0.24),
-      transitionDuration: const Duration(milliseconds: 180),
-      pageBuilder: (context, _, __) => Padding(
-        padding: const EdgeInsets.all(8),
-        child: Align(
-          alignment: Alignment.centerRight,
-          child: _VariantEditDrawer(product: product, variant: variant),
-        ),
-      ),
-      transitionBuilder: (context, animation, _, child) => SlideTransition(
-        position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-            .animate(CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutCubic,
-        )),
-        child: child,
-      ),
-    );
-
-final class _VariantEditDrawer extends StatefulWidget {
-  const _VariantEditDrawer({required this.product, required this.variant});
-
-  final AdminProductDetail product;
-  final AdminProductVariant variant;
-
-  @override
-  State<_VariantEditDrawer> createState() => _VariantEditDrawerState();
-}
 
 final class _VariantEditDrawerState extends State<_VariantEditDrawer> {
   final _form = GlobalKey<FormState>();
   final _scroll = ScrollController();
   late final _VariantEditValues _values;
   late final Map<String, String> _selections;
-  late bool _manageInventory;
   late bool _allowBackorder;
+  late bool _manageInventory;
   late String? _originCountry;
 
   @override
@@ -65,8 +28,8 @@ final class _VariantEditDrawerState extends State<_VariantEditDrawer> {
     final variant = widget.variant;
     _values = _VariantEditValues(variant);
     _selections = {...variant.optionValues};
-    _manageInventory = variant.manageInventory;
     _allowBackorder = variant.allowBackorder;
+    _manageInventory = variant.manageInventory;
     _originCountry = variant.originCountry;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) context.readAdminProductDetailViewModel().clearFailure();
@@ -103,22 +66,33 @@ final class _VariantEditDrawerState extends State<_VariantEditDrawer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _header(busy),
+              _AdminVariantEditHeader(
+                busy: busy,
+                onClose: () => Navigator.of(context).pop(false),
+              ),
               Expanded(
-                child: Form(
-                  key: _form,
-                  child: Scrollbar(
-                    controller: _scroll,
-                    thumbVisibility: true,
-                    child: ListView(
-                      controller: _scroll,
-                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-                      children: _fields(state, busy),
-                    ),
-                  ),
+                child: _AdminVariantEditForm(
+                  allowBackorder: _allowBackorder,
+                  busy: busy,
+                  failure: state.failure,
+                  formKey: _form,
+                  manageInventory: _manageInventory,
+                  onAllowBackorderChanged: _setAllowBackorder,
+                  onCountrySelected: _setOriginCountry,
+                  onCountryTyped: _typeOriginCountry,
+                  onManageInventoryChanged: _setManageInventory,
+                  options: widget.product.options,
+                  readOriginCountry: () => _originCountry,
+                  scrollController: _scroll,
+                  selections: _selections,
+                  values: _values,
                 ),
               ),
-              _footer(busy),
+              _AdminVariantEditFooter(
+                busy: busy,
+                onCancel: () => Navigator.of(context).pop(false),
+                onSave: _save,
+              ),
             ],
           ),
         ),
@@ -132,21 +106,21 @@ final class _VariantEditDrawerState extends State<_VariantEditDrawer> {
           widget.product.id,
           widget.variant.id,
           _values.request(
-            manageInventory: _manageInventory,
             allowBackorder: _allowBackorder,
-            originCountry: _originCountry,
+            manageInventory: _manageInventory,
             optionValues: _selections,
+            originCountry: _originCountry,
           ),
         );
     if (saved && mounted) Navigator.of(context).pop(true);
   }
 
-  void _setManageInventory(bool value) => setState(() {
-        _manageInventory = value;
-      });
-
   void _setAllowBackorder(bool value) => setState(() {
         _allowBackorder = value;
+      });
+
+  void _setManageInventory(bool value) => setState(() {
+        _manageInventory = value;
       });
 
   void _setOriginCountry(String? value) => setState(() {
