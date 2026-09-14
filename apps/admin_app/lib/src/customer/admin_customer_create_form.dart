@@ -1,4 +1,4 @@
-import 'package:admin_app/src/customer/admin_customer_create_chrome.dart';
+import 'package:admin_app/src/core/admin_route_focus_chrome.dart';
 import 'package:admin_app/src/customer/admin_customer_create_fields.dart';
 import 'package:admin_app/src/customer/admin_customer_create_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
@@ -45,7 +45,7 @@ final class _AdminCustomerCreateFormState
         child: SafeArea(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            AdminCustomerCreateHeader(
+            AdminRouteFocusHeader(
               onClose: state.isBusy ? null : navigator.pop,
             ),
             Expanded(
@@ -84,7 +84,7 @@ final class _AdminCustomerCreateFormState
                             phone: _phone,
                             enabled: !state.isBusy,
                           ),
-                          AdminCustomerCreateFailure(failure: state.failure),
+                          AdminRouteFocusFailure(failure: state.failure),
                         ],
                       ),
                     ),
@@ -92,10 +92,10 @@ final class _AdminCustomerCreateFormState
                 ),
               ),
             ),
-            AdminCustomerCreateFooter(
+            AdminRouteFocusFooter(
               busy: state.isBusy,
               onCancel: navigator.pop,
-              onCreate: _submit,
+              onSubmit: _submit,
             ),
           ]),
         ),

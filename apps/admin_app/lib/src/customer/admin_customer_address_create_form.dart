@@ -1,6 +1,6 @@
 import 'package:admin_app/src/core/admin_country.dart';
 import 'package:admin_app/src/customer/admin_customer_address_create_view_model.dart';
-import 'package:admin_app/src/customer/admin_customer_create_chrome.dart';
+import 'package:admin_app/src/core/admin_route_focus_chrome.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +55,7 @@ final class _AdminCustomerAddressCreateFormState
         child: SafeArea(
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            AdminCustomerCreateHeader(
+            AdminRouteFocusHeader(
               onClose: state.isBusy ? null : navigator.pop,
             ),
             Expanded(
@@ -95,7 +95,7 @@ final class _AdminCustomerAddressCreateFormState
                             onCountryTyped: _typeCountry,
                             selectedCountryCode: _countryCode,
                           ),
-                          AdminCustomerCreateFailure(failure: state.failure),
+                          AdminRouteFocusFailure(failure: state.failure),
                         ],
                       ),
                     ),
@@ -103,10 +103,10 @@ final class _AdminCustomerAddressCreateFormState
                 ),
               ),
             ),
-            AdminCustomerCreateFooter(
+            AdminRouteFocusFooter(
               busy: state.isBusy,
               onCancel: navigator.pop,
-              onCreate: _submit,
+              onSubmit: _submit,
               submitLabel: 'Save',
             ),
           ]),

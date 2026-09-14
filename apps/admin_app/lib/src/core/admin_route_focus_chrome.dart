@@ -2,9 +2,9 @@ import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
 /// Minimal top bar used by Medusa route-focus modals.
-final class AdminCustomerCreateHeader extends StatelessWidget {
+final class AdminRouteFocusHeader extends StatelessWidget {
   /// Creates the close affordance.
-  const AdminCustomerCreateHeader({required this.onClose, super.key});
+  const AdminRouteFocusHeader({required this.onClose, super.key});
 
   /// Closes the focus surface when submission is idle.
   final VoidCallback? onClose;
@@ -36,13 +36,13 @@ final class AdminCustomerCreateHeader extends StatelessWidget {
       );
 }
 
-/// Sticky customer-create actions matching Medusa's focus footer.
-final class AdminCustomerCreateFooter extends StatelessWidget {
+/// Sticky actions matching Medusa's route-focus footer.
+final class AdminRouteFocusFooter extends StatelessWidget {
   /// Creates cancel and submit actions.
-  const AdminCustomerCreateFooter({
+  const AdminRouteFocusFooter({
     required this.busy,
     required this.onCancel,
-    required this.onCreate,
+    required this.onSubmit,
     this.submitLabel = 'Create',
     super.key,
   });
@@ -50,11 +50,11 @@ final class AdminCustomerCreateFooter extends StatelessWidget {
   /// Whether one submission is active.
   final bool busy;
 
-  /// Cancels creation.
+  /// Cancels the current route-focus operation.
   final VoidCallback onCancel;
 
-  /// Submits the form.
-  final VoidCallback onCreate;
+  /// Submits the current route-focus form.
+  final VoidCallback onSubmit;
 
   /// Visible primary action label.
   final String submitLabel;
@@ -74,7 +74,7 @@ final class AdminCustomerCreateFooter extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           FilledButton(
-            onPressed: busy ? null : onCreate,
+            onPressed: busy ? null : onSubmit,
             child: busy
                 ? const SizedBox.square(
                     dimension: 15,
@@ -86,10 +86,10 @@ final class AdminCustomerCreateFooter extends StatelessWidget {
       );
 }
 
-/// Optional display-safe failure below the customer fields.
-final class AdminCustomerCreateFailure extends StatelessWidget {
+/// Optional display-safe failure below a route-focus form.
+final class AdminRouteFocusFailure extends StatelessWidget {
   /// Creates the failure region.
-  const AdminCustomerCreateFailure({required this.failure, super.key});
+  const AdminRouteFocusFailure({required this.failure, super.key});
 
   /// Current display-safe failure, when present.
   final Option<String> failure;
