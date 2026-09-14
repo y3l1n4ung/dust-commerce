@@ -1,3 +1,4 @@
+import 'package:admin_app/src/order/admin_cancel_order_action.dart';
 import 'package:admin_app/src/order/admin_order_status_badge.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
@@ -47,14 +48,22 @@ final class AdminOrderGeneralSection extends StatelessWidget {
                 ),
               ),
               Wrap(
-                spacing: 6,
+                spacing: 10,
                 runSpacing: 6,
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  AdminOrderLifecycleBadge(status: order.status),
-                  AdminOrderPaymentBadge(status: order.paymentStatus),
-                  AdminOrderFulfillmentBadge(
-                    status: order.fulfillmentStatus,
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      AdminOrderLifecycleBadge(status: order.status),
+                      AdminOrderPaymentBadge(status: order.paymentStatus),
+                      AdminOrderFulfillmentBadge(
+                        status: order.fulfillmentStatus,
+                      ),
+                    ],
                   ),
+                  AdminCancelOrderAction(order: order),
                 ],
               ),
             ],
