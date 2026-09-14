@@ -58,4 +58,12 @@ abstract interface class AdminOrderDetailApi {
     @Path('fulfillment_id') String fulfillmentId,
     @Body() AdminMarkFulfillmentDelivered body,
   );
+
+  /// Cancels one pending fulfillment and returns the refreshed order.
+  @POST('/admin/orders/{id}/fulfillments/{fulfillment_id}/cancel')
+  Future<AdminOrderDetail> cancelFulfillment(
+    @Path() String id,
+    @Path('fulfillment_id') String fulfillmentId,
+    @Body() AdminCancelFulfillment body,
+  );
 }

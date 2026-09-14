@@ -6,6 +6,7 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'admin_order_detail_view_model.g.dart';
+part 'admin_order_cancellation_view_model.dart';
 part 'admin_order_delivery_view_model.dart';
 
 /// Dependencies for one authenticated merchant order detail.

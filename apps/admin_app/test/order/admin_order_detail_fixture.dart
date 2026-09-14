@@ -132,3 +132,15 @@ final adminDeliveredOrderDetailJson = <String, Object?>{
     },
   ],
 };
+
+final adminCanceledFulfillmentOrderDetailJson = <String, Object?>{
+  ...adminOrderDetailJson,
+  'fulfillment_status': 'not_fulfilled',
+  'fulfillments': <Object?>[
+    <String, Object?>{
+      ...adminFulfillmentJson,
+      'canceled_at': '2026-09-14T16:00:00.000Z',
+      'updated_at': '2026-09-14T16:00:00.000Z',
+    },
+  ],
+};
