@@ -53,8 +53,7 @@ Future<Result<OrderReturnOutcome, SqlxError>> _persist(
     return const Ok(OrderReturnDenied(OrderReturnFailure.noOrder));
   }
   final candidate = (order as Some<OrderReturnCandidate>).value;
-  if (candidate.status != 'completed' ||
-      candidate.paymentStatus != 'captured') {
+  if (candidate.paymentStatus != 'captured') {
     return const Ok(OrderReturnDenied(OrderReturnFailure.ineligibleOrder));
   }
 
@@ -115,7 +114,8 @@ Future<Result<Option<OrderReturnFailure>, SqlxError>> _validateItem(
     return const Ok(Some(OrderReturnFailure.invalidItem));
   }
   final candidate = (item as Some<OrderReturnItemCandidate>).value;
-  if (candidate.requestedQuantity + input.quantity > candidate.quantity) {
+  if (candidate.claimedQuantity + input.quantity >
+      candidate.deliveredQuantity) {
     return const Ok(Some(OrderReturnFailure.quantityUnavailable));
   }
   if (input.reasonId case Some(value: final reasonId)) {

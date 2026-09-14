@@ -22,7 +22,7 @@ final class _$OrderReturnReadRepository implements OrderReturnReadRepository {
   Future<Result<OrderReturnCandidate?, SqlxError>> order(String orderId, String customerId) {
     return _db.fetchOptional<OrderReturnCandidate>(
       r'''
-SELECT status, payment_status
+SELECT payment_status
 FROM orders
 WHERE id = ? AND customer_id = ? AND deleted_at IS NULL
 ''',
@@ -35,7 +35,18 @@ WHERE id = ? AND customer_id = ? AND deleted_at IS NULL
   Future<Result<OrderReturnItemCandidate?, SqlxError>> item(String orderId, String itemId) {
     return _db.fetchOptional<OrderReturnItemCandidate>(
       r'''
-SELECT item.id, item.quantity,
+SELECT item.id,
+       COALESCE((
+         SELECT SUM(delivered_item.quantity)
+         FROM fulfillment_items delivered_item
+         JOIN fulfillments fulfillment
+           ON fulfillment.id = delivered_item.fulfillment_id
+         WHERE delivered_item.line_item_id = item.id
+           AND delivered_item.deleted_at IS NULL
+           AND fulfillment.deleted_at IS NULL
+           AND fulfillment.canceled_at IS NULL
+           AND fulfillment.delivered_at IS NOT NULL
+       ), 0) AS delivered_quantity,
        COALESCE((
          SELECT SUM(returned.quantity)
          FROM return_items returned
@@ -43,7 +54,7 @@ SELECT item.id, item.quantity,
          WHERE returned.order_item_id = item.id
            AND request.status <> 'canceled'
            AND request.deleted_at IS NULL
-       ), 0) AS requested_quantity
+       ), 0) AS claimed_quantity
 FROM order_items item
 WHERE item.order_id = ? AND item.id = ?
 ''',

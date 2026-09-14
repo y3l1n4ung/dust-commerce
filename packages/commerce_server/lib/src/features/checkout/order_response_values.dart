@@ -14,6 +14,10 @@ extension OrderResponseValues on OrderResponse {
   /// Stable order identifier.
   String get id => orderId;
 
+  /// Customer-visible progress from active fulfillment records.
+  OrderFulfillmentStatus get fulfillmentStatus =>
+      OrderFulfillmentStatusCodec().deserialize(storedFulfillmentStatus);
+
   /// Current payment lifecycle.
   PaymentStatus get paymentStatus => PaymentStatus.values.firstWhere(
         (status) => status.name == storedPaymentStatus,
@@ -97,6 +101,7 @@ extension OrderResponseValues on OrderResponse {
         orderTax: orderTax,
         orderTotal: orderTotal,
         storedStatus: storedStatus,
+        storedFulfillmentStatus: storedFulfillmentStatus,
         storedPaymentStatus: PaymentStatus.captured.name,
         placedAtText: placedAtText,
         regionId: regionId,
@@ -134,6 +139,7 @@ Map<String, Object?> _serializeOrderResponse(OrderResponse value) =>
       'placed_at': value.placedAt,
       'payment': value.payment,
       'status': value.status.name,
+      'fulfillment_status': value.storedFulfillmentStatus,
       'payment_status': value.paymentStatus.name,
     };
 

@@ -72,8 +72,15 @@ void main() {
     (await missing.send()).assertNotFound();
   });
 
-  test('only completed paid orders can enter the return lifecycle', () async {
-    final owned = await scenario.order(complete: false);
+  test('undelivered items cannot enter the return lifecycle', () async {
+    final owned = await scenario.order(deliver: false);
+
+    (await scenario.request(owned.order, owned.token).send())
+        .assertUnprocessable();
+  });
+
+  test('uncaptured orders cannot enter the return lifecycle', () async {
+    final owned = await scenario.order(capture: false, deliver: false);
 
     (await scenario.request(owned.order, owned.token).send())
         .assertUnprocessable();
@@ -98,8 +105,7 @@ void main() {
     expect(rows.single.readIndex<int>(0), 0);
   });
 
-  test('active requests cannot exceed the quantity originally ordered',
-      () async {
+  test('active requests cannot exceed the quantity delivered', () async {
     final owned = await scenario.order();
     (await scenario.request(owned.order, owned.token, quantity: 2).send())
         .assertCreated();

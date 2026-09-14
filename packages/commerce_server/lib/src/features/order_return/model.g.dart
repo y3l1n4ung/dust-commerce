@@ -54,7 +54,6 @@ final class $ReturnReasonListResponseSerializer implements Serializer<ReturnReas
 }
 OrderReturnCandidate _$OrderReturnCandidateFromRow(Row row) {
   return OrderReturnCandidate(
-    status: row.read<String>('status'),
     paymentStatus: row.read<String>('payment_status'),
   );
 }
@@ -88,8 +87,8 @@ extension $OrderReturnCandidateQuery on QueryAs<OrderReturnCandidate> {
 OrderReturnItemCandidate _$OrderReturnItemCandidateFromRow(Row row) {
   return OrderReturnItemCandidate(
     id: row.read<String>('id'),
-    quantity: row.read<int>('quantity'),
-    requestedQuantity: row.read<int>('requested_quantity'),
+    deliveredQuantity: row.read<int>('delivered_quantity'),
+    claimedQuantity: row.read<int>('claimed_quantity'),
   );
 }
 

@@ -31,6 +31,7 @@ final class OrderResponse implements Serializable {
     required this.orderTax,
     required this.orderTotal,
     required this.storedStatus,
+    required this.storedFulfillmentStatus,
     required this.storedPaymentStatus,
     required this.placedAtText,
     required this.regionId,
@@ -148,6 +149,10 @@ final class OrderResponse implements Serializable {
   /// Payment lifecycle value stored in SQLite.
   @Sqlx(rename: 'payment_status')
   final String storedPaymentStatus;
+
+  /// Fulfillment lifecycle derived by the order query.
+  @Sqlx(rename: 'fulfillment_status')
+  final String storedFulfillmentStatus;
 
   /// Order lifecycle value stored in SQLite.
   @Sqlx(rename: 'status')

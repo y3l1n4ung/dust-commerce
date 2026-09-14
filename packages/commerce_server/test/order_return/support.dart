@@ -24,7 +24,8 @@ final class ReturnScenario {
   Future<void> stop() => harness.stop();
 
   Future<({Order order, String token})> order({
-    bool complete = true,
+    bool capture = true,
+    bool deliver = true,
     String email = 'owner@example.com',
   }) async {
     final account = await harness.account(email);
@@ -36,7 +37,7 @@ final class ReturnScenario {
     final placed = await harness.checkout(cart, token: account.token);
     placed.assertCreated();
     var order = Order.fromJson(placed.json! as Map<String, Object?>);
-    if (complete) {
+    if (capture) {
       final authorize = client.post('/store/orders/${order.id}/payments')
         ..bearer(account.token);
       (await authorize.send()).assertCreated();
@@ -44,18 +45,32 @@ final class ReturnScenario {
         ..bearer(account.token);
       final captured = await capture.send();
       captured.assertOk();
-      // Completion is independent from payment capture; model that Admin
-      // transition explicitly until the dedicated completion slice lands.
-      await queryExecute(
-        "UPDATE orders SET status = 'completed' WHERE id = ?",
-        [order.id],
-      ).execute(harness.database.executor);
-      final read = client.get('/store/orders/${order.id}')
-        ..bearer(account.token);
-      final refreshed = await read.send();
-      refreshed.assertOk();
-      order = Order.fromJson(refreshed.json! as Map<String, Object?>);
     }
+    if (deliver) {
+      await queryExecute(
+        "INSERT INTO fulfillments "
+        "(id, order_id, location_id, provider_id, delivered_at) "
+        "VALUES (?, ?, 'location_test', 'manual', "
+        "strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))",
+        ['ful_${order.id}', order.id],
+      ).execute(harness.database.executor);
+      await queryExecute(
+        "INSERT INTO fulfillment_items "
+        "(id, fulfillment_id, title, quantity, sku, barcode, line_item_id) "
+        "VALUES (?, ?, ?, ?, '', '', ?)",
+        [
+          'fulitem_${order.id}',
+          'ful_${order.id}',
+          order.items.single.title,
+          order.items.single.quantity,
+          order.items.single.id,
+        ],
+      ).execute(harness.database.executor);
+    }
+    final read = client.get('/store/orders/${order.id}')..bearer(account.token);
+    final refreshed = await read.send();
+    refreshed.assertOk();
+    order = Order.fromJson(refreshed.json! as Map<String, Object?>);
     return (order: order, token: account.token);
   }
 

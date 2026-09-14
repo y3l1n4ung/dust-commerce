@@ -12,9 +12,44 @@ abstract final class CheckoutReadRepository {
 
   /// One complete order, including frozen lines and addresses.
   @Query(r'''
+WITH order_summary AS (
+  SELECT order_id, sum(quantity) AS order_quantity
+  FROM order_items GROUP BY order_id
+), fulfillment_summary AS (
+  SELECT fulfillment.order_id, sum(item.quantity) AS fulfilled_quantity,
+         sum(iif(fulfillment.shipped_at IS NULL, 0, item.quantity))
+           AS shipped_quantity,
+         sum(iif(fulfillment.delivered_at IS NULL, 0, item.quantity))
+           AS delivered_quantity
+  FROM fulfillments fulfillment
+  JOIN fulfillment_items item
+    ON item.fulfillment_id = fulfillment.id AND item.deleted_at IS NULL
+  WHERE fulfillment.deleted_at IS NULL AND fulfillment.canceled_at IS NULL
+  GROUP BY fulfillment.order_id
+)
 SELECT o.id, o.display_id, o.email, o.customer_id, o.currency_code, o.subtotal,
        o.shipping_total, o.discount_total, o.tax, o.total, o.status,
-       o.payment_status, o.placed_at, o.region_id,
+       o.payment_status,
+       CASE
+         WHEN coalesce(fulfillment_summary.delivered_quantity, 0) >=
+           order_summary.order_quantity THEN 'delivered'
+         WHEN coalesce(fulfillment_summary.delivered_quantity, 0) > 0
+           THEN 'partially_delivered'
+         WHEN coalesce(fulfillment_summary.shipped_quantity, 0) >=
+           order_summary.order_quantity THEN 'shipped'
+         WHEN coalesce(fulfillment_summary.shipped_quantity, 0) > 0
+           THEN 'partially_shipped'
+         WHEN coalesce(fulfillment_summary.fulfilled_quantity, 0) >=
+           order_summary.order_quantity THEN 'fulfilled'
+         WHEN coalesce(fulfillment_summary.fulfilled_quantity, 0) > 0
+           THEN 'partially_fulfilled'
+         WHEN o.status = 'canceled' AND EXISTS (
+           SELECT 1 FROM fulfillments canceled
+           WHERE canceled.order_id = o.id AND canceled.canceled_at IS NOT NULL
+         ) THEN 'canceled'
+         ELSE 'not_fulfilled'
+       END AS fulfillment_status,
+       o.placed_at, o.region_id,
        o.shipping_option_id, o.shipping_name,
        payment.provider AS payment_provider, payment.amount AS payment_amount,
        payment.created_at AS payment_created_at,
@@ -29,9 +64,17 @@ SELECT o.id, o.display_id, o.email, o.customer_id, o.currency_code, o.subtotal,
                                      'currency_code', i.currency_code),
            'quantity', i.quantity,
            'detail', json_object(
-             'delivered_quantity', CASE
-               WHEN o.status = 'completed' AND o.payment_status = 'captured'
-               THEN i.quantity ELSE 0 END,
+             'delivered_quantity', coalesce((
+               SELECT sum(delivered_item.quantity)
+               FROM fulfillment_items delivered_item
+               JOIN fulfillments delivered
+                 ON delivered.id = delivered_item.fulfillment_id
+               WHERE delivered_item.line_item_id = i.id
+                 AND delivered_item.deleted_at IS NULL
+                 AND delivered.deleted_at IS NULL
+                 AND delivered.canceled_at IS NULL
+                 AND delivered.delivered_at IS NOT NULL
+             ), 0),
              'return_requested_quantity', coalesce(returned.requested_quantity, 0),
              'return_received_quantity', coalesce(returned.received_quantity, 0),
              'return_dismissed_quantity', coalesce(returned.dismissed_quantity, 0)
@@ -85,6 +128,8 @@ JOIN regions r ON r.id = o.region_id
 JOIN order_addresses shipping ON shipping.order_id = o.id AND shipping.kind = 'shipping'
 LEFT JOIN order_addresses billing ON billing.order_id = o.id AND billing.kind = 'billing'
 LEFT JOIN payment_collections payment ON payment.order_id = o.id AND payment.deleted_at IS NULL
+LEFT JOIN order_summary ON order_summary.order_id = o.id
+LEFT JOIN fulfillment_summary ON fulfillment_summary.order_id = o.id
 WHERE o.id = $1
 ''')
   Future<Result<OrderResponse?, SqlxError>> findOrder(String id);

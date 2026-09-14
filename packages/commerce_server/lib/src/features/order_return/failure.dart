@@ -5,7 +5,7 @@ enum OrderReturnFailure {
   /// The order is absent or belongs to another customer.
   noOrder,
 
-  /// The order has not completed captured payment.
+  /// Payment is not captured or a selected item has not been delivered.
   ineligibleOrder,
 
   /// An item is absent, duplicated, or belongs to another order.
@@ -14,7 +14,7 @@ enum OrderReturnFailure {
   /// A supplied return reason is not active.
   invalidReason,
 
-  /// Active requests already consume some or all bought quantity.
+  /// Existing returns consume some or all delivered quantity.
   quantityUnavailable,
 }
 

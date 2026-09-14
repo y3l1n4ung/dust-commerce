@@ -8,36 +8,33 @@ part 'model.g.dart';
 @Derive([FromRow()])
 final class OrderReturnCandidate {
   /// Creates order eligibility facts directly from SQL.
-  const OrderReturnCandidate(
-      {required this.status, required this.paymentStatus});
+  const OrderReturnCandidate({required this.paymentStatus});
 
   /// Payment must be captured before physical goods can be returned.
   @Sqlx(rename: 'payment_status')
   final String paymentStatus;
-
-  /// Only completed orders have entered the post-purchase lifecycle.
-  final String status;
 }
 
-/// Frozen line quantity and quantity already claimed by active returns.
+/// Delivered line quantity and units already claimed by returns.
 @Derive([FromRow()])
 final class OrderReturnItemCandidate {
   /// Creates item availability facts directly from SQL.
   const OrderReturnItemCandidate({
     required this.id,
-    required this.quantity,
-    required this.requestedQuantity,
+    required this.deliveredQuantity,
+    required this.claimedQuantity,
   });
+
+  /// Delivered units already present in any non-canceled return.
+  @Sqlx(rename: 'claimed_quantity')
+  final int claimedQuantity;
+
+  /// Units delivered by active fulfillment records.
+  @Sqlx(rename: 'delivered_quantity')
+  final int deliveredQuantity;
 
   /// Immutable order-item identifier.
   final String id;
-
-  /// Quantity bought on the frozen order.
-  final int quantity;
-
-  /// Units already present in non-canceled return requests.
-  @Sqlx(rename: 'requested_quantity')
-  final int requestedQuantity;
 }
 
 /// Explicit Store response allowlist decoded directly from SQLx.

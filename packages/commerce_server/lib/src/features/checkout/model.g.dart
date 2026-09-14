@@ -25,6 +25,7 @@ OrderResponse _$OrderResponseFromRow(Row row) {
     orderTax: row.read<int>('tax'),
     orderTotal: row.read<int>('total'),
     storedStatus: row.read<String>('status'),
+    storedFulfillmentStatus: row.read<String>('fulfillment_status'),
     storedPaymentStatus: row.read<String>('payment_status'),
     placedAtText: row.read<String>('placed_at'),
     regionId: row.read<String>('region_id'),
