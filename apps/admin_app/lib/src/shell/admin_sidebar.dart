@@ -14,6 +14,7 @@ final class AdminSidebar extends StatelessWidget {
     required this.themes,
     required this.onSearchRequested,
     required this.onCustomersRequested,
+    required this.onCustomerGroupsRequested,
     required this.onOrdersRequested,
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
@@ -29,6 +30,9 @@ final class AdminSidebar extends StatelessWidget {
 
   /// Opens the merchant customer table.
   final VoidCallback onCustomersRequested;
+
+  /// Opens the merchant customer-group route.
+  final VoidCallback onCustomerGroupsRequested;
 
   /// Opens the merchant order table.
   final VoidCallback onOrdersRequested;
@@ -107,7 +111,11 @@ final class AdminSidebar extends StatelessWidget {
                   selected: selectedSection == AdminShellSection.customers,
                   onTap: onCustomersRequested,
                 ),
-                const _SubNav(label: 'Customer Groups'),
+                _SubNav(
+                  label: 'Customer Groups',
+                  selected: selectedSection == AdminShellSection.customerGroups,
+                  onTap: onCustomerGroupsRequested,
+                ),
                 const _NavRow(icon: Icons.sell_outlined, label: 'Promotions'),
                 const _SubNav(label: 'Campaigns'),
                 const _NavRow(

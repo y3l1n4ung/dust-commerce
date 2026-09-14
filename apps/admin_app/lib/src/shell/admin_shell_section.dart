@@ -3,6 +3,9 @@ enum AdminShellSection {
   /// Merchant customer-list routes.
   customers,
 
+  /// Merchant customer-segmentation routes.
+  customerGroups,
+
   /// Merchant order-list routes.
   orders,
 

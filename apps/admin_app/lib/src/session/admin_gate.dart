@@ -3,6 +3,8 @@ import 'package:admin_app/src/customer/admin_customer_detail_page.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_page.dart';
 import 'package:admin_app/src/customer/admin_customer_view_model.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_page.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_view_model.dart';
 import 'package:admin_app/src/product/admin_product_page.dart';
 import 'package:admin_app/src/product/admin_product_detail_page.dart';
 import 'package:admin_app/src/product/admin_product_create_page.dart';
@@ -35,6 +37,7 @@ import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
 part 'admin_gate_actions.dart';
+part 'admin_gate_customer_group_actions.dart';
 part 'admin_gate_navigation.dart';
 
 /// Switches between sign-in and the authenticated admin shell.
@@ -77,9 +80,11 @@ final class _AdminHome extends StatefulWidget {
 }
 
 final class _AdminHomeState extends State<_AdminHome>
-    with _AdminHomeActions, _AdminHomeNavigation {
+    with _AdminCustomerGroupActions, _AdminHomeActions, _AdminHomeNavigation {
   @override
   final _customerSearchFocus = FocusNode();
+  @override
+  final _customerGroupSearchFocus = FocusNode();
   @override
   final _orderSearchFocus = FocusNode();
   @override
@@ -111,6 +116,7 @@ final class _AdminHomeState extends State<_AdminHome>
   @override
   void dispose() {
     _customerSearchFocus.dispose();
+    _customerGroupSearchFocus.dispose();
     _orderSearchFocus.dispose();
     _searchFocus.dispose();
     _optionSearchFocus.dispose();
@@ -125,6 +131,7 @@ final class _AdminHomeState extends State<_AdminHome>
 
 enum _AdminRoute {
   customers,
+  customerGroups,
   customer,
   customerOrder,
   orders,

@@ -19,6 +19,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
       themes: widget.themes,
       title: switch (_route) {
         _AdminRoute.customers => 'Customers',
+        _AdminRoute.customerGroups => 'Customer Groups',
         _AdminRoute.customer => switch (customerDetail) {
             Some(value: final customer) =>
               'Customers  ›  ${customer.email.match(some: (value) => value, none: () => customer.id)}',
@@ -53,6 +54,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
       },
       onSearchRequested: _requestSearch,
       onCustomersRequested: _showCustomers,
+      onCustomerGroupsRequested: _showCustomerGroups,
       onOrdersRequested: _showOrders,
       onProductsRequested: _showProducts,
       onProductOptionsRequested: _showProductOptions,
@@ -63,6 +65,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
         _AdminRoute.customer ||
         _AdminRoute.customerOrder =>
           AdminShellSection.customers,
+        _AdminRoute.customerGroups => AdminShellSection.customerGroups,
         _AdminRoute.orders || _AdminRoute.order => AdminShellSection.orders,
         _AdminRoute.products ||
         _AdminRoute.product =>
@@ -85,6 +88,9 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
             searchFocus: _customerSearchFocus,
             onOpen: _showCustomer,
             onCreate: _createCustomer,
+          ),
+        _AdminRoute.customerGroups => AdminCustomerGroupPage(
+            searchFocus: _customerGroupSearchFocus,
           ),
         _AdminRoute.customer => AdminCustomerDetailPage(
             customerId: selectedIdForNavigation,
