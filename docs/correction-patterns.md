@@ -77,6 +77,7 @@ affected slice and the authoritative check that exposed or verified it.
 | observed | A two-column alignment spacer was emitted after switching the address grid to one column, leaving a full empty row on compact screens. | Keep source grid placeholders conditional on the breakpoint that needs them. | Exercise the same focus form at desktop and `390 x 844` before committing the UI slice. |
 | observed | The package verifier passed a path deleted by the previous commit to `dart format`, producing a false missing-file warning after a rename. | Every Git-produced formatting list excludes deleted paths. | `scripts/verify_package.sh` applies `--diff-filter=ACMRT` to working-tree and committed-source scans; reproduce against rename commit `1676fd9`. |
 | observed | Terminating a long-running Flutter or Dart wrapper left its spawned VM listening on the QA port, so the replacement processes failed to bind. | Before restarting local QA, resolve and stop the exact listener PID, then prove the port is free. | Check ports `3878`, `13001` and `13002` with `lsof` before launching replacement processes. |
+| observed | Route-focus headers displayed an `esc` affordance, but pressing Escape left the form open. | Every visible keyboard affordance must invoke its advertised action and must respect the command's busy state. | Browser QA presses Escape on each new focus form and verifies dismissal or intentional blocking. |
 
 ## Entry template
 
