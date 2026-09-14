@@ -23,6 +23,9 @@
    private function or method returning `Widget`. Give the subtree a focused
    `StatelessWidget` or `StatefulWidget` so ownership, lifecycle and rebuild
    boundaries stay visible.
+8. **Package verification starts at the repository root.** Run
+   `./scripts/verify_package.sh <package>` so source paths, Dust roots, working
+   directories and the Dart/Flutter test runner come from one checked contract.
 
 ## Splitting
 
@@ -60,9 +63,9 @@ rules here only after recurrence and an enforcement path are clear.
 ## Verifying
 
 ```bash
-dust build --root packages/commerce_shared
-dust build --root packages/commerce_server && dust db build --root packages/commerce_server
-dust build --root apps/commerce_app
+./scripts/verify_package.sh packages/commerce_admin_shared
+./scripts/verify_package.sh packages/commerce_server
+./scripts/verify_package.sh apps/admin_app
 ```
 
 ```bash

@@ -84,5 +84,5 @@ persistence without weakening order ownership or transfer behavior.
 
 This proves source-structure and live behavior parity for the implemented list.
 It does not prove same-state pixel parity with a running Medusa Admin. Customer
-creation, detail, edit/delete, groups and live pagination beyond 20 rows remain
-separate vertical slices.
+creation, detail, edit and deletion now have dedicated QA documents; groups and
+live pagination beyond 20 rows remain separate vertical slices.

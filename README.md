@@ -170,6 +170,13 @@ Then the same checks CI runs:
 ./scripts/format.sh --check && ./scripts/check_file_size.sh
 ```
 
+Run one package's generator, analyzer and correct Dart/Flutter test runner from
+the repository root with:
+
+```bash
+./scripts/verify_package.sh apps/admin_app
+```
+
 The process-level smoke starts the real server entrypoint against a temporary
 database, waits for health, verifies the twenty-product public catalogue,
 shuts it down

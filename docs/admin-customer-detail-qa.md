@@ -86,7 +86,7 @@ customer fixture was available, so same-state pixel parity is not claimed.
 
 ## Remaining parity boundary
 
-Customer creation and edit are now covered by their dedicated QA documents.
-Deactivate/delete, address mutations, groups and a same-state Medusa raster
-remain separate vertical slices. Issue #33 therefore remains open; this slice
-completes only read-only detail, addresses and customer-owned order history.
+Customer creation, edit and deletion are now covered by their dedicated QA
+documents. Address mutations, groups and a same-state Medusa raster remain
+separate vertical slices. Issue #33 therefore remains open; this slice completes
+only read-only detail, addresses and customer-owned order history.
