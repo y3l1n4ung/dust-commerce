@@ -36,6 +36,13 @@ abstract interface class AdminCustomerApi {
     @Body() AdminCreateCustomerAddress body,
   );
 
+  /// Removes one owned destination and returns its refreshed parent.
+  @DELETE('/admin/customers/{id}/addresses/{address_id}')
+  Future<AdminCustomerAddressDeleted> deleteCustomerAddress(
+    @Path() String id,
+    @Path('address_id') String addressId,
+  );
+
   /// Reads one merchant-visible customer profile and active address book.
   @GET('/admin/customers/{id}')
   Future<AdminCustomerDetail> customer(@Path() String id);
