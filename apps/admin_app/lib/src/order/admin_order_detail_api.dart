@@ -18,6 +18,10 @@ abstract interface class AdminOrderDetailApi {
   @GET('/admin/orders/{id}')
   Future<AdminOrderDetail> order(@Path() String id);
 
+  /// Cancels one eligible order and returns the refreshed merchant snapshot.
+  @POST('/admin/orders/{id}/cancel')
+  Future<AdminOrderDetail> cancelOrder(@Path() String id);
+
   /// Lists active stock locations for the fulfillment form.
   @GET('/admin/stock-locations')
   Future<AdminStockLocationList> stockLocations(
