@@ -13,12 +13,16 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
     required this.state,
     required this.onEditCustomer,
     required this.onDeleteCustomer,
+    required this.onAddAddress,
     required this.onOpenOrder,
     super.key,
   });
 
   /// Complete customer profile.
   final AdminCustomerDetail customer;
+
+  /// Opens the focused customer-address form.
+  final VoidCallback onAddAddress;
 
   /// Opens the customer contact editor.
   final VoidCallback onEditCustomer;
@@ -48,7 +52,10 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
                     onDelete: onDeleteCustomer,
                   ),
                   const SizedBox(height: 12),
-                  AdminCustomerAddressSection(customer: customer),
+                  AdminCustomerAddressSection(
+                    customer: customer,
+                    onAdd: onAddAddress,
+                  ),
                   const SizedBox(height: 12),
                   AdminCustomerOrderSection(
                     state: state,
@@ -76,7 +83,10 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
                   const SizedBox(width: 16),
                   SizedBox(
                     width: 440,
-                    child: AdminCustomerAddressSection(customer: customer),
+                    child: AdminCustomerAddressSection(
+                      customer: customer,
+                      onAdd: onAddAddress,
+                    ),
                   ),
                 ],
               );

@@ -43,6 +43,7 @@ final class AdminCustomerCreateFooter extends StatelessWidget {
     required this.busy,
     required this.onCancel,
     required this.onCreate,
+    this.submitLabel = 'Create',
     super.key,
   });
 
@@ -54,6 +55,9 @@ final class AdminCustomerCreateFooter extends StatelessWidget {
 
   /// Submits the form.
   final VoidCallback onCreate;
+
+  /// Visible primary action label.
+  final String submitLabel;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -76,7 +80,7 @@ final class AdminCustomerCreateFooter extends StatelessWidget {
                     dimension: 15,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : const Text('Create'),
+                : Text(submitLabel),
           ),
         ]),
       );

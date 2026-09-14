@@ -5,10 +5,17 @@ import 'package:flutter/material.dart';
 /// Active reusable destinations on Medusa's customer-detail side column.
 final class AdminCustomerAddressSection extends StatelessWidget {
   /// Creates the read-only address section.
-  const AdminCustomerAddressSection({required this.customer, super.key});
+  const AdminCustomerAddressSection({
+    required this.customer,
+    required this.onAdd,
+    super.key,
+  });
 
   /// Complete profile and active address book.
   final AdminCustomerDetail customer;
+
+  /// Opens the focused address creation form.
+  final VoidCallback onAdd;
 
   @override
   Widget build(BuildContext context) => Material(
@@ -30,10 +37,7 @@ final class AdminCustomerAddressSection extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
-              const Tooltip(
-                message: 'Address creation is not available yet',
-                child: TextButton(onPressed: null, child: Text('Add')),
-              ),
+              TextButton(onPressed: onAdd, child: const Text('Add')),
             ]),
           ),
           if (customer.addresses.isEmpty)

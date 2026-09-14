@@ -1,3 +1,4 @@
+import 'package:admin_app/src/customer/admin_customer_address_create_page.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_layout.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_state.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
@@ -61,6 +62,7 @@ final class _AdminCustomerDetailPageState
       Some(value: final customer) => AdminCustomerDetailLayout(
           customer: customer,
           state: state,
+          onAddAddress: () => _addAddress(customer),
           onEditCustomer: () => _edit(customer),
           onDeleteCustomer: deletion.isBusy ? null : () => _delete(customer),
           onOpenOrder: widget.onOpenOrder,
@@ -76,6 +78,16 @@ final class _AdminCustomerDetailPageState
           onRetry: _load,
         ),
     };
+  }
+
+  Future<void> _addAddress(AdminCustomerDetail customer) async {
+    final updated = await showAdminCustomerAddressCreatePage(
+      context,
+      customer.id,
+    );
+    if (updated != null && mounted) {
+      await context.readAdminCustomerDetailViewModel().load(updated.id);
+    }
   }
 
   Future<void> _delete(AdminCustomerDetail customer) async {
