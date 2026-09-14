@@ -53,6 +53,10 @@ not divided a responsibility; it has moved a line count.
 
 Conventional commits. The body says why, not what — the diff already says what.
 
+Repeated user and self-corrections are collected in the
+[correction pattern ledger](docs/correction-patterns.md). Its candidates become
+rules here only after recurrence and an enforcement path are clear.
+
 ## Verifying
 
 ```bash
