@@ -34,4 +34,53 @@ void main() {
     );
     expect(AdminCustomerOrder.parse('metadata'), const None());
   });
+
+  test('customer detail decodes only merchant-visible profile data', () {
+    final customer = AdminCustomerDetail.fromJson({
+      'id': 'cus_ada',
+      'email': 'ada@example.com',
+      'company_name': 'Analytical Engines',
+      'first_name': 'Ada',
+      'last_name': 'Lovelace',
+      'phone': null,
+      'has_account': true,
+      'created_at': '2026-09-10T10:00:00.000Z',
+      'updated_at': '2026-09-10T10:05:00.000Z',
+      'addresses': [
+        {
+          'id': 'addr_home',
+          'first_name': 'Ada',
+          'last_name': 'Lovelace',
+          'company': null,
+          'phone': '+44 20 0000 0000',
+          'address_1': '12 St James Square',
+          'address_2': null,
+          'city': 'London',
+          'province': null,
+          'postal_code': 'SW1Y 4LB',
+          'country_code': 'gb',
+          'is_default_shipping': true,
+          'is_default_billing': false,
+        },
+      ],
+    });
+
+    expect(customer.companyName, const Some('Analytical Engines'));
+    expect(customer.phone, const None<String>());
+    expect(customer.addresses.single.line2, const None<String>());
+    expect(customer.addresses.single.phone, const Some('+44 20 0000 0000'));
+    expect(customer.createdAt.isUtc, isTrue);
+    expect(customer.toJson().keys, {
+      'id',
+      'email',
+      'company_name',
+      'first_name',
+      'last_name',
+      'phone',
+      'has_account',
+      'created_at',
+      'updated_at',
+      'addresses',
+    });
+  });
 }
