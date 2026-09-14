@@ -24,6 +24,13 @@ abstract interface class AdminCustomerGroupApi {
   @GET('/admin/customer-groups/{id}')
   Future<AdminCustomerGroupDetailResponse> customerGroup(@Path() String id);
 
+  /// Replaces the merchant-facing name and returns refreshed group detail.
+  @POST('/admin/customer-groups/{id}')
+  Future<AdminCustomerGroupDetailResponse> updateCustomerGroup(
+    @Path() String id,
+    @Body() AdminUpdateCustomerGroup body,
+  );
+
   /// Lists customers belonging to one active group.
   @GET('/admin/customers')
   Future<AdminCustomerList> listCustomerGroupCustomers(

@@ -1,6 +1,7 @@
 import 'package:admin_app/src/customer_group/admin_customer_group_api.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_create_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_view_model.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_edit_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_view_model.dart';
 import 'package:dio/dio.dart';
 
@@ -16,6 +17,9 @@ final class AdminCustomerGroupDependencies {
       detail: AdminCustomerGroupDetailViewModel(
         AdminCustomerGroupDetailViewModelArgs(api: api),
       ),
+      edit: AdminCustomerGroupEditViewModel(
+        AdminCustomerGroupEditViewModelArgs(api: api),
+      ),
       list: AdminCustomerGroupViewModel(
         AdminCustomerGroupViewModelArgs(api: api),
       ),
@@ -25,6 +29,7 @@ final class AdminCustomerGroupDependencies {
   const AdminCustomerGroupDependencies._({
     required this.create,
     required this.detail,
+    required this.edit,
     required this.list,
   });
 
@@ -33,6 +38,9 @@ final class AdminCustomerGroupDependencies {
 
   /// Selected customer-group detail and member-table state.
   final AdminCustomerGroupDetailViewModel detail;
+
+  /// Focused customer-group edit command state.
+  final AdminCustomerGroupEditViewModel edit;
 
   /// Customer-group collection state.
   final AdminCustomerGroupViewModel list;
