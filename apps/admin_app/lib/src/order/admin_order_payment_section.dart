@@ -1,14 +1,15 @@
 import 'package:admin_app/src/core/admin_money.dart';
+import 'package:admin_app/src/order/admin_order_payment_record.dart';
+import 'package:admin_app/src/order/admin_order_refund_row.dart';
 import 'package:admin_app/src/order/admin_order_status_badge.dart';
 import 'package:admin_app/src/product/detail/admin_product_detail_section.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-/// Provider payment facts without capture or refund controls.
+/// Medusa-shaped payment record, refund history, and captured total.
 final class AdminOrderPaymentSection extends StatelessWidget {
-  /// Creates the payment section.
+  /// Creates the protected payment section.
   const AdminOrderPaymentSection({required this.order, super.key});
 
   /// Complete merchant order snapshot.
@@ -19,51 +20,49 @@ final class AdminOrderPaymentSection extends StatelessWidget {
         title: 'Payment',
         action: AdminOrderPaymentBadge(status: order.paymentStatus),
         child: Column(children: [
-          switch (order.paymentProvider) {
-            Some(value: final provider) => AdminProductDetailRow(
-                label: 'Provider',
-                value: Text(provider),
-              ),
-            None() => AdminProductDetailRow(
-                label: 'Payment record',
-                value: adminDetailText(context, null),
+          switch (order.paymentId) {
+            Some() => AdminOrderPaymentRecord(order: order),
+            None() => const Padding(
+                padding: EdgeInsets.all(24),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('No payment recorded.'),
+                ),
               ),
           },
-          if (order.paymentRecordStatus case Some(value: final status))
-            AdminProductDetailRow(
-              label: 'Status',
-              value: Text(_recordLabel(status)),
+          for (final refund in order.paymentRefunds)
+            AdminOrderRefundRow(
+              refund: refund,
+              currencyCode: order.currencyCode,
             ),
-          if (order.paymentCreatedAt case Some(value: final createdAt))
-            AdminProductDetailRow(
-              label: 'Created',
-              value: Text(_date(createdAt)),
+          _AdminOrderPaymentTotal(order: order),
+        ]),
+      );
+}
+
+final class _AdminOrderPaymentTotal extends StatelessWidget {
+  const _AdminOrderPaymentTotal({required this.order});
+
+  final AdminOrderDetail order;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        child: Row(children: [
+          const Expanded(
+            child: Text(
+              'Total paid by customer',
+              style: TextStyle(fontWeight: FontWeight.w600),
             ),
-          if (order.paymentCapturedAt case Some(value: final capturedAt))
-            AdminProductDetailRow(
-              label: 'Captured',
-              value: Text(_date(capturedAt)),
-            ),
-          AdminProductDetailRow(
-            label: 'Amount',
-            value: Text(switch (order.paymentAmount) {
-              Some(value: final amount) =>
-                '${order.currencyCode.toUpperCase()} '
-                    '${formatMinorUnits(amount, order.currencyCode)}',
+          ),
+          Text(
+            switch (order.paymentAmount) {
+              Some(:final value) => '${order.currencyCode.toUpperCase()} '
+                  '${formatMinorUnits(value, order.currencyCode)}',
               None() => '—',
-            }),
+            },
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ]),
       );
-
-  String _date(DateTime value) =>
-      DateFormat.yMMMd().add_jm().format(value.toLocal());
-
-  String _recordLabel(AdminOrderPaymentRecordStatus status) => switch (status) {
-        AdminOrderPaymentRecordStatus.pending => 'Pending',
-        AdminOrderPaymentRecordStatus.authorized => 'Authorized',
-        AdminOrderPaymentRecordStatus.captured => 'Captured',
-        AdminOrderPaymentRecordStatus.canceled => 'Canceled',
-        AdminOrderPaymentRecordStatus.failed => 'Failed',
-      };
 }
