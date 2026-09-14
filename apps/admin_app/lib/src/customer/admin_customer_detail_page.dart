@@ -1,6 +1,8 @@
 import 'package:admin_app/src/customer/admin_customer_detail_layout.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_state.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
+import 'package:admin_app/src/customer/admin_customer_edit_drawer.dart';
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
@@ -55,6 +57,7 @@ final class _AdminCustomerDetailPageState
       Some(value: final customer) => AdminCustomerDetailLayout(
           customer: customer,
           state: state,
+          onEditCustomer: () => _edit(customer),
           onOpenOrder: widget.onOpenOrder,
         ),
       None() when state.status == AdminCustomerDetailStatus.loading =>
@@ -68,6 +71,13 @@ final class _AdminCustomerDetailPageState
           onRetry: _load,
         ),
     };
+  }
+
+  Future<void> _edit(AdminCustomerDetail customer) async {
+    final updated = await showAdminCustomerEditDrawer(context, customer);
+    if (updated != null && mounted) {
+      await context.readAdminCustomerDetailViewModel().load(updated.id);
+    }
   }
 }
 

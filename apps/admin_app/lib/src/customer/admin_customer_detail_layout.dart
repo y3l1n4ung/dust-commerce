@@ -11,12 +11,16 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
   const AdminCustomerDetailLayout({
     required this.customer,
     required this.state,
+    required this.onEditCustomer,
     required this.onOpenOrder,
     super.key,
   });
 
   /// Complete customer profile.
   final AdminCustomerDetail customer;
+
+  /// Opens the customer contact editor.
+  final VoidCallback onEditCustomer;
 
   /// Opens one customer-owned order.
   final ValueChanged<String> onOpenOrder;
@@ -34,7 +38,10 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
             child: LayoutBuilder(builder: (context, constraints) {
               if (constraints.maxWidth < 1000) {
                 return Column(children: [
-                  AdminCustomerGeneralSection(customer: customer),
+                  AdminCustomerGeneralSection(
+                    customer: customer,
+                    onEdit: onEditCustomer,
+                  ),
                   const SizedBox(height: 12),
                   AdminCustomerAddressSection(customer: customer),
                   const SizedBox(height: 12),
@@ -49,7 +56,10 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Column(children: [
-                      AdminCustomerGeneralSection(customer: customer),
+                      AdminCustomerGeneralSection(
+                        customer: customer,
+                        onEdit: onEditCustomer,
+                      ),
                       const SizedBox(height: 12),
                       AdminCustomerOrderSection(
                         state: state,

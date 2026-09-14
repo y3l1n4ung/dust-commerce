@@ -1,14 +1,22 @@
 import 'package:admin_app/src/customer/admin_customer_presenter.dart';
+import 'package:admin_app/src/customer/admin_customer_actions_menu.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
 
 /// Medusa-compatible customer identity and contact facts.
 final class AdminCustomerGeneralSection extends StatelessWidget {
   /// Creates the read-only general section.
-  const AdminCustomerGeneralSection({required this.customer, super.key});
+  const AdminCustomerGeneralSection({
+    required this.customer,
+    required this.onEdit,
+    super.key,
+  });
 
   /// Complete merchant customer allowlist.
   final AdminCustomerDetail customer;
+
+  /// Opens the Medusa-shaped customer editor.
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) => Material(
@@ -32,13 +40,7 @@ final class AdminCustomerGeneralSection extends StatelessWidget {
               ),
               _AdminCustomerAccountBadge(hasAccount: customer.hasAccount),
               const SizedBox(width: 8),
-              const Tooltip(
-                message: 'Customer editing and deletion are not available yet',
-                child: IconButton(
-                  onPressed: null,
-                  icon: Icon(Icons.more_horiz_rounded, size: 18),
-                ),
-              ),
+              AdminCustomerActionsMenu(onEdit: onEdit),
             ]),
           ),
           Divider(height: 1, color: Theme.of(context).dividerColor),
