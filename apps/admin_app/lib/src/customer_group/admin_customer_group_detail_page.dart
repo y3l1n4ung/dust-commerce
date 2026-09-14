@@ -1,6 +1,8 @@
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_layout.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_state.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_view_model.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_edit_drawer.dart';
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
@@ -57,6 +59,7 @@ final class _AdminCustomerGroupDetailPageState
       Some(value: final group) => AdminCustomerGroupDetailLayout(
           customerGroup: group,
           state: state,
+          onEdit: () => _edit(group),
           onOpenCustomer: widget.onOpenCustomer,
         ),
       None() when state.status == AdminCustomerGroupDetailStatus.loading =>
@@ -70,6 +73,17 @@ final class _AdminCustomerGroupDetailPageState
           onRetry: _load,
         ),
     };
+  }
+
+  Future<void> _edit(AdminCustomerGroupDetail group) async {
+    final updated = await showAdminCustomerGroupEditDrawer(context, group);
+    if (updated == null || !mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        'Customer group ${updated.name} was successfully updated.',
+      ),
+    ));
+    await context.readAdminCustomerGroupDetailViewModel().load(updated.id);
   }
 }
 

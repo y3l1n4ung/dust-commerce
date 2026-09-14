@@ -11,12 +11,16 @@ final class AdminCustomerGroupDetailLayout extends StatelessWidget {
   const AdminCustomerGroupDetailLayout({
     required this.customerGroup,
     required this.state,
+    required this.onEdit,
     required this.onOpenCustomer,
     super.key,
   });
 
   /// Complete customer-group allowlist.
   final AdminCustomerGroupDetail customerGroup;
+
+  /// Opens the Medusa-shaped customer-group editor.
+  final VoidCallback onEdit;
 
   /// Opens one customer profile from the group table.
   final ValueChanged<String> onOpenCustomer;
@@ -32,7 +36,10 @@ final class AdminCustomerGroupDetailLayout extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1600),
             child: Column(children: [
-              AdminCustomerGroupGeneralSection(customerGroup: customerGroup),
+              AdminCustomerGroupGeneralSection(
+                customerGroup: customerGroup,
+                onEdit: onEdit,
+              ),
               const SizedBox(height: 12),
               AdminCustomerGroupCustomerSection(
                 state: state,

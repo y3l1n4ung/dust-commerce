@@ -1,3 +1,4 @@
+import 'package:admin_app/src/customer_group/admin_customer_group_actions_menu.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
 
@@ -6,11 +7,15 @@ final class AdminCustomerGroupGeneralSection extends StatelessWidget {
   /// Creates the read-only general section.
   const AdminCustomerGroupGeneralSection({
     required this.customerGroup,
+    required this.onEdit,
     super.key,
   });
 
   /// Complete merchant customer-group allowlist.
   final AdminCustomerGroupDetail customerGroup;
+
+  /// Opens the existing customer-group edit drawer.
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) => Material(
@@ -25,13 +30,15 @@ final class AdminCustomerGroupGeneralSection extends StatelessWidget {
         child: Column(children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                customerGroup.name,
-                style: Theme.of(context).textTheme.titleMedium,
+            child: Row(children: [
+              Expanded(
+                child: Text(
+                  customerGroup.name,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
               ),
-            ),
+              AdminCustomerGroupActionsMenu(onEdit: onEdit),
+            ]),
           ),
           Divider(height: 1, color: Theme.of(context).dividerColor),
           Padding(
