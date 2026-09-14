@@ -1,6 +1,7 @@
-import 'package:admin_app/src/customer/admin_customer_page.dart';
+import 'package:admin_app/src/customer/admin_customer_create_page.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_page.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
+import 'package:admin_app/src/customer/admin_customer_page.dart';
 import 'package:admin_app/src/customer/admin_customer_view_model.dart';
 import 'package:admin_app/src/product/admin_product_page.dart';
 import 'package:admin_app/src/product/admin_product_detail_page.dart';

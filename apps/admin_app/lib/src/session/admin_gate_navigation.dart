@@ -84,6 +84,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
         _AdminRoute.customers => AdminCustomerPage(
             searchFocus: _customerSearchFocus,
             onOpen: _showCustomer,
+            onCreate: _createCustomer,
           ),
         _AdminRoute.customer => AdminCustomerDetailPage(
             customerId: selectedIdForNavigation,

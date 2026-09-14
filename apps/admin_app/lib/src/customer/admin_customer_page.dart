@@ -11,11 +11,15 @@ final class AdminCustomerPage extends StatelessWidget {
   const AdminCustomerPage({
     required this.searchFocus,
     required this.onOpen,
+    required this.onCreate,
     super.key,
   });
 
   /// Opens one complete customer detail route.
   final ValueChanged<String> onOpen;
+
+  /// Opens Medusa's focused customer-create route.
+  final VoidCallback onCreate;
 
   /// Focus target shared with the sidebar search action.
   final FocusNode searchFocus;
@@ -39,7 +43,7 @@ final class AdminCustomerPage extends StatelessWidget {
             ),
             clipBehavior: Clip.antiAlias,
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              const AdminCustomerPageHeader(),
+              AdminCustomerPageHeader(onCreate: onCreate),
               Divider(height: 1, color: Theme.of(context).dividerColor),
               AdminCustomerToolbar(state: state, searchFocus: searchFocus),
               Divider(height: 1, color: Theme.of(context).dividerColor),

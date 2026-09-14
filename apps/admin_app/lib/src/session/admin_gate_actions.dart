@@ -156,6 +156,13 @@ mixin _AdminHomeActions on State<_AdminHome> {
     }
   }
 
+  Future<void> _createCustomer() async {
+    final created = await showAdminCustomerCreatePage(context);
+    if (!mounted || created == null) return;
+    await context.readAdminCustomerViewModel().load(offset: 0);
+    if (mounted) _showCustomer(created.id);
+  }
+
   Future<void> _createProductOption() async {
     final created = await showAdminProductOptionCreatePage(context);
     if (!mounted || created == null) return;
