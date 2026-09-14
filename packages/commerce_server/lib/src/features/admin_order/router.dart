@@ -1,6 +1,7 @@
 import 'package:commerce_server/src/features/admin_order/handler.dart';
 import 'package:commerce_server/src/features/admin_order/create_fulfillment_handler.dart';
 import 'package:commerce_server/src/features/admin_order/create_shipment_handler.dart';
+import 'package:commerce_server/src/features/admin_order/cancel_fulfillment_handler.dart';
 import 'package:commerce_server/src/features/admin_order/detail_handler.dart';
 import 'package:commerce_server/src/features/admin_order/export_handler.dart';
 import 'package:commerce_server/src/features/admin_order/mark_delivered_handler.dart';
@@ -22,4 +23,8 @@ Router adminOrderRoutes() => Router()
   ..route(
     '/orders/{id}/fulfillments/{fulfillment_id}/mark-as-delivered',
     post(markAdminOrderFulfillmentDeliveredHandler),
+  )
+  ..route(
+    '/orders/{id}/fulfillments/{fulfillment_id}/cancel',
+    post(cancelAdminOrderFulfillmentHandler),
   );

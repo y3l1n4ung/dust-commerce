@@ -2,6 +2,12 @@
 library;
 
 export 'deps.dart';
+export 'cancel_fulfillment_failure.dart';
+export 'cancel_fulfillment_handler.dart';
+export 'cancel_fulfillment_model.dart';
+export 'cancel_fulfillment_outcome.dart';
+export 'cancel_fulfillment_repository.dart';
+export 'cancel_fulfillment_service.dart';
 export 'create_fulfillment_failure.dart';
 export 'create_fulfillment_handler.dart';
 export 'create_fulfillment_model.dart';
