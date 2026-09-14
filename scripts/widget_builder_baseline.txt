@@ -7,7 +7,6 @@ apps/admin_app/lib/src/product/admin_product_create_variant.dart:1
 apps/admin_app/lib/src/product/admin_product_edit_drawer.dart:2
 apps/admin_app/lib/src/product/admin_product_filter_styles.dart:1
 apps/admin_app/lib/src/product/admin_product_image_variants_chrome.dart:2
-apps/admin_app/lib/src/product/admin_product_import_chrome.dart:3
 apps/admin_app/lib/src/product/admin_product_media_editor.dart:4
 apps/admin_app/lib/src/product/admin_product_media_editor_tile.dart:2
 apps/admin_app/lib/src/product/admin_product_media_editor_view.dart:3
