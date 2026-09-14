@@ -32,7 +32,7 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1600),
             child: LayoutBuilder(builder: (context, constraints) {
-              if (constraints.maxWidth < 1040) {
+              if (constraints.maxWidth < 1000) {
                 return Column(children: [
                   AdminCustomerGeneralSection(customer: customer),
                   const SizedBox(height: 12),
@@ -57,9 +57,9 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
                       ),
                     ]),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   SizedBox(
-                    width: 360,
+                    width: 440,
                     child: AdminCustomerAddressSection(customer: customer),
                   ),
                 ],
