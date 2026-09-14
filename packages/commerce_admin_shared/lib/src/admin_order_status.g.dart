@@ -67,6 +67,7 @@ Object? _$AdminOrderStatusSerialize(AdminOrderStatus instance) {
     AdminOrderStatus.pending => 'pending',
     AdminOrderStatus.completed => 'completed',
     AdminOrderStatus.canceled => 'canceled',
+    AdminOrderStatus.archived => 'archived',
   };
 }
 
@@ -78,6 +79,7 @@ AdminOrderStatus _$AdminOrderStatusDeserialize(Object? json, [String key = 'json
     'pending' => AdminOrderStatus.pending,
     'completed' => AdminOrderStatus.completed,
     'canceled' => AdminOrderStatus.canceled,
+    'archived' => AdminOrderStatus.archived,
     _ => throw ArgumentError.value(json, key, 'unknown value for AdminOrderStatus at $key'),
   };
 }

@@ -21,6 +21,9 @@ enum OrderStatus {
 
   /// Called off before completion.
   canceled,
+
+  /// Removed from active operations after reaching an eligible final state.
+  archived,
 }
 
 /// Whether the money has moved.

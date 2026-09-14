@@ -14,6 +14,9 @@ enum AuthorizeFailure {
 
   /// The order was canceled, so there is nothing to pay.
   canceled,
+
+  /// An archived order is closed to further payment activity.
+  archived,
 }
 
 /// Starts a payment for [orderId], for the amount the order says.
@@ -50,6 +53,9 @@ Future<Result<Result<OrderResponse, AuthorizeFailure>, SqlxError>>
     }
     if (order.status == OrderStatus.canceled) {
       return const Ok(Err(AuthorizeFailure.canceled));
+    }
+    if (order.status == OrderStatus.archived) {
+      return const Ok(Err(AuthorizeFailure.archived));
     }
 
     final existing = await reads.forOrder(orderId);

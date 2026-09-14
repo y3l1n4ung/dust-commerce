@@ -35,6 +35,16 @@ void main() {
       expect(rows.single.readIndex<int>(0), 1);
     });
 
+    test('does not start payment for an archived order', () async {
+      final orderId = await context.placeOrder();
+      await queryExecute(
+        "UPDATE orders SET status = 'archived' WHERE id = ?",
+        [orderId],
+      ).execute(context.database.executor);
+
+      (await context.authorize(orderId)).assertConflict();
+    });
+
     test('will not let somebody else pay for a known order id', () async {
       final orderId = await context.placeOrder();
 

@@ -14,6 +14,9 @@ enum AdminOrderStatus {
 
   /// Called off before completion.
   canceled,
+
+  /// Removed from active operations after reaching an eligible final state.
+  archived,
 }
 
 /// Merchant-visible payment state frozen on the order.

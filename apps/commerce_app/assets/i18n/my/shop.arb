@@ -208,6 +208,10 @@
   "@account_return_failed": {
     "description": "Retryable return-request failure."
   },
+  "account_return_no_items": "ဤအော်ဒါတွင် ပြန်အပ်ရန် ပစ္စည်း မကျန်တော့ပါ။",
+  "@account_return_no_items": {
+    "description": "Explains that every order item has already been returned."
+  },
   "account_return_not_eligible": "ဤပစ္စည်းများကို ပြန်အပ်၍ မရတော့ပါ။",
   "@account_return_not_eligible": {
     "description": "Return eligibility changed before submission."
@@ -491,6 +495,10 @@
   "account_sign_in_email": "အကောင့်ဝင် အီးမေးလ်",
   "@account_sign_in_email": {
     "description": "Explains that the profile email identifies sign-in."
+  },
+  "account_status_archived": "သိမ်းဆည်းပြီး",
+  "@account_status_archived": {
+    "description": "Archived order status."
   },
   "account_status_cancelled": "ပယ်ဖျက်ပြီး",
   "@account_status_cancelled": {

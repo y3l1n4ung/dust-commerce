@@ -20,7 +20,9 @@ CREATE TABLE orders (
   total              INTEGER NOT NULL CHECK (total >= 0),
   -- Names match Medusa's API so storage and response status cannot drift.
   status             TEXT NOT NULL DEFAULT 'pending'
-                     CHECK (status IN ('pending', 'completed', 'canceled')),
+                     CHECK (status IN (
+                       'pending', 'completed', 'canceled', 'archived'
+                     )),
   payment_status     TEXT NOT NULL DEFAULT 'awaiting'
                      CHECK (payment_status IN ('awaiting', 'captured', 'refunded')),
   -- Shipping/promotion labels are copied so later catalog edits do not rewrite history.
@@ -42,10 +44,13 @@ CREATE TABLE orders (
   -- Database checks make a corrupted or contradictory order total impossible.
   CHECK (discount_total <= subtotal + shipping_total),
   CHECK (total = subtotal + shipping_total - discount_total + tax),
-  -- A status without its event time, or an event on an open order, is invalid.
+  -- Archival preserves a prior cancellation audit instead of erasing history.
   CHECK (
     (status = 'canceled' AND canceled_at IS NOT NULL) OR
-    (status <> 'canceled' AND canceled_at IS NULL AND canceled_by IS NULL)
+    (status = 'archived' AND
+      (canceled_by IS NULL OR canceled_at IS NOT NULL)) OR
+    (status NOT IN ('canceled', 'archived') AND
+      canceled_at IS NULL AND canceled_by IS NULL)
   )
 );
 

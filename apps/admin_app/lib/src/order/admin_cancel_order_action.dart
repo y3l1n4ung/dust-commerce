@@ -22,7 +22,7 @@ final class AdminCancelOrderAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final detail = context.watchAdminOrderDetailViewModel().value;
     final enabled = detail.status != AdminOrderDetailStatus.saving &&
-        order.status != AdminOrderStatus.canceled;
+        order.status == AdminOrderStatus.pending;
     return PopupMenuButton<String>(
       tooltip: 'Order actions',
       onSelected: (_) => _open(context),

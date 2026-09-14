@@ -98,7 +98,7 @@ void main() {
       () async {
     final token = await harness.adminToken();
     for (final query in [
-      'status=archived',
+      'status=deleted',
       'order=total',
       'region_id=bad%20id',
       'created_at=tomorrow',

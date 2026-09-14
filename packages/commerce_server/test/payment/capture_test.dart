@@ -77,6 +77,22 @@ void main() {
       (await context.capture(orderId)).assertConflict();
     });
 
+    test('does not capture payment after an order is archived', () async {
+      final orderId = await context.placeOrder();
+      await context.authorize(orderId);
+      await queryExecute(
+        "UPDATE orders SET status = 'archived' WHERE id = ?",
+        [orderId],
+      ).execute(context.database.executor);
+
+      (await context.capture(orderId)).assertConflict();
+      final rows = await queryRaw(
+        'SELECT status FROM payment_collections WHERE order_id = ?',
+        [orderId],
+      ).fetch(context.database.connection as Executor);
+      expect(rows.single.readIndex<String>(0), 'authorized');
+    });
+
     test("will not capture somebody else's order", () async {
       final orderId = await context.placeOrder();
       await context.authorize(orderId);

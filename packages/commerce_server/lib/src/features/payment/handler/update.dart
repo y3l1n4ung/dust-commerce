@@ -45,6 +45,8 @@ Future<Result<OrderResponse, Rejection>> capturePaymentHandler(
       const Err(Rejection.conflict('No payment has been started')),
     Ok(value: Err(error: CaptureFailure.canceled)) =>
       const Err(Rejection.conflict('A canceled order cannot be paid for')),
+    Ok(value: Err(error: CaptureFailure.archived)) =>
+      const Err(Rejection.conflict('An archived order cannot be paid for')),
     Err() => const Err(Rejection.internal()),
   };
 }

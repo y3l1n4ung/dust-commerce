@@ -208,6 +208,10 @@
   "@account_return_failed": {
     "description": "Retryable return-request failure."
   },
+  "account_return_no_items": "This order has no items left to return.",
+  "@account_return_no_items": {
+    "description": "Explains that every order item has already been returned."
+  },
   "account_return_not_eligible": "These items can no longer be returned.",
   "@account_return_not_eligible": {
     "description": "Return eligibility changed before submission."
@@ -491,6 +495,10 @@
   "account_sign_in_email": "Sign-in email",
   "@account_sign_in_email": {
     "description": "Explains that the profile email identifies sign-in."
+  },
+  "account_status_archived": "Archived",
+  "@account_status_archived": {
+    "description": "Archived order status."
   },
   "account_status_cancelled": "Cancelled",
   "@account_status_cancelled": {

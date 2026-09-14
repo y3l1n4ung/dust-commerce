@@ -116,6 +116,13 @@ void main() {
     test('refuses to capture an order already canceled', () {
       expect(() => placed().canceled().captured(), throwsStateError);
     });
+
+    test('refuses money and cancellation changes after archival', () {
+      final archived = placed().copyWith(status: OrderStatus.archived);
+
+      expect(archived.captured, throwsStateError);
+      expect(archived.canceled, throwsStateError);
+    });
   });
 
   group('json', () {
@@ -139,6 +146,13 @@ void main() {
     test('encodes status as its wire name', () {
       expect(placed().toJson()['status'], 'pending');
       expect(placed().toJson()['payment_status'], 'awaiting');
+    });
+
+    test('round-trips Medusa archived status', () {
+      final archived = placed().copyWith(status: OrderStatus.archived);
+
+      expect(Order.fromJson(archived.toJson()), archived);
+      expect(archived.toJson()['status'], 'archived');
     });
   });
 }

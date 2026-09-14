@@ -17,6 +17,9 @@ enum CaptureFailure {
 
   /// The order was canceled before the money moved.
   canceled,
+
+  /// The order was archived before the money moved.
+  archived,
 }
 
 /// Captures the payment on [orderId] without completing its lifecycle.
@@ -56,6 +59,9 @@ Future<Result<Result<OrderResponse, CaptureFailure>, SqlxError>> capturePayment(
     }
     if (order.status == OrderStatus.canceled) {
       return const Ok(Err(CaptureFailure.canceled));
+    }
+    if (order.status == OrderStatus.archived) {
+      return const Ok(Err(CaptureFailure.archived));
     }
 
     final found = await reads.forOrder(orderId);
