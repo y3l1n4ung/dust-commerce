@@ -3,6 +3,31 @@ import 'package:dust_dart/fp.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('customer-group creation normalizes the Medusa input', () {
+    final input = AdminCreateCustomerGroup.fromJson({
+      'name': '  VIP Customers  ',
+      'metadata': {'source': 'admin'},
+    });
+
+    expect(input.name, 'VIP Customers');
+    expect(
+      input.metadata.match(some: (value) => value, none: () => null),
+      {'source': 'admin'},
+    );
+    expect(input.validate().isValid, isTrue);
+    expect(input.toJson(), {
+      'name': 'VIP Customers',
+      'metadata': {'source': 'admin'},
+    });
+    expect(
+      const AdminCreateCustomerGroup(
+        name: '   ',
+        metadataValue: null,
+      ).validate().isValid,
+      isFalse,
+    );
+  });
+
   test('customer-group page decodes Medusa list fields only', () {
     final page = AdminCustomerGroupList.fromJson({
       'customer_groups': [
