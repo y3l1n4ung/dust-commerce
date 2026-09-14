@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/admin_customer_group/list_repository.dart';
 import 'package:commerce_server/src/features/admin_customer_group/repository/create.dart';
+import 'package:commerce_server/src/features/admin_customer_group/repository/read.dart';
 import 'package:commerce_server/src/http/http.dart';
 import 'package:dust_server/server.dart';
 
@@ -9,11 +10,15 @@ final class AdminCustomerGroupDeps {
   const AdminCustomerGroupDeps({
     required this.groups,
     required this.creates,
+    required this.details,
     required this.clock,
   });
 
   /// Protected customer-group creation.
   final AdminCustomerGroupCreateRepository creates;
+
+  /// Protected customer-group detail reads.
+  final AdminCustomerGroupDetailRepository details;
 
   /// Shared deterministic identifier source.
   final Clock clock;

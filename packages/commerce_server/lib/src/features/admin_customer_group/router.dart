@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/admin_customer_group/handler/create.dart';
+import 'package:commerce_server/src/features/admin_customer_group/handler/read.dart';
 import 'package:commerce_server/src/features/admin_customer_group/list_handler.dart';
 import 'package:dust_server/server.dart';
 
@@ -9,4 +10,8 @@ Router adminCustomerGroupRoutes() => Router()
     get(listAdminCustomerGroupsHandler).post(
       createAdminCustomerGroupHandler,
     ),
+  )
+  ..route(
+    '/customer-groups/{id}',
+    get(readAdminCustomerGroupHandler),
   );
