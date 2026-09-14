@@ -536,6 +536,15 @@ raster is available, so pixel parity is not claimed.
   clean. New UI subtrees are widget classes and no widget test was added.
   Browser logs contained only the pre-existing Flutter route-label warnings,
   with no cancellation warning or error.
+- Customers now follows the pinned list container, four visible columns,
+  search, filter, sorting and 20-row paging structure. Live QA created four
+  registered profiles through the Store API and one guest through a complete
+  checkout, then rendered all five in Admin. Search, Registered/Guest filters,
+  email ordering, Clear all and `390 x 844` responsive behavior passed; final
+  browser warnings and errors were empty. The Create control is honestly
+  disabled because create/detail/groups remain separate capabilities. This is
+  source-structure and behavior evidence, not same-state pixel parity with a
+  running Medusa Admin.
 
 ## Open findings
 
