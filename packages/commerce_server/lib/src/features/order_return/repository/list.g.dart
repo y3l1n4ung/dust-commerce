@@ -31,6 +31,38 @@ WHERE deleted_at IS NULL
   }
 
   @override
+  Future<Result<int, SqlxError>> countForOrder(String orderId, String customerId) {
+    return _db.fetchScalar<int>(
+      r'''
+SELECT count(*)
+FROM return_requests
+WHERE order_id = ? AND customer_id = ? AND deleted_at IS NULL
+''',
+      [orderId, customerId],
+    );
+  }
+
+  @override
+  Future<Result<List<OrderReturnResponse>, SqlxError>> forOrder(String orderId, String customerId, int limit, int offset) {
+    return _db.fetchAll<OrderReturnResponse>(
+      r'''
+SELECT request.id, request.display_id, request.order_id, request.status,
+       SUM(item.quantity) AS item_quantity, request.requested_at
+FROM return_requests request
+JOIN return_items item ON item.return_id = request.id
+WHERE request.order_id = ? AND request.customer_id = ?
+  AND request.deleted_at IS NULL
+GROUP BY request.id, request.display_id, request.order_id,
+         request.status, request.requested_at
+ORDER BY request.requested_at DESC, request.display_id DESC
+LIMIT ? OFFSET ?
+''',
+      [orderId, customerId, limit, offset],
+      const $OrderReturnResponseRowDeserializer().deserialize,
+    );
+  }
+
+  @override
   Future<Result<List<ReturnReasonResponse>, SqlxError>> reasons(int limit, int offset) {
     return _db.fetchAll<ReturnReasonResponse>(
       r'''

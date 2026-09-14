@@ -6,6 +6,7 @@ import 'package:dust_server/server.dart';
 Router orderReturnRoutes() {
   final authenticated = Router()
     ..routeLayer(fromExtractor(const CustomerAuth()))
+    ..route('/orders/{id}/returns', get(listOrderReturnHistoryHandler))
     ..route('/returns', post(createOrderReturnHandler, status: 201));
 
   return Router()
