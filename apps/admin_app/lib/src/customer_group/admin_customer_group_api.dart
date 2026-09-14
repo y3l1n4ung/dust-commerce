@@ -14,6 +14,12 @@ abstract interface class AdminCustomerGroupApi {
   factory AdminCustomerGroupApi(Dio dio, {String? baseUrl}) =
       _$AdminCustomerGroupApi;
 
+  /// Creates one merchant customer segment.
+  @POST('/admin/customer-groups')
+  Future<AdminCustomerGroupCreateResponse> createCustomerGroup(
+    @Body() AdminCreateCustomerGroup body,
+  );
+
   /// Lists merchant-visible groups through Medusa query parameters.
   @GET('/admin/customer-groups')
   Future<AdminCustomerGroupList> listCustomerGroups(

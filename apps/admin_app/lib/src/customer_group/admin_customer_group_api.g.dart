@@ -59,6 +59,44 @@ final class _$AdminCustomerGroupApi implements AdminCustomerGroupApi {
   final String? _baseUrl;
 
   @override
+  Future<AdminCustomerGroupCreateResponse> createCustomerGroup(
+    AdminCreateCustomerGroup body,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminCustomerGroupCreateResponse>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/customer-groups',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminCustomerGroupCreateResponse.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<AdminCustomerGroupList> listCustomerGroups(
     String query,
     String createdAt,
