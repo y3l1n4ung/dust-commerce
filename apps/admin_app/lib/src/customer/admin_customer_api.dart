@@ -25,6 +25,10 @@ abstract interface class AdminCustomerApi {
     @Query('offset') int offset,
   );
 
+  /// Creates one non-authenticating customer profile.
+  @POST('/admin/customers')
+  Future<AdminCustomerDetail> createCustomer(@Body() AdminCreateCustomer body);
+
   /// Reads one merchant-visible customer profile and active address book.
   @GET('/admin/customers/{id}')
   Future<AdminCustomerDetail> customer(@Path() String id);
