@@ -5,10 +5,17 @@ import 'package:intl/intl.dart';
 /// Customer-group table with Medusa's visible column order.
 final class AdminCustomerGroupTable extends StatelessWidget {
   /// Creates explicit merchant customer-group rows.
-  const AdminCustomerGroupTable({required this.customerGroups, super.key});
+  const AdminCustomerGroupTable({
+    required this.customerGroups,
+    required this.onOpen,
+    super.key,
+  });
 
   /// Rows returned by the protected Admin contract.
   final List<AdminCustomerGroup> customerGroups;
+
+  /// Opens one complete customer-group profile.
+  final ValueChanged<String> onOpen;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -19,7 +26,7 @@ final class AdminCustomerGroupTable extends StatelessWidget {
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               const _AdminCustomerGroupTableHeader(),
               for (final group in customerGroups)
-                _AdminCustomerGroupTableRow(group: group),
+                _AdminCustomerGroupTableRow(group: group, onOpen: onOpen),
             ]),
           ),
         ),
@@ -45,29 +52,36 @@ final class _AdminCustomerGroupTableHeader extends StatelessWidget {
 }
 
 final class _AdminCustomerGroupTableRow extends StatelessWidget {
-  const _AdminCustomerGroupTableRow({required this.group});
+  const _AdminCustomerGroupTableRow({
+    required this.group,
+    required this.onOpen,
+  });
 
   final AdminCustomerGroup group;
+  final ValueChanged<String> onOpen;
 
   @override
-  Widget build(BuildContext context) => Container(
-        height: 48,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Theme.of(context).dividerColor),
+  Widget build(BuildContext context) => InkWell(
+        onTap: () => onOpen(group.id),
+        child: Container(
+          height: 48,
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Theme.of(context).dividerColor),
+            ),
           ),
+          child: Row(children: [
+            Expanded(
+              flex: 4,
+              child: Text(group.name, overflow: TextOverflow.ellipsis),
+            ),
+            Expanded(flex: 2, child: Text('${group.customers.length}')),
+            Expanded(flex: 2, child: _AdminCustomerGroupDate(group.createdAt)),
+            Expanded(flex: 2, child: _AdminCustomerGroupDate(group.updatedAt)),
+            const SizedBox(width: 32),
+          ]),
         ),
-        child: Row(children: [
-          Expanded(
-            flex: 4,
-            child: Text(group.name, overflow: TextOverflow.ellipsis),
-          ),
-          Expanded(flex: 2, child: Text('${group.customers.length}')),
-          Expanded(flex: 2, child: _AdminCustomerGroupDate(group.createdAt)),
-          Expanded(flex: 2, child: _AdminCustomerGroupDate(group.updatedAt)),
-          const SizedBox(width: 32),
-        ]),
       );
 }
 

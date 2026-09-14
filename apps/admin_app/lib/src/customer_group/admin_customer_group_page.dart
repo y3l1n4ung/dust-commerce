@@ -11,11 +11,15 @@ final class AdminCustomerGroupPage extends StatelessWidget {
   const AdminCustomerGroupPage({
     required this.searchFocus,
     required this.onCreate,
+    required this.onOpen,
     super.key,
   });
 
   /// Opens Medusa's focused customer-group create route.
   final VoidCallback onCreate;
+
+  /// Opens one customer-group detail route.
+  final ValueChanged<String> onOpen;
 
   /// Focus target shared with the sidebar search action.
   final FocusNode searchFocus;
@@ -48,6 +52,7 @@ final class AdminCustomerGroupPage extends StatelessWidget {
               Divider(height: 1, color: Theme.of(context).dividerColor),
               AdminCustomerGroupTableBody(
                 state: state,
+                onOpen: onOpen,
                 onRetry: context.readAdminCustomerGroupViewModel().load,
               ),
               AdminCustomerGroupPagination(state: state),

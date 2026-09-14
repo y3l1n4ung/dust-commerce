@@ -19,15 +19,22 @@ mixin _AdminCustomerGroupActions on State<_AdminHome> {
     });
   }
 
+  void _showCustomerGroup(String id) {
+    setState(() {
+      _route = _AdminRoute.customerGroup;
+      _selectedId = id;
+      _selectedCustomerId = '';
+    });
+  }
+
   Future<void> _createCustomerGroup() async {
     final created = await showAdminCustomerGroupCreatePage(context);
     if (!mounted || created == null) return;
-    await context.readAdminCustomerGroupViewModel().load(offset: 0);
-    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         'Customer group ${created.name} was successfully created.',
       ),
     ));
+    _showCustomerGroup(created.id);
   }
 }

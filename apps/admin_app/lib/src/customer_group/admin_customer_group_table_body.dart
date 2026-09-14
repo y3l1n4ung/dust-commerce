@@ -8,12 +8,16 @@ final class AdminCustomerGroupTableBody extends StatelessWidget {
   /// Creates the loading, error, empty, or populated surface.
   const AdminCustomerGroupTableBody({
     required this.state,
+    required this.onOpen,
     required this.onRetry,
     super.key,
   });
 
   /// Retries the current server page.
   final VoidCallback onRetry;
+
+  /// Opens one complete customer-group profile.
+  final ValueChanged<String> onOpen;
 
   /// Current customer-group list lifecycle and rows.
   final AdminCustomerGroupState state;
@@ -43,7 +47,10 @@ final class AdminCustomerGroupTableBody extends StatelessWidget {
       return _AdminCustomerGroupEmpty(filtered: _hasQueryOrFilter(state));
     }
     return Stack(children: [
-      AdminCustomerGroupTable(customerGroups: state.customerGroups),
+      AdminCustomerGroupTable(
+        customerGroups: state.customerGroups,
+        onOpen: onOpen,
+      ),
       if (state.status == AdminCustomerGroupStatus.loading)
         const LinearProgressIndicator(minHeight: 2),
     ]);

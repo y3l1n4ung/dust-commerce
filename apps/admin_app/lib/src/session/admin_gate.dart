@@ -4,6 +4,8 @@ import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_page.dart';
 import 'package:admin_app/src/customer/admin_customer_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_create_page.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_detail_page.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_detail_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_page.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_view_model.dart';
 import 'package:admin_app/src/product/admin_product_page.dart';
@@ -133,6 +135,7 @@ final class _AdminHomeState extends State<_AdminHome>
 enum _AdminRoute {
   customers,
   customerGroups,
+  customerGroup,
   customer,
   customerOrder,
   orders,

@@ -8,6 +8,8 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
     final orderDetail = context.watchAdminOrderDetailViewModel().value.order;
     final customerDetail =
         context.watchAdminCustomerDetailViewModel().value.customer;
+    final customerGroupDetail =
+        context.watchAdminCustomerGroupDetailViewModel().value.customerGroup;
     final typeDetail =
         context.watchAdminProductTypeDetailViewModel().value.productType;
     final profileDetail = context
@@ -20,6 +22,10 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
       title: switch (_route) {
         _AdminRoute.customers => 'Customers',
         _AdminRoute.customerGroups => 'Customer Groups',
+        _AdminRoute.customerGroup => switch (customerGroupDetail) {
+            Some(value: final group) => 'Customer Groups  ›  ${group.name}',
+            None() => 'Customer Groups',
+          },
         _AdminRoute.customer => switch (customerDetail) {
             Some(value: final customer) =>
               'Customers  ›  ${customer.email.match(some: (value) => value, none: () => customer.id)}',
@@ -65,7 +71,9 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
         _AdminRoute.customer ||
         _AdminRoute.customerOrder =>
           AdminShellSection.customers,
-        _AdminRoute.customerGroups => AdminShellSection.customerGroups,
+        _AdminRoute.customerGroups ||
+        _AdminRoute.customerGroup =>
+          AdminShellSection.customerGroups,
         _AdminRoute.orders || _AdminRoute.order => AdminShellSection.orders,
         _AdminRoute.products ||
         _AdminRoute.product =>
@@ -92,6 +100,12 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
         _AdminRoute.customerGroups => AdminCustomerGroupPage(
             searchFocus: _customerGroupSearchFocus,
             onCreate: _createCustomerGroup,
+            onOpen: _showCustomerGroup,
+          ),
+        _AdminRoute.customerGroup => AdminCustomerGroupDetailPage(
+            customerGroupId: selectedIdForNavigation,
+            onBack: _showCustomerGroups,
+            onOpenCustomer: _showCustomer,
           ),
         _AdminRoute.customer => AdminCustomerDetailPage(
             customerId: selectedIdForNavigation,
