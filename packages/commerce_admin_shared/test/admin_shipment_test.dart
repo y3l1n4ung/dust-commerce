@@ -2,6 +2,17 @@ import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('round trips Medusa fulfillment-cancel input and its default', () {
+    const suppressed = AdminCancelFulfillment(noNotification: true);
+
+    expect(suppressed.toJson(), {'no_notification': true});
+    expect(AdminCancelFulfillment.fromJson(suppressed.toJson()), suppressed);
+    expect(
+      AdminCancelFulfillment.fromJson(const {}).noNotification,
+      isFalse,
+    );
+  });
+
   test('round trips Medusa mark-delivered input and its default', () {
     const suppressed = AdminMarkFulfillmentDelivered(noNotification: true);
 
