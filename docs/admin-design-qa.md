@@ -563,9 +563,10 @@ raster is available, so pixel parity is not claimed.
   Medusa order-list and order-detail captures before pixel parity can be
   claimed. Sales-channel discovery, order query behavior and the source-shaped
   visible filter are implemented, while channel mutations remain separate.
-  Fulfillment, shipment, delivery and cancellation behavior now pass live QA
-  against the pinned source structure, but their forms and prompts also lack
-  same-state Medusa captures.
+  Fulfillment, shipment, delivery, cancellation and independent manual-payment
+  refund behavior now pass live QA against the pinned source structure, but
+  their forms and prompts also lack same-state Medusa captures. External refund
+  provider adapters remain separate.
   Region and Order Export have source-structure and live-behavior coverage but
   also lack same-state Medusa captures.
 - P2 — Shipping-profile assignment passes source-structure and live-behavior
@@ -582,10 +583,10 @@ also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
 live end-to-end behavior checks. Product query behavior, discovery and visible
 controls pass API, state, accessibility and same-state live comparison.
-The order list, region filtering, detail, fulfillment shipment, delivery and
-cancellation, and filtered CSV export pass protected API, generated-client,
-responsive layout and live-data behavior checks against the pinned source
-structure.
+The order list, region filtering, detail, fulfillment shipment, delivery,
+cancellation, independent manual-payment refunds and filtered CSV export pass
+protected API, generated-client, responsive layout and live-data behavior
+checks against the pinned source structure.
 The product-list sales-channel slice passes its typed contract, direct SQLx
 projection, source-shaped truncation/tooltip behavior and clean-start browser
 QA. Its whole-screen density and thumbnail differences remain an open visual

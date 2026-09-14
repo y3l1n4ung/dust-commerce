@@ -32,7 +32,7 @@ Medusa replacement and has no workflow engine or plugin platform.
 | `Product` / `ProductVariant` | variants carry price and stock, not the product | one simple option matrix |
 | `Money` | integer minor units plus currency, never a float | single currency per region |
 | `Cart` / `LineItem` | line items snapshot unit price when added | one shipping method and promotion per cart |
-| `Order` | an immutable snapshot of a cart at checkout | no full fulfilment, refund, label or exchange workflow |
+| `Order` | an immutable snapshot of a cart at checkout | manual refunds only; no external refund, label or exchange workflow |
 | `Region` | currency and tax rate scope | no multi-warehouse |
 | `Customer` / `AuthIdentity` | customer data is separate from provider credentials | email/password only; no reset, MFA, or OAuth |
 | `PaymentCollection` | payment state belongs to the order | manual provider only; no card data |

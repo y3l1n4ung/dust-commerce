@@ -144,8 +144,8 @@ checks are clean.
 - P2 — Continue compact and authenticated account-state comparisons from the
   storefront parity ledger.
 - P2 — Complete same-state Review and order-confirmation comparisons.
-- P1 — Add independent refund decisions before claiming a complete production
-  return lifecycle; labels and exchanges remain separate.
+- P1 — Add external payment-provider refund adapters before claiming a complete
+  production refund lifecycle; labels and exchanges remain separate.
 
 ## Result
 
@@ -156,8 +156,9 @@ are also disabled before submission. Customer return history passes desktop,
 compact and reload browser QA as an explicit extension beneath the pinned
 source's help block. Exact code-to-layout translation is implemented where the
 pinned source owns a screen. Store order status and return eligibility now use
-the real fulfillment lifecycle. Admin requested-return receipt and intact
-inventory restoration pass, while broader storefront visual parity and an
-independent refund lifecycle are not claimed.
+the real fulfillment lifecycle. Admin requested-return receipt, intact
+inventory restoration and independent manual-payment refunds pass, while
+broader storefront visual parity and external refund-provider support are not
+claimed.
 
 final result: partial
