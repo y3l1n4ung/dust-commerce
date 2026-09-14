@@ -6,14 +6,21 @@ evidence for future rules, not a second rulebook. Enforced rules remain in
 
 ## Promotion process
 
-1. Record the concrete symptom and correction without generalizing it.
-2. Mark a recurrence only when the same failure appears in another slice.
-3. Promote a candidate when it prevents a real defect and is cheap to follow.
-4. Prefer an automated check; document-only rules need a clear review signal.
-5. Move promoted wording to `CONTRIBUTING.md` and keep the evidence here.
+1. Record the concrete symptom and correction in the slice where it happened.
+2. Put user-directed corrections below **User correction patterns** and
+   agent-detected corrections below **Self-correction patterns**.
+3. Update the existing row instead of adding a differently worded duplicate.
+4. Mark a recurrence only when the same failure appears in another slice.
+5. Promote a candidate when it prevents a real defect and is cheap to follow.
+6. Prefer an automated check; document-only rules need a clear review signal.
+7. Move promoted wording to `CONTRIBUTING.md` and keep the evidence here.
 
 Status meanings: **observed** happened once, **repeated** happened more than
 once, and **promoted** already has an enforced project rule.
+
+A candidate is not a rule. Do not treat personal preference, a one-off compile
+error, or an unverified suspicion as policy. The evidence must identify the
+affected slice and the authoritative check that exposed or verified it.
 
 ## User correction patterns
 
@@ -59,9 +66,10 @@ Add a row only after a concrete correction:
 
 ```text
 Status: observed | repeated | promoted
+Source: user correction | self-correction
 Symptom: what failed or created risk
 Correction: what changed the decision
 Candidate: the smallest durable rule
 Enforcement: the cheapest reliable check
-Evidence: branch, commit, test, or review reference
+Evidence: affected slice plus branch, commit, test, or review reference
 ```
