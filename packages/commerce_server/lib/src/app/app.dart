@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/account/account.dart';
 import 'package:commerce_server/src/features/admin/admin.dart';
+import 'package:commerce_server/src/features/admin_customer/admin_customer.dart';
 import 'package:commerce_server/src/features/admin_fulfillment_context/admin_fulfillment_context.dart';
 import 'package:commerce_server/src/features/admin_order/admin_order.dart';
 import 'package:commerce_server/src/features/admin_region/admin_region.dart';
@@ -100,6 +101,9 @@ Router buildApp(
         nextId: clock.nextId,
       ),
     )
+    ..withState(AdminCustomerDeps(
+      customers: AdminCustomerRepository(executor),
+    ))
     ..withState(AdminReturnDeps(
       database: database,
       returns: AdminReturnRepository(executor),
