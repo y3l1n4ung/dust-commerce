@@ -2,6 +2,7 @@ import 'package:commerce_shared/src/customers/address.dart';
 import 'package:commerce_shared/src/money.dart';
 import 'package:commerce_shared/src/ordering/cart.dart';
 import 'package:commerce_shared/src/ordering/order_line_item.dart';
+import 'package:commerce_shared/src/ordering/order_fulfillment_status.dart';
 import 'package:commerce_shared/src/ordering/shipping_method.dart';
 import 'package:commerce_shared/src/region.dart';
 import 'package:dust_dart/serde.dart';
@@ -41,10 +42,7 @@ enum PaymentStatus {
 }
 
 /// Public payment facts needed to explain a paid order to its buyer.
-///
-/// Provider metadata and credentials stay server-side. This receipt snapshot
-/// contains only the adapter name, charged amount, and event time Medusa shows
-/// on its order-completed page.
+/// Provider metadata and credentials stay server-side.
 @Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)
 class OrderPayment with _$OrderPayment {
@@ -70,11 +68,7 @@ class OrderPayment with _$OrderPayment {
 }
 
 /// A cart, frozen at the moment it was placed.
-///
-/// Every amount here is stored, not derived. An order recomputed from today's
-/// prices, tax rates, or catalogue would change what a customer was charged
-/// months after they were charged it, which is the one thing an order exists
-/// to prevent. The region is kept for the record, not to recalculate with.
+/// Amounts and region are frozen so later catalogue changes cannot alter it.
 @Derive([ToString(), Eq(), CopyWith(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)
 class Order with _$Order {
@@ -97,13 +91,12 @@ class Order with _$Order {
     this.payment,
     this.shippingMethod,
     this.status = OrderStatus.pending,
+    this.fulfillmentStatus = OrderFulfillmentStatus.notFulfilled,
     this.paymentStatus = PaymentStatus.awaiting,
   });
 
   /// Places [cart] as an order, freezing its lines and totals.
-  ///
-  /// Throws [ArgumentError] when the cart is empty or carries no email. Both
-  /// are states a cart is allowed to be in and an order is not.
+  /// Throws [ArgumentError] when the cart is empty or carries no email.
   factory Order.fromCart({
     required String id,
     required int displayId,
@@ -138,6 +131,13 @@ class Order with _$Order {
 
   /// Unique identifier.
   final String id;
+
+  /// Real progress derived from active fulfillment records.
+  @SerDe(
+    defaultValue: OrderFulfillmentStatus.notFulfilled,
+    using: OrderFulfillmentStatusCodec(),
+  )
+  final OrderFulfillmentStatus fulfillmentStatus;
 
   /// The lines as they stood at checkout.
   final List<OrderLineItem> items;

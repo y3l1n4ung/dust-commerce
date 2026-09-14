@@ -83,6 +83,7 @@ void main() {
       final order = placed();
 
       expect(order.status, OrderStatus.pending);
+      expect(order.fulfillmentStatus, OrderFulfillmentStatus.notFulfilled);
       expect(order.paymentStatus, PaymentStatus.awaiting);
       expect(order.isPaid, isFalse);
     });
@@ -146,6 +147,7 @@ void main() {
     test('encodes status as its wire name', () {
       expect(placed().toJson()['status'], 'pending');
       expect(placed().toJson()['payment_status'], 'awaiting');
+      expect(placed().toJson()['fulfillment_status'], 'not_fulfilled');
     });
 
     test('round-trips Medusa archived status', () {

@@ -78,6 +78,7 @@ mixin _$Order implements Serializable {
         'email: ${self.email}, '
         'displayId: ${self.displayId}, '
         'id: ${self.id}, '
+        'fulfillmentStatus: ${self.fulfillmentStatus}, '
         'items: ${self.items}, '
         'paymentStatus: ${self.paymentStatus}, '
         'payment: ${self.payment}, '
@@ -105,6 +106,7 @@ mixin _$Order implements Serializable {
             other.email == self.email &&
             other.displayId == self.displayId &&
             other.id == self.id &&
+            other.fulfillmentStatus == self.fulfillmentStatus &&
             _orderItemsEquality.equals(other.items, self.items) &&
             other.paymentStatus == self.paymentStatus &&
             other.payment == self.payment &&
@@ -130,6 +132,7 @@ mixin _$Order implements Serializable {
       self.email,
       self.displayId,
       self.id,
+      self.fulfillmentStatus,
       _orderItemsEquality.hash(self.items),
       self.paymentStatus,
       self.payment,
@@ -204,6 +207,7 @@ abstract class _$OrderCopyWith<$Res> {
     String? email,
     int? displayId,
     String? id,
+    OrderFulfillmentStatus? fulfillmentStatus,
     List<OrderLineItem>? items,
     PaymentStatus? paymentStatus,
     OrderPayment? payment,
@@ -237,6 +241,7 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
     Object? email = null,
     Object? displayId = null,
     Object? id = null,
+    Object? fulfillmentStatus = null,
     Object? items = null,
     Object? paymentStatus = null,
     Object? payment = _orderCopyWithUnset,
@@ -276,6 +281,7 @@ final class _$OrderCopyWithImpl<$Res> implements _$OrderCopyWith<$Res> {
             ? _self.shippingMethod
             : shippingMethod as ShippingMethod?,
         status: status == null ? _self.status : status as OrderStatus,
+        fulfillmentStatus: fulfillmentStatus == null ? _self.fulfillmentStatus : fulfillmentStatus as OrderFulfillmentStatus,
         paymentStatus: paymentStatus == null ? _self.paymentStatus : paymentStatus as PaymentStatus,
       )
     );
@@ -387,6 +393,10 @@ Map<String, Object?> _$OrderSerialize(Order instance) {
     'email': instance.email,
     'display_id': instance.displayId,
     'id': instance.id,
+    'fulfillment_status': JsonHelper.encodeWithCodec<OrderFulfillmentStatus, Object?>(
+      (OrderFulfillmentStatusCodec()),
+      instance.fulfillmentStatus,
+    ),
     'items': instance.items
         .map((item) => item.toJson())
         .toList(),
@@ -427,6 +437,9 @@ Order _$OrderDeserialize(Map<String, Object?> json) {
     'int',
   );
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
+  final fulfillmentStatusValue = json.containsKey('fulfillment_status')
+      ? JsonHelper.decodeWithCodec<OrderFulfillmentStatus, Object?>((OrderFulfillmentStatusCodec()), json['fulfillment_status'], 'fulfillment_status')
+      : OrderFulfillmentStatus.notFulfilled;
   final itemsValue = JsonHelper.decodeList(json['items'], 'items',
       (item, itemKey) => OrderLineItem.fromJson(JsonHelper.asMap(item, itemKey)));
   final paymentStatusValue = _$PaymentStatusDeserialize(
@@ -477,6 +490,7 @@ Order _$OrderDeserialize(Map<String, Object?> json) {
     payment: paymentValue,
     shippingMethod: shippingMethodValue,
     status: statusValue,
+    fulfillmentStatus: fulfillmentStatusValue,
     paymentStatus: paymentStatusValue,
   );
 }
