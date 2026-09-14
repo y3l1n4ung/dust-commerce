@@ -1,3 +1,4 @@
+import 'package:admin_app/src/customer/admin_customer_address_create_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_api.dart';
 import 'package:admin_app/src/customer/admin_customer_create_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_delete_view_model.dart';
@@ -12,6 +13,9 @@ final class AdminCustomerDependencies {
   factory AdminCustomerDependencies(Dio dio, String baseUrl) {
     final api = AdminCustomerApi(dio, baseUrl: baseUrl);
     return AdminCustomerDependencies._(
+      addressCreate: AdminCustomerAddressCreateViewModel(
+        AdminCustomerAddressCreateViewModelArgs(api: api),
+      ),
       list: AdminCustomerViewModel(AdminCustomerViewModelArgs(api: api)),
       create: AdminCustomerCreateViewModel(
         AdminCustomerCreateViewModelArgs(api: api),
@@ -29,12 +33,16 @@ final class AdminCustomerDependencies {
   }
 
   const AdminCustomerDependencies._({
+    required this.addressCreate,
     required this.list,
     required this.create,
     required this.detail,
     required this.delete,
     required this.edit,
   });
+
+  /// Customer-address creation command state.
+  final AdminCustomerAddressCreateViewModel addressCreate;
 
   /// Customer collection state.
   final AdminCustomerViewModel list;

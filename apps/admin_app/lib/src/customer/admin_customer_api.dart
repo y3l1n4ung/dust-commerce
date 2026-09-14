@@ -29,6 +29,13 @@ abstract interface class AdminCustomerApi {
   @POST('/admin/customers')
   Future<AdminCustomerDetail> createCustomer(@Body() AdminCreateCustomer body);
 
+  /// Adds one reusable destination and returns the refreshed customer.
+  @POST('/admin/customers/{id}/addresses')
+  Future<AdminCustomerDetail> createCustomerAddress(
+    @Path() String id,
+    @Body() AdminCreateCustomerAddress body,
+  );
+
   /// Reads one merchant-visible customer profile and active address book.
   @GET('/admin/customers/{id}')
   Future<AdminCustomerDetail> customer(@Path() String id);
