@@ -1,6 +1,7 @@
 import 'package:commerce_server/src/features/account/account.dart';
 import 'package:commerce_server/src/features/admin/admin.dart';
 import 'package:commerce_server/src/features/admin_customer/admin_customer.dart';
+import 'package:commerce_server/src/features/admin_customer_group/admin_customer_group.dart';
 import 'package:commerce_server/src/features/admin_fulfillment_context/admin_fulfillment_context.dart';
 import 'package:commerce_server/src/features/admin_order/admin_order.dart';
 import 'package:commerce_server/src/features/admin_region/admin_region.dart';
@@ -56,6 +57,9 @@ extension AdminStateRegistration on Router {
       creates: AdminCustomerCreateRepository(executor),
       clock: clock,
       database: database,
+    ));
+    withState(AdminCustomerGroupDeps(
+      groups: AdminCustomerGroupListRepository(executor),
     ));
     withState(AdminReturnDeps(
       database: database,

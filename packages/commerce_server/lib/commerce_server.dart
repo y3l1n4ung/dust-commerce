@@ -8,6 +8,7 @@ export 'src/boot/boot.dart';
 export 'src/features/account/account.dart';
 export 'src/features/admin/admin.dart';
 export 'src/features/admin_fulfillment_context/admin_fulfillment_context.dart';
+export 'src/features/admin_customer_group/admin_customer_group.dart';
 export 'src/features/admin_order/admin_order.dart';
 export 'src/features/admin_return/admin_return.dart';
 export 'src/features/admin_sales_channel/admin_sales_channel.dart';

@@ -33,6 +33,7 @@ void main() {
         ...'carts cart_payment_sessions cart_promotions cart_shipping_methods'
             .split(' '),
         ...'customers admin_users auth_identity auth_tokens'.split(' '),
+        ...'customer_groups customer_group_customers'.split(' '),
         'email_verifications',
         ...'line_items order_addresses order_items orders'.split(' '),
         ...'product_options product_option_values product_product_options'
