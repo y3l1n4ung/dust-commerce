@@ -8,11 +8,15 @@ final class AdminCustomerGroupGeneralSection extends StatelessWidget {
   const AdminCustomerGroupGeneralSection({
     required this.customerGroup,
     required this.onEdit,
+    required this.onDelete,
     super.key,
   });
 
   /// Complete merchant customer-group allowlist.
   final AdminCustomerGroupDetail customerGroup;
+
+  /// Opens the destructive group confirmation when available.
+  final VoidCallback? onDelete;
 
   /// Opens the existing customer-group edit drawer.
   final VoidCallback onEdit;
@@ -37,7 +41,10 @@ final class AdminCustomerGroupGeneralSection extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
-              AdminCustomerGroupActionsMenu(onEdit: onEdit),
+              AdminCustomerGroupActionsMenu(
+                onDelete: onDelete,
+                onEdit: onEdit,
+              ),
             ]),
           ),
           Divider(height: 1, color: Theme.of(context).dividerColor),

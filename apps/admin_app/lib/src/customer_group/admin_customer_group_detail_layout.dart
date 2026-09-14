@@ -12,12 +12,16 @@ final class AdminCustomerGroupDetailLayout extends StatelessWidget {
     required this.customerGroup,
     required this.state,
     required this.onEdit,
+    required this.onDelete,
     required this.onOpenCustomer,
     super.key,
   });
 
   /// Complete customer-group allowlist.
   final AdminCustomerGroupDetail customerGroup;
+
+  /// Opens the destructive confirmation when deletion is available.
+  final VoidCallback? onDelete;
 
   /// Opens the Medusa-shaped customer-group editor.
   final VoidCallback onEdit;
@@ -38,6 +42,7 @@ final class AdminCustomerGroupDetailLayout extends StatelessWidget {
             child: Column(children: [
               AdminCustomerGroupGeneralSection(
                 customerGroup: customerGroup,
+                onDelete: onDelete,
                 onEdit: onEdit,
               ),
               const SizedBox(height: 12),

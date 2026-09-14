@@ -1,6 +1,8 @@
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_layout.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_state.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_view_model.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_delete_dialog.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_delete_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_edit_drawer.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
@@ -55,10 +57,12 @@ final class _AdminCustomerGroupDetailPageState
   @override
   Widget build(BuildContext context) {
     final state = context.watchAdminCustomerGroupDetailViewModel().value;
+    final deletion = context.watchAdminCustomerGroupDeleteViewModel().value;
     return switch (state.customerGroup) {
       Some(value: final group) => AdminCustomerGroupDetailLayout(
           customerGroup: group,
           state: state,
+          onDelete: deletion.isBusy ? null : () => _delete(group),
           onEdit: () => _edit(group),
           onOpenCustomer: widget.onOpenCustomer,
         ),
@@ -73,6 +77,31 @@ final class _AdminCustomerGroupDetailPageState
           onRetry: _load,
         ),
     };
+  }
+
+  Future<void> _delete(AdminCustomerGroupDetail group) async {
+    final confirmed = await confirmAdminCustomerGroupDelete(context, group);
+    if (!confirmed || !mounted) return;
+    final viewModel = context.readAdminCustomerGroupDeleteViewModel();
+    final result = await viewModel.delete(group.id);
+    if (!mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    switch (result) {
+      case Some():
+        messenger.showSnackBar(SnackBar(
+          content: Text(
+            'Customer group ${group.name} was successfully deleted.',
+          ),
+        ));
+        widget.onBack();
+      case None():
+        messenger.showSnackBar(SnackBar(
+          content: Text(viewModel.state.failure.match(
+            some: (message) => message,
+            none: () => 'Unable to delete this customer group. Try again.',
+          )),
+        ));
+    }
   }
 
   Future<void> _edit(AdminCustomerGroupDetail group) async {
