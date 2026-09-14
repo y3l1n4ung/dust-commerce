@@ -1,3 +1,4 @@
+import 'package:admin_app/src/core/admin_country.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
@@ -5,7 +6,6 @@ import 'package:flutter/material.dart';
 
 part 'admin_product_variant_edit_attributes.dart';
 part 'admin_product_variant_edit_chrome.dart';
-part 'admin_product_variant_edit_countries.dart';
 part 'admin_product_variant_edit_country_picker.dart';
 part 'admin_product_variant_edit_field.dart';
 part 'admin_product_variant_edit_fields.dart';
@@ -133,6 +133,6 @@ final class _VariantEditDrawerState extends State<_VariantEditDrawer> {
       });
 
   void _typeOriginCountry(String value) {
-    if (value != _variantCountryName(_originCountry)) _originCountry = null;
+    if (value != adminCountryName(_originCountry)) _originCountry = null;
   }
 }

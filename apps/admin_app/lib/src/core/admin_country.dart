@@ -1,25 +1,50 @@
-part of 'admin_product_variant_edit_drawer.dart';
+import 'package:flutter/widgets.dart';
 
-final List<({String code, String name})> _variantCountries = _variantCountryData
+/// One ISO 3166-1 alpha-2 choice used by Admin country selectors.
+final class AdminCountry {
+  /// Creates an immutable country choice.
+  const AdminCountry({required this.code, required this.name});
+
+  /// Lowercase two-letter country code.
+  final String code;
+
+  /// Merchant-facing English country name copied from Medusa.
+  final String name;
+}
+
+/// Medusa's normalized country choices shared by Admin forms.
+final List<AdminCountry> adminCountries = _adminCountryData
     .split('|')
     .map((entry) => entry.trim())
     .where((entry) => entry.isNotEmpty)
-    .map((entry) => (
+    .map((entry) => AdminCountry(
           code: entry.substring(0, 2),
           name: entry.substring(3),
         ))
     .toList(growable: false);
 
-String _variantCountryName(String? code) {
+/// Resolves [code] to its source label or an uppercase safe fallback.
+String adminCountryName(String? code) {
   if (code == null) return '';
-  for (final country in _variantCountries) {
+  for (final country in adminCountries) {
     if (country.code == code.toLowerCase()) return country.name;
   }
   return code.toUpperCase();
 }
 
+/// Filters source country choices by a typed label or ISO code.
+Iterable<AdminCountry> adminCountryOptions(TextEditingValue value) {
+  final query = value.text.trim().toLowerCase();
+  if (query.isEmpty) return adminCountries;
+  return adminCountries.where(
+    (country) =>
+        country.name.toLowerCase().contains(query) ||
+        country.code.contains(query),
+  );
+}
+
 // Medusa's country labels and ISO codes keep both admin implementations aligned.
-const _variantCountryData = r'''
+const _adminCountryData = r'''
 af:Afghanistan|al:Albania|dz:Algeria|as:American Samoa|
 ad:Andorra|ao:Angola|ai:Anguilla|aq:Antarctica|
 ag:Antigua and Barbuda|ar:Argentina|am:Armenia|aw:Aruba|

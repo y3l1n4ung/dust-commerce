@@ -15,7 +15,7 @@ final class _VariantEditValues {
         midCode = TextEditingController(text: variant.midCode ?? ''),
         hsCode = TextEditingController(text: variant.hsCode ?? ''),
         originCountry = TextEditingController(
-          text: _variantCountryName(variant.originCountry),
+          text: adminCountryName(variant.originCountry),
         );
 
   final TextEditingController barcode;

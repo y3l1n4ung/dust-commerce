@@ -33,7 +33,7 @@ final class _AdminVariantCountryField extends StatelessWidget {
             ),
           ]),
           const SizedBox(height: 7),
-          RawAutocomplete<({String code, String name})>(
+          RawAutocomplete<AdminCountry>(
             displayStringForOption: (country) => country.name,
             fieldViewBuilder: (context, controller, focusNode, submit) =>
                 TextFormField(
@@ -57,7 +57,7 @@ final class _AdminVariantCountryField extends StatelessWidget {
             ),
             focusNode: values.originCountryFocus,
             onSelected: (country) => onCountrySelected(country.code),
-            optionsBuilder: _variantCountryOptions,
+            optionsBuilder: adminCountryOptions,
             optionsViewBuilder: (context, onSelected, options) =>
                 _AdminVariantCountryOptions(
               onSelected: onSelected,
@@ -75,8 +75,8 @@ final class _AdminVariantCountryOptions extends StatelessWidget {
     required this.options,
   });
 
-  final AutocompleteOnSelected<({String code, String name})> onSelected;
-  final List<({String code, String name})> options;
+  final AutocompleteOnSelected<AdminCountry> onSelected;
+  final List<AdminCountry> options;
 
   @override
   Widget build(BuildContext context) => Align(
@@ -107,16 +107,4 @@ final class _AdminVariantCountryOptions extends StatelessWidget {
           ),
         ),
       );
-}
-
-Iterable<({String code, String name})> _variantCountryOptions(
-  TextEditingValue value,
-) {
-  final query = value.text.trim().toLowerCase();
-  if (query.isEmpty) return _variantCountries;
-  return _variantCountries.where(
-    (country) =>
-        country.name.toLowerCase().contains(query) ||
-        country.code.contains(query),
-  );
 }
