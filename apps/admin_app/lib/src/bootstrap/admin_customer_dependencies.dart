@@ -1,5 +1,6 @@
 import 'package:admin_app/src/customer/admin_customer_api.dart';
 import 'package:admin_app/src/customer/admin_customer_create_view_model.dart';
+import 'package:admin_app/src/customer/admin_customer_delete_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_edit_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_view_model.dart';
@@ -18,6 +19,9 @@ final class AdminCustomerDependencies {
       detail: AdminCustomerDetailViewModel(
         AdminCustomerDetailViewModelArgs(api: api),
       ),
+      delete: AdminCustomerDeleteViewModel(
+        AdminCustomerDeleteViewModelArgs(api: api),
+      ),
       edit: AdminCustomerEditViewModel(
         AdminCustomerEditViewModelArgs(api: api),
       ),
@@ -28,6 +32,7 @@ final class AdminCustomerDependencies {
     required this.list,
     required this.create,
     required this.detail,
+    required this.delete,
     required this.edit,
   });
 
@@ -39,6 +44,9 @@ final class AdminCustomerDependencies {
 
   /// Selected customer detail state.
   final AdminCustomerDetailViewModel detail;
+
+  /// Customer-deletion command state.
+  final AdminCustomerDeleteViewModel delete;
 
   /// Customer-edit command state.
   final AdminCustomerEditViewModel edit;

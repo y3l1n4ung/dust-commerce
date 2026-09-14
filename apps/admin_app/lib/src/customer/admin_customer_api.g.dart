@@ -221,6 +221,42 @@ final class _$AdminCustomerApi implements AdminCustomerApi {
   }
 
   @override
+  Future<AdminCustomerDeleted> deleteCustomer(String id) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = null;
+    final _options = Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminCustomerDeleted>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/customers/' + Uri.encodeComponent(id.toString()),
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminCustomerDeleted.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<AdminOrderList> listCustomerOrders(
     String customerId,
     String query,

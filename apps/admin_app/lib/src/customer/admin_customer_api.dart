@@ -40,6 +40,10 @@ abstract interface class AdminCustomerApi {
     @Body() AdminUpdateCustomer body,
   );
 
+  /// Deletes one customer profile and its exclusive sign-in capability.
+  @DELETE('/admin/customers/{id}')
+  Future<AdminCustomerDeleted> deleteCustomer(@Path() String id);
+
   /// Lists only orders owned by one customer for the detail route.
   @GET('/admin/orders')
   Future<AdminOrderList> listCustomerOrders(
