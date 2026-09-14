@@ -20,6 +20,23 @@ abstract interface class AdminCustomerGroupApi {
     @Body() AdminCreateCustomerGroup body,
   );
 
+  /// Reads one merchant-visible group and its active customer references.
+  @GET('/admin/customer-groups/{id}')
+  Future<AdminCustomerGroupDetailResponse> customerGroup(@Path() String id);
+
+  /// Lists customers belonging to one active group.
+  @GET('/admin/customers')
+  Future<AdminCustomerList> listCustomerGroupCustomers(
+    @Query('groups') String groupId,
+    @Query('q') String query,
+    @Query('has_account') String hasAccount,
+    @Query('created_at') String createdAt,
+    @Query('updated_at') String updatedAt,
+    @Query('order') String order,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
+
   /// Lists merchant-visible groups through Medusa query parameters.
   @GET('/admin/customer-groups')
   Future<AdminCustomerGroupList> listCustomerGroups(

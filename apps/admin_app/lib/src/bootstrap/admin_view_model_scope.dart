@@ -7,6 +7,7 @@ import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_edit_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_create_view_model.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_detail_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_view_model.dart';
 import 'package:admin_app/src/order/admin_fulfillment_context_view_model.dart';
 import 'package:admin_app/src/order/admin_order_detail_view_model.dart';
@@ -62,45 +63,51 @@ final class AdminViewModelScope extends StatelessWidget {
                       value: deps.customers.list,
                       child: AdminCustomerGroupCreateViewModelScope.value(
                         value: deps.customerGroups.create,
-                        child: AdminCustomerGroupViewModelScope.value(
-                          value: deps.customerGroups.list,
-                          child: AdminOrderDetailViewModelScope.value(
-                            value: deps.orderDetail,
-                            child: AdminFulfillmentContextViewModelScope.value(
-                              value: deps.fulfillmentContext,
-                              child: AdminReturnViewModelScope.value(
-                                value: deps.returns,
-                                child: AdminProductViewModelScope.value(
-                                  value: deps.products,
-                                  child: AdminProductDetailViewModelScope.value(
-                                    value: deps.productDetail,
+                        child: AdminCustomerGroupDetailViewModelScope.value(
+                          value: deps.customerGroups.detail,
+                          child: AdminCustomerGroupViewModelScope.value(
+                            value: deps.customerGroups.list,
+                            child: AdminOrderDetailViewModelScope.value(
+                              value: deps.orderDetail,
+                              child:
+                                  AdminFulfillmentContextViewModelScope.value(
+                                value: deps.fulfillmentContext,
+                                child: AdminReturnViewModelScope.value(
+                                  value: deps.returns,
+                                  child: AdminProductViewModelScope.value(
+                                    value: deps.products,
                                     child:
-                                        AdminProductCreateViewModelScope.value(
-                                      value: deps.productCreate,
-                                      child: AdminProductOptionViewModelScope
+                                        AdminProductDetailViewModelScope.value(
+                                      value: deps.productDetail,
+                                      child: AdminProductCreateViewModelScope
                                           .value(
-                                        value: deps.productOptions,
-                                        child:
-                                            AdminProductOptionDetailViewModelScope
-                                                .value(
-                                          value: deps.productOptionDetail,
-                                          child: AdminProductTypeViewModelScope
-                                              .value(
-                                            value: deps.productTypes,
+                                        value: deps.productCreate,
+                                        child: AdminProductOptionViewModelScope
+                                            .value(
+                                          value: deps.productOptions,
+                                          child:
+                                              AdminProductOptionDetailViewModelScope
+                                                  .value(
+                                            value: deps.productOptionDetail,
                                             child:
-                                                AdminProductTypeDetailViewModelScope
+                                                AdminProductTypeViewModelScope
                                                     .value(
-                                              value: deps.productTypeDetail,
+                                              value: deps.productTypes,
                                               child:
-                                                  AdminShippingProfileViewModelScope
+                                                  AdminProductTypeDetailViewModelScope
                                                       .value(
-                                                value: deps.shippingProfiles,
+                                                value: deps.productTypeDetail,
                                                 child:
-                                                    AdminShippingProfileDetailViewModelScope
+                                                    AdminShippingProfileViewModelScope
                                                         .value(
-                                                  value: deps
-                                                      .shippingProfileDetail,
-                                                  child: child,
+                                                  value: deps.shippingProfiles,
+                                                  child:
+                                                      AdminShippingProfileDetailViewModelScope
+                                                          .value(
+                                                    value: deps
+                                                        .shippingProfileDetail,
+                                                    child: child,
+                                                  ),
                                                 ),
                                               ),
                                             ),
