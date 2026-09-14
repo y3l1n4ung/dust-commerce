@@ -8,6 +8,7 @@ export 'line_item.dart';
 export 'order.dart';
 export 'order_line_item.dart';
 export 'order_return.dart';
+export 'order_return_list.dart';
 export 'order_transfer.dart';
 export 'promotion.dart';
 export 'return_reason.dart';

@@ -57,4 +57,24 @@ void main() {
     expect(OrderReturnView.fromJson(response.toJson()), response);
     expect(response.toJson()['requested_at'], '2026-09-14T12:00:00.000Z');
   });
+
+  test('return history keeps paging and typed entries', () {
+    final response = OrderReturnView(
+      id: 'return_2',
+      displayId: 2,
+      orderId: 'order_1',
+      status: OrderReturnStatus.partiallyReceived,
+      itemQuantity: 3,
+      requestedAt: DateTime.utc(2026, 9, 14, 13),
+    );
+    final page = OrderReturnListView(
+      returns: [response],
+      count: 4,
+      limit: 2,
+      offset: 2,
+    );
+
+    expect(OrderReturnListView.fromJson(page.toJson()), page);
+    expect(page.returns.single.status, OrderReturnStatus.partiallyReceived);
+  });
 }
