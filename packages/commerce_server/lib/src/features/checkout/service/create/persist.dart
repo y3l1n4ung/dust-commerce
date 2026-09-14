@@ -2,9 +2,9 @@ import 'package:commerce_server/src/features/cart/model/cart.dart';
 import 'package:commerce_server/src/features/cart/model/promotion.dart';
 import 'package:commerce_server/src/features/cart/repository/repository.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
-import 'package:commerce_server/src/features/checkout/failure.dart';
 import 'package:commerce_server/src/features/checkout/model.dart';
 import 'package:commerce_server/src/features/checkout/repository/repository.dart';
+import 'package:commerce_server/src/features/checkout/service/create/guest.dart';
 import 'package:commerce_server/src/features/checkout/service/create/outcome.dart';
 import 'package:commerce_server/src/infra/option.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -28,14 +28,14 @@ Future<Result<CheckoutPlacementOutcome, SqlxError>> persistOrder(
   if (loaded case Err(:final error)) return Err(error);
 
   final cartOption = (loaded as Ok<Option<CartResponse>, SqlxError>).value;
-  if (cartOption case None()) return const Ok(_noCart);
+  if (cartOption case None()) return const Ok(checkoutNoCart);
   final cart = (cartOption as Some<CartResponse>).value;
   if (cart.customerId case final owner? when customerId != Some(owner)) {
-    return const Ok(_wrongCustomer);
+    return const Ok(checkoutWrongCustomer);
   }
   if (!cart.region.countries.contains(shippingAddress.countryCode) ||
       !cart.region.countries.contains(billingAddress.countryCode)) {
-    return const Ok(_countryNotInRegion);
+    return const Ok(checkoutCountryNotInRegion);
   }
 
   final previousId = await reads.orderIdForCart(cartId);
@@ -50,24 +50,34 @@ Future<Result<CheckoutPlacementOutcome, SqlxError>> persistOrder(
     }
     return Err(SqlxError.decode('Existing cart order could not be read'));
   }
-  if (cart.isEmpty) return const Ok(_emptyCart);
+  if (cart.isEmpty) return const Ok(checkoutEmptyCart);
   final shippingMethod = cart.shippingMethod;
-  if (shippingMethod == null) return const Ok(_shippingNotSelected);
+  if (shippingMethod == null) return const Ok(checkoutShippingNotSelected);
   if (cart.paymentSession?.providerId != 'manual') {
-    return const Ok(_paymentNotSelected);
+    return const Ok(checkoutPaymentNotSelected);
   }
   final providerEnabled = await carts.hasEnabledPaymentProvider(cartId);
   if (providerEnabled case Err(:final error)) return Err(error);
   if ((providerEnabled as Ok<int, SqlxError>).value == 0) {
-    return const Ok(_paymentNotSelected);
+    return const Ok(checkoutPaymentNotSelected);
   }
 
   for (final line in cart.items) {
     final taken = await orders.reserveStock(line.variantId, line.quantity);
     if (taken case Err(:final error)) return Err(error);
     if ((taken as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
-      return const Ok(_outOfStock);
+      return const Ok(checkoutOutOfStock);
     }
+  }
+
+  if (customerId case None()) {
+    final guest = await persistGuestCustomer(
+      orders,
+      nextId,
+      email,
+      shippingAddress,
+    );
+    if (guest case Err(:final error)) return Err(error);
   }
 
   final orderId = nextId();
@@ -160,14 +170,3 @@ Future<Result<CheckoutPlacementOutcome, SqlxError>> persistOrder(
       ),
   };
 }
-
-const _noCart = CheckoutPlacementDenied(CheckoutFailure.noCart);
-const _emptyCart = CheckoutPlacementDenied(CheckoutFailure.emptyCart);
-const _outOfStock = CheckoutPlacementDenied(CheckoutFailure.outOfStock);
-const _wrongCustomer = CheckoutPlacementDenied(CheckoutFailure.wrongCustomer);
-const _countryNotInRegion =
-    CheckoutPlacementDenied(CheckoutFailure.countryNotInRegion);
-const _shippingNotSelected =
-    CheckoutPlacementDenied(CheckoutFailure.shippingNotSelected);
-const _paymentNotSelected =
-    CheckoutPlacementDenied(CheckoutFailure.paymentNotSelected);

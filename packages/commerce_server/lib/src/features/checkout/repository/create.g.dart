@@ -36,6 +36,24 @@ FROM orders
   }
 
   @override
+  Future<Result<ExecResult, SqlxError>> upsertGuestCustomer(String id, String email, String? companyName, String firstName, String lastName, String? phone) {
+    return _db.execute(
+      r'''
+INSERT INTO customers
+  (id, email, company_name, first_name, last_name, phone, has_account)
+VALUES (?, ?, ?, ?, ?, ?, 0)
+ON CONFLICT(email, has_account)
+  WHERE email IS NOT NULL AND deleted_at IS NULL
+DO UPDATE SET company_name = excluded.company_name,
+              first_name = excluded.first_name,
+              last_name = excluded.last_name,
+              phone = excluded.phone
+''',
+      [id, email, companyName, firstName, lastName, phone],
+    );
+  }
+
+  @override
   Future<Result<ExecResult, SqlxError>> insertOrderItem(String id, String orderId, String variantId, String productId, String productHandle, String? thumbnail, String title, String? variantTitle, int unitAmount, String currencyCode, int quantity) {
     return _db.execute(
       r'''

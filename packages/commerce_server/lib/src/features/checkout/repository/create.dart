@@ -38,6 +38,27 @@ FROM orders
     String placedAt,
   );
 
+  /// Creates or refreshes one checkout-only profile without credentials.
+  @Query(r'''
+INSERT INTO customers
+  (id, email, company_name, first_name, last_name, phone, has_account)
+VALUES ($1, $2, $3, $4, $5, $6, 0)
+ON CONFLICT(email, has_account)
+  WHERE email IS NOT NULL AND deleted_at IS NULL
+DO UPDATE SET company_name = excluded.company_name,
+              first_name = excluded.first_name,
+              last_name = excluded.last_name,
+              phone = excluded.phone
+''')
+  Future<Result<ExecResult, SqlxError>> upsertGuestCustomer(
+    String id,
+    String email,
+    String? companyName,
+    String firstName,
+    String lastName,
+    String? phone,
+  );
+
   /// Copies one cart line onto the order.
   @Query(r'''
 INSERT INTO order_items (id, order_id, variant_id, product_id, product_handle,

@@ -23,3 +23,28 @@ final class CheckoutPlacementDenied extends CheckoutPlacementOutcome {
   /// Stable checkout refusal.
   final CheckoutFailure failure;
 }
+
+/// No active cart outcome.
+const checkoutNoCart = CheckoutPlacementDenied(CheckoutFailure.noCart);
+
+/// Empty cart outcome.
+const checkoutEmptyCart = CheckoutPlacementDenied(CheckoutFailure.emptyCart);
+
+/// Managed stock conflict outcome.
+const checkoutOutOfStock = CheckoutPlacementDenied(CheckoutFailure.outOfStock);
+
+/// Foreign cart ownership outcome.
+const checkoutWrongCustomer =
+    CheckoutPlacementDenied(CheckoutFailure.wrongCustomer);
+
+/// Unsupported destination outcome.
+const checkoutCountryNotInRegion =
+    CheckoutPlacementDenied(CheckoutFailure.countryNotInRegion);
+
+/// Missing delivery choice outcome.
+const checkoutShippingNotSelected =
+    CheckoutPlacementDenied(CheckoutFailure.shippingNotSelected);
+
+/// Missing or disabled payment choice outcome.
+const checkoutPaymentNotSelected =
+    CheckoutPlacementDenied(CheckoutFailure.paymentNotSelected);
