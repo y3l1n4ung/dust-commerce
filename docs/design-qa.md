@@ -75,6 +75,28 @@ control. No additional return was submitted. The current simplified lifecycle
 maps a completed captured order to delivered; real fulfillment records remain
 a separate production capability.
 
+## Customer return-history slice
+
+The pinned DTC order detail has no customer return-history component. Its
+`Help` component renders `Contact` and `Returns & Exchanges`, both linked to
+`/contact`. Morrow preserves the `Need help?` placement and adds its explicit
+customer-owned history immediately below it. This is a secure Dust extension,
+not a same-state Medusa raster-parity claim.
+
+Live QA used a fresh database created by all 59 SQLx migrations. Supported
+Store and Admin APIs created an authenticated customer, a completed and
+captured order, and requested return `#1`; the generated history endpoint then
+returned exactly one customer-owned row. No historical rows were patched by
+hand.
+
+The authenticated order-detail route rendered `Return history`, `Return #1`,
+`Requested`, the localized request date, and `1 item(s)` at both the default
+desktop viewport and `390 × 844`. A hard reload retained the secure session,
+reloaded the generated history request, and rendered the same row. The browser
+console contained no warnings or errors. The implementation passes all 127
+non-widget storefront tests, Flutter analysis, and all 50 generated Dust
+checks; no widget test was added.
+
 ## Admin return receipt slice
 
 The pinned Admin source has no standalone Returns page. Order detail queries
@@ -114,9 +136,11 @@ checks are clean.
 The verification interaction, API boundary, local success/failure rendering,
 reason selection, and navigation pass. Customer return creation and
 server-side rejection pass against the live local stack. Exhausted quantities
-are also disabled before submission. Exact code-to-layout translation is
-implemented where the pinned source owns a screen. Admin requested-return
-receipt and intact inventory restoration pass, while broader storefront visual
-parity and a complete refund/fulfillment return lifecycle are not claimed.
+are also disabled before submission. Customer return history passes desktop,
+compact and reload browser QA as an explicit extension beneath the pinned
+source's help block. Exact code-to-layout translation is implemented where the
+pinned source owns a screen. Admin requested-return receipt and intact inventory
+restoration pass, while broader storefront visual parity and a complete
+refund/fulfillment return lifecycle are not claimed.
 
-final result: blocked
+final result: partial
