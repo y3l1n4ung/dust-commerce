@@ -74,10 +74,11 @@ running Medusa Admin was not available, so pixel parity is not claimed.
 
 ## Remaining parity boundary
 
-Customer edit, deactivate/delete, address mutations and customer groups remain
-separate vertical slices under issue #33. Customer creation intentionally makes
-a non-authenticating guest profile; Store account registration remains the only
-password-bearing customer flow.
+Customer edit is now covered by `admin-customer-edit-qa.md`. Deactivate/delete,
+address mutations and customer groups remain separate vertical slices under
+issue #33. Customer creation intentionally makes a non-authenticating guest
+profile; Store account registration remains the only password-bearing customer
+flow.
 
 GitHub issue #33 remains open in the `Medusa admin parity` milestone so those
 capability boundaries stay visible rather than being implied complete.

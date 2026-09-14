@@ -35,9 +35,10 @@ column with a 16 px gap. The layout collapses to one column below that point.
   and 10-row server paging.
 - Flutter composition uses dedicated widget classes. No widget test was added.
 
-The source's edit, delete and address-add actions remain visible but disabled
-with honest capability tooltips. Customer groups are not rendered because the
-backend does not implement them yet.
+The source's Edit action now opens the functional customer editor documented in
+`admin-customer-edit-qa.md`. Delete is omitted and address-add remains visible
+but disabled because their backend mutations do not exist yet. Customer groups
+are not rendered for the same reason.
 
 ## Store-to-Admin evidence
 
@@ -85,7 +86,7 @@ customer fixture was available, so same-state pixel parity is not claimed.
 
 ## Remaining parity boundary
 
-Customer creation is now covered by `admin-customer-create-qa.md`. Edit,
-deactivate/delete, address mutations, groups and a same-state Medusa raster
+Customer creation and edit are now covered by their dedicated QA documents.
+Deactivate/delete, address mutations, groups and a same-state Medusa raster
 remain separate vertical slices. Issue #33 therefore remains open; this slice
 completes only read-only detail, addresses and customer-owned order history.
