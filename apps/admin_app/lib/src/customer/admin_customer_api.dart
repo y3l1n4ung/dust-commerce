@@ -24,4 +24,18 @@ abstract interface class AdminCustomerApi {
     @Query('limit') int limit,
     @Query('offset') int offset,
   );
+
+  /// Reads one merchant-visible customer profile and active address book.
+  @GET('/admin/customers/{id}')
+  Future<AdminCustomerDetail> customer(@Path() String id);
+
+  /// Lists only orders owned by one customer for the detail route.
+  @GET('/admin/orders')
+  Future<AdminOrderList> listCustomerOrders(
+    @Query('customer_id') String customerId,
+    @Query('q') String query,
+    @Query('order') String order,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
 }
