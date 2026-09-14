@@ -44,6 +44,20 @@ void main() {
     expect(response.toJson().keys, {'customer_group'});
   });
 
+  test('customer-group edit normalizes its standalone name input', () {
+    final input = AdminUpdateCustomerGroup.fromJson({
+      'name': '  Preferred Customers  ',
+    });
+
+    expect(input.name, 'Preferred Customers');
+    expect(input.validate().isValid, isTrue);
+    expect(input.toJson(), {'name': 'Preferred Customers'});
+    expect(
+      const AdminUpdateCustomerGroup(name: '   ').validate().isValid,
+      isFalse,
+    );
+  });
+
   test('customer-group page decodes Medusa list fields only', () {
     final page = AdminCustomerGroupList.fromJson({
       'customer_groups': [
