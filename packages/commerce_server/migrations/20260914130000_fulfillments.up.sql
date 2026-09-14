@@ -24,6 +24,8 @@ CREATE TABLE fulfillments (
   delivered_at       TEXT,
   -- Cancellation is final and cannot coexist with shipment or delivery.
   canceled_at        TEXT,
+  -- Authenticated actor is retained for the irreversible cancellation audit.
+  canceled_by        TEXT REFERENCES admin_users (id) ON DELETE SET NULL,
   -- Nullable actor survives staff deletion while retaining the event time.
   marked_shipped_by  TEXT REFERENCES admin_users (id) ON DELETE SET NULL,
   -- Nullable creator records who initiated the fulfillment when authenticated.
@@ -43,6 +45,7 @@ CREATE TABLE fulfillments (
   CHECK (
     canceled_at IS NULL OR (shipped_at IS NULL AND delivered_at IS NULL)
   ),
+  CHECK (canceled_by IS NULL OR canceled_at IS NOT NULL),
   CHECK (marked_shipped_by IS NULL OR shipped_at IS NOT NULL)
 );
 

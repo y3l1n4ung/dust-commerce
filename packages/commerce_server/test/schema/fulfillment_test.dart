@@ -39,6 +39,7 @@ void main() {
         'shipped_at',
         'delivered_at',
         'canceled_at',
+        'canceled_by',
         'marked_shipped_by',
         'created_by',
         'data',
@@ -78,6 +79,16 @@ INSERT INTO fulfillments (
   'ful_bad', 'ord_one', 'loc_default', 'manual',
   '2026-09-14T01:00:00.000Z', '2026-09-14T02:00:00.000Z'
 )
+''', []).execute(database.executor),
+      throwsStateError,
+    );
+
+    await queryExecute('''
+INSERT INTO admin_users (id, email) VALUES ('admin_one', 'admin@example.com')
+''', []).execute(database.executor);
+    expect(
+      () => queryExecute('''
+UPDATE fulfillments SET canceled_by = 'admin_one' WHERE id = 'ful_one'
 ''', []).execute(database.executor),
       throwsStateError,
     );
