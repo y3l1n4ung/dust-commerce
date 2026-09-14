@@ -57,6 +57,7 @@ void main() {
         ...'stock_locations fulfillment_providers stock_location_fulfillment_providers'
             .split(' '),
         'payment_collections',
+        'refund_reasons',
         'refunds',
       ]),
     );
