@@ -1,7 +1,23 @@
 part of 'admin_product_stock_page.dart';
 
-extension on _ProductStockPageState {
-  Widget _body(AdminProductDetailState state, bool busy) => ColoredBox(
+final class _AdminProductStockBody extends StatelessWidget {
+  const _AdminProductStockBody({
+    required this.busy,
+    required this.drafts,
+    required this.failure,
+    required this.formKey,
+    required this.onManagedChanged,
+  });
+
+  final bool busy;
+  final List<_StockDraft> drafts;
+  final Option<String> failure;
+  final GlobalKey<FormState> formKey;
+  final void Function(_StockDraft draft, {required bool managed})
+      onManagedChanged;
+
+  @override
+  Widget build(BuildContext context) => ColoredBox(
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 48),
@@ -10,7 +26,7 @@ extension on _ProductStockPageState {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 960),
                 child: Form(
-                  key: _form,
+                  key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -30,10 +46,14 @@ extension on _ProductStockPageState {
                             ),
                       ),
                       const SizedBox(height: 24),
-                      _stockGrid(busy),
-                      if (state.failure case Some(value: final message)) ...[
+                      _AdminProductStockGrid(
+                        busy: busy,
+                        drafts: drafts,
+                        onManagedChanged: onManagedChanged,
+                      ),
+                      if (failure case Some(value: final message)) ...[
                         const SizedBox(height: 16),
-                        _stockFailure(message),
+                        _AdminProductStockFailure(message: message),
                       ],
                     ],
                   ),
@@ -43,8 +63,22 @@ extension on _ProductStockPageState {
           ],
         ),
       );
+}
 
-  Widget _stockGrid(bool busy) => Card(
+final class _AdminProductStockGrid extends StatelessWidget {
+  const _AdminProductStockGrid({
+    required this.busy,
+    required this.drafts,
+    required this.onManagedChanged,
+  });
+
+  final bool busy;
+  final List<_StockDraft> drafts;
+  final void Function(_StockDraft draft, {required bool managed})
+      onManagedChanged;
+
+  @override
+  Widget build(BuildContext context) => Card(
         clipBehavior: Clip.antiAlias,
         margin: EdgeInsets.zero,
         child: LayoutBuilder(
@@ -64,14 +98,33 @@ extension on _ProductStockPageState {
                     SizedBox(width: 150, child: Text('Stock')),
                   ]),
                 ),
-                for (final draft in _drafts) _stockRow(draft, busy),
+                for (final draft in drafts)
+                  _AdminProductStockRow(
+                    busy: busy,
+                    draft: draft,
+                    onManagedChanged: onManagedChanged,
+                  ),
               ]),
             ),
           ),
         ),
       );
+}
 
-  Widget _stockRow(_StockDraft draft, bool busy) => Container(
+final class _AdminProductStockRow extends StatelessWidget {
+  const _AdminProductStockRow({
+    required this.busy,
+    required this.draft,
+    required this.onManagedChanged,
+  });
+
+  final bool busy;
+  final _StockDraft draft;
+  final void Function(_StockDraft draft, {required bool managed})
+      onManagedChanged;
+
+  @override
+  Widget build(BuildContext context) => Container(
         constraints: const BoxConstraints(minHeight: 64),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
@@ -85,7 +138,9 @@ extension on _ProductStockPageState {
             width: 120,
             child: Switch(
               value: draft.managed,
-              onChanged: busy ? null : (value) => _setManaged(draft, value),
+              onChanged: busy
+                  ? null
+                  : (value) => onManagedChanged(draft, managed: value),
             ),
           ),
           SizedBox(
@@ -100,19 +155,6 @@ extension on _ProductStockPageState {
             ),
           ),
         ]),
-      );
-
-  Widget _stockFailure(String message) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.errorContainer,
-          borderRadius: BorderRadius.circular(7),
-        ),
-        child: Text(
-          message,
-          style:
-              TextStyle(color: Theme.of(context).colorScheme.onErrorContainer),
-        ),
       );
 }
 

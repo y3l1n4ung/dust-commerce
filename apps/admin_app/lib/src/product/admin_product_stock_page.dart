@@ -1,9 +1,10 @@
-import 'package:admin_app/src/product/admin_product_detail_state.dart';
 import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
+part 'admin_product_stock_failure.dart';
+part 'admin_product_stock_page_chrome.dart';
 part 'admin_product_stock_table.dart';
 
 /// Opens Medusa's full-screen product stock focus surface.
@@ -59,60 +60,31 @@ final class _ProductStockPageState extends State<_ProductStockPage> {
       color: Theme.of(context).colorScheme.surface,
       child: SafeArea(
         child: Column(children: [
-          _header(busy),
-          Expanded(child: _body(state, busy)),
-          _footer(busy),
+          _AdminProductStockHeader(
+            busy: busy,
+            onClose: () => Navigator.of(context).pop(false),
+          ),
+          Expanded(
+            child: _AdminProductStockBody(
+              busy: busy,
+              drafts: _drafts,
+              failure: state.failure,
+              formKey: _form,
+              onManagedChanged: _setManaged,
+            ),
+          ),
+          _AdminProductStockFooter(
+            busy: busy,
+            onCancel: () => Navigator.of(context).pop(false),
+            onSave: _save,
+          ),
         ]),
       ),
     );
   }
 
-  Widget _header(bool busy) => Container(
-        height: 56,
-        padding: const EdgeInsets.only(left: 24, right: 12),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: Theme.of(context).dividerColor),
-          ),
-        ),
-        child: Row(children: [
-          Text('Edit stock', style: Theme.of(context).textTheme.titleMedium),
-          const Spacer(),
-          IconButton(
-            tooltip: 'Close',
-            onPressed: busy ? null : () => Navigator.of(context).pop(false),
-            icon: const Icon(Icons.close_rounded, size: 18),
-          ),
-        ]),
-      );
-
-  Widget _footer(bool busy) => Container(
-        height: 64,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        decoration: BoxDecoration(
-          border:
-              Border(top: BorderSide(color: Theme.of(context).dividerColor)),
-        ),
-        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          OutlinedButton(
-            onPressed: busy ? null : () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          const SizedBox(width: 8),
-          FilledButton(
-            onPressed: busy ? null : _save,
-            child: busy
-                ? const SizedBox.square(
-                    dimension: 15,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Text('Save'),
-          ),
-        ]),
-      );
-
-  void _setManaged(_StockDraft draft, bool value) =>
-      setState(() => draft.managed = value);
+  void _setManaged(_StockDraft draft, {required bool managed}) =>
+      setState(() => draft.managed = managed);
 
   Future<void> _save() async {
     if (!(_form.currentState?.validate() ?? false)) return;
