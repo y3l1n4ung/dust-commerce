@@ -71,9 +71,27 @@ received and dismissed quantities on every Store order item. The return form
 uses their returnable difference as its maximum and omits exhausted items.
 Authenticated reload QA against order display id `1` showed `This order has no
 items left to return.` with no checkbox, quantity, reason, note or submit
-control. No additional return was submitted. The current simplified lifecycle
-maps a completed captured order to delivered; real fulfillment records remain
-a separate production capability.
+control. No additional return was submitted. The simplified lifecycle has now
+been replaced: only quantities in active fulfillments with a real delivery
+timestamp count as delivered or returnable.
+
+## Store fulfillment-status slice
+
+The pinned DTC `OrderDetails` component labels `order.fulfillment_status` as
+`Order status`; it does not render Dust's separate business order status or a
+tracking panel. Morrow now follows that exact source boundary. A standalone
+Store enum keeps the customer contract separate from Admin, and direct SQLx
+order projections derive partial and full fulfillment, shipment and delivery
+from active fulfillment item quantities.
+
+Live QA reused the fresh 59-migration return-history database. The authenticated
+Admin API created and delivered the existing order's fulfillment, after which
+the authenticated Store API returned `fulfillment_status: delivered` and one
+delivered unit. The release-mode account order page rendered `Order status:
+Delivered` at the default viewport and at `390 × 844`; the compact screenshot
+showed no overflow and the browser console contained no warnings or errors.
+The full 467-test server suite, 128 non-widget Store tests, both analyzers and
+normal plus SQLx Dust checks pass.
 
 ## Customer return-history slice
 
@@ -126,10 +144,8 @@ checks are clean.
 - P2 — Continue compact and authenticated account-state comparisons from the
   storefront parity ledger.
 - P2 — Complete same-state Review and order-confirmation comparisons.
-- P1 — Add refund decisions and real fulfillment records before claiming a
-  complete production return lifecycle; labels and exchanges remain separate.
-- P1 — Replace the simplified completed-equals-delivered mapping when a real
-  fulfillment lifecycle is introduced.
+- P1 — Add independent refund decisions before claiming a complete production
+  return lifecycle; labels and exchanges remain separate.
 
 ## Result
 
@@ -139,8 +155,9 @@ server-side rejection pass against the live local stack. Exhausted quantities
 are also disabled before submission. Customer return history passes desktop,
 compact and reload browser QA as an explicit extension beneath the pinned
 source's help block. Exact code-to-layout translation is implemented where the
-pinned source owns a screen. Admin requested-return receipt and intact inventory
-restoration pass, while broader storefront visual parity and a complete
-refund/fulfillment return lifecycle are not claimed.
+pinned source owns a screen. Store order status and return eligibility now use
+the real fulfillment lifecycle. Admin requested-return receipt and intact
+inventory restoration pass, while broader storefront visual parity and an
+independent refund lifecycle are not claimed.
 
 final result: partial
