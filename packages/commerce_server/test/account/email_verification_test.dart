@@ -18,7 +18,7 @@ void main() {
       options: commerceOptions,
     );
     mailer = RecordingEmailVerificationMailer();
-    currentTime = DateTime.utc(2026, 9, 7, 12);
+    currentTime = DateTime.now().toUtc();
     var id = 0;
     client = TestClient(buildApp(
       database,
