@@ -38,22 +38,32 @@ WHERE customer.deleted_at IS NULL
   AND ($8 = '' OR customer.updated_at >= $8)
   AND ($9 = '' OR customer.updated_at < $9)
   AND ($10 = '' OR customer.updated_at <= $10)
+  AND ($11 = '' OR EXISTS (
+    SELECT 1
+    FROM customer_group_customers membership
+    JOIN customer_groups customer_group
+      ON customer_group.id = membership.customer_group_id
+    WHERE membership.customer_id = customer.id
+      AND membership.customer_group_id = $11
+      AND membership.deleted_at IS NULL
+      AND customer_group.deleted_at IS NULL
+  ))
 ORDER BY
-  CASE WHEN $11 = 'email' THEN lower(customer.email) END ASC,
-  CASE WHEN $11 = '-email' THEN lower(customer.email) END DESC,
-  CASE WHEN $11 = 'first_name' THEN lower(customer.first_name) END ASC,
-  CASE WHEN $11 = '-first_name' THEN lower(customer.first_name) END DESC,
-  CASE WHEN $11 = 'last_name' THEN lower(customer.last_name) END ASC,
-  CASE WHEN $11 = '-last_name' THEN lower(customer.last_name) END DESC,
-  CASE WHEN $11 = 'has_account' THEN customer.has_account END ASC,
-  CASE WHEN $11 = '-has_account' THEN customer.has_account END DESC,
-  CASE WHEN $11 = 'created_at' THEN customer.created_at END ASC,
-  CASE WHEN $11 = '-created_at' THEN customer.created_at END DESC,
-  CASE WHEN $11 = 'updated_at' THEN customer.updated_at END ASC,
-  CASE WHEN $11 = '-updated_at' THEN customer.updated_at END DESC,
+  CASE WHEN $12 = 'email' THEN lower(customer.email) END ASC,
+  CASE WHEN $12 = '-email' THEN lower(customer.email) END DESC,
+  CASE WHEN $12 = 'first_name' THEN lower(customer.first_name) END ASC,
+  CASE WHEN $12 = '-first_name' THEN lower(customer.first_name) END DESC,
+  CASE WHEN $12 = 'last_name' THEN lower(customer.last_name) END ASC,
+  CASE WHEN $12 = '-last_name' THEN lower(customer.last_name) END DESC,
+  CASE WHEN $12 = 'has_account' THEN customer.has_account END ASC,
+  CASE WHEN $12 = '-has_account' THEN customer.has_account END DESC,
+  CASE WHEN $12 = 'created_at' THEN customer.created_at END ASC,
+  CASE WHEN $12 = '-created_at' THEN customer.created_at END DESC,
+  CASE WHEN $12 = 'updated_at' THEN customer.updated_at END ASC,
+  CASE WHEN $12 = '-updated_at' THEN customer.updated_at END DESC,
   customer.created_at DESC,
   customer.id
-LIMIT $12 OFFSET $13
+LIMIT $13 OFFSET $14
 ''')
   Future<Result<List<AdminCustomerResponse>, SqlxError>> list(
     String query,
@@ -66,6 +76,7 @@ LIMIT $12 OFFSET $13
     String updatedFrom,
     String updatedBefore,
     String updatedTo,
+    String groupId,
     String order,
     int limit,
     int offset,
@@ -93,6 +104,16 @@ WHERE customer.deleted_at IS NULL
   AND ($8 = '' OR customer.updated_at >= $8)
   AND ($9 = '' OR customer.updated_at < $9)
   AND ($10 = '' OR customer.updated_at <= $10)
+  AND ($11 = '' OR EXISTS (
+    SELECT 1
+    FROM customer_group_customers membership
+    JOIN customer_groups customer_group
+      ON customer_group.id = membership.customer_group_id
+    WHERE membership.customer_id = customer.id
+      AND membership.customer_group_id = $11
+      AND membership.deleted_at IS NULL
+      AND customer_group.deleted_at IS NULL
+  ))
 ''')
   Future<Result<int, SqlxError>> count(
     String query,
@@ -105,5 +126,6 @@ WHERE customer.deleted_at IS NULL
     String updatedFrom,
     String updatedBefore,
     String updatedTo,
+    String groupId,
   );
 }

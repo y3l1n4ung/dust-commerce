@@ -19,7 +19,7 @@ final class _$AdminCustomerRepository implements AdminCustomerRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<AdminCustomerResponse>, SqlxError>> list(String query, int hasAccount, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo, String order, int limit, int offset) {
+  Future<Result<List<AdminCustomerResponse>, SqlxError>> list(String query, int hasAccount, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo, String groupId, String order, int limit, int offset) {
     return _db.fetchAll<AdminCustomerResponse>(
       r'''
 SELECT customer.id,
@@ -48,6 +48,16 @@ WHERE customer.deleted_at IS NULL
   AND (? = '' OR customer.updated_at >= ?)
   AND (? = '' OR customer.updated_at < ?)
   AND (? = '' OR customer.updated_at <= ?)
+  AND (? = '' OR EXISTS (
+    SELECT 1
+    FROM customer_group_customers membership
+    JOIN customer_groups customer_group
+      ON customer_group.id = membership.customer_group_id
+    WHERE membership.customer_id = customer.id
+      AND membership.customer_group_id = ?
+      AND membership.deleted_at IS NULL
+      AND customer_group.deleted_at IS NULL
+  ))
 ORDER BY
   CASE WHEN ? = 'email' THEN lower(customer.email) END ASC,
   CASE WHEN ? = '-email' THEN lower(customer.email) END DESC,
@@ -65,13 +75,13 @@ ORDER BY
   customer.id
 LIMIT ? OFFSET ?
 ''',
-      [query, query, query, query, query, query, query, hasAccount, hasAccount, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo, order, order, order, order, order, order, order, order, order, order, order, order, limit, offset],
+      [query, query, query, query, query, query, query, hasAccount, hasAccount, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo, groupId, groupId, order, order, order, order, order, order, order, order, order, order, order, order, limit, offset],
       const $AdminCustomerResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<int, SqlxError>> count(String query, int hasAccount, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo) {
+  Future<Result<int, SqlxError>> count(String query, int hasAccount, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo, String groupId) {
     return _db.fetchScalar<int>(
       r'''
 SELECT count(*)
@@ -94,8 +104,18 @@ WHERE customer.deleted_at IS NULL
   AND (? = '' OR customer.updated_at >= ?)
   AND (? = '' OR customer.updated_at < ?)
   AND (? = '' OR customer.updated_at <= ?)
+  AND (? = '' OR EXISTS (
+    SELECT 1
+    FROM customer_group_customers membership
+    JOIN customer_groups customer_group
+      ON customer_group.id = membership.customer_group_id
+    WHERE membership.customer_id = customer.id
+      AND membership.customer_group_id = ?
+      AND membership.deleted_at IS NULL
+      AND customer_group.deleted_at IS NULL
+  ))
 ''',
-      [query, query, query, query, query, query, query, hasAccount, hasAccount, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo],
+      [query, query, query, query, query, query, query, hasAccount, hasAccount, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo, groupId, groupId],
     );
   }
 }

@@ -6,6 +6,7 @@ final class AdminCustomerQuery {
   /// Creates one normalized merchant query boundary.
   const AdminCustomerQuery({
     required this.query,
+    required this.groupId,
     required this.hasAccount,
     required this.createdAt,
     required this.updatedAt,
@@ -14,6 +15,9 @@ final class AdminCustomerQuery {
 
   /// Customer creation-time bounds.
   final AdminDateFilter createdAt;
+
+  /// Active customer-group membership, or no group constraint.
+  final Option<String> groupId;
 
   /// Registered/guest filter, or no account constraint.
   final Option<bool> hasAccount;
@@ -44,6 +48,11 @@ Result<AdminCustomerQuery, Rejection> adminCustomerQueryOf(Request request) {
   }
   return Ok(AdminCustomerQuery(
     query: request.requestedUri.queryParameters['q'] ?? '',
+    groupId: switch (
+        request.requestedUri.queryParameters['groups']?.trim() ?? '') {
+      '' => const None(),
+      final id => Some(id),
+    },
     hasAccount: (hasAccount as Ok<Option<bool>, Rejection>).value,
     createdAt: (createdAt as Ok<AdminDateFilter, Rejection>).value,
     updatedAt: (updatedAt as Ok<AdminDateFilter, Rejection>).value,

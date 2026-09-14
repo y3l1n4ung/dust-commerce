@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:test/test.dart';
 
-import 'customer_list_test_support.dart';
+import 'customer_group_list_test_support.dart';
 import 'support.dart';
 
 void main() {
@@ -10,7 +10,7 @@ void main() {
 
   setUp(() async {
     harness = await AdminHarness.start();
-    await seedCustomerList(harness);
+    await seedCustomerGroupList(harness);
   });
   tearDown(() => harness.stop());
 
@@ -74,6 +74,27 @@ void main() {
     expect(customers, hasLength(1));
     expect(customers.single, containsPair('id', 'cus_ada'));
     expect(customers.single, containsPair('has_account', true));
+  });
+
+  test('customer list scopes active group members before count and paging',
+      () async {
+    final request = harness.client.get(
+      '/admin/customers?groups=cusgrp_vip&order=email&limit=1&offset=0',
+    )..bearer(await harness.adminToken());
+
+    final response = await request.send();
+
+    response.assertOk();
+    final json = response.json! as Map<String, Object?>;
+    expect(json, containsPair('count', 2));
+    expect(json['customers'], [containsPair('id', 'cus_ada')]);
+
+    for (final groupId in ['cusgrp_retired', 'cusgrp_missing']) {
+      final empty = harness.client.get('/admin/customers?groups=$groupId')
+        ..bearer(await harness.adminToken());
+      final emptyJson = (await empty.send()).json! as Map<String, Object?>;
+      expect(emptyJson, containsPair('count', 0));
+    }
   });
 
   test('customer list rejects filters and order keys outside its allowlist',

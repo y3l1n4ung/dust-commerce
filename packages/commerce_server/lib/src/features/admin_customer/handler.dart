@@ -22,6 +22,7 @@ Future<Result<AdminCustomerListResponse, Rejection>> listAdminCustomersHandler(
   final result = await listAdminCustomers(
     deps.customers,
     query: value.query,
+    groupId: value.groupId,
     hasAccount: value.hasAccount,
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
