@@ -33,6 +33,13 @@ abstract interface class AdminCustomerApi {
   @GET('/admin/customers/{id}')
   Future<AdminCustomerDetail> customer(@Path() String id);
 
+  /// Replaces the editable contact fields for one customer profile.
+  @PATCH('/admin/customers/{id}')
+  Future<AdminCustomerDetail> updateCustomer(
+    @Path() String id,
+    @Body() AdminUpdateCustomer body,
+  );
+
   /// Lists only orders owned by one customer for the detail route.
   @GET('/admin/orders')
   Future<AdminOrderList> listCustomerOrders(
