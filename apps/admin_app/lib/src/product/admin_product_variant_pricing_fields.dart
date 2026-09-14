@@ -1,7 +1,24 @@
 part of 'admin_product_variant_pricing_page.dart';
 
-extension on _VariantPricingPageState {
-  Widget _body(AdminProductDetailState state, bool busy) => ColoredBox(
+final class _AdminVariantPricingBody extends StatelessWidget {
+  const _AdminVariantPricingBody({
+    required this.busy,
+    required this.currencies,
+    required this.failure,
+    required this.formKey,
+    required this.prices,
+    required this.variant,
+  });
+
+  final bool busy;
+  final List<String> currencies;
+  final Option<String> failure;
+  final GlobalKey<FormState> formKey;
+  final Map<String, TextEditingController> prices;
+  final AdminProductVariant variant;
+
+  @override
+  Widget build(BuildContext context) => ColoredBox(
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 48),
@@ -10,7 +27,7 @@ extension on _VariantPricingPageState {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 960),
                 child: Form(
-                  key: _form,
+                  key: formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -30,10 +47,15 @@ extension on _VariantPricingPageState {
                             ),
                       ),
                       const SizedBox(height: 24),
-                      _priceGrid(busy),
-                      if (state.failure case Some(value: final message)) ...[
+                      _AdminVariantPricingGrid(
+                        busy: busy,
+                        currencies: currencies,
+                        prices: prices,
+                        variant: variant,
+                      ),
+                      if (failure case Some(value: final message)) ...[
                         const SizedBox(height: 16),
-                        _failure(message),
+                        _AdminVariantPricingFailure(message: message),
                       ],
                     ],
                   ),
@@ -43,16 +65,50 @@ extension on _VariantPricingPageState {
           ],
         ),
       );
+}
 
-  Widget _priceGrid(bool busy) => Card(
+final class _AdminVariantPricingFailure extends StatelessWidget {
+  const _AdminVariantPricingFailure({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.errorContainer,
+          borderRadius: BorderRadius.circular(7),
+        ),
+        child: Text(
+          message,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onErrorContainer,
+          ),
+        ),
+      );
+}
+
+final class _AdminVariantPricingGrid extends StatelessWidget {
+  const _AdminVariantPricingGrid({
+    required this.busy,
+    required this.currencies,
+    required this.prices,
+    required this.variant,
+  });
+
+  final bool busy;
+  final List<String> currencies;
+  final Map<String, TextEditingController> prices;
+  final AdminProductVariant variant;
+
+  @override
+  Widget build(BuildContext context) => Card(
         clipBehavior: Clip.antiAlias,
         margin: EdgeInsets.zero,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: SizedBox(
-            width: (320 + widget.currencies.length * 180)
-                .clamp(680, 960)
-                .toDouble(),
+            width: (320 + currencies.length * 180).clamp(680, 960).toDouble(),
             child: Column(
               children: [
                 Container(
@@ -62,7 +118,7 @@ extension on _VariantPricingPageState {
                   child: Row(
                     children: [
                       const Expanded(flex: 2, child: Text('Title')),
-                      for (final currency in widget.currencies)
+                      for (final currency in currencies)
                         SizedBox(
                           width: 180,
                           child: Text(currency.toUpperCase()),
@@ -76,15 +132,15 @@ extension on _VariantPricingPageState {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(flex: 2, child: Text(widget.variant.title)),
-                      for (final currency in widget.currencies)
+                      Expanded(flex: 2, child: Text(variant.title)),
+                      for (final currency in currencies)
                         SizedBox(
                           width: 180,
                           child: Padding(
                             padding: const EdgeInsets.only(left: 12),
                             child: TextFormField(
                               key: ValueKey('variant-price-$currency'),
-                              controller: _prices[currency],
+                              controller: prices[currency],
                               enabled: !busy,
                               keyboardType:
                                   const TextInputType.numberWithOptions(
@@ -106,35 +162,6 @@ extension on _VariantPricingPageState {
           ),
         ),
       );
-
-  Widget _failure(String message) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.errorContainer,
-          borderRadius: BorderRadius.circular(7),
-        ),
-        child: Text(
-          message,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onErrorContainer,
-          ),
-        ),
-      );
-
-  Future<void> _save() async {
-    if (!(_form.currentState?.validate() ?? false)) return;
-    final request = AdminUpdateVariantPrices(prices: [
-      for (final currency in widget.currencies)
-        AdminUpdateVariantPrice(
-          currencyCode: currency,
-          amount: parseMinorUnits(_prices[currency]!.text, currency)!,
-        ),
-    ]);
-    final saved = await context
-        .readAdminProductDetailViewModel()
-        .updateVariantPrices(widget.product.id, widget.variant.id, request);
-    if (saved && mounted) Navigator.of(context).pop(true);
-  }
 }
 
 String? _validateAmount(String? value, String currency) =>
