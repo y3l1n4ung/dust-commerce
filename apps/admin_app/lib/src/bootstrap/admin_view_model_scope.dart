@@ -1,0 +1,101 @@
+import 'package:admin_app/src/bootstrap/admin_dependencies.dart';
+import 'package:admin_app/src/customer/admin_customer_create_view_model.dart';
+import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
+import 'package:admin_app/src/customer/admin_customer_edit_view_model.dart';
+import 'package:admin_app/src/customer/admin_customer_view_model.dart';
+import 'package:admin_app/src/order/admin_fulfillment_context_view_model.dart';
+import 'package:admin_app/src/order/admin_order_detail_view_model.dart';
+import 'package:admin_app/src/order/admin_order_view_model.dart';
+import 'package:admin_app/src/order/admin_return_view_model.dart';
+import 'package:admin_app/src/product/admin_product_create_view_model.dart';
+import 'package:admin_app/src/product/admin_product_detail_view_model.dart';
+import 'package:admin_app/src/product/admin_product_view_model.dart';
+import 'package:admin_app/src/product_option/admin_product_option_detail_view_model.dart';
+import 'package:admin_app/src/product_option/admin_product_option_view_model.dart';
+import 'package:admin_app/src/product_type/admin_product_type_detail_view_model.dart';
+import 'package:admin_app/src/product_type/admin_product_type_view_model.dart';
+import 'package:admin_app/src/session/admin_session_view_model.dart';
+import 'package:admin_app/src/shipping_profile/admin_shipping_profile_detail_view_model.dart';
+import 'package:admin_app/src/shipping_profile/admin_shipping_profile_view_model.dart';
+import 'package:flutter/widgets.dart';
+
+/// Provides the process-owned Admin ViewModels to the application tree.
+final class AdminViewModelScope extends StatelessWidget {
+  /// Creates the complete Admin scope graph.
+  const AdminViewModelScope({
+    required this.dependencies,
+    required this.child,
+    super.key,
+  });
+
+  /// Process-owned dependencies exposed by this scope.
+  final AdminDependencies dependencies;
+
+  /// Application subtree that consumes the ViewModels.
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final deps = dependencies;
+    return AdminSessionViewModelScope.value(
+      value: deps.session,
+      child: AdminOrderViewModelScope.value(
+        value: deps.orders,
+        child: AdminCustomerDetailViewModelScope.value(
+          value: deps.customers.detail,
+          child: AdminCustomerEditViewModelScope.value(
+            value: deps.customers.edit,
+            child: AdminCustomerCreateViewModelScope.value(
+              value: deps.customers.create,
+              child: AdminCustomerViewModelScope.value(
+                value: deps.customers.list,
+                child: AdminOrderDetailViewModelScope.value(
+                  value: deps.orderDetail,
+                  child: AdminFulfillmentContextViewModelScope.value(
+                    value: deps.fulfillmentContext,
+                    child: AdminReturnViewModelScope.value(
+                      value: deps.returns,
+                      child: AdminProductViewModelScope.value(
+                        value: deps.products,
+                        child: AdminProductDetailViewModelScope.value(
+                          value: deps.productDetail,
+                          child: AdminProductCreateViewModelScope.value(
+                            value: deps.productCreate,
+                            child: AdminProductOptionViewModelScope.value(
+                              value: deps.productOptions,
+                              child:
+                                  AdminProductOptionDetailViewModelScope.value(
+                                value: deps.productOptionDetail,
+                                child: AdminProductTypeViewModelScope.value(
+                                  value: deps.productTypes,
+                                  child: AdminProductTypeDetailViewModelScope
+                                      .value(
+                                    value: deps.productTypeDetail,
+                                    child: AdminShippingProfileViewModelScope
+                                        .value(
+                                      value: deps.shippingProfiles,
+                                      child:
+                                          AdminShippingProfileDetailViewModelScope
+                                              .value(
+                                        value: deps.shippingProfileDetail,
+                                        child: child,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

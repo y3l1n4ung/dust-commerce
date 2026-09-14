@@ -1,0 +1,45 @@
+import 'package:admin_app/src/customer/admin_customer_api.dart';
+import 'package:admin_app/src/customer/admin_customer_create_view_model.dart';
+import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
+import 'package:admin_app/src/customer/admin_customer_edit_view_model.dart';
+import 'package:admin_app/src/customer/admin_customer_view_model.dart';
+import 'package:dio/dio.dart';
+
+/// Customer API and ViewModels sharing one authenticated Dio client.
+final class AdminCustomerDependencies {
+  /// Creates the customer feature graph.
+  factory AdminCustomerDependencies(Dio dio, String baseUrl) {
+    final api = AdminCustomerApi(dio, baseUrl: baseUrl);
+    return AdminCustomerDependencies._(
+      list: AdminCustomerViewModel(AdminCustomerViewModelArgs(api: api)),
+      create: AdminCustomerCreateViewModel(
+        AdminCustomerCreateViewModelArgs(api: api),
+      ),
+      detail: AdminCustomerDetailViewModel(
+        AdminCustomerDetailViewModelArgs(api: api),
+      ),
+      edit: AdminCustomerEditViewModel(
+        AdminCustomerEditViewModelArgs(api: api),
+      ),
+    );
+  }
+
+  const AdminCustomerDependencies._({
+    required this.list,
+    required this.create,
+    required this.detail,
+    required this.edit,
+  });
+
+  /// Customer collection state.
+  final AdminCustomerViewModel list;
+
+  /// Customer-creation command state.
+  final AdminCustomerCreateViewModel create;
+
+  /// Selected customer detail state.
+  final AdminCustomerDetailViewModel detail;
+
+  /// Customer-edit command state.
+  final AdminCustomerEditViewModel edit;
+}
