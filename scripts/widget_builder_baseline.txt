@@ -1,5 +1,3 @@
-apps/admin_app/lib/src/order/admin_order_export_drawer.dart:2
-apps/admin_app/lib/src/order/admin_order_page.dart:1
 apps/admin_app/lib/src/product/admin_product_create_body.dart:2
 apps/admin_app/lib/src/product/admin_product_create_details.dart:1
 apps/admin_app/lib/src/product/admin_product_create_form_fields.dart:3

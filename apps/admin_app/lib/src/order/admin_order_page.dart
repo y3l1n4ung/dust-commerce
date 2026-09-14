@@ -56,7 +56,7 @@ final class _AdminOrderPageState extends State<AdminOrderPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _Header(onExport: () => _export(state)),
+                _AdminOrderHeader(onExport: () => _export(state)),
                 Divider(height: 1, color: Theme.of(context).dividerColor),
                 AdminOrderToolbar(
                   controller: _query,
@@ -66,7 +66,11 @@ final class _AdminOrderPageState extends State<AdminOrderPage> {
                       context.readAdminOrderViewModel().search(_query.text),
                 ),
                 Divider(height: 1, color: Theme.of(context).dividerColor),
-                _body(context, state),
+                _AdminOrderBody(
+                  onOpen: widget.onOpen,
+                  onRetry: context.readAdminOrderViewModel().load,
+                  state: state,
+                ),
                 AdminOrderPagination(state: state),
               ],
             ),
@@ -76,7 +80,28 @@ final class _AdminOrderPageState extends State<AdminOrderPage> {
     );
   }
 
-  Widget _body(BuildContext context, AdminOrderState state) {
+  Future<void> _export(AdminOrderState state) async {
+    final exported = await showAdminOrderExportDrawer(context, state);
+    if (!mounted || exported != true) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Order export downloaded.')),
+    );
+  }
+}
+
+final class _AdminOrderBody extends StatelessWidget {
+  const _AdminOrderBody({
+    required this.onOpen,
+    required this.onRetry,
+    required this.state,
+  });
+
+  final ValueChanged<String> onOpen;
+  final VoidCallback onRetry;
+  final AdminOrderState state;
+
+  @override
+  Widget build(BuildContext context) {
     if (state.status == AdminOrderListStatus.loading && state.orders.isEmpty) {
       return const SizedBox(
         height: 160,
@@ -89,7 +114,7 @@ final class _AdminOrderPageState extends State<AdminOrderPage> {
         height: 160,
         child: Center(
           child: OutlinedButton(
-            onPressed: context.readAdminOrderViewModel().load,
+            onPressed: onRetry,
             child: Text('$message Retry'),
           ),
         ),
@@ -103,24 +128,16 @@ final class _AdminOrderPageState extends State<AdminOrderPage> {
     }
     return Stack(
       children: [
-        AdminOrderTable(orders: state.orders, onOpen: widget.onOpen),
+        AdminOrderTable(orders: state.orders, onOpen: onOpen),
         if (state.status == AdminOrderListStatus.loading)
           const LinearProgressIndicator(minHeight: 2),
       ],
     );
   }
-
-  Future<void> _export(AdminOrderState state) async {
-    final exported = await showAdminOrderExportDrawer(context, state);
-    if (!mounted || exported != true) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Order export downloaded.')),
-    );
-  }
 }
 
-final class _Header extends StatelessWidget {
-  const _Header({required this.onExport});
+final class _AdminOrderHeader extends StatelessWidget {
+  const _AdminOrderHeader({required this.onExport});
 
   final VoidCallback onExport;
 

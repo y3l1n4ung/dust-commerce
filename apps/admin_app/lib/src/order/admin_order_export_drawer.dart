@@ -5,6 +5,8 @@ import 'package:admin_app/src/order/admin_order_view_model.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
+part 'admin_order_export_drawer_chrome.dart';
+
 /// Opens Medusa's right-side order export flow.
 Future<bool?> showAdminOrderExportDrawer(
   BuildContext context,
@@ -58,7 +60,10 @@ final class _OrderExportDrawerState extends State<_OrderExportDrawer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _header(),
+              _AdminOrderExportHeader(
+                busy: _busy,
+                onClose: () => Navigator.pop(context, false),
+              ),
               Expanded(
                 child: ListView(
                   padding: const EdgeInsets.all(24),
@@ -76,61 +81,14 @@ final class _OrderExportDrawerState extends State<_OrderExportDrawer> {
                   ],
                 ),
               ),
-              _footer(),
+              _AdminOrderExportFooter(
+                busy: _busy,
+                onCancel: () => Navigator.pop(context, false),
+                onExport: _export,
+              ),
             ],
           ),
         ),
-      );
-
-  Widget _header() => Container(
-        height: 62,
-        padding: const EdgeInsets.only(left: 24, right: 12),
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(color: Theme.of(context).dividerColor),
-          ),
-        ),
-        child: Row(children: [
-          Expanded(
-            child: Text(
-              'Export Orders',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-          ),
-          IconButton(
-            tooltip: 'Close',
-            onPressed: _busy ? null : () => Navigator.pop(context, false),
-            icon: const Icon(Icons.close_rounded, size: 18),
-          ),
-        ]),
-      );
-
-  Widget _footer() => Container(
-        height: 62,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Theme.of(context).dividerColor),
-          ),
-        ),
-        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          OutlinedButton(
-            onPressed: _busy ? null : () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          const SizedBox(width: 8),
-          FilledButton(
-            onPressed: _busy ? null : _export,
-            child: _busy
-                ? const SizedBox.square(
-                    dimension: 15,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Text('Export'),
-          ),
-        ]),
       );
 
   Future<void> _export() async {
