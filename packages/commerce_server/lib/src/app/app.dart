@@ -1,12 +1,6 @@
 import 'package:commerce_server/src/features/account/account.dart';
 import 'package:commerce_server/src/features/admin/admin.dart';
-import 'package:commerce_server/src/features/admin_customer/admin_customer.dart';
-import 'package:commerce_server/src/features/admin_fulfillment_context/admin_fulfillment_context.dart';
-import 'package:commerce_server/src/features/admin_order/admin_order.dart';
-import 'package:commerce_server/src/features/admin_region/admin_region.dart';
-import 'package:commerce_server/src/features/admin_return/admin_return.dart';
-import 'package:commerce_server/src/features/admin_sales_channel/admin_sales_channel.dart';
-import 'package:commerce_server/src/features/admin_shipping_profile/admin_shipping_profile.dart';
+import 'package:commerce_server/src/app/admin_state.dart';
 import 'package:commerce_server/src/features/cart/cart.dart';
 import 'package:commerce_server/src/features/category/category.dart';
 import 'package:commerce_server/src/features/catalog/catalog.dart';
@@ -70,59 +64,14 @@ Router buildApp(
     ..nest('/store', regionRoutes())
     ..route('/health', get(_health))
     ..withState(accountDeps)
-    ..withState(
-      AdminDeps(
-        database: database,
-        reads: AdminReadRepository(executor),
-        writes: AdminCreateRepository(executor),
-        deletes: AdminDeleteRepository(executor),
-        clock: clock,
-        passwordWork: resolvedPasswordWork,
-        dummyPasswordHash: accountDeps.dummyPasswordHash,
-        products: AdminProductRepository(executor),
-        productExports: AdminProductExportRepository(executor),
-        productImports: AdminProductImportRepository(executor),
-        productTags: AdminProductTagRepository(executor),
-        productTypes: AdminProductTypeRepository(executor),
-        productTypeReads: AdminProductTypeReadRepository(executor),
-        productOptions: AdminProductOptionRepository(executor),
-        productCreates: AdminProductCreateRepository(executor),
-        productReads: AdminProductReadRepository(executor),
-        media: AdminMediaRepository(executor),
-        mediaStorage: mediaStorage,
-      ),
-    )
-    ..withState(
-      AdminOrderDeps(
-        orders: AdminOrderRepository(executor),
-        details: AdminOrderDetailRepository(executor),
-        exports: AdminOrderExportRepository(executor),
-        database: database,
-        nextId: clock.nextId,
-      ),
-    )
-    ..withState(AdminCustomerDeps(
-      customers: AdminCustomerRepository(executor),
-    ))
-    ..withState(AdminReturnDeps(
+    ..attachAdminState(
       database: database,
-      returns: AdminReturnRepository(executor),
-    ))
-    ..withState(AdminRegionDeps(regions: AdminRegionRepository(executor)))
-    ..withState(AdminFulfillmentContextDeps(
-      choices: AdminFulfillmentContextRepository(executor),
-    ))
-    ..withState(AdminSalesChannelDeps(
-      salesChannels: AdminSalesChannelRepository(executor),
-      database: database,
+      executor: executor,
       clock: clock,
-    ))
-    ..withState(AdminShippingProfileDeps(
-      database: database,
-      management: AdminShippingProfileManagementRepository(executor),
-      profiles: AdminShippingProfileRepository(executor),
-      clock: clock,
-    ))
+      passwordWork: resolvedPasswordWork,
+      dummyPasswordHash: accountDeps.dummyPasswordHash,
+      mediaStorage: mediaStorage,
+    )
     ..withState(
       CatalogDeps(
         reads: catalogReads,
