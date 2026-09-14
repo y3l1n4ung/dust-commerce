@@ -1,7 +1,8 @@
 part of 'order_return_view_model.dart';
 
 OrderReturnRequestState _preparedReturnState(Order order) {
-  if (order.status != OrderStatus.completed || !order.isPaid) {
+  if (!order.isPaid ||
+      !order.items.any((item) => item.detail.deliveredQuantity > 0)) {
     return const OrderReturnRequestState(
       status: OrderReturnRequestStatus.failed,
       failure: Some(OrderReturnFailure.notEligible),

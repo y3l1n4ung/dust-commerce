@@ -542,6 +542,38 @@
   "@account_sign_in_email": {
     "description": "Explains that the profile email identifies sign-in."
   },
+  "account_fulfillment_not_fulfilled": "မဖြည့်ဆည်းရသေး",
+  "@account_fulfillment_not_fulfilled": {
+    "description": "Order with no active fulfillment."
+  },
+  "account_fulfillment_partially_fulfilled": "တစ်စိတ်တစ်ပိုင်း ဖြည့်ဆည်းပြီး",
+  "@account_fulfillment_partially_fulfilled": {
+    "description": "Order with some units fulfilled."
+  },
+  "account_fulfillment_fulfilled": "ဖြည့်ဆည်းပြီး",
+  "@account_fulfillment_fulfilled": {
+    "description": "Order with every unit fulfilled."
+  },
+  "account_fulfillment_partially_shipped": "တစ်စိတ်တစ်ပိုင်း ပို့ပြီး",
+  "@account_fulfillment_partially_shipped": {
+    "description": "Order with some units shipped."
+  },
+  "account_fulfillment_shipped": "ပို့ပြီး",
+  "@account_fulfillment_shipped": {
+    "description": "Order with every unit shipped."
+  },
+  "account_fulfillment_partially_delivered": "တစ်စိတ်တစ်ပိုင်း ပို့ဆောင်ပြီး",
+  "@account_fulfillment_partially_delivered": {
+    "description": "Order with some units delivered."
+  },
+  "account_fulfillment_delivered": "ပို့ဆောင်ပြီး",
+  "@account_fulfillment_delivered": {
+    "description": "Order with every unit delivered."
+  },
+  "account_fulfillment_canceled": "ပယ်ဖျက်ပြီး",
+  "@account_fulfillment_canceled": {
+    "description": "Order whose fulfillment was canceled."
+  },
   "account_status_archived": "သိမ်းဆည်းပြီး",
   "@account_status_archived": {
     "description": "Archived order status."

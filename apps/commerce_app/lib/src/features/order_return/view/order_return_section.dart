@@ -41,8 +41,8 @@ final class _OrderReturnSectionState extends State<OrderReturnSection> {
 
   @override
   Widget build(BuildContext context) {
-    final eligible = widget.order.status == OrderStatus.completed &&
-        widget.order.paymentStatus == PaymentStatus.captured;
+    final eligible = widget.order.paymentStatus == PaymentStatus.captured &&
+        widget.order.items.any((item) => item.detail.deliveredQuantity > 0);
     final state = context.watchOrderReturnViewModel().value;
     final history = context.watchOrderReturnHistoryViewModel().value;
     final historyVisible = switch (history.status) {

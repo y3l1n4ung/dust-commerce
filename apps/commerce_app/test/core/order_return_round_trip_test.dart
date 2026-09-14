@@ -66,11 +66,18 @@ void main() {
     ));
     await api.authorizePayment(placed.id);
     final paid = await api.capturePayment(placed.id);
-    // Payment and completion are separate transitions; this fixture exercises
-    // the generated return client while Admin completion gets its own slice.
     await queryExecute(
-      "UPDATE orders SET status = 'completed' WHERE id = ?",
+      "INSERT INTO fulfillments "
+      "(id, order_id, location_id, provider_id, delivered_at) "
+      "VALUES ('ful_client', ?, 'location_test', 'manual', "
+      "strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))",
       [paid.id],
+    ).execute(database.executor);
+    await queryExecute(
+      "INSERT INTO fulfillment_items "
+      "(id, fulfillment_id, title, quantity, sku, barcode, line_item_id) "
+      "VALUES ('fulitem_client', 'ful_client', ?, 2, '', '', ?)",
+      [paid.items.single.title, paid.items.single.id],
     ).execute(database.executor);
 
     final returned = await api.requestOrderReturn(OrderReturnRequestBody(

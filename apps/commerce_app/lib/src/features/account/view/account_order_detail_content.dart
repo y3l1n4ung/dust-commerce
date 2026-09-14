@@ -74,7 +74,7 @@ final class AccountOrderDetailContent extends StatelessWidget {
                   'shop_account_order_status',
                   defaultText: 'Order status',
                 ),
-                value: _orderStatus(context),
+                value: _fulfillmentStatus(context),
               ),
               _OrderStatusText(
                 title: context.tr(
@@ -104,22 +104,39 @@ final class AccountOrderDetailContent extends StatelessWidget {
         ],
       );
 
-  String _orderStatus(BuildContext context) => switch (order.status) {
-        OrderStatus.pending => context.tr(
-            'shop_account_status_pending',
-            defaultText: 'Pending',
+  String _fulfillmentStatus(BuildContext context) =>
+      switch (order.fulfillmentStatus) {
+        OrderFulfillmentStatus.notFulfilled => context.tr(
+            'shop_account_fulfillment_not_fulfilled',
+            defaultText: 'Not fulfilled',
           ),
-        OrderStatus.completed => context.tr(
-            'shop_account_status_completed',
-            defaultText: 'Completed',
+        OrderFulfillmentStatus.partiallyFulfilled => context.tr(
+            'shop_account_fulfillment_partially_fulfilled',
+            defaultText: 'Partially fulfilled',
           ),
-        OrderStatus.canceled => context.tr(
-            'shop_account_status_cancelled',
+        OrderFulfillmentStatus.fulfilled => context.tr(
+            'shop_account_fulfillment_fulfilled',
+            defaultText: 'Fulfilled',
+          ),
+        OrderFulfillmentStatus.partiallyShipped => context.tr(
+            'shop_account_fulfillment_partially_shipped',
+            defaultText: 'Partially shipped',
+          ),
+        OrderFulfillmentStatus.shipped => context.tr(
+            'shop_account_fulfillment_shipped',
+            defaultText: 'Shipped',
+          ),
+        OrderFulfillmentStatus.partiallyDelivered => context.tr(
+            'shop_account_fulfillment_partially_delivered',
+            defaultText: 'Partially delivered',
+          ),
+        OrderFulfillmentStatus.delivered => context.tr(
+            'shop_account_fulfillment_delivered',
+            defaultText: 'Delivered',
+          ),
+        OrderFulfillmentStatus.canceled => context.tr(
+            'shop_account_fulfillment_canceled',
             defaultText: 'Canceled',
-          ),
-        OrderStatus.archived => context.tr(
-            'shop_account_status_archived',
-            defaultText: 'Archived',
           ),
       };
 

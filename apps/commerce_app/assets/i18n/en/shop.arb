@@ -542,6 +542,38 @@
   "@account_sign_in_email": {
     "description": "Explains that the profile email identifies sign-in."
   },
+  "account_fulfillment_not_fulfilled": "Not fulfilled",
+  "@account_fulfillment_not_fulfilled": {
+    "description": "Order with no active fulfillment."
+  },
+  "account_fulfillment_partially_fulfilled": "Partially fulfilled",
+  "@account_fulfillment_partially_fulfilled": {
+    "description": "Order with some units fulfilled."
+  },
+  "account_fulfillment_fulfilled": "Fulfilled",
+  "@account_fulfillment_fulfilled": {
+    "description": "Order with every unit fulfilled."
+  },
+  "account_fulfillment_partially_shipped": "Partially shipped",
+  "@account_fulfillment_partially_shipped": {
+    "description": "Order with some units shipped."
+  },
+  "account_fulfillment_shipped": "Shipped",
+  "@account_fulfillment_shipped": {
+    "description": "Order with every unit shipped."
+  },
+  "account_fulfillment_partially_delivered": "Partially delivered",
+  "@account_fulfillment_partially_delivered": {
+    "description": "Order with some units delivered."
+  },
+  "account_fulfillment_delivered": "Delivered",
+  "@account_fulfillment_delivered": {
+    "description": "Order with every unit delivered."
+  },
+  "account_fulfillment_canceled": "Canceled",
+  "@account_fulfillment_canceled": {
+    "description": "Order whose fulfillment was canceled."
+  },
   "account_status_archived": "Archived",
   "@account_status_archived": {
     "description": "Archived order status."

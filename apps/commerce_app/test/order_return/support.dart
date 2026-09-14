@@ -38,7 +38,7 @@ Order paidReturnOrder({int quantity = 3, int requestedQuantity = 0}) => Order(
       shippingAddress: returnAddress,
       billingAddress: returnAddress,
       placedAt: returnInstant,
-      status: OrderStatus.completed,
+      fulfillmentStatus: OrderFulfillmentStatus.delivered,
       paymentStatus: PaymentStatus.captured,
     );
 
