@@ -91,6 +91,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
           ),
         _AdminRoute.customerGroups => AdminCustomerGroupPage(
             searchFocus: _customerGroupSearchFocus,
+            onCreate: _createCustomerGroup,
           ),
         _AdminRoute.customer => AdminCustomerDetailPage(
             customerId: selectedIdForNavigation,

@@ -1,3 +1,4 @@
+import 'package:admin_app/src/customer_group/admin_customer_group_page_header.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_pagination.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_table_body.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_toolbar.dart';
@@ -7,7 +8,14 @@ import 'package:flutter/material.dart';
 /// Medusa-shaped customer-group list backed by the protected Admin API.
 final class AdminCustomerGroupPage extends StatelessWidget {
   /// Creates the customer-group list route.
-  const AdminCustomerGroupPage({required this.searchFocus, super.key});
+  const AdminCustomerGroupPage({
+    required this.searchFocus,
+    required this.onCreate,
+    super.key,
+  });
+
+  /// Opens Medusa's focused customer-group create route.
+  final VoidCallback onCreate;
 
   /// Focus target shared with the sidebar search action.
   final FocusNode searchFocus;
@@ -31,7 +39,7 @@ final class AdminCustomerGroupPage extends StatelessWidget {
             ),
             clipBehavior: Clip.antiAlias,
             child: Column(mainAxisSize: MainAxisSize.min, children: [
-              const _AdminCustomerGroupHeader(),
+              AdminCustomerGroupPageHeader(onCreate: onCreate),
               Divider(height: 1, color: Theme.of(context).dividerColor),
               AdminCustomerGroupToolbar(
                 state: state,
@@ -49,20 +57,4 @@ final class AdminCustomerGroupPage extends StatelessWidget {
       ),
     );
   }
-}
-
-final class _AdminCustomerGroupHeader extends StatelessWidget {
-  const _AdminCustomerGroupHeader();
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Customer Groups',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-        ),
-      );
 }
