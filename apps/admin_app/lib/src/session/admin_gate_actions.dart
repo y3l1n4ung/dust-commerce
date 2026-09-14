@@ -2,6 +2,7 @@ part of 'admin_gate.dart';
 
 /// Owns authenticated route transitions separately from shell composition.
 mixin _AdminHomeActions on State<_AdminHome> {
+  FocusNode get _customerSearchFocus;
   FocusNode get _orderSearchFocus;
   FocusNode get _optionSearchFocus;
   _AdminRoute get _route;
@@ -15,6 +16,13 @@ mixin _AdminHomeActions on State<_AdminHome> {
   String get selectedIdForNavigation => _selectedId;
 
   void _requestSearch() {
+    if (_route == _AdminRoute.customers) {
+      _showCustomers();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _customerSearchFocus.requestFocus();
+      });
+      return;
+    }
     if (_route == _AdminRoute.orders || _route == _AdminRoute.order) {
       _showOrders();
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -45,6 +53,14 @@ mixin _AdminHomeActions on State<_AdminHome> {
       if (mounted) {
         (options ? _optionSearchFocus : _searchFocus).requestFocus();
       }
+    });
+  }
+
+  void _showCustomers() {
+    context.readAdminCustomerViewModel().load(offset: 0);
+    setState(() {
+      _route = _AdminRoute.customers;
+      _selectedId = '';
     });
   }
 

@@ -16,6 +16,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
       user: widget.user,
       themes: widget.themes,
       title: switch (_route) {
+        _AdminRoute.customers => 'Customers',
         _AdminRoute.orders => 'Orders',
         _AdminRoute.order => switch (orderDetail) {
             Some(value: final order) => 'Orders  ›  #${order.displayId}',
@@ -40,12 +41,14 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
           },
       },
       onSearchRequested: _requestSearch,
+      onCustomersRequested: _showCustomers,
       onOrdersRequested: _showOrders,
       onProductsRequested: _showProducts,
       onProductOptionsRequested: _showProductOptions,
       onProductTypesRequested: _showProductTypes,
       onShippingProfilesRequested: _showShippingProfiles,
       selectedSection: switch (_route) {
+        _AdminRoute.customers => AdminShellSection.customers,
         _AdminRoute.orders || _AdminRoute.order => AdminShellSection.orders,
         _AdminRoute.products ||
         _AdminRoute.product =>
@@ -64,6 +67,9 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
           ? null
           : context.readAdminSessionViewModel().signOut,
       child: switch (_route) {
+        _AdminRoute.customers => AdminCustomerPage(
+            searchFocus: _customerSearchFocus,
+          ),
         _AdminRoute.orders => AdminOrderPage(
             searchFocus: _orderSearchFocus,
             onOpen: _showOrder,

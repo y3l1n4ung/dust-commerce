@@ -13,6 +13,7 @@ final class AdminSidebar extends StatelessWidget {
     required this.user,
     required this.themes,
     required this.onSearchRequested,
+    required this.onCustomersRequested,
     required this.onOrdersRequested,
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
@@ -25,6 +26,9 @@ final class AdminSidebar extends StatelessWidget {
 
   /// Focuses the active product search field.
   final VoidCallback onSearchRequested;
+
+  /// Opens the merchant customer table.
+  final VoidCallback onCustomersRequested;
 
   /// Opens the merchant order table.
   final VoidCallback onOrdersRequested;
@@ -97,7 +101,12 @@ final class AdminSidebar extends StatelessWidget {
                 const _NavRow(
                     icon: Icons.warehouse_outlined, label: 'Inventory'),
                 const _SubNav(label: 'Reservations'),
-                const _NavRow(icon: Icons.people_outline, label: 'Customers'),
+                _NavRow(
+                  icon: Icons.people_outline,
+                  label: 'Customers',
+                  selected: selectedSection == AdminShellSection.customers,
+                  onTap: onCustomersRequested,
+                ),
                 const _SubNav(label: 'Customer Groups'),
                 const _NavRow(icon: Icons.sell_outlined, label: 'Promotions'),
                 const _SubNav(label: 'Campaigns'),

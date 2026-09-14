@@ -1,5 +1,8 @@
 /// Sidebar section selected by the current authenticated route.
 enum AdminShellSection {
+  /// Merchant customer-list routes.
+  customers,
+
   /// Merchant order-list routes.
   orders,
 
