@@ -24,6 +24,10 @@ abstract interface class AdminCustomerGroupApi {
   @GET('/admin/customer-groups/{id}')
   Future<AdminCustomerGroupDetailResponse> customerGroup(@Path() String id);
 
+  /// Retires one customer group and returns the Medusa acknowledgement.
+  @DELETE('/admin/customer-groups/{id}')
+  Future<AdminCustomerGroupDeleted> deleteCustomerGroup(@Path() String id);
+
   /// Replaces the merchant-facing name and returns refreshed group detail.
   @POST('/admin/customer-groups/{id}')
   Future<AdminCustomerGroupDetailResponse> updateCustomerGroup(
