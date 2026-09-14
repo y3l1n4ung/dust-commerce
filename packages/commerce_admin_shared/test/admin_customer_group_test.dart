@@ -81,6 +81,43 @@ void main() {
     });
   });
 
+  test('customer-group detail decodes metadata without inheriting list data',
+      () {
+    final response = AdminCustomerGroupDetailResponse.fromJson({
+      'customer_group': {
+        'id': 'cusgrp_vip',
+        'name': 'VIP Customers',
+        'customers': [
+          {'id': 'cus_ada'},
+        ],
+        'metadata': {
+          'source': 'admin',
+          'priority': 1,
+        },
+        'created_at': '2026-09-14T01:02:03.000Z',
+        'updated_at': '2026-09-14T02:03:04.000Z',
+      },
+    });
+
+    final group = response.customerGroup;
+    expect(group.id, 'cusgrp_vip');
+    expect(group.customers.single.id, 'cus_ada');
+    expect(
+      group.metadata.match(some: (value) => value, none: () => null),
+      {'source': 'admin', 'priority': 1},
+    );
+    expect(group.createdAt.isUtc, isTrue);
+    expect(response.toJson().keys, {'customer_group'});
+    expect(group.toJson().keys, {
+      'id',
+      'name',
+      'customers',
+      'metadata',
+      'created_at',
+      'updated_at',
+    });
+  });
+
   test('customer-group ordering accepts only visible table fields', () {
     expect(
       AdminCustomerGroupOrder.parse('-updated_at'),
