@@ -89,6 +89,10 @@
 - Global product-option source:
   `packages/admin/dashboard/src/routes/product-options/product-option-list/`,
   `product-option-detail/`, and `product-option-create/` at the pinned commit.
+- Customer-detail source:
+  `packages/admin/dashboard/src/routes/customers/customer-detail/customer-detail.tsx`
+  plus its General, Addresses and Orders section components and the shared
+  two-column layout at the pinned commit.
 - Rendered reference: Medusa's official Admin product-list image in the User
   Guide, official product-detail image in the Edit Product guide, and official
   Details-step image in the Create Product guide.
@@ -545,6 +549,14 @@ raster is available, so pixel parity is not claimed.
   disabled because create/detail/groups remain separate capabilities. This is
   source-structure and behavior evidence, not same-state pixel parity with a
   running Medusa Admin.
+- Customer detail now follows the pinned General and Orders main column plus
+  440 px Addresses side column. Live QA showed Ada's Store-created default
+  address and authenticated order `#4`, opened the full order and returned to
+  Ada's detail. The final release build used the two-column grid at the default
+  1280 viewport, collapsed at `390 x 844`, and emitted no browser warning or
+  error. Edit/delete, address mutations and groups stay disabled or absent
+  rather than pretending the API exists. No equivalent live Medusa customer
+  fixture was available, so same-state pixel parity is not claimed.
 
 ## Open findings
 
@@ -596,6 +608,10 @@ The order list, region filtering, detail, fulfillment shipment, delivery,
 cancellation, independent manual-payment refunds and filtered CSV export pass
 protected API, generated-client, responsive layout and live-data behavior
 checks against the pinned source structure.
+The customer list and read-only detail pass protected API, explicit-contract,
+direct-SQLx, responsive layout and Store-to-Admin live-data checks against the
+pinned source structure. Customer mutations, groups and same-state pixel parity
+remain open.
 The product-list sales-channel slice passes its typed contract, direct SQLx
 projection, source-shaped truncation/tooltip behavior and clean-start browser
 QA. Its whole-screen density and thumbnail differences remain an open visual
