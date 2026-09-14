@@ -62,6 +62,7 @@ extension AdminStateRegistration on Router {
       groups: AdminCustomerGroupListRepository(executor),
       creates: AdminCustomerGroupCreateRepository(executor),
       details: AdminCustomerGroupDetailRepository(executor),
+      database: database,
       clock: clock,
     ));
     withState(AdminReturnDeps(

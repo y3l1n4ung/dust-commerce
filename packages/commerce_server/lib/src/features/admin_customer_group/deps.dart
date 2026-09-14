@@ -2,6 +2,7 @@ import 'package:commerce_server/src/features/admin_customer_group/list_repositor
 import 'package:commerce_server/src/features/admin_customer_group/repository/create.dart';
 import 'package:commerce_server/src/features/admin_customer_group/repository/read.dart';
 import 'package:commerce_server/src/http/http.dart';
+import 'package:commerce_server/src/infra/database.dart';
 import 'package:dust_server/server.dart';
 
 /// Persistence required only by merchant customer-group routes.
@@ -11,8 +12,12 @@ final class AdminCustomerGroupDeps {
     required this.groups,
     required this.creates,
     required this.details,
+    required this.database,
     required this.clock,
   });
+
+  /// Transaction boundary for updates that must return refreshed detail.
+  final CommerceDatabase database;
 
   /// Protected customer-group creation.
   final AdminCustomerGroupCreateRepository creates;
