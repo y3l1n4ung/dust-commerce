@@ -49,6 +49,24 @@ final class AdminCustomerGroup with _$AdminCustomerGroup {
   final DateTime updatedAt;
 }
 
+/// Medusa-compatible envelope returned after customer-group creation.
+@Derive([ToString(), Eq(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class AdminCustomerGroupCreateResponse
+    with _$AdminCustomerGroupCreateResponse {
+  /// Creates one explicit group response envelope.
+  const AdminCustomerGroupCreateResponse({required this.customerGroup});
+
+  /// Decodes one generated Admin API response.
+  factory AdminCustomerGroupCreateResponse.fromJson(
+    Map<String, Object?> json,
+  ) =>
+      _$AdminCustomerGroupCreateResponseFromJson(json);
+
+  /// Newly created allowlisted customer-group row.
+  final AdminCustomerGroup customerGroup;
+}
+
 /// One bounded page returned by the merchant customer-group API.
 @Derive([ToString(), Eq(), Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)

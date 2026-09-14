@@ -28,6 +28,22 @@ void main() {
     );
   });
 
+  test('customer-group creation decodes the Medusa response envelope', () {
+    final response = AdminCustomerGroupCreateResponse.fromJson({
+      'customer_group': {
+        'id': 'cusgrp_vip',
+        'name': 'VIP Customers',
+        'customers': <Object?>[],
+        'created_at': '2026-09-14T01:02:03.000Z',
+        'updated_at': '2026-09-14T01:02:03.000Z',
+      },
+    });
+
+    expect(response.customerGroup.id, 'cusgrp_vip');
+    expect(response.customerGroup.customers, isEmpty);
+    expect(response.toJson().keys, {'customer_group'});
+  });
+
   test('customer-group page decodes Medusa list fields only', () {
     final page = AdminCustomerGroupList.fromJson({
       'customer_groups': [

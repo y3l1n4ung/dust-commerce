@@ -94,6 +94,39 @@ mixin _$AdminCustomerGroup implements Serializable {
   Map<String, Object?> toJson() => serialize();
 }
 
+mixin _$AdminCustomerGroupCreateResponse implements Serializable {
+  @override
+  String toString() {
+    final self = this as AdminCustomerGroupCreateResponse;
+    return 'AdminCustomerGroupCreateResponse('
+        'customerGroup: ${self.customerGroup}'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    final self = this as AdminCustomerGroupCreateResponse;
+    return identical(this, other) ||
+        other is AdminCustomerGroupCreateResponse &&
+            runtimeType == other.runtimeType &&
+            other.customerGroup == self.customerGroup;
+  }
+
+  @override
+  int get hashCode {
+    final self = this as AdminCustomerGroupCreateResponse;
+    return Object.hashAll([
+      runtimeType,
+      self.customerGroup,
+    ]);
+  }
+
+  Map<String, Object?> serialize() =>
+      _$AdminCustomerGroupCreateResponseSerialize(this as AdminCustomerGroupCreateResponse);
+
+  Map<String, Object?> toJson() => serialize();
+}
+
 mixin _$AdminCustomerGroupList implements Serializable {
   @override
   String toString() {
@@ -159,6 +192,18 @@ final class $AdminCustomerGroupDeserializer implements Deserializer<AdminCustome
 
   @override
   AdminCustomerGroup deserialize(Map<String, Object?> json) => _$AdminCustomerGroupDeserialize(json);
+}
+final class $AdminCustomerGroupCreateResponseSerializer implements Serializer<AdminCustomerGroupCreateResponse, Map<String, Object?>> {
+  const $AdminCustomerGroupCreateResponseSerializer();
+
+  @override
+  Map<String, Object?> serialize(AdminCustomerGroupCreateResponse value) => _$AdminCustomerGroupCreateResponseSerialize(value);
+}
+final class $AdminCustomerGroupCreateResponseDeserializer implements Deserializer<AdminCustomerGroupCreateResponse, Map<String, Object?>> {
+  const $AdminCustomerGroupCreateResponseDeserializer();
+
+  @override
+  AdminCustomerGroupCreateResponse deserialize(Map<String, Object?> json) => _$AdminCustomerGroupCreateResponseDeserialize(json);
 }
 final class $AdminCustomerGroupListSerializer implements Serializer<AdminCustomerGroupList, Map<String, Object?>> {
   const $AdminCustomerGroupListSerializer();
@@ -233,6 +278,27 @@ AdminCustomerGroup _$AdminCustomerGroupDeserialize(Map<String, Object?> json) {
 
 AdminCustomerGroup _$AdminCustomerGroupFromJson(Map<String, Object?> json) =>
     _$AdminCustomerGroupDeserialize(json);
+
+Map<String, Object?> _$AdminCustomerGroupCreateResponseSerialize(AdminCustomerGroupCreateResponse instance) {
+  return <String, Object?>{
+    'customer_group': _$AdminCustomerGroupSerialize(instance.customerGroup),
+  };
+}
+
+Map<String, Object?> _$AdminCustomerGroupCreateResponseToJson(AdminCustomerGroupCreateResponse instance) =>
+    _$AdminCustomerGroupCreateResponseSerialize(instance);
+
+// factory AdminCustomerGroupCreateResponse.fromJson(Map<String, Object?> json) => _$AdminCustomerGroupCreateResponseFromJson(json);
+AdminCustomerGroupCreateResponse _$AdminCustomerGroupCreateResponseDeserialize(Map<String, Object?> json) {
+  final customerGroupValue = _$AdminCustomerGroupDeserialize(
+    JsonHelper.asMap(json['customer_group'], 'customer_group'),
+  );
+
+  return AdminCustomerGroupCreateResponse(customerGroup: customerGroupValue);
+}
+
+AdminCustomerGroupCreateResponse _$AdminCustomerGroupCreateResponseFromJson(Map<String, Object?> json) =>
+    _$AdminCustomerGroupCreateResponseDeserialize(json);
 
 Map<String, Object?> _$AdminCustomerGroupListSerialize(AdminCustomerGroupList instance) {
   return <String, Object?>{
