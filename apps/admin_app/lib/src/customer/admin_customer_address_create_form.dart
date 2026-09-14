@@ -48,68 +48,76 @@ final class _AdminCustomerAddressCreateFormState
   Widget build(BuildContext context) {
     final state = context.watchAdminCustomerAddressCreateViewModel().value;
     final navigator = Navigator.of(context);
-    return PopScope(
-      canPop: !state.isBusy,
-      child: Material(
-        color: Theme.of(context).colorScheme.surface,
-        child: SafeArea(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            AdminRouteFocusHeader(
-              onClose: state.isBusy ? null : navigator.pop,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 64,
-                ),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 720),
-                    child: Form(
-                      key: _form,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            'Create Address',
-                            style: Theme.of(context).textTheme.headlineSmall,
+    return AdminRouteFocusKeyboard(
+      enabled: !state.isBusy,
+      onClose: navigator.pop,
+      child: PopScope(
+        canPop: !state.isBusy,
+        child: Material(
+          color: Theme.of(context).colorScheme.surface,
+          child: SafeArea(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AdminRouteFocusHeader(
+                    onClose: state.isBusy ? null : navigator.pop,
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 64,
+                      ),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 720),
+                          child: Form(
+                            key: _form,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  'Create Address',
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Create a new address for the customer.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                      ),
+                                ),
+                                const SizedBox(height: 32),
+                                _AdminCustomerAddressCreateFields(
+                                  controllers: _fields,
+                                  enabled: !state.isBusy,
+                                  onCountrySelected: _selectCountry,
+                                  onCountryTyped: _typeCountry,
+                                  selectedCountryCode: _countryCode,
+                                ),
+                                AdminRouteFocusFailure(failure: state.failure),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Create a new address for the customer.',
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
-                                    ),
-                          ),
-                          const SizedBox(height: 32),
-                          _AdminCustomerAddressCreateFields(
-                            controllers: _fields,
-                            enabled: !state.isBusy,
-                            onCountrySelected: _selectCountry,
-                            onCountryTyped: _typeCountry,
-                            selectedCountryCode: _countryCode,
-                          ),
-                          AdminRouteFocusFailure(failure: state.failure),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-            AdminRouteFocusFooter(
-              busy: state.isBusy,
-              onCancel: navigator.pop,
-              onSubmit: _submit,
-              submitLabel: 'Save',
-            ),
-          ]),
+                  AdminRouteFocusFooter(
+                    busy: state.isBusy,
+                    onCancel: navigator.pop,
+                    onSubmit: _submit,
+                    submitLabel: 'Save',
+                  ),
+                ]),
+          ),
         ),
       ),
     );

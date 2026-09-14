@@ -1,5 +1,36 @@
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+/// Gives route-focus forms the Escape behavior advertised by their header.
+final class AdminRouteFocusKeyboard extends StatelessWidget {
+  /// Creates a keyboard boundary around [child].
+  const AdminRouteFocusKeyboard({
+    required this.enabled,
+    required this.onClose,
+    required this.child,
+    super.key,
+  });
+
+  /// Focus-form content receiving the shortcut.
+  final Widget child;
+
+  /// Whether Escape may close the current form.
+  final bool enabled;
+
+  /// Closes the route-focus surface.
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) => CallbackShortcuts(
+        bindings: {
+          const SingleActivator(LogicalKeyboardKey.escape): () {
+            if (enabled) onClose();
+          },
+        },
+        child: child,
+      );
+}
 
 /// Minimal top bar used by Medusa route-focus modals.
 final class AdminRouteFocusHeader extends StatelessWidget {

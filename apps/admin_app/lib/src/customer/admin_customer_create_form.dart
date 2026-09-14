@@ -38,66 +38,74 @@ final class _AdminCustomerCreateFormState
   Widget build(BuildContext context) {
     final state = context.watchAdminCustomerCreateViewModel().value;
     final navigator = Navigator.of(context);
-    return PopScope(
-      canPop: !state.isBusy,
-      child: Material(
-        color: Theme.of(context).colorScheme.surface,
-        child: SafeArea(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            AdminRouteFocusHeader(
-              onClose: state.isBusy ? null : navigator.pop,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 64),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 720),
-                    child: Form(
-                      key: _form,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            'Create customer',
-                            style: Theme.of(context).textTheme.headlineSmall,
+    return AdminRouteFocusKeyboard(
+      enabled: !state.isBusy,
+      onClose: navigator.pop,
+      child: PopScope(
+        canPop: !state.isBusy,
+        child: Material(
+          color: Theme.of(context).colorScheme.surface,
+          child: SafeArea(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AdminRouteFocusHeader(
+                    onClose: state.isBusy ? null : navigator.pop,
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 64),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 720),
+                          child: Form(
+                            key: _form,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  'Create customer',
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Add a new customer to your store.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                      ),
+                                ),
+                                const SizedBox(height: 32),
+                                AdminCustomerCreateFields(
+                                  company: _company,
+                                  email: _email,
+                                  firstName: _firstName,
+                                  lastName: _lastName,
+                                  phone: _phone,
+                                  enabled: !state.isBusy,
+                                ),
+                                AdminRouteFocusFailure(failure: state.failure),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Add a new customer to your store.',
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
-                                    ),
-                          ),
-                          const SizedBox(height: 32),
-                          AdminCustomerCreateFields(
-                            company: _company,
-                            email: _email,
-                            firstName: _firstName,
-                            lastName: _lastName,
-                            phone: _phone,
-                            enabled: !state.isBusy,
-                          ),
-                          AdminRouteFocusFailure(failure: state.failure),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-            AdminRouteFocusFooter(
-              busy: state.isBusy,
-              onCancel: navigator.pop,
-              onSubmit: _submit,
-            ),
-          ]),
+                  AdminRouteFocusFooter(
+                    busy: state.isBusy,
+                    onCancel: navigator.pop,
+                    onSubmit: _submit,
+                  ),
+                ]),
+          ),
         ),
       ),
     );
