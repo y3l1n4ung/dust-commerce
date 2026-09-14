@@ -53,29 +53,31 @@ WHERE order_row.deleted_at IS NULL
                         ',' || order_row.region_id || ',') > 0)
   AND ($4 = '' OR instr(',' || $4 || ',',
                         ',' || channel_link.sales_channel_id || ',') > 0)
-  AND ($5 = '' OR order_row.created_at > $5)
-  AND ($6 = '' OR order_row.created_at >= $6)
-  AND ($7 = '' OR order_row.created_at < $7)
-  AND ($8 = '' OR order_row.created_at <= $8)
-  AND ($9 = '' OR order_row.updated_at > $9)
-  AND ($10 = '' OR order_row.updated_at >= $10)
-  AND ($11 = '' OR order_row.updated_at < $11)
-  AND ($12 = '' OR order_row.updated_at <= $12)
+  AND ($5 = '' OR order_row.customer_id = $5)
+  AND ($6 = '' OR order_row.created_at > $6)
+  AND ($7 = '' OR order_row.created_at >= $7)
+  AND ($8 = '' OR order_row.created_at < $8)
+  AND ($9 = '' OR order_row.created_at <= $9)
+  AND ($10 = '' OR order_row.updated_at > $10)
+  AND ($11 = '' OR order_row.updated_at >= $11)
+  AND ($12 = '' OR order_row.updated_at < $12)
+  AND ($13 = '' OR order_row.updated_at <= $13)
 ORDER BY
-  CASE WHEN $13 = 'display_id' THEN order_row.display_id END ASC,
-  CASE WHEN $13 = '-display_id' THEN order_row.display_id END DESC,
-  CASE WHEN $13 = 'created_at' THEN order_row.created_at END ASC,
-  CASE WHEN $13 = '-created_at' THEN order_row.created_at END DESC,
-  CASE WHEN $13 = 'updated_at' THEN order_row.updated_at END ASC,
-  CASE WHEN $13 = '-updated_at' THEN order_row.updated_at END DESC,
+  CASE WHEN $14 = 'display_id' THEN order_row.display_id END ASC,
+  CASE WHEN $14 = '-display_id' THEN order_row.display_id END DESC,
+  CASE WHEN $14 = 'created_at' THEN order_row.created_at END ASC,
+  CASE WHEN $14 = '-created_at' THEN order_row.created_at END DESC,
+  CASE WHEN $14 = 'updated_at' THEN order_row.updated_at END ASC,
+  CASE WHEN $14 = '-updated_at' THEN order_row.updated_at END DESC,
   order_row.display_id DESC
-LIMIT $14 OFFSET $15
+LIMIT $15 OFFSET $16
 ''')
   Future<Result<List<AdminOrderResponse>, SqlxError>> list(
     String query,
     String statuses,
     String regionIds,
     String salesChannelIds,
+    String customerId,
     String createdAfter,
     String createdFrom,
     String createdBefore,
@@ -112,20 +114,22 @@ WHERE order_row.deleted_at IS NULL
                         ',' || order_row.region_id || ',') > 0)
   AND ($4 = '' OR instr(',' || $4 || ',',
                         ',' || channel_link.sales_channel_id || ',') > 0)
-  AND ($5 = '' OR order_row.created_at > $5)
-  AND ($6 = '' OR order_row.created_at >= $6)
-  AND ($7 = '' OR order_row.created_at < $7)
-  AND ($8 = '' OR order_row.created_at <= $8)
-  AND ($9 = '' OR order_row.updated_at > $9)
-  AND ($10 = '' OR order_row.updated_at >= $10)
-  AND ($11 = '' OR order_row.updated_at < $11)
-  AND ($12 = '' OR order_row.updated_at <= $12)
+  AND ($5 = '' OR order_row.customer_id = $5)
+  AND ($6 = '' OR order_row.created_at > $6)
+  AND ($7 = '' OR order_row.created_at >= $7)
+  AND ($8 = '' OR order_row.created_at < $8)
+  AND ($9 = '' OR order_row.created_at <= $9)
+  AND ($10 = '' OR order_row.updated_at > $10)
+  AND ($11 = '' OR order_row.updated_at >= $11)
+  AND ($12 = '' OR order_row.updated_at < $12)
+  AND ($13 = '' OR order_row.updated_at <= $13)
 ''')
   Future<Result<int, SqlxError>> count(
     String query,
     String statuses,
     String regionIds,
     String salesChannelIds,
+    String customerId,
     String createdAfter,
     String createdFrom,
     String createdBefore,

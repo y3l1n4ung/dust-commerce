@@ -25,6 +25,7 @@ Future<Result<AdminOrderListResponse, Rejection>> listAdminOrdersHandler(
     statuses: value.statuses,
     regionIds: value.regionIds,
     salesChannelIds: value.salesChannelIds,
+    customerId: value.customerId,
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
     order: value.order,

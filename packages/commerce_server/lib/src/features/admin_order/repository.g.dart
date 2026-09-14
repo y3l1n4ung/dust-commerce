@@ -19,7 +19,7 @@ final class _$AdminOrderRepository implements AdminOrderRepository {
   final DatabaseExecutor _db;
 
   @override
-  Future<Result<List<AdminOrderResponse>, SqlxError>> list(String query, String statuses, String regionIds, String salesChannelIds, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo, String order, int limit, int offset) {
+  Future<Result<List<AdminOrderResponse>, SqlxError>> list(String query, String statuses, String regionIds, String salesChannelIds, String customerId, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo, String order, int limit, int offset) {
     return _db.fetchAll<AdminOrderResponse>(
       r'''
 SELECT order_row.id,
@@ -63,6 +63,7 @@ WHERE order_row.deleted_at IS NULL
                         ',' || order_row.region_id || ',') > 0)
   AND (? = '' OR instr(',' || ? || ',',
                         ',' || channel_link.sales_channel_id || ',') > 0)
+  AND (? = '' OR order_row.customer_id = ?)
   AND (? = '' OR order_row.created_at > ?)
   AND (? = '' OR order_row.created_at >= ?)
   AND (? = '' OR order_row.created_at < ?)
@@ -81,13 +82,13 @@ ORDER BY
   order_row.display_id DESC
 LIMIT ? OFFSET ?
 ''',
-      [query, query, query, query, query, query, query, statuses, statuses, regionIds, regionIds, salesChannelIds, salesChannelIds, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo, order, order, order, order, order, order, limit, offset],
+      [query, query, query, query, query, query, query, statuses, statuses, regionIds, regionIds, salesChannelIds, salesChannelIds, customerId, customerId, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo, order, order, order, order, order, order, limit, offset],
       const $AdminOrderResponseRowDeserializer().deserialize,
     );
   }
 
   @override
-  Future<Result<int, SqlxError>> count(String query, String statuses, String regionIds, String salesChannelIds, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo) {
+  Future<Result<int, SqlxError>> count(String query, String statuses, String regionIds, String salesChannelIds, String customerId, String createdAfter, String createdFrom, String createdBefore, String createdTo, String updatedAfter, String updatedFrom, String updatedBefore, String updatedTo) {
     return _db.fetchScalar<int>(
       r'''
 SELECT count(*)
@@ -111,6 +112,7 @@ WHERE order_row.deleted_at IS NULL
                         ',' || order_row.region_id || ',') > 0)
   AND (? = '' OR instr(',' || ? || ',',
                         ',' || channel_link.sales_channel_id || ',') > 0)
+  AND (? = '' OR order_row.customer_id = ?)
   AND (? = '' OR order_row.created_at > ?)
   AND (? = '' OR order_row.created_at >= ?)
   AND (? = '' OR order_row.created_at < ?)
@@ -120,7 +122,7 @@ WHERE order_row.deleted_at IS NULL
   AND (? = '' OR order_row.updated_at < ?)
   AND (? = '' OR order_row.updated_at <= ?)
 ''',
-      [query, query, query, query, query, query, query, statuses, statuses, regionIds, regionIds, salesChannelIds, salesChannelIds, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo],
+      [query, query, query, query, query, query, query, statuses, statuses, regionIds, regionIds, salesChannelIds, salesChannelIds, customerId, customerId, createdAfter, createdAfter, createdFrom, createdFrom, createdBefore, createdBefore, createdTo, createdTo, updatedAfter, updatedAfter, updatedFrom, updatedFrom, updatedBefore, updatedBefore, updatedTo, updatedTo],
     );
   }
 }

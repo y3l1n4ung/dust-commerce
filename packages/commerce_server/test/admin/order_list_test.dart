@@ -20,8 +20,8 @@ void main() {
   test('order list accepts generated-client empty optional filters', () async {
     final token = await harness.adminToken();
     final request = harness.client.get(
-      '/admin/orders?q=&status=&region_id=&sales_channel_id=&created_at='
-      '&updated_at=&order=-created_at&limit=20&offset=0',
+      '/admin/orders?q=&status=&region_id=&sales_channel_id=&customer_id='
+      '&created_at=&updated_at=&order=-created_at&limit=20&offset=0',
     )..bearer(token);
 
     final response = await request.send();
@@ -94,6 +94,20 @@ void main() {
     expect(order, containsPair('country_code', 'dk'));
   });
 
+  test('order list scopes order history to one customer id', () async {
+    final request = harness.client.get(
+      '/admin/orders?customer_id=cus_ada&limit=10',
+    )..bearer(await harness.adminToken());
+
+    final response = await request.send();
+
+    response.assertOk();
+    final json = response.json! as Map<String, Object?>;
+    expect(json, containsPair('count', 1));
+    final orders = json['orders']! as List<Object?>;
+    expect(orders.single, containsPair('id', 'ord_1001'));
+  });
+
   test('order list rejects filters and order keys outside its allowlist',
       () async {
     final token = await harness.adminToken();
@@ -101,6 +115,7 @@ void main() {
       'status=deleted',
       'order=total',
       'region_id=bad%20id',
+      'customer_id=bad%20id',
       'created_at=tomorrow',
     ]) {
       final request = harness.client.get('/admin/orders?$query')..bearer(token);

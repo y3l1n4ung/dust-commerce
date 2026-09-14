@@ -10,6 +10,7 @@ Future<Result<AdminOrderListResponse, SqlxError>> listAdminOrders(
   required List<AdminOrderStatus> statuses,
   required List<String> regionIds,
   required List<String> salesChannelIds,
+  required Option<String> customerId,
   required AdminDateFilter createdAt,
   required AdminDateFilter updatedAt,
   required AdminOrderOrder order,
@@ -25,6 +26,7 @@ Future<Result<AdminOrderListResponse, SqlxError>> listAdminOrders(
         .join(','),
     regionIds.join(','),
     salesChannelIds.join(','),
+    _optionalValue(customerId),
     _value(createdAt.greaterThan),
     _value(createdAt.greaterThanOrEqual),
     _value(createdAt.lessThan),
@@ -45,6 +47,7 @@ Future<Result<AdminOrderListResponse, SqlxError>> listAdminOrders(
         .join(','),
     regionIds.join(','),
     salesChannelIds.join(','),
+    _optionalValue(customerId),
     _value(createdAt.greaterThan),
     _value(createdAt.greaterThanOrEqual),
     _value(createdAt.lessThan),
@@ -65,5 +68,10 @@ Future<Result<AdminOrderListResponse, SqlxError>> listAdminOrders(
 
 String _value(Option<DateTime> value) => switch (value) {
       Some(value: final instant) => instant.toIso8601String(),
+      None() => '',
+    };
+
+String _optionalValue(Option<String> value) => switch (value) {
+      Some(:final value) => value,
       None() => '',
     };

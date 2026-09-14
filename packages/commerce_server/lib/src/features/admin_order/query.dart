@@ -9,6 +9,7 @@ final class AdminOrderQuery {
     required this.statuses,
     required this.regionIds,
     required this.salesChannelIds,
+    required this.customerId,
     required this.createdAt,
     required this.updatedAt,
     required this.order,
@@ -16,6 +17,9 @@ final class AdminOrderQuery {
 
   /// Order creation-time bounds.
   final AdminDateFilter createdAt;
+
+  /// Customer owner constraint used by the customer-detail order section.
+  final Option<String> customerId;
 
   /// Allowlisted table ordering.
   final AdminOrderOrder order;
@@ -48,6 +52,8 @@ Result<AdminOrderQuery, Rejection> adminOrderQueryOf(Request request) {
     'sales channel',
   );
   if (salesChannelIds case Err(:final error)) return Err(error);
+  final customerId = _customerId(request);
+  if (customerId case Err(:final error)) return Err(error);
   final createdAt = _date(request, 'created_at');
   if (createdAt case Err(:final error)) return Err(error);
   final updatedAt = _date(request, 'updated_at');
@@ -63,10 +69,21 @@ Result<AdminOrderQuery, Rejection> adminOrderQueryOf(Request request) {
     statuses: (statuses as Ok<List<AdminOrderStatus>, Rejection>).value,
     regionIds: (regionIds as Ok<List<String>, Rejection>).value,
     salesChannelIds: (salesChannelIds as Ok<List<String>, Rejection>).value,
+    customerId: (customerId as Ok<Option<String>, Rejection>).value,
     createdAt: (createdAt as Ok<AdminDateFilter, Rejection>).value,
     updatedAt: (updatedAt as Ok<AdminDateFilter, Rejection>).value,
     order: (order as Some<AdminOrderOrder>).value,
   ));
+}
+
+Result<Option<String>, Rejection> _customerId(Request request) {
+  final value =
+      (request.requestedUri.queryParameters['customer_id'] ?? '').trim();
+  if (value.isEmpty) return const Ok(None());
+  if (!RegExp(r'^[A-Za-z0-9_:-]{1,100}$').hasMatch(value)) {
+    return const Err(Rejection.badRequest('Invalid customer id'));
+  }
+  return Ok(Some(value));
 }
 
 Result<AdminDateFilter, Rejection> _date(Request request, String name) {
