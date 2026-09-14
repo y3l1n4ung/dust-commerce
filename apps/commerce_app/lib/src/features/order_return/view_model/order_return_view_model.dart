@@ -8,16 +8,24 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'order_return_view_model.g.dart';
+part 'order_return_failure.dart';
 part 'order_return_preparation.dart';
 part 'order_return_reasons.dart';
 
 /// Dependencies for the authenticated customer return form.
 final class OrderReturnViewModelArgs extends ViewModelArgs {
   /// Creates return-request dependencies.
-  const OrderReturnViewModelArgs({required this.api, super.observer});
+  const OrderReturnViewModelArgs({
+    required this.api,
+    this.onCreated = _ignoreCreatedReturn,
+    super.observer,
+  });
 
   /// Generated Store API with authorization attached by Dio.
   final CommerceApi api;
+
+  /// Publishes one authoritative acknowledgement to sibling return state.
+  final void Function(OrderReturnView) onCreated;
 }
 
 /// Owns item selection and one authenticated return-request operation.
@@ -137,6 +145,7 @@ final class OrderReturnViewModel extends $OrderReturnViewModel {
         status: OrderReturnRequestStatus.succeeded,
         request: Some(response),
       ));
+      args.onCreated(response);
     } on Object catch (error) {
       if (generation != _generation) return;
       emit(state.copyWith(
@@ -163,14 +172,4 @@ final class OrderReturnViewModel extends $OrderReturnViewModel {
   void _set(OrderReturnRequestState next) => emit(next);
 }
 
-OrderReturnFailure _classifyReturnFailure(Object error) {
-  if (error is DioException) {
-    return switch (error.response?.statusCode) {
-      401 => OrderReturnFailure.unauthorized,
-      404 => OrderReturnFailure.unavailable,
-      409 || 422 => OrderReturnFailure.notEligible,
-      _ => OrderReturnFailure.retryable,
-    };
-  }
-  return OrderReturnFailure.retryable;
-}
+void _ignoreCreatedReturn(OrderReturnView _) {}

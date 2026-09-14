@@ -208,6 +208,32 @@
   "@account_return_failed": {
     "description": "Retryable return-request failure."
   },
+  "account_return_history": "Return history",
+  "@account_return_history": {
+    "description": "Heading above customer-owned return requests."
+  },
+  "account_return_history_failed": "Return history could not be loaded.",
+  "@account_return_history_failed": {
+    "description": "Retryable customer return-history failure."
+  },
+  "account_return_history_loading": "Loading return history",
+  "@account_return_history_loading": {
+    "description": "Accessible progress label while return history loads."
+  },
+  "account_return_items": "{quantity} item(s)",
+  "@account_return_items": {
+    "description": "Total units included in one historical return.",
+    "placeholders": {"quantity": {"example": "2"}}
+  },
+  "account_return_load_more": "Show more returns",
+  "@account_return_load_more": {
+    "description": "Loads the next bounded return-history page."
+  },
+  "account_return_number": "Return #{id}",
+  "@account_return_number": {
+    "description": "Customer-facing return request number.",
+    "placeholders": {"id": {"example": "1001"}}
+  },
   "account_return_no_items": "This order has no items left to return.",
   "@account_return_no_items": {
     "description": "Explains that every order item has already been returned."
@@ -270,6 +296,26 @@
   "account_submit_return": "Submit return",
   "@account_submit_return": {
     "description": "Submits the selected return items."
+  },
+  "account_return_status_canceled": "Canceled",
+  "@account_return_status_canceled": {
+    "description": "Canceled return-history status."
+  },
+  "account_return_status_open": "Open",
+  "@account_return_status_open": {
+    "description": "Open return-history status."
+  },
+  "account_return_status_partially_received": "Partially received",
+  "@account_return_status_partially_received": {
+    "description": "Partially received return-history status."
+  },
+  "account_return_status_received": "Received",
+  "@account_return_status_received": {
+    "description": "Received return-history status."
+  },
+  "account_return_status_requested": "Requested",
+  "@account_return_status_requested": {
+    "description": "Requested return-history status."
   },
   "account_transfer_requested": "Transfer for order {id} requested",
   "@account_transfer_requested": {

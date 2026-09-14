@@ -9,6 +9,7 @@ extension on _CommerceAppState {
     _addresses.reset();
     _orderDetail.reset();
     _orders.reset();
+    _returnHistory.reset();
     _orderReturn.reset();
     _orderTransfer.reset();
     _checkout.reset();

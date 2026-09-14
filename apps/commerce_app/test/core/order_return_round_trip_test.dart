@@ -19,10 +19,10 @@ void main() {
     await seedRoundTripCatalog(database);
     final server = await TestClient.serve(buildApp(database));
     final sessions = MemoryAuthSessionStore();
-    final api = CommerceApi(
-      Dio()..interceptors.add(AuthorizationInterceptor(sessions: sessions)),
-      baseUrl: server.origin,
-    );
+    final dio = Dio()
+      ..interceptors.add(AuthorizationInterceptor(sessions: sessions));
+    final api = CommerceApi(dio, baseUrl: server.origin);
+    final historyApi = OrderReturnHistoryApi(dio, baseUrl: server.origin);
     addTearDown(() async {
       await server.close();
       await database.close();
@@ -85,5 +85,9 @@ void main() {
     expect(returned.status, OrderReturnStatus.requested);
     expect(returned.itemQuantity, 1);
     expect(returned.requestedAt.isUtc, isTrue);
+
+    final history = await historyApi.returns(paid.id);
+    expect(history.count, 1);
+    expect(history.returns.single, returned);
   });
 }

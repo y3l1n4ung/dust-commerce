@@ -7,6 +7,8 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 part 'account_identity.dart';
+part 'storefront_preparation.dart';
+part 'storefront_root.dart';
 part 'view_model_scopes.dart';
 
 /// The storefront application and its long-lived state owners.
@@ -14,6 +16,7 @@ class CommerceApp extends StatefulWidget {
   /// Creates a [CommerceApp].
   const CommerceApp({
     required this.api,
+    required this.returnHistoryApi,
     required this.sessions,
     required this.countries,
     required this.locales,
@@ -23,6 +26,9 @@ class CommerceApp extends StatefulWidget {
 
   /// The storefront API every view model is given.
   final CommerceApi api;
+
+  /// Focused return-history API sharing the same Dio bearer interceptor.
+  final OrderReturnHistoryApi returnHistoryApi;
 
   /// Secure customer-session persistence shared with Dio authorization.
   final AuthSessionStore sessions;
@@ -45,6 +51,7 @@ class _CommerceAppState extends State<CommerceApp> {
   late final AddressBookViewModel _addresses;
   late final AccountOrderDetailViewModel _orderDetail;
   late final AccountOrdersViewModel _orders;
+  late final OrderReturnHistoryViewModel _returnHistory;
   late final OrderReturnViewModel _orderReturn;
   late final OrderTransferViewModel _orderTransfer;
   late final CartViewModel _cart;
@@ -73,8 +80,14 @@ class _CommerceAppState extends State<CommerceApp> {
     _orderDetail = AccountOrderDetailViewModel(
       AccountOrderDetailViewModelArgs(api: widget.api),
     );
+    _returnHistory = OrderReturnHistoryViewModel(
+      OrderReturnHistoryViewModelArgs(api: widget.returnHistoryApi),
+    );
     _orderReturn = OrderReturnViewModel(
-      OrderReturnViewModelArgs(api: widget.api),
+      OrderReturnViewModelArgs(
+        api: widget.api,
+        onCreated: _returnHistory.record,
+      ),
     );
     _orderTransfer = OrderTransferViewModel(
       OrderTransferViewModelArgs(api: widget.api),
@@ -123,12 +136,8 @@ class _CommerceAppState extends State<CommerceApp> {
     unawaited(_prepareStorefront());
   }
 
-  Future<void> _prepareStorefront() async {
-    await _shell.load();
-    if (!mounted) return;
-    _i18n.setLocale(
-      _shell.state.localeOr(appI18nFallbackLocale),
-    );
+  void _showStorefront() {
+    _i18n.setLocale(_shell.state.localeOr(appI18nFallbackLocale));
     setState(() => _routerReady = true);
   }
 
@@ -142,6 +151,7 @@ class _CommerceAppState extends State<CommerceApp> {
     _addresses.dispose();
     _orderDetail.dispose();
     _orders.dispose();
+    _returnHistory.dispose();
     _orderReturn.dispose();
     _orderTransfer.dispose();
     _account.dispose();
@@ -151,33 +161,20 @@ class _CommerceAppState extends State<CommerceApp> {
   @override
   Widget build(BuildContext context) {
     if (!_routerReady) return const SizedBox.shrink();
-    final i18n = I18nScope.of(context);
-    final app = MaterialApp.router(
-      onGenerateTitle: (context) => context.tr(
-        'shop_brand',
-        defaultText: 'Morrow',
-      ),
-      debugShowCheckedModeBanner: false,
-      locale: appI18nLocaleOf(i18n.locale),
-      supportedLocales: appI18nSupportedLocales,
-      localizationsDelegates: appI18nLocalizationsDelegates,
-      theme: StoreTheme.light,
-      routerConfig: _routerConfig,
-    );
-
-    return _StorefrontScopes(
+    return _StorefrontRoot(
       api: widget.api,
       account: _account,
       addresses: _addresses,
       orderDetail: _orderDetail,
       orders: _orders,
+      returnHistory: _returnHistory,
       orderReturn: _orderReturn,
       orderTransfer: _orderTransfer,
       cart: _cart,
       checkout: _checkout,
       emailVerification: _emailVerification,
       shell: _shell,
-      child: app,
+      routerConfig: _routerConfig,
     );
   }
 }

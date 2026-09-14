@@ -208,6 +208,32 @@
   "@account_return_failed": {
     "description": "Retryable return-request failure."
   },
+  "account_return_history": "ပြန်အပ်မှုမှတ်တမ်း",
+  "@account_return_history": {
+    "description": "Heading above customer-owned return requests."
+  },
+  "account_return_history_failed": "ပြန်အပ်မှုမှတ်တမ်းကို မတင်နိုင်ပါ။",
+  "@account_return_history_failed": {
+    "description": "Retryable customer return-history failure."
+  },
+  "account_return_history_loading": "ပြန်အပ်မှုမှတ်တမ်း တင်နေသည်",
+  "@account_return_history_loading": {
+    "description": "Accessible progress label while return history loads."
+  },
+  "account_return_items": "ပစ္စည်း {quantity} ခု",
+  "@account_return_items": {
+    "description": "Total units included in one historical return.",
+    "placeholders": {"quantity": {"example": "2"}}
+  },
+  "account_return_load_more": "နောက်ထပ် ပြန်အပ်မှုများ ပြမည်",
+  "@account_return_load_more": {
+    "description": "Loads the next bounded return-history page."
+  },
+  "account_return_number": "ပြန်အပ်မှု #{id}",
+  "@account_return_number": {
+    "description": "Customer-facing return request number.",
+    "placeholders": {"id": {"example": "1001"}}
+  },
   "account_return_no_items": "ဤအော်ဒါတွင် ပြန်အပ်ရန် ပစ္စည်း မကျန်တော့ပါ။",
   "@account_return_no_items": {
     "description": "Explains that every order item has already been returned."
@@ -270,6 +296,26 @@
   "account_submit_return": "ပြန်အပ်ရန် တင်သွင်းမည်",
   "@account_submit_return": {
     "description": "Submits the selected return items."
+  },
+  "account_return_status_canceled": "ပယ်ဖျက်ပြီး",
+  "@account_return_status_canceled": {
+    "description": "Canceled return-history status."
+  },
+  "account_return_status_open": "စစ်ဆေးနေသည်",
+  "@account_return_status_open": {
+    "description": "Open return-history status."
+  },
+  "account_return_status_partially_received": "တစ်စိတ်တစ်ပိုင်း လက်ခံရရှိပြီး",
+  "@account_return_status_partially_received": {
+    "description": "Partially received return-history status."
+  },
+  "account_return_status_received": "လက်ခံရရှိပြီး",
+  "@account_return_status_received": {
+    "description": "Received return-history status."
+  },
+  "account_return_status_requested": "တောင်းဆိုထားသည်",
+  "@account_return_status_requested": {
+    "description": "Requested return-history status."
   },
   "account_transfer_requested": "အော်ဒါ {id} အတွက် လွှဲပြောင်းရန် တောင်းဆိုပြီးပါပြီ",
   "@account_transfer_requested": {

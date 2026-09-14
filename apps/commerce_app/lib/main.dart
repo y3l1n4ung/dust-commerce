@@ -27,6 +27,7 @@ void main() {
     AppI18n(
       child: CommerceApp(
         api: CommerceApi(dio, baseUrl: baseUrl),
+        returnHistoryApi: OrderReturnHistoryApi(dio, baseUrl: baseUrl),
         sessions: sessions,
         countries: SecureCountryPreferenceStore(),
         locales: SecureLocalePreferenceStore(),
