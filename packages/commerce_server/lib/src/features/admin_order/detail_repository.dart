@@ -39,23 +39,36 @@ SELECT order_row.id, order_row.region_id, order_row.display_id, order_row.email,
        END AS fulfillment_status,
        order_row.shipping_name, order_row.promotion_code, order_row.placed_at,
        order_row.created_at, order_row.updated_at,
-       payment.provider AS payment_provider, payment.amount AS payment_amount,
+       payment.id AS payment_id, payment.provider AS payment_provider,
+       payment.amount AS payment_amount,
        payment.status AS payment_record_status, payment.created_at AS payment_created_at,
        payment.captured_at AS payment_captured_at,
+       coalesce((SELECT sum(refund.amount) FROM refunds refund
+                 WHERE refund.payment_collection_id = payment.id
+                   AND refund.deleted_at IS NULL), 0) AS payment_refunded_amount,
+       coalesce((SELECT json_group_array(json_object(
+         'id', refund.id, 'amount', refund.amount,
+         'refund_reason', CASE WHEN refund.reason_id IS NULL THEN NULL ELSE
+           json_object('id', refund.reason_id, 'label', refund.reason_label,
+             'code', refund.reason_code, 'description', refund.reason_description) END,
+         'note', refund.note, 'created_by', refund.created_by, 'created_at', refund.created_at
+       )) FROM (
+         SELECT record.*, reason.id AS reason_id, reason.label AS reason_label,
+                reason.code AS reason_code, reason.description AS reason_description
+         FROM refunds record
+         LEFT JOIN refund_reasons reason ON reason.id = record.refund_reason_id
+         WHERE record.payment_collection_id = payment.id
+           AND record.deleted_at IS NULL
+         ORDER BY record.created_at, record.id
+       ) refund), '[]') AS payment_refunds_json,
        coalesce((
          SELECT json_group_array(json_object(
-           'id', item.id,
-           'variant_id', item.variant_id,
-           'product_id', item.product_id,
+           'id', item.id, 'variant_id', item.variant_id, 'product_id', item.product_id,
            'shipping_profile_id', item.shipping_profile_id,
-           'product_handle', item.product_handle,
-           'thumbnail', item.thumbnail,
-           'title', item.title,
-           'variant_title', item.variant_title,
-           'unit_amount', item.unit_amount,
-           'currency_code', item.currency_code,
-           'quantity', item.quantity,
-           'created_at', item.created_at
+           'product_handle', item.product_handle, 'thumbnail', item.thumbnail,
+           'title', item.title, 'variant_title', item.variant_title,
+           'unit_amount', item.unit_amount, 'currency_code', item.currency_code,
+           'quantity', item.quantity, 'created_at', item.created_at
          ))
          FROM (
            SELECT item_row.*, profile_link.shipping_profile_id
@@ -69,27 +82,21 @@ SELECT order_row.id, order_row.region_id, order_row.display_id, order_row.email,
        ), '[]') AS items_json,
        coalesce((
          SELECT json_group_array(json_object(
-           'id', fulfillment.id,
-           'location_id', fulfillment.location_id,
+           'id', fulfillment.id, 'location_id', fulfillment.location_id,
            'provider_id', fulfillment.provider_id,
            'shipping_option_id', fulfillment.shipping_option_id,
            'requires_shipping', json(iif(
              fulfillment.requires_shipping = 1, 'true', 'false'
            )),
-           'packed_at', fulfillment.packed_at,
-           'shipped_at', fulfillment.shipped_at,
-           'delivered_at', fulfillment.delivered_at,
-           'canceled_at', fulfillment.canceled_at,
+           'packed_at', fulfillment.packed_at, 'shipped_at', fulfillment.shipped_at,
+           'delivered_at', fulfillment.delivered_at, 'canceled_at', fulfillment.canceled_at,
            'data', CASE WHEN fulfillment.data IS NULL THEN NULL
                         ELSE json(fulfillment.data) END,
            'metadata', CASE WHEN fulfillment.metadata IS NULL THEN NULL
                             ELSE json(fulfillment.metadata) END,
-           'created_by', fulfillment.created_by,
-           'marked_shipped_by', fulfillment.marked_shipped_by,
-           'created_at', fulfillment.created_at,
-           'updated_at', fulfillment.updated_at,
-           'items', json(fulfillment.items_json),
-           'labels', json(fulfillment.labels_json)
+           'created_by', fulfillment.created_by, 'marked_shipped_by', fulfillment.marked_shipped_by,
+           'created_at', fulfillment.created_at, 'updated_at', fulfillment.updated_at,
+           'items', json(fulfillment.items_json), 'labels', json(fulfillment.labels_json)
          ))
          FROM (
            SELECT record.*, coalesce((
@@ -146,12 +153,9 @@ SELECT order_row.id, order_row.region_id, order_row.display_id, order_row.email,
          'phone', billing.phone
        ) END AS billing_address_json
 FROM orders order_row
-LEFT JOIN customers customer
-  ON customer.id = order_row.customer_id AND customer.deleted_at IS NULL
-LEFT JOIN order_addresses shipping
-  ON shipping.order_id = order_row.id AND shipping.kind = 'shipping'
-LEFT JOIN order_addresses billing
-  ON billing.order_id = order_row.id AND billing.kind = 'billing'
+LEFT JOIN customers customer ON customer.id = order_row.customer_id AND customer.deleted_at IS NULL
+LEFT JOIN order_addresses shipping ON shipping.order_id = order_row.id AND shipping.kind = 'shipping'
+LEFT JOIN order_addresses billing ON billing.order_id = order_row.id AND billing.kind = 'billing'
 LEFT JOIN payment_collections payment
   ON payment.order_id = order_row.id AND payment.deleted_at IS NULL
 LEFT JOIN (
@@ -165,7 +169,8 @@ LEFT JOIN (
          sum(iif(fulfillment.delivered_at IS NULL, 0, item.quantity))
            AS delivered_quantity
   FROM fulfillments fulfillment
-  JOIN fulfillment_items item ON item.fulfillment_id = fulfillment.id AND item.deleted_at IS NULL
+  JOIN fulfillment_items item ON item.fulfillment_id = fulfillment.id
+    AND item.deleted_at IS NULL
   WHERE fulfillment.deleted_at IS NULL AND fulfillment.canceled_at IS NULL
   GROUP BY fulfillment.order_id
 ) fulfillment_summary ON fulfillment_summary.order_id = order_row.id

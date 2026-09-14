@@ -156,6 +156,18 @@ VALUES
   ('reason_other', 'other', 'Other',
    'Another reason not listed above.')
 '''),
+  const _Statement(r'''
+INSERT OR IGNORE INTO refund_reasons (id, label, code, description)
+VALUES
+  ('refund_reason_damaged', 'Damaged', 'damaged',
+   'The delivered item was damaged or defective.'),
+  ('refund_reason_missing', 'Missing item', 'missing_item',
+   'A paid item was not included in the delivery.'),
+  ('refund_reason_goodwill', 'Goodwill', 'goodwill',
+   'A discretionary customer-service refund.'),
+  ('refund_reason_other', 'Other', 'other',
+   'Use the note to explain another refund decision.')
+'''),
 ];
 
 final class _Statement {

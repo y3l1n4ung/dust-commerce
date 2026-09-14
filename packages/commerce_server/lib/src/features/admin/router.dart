@@ -2,6 +2,7 @@ import 'package:commerce_server/src/features/admin/extractor.dart';
 import 'package:commerce_server/src/features/admin/handler/handler.dart';
 import 'package:commerce_server/src/features/admin_fulfillment_context/router.dart';
 import 'package:commerce_server/src/features/admin_order/router.dart';
+import 'package:commerce_server/src/features/admin_refund/router.dart';
 import 'package:commerce_server/src/features/admin_region/router.dart';
 import 'package:commerce_server/src/features/admin_return/router.dart';
 import 'package:commerce_server/src/features/admin_sales_channel/router.dart';
@@ -23,6 +24,7 @@ Router adminAuthRoutes() {
 Router adminRoutes() => Router()
   ..routeLayer(fromExtractor(const AdminAuth()))
   ..merge(adminOrderRoutes())
+  ..merge(adminRefundRoutes())
   ..merge(adminFulfillmentContextRoutes())
   ..merge(adminReturnRoutes())
   ..merge(adminRegionRoutes())

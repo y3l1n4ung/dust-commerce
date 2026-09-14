@@ -23,6 +23,7 @@ AdminCancelOrderTarget _$AdminCancelOrderTargetFromRow(Row row) {
     paymentProvider: row.readNullable<String>('payment_provider'),
     paymentRecordStatus: row.readNullable<String>('payment_record_status'),
     paymentAmount: row.readNullable<int>('payment_amount'),
+    refundedAmount: row.read<int>('refunded_amount'),
   );
 }
 

@@ -40,8 +40,11 @@ void main() {
       'payment_amount',
       'payment_captured_at',
       'payment_created_at',
+      'payment_id',
       'payment_provider',
       'payment_record_status',
+      'payment_refunded_amount',
+      'payment_refunds',
       'payment_status',
       'placed_at',
       'promotion_code',
@@ -59,6 +62,9 @@ void main() {
     expect(order, containsPair('customer_name', 'Ada Lovelace'));
     expect(order, containsPair('total', 5400));
     expect(order, containsPair('payment_provider', 'manual'));
+    expect(order, containsPair('payment_id', 'pay_detail'));
+    expect(order, containsPair('payment_refunded_amount', 0));
+    expect(order, containsPair('payment_refunds', isEmpty));
     expect(order, containsPair('payment_record_status', 'captured'));
     expect(order, containsPair('region_id', 'reg_eu'));
     expect(order, containsPair('shipping_option_id', 'so_standard'));

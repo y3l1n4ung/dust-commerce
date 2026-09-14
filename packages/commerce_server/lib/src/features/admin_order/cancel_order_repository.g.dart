@@ -26,6 +26,9 @@ SELECT order_row.status, order_row.payment_status, order_row.currency_code,
        payment.id AS payment_id, payment.provider AS payment_provider,
        payment.status AS payment_record_status,
        payment.amount AS payment_amount,
+       coalesce((SELECT sum(refund.amount) FROM refunds refund
+                 WHERE refund.payment_collection_id = payment.id
+                   AND refund.deleted_at IS NULL), 0) AS refunded_amount,
        (SELECT count(*) FROM fulfillments fulfillment
         WHERE fulfillment.order_id = order_row.id
           AND fulfillment.deleted_at IS NULL

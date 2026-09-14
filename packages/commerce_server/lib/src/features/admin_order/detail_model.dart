@@ -42,7 +42,10 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
     required this.shippingAddress,
     required this.billingAddress,
     required this.paymentProvider,
+    required this.paymentId,
     required this.paymentAmount,
+    required this.paymentRefundedAmount,
+    required this.paymentRefunds,
     required this.paymentRecordStatus,
     required this.paymentCreatedAt,
     required this.paymentCapturedAt,
@@ -94,11 +97,21 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   @Sqlx(rename: 'region_id')
   final String regionId;
 
-  /// Amount recorded by the provider adapter, when present.
   @Sqlx(rename: 'payment_amount')
   final int? paymentAmount;
 
-  /// Provider capture instant, when funds moved.
+  /// Stable payment route id, absent before payment starts.
+  @Sqlx(rename: 'payment_id')
+  final String? paymentId;
+
+  /// Sum of active refund audits in minor units.
+  @Sqlx(rename: 'payment_refunded_amount')
+  final int paymentRefundedAmount;
+
+  /// Ordered independent refund history kept outside Store contracts.
+  @Sqlx(rename: 'payment_refunds_json', tryFrom: _AdminOrderRefundsFromString())
+  final List<AdminRefund> paymentRefunds;
+
   @Sqlx(
     rename: 'payment_captured_at',
     defaultValue: null,
@@ -106,7 +119,6 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   )
   final DateTime? paymentCapturedAt;
 
-  /// Provider record creation instant, when present.
   @Sqlx(
     rename: 'payment_created_at',
     defaultValue: null,
@@ -114,11 +126,9 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   )
   final DateTime? paymentCreatedAt;
 
-  /// Public payment adapter identifier, when present.
   @Sqlx(rename: 'payment_provider')
   final String? paymentProvider;
 
-  /// Provider payment record lifecycle, when present.
   @SerDe(using: AdminOrderPaymentRecordStatusCodec())
   @Sqlx(
     rename: 'payment_record_status',
@@ -127,7 +137,6 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   )
   final AdminOrderPaymentRecordStatus? paymentRecordStatus;
 
-  /// Order-level payment lifecycle.
   @SerDe(using: AdminOrderPaymentStatusCodec())
   @Sqlx(
     rename: 'payment_status',
@@ -135,11 +144,9 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   )
   final AdminOrderPaymentStatus paymentStatus;
 
-  /// Business placement instant.
   @Sqlx(rename: 'placed_at', tryFrom: _AdminOrderDateTimeFromString())
   final DateTime placedAt;
 
-  /// Applied promotion code, when one was frozen.
   @Sqlx(rename: 'promotion_code')
   final String? promotionCode;
 
@@ -151,30 +158,22 @@ final class AdminOrderDetailResponse with _$AdminOrderDetailResponse {
   )
   final AdminOrderAddressResponse? shippingAddress;
 
-  /// Selected delivery label, when one was frozen.
   @Sqlx(rename: 'shipping_name')
   final String? shippingName;
 
-  /// Original checkout shipping method, when the order required delivery.
   @Sqlx(rename: 'shipping_option_id')
   final String? shippingOptionId;
 
-  /// Frozen delivery amount in minor units.
   @Sqlx(rename: 'shipping_total')
   final int shippingTotal;
 
-  /// Current order lifecycle.
   @SerDe(using: AdminOrderStatusCodec())
   @Sqlx(tryFrom: _AdminOrderStatusFromString())
   final AdminOrderStatus status;
-
   final int subtotal;
-
   final int tax;
-
   final int total;
 
-  /// Database-generated last mutation instant.
   @Sqlx(rename: 'updated_at', tryFrom: _AdminOrderDateTimeFromString())
   final DateTime updatedAt;
 }

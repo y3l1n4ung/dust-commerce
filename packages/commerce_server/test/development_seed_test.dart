@@ -48,6 +48,7 @@ void main() {
     expect(await _count(database, 'sales_channels'), 2);
     expect(await _count(database, 'region_payment_providers'), 2);
     expect(await _count(database, 'return_reasons'), 5);
+    expect(await _count(database, 'refund_reasons'), 4);
     expect(
       await _where(
         database,

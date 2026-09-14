@@ -15,6 +15,7 @@ final class AdminCancelOrderTarget {
     required this.paymentProvider,
     required this.paymentRecordStatus,
     required this.paymentAmount,
+    required this.refundedAmount,
   });
 
   /// Fulfillments that have not reached their canceled terminal state.
@@ -40,6 +41,10 @@ final class AdminCancelOrderTarget {
   /// Collection lifecycle absent before payment starts.
   @Sqlx(rename: 'payment_record_status')
   final String? paymentRecordStatus;
+
+  /// Active refunds already returned before cancellation.
+  @Sqlx(rename: 'refunded_amount')
+  final int refundedAmount;
 
   /// Order-level payment lifecycle used to validate reconciliation.
   @Sqlx(rename: 'payment_status')

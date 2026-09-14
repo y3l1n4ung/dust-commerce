@@ -53,7 +53,10 @@ AdminOrderDetailResponse _$AdminOrderDetailResponseFromRow(Row row) {
     shippingAddress: row.readNullable<Object?>('shipping_address_json') == null ? null : _AdminOrderAddressFromString().decode(row.read<String>('shipping_address_json')),
     billingAddress: row.readNullable<Object?>('billing_address_json') == null ? null : _AdminOrderAddressFromString().decode(row.read<String>('billing_address_json')),
     paymentProvider: row.readNullable<String>('payment_provider'),
+    paymentId: row.readNullable<String>('payment_id'),
     paymentAmount: row.readNullable<int>('payment_amount'),
+    paymentRefundedAmount: row.read<int>('payment_refunded_amount'),
+    paymentRefunds: _AdminOrderRefundsFromString().decode(row.read<String>('payment_refunds_json')),
     paymentRecordStatus: row.readNullable<Object?>('payment_record_status') == null ? null : _AdminOrderPaymentRecordStatusFromString().decode(row.read<String>('payment_record_status')),
     paymentCreatedAt: row.readNullable<Object?>('payment_created_at') == null ? null : _AdminOrderDateTimeFromString().decode(row.read<String>('payment_created_at')),
     paymentCapturedAt: row.readNullable<Object?>('payment_captured_at') == null ? null : _AdminOrderDateTimeFromString().decode(row.read<String>('payment_captured_at')),
@@ -110,6 +113,11 @@ Map<String, Object?> _$AdminOrderDetailResponseSerialize(AdminOrderDetailRespons
         .toList(),
     'region_id': instance.regionId,
     'payment_amount': instance.paymentAmount,
+    'payment_id': instance.paymentId,
+    'payment_refunded_amount': instance.paymentRefundedAmount,
+    'payment_refunds': instance.paymentRefunds
+        .map((item) => item.toJson())
+        .toList(),
     'payment_captured_at': instance.paymentCapturedAt == null
         ? null
         : (instance.paymentCapturedAt!).toIso8601String(),

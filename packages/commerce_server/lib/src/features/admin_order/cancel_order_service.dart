@@ -115,11 +115,15 @@ Future<Result<_PaymentDecision, SqlxError>> _cancelPayment(
       order.paymentStatus == 'refunded') {
     return const Ok(_PaymentDenied(AdminCancelOrderFailure.invalidPayment));
   }
-  if (captured && order.paymentAmount! > 0) {
+  if (captured) {
+    final refundable = order.paymentAmount! - order.refundedAmount;
+    if (order.refundedAmount < 0 || refundable <= 0) {
+      return const Ok(_PaymentDenied(AdminCancelOrderFailure.invalidPayment));
+    }
     final refund = await writes.insertRefund(
       nextId(),
       paymentId,
-      order.paymentAmount!,
+      refundable,
       order.currencyCode,
       adminId,
     );
