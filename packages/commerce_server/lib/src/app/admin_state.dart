@@ -55,6 +55,7 @@ extension AdminStateRegistration on Router {
       details: AdminCustomerDetailRepository(executor),
       creates: AdminCustomerCreateRepository(executor),
       clock: clock,
+      database: database,
     ));
     withState(AdminReturnDeps(
       database: database,

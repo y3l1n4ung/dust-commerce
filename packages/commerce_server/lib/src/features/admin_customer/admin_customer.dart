@@ -17,3 +17,8 @@ export 'query.dart';
 export 'repository.dart';
 export 'router.dart';
 export 'service.dart';
+export 'update_failure.dart';
+export 'update_handler.dart';
+export 'update_outcome.dart';
+export 'update_repository.dart';
+export 'update_service.dart';
