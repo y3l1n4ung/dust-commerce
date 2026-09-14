@@ -506,6 +506,17 @@ raster is available, so pixel parity is not claimed.
   non-widget Admin tests and all 424 server tests pass; analyzer, Dust checks,
   the widget-composition baseline and release web build are clean. Every new
   shipment subtree is a dedicated widget class; no widget test was added.
+- Fulfillment delivery follows the same pinned order-detail source. Live QA on
+  order #1 opened the `Are you sure?` prompt, rendered Medusa's irreversible
+  warning, showed the unavailable notification switch disabled, and continued
+  once. The order and fulfillment badges refreshed from Shipped to Delivered,
+  while SQLite retained `shipped_at`, `MORROW-TRACK-001` and generated UTC
+  `delivered_at` value `2026-09-14T00:10:07.063Z`. The terminal card removed
+  both lifecycle actions. All 100 non-widget Admin tests and all 429 server
+  tests pass; analyzer, Dust checks and the Admin release web build are clean.
+  The action and prompt are dedicated widget classes; no widget test was added.
+  Accessibility enablement emitted Flutter route-label warnings before the
+  mutation, but delivery emitted no new warning or error.
 
 ## Open findings
 
@@ -533,8 +544,9 @@ raster is available, so pixel parity is not claimed.
   Medusa order-list and order-detail captures before pixel parity can be
   claimed. Sales-channel discovery, order query behavior and the source-shaped
   visible filter are implemented, while channel mutations remain separate.
-  Fulfillment and shipment behavior now pass live QA against the pinned source
-  structure, but the shipment form also lacks a same-state Medusa capture.
+  Fulfillment, shipment and delivery behavior now pass live QA against the
+  pinned source structure, but their forms and prompt also lack same-state
+  Medusa captures.
   Region and Order Export have source-structure and live-behavior coverage but
   also lack same-state Medusa captures.
 - P2 — Shipping-profile assignment passes source-structure and live-behavior
@@ -551,9 +563,9 @@ also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
 live end-to-end behavior checks. Product query behavior, discovery and visible
 controls pass API, state, accessibility and same-state live comparison.
-The order list, region filtering, detail, fulfillment shipment and filtered CSV
-export pass protected API, generated-client, responsive layout and live-data
-behavior checks against the pinned source structure.
+The order list, region filtering, detail, fulfillment shipment and delivery,
+and filtered CSV export pass protected API, generated-client, responsive layout
+and live-data behavior checks against the pinned source structure.
 The product-list sales-channel slice passes its typed contract, direct SQLx
 projection, source-shaped truncation/tooltip behavior and clean-start browser
 QA. Its whole-screen density and thumbnail differences remain an open visual
