@@ -93,6 +93,11 @@
   `packages/admin/dashboard/src/routes/customers/customer-detail/customer-detail.tsx`
   plus its General, Addresses and Orders section components and the shared
   two-column layout at the pinned commit.
+- Customer-group edit source:
+  `packages/admin/dashboard/src/routes/customer-groups/customer-group-detail/components/customer-group-general-section/customer-group-general-section.tsx`,
+  `customer-group-edit/customer-group-edit.tsx`, its edit form, and
+  `packages/medusa/src/api/admin/customer-groups/[id]/route.ts` at the pinned
+  commit.
 - Rendered reference: Medusa's official Admin product-list image in the User
   Guide, official product-detail image in the Edit Product guide, and official
   Details-step image in the Create Product guide.
@@ -114,6 +119,11 @@ spacing, hierarchy and responsive fidelity rather than pixel identity.
 The general-edit comparison uses the pinned RouteDrawer implementation as
 source truth: right-side drawer, Medusa field order, lifecycle selector,
 discountable switch box, and sticky Cancel/Save footer.
+
+The customer-group edit pass uses the pinned RouteDrawer and one-field form as
+source truth. The running Admin was exercised at its compact viewport and at
+`1440 x 1000`; no equivalent same-state Medusa raster was available, so this
+proves source structure and live behavior rather than pixel parity.
 
 The product-create comparison puts the official Medusa Details-step reference
 and the running Morrow form into one `2560 x 720` image. Both sides use a
@@ -557,6 +567,13 @@ raster is available, so pixel parity is not claimed.
   error. Edit/delete, address mutations and groups stay disabled or absent
   rather than pretending the API exists. No equivalent live Medusa customer
   fixture was available, so same-state pixel parity is not claimed.
+- Customer-group edit now follows the pinned General-card action and 560 px
+  right-side drawer. Live QA opened Edit, validated empty input, renamed VIP
+  Customers to VIP Members, restored the normalized canonical name, observed
+  the exact success message and confirmed SQLite advanced its database-owned
+  timestamp. Compact and `1440 x 1000` layouts, Escape dismissal and final
+  browser logs passed. All 146 non-widget Admin and 527 server tests pass; both
+  Dust modes and analyzers are clean, and no widget test was added.
 
 ## Open findings
 
@@ -608,10 +625,10 @@ The order list, region filtering, detail, fulfillment shipment, delivery,
 cancellation, independent manual-payment refunds and filtered CSV export pass
 protected API, generated-client, responsive layout and live-data behavior
 checks against the pinned source structure.
-The customer list and read-only detail pass protected API, explicit-contract,
-direct-SQLx, responsive layout and Store-to-Admin live-data checks against the
-pinned source structure. Customer mutations, groups and same-state pixel parity
-remain open.
+The customer list, detail, mutations, and customer-group list/create/detail/edit
+pass protected API, explicit-contract, direct-SQLx, responsive layout and live
+data checks against the pinned source structure. Group deletion, membership
+mutation, address update and same-state customer raster parity remain open.
 The product-list sales-channel slice passes its typed contract, direct SQLx
 projection, source-shaped truncation/tooltip behavior and clean-start browser
 QA. Its whole-screen density and thumbnail differences remain an open visual
