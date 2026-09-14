@@ -1,4 +1,6 @@
 import 'package:admin_app/src/customer/admin_customer_page.dart';
+import 'package:admin_app/src/customer/admin_customer_detail_page.dart';
+import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_view_model.dart';
 import 'package:admin_app/src/product/admin_product_page.dart';
 import 'package:admin_app/src/product/admin_product_detail_page.dart';
@@ -91,6 +93,8 @@ final class _AdminHomeState extends State<_AdminHome>
   _AdminRoute _route = _AdminRoute.products;
   @override
   String _selectedId = '';
+  @override
+  String _selectedCustomerId = '';
 
   @override
   void initState() {
@@ -120,6 +124,8 @@ final class _AdminHomeState extends State<_AdminHome>
 
 enum _AdminRoute {
   customers,
+  customer,
+  customerOrder,
   orders,
   order,
   products,

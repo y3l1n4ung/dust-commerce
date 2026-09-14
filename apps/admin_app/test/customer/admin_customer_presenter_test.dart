@@ -15,6 +15,18 @@ void main() {
     expect(adminCustomerAccount(_customer(hasAccount: true)), 'Registered');
     expect(adminCustomerAccount(_customer()), 'Guest');
   });
+
+  test('presents detail and address absence without nullable UI checks', () {
+    final detail = _detail();
+
+    expect(adminCustomerDetailName(detail), 'Ada Lovelace');
+    expect(adminCustomerDetailText(detail.companyName), '—');
+    expect(adminCustomerAddressTitle(detail.addresses.single), 'Ada Lovelace');
+    expect(
+      adminCustomerAddressLines(detail.addresses.single),
+      '12 St James Square\nLondon, SW1Y 4LB\nGB',
+    );
+  });
 }
 
 AdminCustomer _customer({
@@ -30,4 +42,33 @@ AdminCustomer _customer({
       hasAccount: hasAccount,
       createdAt: DateTime.utc(2026, 9, 14),
       updatedAt: DateTime.utc(2026, 9, 14),
+    );
+
+AdminCustomerDetail _detail() => AdminCustomerDetail(
+      id: 'cus_ada',
+      emailValue: 'ada@example.com',
+      companyNameValue: null,
+      firstNameValue: 'Ada',
+      lastNameValue: 'Lovelace',
+      phoneValue: null,
+      hasAccount: true,
+      createdAt: DateTime.utc(2026, 9, 14),
+      updatedAt: DateTime.utc(2026, 9, 14),
+      addresses: const [
+        AdminCustomerAddress(
+          id: 'addr_ada',
+          firstName: 'Ada',
+          lastName: 'Lovelace',
+          line1: '12 St James Square',
+          city: 'London',
+          postalCode: 'SW1Y 4LB',
+          countryCode: 'gb',
+          isDefaultShipping: true,
+          isDefaultBilling: false,
+          companyValue: null,
+          phoneValue: null,
+          line2Value: null,
+          provinceValue: null,
+        ),
+      ],
     );

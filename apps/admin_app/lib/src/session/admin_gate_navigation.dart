@@ -6,6 +6,8 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
     final optionDetail =
         context.watchAdminProductOptionDetailViewModel().value.productOption;
     final orderDetail = context.watchAdminOrderDetailViewModel().value.order;
+    final customerDetail =
+        context.watchAdminCustomerDetailViewModel().value.customer;
     final typeDetail =
         context.watchAdminProductTypeDetailViewModel().value.productType;
     final profileDetail = context
@@ -17,6 +19,15 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
       themes: widget.themes,
       title: switch (_route) {
         _AdminRoute.customers => 'Customers',
+        _AdminRoute.customer => switch (customerDetail) {
+            Some(value: final customer) =>
+              'Customers  ›  ${customer.email.match(some: (value) => value, none: () => customer.id)}',
+            None() => 'Customers',
+          },
+        _AdminRoute.customerOrder => switch (orderDetail) {
+            Some(value: final order) => 'Customers  ›  #${order.displayId}',
+            None() => 'Customers',
+          },
         _AdminRoute.orders => 'Orders',
         _AdminRoute.order => switch (orderDetail) {
             Some(value: final order) => 'Orders  ›  #${order.displayId}',
@@ -48,7 +59,10 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
       onProductTypesRequested: _showProductTypes,
       onShippingProfilesRequested: _showShippingProfiles,
       selectedSection: switch (_route) {
-        _AdminRoute.customers => AdminShellSection.customers,
+        _AdminRoute.customers ||
+        _AdminRoute.customer ||
+        _AdminRoute.customerOrder =>
+          AdminShellSection.customers,
         _AdminRoute.orders || _AdminRoute.order => AdminShellSection.orders,
         _AdminRoute.products ||
         _AdminRoute.product =>
@@ -69,6 +83,16 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
       child: switch (_route) {
         _AdminRoute.customers => AdminCustomerPage(
             searchFocus: _customerSearchFocus,
+            onOpen: _showCustomer,
+          ),
+        _AdminRoute.customer => AdminCustomerDetailPage(
+            customerId: selectedIdForNavigation,
+            onBack: _showCustomers,
+            onOpenOrder: _showCustomerOrder,
+          ),
+        _AdminRoute.customerOrder => AdminOrderDetailPage(
+            orderId: selectedIdForNavigation,
+            onBack: () => _showCustomer(selectedCustomerIdForNavigation),
           ),
         _AdminRoute.orders => AdminOrderPage(
             searchFocus: _orderSearchFocus,

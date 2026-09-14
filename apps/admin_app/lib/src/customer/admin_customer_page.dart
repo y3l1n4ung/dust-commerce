@@ -8,7 +8,14 @@ import 'package:flutter/material.dart';
 /// Medusa-shaped customer list backed by the protected Admin API.
 final class AdminCustomerPage extends StatelessWidget {
   /// Creates the customer list route.
-  const AdminCustomerPage({required this.searchFocus, super.key});
+  const AdminCustomerPage({
+    required this.searchFocus,
+    required this.onOpen,
+    super.key,
+  });
+
+  /// Opens one complete customer detail route.
+  final ValueChanged<String> onOpen;
 
   /// Focus target shared with the sidebar search action.
   final FocusNode searchFocus;
@@ -39,6 +46,7 @@ final class AdminCustomerPage extends StatelessWidget {
               AdminCustomerTableBody(
                 state: state,
                 onRetry: context.readAdminCustomerViewModel().load,
+                onOpen: onOpen,
               ),
               AdminCustomerPagination(state: state),
             ]),

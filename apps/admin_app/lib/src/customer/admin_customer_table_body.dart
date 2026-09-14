@@ -9,11 +9,15 @@ final class AdminCustomerTableBody extends StatelessWidget {
   const AdminCustomerTableBody({
     required this.state,
     required this.onRetry,
+    required this.onOpen,
     super.key,
   });
 
   /// Retries the current server page.
   final VoidCallback onRetry;
+
+  /// Opens a selected customer profile.
+  final ValueChanged<String> onOpen;
 
   /// Current customer list lifecycle and rows.
   final AdminCustomerState state;
@@ -45,7 +49,7 @@ final class AdminCustomerTableBody extends StatelessWidget {
       );
     }
     return Stack(children: [
-      AdminCustomerTable(customers: state.customers),
+      AdminCustomerTable(customers: state.customers, onOpen: onOpen),
       if (state.status == AdminCustomerListStatus.loading)
         const LinearProgressIndicator(minHeight: 2),
     ]);

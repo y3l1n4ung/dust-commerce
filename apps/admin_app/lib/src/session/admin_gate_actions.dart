@@ -10,13 +10,18 @@ mixin _AdminHomeActions on State<_AdminHome> {
   FocusNode get _searchFocus;
   String get _selectedId;
   set _selectedId(String value);
+  String get _selectedCustomerId;
+  set _selectedCustomerId(String value);
   FocusNode get _typeSearchFocus;
   FocusNode get _profileSearchFocus;
 
   String get selectedIdForNavigation => _selectedId;
+  String get selectedCustomerIdForNavigation => _selectedCustomerId;
 
   void _requestSearch() {
-    if (_route == _AdminRoute.customers) {
+    if (_route == _AdminRoute.customers ||
+        _route == _AdminRoute.customer ||
+        _route == _AdminRoute.customerOrder) {
       _showCustomers();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _customerSearchFocus.requestFocus();
@@ -61,12 +66,25 @@ mixin _AdminHomeActions on State<_AdminHome> {
     setState(() {
       _route = _AdminRoute.customers;
       _selectedId = '';
+      _selectedCustomerId = '';
     });
   }
+
+  void _showCustomer(String id) => setState(() {
+        _route = _AdminRoute.customer;
+        _selectedId = id;
+        _selectedCustomerId = id;
+      });
+
+  void _showCustomerOrder(String id) => setState(() {
+        _route = _AdminRoute.customerOrder;
+        _selectedId = id;
+      });
 
   void _showOrder(String id) => setState(() {
         _route = _AdminRoute.order;
         _selectedId = id;
+        _selectedCustomerId = '';
       });
 
   void _showOrders() {
@@ -76,6 +94,7 @@ mixin _AdminHomeActions on State<_AdminHome> {
     setState(() {
       _route = _AdminRoute.orders;
       _selectedId = '';
+      _selectedCustomerId = '';
     });
   }
 
