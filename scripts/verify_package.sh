@@ -34,7 +34,8 @@ CHANGED_SOURCES="$(mktemp)"
 trap 'rm -f "$CHANGED_SOURCES"' EXIT
 {
   git diff --name-only --diff-filter=ACMRT HEAD -- "$PACKAGE"
-  git diff-tree --no-commit-id --name-only -r HEAD -- "$PACKAGE"
+  git diff-tree --no-commit-id --name-only --diff-filter=ACMRT -r HEAD \
+    -- "$PACKAGE"
   git ls-files --others --exclude-standard -- "$PACKAGE"
 } | awk '/\.dart$/ && !/\.g\.dart$/' | sort -u > "$CHANGED_SOURCES"
 
