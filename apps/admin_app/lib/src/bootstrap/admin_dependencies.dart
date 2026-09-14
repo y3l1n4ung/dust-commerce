@@ -2,6 +2,7 @@ import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/core/admin_authorization_interceptor.dart';
 import 'package:admin_app/src/core/admin_session_store.dart';
 import 'package:admin_app/src/bootstrap/admin_customer_dependencies.dart';
+import 'package:admin_app/src/bootstrap/admin_customer_group_dependencies.dart';
 import 'package:admin_app/src/order/admin_fulfillment_context_view_model.dart';
 import 'package:admin_app/src/order/admin_order_detail_api.dart';
 import 'package:admin_app/src/order/admin_order_detail_view_model.dart';
@@ -42,6 +43,7 @@ final class AdminDependencies {
       ),
       products: AdminProductViewModel(AdminProductViewModelArgs(api: api)),
       customers: AdminCustomerDependencies(dio, baseUrl),
+      customerGroups: AdminCustomerGroupDependencies(dio, baseUrl),
       orders: AdminOrderViewModel(AdminOrderViewModelArgs(
         api: api,
         exports: AdminOrderExportApi(dio, baseUrl: baseUrl),
@@ -97,6 +99,7 @@ final class AdminDependencies {
     required this.session,
     required this.products,
     required this.customers,
+    required this.customerGroups,
     required this.orders,
     required this.orderDetail,
     required this.fulfillmentContext,
@@ -119,6 +122,9 @@ final class AdminDependencies {
 
   /// Customer feature dependency group.
   final AdminCustomerDependencies customers;
+
+  /// Customer-group feature dependency group.
+  final AdminCustomerGroupDependencies customerGroups;
 
   /// Order collection state.
   final AdminOrderViewModel orders;
