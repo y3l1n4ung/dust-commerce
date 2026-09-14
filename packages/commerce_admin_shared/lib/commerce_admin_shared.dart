@@ -10,6 +10,7 @@ export 'src/admin_create_customer_address.dart';
 export 'src/admin_create_customer_group.dart';
 export 'src/admin_customer.dart';
 export 'src/admin_customer_group.dart';
+export 'src/admin_customer_group_deleted.dart';
 export 'src/admin_customer_group_detail.dart';
 export 'src/admin_customer_group_query.dart';
 export 'src/admin_customer_address.dart';

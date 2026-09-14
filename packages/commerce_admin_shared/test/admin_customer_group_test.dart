@@ -58,6 +58,24 @@ void main() {
     );
   });
 
+  test('customer-group deletion keeps the Medusa acknowledgement allowlist',
+      () {
+    final deleted = AdminCustomerGroupDeleted.fromJson({
+      'id': 'cusgrp_vip',
+      'object': 'customer_group',
+      'deleted': true,
+    });
+
+    expect(deleted.id, 'cusgrp_vip');
+    expect(deleted.object, 'customer_group');
+    expect(deleted.deleted, isTrue);
+    expect(deleted.toJson(), {
+      'id': 'cusgrp_vip',
+      'object': 'customer_group',
+      'deleted': true,
+    });
+  });
+
   test('customer-group page decodes Medusa list fields only', () {
     final page = AdminCustomerGroupList.fromJson({
       'customer_groups': [
