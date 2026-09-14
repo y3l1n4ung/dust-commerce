@@ -7,10 +7,14 @@ issue [#33](https://github.com/y3l1n4ung/dust-commerce/issues/33). It adds the
 standalone Admin request and response contracts, guarded server operation,
 generated Dio command state, source-matched focus form and live browser QA.
 
-Customer-group detail, edit, deletion and membership mutation remain separate
-slices. The successful form therefore returns to and refreshes the functional
-list instead of navigating to a fabricated detail route. No widget test was
-added.
+When this slice was QA'd, customer-group detail, edit, deletion and membership
+mutation remained separate slices. The successful form therefore returned to
+and refreshed the functional list instead of navigating to a fabricated detail
+route. No widget test was added.
+
+Follow-on commit `5c3420f` implements the real detail route. Current successful
+creation now navigates through that tested route; the evidence below records
+the original creation slice before detail existed.
 
 The stacked commits are independently reviewable:
 
