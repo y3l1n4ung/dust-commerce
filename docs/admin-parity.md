@@ -9,7 +9,7 @@ Progress is tracked by
 [GitHub issue #40](https://github.com/y3l1n4ung/dust-commerce/issues/40) and the
 `Medusa admin parity` milestone.
 
-The repository's 180-code-line gate still reports 9 legacy files. This slice
+The repository's 180-code-line gate still reports 6 legacy files. This slice
 adds no new over-limit handwritten file; its focused organization ViewModel,
 drawer and tests stay below the limit. The remaining legacy splits stay visible
 instead of weakening the gate.

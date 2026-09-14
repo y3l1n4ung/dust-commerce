@@ -52,6 +52,11 @@ Pinned source truth:
 - Admin and server analyzers passed.
 - Admin Dust output: 38 scanned and clean.
 - Server Dust output: 126 normal and 113 SQLx targets clean.
+- A fresh SQLx cycle applied 60 migrations, reverted all 60 to zero application
+  tables, and reapplied all 60.
+- All seven new or rewritten UI files pass targeted formatting and contain
+  41–148 code lines. The repository-wide gates still report five unrelated
+  formatting files and six legacy over-limit files.
 - Focused server coverage includes authorization, partial and full refunds,
   default remaining amount, invalid reasons, over-refunds, strict bodies,
   provider refusal, concurrency and cancellation after a partial refund.
