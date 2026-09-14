@@ -1,0 +1,50 @@
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
+import 'package:dust_dart/fp.dart';
+import 'package:test/test.dart';
+
+void main() {
+  test('customer-group page decodes Medusa list fields only', () {
+    final page = AdminCustomerGroupList.fromJson({
+      'customer_groups': [
+        {
+          'id': 'cusgrp_vip',
+          'name': 'VIP',
+          'customers': [
+            {'id': 'cus_ada'},
+            {'id': 'cus_grace'},
+          ],
+          'created_at': '2026-09-14T01:02:03.000Z',
+          'updated_at': '2026-09-14T02:03:04.000Z',
+        },
+      ],
+      'count': 1,
+      'limit': 10,
+      'offset': 0,
+    });
+
+    final group = page.customerGroups.single;
+    expect(group.id, 'cusgrp_vip');
+    expect(group.name, 'VIP');
+    expect(group.customers.map((customer) => customer.id).toList(), [
+      'cus_ada',
+      'cus_grace',
+    ]);
+    expect(group.createdAt.isUtc, isTrue);
+    expect(group.updatedAt.isUtc, isTrue);
+    expect(group.toJson().keys, {
+      'id',
+      'name',
+      'customers',
+      'created_at',
+      'updated_at',
+    });
+  });
+
+  test('customer-group ordering accepts only visible table fields', () {
+    expect(
+      AdminCustomerGroupOrder.parse('-updated_at'),
+      const Some(AdminCustomerGroupOrder.updatedAtDesc),
+    );
+    expect(AdminCustomerGroupOrder.parse('metadata'), const None());
+  });
+}
