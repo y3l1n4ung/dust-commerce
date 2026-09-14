@@ -1,5 +1,6 @@
 import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/checkout/deps.dart';
+import 'package:commerce_server/src/features/checkout/failure.dart';
 import 'package:commerce_server/src/features/checkout/model.dart';
 import 'package:commerce_server/src/features/checkout/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -46,25 +47,41 @@ Future<Result<OrderResponse, Rejection>> placeOrderHandler(
   );
 
   return switch (result) {
-    Ok(value: Ok(value: final order)) => Ok(order),
-    Ok(value: Err(error: CheckoutFailure.noCart)) =>
+    Ok(:final value) => Ok(value),
+    Err(error: CheckoutRejected(failure: CheckoutFailure.noCart)) =>
       Err(Rejection.notFound('Cart "${input.cartId}"')),
-    Ok(value: Err(error: CheckoutFailure.emptyCart)) =>
+    Err(error: CheckoutRejected(failure: CheckoutFailure.emptyCart)) =>
       const Err(Rejection.status(422, 'An empty cart cannot be ordered')),
-    Ok(value: Err(error: CheckoutFailure.outOfStock)) => const Err(
+    Err(error: CheckoutRejected(failure: CheckoutFailure.outOfStock)) =>
+      const Err(
         Rejection.conflict('Something in this cart sold out before checkout'),
       ),
-    Ok(value: Err(error: CheckoutFailure.wrongCustomer)) =>
+    Err(error: CheckoutRejected(failure: CheckoutFailure.wrongCustomer)) =>
       Err(Rejection.notFound('Cart "${input.cartId}"')),
-    Ok(value: Err(error: CheckoutFailure.countryNotInRegion)) => const Err(
+    Err(
+      error: CheckoutRejected(
+        failure: CheckoutFailure.countryNotInRegion,
+      ),
+    ) =>
+      const Err(
         Rejection.status(422, 'Address country is not served by this cart'),
       ),
-    Ok(value: Err(error: CheckoutFailure.shippingNotSelected)) => const Err(
+    Err(
+      error: CheckoutRejected(
+        failure: CheckoutFailure.shippingNotSelected,
+      ),
+    ) =>
+      const Err(
         Rejection.status(422, 'Select a delivery method before checkout'),
       ),
-    Ok(value: Err(error: CheckoutFailure.paymentNotSelected)) => const Err(
+    Err(
+      error: CheckoutRejected(
+        failure: CheckoutFailure.paymentNotSelected,
+      ),
+    ) =>
+      const Err(
         Rejection.status(422, 'Select a payment method before checkout'),
       ),
-    Err() => const Err(Rejection.internal()),
+    Err(error: CheckoutStorage()) => const Err(Rejection.internal()),
   };
 }
