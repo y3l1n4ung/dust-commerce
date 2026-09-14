@@ -12,6 +12,7 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
     required this.customer,
     required this.state,
     required this.onEditCustomer,
+    required this.onDeleteCustomer,
     required this.onOpenOrder,
     super.key,
   });
@@ -21,6 +22,9 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
 
   /// Opens the customer contact editor.
   final VoidCallback onEditCustomer;
+
+  /// Opens typed confirmation for customer deletion when no request is active.
+  final VoidCallback? onDeleteCustomer;
 
   /// Opens one customer-owned order.
   final ValueChanged<String> onOpenOrder;
@@ -41,6 +45,7 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
                   AdminCustomerGeneralSection(
                     customer: customer,
                     onEdit: onEditCustomer,
+                    onDelete: onDeleteCustomer,
                   ),
                   const SizedBox(height: 12),
                   AdminCustomerAddressSection(customer: customer),
@@ -59,6 +64,7 @@ final class AdminCustomerDetailLayout extends StatelessWidget {
                       AdminCustomerGeneralSection(
                         customer: customer,
                         onEdit: onEditCustomer,
+                        onDelete: onDeleteCustomer,
                       ),
                       const SizedBox(height: 12),
                       AdminCustomerOrderSection(

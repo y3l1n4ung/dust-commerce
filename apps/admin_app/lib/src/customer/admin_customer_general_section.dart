@@ -9,6 +9,7 @@ final class AdminCustomerGeneralSection extends StatelessWidget {
   const AdminCustomerGeneralSection({
     required this.customer,
     required this.onEdit,
+    required this.onDelete,
     super.key,
   });
 
@@ -17,6 +18,9 @@ final class AdminCustomerGeneralSection extends StatelessWidget {
 
   /// Opens the Medusa-shaped customer editor.
   final VoidCallback onEdit;
+
+  /// Opens typed confirmation for destructive deletion when available.
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) => Material(
@@ -40,7 +44,7 @@ final class AdminCustomerGeneralSection extends StatelessWidget {
               ),
               _AdminCustomerAccountBadge(hasAccount: customer.hasAccount),
               const SizedBox(width: 8),
-              AdminCustomerActionsMenu(onEdit: onEdit),
+              AdminCustomerActionsMenu(onEdit: onEdit, onDelete: onDelete),
             ]),
           ),
           Divider(height: 1, color: Theme.of(context).dividerColor),

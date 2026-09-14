@@ -27,6 +27,7 @@ final class AdminCustomerDeleteViewModel extends $AdminCustomerDeleteViewModel {
 
   /// Deletes [id] once and returns the exact acknowledgement on success.
   Future<Option<AdminCustomerDeleted>> delete(String id) async {
+    if (state.isBusy) return const None();
     emit(const AdminCustomerDeleteState(
       status: AdminCustomerDeleteStatus.deleting,
     ));

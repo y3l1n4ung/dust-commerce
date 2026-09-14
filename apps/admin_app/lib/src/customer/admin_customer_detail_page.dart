@@ -1,7 +1,10 @@
 import 'package:admin_app/src/customer/admin_customer_detail_layout.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_state.dart';
 import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
+import 'package:admin_app/src/customer/admin_customer_delete_dialog.dart';
+import 'package:admin_app/src/customer/admin_customer_delete_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_edit_drawer.dart';
+import 'package:admin_app/src/customer/admin_customer_presenter.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
@@ -53,11 +56,13 @@ final class _AdminCustomerDetailPageState
   @override
   Widget build(BuildContext context) {
     final state = context.watchAdminCustomerDetailViewModel().value;
+    final deletion = context.watchAdminCustomerDeleteViewModel().value;
     return switch (state.customer) {
       Some(value: final customer) => AdminCustomerDetailLayout(
           customer: customer,
           state: state,
           onEditCustomer: () => _edit(customer),
+          onDeleteCustomer: deletion.isBusy ? null : () => _delete(customer),
           onOpenOrder: widget.onOpenOrder,
         ),
       None() when state.status == AdminCustomerDetailStatus.loading =>
@@ -71,6 +76,34 @@ final class _AdminCustomerDetailPageState
           onRetry: _load,
         ),
     };
+  }
+
+  Future<void> _delete(AdminCustomerDetail customer) async {
+    final confirmed = await confirmAdminCustomerDelete(context, customer);
+    if (!confirmed || !mounted) return;
+    final result =
+        await context.readAdminCustomerDeleteViewModel().delete(customer.id);
+    if (!mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    switch (result) {
+      case Some():
+        messenger.showSnackBar(SnackBar(
+          content: Text(
+            'Customer ${adminCustomerDetailText(customer.email)} '
+            'was successfully deleted.',
+          ),
+        ));
+        widget.onBack();
+      case None():
+        final failure =
+            context.readAdminCustomerDeleteViewModel().state.failure;
+        messenger.showSnackBar(SnackBar(
+          content: Text(failure.match(
+            some: (message) => message,
+            none: () => 'Unable to delete this customer. Try again.',
+          )),
+        ));
+    }
   }
 
   Future<void> _edit(AdminCustomerDetail customer) async {
