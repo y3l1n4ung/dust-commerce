@@ -49,6 +49,7 @@ export 'src/admin_sales_channel.dart';
 export 'src/admin_shipping_profile.dart';
 export 'src/admin_update_product_option.dart';
 export 'src/admin_update_product_variant.dart';
+export 'src/admin_update_customer.dart';
 export 'src/admin_user.dart';
 export 'src/admin_variant_price.dart';
 export 'src/admin_variant_stock.dart';

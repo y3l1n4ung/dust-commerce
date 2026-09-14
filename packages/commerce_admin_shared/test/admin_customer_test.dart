@@ -115,4 +115,25 @@ void main() {
       isFalse,
     );
   });
+
+  test('customer edit preserves nullable clearing and guest email intent', () {
+    final input = AdminUpdateCustomer.fromJson({
+      'email': '  GUEST.NEW@Example.com ',
+      'first_name': null,
+      'last_name': 'Vaughan',
+      'company_name': null,
+      'phone': '+1 555 0102',
+    });
+
+    expect(input.email, const Some('guest.new@example.com'));
+    expect(input.firstName, const None<String>());
+    expect(input.validate().isValid, isTrue);
+    expect(input.toJson(), {
+      'email': 'guest.new@example.com',
+      'company_name': null,
+      'first_name': null,
+      'last_name': 'Vaughan',
+      'phone': '+1 555 0102',
+    });
+  });
 }
