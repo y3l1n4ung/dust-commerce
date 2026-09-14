@@ -1,16 +1,16 @@
 import 'package:commerce_server/src/features/checkout/model.dart';
 import 'package:dust_dart/db.dart';
 
-part 'read.g.dart';
+part 'customer_read.g.dart';
 
-/// The reads that load one complete order response.
+/// Customer-scoped reads for complete order responses.
 @SqlxDao()
-abstract final class CheckoutReadRepository {
-  /// Binds the queries to [db].
-  const factory CheckoutReadRepository(DatabaseExecutor db) =
-      _$CheckoutReadRepository;
+abstract final class CheckoutCustomerReadRepository {
+  /// Binds the ownership-scoped query to [db].
+  const factory CheckoutCustomerReadRepository(DatabaseExecutor db) =
+      _$CheckoutCustomerReadRepository;
 
-  /// One complete order, including frozen lines and addresses.
+  /// One complete order only when it belongs to [customerId].
   @Query(r'''
 SELECT o.id, o.display_id, o.email, o.customer_id, o.currency_code, o.subtotal,
        o.shipping_total, o.discount_total, o.tax, o.total, o.status,
@@ -85,13 +85,10 @@ JOIN regions r ON r.id = o.region_id
 JOIN order_addresses shipping ON shipping.order_id = o.id AND shipping.kind = 'shipping'
 LEFT JOIN order_addresses billing ON billing.order_id = o.id AND billing.kind = 'billing'
 LEFT JOIN payment_collections payment ON payment.order_id = o.id AND payment.deleted_at IS NULL
-WHERE o.id = $1
+WHERE o.id = $1 AND o.customer_id = $2
 ''')
-  Future<Result<OrderResponse?, SqlxError>> findOrder(String id);
-
-  /// Existing order id for a cart, used to make checkout retry-safe.
-  @Query(r'''
-SELECT id FROM orders WHERE cart_id = $1 AND deleted_at IS NULL
-''')
-  Future<Result<String?, SqlxError>> orderIdForCart(String cartId);
+  Future<Result<OrderResponse?, SqlxError>> findCustomerOrder(
+    String id,
+    String customerId,
+  );
 }

@@ -147,6 +147,7 @@ Router buildApp(
       CheckoutDeps(
         database: database,
         reads: orderReads,
+        customerReads: CheckoutCustomerReadRepository(executor),
         lists: CheckoutListRepository(executor),
         clock: clock,
       ),

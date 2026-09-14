@@ -36,7 +36,7 @@ Future<Result<OrderResponse, Rejection>> readOrderHandler(
   final deps = (state as Ok<CheckoutDeps, Rejection>).value;
 
   final result = await loadCustomerOrder(
-    deps.reads,
+    deps.customerReads,
     id,
     actor.customer.id,
   );

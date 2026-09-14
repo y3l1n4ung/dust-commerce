@@ -17,7 +17,7 @@ Future<Result<Option<OrderResponse>, SqlxError>> loadOrder(
 
 /// One complete order owned by [customerId], or [None] when none matches.
 Future<Result<Option<OrderResponse>, SqlxError>> loadCustomerOrder(
-  CheckoutReadRepository reads,
+  CheckoutCustomerReadRepository reads,
   String orderId,
   String customerId,
 ) async {
