@@ -15,6 +15,7 @@ part of 'admin_order_detail.dart';
 
 const DeepCollectionEquality _adminOrderDetailFulfillmentsEquality = DeepCollectionEquality();
 const DeepCollectionEquality _adminOrderDetailItemsEquality = DeepCollectionEquality();
+const DeepCollectionEquality _adminOrderDetailPaymentRefundsEquality = DeepCollectionEquality();
 
 mixin _$AdminOrderDetail implements Serializable {
   @override
@@ -34,6 +35,9 @@ mixin _$AdminOrderDetail implements Serializable {
         'fulfillments: ${self.fulfillments}, '
         'items: ${self.items}, '
         'paymentAmountValue: ${self.paymentAmountValue}, '
+        'paymentIdValue: ${self.paymentIdValue}, '
+        'paymentRefundedAmount: ${self.paymentRefundedAmount}, '
+        'paymentRefunds: ${self.paymentRefunds}, '
         'paymentCapturedAtValue: ${self.paymentCapturedAtValue}, '
         'paymentCreatedAtValue: ${self.paymentCreatedAtValue}, '
         'paymentProviderValue: ${self.paymentProviderValue}, '
@@ -72,6 +76,9 @@ mixin _$AdminOrderDetail implements Serializable {
             _adminOrderDetailFulfillmentsEquality.equals(other.fulfillments, self.fulfillments) &&
             _adminOrderDetailItemsEquality.equals(other.items, self.items) &&
             other.paymentAmountValue == self.paymentAmountValue &&
+            other.paymentIdValue == self.paymentIdValue &&
+            other.paymentRefundedAmount == self.paymentRefundedAmount &&
+            _adminOrderDetailPaymentRefundsEquality.equals(other.paymentRefunds, self.paymentRefunds) &&
             other.paymentCapturedAtValue == self.paymentCapturedAtValue &&
             other.paymentCreatedAtValue == self.paymentCreatedAtValue &&
             other.paymentProviderValue == self.paymentProviderValue &&
@@ -108,6 +115,9 @@ mixin _$AdminOrderDetail implements Serializable {
       _adminOrderDetailFulfillmentsEquality.hash(self.fulfillments),
       _adminOrderDetailItemsEquality.hash(self.items),
       self.paymentAmountValue,
+      self.paymentIdValue,
+      self.paymentRefundedAmount,
+      _adminOrderDetailPaymentRefundsEquality.hash(self.paymentRefunds),
       self.paymentCapturedAtValue,
       self.paymentCreatedAtValue,
       self.paymentProviderValue,
@@ -170,6 +180,11 @@ Map<String, Object?> _$AdminOrderDetailSerialize(AdminOrderDetail instance) {
         .map((item) => item.toJson())
         .toList(),
     'payment_amount': instance.paymentAmountValue,
+    'payment_id': instance.paymentIdValue,
+    'payment_refunded_amount': instance.paymentRefundedAmount,
+    'payment_refunds': instance.paymentRefunds
+        .map((item) => item.toJson())
+        .toList(),
     'payment_captured_at': instance.paymentCapturedAtValue == null
         ? null
         : (instance.paymentCapturedAtValue!).toIso8601String(),
@@ -254,6 +269,16 @@ AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
   final paymentAmountValueValue = json['payment_amount'] == null
       ? null
       : JsonHelper.as<int>(json['payment_amount'], 'payment_amount', 'int');
+  final paymentIdValueValue = json['payment_id'] == null
+      ? null
+      : JsonHelper.as<String>(json['payment_id'], 'payment_id', 'String');
+  final paymentRefundedAmountValue = json.containsKey('payment_refunded_amount')
+      ? JsonHelper.as<int>(json['payment_refunded_amount'], 'payment_refunded_amount', 'int')
+      : 0;
+  final paymentRefundsValue = json.containsKey('payment_refunds')
+      ? JsonHelper.decodeList(json['payment_refunds'], 'payment_refunds',
+      (item, itemKey) => AdminRefund.fromJson(JsonHelper.asMap(item, itemKey)))
+      : <AdminRefund>[];
   final paymentCapturedAtValueValue = json['payment_captured_at'] == null
       ? null
       : JsonHelper.asDateTime(json['payment_captured_at'], 'payment_captured_at');
@@ -332,6 +357,9 @@ AdminOrderDetail _$AdminOrderDetailDeserialize(Map<String, Object?> json) {
     paymentRecordStatusValue: paymentRecordStatusValueValue,
     paymentCreatedAtValue: paymentCreatedAtValueValue,
     paymentCapturedAtValue: paymentCapturedAtValueValue,
+    paymentIdValue: paymentIdValueValue,
+    paymentRefundedAmount: paymentRefundedAmountValue,
+    paymentRefunds: paymentRefundsValue,
   );
 }
 

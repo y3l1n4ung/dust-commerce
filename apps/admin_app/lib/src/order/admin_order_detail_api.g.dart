@@ -95,6 +95,85 @@ final class _$AdminOrderDetailApi implements AdminOrderDetailApi {
   }
 
   @override
+  Future<AdminRefundReasonList> refundReasons(
+    String query,
+    int limit,
+    int offset,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    _queryParameters['q'] = query;
+    _queryParameters['limit'] = limit;
+    _queryParameters['offset'] = offset;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminRefundReasonList>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/refund-reasons',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminRefundReasonList.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<AdminRefundedPayment> refundPayment(String id, AdminRefundPayment body) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    final Object? _data = body.toJson();
+    final _options = Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminRefundedPayment>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/payments/' + Uri.encodeComponent(id.toString()) + '/refund',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminRefundedPayment.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<AdminOrderDetail> archiveOrder(String id) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

@@ -1,5 +1,6 @@
 import 'package:admin_app/src/order/admin_order_detail_api.dart';
 import 'package:admin_app/src/order/admin_order_detail_state.dart';
+import 'package:admin_app/src/order/admin_payment_refund_state.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dio/dio.dart';
 import 'package:dust_dart/fp.dart';
@@ -8,6 +9,7 @@ import 'package:dust_flutter/state.dart';
 part 'admin_order_detail_view_model.g.dart';
 part 'admin_order_cancellation_view_model.dart';
 part 'admin_order_delivery_view_model.dart';
+part 'admin_payment_refund_view_model.dart';
 
 /// Dependencies for one authenticated merchant order detail.
 final class AdminOrderDetailViewModelArgs extends ViewModelArgs {
@@ -58,19 +60,10 @@ final class AdminOrderDetailViewModel extends $AdminOrderDetailViewModel {
     String orderId,
     AdminCreateFulfillment body,
   ) async {
-    final revision = ++_revision;
-    emit(state.copyWith(
-      status: AdminOrderDetailStatus.saving,
-      failure: const None(),
-    ));
+    final revision = _beginSave();
     try {
       final order = await args.api.createFulfillment(orderId, body);
-      if (revision != _revision) return false;
-      emit(AdminOrderDetailState(
-        status: AdminOrderDetailStatus.ready,
-        order: Some(order),
-      ));
-      return true;
+      return _publishSaved(revision, order);
     } on DioException catch (error) {
       if (revision != _revision) return false;
       _saveFailure(switch (error.response?.statusCode) {
@@ -94,23 +87,14 @@ final class AdminOrderDetailViewModel extends $AdminOrderDetailViewModel {
     String fulfillmentId,
     AdminCreateShipment body,
   ) async {
-    final revision = ++_revision;
-    emit(state.copyWith(
-      status: AdminOrderDetailStatus.saving,
-      failure: const None(),
-    ));
+    final revision = _beginSave();
     try {
       final order = await args.api.createShipment(
         orderId,
         fulfillmentId,
         body,
       );
-      if (revision != _revision) return false;
-      emit(AdminOrderDetailState(
-        status: AdminOrderDetailStatus.ready,
-        order: Some(order),
-      ));
-      return true;
+      return _publishSaved(revision, order);
     } on DioException catch (error) {
       if (revision != _revision) return false;
       _saveFailure(switch (error.response?.statusCode) {
@@ -136,6 +120,28 @@ final class AdminOrderDetailViewModel extends $AdminOrderDetailViewModel {
     ));
     return revision;
   }
+
+  int _beginRefundSave() {
+    final revision = _beginSave();
+    emit(state.copyWith(
+        refund: state.refund.copyWith(
+      status: AdminPaymentRefundStatus.saving,
+      failure: const None(),
+    )));
+    return revision;
+  }
+
+  void _publishRefund(AdminPaymentRefundState refund) =>
+      emit(state.copyWith(refund: refund));
+
+  void _failRefund(String message) => emit(state.copyWith(
+        status: AdminOrderDetailStatus.failed,
+        failure: Some(message),
+        refund: state.refund.copyWith(
+          status: AdminPaymentRefundStatus.failed,
+          failure: Some(message),
+        ),
+      ));
 
   bool _publishSaved(int revision, AdminOrderDetail order) {
     if (revision != _revision) return false;

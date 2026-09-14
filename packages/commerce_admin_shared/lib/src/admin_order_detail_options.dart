@@ -9,6 +9,9 @@ extension AdminOrderDetailOptions on AdminOrderDetail {
   /// Amount recorded by the provider adapter, when present.
   Option<int> get paymentAmount => adminOptionOf(paymentAmountValue);
 
+  /// Stable payment route id, absent before payment starts.
+  Option<String> get paymentId => adminOptionOf(paymentIdValue);
+
   /// Provider capture instant, when funds moved.
   Option<DateTime> get paymentCapturedAt =>
       adminOptionOf(paymentCapturedAtValue);

@@ -3,6 +3,7 @@ import 'package:commerce_admin_shared/src/admin_order_address.dart';
 import 'package:commerce_admin_shared/src/admin_order_item.dart';
 import 'package:commerce_admin_shared/src/admin_order_fulfillment.dart';
 import 'package:commerce_admin_shared/src/admin_order_status.dart';
+import 'package:commerce_admin_shared/src/admin_refund.dart';
 import 'package:dust_dart/serde.dart';
 
 part 'admin_order_detail.g.dart';
@@ -43,6 +44,9 @@ final class AdminOrderDetail with _$AdminOrderDetail {
     required this.paymentRecordStatusValue,
     required this.paymentCreatedAtValue,
     required this.paymentCapturedAtValue,
+    this.paymentIdValue,
+    this.paymentRefundedAmount = 0,
+    this.paymentRefunds = const [],
   });
 
   /// Decodes one generated Admin order response.
@@ -90,6 +94,18 @@ final class AdminOrderDetail with _$AdminOrderDetail {
   /// Nullable JSON backing for [paymentAmount].
   @SerDe(rename: 'payment_amount')
   final int? paymentAmountValue;
+
+  /// Nullable JSON backing for [paymentId].
+  @SerDe(rename: 'payment_id')
+  final String? paymentIdValue;
+
+  /// Sum of active refund audits in minor units.
+  @SerDe(defaultValue: 0)
+  final int paymentRefundedAmount;
+
+  /// Independent refund history visible only to Admin.
+  @SerDe(defaultValue: <AdminRefund>[])
+  final List<AdminRefund> paymentRefunds;
 
   /// Nullable JSON backing for [paymentCapturedAt].
   @SerDe(rename: 'payment_captured_at')

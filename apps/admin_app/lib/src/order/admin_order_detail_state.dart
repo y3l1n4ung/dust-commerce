@@ -1,4 +1,5 @@
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
+import 'package:admin_app/src/order/admin_payment_refund_state.dart';
 import 'package:dust_dart/serde.dart';
 
 part 'admin_order_detail_state.g.dart';
@@ -29,6 +30,7 @@ final class AdminOrderDetailState with _$AdminOrderDetailState {
     this.status = AdminOrderDetailStatus.idle,
     this.order = const None(),
     this.failure = const None(),
+    this.refund = const AdminPaymentRefundState(),
   });
 
   /// Display-safe failure copy.
@@ -36,6 +38,9 @@ final class AdminOrderDetailState with _$AdminOrderDetailState {
 
   /// Explicit merchant order allowlist when loaded.
   final Option<AdminOrderDetail> order;
+
+  /// Independent refund form and mutation state.
+  final AdminPaymentRefundState refund;
 
   /// Current request lifecycle.
   final AdminOrderDetailStatus status;

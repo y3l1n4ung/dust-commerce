@@ -18,6 +18,21 @@ abstract interface class AdminOrderDetailApi {
   @GET('/admin/orders/{id}')
   Future<AdminOrderDetail> order(@Path() String id);
 
+  /// Lists active merchant reasons used by the refund drawer.
+  @GET('/admin/refund-reasons')
+  Future<AdminRefundReasonList> refundReasons(
+    @Query('q') String query,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
+
+  /// Refunds one captured payment and returns its refreshed audit response.
+  @POST('/admin/payments/{id}/refund')
+  Future<AdminRefundedPayment> refundPayment(
+    @Path() String id,
+    @Body() AdminRefundPayment body,
+  );
+
   /// Archives one completed or canceled order and returns its refreshed detail.
   @POST('/admin/orders/{id}/archive')
   Future<AdminOrderDetail> archiveOrder(@Path() String id);

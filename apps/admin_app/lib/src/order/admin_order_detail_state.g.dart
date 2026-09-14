@@ -20,6 +20,7 @@ mixin _$AdminOrderDetailState {
     return 'AdminOrderDetailState('
         'failure: ${self.failure}, '
         'order: ${self.order}, '
+        'refund: ${self.refund}, '
         'status: ${self.status}'
         ')';
   }
@@ -32,6 +33,7 @@ mixin _$AdminOrderDetailState {
             runtimeType == other.runtimeType &&
             other.failure == self.failure &&
             other.order == self.order &&
+            other.refund == self.refund &&
             other.status == self.status;
   }
 
@@ -42,6 +44,7 @@ mixin _$AdminOrderDetailState {
       runtimeType,
       self.failure,
       self.order,
+      self.refund,
       self.status,
     ]);
   }
@@ -63,6 +66,7 @@ abstract class _$AdminOrderDetailStateCopyWith<$Res> {
   $Res call({
     Option<String>? failure,
     Option<AdminOrderDetail>? order,
+    AdminPaymentRefundState? refund,
     AdminOrderDetailStatus? status,
   });
 }
@@ -79,6 +83,7 @@ final class _$AdminOrderDetailStateCopyWithImpl<$Res> implements _$AdminOrderDet
   $Res call({
     Object? failure = null,
     Object? order = null,
+    Object? refund = null,
     Object? status = null,
   }) {
     return _then(
@@ -86,6 +91,7 @@ final class _$AdminOrderDetailStateCopyWithImpl<$Res> implements _$AdminOrderDet
         status: status == null ? _self.status : status as AdminOrderDetailStatus,
         order: order == null ? _self.order : order as Option<AdminOrderDetail>,
         failure: failure == null ? _self.failure : failure as Option<String>,
+        refund: refund == null ? _self.refund : refund as AdminPaymentRefundState,
       )
     );
   }
