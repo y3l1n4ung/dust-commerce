@@ -62,4 +62,31 @@ void main() {
     expect(address.city, const None<String>());
     expect(address.postalCode, const None<String>());
   });
+
+  test('address deletion decodes the Medusa parent acknowledgement', () {
+    final deleted = AdminCustomerAddressDeleted.fromJson({
+      'id': 'addr_home',
+      'object': 'customer_address',
+      'deleted': true,
+      'parent': {
+        'id': 'cus_ada',
+        'email': 'ada@example.com',
+        'company_name': null,
+        'first_name': 'Ada',
+        'last_name': 'Lovelace',
+        'phone': null,
+        'has_account': true,
+        'created_at': '2026-09-14T01:02:03.000Z',
+        'updated_at': '2026-09-14T02:03:04.000Z',
+        'addresses': const <Object?>[],
+      },
+    });
+
+    expect(deleted.id, 'addr_home');
+    expect(deleted.object, 'customer_address');
+    expect(deleted.deleted, isTrue);
+    expect(
+        deleted.parent.map((customer) => customer.id), const Some('cus_ada'));
+    expect(deleted.toJson().keys, {'id', 'object', 'deleted', 'parent'});
+  });
 }
