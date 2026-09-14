@@ -1,6 +1,10 @@
 /// Protected merchant customer listing.
 library;
 
+export 'create_failure.dart';
+export 'create_handler.dart';
+export 'create_repository.dart';
+export 'create_service.dart';
 export 'deps.dart';
 export 'detail_address_response.dart';
 export 'detail_handler.dart';

@@ -7,3 +7,4 @@ library;
 export 'cors.dart';
 export 'paging.dart';
 export 'state.dart';
+export 'strict_json.dart';
