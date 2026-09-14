@@ -66,7 +66,7 @@ Object? _$AdminOrderStatusSerialize(AdminOrderStatus instance) {
   return switch (instance) {
     AdminOrderStatus.pending => 'pending',
     AdminOrderStatus.completed => 'completed',
-    AdminOrderStatus.cancelled => 'cancelled',
+    AdminOrderStatus.canceled => 'canceled',
   };
 }
 
@@ -77,7 +77,7 @@ AdminOrderStatus _$AdminOrderStatusDeserialize(Object? json, [String key = 'json
   return switch (json) {
     'pending' => AdminOrderStatus.pending,
     'completed' => AdminOrderStatus.completed,
-    'cancelled' => AdminOrderStatus.cancelled,
+    'canceled' => AdminOrderStatus.canceled,
     _ => throw ArgumentError.value(json, key, 'unknown value for AdminOrderStatus at $key'),
   };
 }
@@ -146,7 +146,7 @@ Object? _$AdminOrderPaymentRecordStatusSerialize(AdminOrderPaymentRecordStatus i
     AdminOrderPaymentRecordStatus.pending => 'pending',
     AdminOrderPaymentRecordStatus.authorized => 'authorized',
     AdminOrderPaymentRecordStatus.captured => 'captured',
-    AdminOrderPaymentRecordStatus.cancelled => 'cancelled',
+    AdminOrderPaymentRecordStatus.canceled => 'canceled',
     AdminOrderPaymentRecordStatus.failed => 'failed',
   };
 }
@@ -159,7 +159,7 @@ AdminOrderPaymentRecordStatus _$AdminOrderPaymentRecordStatusDeserialize(Object?
     'pending' => AdminOrderPaymentRecordStatus.pending,
     'authorized' => AdminOrderPaymentRecordStatus.authorized,
     'captured' => AdminOrderPaymentRecordStatus.captured,
-    'cancelled' => AdminOrderPaymentRecordStatus.cancelled,
+    'canceled' => AdminOrderPaymentRecordStatus.canceled,
     'failed' => AdminOrderPaymentRecordStatus.failed,
     _ => throw ArgumentError.value(json, key, 'unknown value for AdminOrderPaymentRecordStatus at $key'),
   };

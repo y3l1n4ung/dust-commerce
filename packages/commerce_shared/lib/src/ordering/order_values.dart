@@ -50,23 +50,23 @@ extension OrderValues on Order {
 
   /// This order with payment captured while its lifecycle remains open.
   ///
-  /// Throws [StateError] when the order was cancelled: taking money for
+  /// Throws [StateError] when the order was canceled: taking money for
   /// something called off is the failure this guard exists to prevent.
   Order captured() {
-    if (status == OrderStatus.cancelled) {
-      throw StateError('cannot capture payment on a cancelled order');
+    if (status == OrderStatus.canceled) {
+      throw StateError('cannot capture payment on a canceled order');
     }
     return copyWith(paymentStatus: PaymentStatus.captured);
   }
 
-  /// This order cancelled.
+  /// This order canceled.
   ///
   /// Throws [StateError] once payment has been captured; that path is a
   /// refund, which is a different operation with different accounting.
-  Order cancelled() {
+  Order canceled() {
     if (isPaid) {
-      throw StateError('a paid order is refunded, not cancelled');
+      throw StateError('a paid order is refunded, not canceled');
     }
-    return copyWith(status: OrderStatus.cancelled);
+    return copyWith(status: OrderStatus.canceled);
   }
 }

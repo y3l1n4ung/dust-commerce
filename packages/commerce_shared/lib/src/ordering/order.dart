@@ -20,7 +20,7 @@ enum OrderStatus {
   completed,
 
   /// Called off before completion.
-  cancelled,
+  canceled,
 }
 
 /// Whether the money has moved.

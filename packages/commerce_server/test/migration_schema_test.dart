@@ -51,13 +51,13 @@ void main() {
         ...'order_transfers variant_option_values variant_prices'.split(' '),
         ...'return_reasons return_requests return_items fulfillments'
             .split(' '),
-        'fulfillment_items',
-        'fulfillment_labels',
+        ...'fulfillment_items fulfillment_labels'.split(' '),
         ...'stock_location_addresses shipping_option_fulfillment_provider shipping_option_shipping_profile'
             .split(' '),
         ...'stock_locations fulfillment_providers stock_location_fulfillment_providers'
             .split(' '),
         'payment_collections',
+        'refunds',
       ]),
     );
   });

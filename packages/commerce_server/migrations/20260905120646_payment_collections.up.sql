@@ -13,7 +13,7 @@ CREATE TABLE payment_collections (
                        AND currency_code = lower(currency_code)),
   status        TEXT NOT NULL
                 CHECK (status IN ('pending', 'authorized', 'captured',
-                                  'cancelled', 'failed')),
+                                  'canceled', 'failed')),
   metadata      TEXT CHECK (metadata IS NULL OR json_valid(metadata)),
   created_at    TEXT NOT NULL DEFAULT
                 (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),

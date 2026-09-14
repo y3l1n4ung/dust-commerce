@@ -113,9 +113,9 @@ final class AccountOrderDetailContent extends StatelessWidget {
             'shop_account_status_completed',
             defaultText: 'Completed',
           ),
-        OrderStatus.cancelled => context.tr(
-            'shop_account_status_cancelled',
-            defaultText: 'Cancelled',
+        OrderStatus.canceled => context.tr(
+            'shop_account_status_canceled',
+            defaultText: 'Canceled',
           ),
       };
 

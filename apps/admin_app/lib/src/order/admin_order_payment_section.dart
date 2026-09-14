@@ -63,7 +63,7 @@ final class AdminOrderPaymentSection extends StatelessWidget {
         AdminOrderPaymentRecordStatus.pending => 'Pending',
         AdminOrderPaymentRecordStatus.authorized => 'Authorized',
         AdminOrderPaymentRecordStatus.captured => 'Captured',
-        AdminOrderPaymentRecordStatus.cancelled => 'Cancelled',
+        AdminOrderPaymentRecordStatus.canceled => 'Canceled',
         AdminOrderPaymentRecordStatus.failed => 'Failed',
       };
 }

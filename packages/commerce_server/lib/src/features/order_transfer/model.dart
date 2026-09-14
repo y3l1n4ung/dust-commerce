@@ -21,7 +21,7 @@ final class OrderTransferCandidate {
   @Sqlx(rename: 'id')
   final String orderId;
 
-  /// Stored order lifecycle used to reject cancelled transfers.
+  /// Stored order lifecycle used to reject canceled transfers.
   @Sqlx(rename: 'status')
   final String orderStatus;
 }

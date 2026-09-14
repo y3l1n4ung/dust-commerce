@@ -83,7 +83,7 @@ WHERE id = ? AND status = 'requested' AND delivery_status = 'sending'
       r'''
 UPDATE orders
 SET customer_id = (SELECT customer_id FROM order_transfers WHERE id = ?)
-WHERE id = ? AND status <> 'cancelled' AND deleted_at IS NULL
+WHERE id = ? AND status <> 'canceled' AND deleted_at IS NULL
   AND EXISTS (
     SELECT 1 FROM order_transfers
     WHERE id = ? AND order_id = ? AND status = 'requested'

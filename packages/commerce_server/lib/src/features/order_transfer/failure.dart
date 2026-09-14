@@ -5,8 +5,8 @@ enum RequestOrderTransferFailure {
   /// No active order has the supplied identifier.
   noOrder,
 
-  /// A cancelled order can no longer change owner.
-  cancelled,
+  /// A canceled order can no longer change owner.
+  canceled,
 
   /// The requesting account already owns the order.
   alreadyOwner,

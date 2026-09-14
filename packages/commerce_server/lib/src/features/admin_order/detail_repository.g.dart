@@ -41,7 +41,7 @@ SELECT order_row.id, order_row.region_id, order_row.display_id, order_row.email,
            order_summary.order_quantity THEN 'fulfilled'
          WHEN coalesce(fulfillment_summary.fulfilled_quantity, 0) > 0
            THEN 'partially_fulfilled'
-         WHEN order_row.status = 'cancelled' AND EXISTS (
+         WHEN order_row.status = 'canceled' AND EXISTS (
            SELECT 1 FROM fulfillments canceled
            WHERE canceled.order_id = order_row.id
              AND canceled.canceled_at IS NOT NULL

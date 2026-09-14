@@ -43,8 +43,8 @@ Future<Result<OrderResponse, Rejection>> capturePaymentHandler(
       Err(Rejection.notFound('Order "$orderId"')),
     Ok(value: Err(error: CaptureFailure.noPayment)) =>
       const Err(Rejection.conflict('No payment has been started')),
-    Ok(value: Err(error: CaptureFailure.cancelled)) =>
-      const Err(Rejection.conflict('A cancelled order cannot be paid for')),
+    Ok(value: Err(error: CaptureFailure.canceled)) =>
+      const Err(Rejection.conflict('A canceled order cannot be paid for')),
     Err() => const Err(Rejection.internal()),
   };
 }

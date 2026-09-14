@@ -51,7 +51,7 @@ JOIN stock_location_fulfillment_providers allowed
   AND allowed.fulfillment_provider_id = provider.id
   AND allowed.deleted_at IS NULL
 WHERE order_row.id = ? AND order_row.deleted_at IS NULL
-  AND order_row.status <> 'cancelled'
+  AND order_row.status <> 'canceled'
 ''',
       [shippingOptionId, locationId, orderId],
       const $AdminFulfillmentContextRowDeserializer().deserialize,

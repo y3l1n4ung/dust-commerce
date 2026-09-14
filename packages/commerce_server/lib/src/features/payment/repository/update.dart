@@ -25,7 +25,7 @@ WHERE id = $1 AND status = 'authorized'
   @Query(r'''
 UPDATE orders
 SET payment_status = 'captured'
-WHERE id = $1 AND status != 'cancelled'
+WHERE id = $1 AND status != 'canceled'
 ''')
   Future<Result<ExecResult, SqlxError>> markOrderCaptured(String orderId);
 }

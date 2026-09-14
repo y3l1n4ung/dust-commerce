@@ -43,8 +43,8 @@ Future<Result<OrderResponse, Rejection>> authorizePaymentHandler(
     Ok(value: Ok(value: final order)) => Ok(order),
     Ok(value: Err(error: AuthorizeFailure.noOrder)) =>
       Err(Rejection.notFound('Order "$orderId"')),
-    Ok(value: Err(error: AuthorizeFailure.cancelled)) =>
-      const Err(Rejection.conflict('A cancelled order cannot be paid for')),
+    Ok(value: Err(error: AuthorizeFailure.canceled)) =>
+      const Err(Rejection.conflict('A canceled order cannot be paid for')),
     Err() => const Err(Rejection.internal()),
   };
 }

@@ -36,7 +36,7 @@ WHERE id = ? AND status = 'authorized'
       r'''
 UPDATE orders
 SET payment_status = 'captured'
-WHERE id = ? AND status != 'cancelled'
+WHERE id = ? AND status != 'canceled'
 ''',
       [orderId],
     );

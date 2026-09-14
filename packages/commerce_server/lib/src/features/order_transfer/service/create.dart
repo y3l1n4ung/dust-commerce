@@ -8,6 +8,8 @@ import 'package:commerce_server/src/features/order_transfer/repository/repositor
 import 'package:commerce_server/src/infra/option.dart';
 import 'package:dust_dart/db.dart';
 
+part 'delivery.dart';
+
 /// Creates or retries the target customer's active transfer request.
 Future<Result<OrderTransferResponse, RequestOrderTransferError>>
     requestOrderTransfer(
@@ -43,9 +45,9 @@ Future<Result<OrderTransferResponse, RequestOrderTransferError>>
       ));
     }
     final order = (candidate as Some<OrderTransferCandidate>).value;
-    if (order.orderStatus == 'cancelled') {
+    if (order.orderStatus == 'canceled') {
       return const Ok(RequestOrderTransferDenied(
-        RequestOrderTransferFailure.cancelled,
+        RequestOrderTransferFailure.canceled,
       ));
     }
     if (optionOf(order.orderCustomerId) == Some(customerId)) {
@@ -137,56 +139,4 @@ Future<Result<RequestOrderTransferOutcome, SqlxError>> _response(
     Some(:final value) => Ok(RequestOrderTransferReady(value)),
     None() => Err(SqlxError.decode('Created transfer could not be read')),
   };
-}
-
-Future<Result<bool, SqlxError>> _deliver(
-  OrderTransferDeps deps,
-  String transferId,
-  DateTime now,
-  Duration lease,
-) async {
-  final claimed = await deps.updates.claimDelivery(
-    transferId,
-    now.toIso8601String(),
-    now.add(lease).toIso8601String(),
-  );
-  if (claimed case Err(:final error)) return Err(error);
-  if ((claimed as Ok<ExecResult, SqlxError>).value.rowsAffected == 0) {
-    return const Ok(false);
-  }
-
-  final found = await deps.reads.delivery(transferId);
-  if (found case Err(:final error)) return Err(error);
-  final delivery = optionOf(
-    (found as Ok<OrderTransferDelivery?, SqlxError>).value,
-  );
-  if (delivery case None()) {
-    return Err(SqlxError.decode('Claimed transfer delivery could not be read'));
-  }
-  final message = (delivery as Some<OrderTransferDelivery>).value;
-  try {
-    await deps.mailer.send(OrderTransferMail(
-      recipient: message.recipientEmail,
-      orderId: message.orderId,
-      token: message.token,
-      expiresAt: message.expiresAt,
-    ));
-  } on Object {
-    final released = await deps.updates.releaseDelivery(
-      transferId,
-      'SMTP delivery failed',
-    );
-    if (released case Err(:final error)) return Err(error);
-    return const Ok(false);
-  }
-
-  final delivered = await deps.updates.markDelivered(
-    transferId,
-    deps.clock.now().toUtc().toIso8601String(),
-  );
-  if (delivered case Err(:final error)) return Err(error);
-  if ((delivered as Ok<ExecResult, SqlxError>).value.rowsAffected != 1) {
-    return Err(SqlxError.decode('Transfer delivery lease was lost'));
-  }
-  return const Ok(true);
 }

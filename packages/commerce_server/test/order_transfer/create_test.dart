@@ -55,11 +55,12 @@ void main() {
     expect(scenario.mailer.attempts, isEmpty);
   });
 
-  test('request rejects a cancelled order', () async {
+  test('request rejects a canceled order', () async {
     scenario = await TransferScenario.start();
     final order = await scenario.ownedOrder();
     await queryExecute(
-      "UPDATE orders SET status = 'cancelled' WHERE id = ?",
+      "UPDATE orders SET status = 'canceled', "
+      "canceled_at = '2026-09-14T00:00:00.000Z' WHERE id = ?",
       [order.orderId],
     ).execute(scenario.harness.database.executor);
 

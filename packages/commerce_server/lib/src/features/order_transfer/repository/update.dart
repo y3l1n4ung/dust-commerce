@@ -63,7 +63,7 @@ WHERE id = $1 AND status = 'requested' AND delivery_status = 'sending'
   @Query(r'''
 UPDATE orders
 SET customer_id = (SELECT customer_id FROM order_transfers WHERE id = $2)
-WHERE id = $1 AND status <> 'cancelled' AND deleted_at IS NULL
+WHERE id = $1 AND status <> 'canceled' AND deleted_at IS NULL
   AND EXISTS (
     SELECT 1 FROM order_transfers
     WHERE id = $2 AND order_id = $1 AND status = 'requested'

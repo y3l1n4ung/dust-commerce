@@ -13,7 +13,7 @@ enum AdminOrderStatus {
   completed,
 
   /// Called off before completion.
-  cancelled,
+  canceled,
 }
 
 /// Merchant-visible payment state frozen on the order.
@@ -72,8 +72,8 @@ enum AdminOrderPaymentRecordStatus {
   /// Funds have been captured.
   captured,
 
-  /// The provider attempt was cancelled.
-  cancelled,
+  /// The provider attempt was canceled.
+  canceled,
 
   /// The provider attempt failed.
   failed,

@@ -16,12 +16,12 @@ final class AdminOrderLifecycleBadge extends StatelessWidget {
         label: switch (status) {
           AdminOrderStatus.pending => 'Pending',
           AdminOrderStatus.completed => 'Completed',
-          AdminOrderStatus.cancelled => 'Cancelled',
+          AdminOrderStatus.canceled => 'Canceled',
         },
         color: switch (status) {
           AdminOrderStatus.pending => const Color(0xFFF59E0B),
           AdminOrderStatus.completed => const Color(0xFF22C55E),
-          AdminOrderStatus.cancelled => const Color(0xFFEF4444),
+          AdminOrderStatus.canceled => const Color(0xFFEF4444),
         },
       );
 }

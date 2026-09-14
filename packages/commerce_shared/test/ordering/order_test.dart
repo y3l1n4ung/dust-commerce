@@ -103,18 +103,18 @@ void main() {
     });
 
     test('cancelling a pending order leaves the payment awaiting', () {
-      final cancelled = placed().cancelled();
+      final canceled = placed().canceled();
 
-      expect(cancelled.status, OrderStatus.cancelled);
-      expect(cancelled.paymentStatus, PaymentStatus.awaiting);
+      expect(canceled.status, OrderStatus.canceled);
+      expect(canceled.paymentStatus, PaymentStatus.awaiting);
     });
 
     test('refuses to cancel an order already paid', () {
-      expect(() => placed().captured().cancelled(), throwsStateError);
+      expect(() => placed().captured().canceled(), throwsStateError);
     });
 
-    test('refuses to capture an order already cancelled', () {
-      expect(() => placed().cancelled().captured(), throwsStateError);
+    test('refuses to capture an order already canceled', () {
+      expect(() => placed().canceled().captured(), throwsStateError);
     });
   });
 

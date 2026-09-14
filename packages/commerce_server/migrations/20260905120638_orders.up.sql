@@ -18,8 +18,9 @@ CREATE TABLE orders (
   discount_total     INTEGER NOT NULL DEFAULT 0 CHECK (discount_total >= 0),
   tax                INTEGER NOT NULL CHECK (tax >= 0),
   total              INTEGER NOT NULL CHECK (total >= 0),
+  -- Names match Medusa's API so storage and response status cannot drift.
   status             TEXT NOT NULL DEFAULT 'pending'
-                     CHECK (status IN ('pending', 'completed', 'cancelled')),
+                     CHECK (status IN ('pending', 'completed', 'canceled')),
   payment_status     TEXT NOT NULL DEFAULT 'awaiting'
                      CHECK (payment_status IN ('awaiting', 'captured', 'refunded')),
   -- Shipping/promotion labels are copied so later catalog edits do not rewrite history.
@@ -29,6 +30,10 @@ CREATE TABLE orders (
   metadata           TEXT CHECK (metadata IS NULL OR json_valid(metadata)),
   -- Business event time is explicit; created_at remains the database insert time.
   placed_at          TEXT NOT NULL,
+  -- Cancellation time makes the irreversible lifecycle event auditable.
+  canceled_at        TEXT,
+  -- Nullable actor preserves the event if an Admin account is later deleted.
+  canceled_by        TEXT REFERENCES admin_users (id) ON DELETE SET NULL,
   created_at         TEXT NOT NULL DEFAULT
                      (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
   updated_at         TEXT NOT NULL DEFAULT
@@ -36,7 +41,12 @@ CREATE TABLE orders (
   deleted_at         TEXT,
   -- Database checks make a corrupted or contradictory order total impossible.
   CHECK (discount_total <= subtotal + shipping_total),
-  CHECK (total = subtotal + shipping_total - discount_total + tax)
+  CHECK (total = subtotal + shipping_total - discount_total + tax),
+  -- A status without its event time, or an event on an open order, is invalid.
+  CHECK (
+    (status = 'canceled' AND canceled_at IS NOT NULL) OR
+    (status <> 'canceled' AND canceled_at IS NULL AND canceled_by IS NULL)
+  )
 );
 
 CREATE INDEX idx_orders_customer ON orders (customer_id)

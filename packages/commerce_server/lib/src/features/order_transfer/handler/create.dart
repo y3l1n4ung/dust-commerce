@@ -34,11 +34,11 @@ Future<Result<OrderTransferResponse, Rejection>> requestOrderTransferHandler(
       Err(Rejection.notFound('Order "$orderId"')),
     Err(
       error: RequestOrderTransferRejected(
-        failure: RequestOrderTransferFailure.cancelled,
+        failure: RequestOrderTransferFailure.canceled,
       )
     ) =>
       const Err(
-        Rejection.status(422, 'A cancelled order cannot be transferred'),
+        Rejection.status(422, 'A canceled order cannot be transferred'),
       ),
     Err(
       error: RequestOrderTransferRejected(

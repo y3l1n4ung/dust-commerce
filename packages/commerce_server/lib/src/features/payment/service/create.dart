@@ -12,8 +12,8 @@ enum AuthorizeFailure {
   /// No order with that id, or not this caller's.
   noOrder,
 
-  /// The order was cancelled, so there is nothing to pay.
-  cancelled,
+  /// The order was canceled, so there is nothing to pay.
+  canceled,
 }
 
 /// Starts a payment for [orderId], for the amount the order says.
@@ -48,8 +48,8 @@ Future<Result<Result<OrderResponse, AuthorizeFailure>, SqlxError>>
     if (!ownsOrder) {
       return const Ok(Err(AuthorizeFailure.noOrder));
     }
-    if (order.status == OrderStatus.cancelled) {
-      return const Ok(Err(AuthorizeFailure.cancelled));
+    if (order.status == OrderStatus.canceled) {
+      return const Ok(Err(AuthorizeFailure.canceled));
     }
 
     final existing = await reads.forOrder(orderId);

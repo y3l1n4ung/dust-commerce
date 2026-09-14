@@ -488,7 +488,7 @@ Object? _$OrderStatusSerialize(OrderStatus instance) {
   return switch (instance) {
     OrderStatus.pending => 'pending',
     OrderStatus.completed => 'completed',
-    OrderStatus.cancelled => 'cancelled',
+    OrderStatus.canceled => 'canceled',
   };
 }
 
@@ -499,7 +499,7 @@ OrderStatus _$OrderStatusDeserialize(Object? json, [String key = 'json']) {
   return switch (json) {
     'pending' => OrderStatus.pending,
     'completed' => OrderStatus.completed,
-    'cancelled' => OrderStatus.cancelled,
+    'canceled' => OrderStatus.canceled,
     _ => throw ArgumentError.value(json, key, 'unknown value for OrderStatus at $key'),
   };
 }
