@@ -1,20 +1,20 @@
-import 'package:admin_app/src/order/admin_create_shipment_dialog.dart';
+import 'package:admin_app/src/order/admin_mark_delivered_dialog.dart';
 import 'package:admin_app/src/order/admin_order_detail_state.dart';
 import 'package:admin_app/src/order/admin_order_detail_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
-/// Opens Medusa's create-shipment focus flow for one pending fulfillment.
-final class AdminCreateShipmentAction extends StatelessWidget {
-  /// Creates the action for one physical fulfillment.
-  const AdminCreateShipmentAction({
+/// Opens Medusa's confirmation prompt for an active fulfillment.
+final class AdminMarkDeliveredAction extends StatelessWidget {
+  /// Creates a delivery action for one active fulfillment.
+  const AdminMarkDeliveredAction({
     required this.order,
     required this.fulfillment,
     super.key,
   });
 
-  /// Pending fulfillment to ship.
+  /// Fulfillment to mark delivered.
   final AdminOrderFulfillment fulfillment;
 
   /// Parent order returned by the mutation.
@@ -23,7 +23,7 @@ final class AdminCreateShipmentAction extends StatelessWidget {
   Future<void> _open(BuildContext context) => showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (context) => AdminCreateShipmentDialog(
+        builder: (context) => AdminMarkDeliveredDialog(
           order: order,
           fulfillment: fulfillment,
         ),
@@ -34,17 +34,15 @@ final class AdminCreateShipmentAction extends StatelessWidget {
     final detail = context.watchAdminOrderDetailViewModel().value;
     return OutlinedButton(
       onPressed: detail.status == AdminOrderDetailStatus.saving ||
-              !canShipAdminFulfillment(fulfillment)
+              !canMarkAdminFulfillmentDelivered(fulfillment)
           ? null
           : () => _open(context),
-      child: const Text('Mark as shipped'),
+      child: const Text('Mark as delivered'),
     );
   }
 }
 
-/// Mirrors Medusa's visibility rule for a physical shipment action.
-bool canShipAdminFulfillment(AdminOrderFulfillment fulfillment) =>
-    fulfillment.requiresShipping &&
+/// Mirrors Medusa: shipment is not required before delivery or pickup.
+bool canMarkAdminFulfillmentDelivered(AdminOrderFulfillment fulfillment) =>
     fulfillment.canceledAt is None<DateTime> &&
-    fulfillment.shippedAt is None<DateTime> &&
     fulfillment.deliveredAt is None<DateTime>;

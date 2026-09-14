@@ -104,15 +104,26 @@ final class _AdminFulfillmentCardActions extends StatelessWidget {
   final AdminOrderDetail order;
 
   @override
-  Widget build(BuildContext context) => Container(
-        color: Theme.of(context).colorScheme.surfaceContainerLowest,
-        padding: const EdgeInsets.all(16),
-        alignment: Alignment.centerRight,
-        child: AdminCreateShipmentAction(
-          order: order,
-          fulfillment: fulfillment,
-        ),
-      );
+  Widget build(BuildContext context) {
+    final showDelivery = canMarkAdminFulfillmentDelivered(fulfillment);
+    final showShipping = canShipAdminFulfillment(fulfillment);
+    if (!showDelivery && !showShipping) return const SizedBox.shrink();
+    return Container(
+      color: Theme.of(context).colorScheme.surfaceContainerLowest,
+      padding: const EdgeInsets.all(16),
+      alignment: Alignment.centerRight,
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          if (showDelivery)
+            AdminMarkDeliveredAction(order: order, fulfillment: fulfillment),
+          if (showShipping)
+            AdminCreateShipmentAction(order: order, fulfillment: fulfillment),
+        ],
+      ),
+    );
+  }
 }
 
 final class _AdminFulfillmentBorder extends StatelessWidget {
