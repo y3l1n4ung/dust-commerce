@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/admin_customer_group/handler/create.dart';
+import 'package:commerce_server/src/features/admin_customer_group/handler/delete.dart';
 import 'package:commerce_server/src/features/admin_customer_group/handler/read.dart';
 import 'package:commerce_server/src/features/admin_customer_group/handler/update.dart';
 import 'package:commerce_server/src/features/admin_customer_group/list_handler.dart';
@@ -14,7 +15,7 @@ Router adminCustomerGroupRoutes() => Router()
   )
   ..route(
     '/customer-groups/{id}',
-    get(readAdminCustomerGroupHandler).post(
-      updateAdminCustomerGroupHandler,
-    ),
+    get(readAdminCustomerGroupHandler)
+        .post(updateAdminCustomerGroupHandler)
+        .delete(deleteAdminCustomerGroupHandler),
   );
