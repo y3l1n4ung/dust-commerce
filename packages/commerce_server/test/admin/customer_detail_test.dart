@@ -57,6 +57,7 @@ void main() {
     expect((addresses.single! as Map<String, Object?>).keys, {
       'address_1',
       'address_2',
+      'address_name',
       'city',
       'company',
       'country_code',

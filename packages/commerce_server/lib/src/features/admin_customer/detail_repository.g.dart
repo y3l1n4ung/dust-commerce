@@ -34,6 +34,7 @@ SELECT customer.id,
        coalesce((
          SELECT json_group_array(json_object(
            'id', address.id,
+           'address_name', address.address_name,
            'first_name', address.first_name,
            'last_name', address.last_name,
            'company', address.company,

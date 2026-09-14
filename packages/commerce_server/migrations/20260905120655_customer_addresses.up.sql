@@ -4,15 +4,24 @@ CREATE TABLE customer_addresses (
   id                  TEXT PRIMARY KEY,
   customer_id         TEXT NOT NULL REFERENCES customers (id)
                       ON DELETE CASCADE,
-  first_name          TEXT NOT NULL CHECK (length(trim(first_name)) > 0),
-  last_name           TEXT NOT NULL CHECK (length(trim(last_name)) > 0),
-  company             TEXT,
-  phone               TEXT,
+  -- Merchant label distinguishes multiple reusable destinations.
+  address_name        TEXT CHECK (address_name IS NULL
+                                  OR length(trim(address_name)) > 0),
+  first_name          TEXT CHECK (first_name IS NULL
+                                  OR length(trim(first_name)) > 0),
+  last_name           TEXT CHECK (last_name IS NULL
+                                  OR length(trim(last_name)) > 0),
+  company             TEXT CHECK (company IS NULL
+                                  OR length(trim(company)) > 0),
+  phone               TEXT CHECK (phone IS NULL OR length(trim(phone)) > 0),
   address_1           TEXT NOT NULL CHECK (length(trim(address_1)) > 0),
-  address_2           TEXT,
-  city                TEXT NOT NULL CHECK (length(trim(city)) > 0),
-  province            TEXT,
-  postal_code         TEXT NOT NULL CHECK (length(trim(postal_code)) > 0),
+  address_2           TEXT CHECK (address_2 IS NULL
+                                  OR length(trim(address_2)) > 0),
+  city                TEXT CHECK (city IS NULL OR length(trim(city)) > 0),
+  province            TEXT CHECK (province IS NULL
+                                  OR length(trim(province)) > 0),
+  postal_code         TEXT CHECK (postal_code IS NULL
+                                  OR length(trim(postal_code)) > 0),
   -- Lowercase ISO code makes region and country comparisons deterministic.
   country_code        TEXT NOT NULL
                       CHECK (length(country_code) = 2

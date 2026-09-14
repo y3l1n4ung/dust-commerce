@@ -10,6 +10,7 @@ final class AdminCustomerAddressResponse with _$AdminCustomerAddressResponse {
   /// Creates one merchant-visible reusable destination.
   const AdminCustomerAddressResponse({
     required this.id,
+    required this.addressName,
     required this.firstName,
     required this.lastName,
     required this.company,
@@ -23,6 +24,10 @@ final class AdminCustomerAddressResponse with _$AdminCustomerAddressResponse {
     required this.isDefaultShipping,
     required this.isDefaultBilling,
   });
+
+  /// Merchant-facing destination label when supplied.
+  @Sqlx(rename: 'address_name')
+  final String? addressName;
 
   /// Decodes one address from the aggregate SQL projection.
   factory AdminCustomerAddressResponse.fromJson(Map<String, Object?> json) =>
@@ -39,7 +44,7 @@ final class AdminCustomerAddressResponse with _$AdminCustomerAddressResponse {
   final String? address2;
 
   /// City or locality.
-  final String city;
+  final String? city;
 
   /// Recipient company when supplied.
   final String? company;
@@ -48,7 +53,7 @@ final class AdminCustomerAddressResponse with _$AdminCustomerAddressResponse {
   final String countryCode;
 
   /// Recipient given name.
-  final String firstName;
+  final String? firstName;
 
   /// Stable opaque address identifier.
   final String id;
@@ -62,13 +67,13 @@ final class AdminCustomerAddressResponse with _$AdminCustomerAddressResponse {
   final bool isDefaultShipping;
 
   /// Recipient family name.
-  final String lastName;
+  final String? lastName;
 
   /// Courier contact number when supplied.
   final String? phone;
 
   /// Postal or ZIP code.
-  final String postalCode;
+  final String? postalCode;
 
   /// State, province, or region when supplied.
   final String? province;

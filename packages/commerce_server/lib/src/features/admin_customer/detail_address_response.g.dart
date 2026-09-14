@@ -35,15 +35,16 @@ final class $AdminCustomerAddressResponseDeserializer implements Deserializer<Ad
 AdminCustomerAddressResponse _$AdminCustomerAddressResponseFromRow(Row row) {
   return AdminCustomerAddressResponse(
     id: row.read<String>('id'),
-    firstName: row.read<String>('firstName'),
-    lastName: row.read<String>('lastName'),
+    addressName: row.readNullable<String>('address_name'),
+    firstName: row.readNullable<String>('firstName'),
+    lastName: row.readNullable<String>('lastName'),
     company: row.readNullable<String>('company'),
     phone: row.readNullable<String>('phone'),
     address1: row.read<String>('address_1'),
     address2: row.readNullable<String>('address_2'),
-    city: row.read<String>('city'),
+    city: row.readNullable<String>('city'),
     province: row.readNullable<String>('province'),
-    postalCode: row.read<String>('postalCode'),
+    postalCode: row.readNullable<String>('postalCode'),
     countryCode: row.read<String>('countryCode'),
     isDefaultShipping: _AdminCustomerAddressFlag().decode(row.read<int>('isDefaultShipping')),
     isDefaultBilling: _AdminCustomerAddressFlag().decode(row.read<int>('isDefaultBilling')),
@@ -78,6 +79,7 @@ extension $AdminCustomerAddressResponseQuery on QueryAs<AdminCustomerAddressResp
 
 Map<String, Object?> _$AdminCustomerAddressResponseSerialize(AdminCustomerAddressResponse instance) {
   return <String, Object?>{
+    'address_name': instance.addressName,
     'address_1': instance.address1,
     'address_2': instance.address2,
     'city': instance.city,
@@ -99,6 +101,9 @@ Map<String, Object?> _$AdminCustomerAddressResponseToJson(AdminCustomerAddressRe
 
 // factory AdminCustomerAddressResponse.fromJson(Map<String, Object?> json) => _$AdminCustomerAddressResponseFromJson(json);
 AdminCustomerAddressResponse _$AdminCustomerAddressResponseDeserialize(Map<String, Object?> json) {
+  final addressNameValue = json['address_name'] == null
+      ? null
+      : JsonHelper.as<String>(json['address_name'], 'address_name', 'String');
   final address1Value = JsonHelper.as<String>(
     json['address_1'],
     'address_1',
@@ -107,7 +112,9 @@ AdminCustomerAddressResponse _$AdminCustomerAddressResponseDeserialize(Map<Strin
   final address2Value = json['address_2'] == null
       ? null
       : JsonHelper.as<String>(json['address_2'], 'address_2', 'String');
-  final cityValue = JsonHelper.as<String>(json['city'], 'city', 'String');
+  final cityValue = json['city'] == null
+      ? null
+      : JsonHelper.as<String>(json['city'], 'city', 'String');
   final companyValue = json['company'] == null
       ? null
       : JsonHelper.as<String>(json['company'], 'company', 'String');
@@ -116,11 +123,9 @@ AdminCustomerAddressResponse _$AdminCustomerAddressResponseDeserialize(Map<Strin
     'country_code',
     'String',
   );
-  final firstNameValue = JsonHelper.as<String>(
-    json['first_name'],
-    'first_name',
-    'String',
-  );
+  final firstNameValue = json['first_name'] == null
+      ? null
+      : JsonHelper.as<String>(json['first_name'], 'first_name', 'String');
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final isDefaultBillingValue = JsonHelper.as<bool>(
     json['is_default_billing'],
@@ -132,25 +137,22 @@ AdminCustomerAddressResponse _$AdminCustomerAddressResponseDeserialize(Map<Strin
     'is_default_shipping',
     'bool',
   );
-  final lastNameValue = JsonHelper.as<String>(
-    json['last_name'],
-    'last_name',
-    'String',
-  );
+  final lastNameValue = json['last_name'] == null
+      ? null
+      : JsonHelper.as<String>(json['last_name'], 'last_name', 'String');
   final phoneValue = json['phone'] == null
       ? null
       : JsonHelper.as<String>(json['phone'], 'phone', 'String');
-  final postalCodeValue = JsonHelper.as<String>(
-    json['postal_code'],
-    'postal_code',
-    'String',
-  );
+  final postalCodeValue = json['postal_code'] == null
+      ? null
+      : JsonHelper.as<String>(json['postal_code'], 'postal_code', 'String');
   final provinceValue = json['province'] == null
       ? null
       : JsonHelper.as<String>(json['province'], 'province', 'String');
 
   return AdminCustomerAddressResponse(
     id: idValue,
+    addressName: addressNameValue,
     firstName: firstNameValue,
     lastName: lastNameValue,
     company: companyValue,
