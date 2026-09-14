@@ -22,6 +22,10 @@ abstract interface class AdminOrderDetailApi {
   @POST('/admin/orders/{id}/cancel')
   Future<AdminOrderDetail> cancelOrder(@Path() String id);
 
+  /// Completes one non-canceled order and returns the refreshed snapshot.
+  @POST('/admin/orders/{id}/complete')
+  Future<AdminOrderDetail> completeOrder(@Path() String id);
+
   /// Lists active stock locations for the fulfillment form.
   @GET('/admin/stock-locations')
   Future<AdminStockLocationList> stockLocations(
