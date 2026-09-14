@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/admin_customer/create_handler.dart';
+import 'package:commerce_server/src/features/admin_customer/delete_handler.dart';
 import 'package:commerce_server/src/features/admin_customer/detail_handler.dart';
 import 'package:commerce_server/src/features/admin_customer/handler.dart';
 import 'package:commerce_server/src/features/admin_customer/update_handler.dart';
@@ -12,5 +13,7 @@ Router adminCustomerRoutes() => Router()
   )
   ..route(
     '/customers/{id}',
-    get(readAdminCustomerHandler).patch(updateAdminCustomerHandler),
+    get(readAdminCustomerHandler)
+        .patch(updateAdminCustomerHandler)
+        .delete(deleteAdminCustomerHandler),
   );
