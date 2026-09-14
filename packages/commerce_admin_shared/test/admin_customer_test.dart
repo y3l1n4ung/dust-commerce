@@ -136,4 +136,17 @@ void main() {
       'phone': '+1 555 0102',
     });
   });
+
+  test('customer deletion decodes only the Medusa acknowledgement', () {
+    final deleted = AdminCustomerDeleted.fromJson({
+      'id': 'cus_guest',
+      'object': 'customer',
+      'deleted': true,
+    });
+
+    expect(deleted.id, 'cus_guest');
+    expect(deleted.object, 'customer');
+    expect(deleted.deleted, isTrue);
+    expect(deleted.toJson().keys, {'id', 'object', 'deleted'});
+  });
 }
