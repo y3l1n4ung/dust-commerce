@@ -5,6 +5,7 @@ export 'src/admin_auth.dart';
 export 'src/admin_cancel_fulfillment.dart';
 export 'src/admin_create_fulfillment.dart';
 export 'src/admin_create_shipment.dart';
+export 'src/admin_create_customer.dart';
 export 'src/admin_customer.dart';
 export 'src/admin_customer_address.dart';
 export 'src/admin_customer_detail.dart';

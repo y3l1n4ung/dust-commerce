@@ -83,4 +83,36 @@ void main() {
       'addresses',
     });
   });
+
+  test('customer creation normalizes the source form allowlist', () {
+    final input = AdminCreateCustomer.fromJson({
+      'email': '  NEW.CUSTOMER@Example.com ',
+      'first_name': 'Katherine',
+      'last_name': 'Johnson',
+      'company_name': null,
+      'phone': '+1 202 555 0147',
+    });
+
+    expect(input.email, 'new.customer@example.com');
+    expect(input.companyName, const None<String>());
+    expect(input.firstName, const Some('Katherine'));
+    expect(input.validate().isValid, isTrue);
+    expect(input.toJson(), {
+      'email': 'new.customer@example.com',
+      'company_name': null,
+      'first_name': 'Katherine',
+      'last_name': 'Johnson',
+      'phone': '+1 202 555 0147',
+    });
+    expect(
+      AdminCreateCustomer(
+        email: 'not-an-email',
+        companyNameValue: null,
+        firstNameValue: null,
+        lastNameValue: null,
+        phoneValue: null,
+      ).validate().isValid,
+      isFalse,
+    );
+  });
 }
