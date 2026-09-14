@@ -1,6 +1,11 @@
 /// Protected merchant order listing.
 library;
 
+export 'archive_order_failure.dart';
+export 'archive_order_handler.dart';
+export 'archive_order_model.dart';
+export 'archive_order_repository.dart';
+export 'archive_order_service.dart';
 export 'deps.dart';
 export 'cancel_order_failure.dart';
 export 'cancel_order_handler.dart';
