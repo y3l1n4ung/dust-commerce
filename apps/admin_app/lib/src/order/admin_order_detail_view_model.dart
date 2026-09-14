@@ -6,6 +6,7 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'admin_order_detail_view_model.g.dart';
+part 'admin_order_delivery_view_model.dart';
 
 /// Dependencies for one authenticated merchant order detail.
 final class AdminOrderDetailViewModelArgs extends ViewModelArgs {
@@ -124,6 +125,24 @@ final class AdminOrderDetailViewModel extends $AdminOrderDetailViewModel {
       _saveFailure('Unable to create this shipment. Try again.');
       return false;
     }
+  }
+
+  int _beginSave() {
+    final revision = ++_revision;
+    emit(state.copyWith(
+      status: AdminOrderDetailStatus.saving,
+      failure: const None(),
+    ));
+    return revision;
+  }
+
+  bool _publishSaved(int revision, AdminOrderDetail order) {
+    if (revision != _revision) return false;
+    emit(AdminOrderDetailState(
+      status: AdminOrderDetailStatus.ready,
+      order: Some(order),
+    ));
+    return true;
   }
 
   void _fail(String message) => emit(AdminOrderDetailState(

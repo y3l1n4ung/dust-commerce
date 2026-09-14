@@ -120,3 +120,15 @@ final adminShippedOrderDetailJson = <String, Object?>{
     },
   ],
 };
+
+final adminDeliveredOrderDetailJson = <String, Object?>{
+  ...adminOrderDetailJson,
+  'fulfillment_status': 'partially_delivered',
+  'fulfillments': <Object?>[
+    <String, Object?>{
+      ...adminFulfillmentJson,
+      'delivered_at': '2026-09-14T15:00:00.000Z',
+      'updated_at': '2026-09-14T15:00:00.000Z',
+    },
+  ],
+};

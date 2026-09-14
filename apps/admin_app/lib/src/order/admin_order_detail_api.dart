@@ -50,4 +50,12 @@ abstract interface class AdminOrderDetailApi {
     @Path('fulfillment_id') String fulfillmentId,
     @Body() AdminCreateShipment body,
   );
+
+  /// Marks one active fulfillment delivered and returns the refreshed order.
+  @POST('/admin/orders/{id}/fulfillments/{fulfillment_id}/mark-as-delivered')
+  Future<AdminOrderDetail> markDelivered(
+    @Path() String id,
+    @Path('fulfillment_id') String fulfillmentId,
+    @Body() AdminMarkFulfillmentDelivered body,
+  );
 }
