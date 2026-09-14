@@ -1,13 +1,12 @@
 import 'package:admin_app/src/product/admin_product_delete.dart';
 import 'package:admin_app/src/product/admin_product_export_drawer.dart';
 import 'package:admin_app/src/product/admin_product_import_drawer.dart';
+import 'package:admin_app/src/product/admin_product_page_body.dart';
 import 'package:admin_app/src/product/admin_product_page_header.dart';
-import 'package:admin_app/src/product/admin_product_state.dart';
 import 'package:admin_app/src/product/admin_product_pagination.dart';
-import 'package:admin_app/src/product/admin_product_table.dart';
+import 'package:admin_app/src/product/admin_product_state.dart';
 import 'package:admin_app/src/product/admin_product_toolbar.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
-import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
 /// Medusa-shaped product route backed by the authenticated admin API.
@@ -77,49 +76,19 @@ final class _AdminProductPageState extends State<AdminProductPage> {
                       context.readAdminProductViewModel().search(_query.text),
                 ),
                 Divider(height: 1, color: Theme.of(context).dividerColor),
-                _body(context, state),
+                AdminProductPageBody(
+                  onDelete: (product) =>
+                      deleteAdminProductSummary(context, product),
+                  onOpen: widget.onOpenProduct,
+                  onRetry: context.readAdminProductViewModel().load,
+                  state: state,
+                ),
                 AdminProductPagination(state: state),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _body(BuildContext context, AdminProductState state) {
-    if (state.status == AdminProductStatus.loading && state.products.isEmpty) {
-      return const Center(child: CircularProgressIndicator(strokeWidth: 2));
-    }
-    if (state.failure case Some(value: final message)
-        when state.products.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(message),
-            const SizedBox(height: 12),
-            OutlinedButton(
-              onPressed: context.readAdminProductViewModel().load,
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      );
-    }
-    if (state.products.isEmpty) {
-      return const Center(child: Text('No products found'));
-    }
-    return Stack(
-      children: [
-        AdminProductTable(
-          products: state.products,
-          onOpen: widget.onOpenProduct,
-          onDelete: (product) => deleteAdminProductSummary(context, product),
-        ),
-        if (state.status == AdminProductStatus.loading)
-          const LinearProgressIndicator(minHeight: 2),
-      ],
     );
   }
 
