@@ -23,6 +23,11 @@
   `packages/admin/dashboard/src/routes/orders/order-create-shipment/`, and
   `packages/medusa/src/api/admin/orders/[id]/fulfillments/[fulfillment_id]/shipments/route.ts`
   at the pinned commit.
+- Order-fulfillment-cancellation source:
+  `packages/admin/dashboard/src/routes/orders/order-detail/components/order-fulfillment-section/order-fulfillment-section.tsx`
+  and
+  `packages/medusa/src/api/admin/orders/[id]/fulfillments/[fulfillment_id]/cancel/route.ts`
+  at the pinned commit.
 - Order-export source:
   `packages/admin/dashboard/src/routes/orders/order-export/order-export.tsx`,
   `components/export-filters.tsx`, the order API export hook and
@@ -517,6 +522,20 @@ raster is available, so pixel parity is not claimed.
   The action and prompt are dedicated widget classes; no widget test was added.
   Accessibility enablement emitted Flutter route-label warnings before the
   mutation, but delivery emitted no new warning or error.
+- Fulfillment cancellation follows the pinned card action and cancel route.
+  Live QA created a real guest Store cart for two Essential T-Shirts, selected
+  Standard shipping and manual payment, placed and captured order #1, then
+  created its pending manual fulfillment in Admin. The card action opened the
+  exact `Are you sure?` warning and continued once. The refreshed order changed
+  from Fulfilled to Not fulfilled, retained Fulfillment #1 as Canceled, disabled
+  its Cancel action and exposed Create fulfillment again; reopening the form
+  offered the original `2 / 2` units. SQLite stored
+  `2026-09-14T00:34:07.240Z` and `owner@morrow.local` as the cancellation actor,
+  with shipped and delivered timestamps absent. All 104 non-widget Admin, 435
+  server and 11 Admin-contract tests pass; analyzers and all Dust checks are
+  clean. New UI subtrees are widget classes and no widget test was added.
+  Browser logs contained only the pre-existing Flutter route-label warnings,
+  with no cancellation warning or error.
 
 ## Open findings
 
@@ -544,9 +563,9 @@ raster is available, so pixel parity is not claimed.
   Medusa order-list and order-detail captures before pixel parity can be
   claimed. Sales-channel discovery, order query behavior and the source-shaped
   visible filter are implemented, while channel mutations remain separate.
-  Fulfillment, shipment and delivery behavior now pass live QA against the
-  pinned source structure, but their forms and prompt also lack same-state
-  Medusa captures.
+  Fulfillment, shipment, delivery and cancellation behavior now pass live QA
+  against the pinned source structure, but their forms and prompts also lack
+  same-state Medusa captures.
   Region and Order Export have source-structure and live-behavior coverage but
   also lack same-state Medusa captures.
 - P2 — Shipping-profile assignment passes source-structure and live-behavior
@@ -563,9 +582,10 @@ also passes its same-state empty-form comparison.
 Variant pricing, product stock and product deletion pass source-structure and
 live end-to-end behavior checks. Product query behavior, discovery and visible
 controls pass API, state, accessibility and same-state live comparison.
-The order list, region filtering, detail, fulfillment shipment and delivery,
-and filtered CSV export pass protected API, generated-client, responsive layout
-and live-data behavior checks against the pinned source structure.
+The order list, region filtering, detail, fulfillment shipment, delivery and
+cancellation, and filtered CSV export pass protected API, generated-client,
+responsive layout and live-data behavior checks against the pinned source
+structure.
 The product-list sales-channel slice passes its typed contract, direct SQLx
 projection, source-shaped truncation/tooltip behavior and clean-start browser
 QA. Its whole-screen density and thumbnail differences remain an open visual
