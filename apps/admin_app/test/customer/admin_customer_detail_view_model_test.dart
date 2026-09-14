@@ -61,7 +61,7 @@ void main() {
       Some(:final value) => value,
       None() => fail('customer detail was absent'),
     };
-    expect(customer.addresses.single.city, 'London');
+    expect(customer.addresses.single.city, const Some('London'));
     expect(detail.state.ordersStatus, AdminCustomerOrdersStatus.ready);
     expect(detail.state.orders.map((order) => order.id), ['ord_ada']);
     expect(detail.state.orderCount, 1);

@@ -18,18 +18,19 @@ mixin _$AdminCustomerAddress implements Serializable {
   String toString() {
     final self = this as AdminCustomerAddress;
     return 'AdminCustomerAddress('
+        'addressNameValue: ${self.addressNameValue}, '
         'line1: ${self.line1}, '
         'line2Value: ${self.line2Value}, '
-        'city: ${self.city}, '
+        'cityValue: ${self.cityValue}, '
         'companyValue: ${self.companyValue}, '
         'countryCode: ${self.countryCode}, '
-        'firstName: ${self.firstName}, '
+        'firstNameValue: ${self.firstNameValue}, '
         'id: ${self.id}, '
         'isDefaultBilling: ${self.isDefaultBilling}, '
         'isDefaultShipping: ${self.isDefaultShipping}, '
-        'lastName: ${self.lastName}, '
+        'lastNameValue: ${self.lastNameValue}, '
         'phoneValue: ${self.phoneValue}, '
-        'postalCode: ${self.postalCode}, '
+        'postalCodeValue: ${self.postalCodeValue}, '
         'provinceValue: ${self.provinceValue}'
         ')';
   }
@@ -40,18 +41,19 @@ mixin _$AdminCustomerAddress implements Serializable {
     return identical(this, other) ||
         other is AdminCustomerAddress &&
             runtimeType == other.runtimeType &&
+            other.addressNameValue == self.addressNameValue &&
             other.line1 == self.line1 &&
             other.line2Value == self.line2Value &&
-            other.city == self.city &&
+            other.cityValue == self.cityValue &&
             other.companyValue == self.companyValue &&
             other.countryCode == self.countryCode &&
-            other.firstName == self.firstName &&
+            other.firstNameValue == self.firstNameValue &&
             other.id == self.id &&
             other.isDefaultBilling == self.isDefaultBilling &&
             other.isDefaultShipping == self.isDefaultShipping &&
-            other.lastName == self.lastName &&
+            other.lastNameValue == self.lastNameValue &&
             other.phoneValue == self.phoneValue &&
-            other.postalCode == self.postalCode &&
+            other.postalCodeValue == self.postalCodeValue &&
             other.provinceValue == self.provinceValue;
   }
 
@@ -60,18 +62,19 @@ mixin _$AdminCustomerAddress implements Serializable {
     final self = this as AdminCustomerAddress;
     return Object.hashAll([
       runtimeType,
+      self.addressNameValue,
       self.line1,
       self.line2Value,
-      self.city,
+      self.cityValue,
       self.companyValue,
       self.countryCode,
-      self.firstName,
+      self.firstNameValue,
       self.id,
       self.isDefaultBilling,
       self.isDefaultShipping,
-      self.lastName,
+      self.lastNameValue,
       self.phoneValue,
-      self.postalCode,
+      self.postalCodeValue,
       self.provinceValue,
     ]);
   }
@@ -97,18 +100,19 @@ final class $AdminCustomerAddressDeserializer implements Deserializer<AdminCusto
 
 Map<String, Object?> _$AdminCustomerAddressSerialize(AdminCustomerAddress instance) {
   return <String, Object?>{
+    'address_name': instance.addressNameValue,
     'address_1': instance.line1,
     'address_2': instance.line2Value,
-    'city': instance.city,
+    'city': instance.cityValue,
     'company': instance.companyValue,
     'country_code': instance.countryCode,
-    'first_name': instance.firstName,
+    'first_name': instance.firstNameValue,
     'id': instance.id,
     'is_default_billing': instance.isDefaultBilling,
     'is_default_shipping': instance.isDefaultShipping,
-    'last_name': instance.lastName,
+    'last_name': instance.lastNameValue,
     'phone': instance.phoneValue,
-    'postal_code': instance.postalCode,
+    'postal_code': instance.postalCodeValue,
     'province': instance.provinceValue,
   };
 }
@@ -118,6 +122,9 @@ Map<String, Object?> _$AdminCustomerAddressToJson(AdminCustomerAddress instance)
 
 // factory AdminCustomerAddress.fromJson(Map<String, Object?> json) => _$AdminCustomerAddressFromJson(json);
 AdminCustomerAddress _$AdminCustomerAddressDeserialize(Map<String, Object?> json) {
+  final addressNameValueValue = json['address_name'] == null
+      ? null
+      : JsonHelper.as<String>(json['address_name'], 'address_name', 'String');
   final line1Value = JsonHelper.as<String>(
     json['address_1'],
     'address_1',
@@ -126,7 +133,9 @@ AdminCustomerAddress _$AdminCustomerAddressDeserialize(Map<String, Object?> json
   final line2ValueValue = json['address_2'] == null
       ? null
       : JsonHelper.as<String>(json['address_2'], 'address_2', 'String');
-  final cityValue = JsonHelper.as<String>(json['city'], 'city', 'String');
+  final cityValueValue = json['city'] == null
+      ? null
+      : JsonHelper.as<String>(json['city'], 'city', 'String');
   final companyValueValue = json['company'] == null
       ? null
       : JsonHelper.as<String>(json['company'], 'company', 'String');
@@ -135,11 +144,9 @@ AdminCustomerAddress _$AdminCustomerAddressDeserialize(Map<String, Object?> json
     'country_code',
     'String',
   );
-  final firstNameValue = JsonHelper.as<String>(
-    json['first_name'],
-    'first_name',
-    'String',
-  );
+  final firstNameValueValue = json['first_name'] == null
+      ? null
+      : JsonHelper.as<String>(json['first_name'], 'first_name', 'String');
   final idValue = JsonHelper.as<String>(json['id'], 'id', 'String');
   final isDefaultBillingValue = JsonHelper.as<bool>(
     json['is_default_billing'],
@@ -151,30 +158,27 @@ AdminCustomerAddress _$AdminCustomerAddressDeserialize(Map<String, Object?> json
     'is_default_shipping',
     'bool',
   );
-  final lastNameValue = JsonHelper.as<String>(
-    json['last_name'],
-    'last_name',
-    'String',
-  );
+  final lastNameValueValue = json['last_name'] == null
+      ? null
+      : JsonHelper.as<String>(json['last_name'], 'last_name', 'String');
   final phoneValueValue = json['phone'] == null
       ? null
       : JsonHelper.as<String>(json['phone'], 'phone', 'String');
-  final postalCodeValue = JsonHelper.as<String>(
-    json['postal_code'],
-    'postal_code',
-    'String',
-  );
+  final postalCodeValueValue = json['postal_code'] == null
+      ? null
+      : JsonHelper.as<String>(json['postal_code'], 'postal_code', 'String');
   final provinceValueValue = json['province'] == null
       ? null
       : JsonHelper.as<String>(json['province'], 'province', 'String');
 
   return AdminCustomerAddress(
     id: idValue,
-    firstName: firstNameValue,
-    lastName: lastNameValue,
+    addressNameValue: addressNameValueValue,
+    firstNameValue: firstNameValueValue,
+    lastNameValue: lastNameValueValue,
     line1: line1Value,
-    city: cityValue,
-    postalCode: postalCodeValue,
+    cityValue: cityValueValue,
+    postalCodeValue: postalCodeValueValue,
     countryCode: countryCodeValue,
     isDefaultShipping: isDefaultShippingValue,
     isDefaultBilling: isDefaultBillingValue,

@@ -29,7 +29,10 @@ String adminCustomerDetailText(Option<String> value) => value.match(
 
 /// Recipient identity used as the address-card title.
 String adminCustomerAddressTitle(AdminCustomerAddress address) =>
-    '${address.firstName} ${address.lastName}'.trim();
+    address.addressName.match(
+      some: (value) => value,
+      none: () => _name(address.firstName, address.lastName),
+    );
 
 /// Compact multiline destination shown by Medusa's address listicle.
 String adminCustomerAddressLines(AdminCustomerAddress address) {
@@ -38,14 +41,18 @@ String adminCustomerAddressLines(AdminCustomerAddress address) {
     address.line2.match(some: (value) => value, none: () => ''),
   ].where((value) => value.isNotEmpty).join(' ');
   final locality = [
-    address.city,
+    address.city.match(some: (value) => value, none: () => ''),
     address.province.match(some: (value) => value, none: () => ''),
   ].where((value) => value.isNotEmpty).join(', ');
-  return [
+  final postal = address.postalCode.match(
+    some: (value) => value,
+    none: () => '',
+  );
+  return <String>[
     street,
-    '$locality, ${address.postalCode}',
+    [locality, postal].where((value) => value.isNotEmpty).join(', '),
     address.countryCode.toUpperCase(),
-  ].join('\n');
+  ].where((value) => value.isNotEmpty).join('\n');
 }
 
 /// Compact local date shown in the customer table.

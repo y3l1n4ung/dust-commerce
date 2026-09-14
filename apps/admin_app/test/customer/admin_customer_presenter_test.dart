@@ -57,11 +57,12 @@ AdminCustomerDetail _detail() => AdminCustomerDetail(
       addresses: const [
         AdminCustomerAddress(
           id: 'addr_ada',
-          firstName: 'Ada',
-          lastName: 'Lovelace',
+          addressNameValue: null,
+          firstNameValue: 'Ada',
+          lastNameValue: 'Lovelace',
           line1: '12 St James Square',
-          city: 'London',
-          postalCode: 'SW1Y 4LB',
+          cityValue: 'London',
+          postalCodeValue: 'SW1Y 4LB',
           countryCode: 'gb',
           isDefaultShipping: true,
           isDefaultBilling: false,
