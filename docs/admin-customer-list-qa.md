@@ -32,9 +32,8 @@ update time.
   account/date filters, ordering and stable server paging survive refreshes.
 - Every UI subtree is a widget class. No widget test was added.
 
-Customer creation, detail, mutation and groups are not implemented in this
-slice. The source-shaped Create action is disabled with an explicit capability
-tooltip, and rows do not pretend to open an unavailable detail route.
+Customer creation and detail are now covered by their own QA slices. Mutation
+and groups remain separate issue #33 responsibilities.
 
 ## Guest acquisition correction
 
