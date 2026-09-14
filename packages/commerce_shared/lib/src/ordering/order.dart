@@ -13,13 +13,13 @@ part 'order_values.dart';
 @Derive([Serialize(), Deserialize()])
 @SerDe(renameAll: SerDeRename.snakeCase)
 enum OrderStatus {
-  /// Placed, not yet paid for.
+  /// Placed and not yet completed, independent of payment state.
   pending,
 
-  /// Paid and done.
+  /// Explicitly completed after its post-purchase work finishes.
   completed,
 
-  /// Called off before payment.
+  /// Called off before completion.
   cancelled,
 }
 
@@ -37,7 +37,7 @@ enum PaymentStatus {
   refunded,
 }
 
-/// Public payment facts needed to explain a completed order to its buyer.
+/// Public payment facts needed to explain a paid order to its buyer.
 ///
 /// Provider metadata and credentials stay server-side. This receipt snapshot
 /// contains only the adapter name, charged amount, and event time Medusa shows

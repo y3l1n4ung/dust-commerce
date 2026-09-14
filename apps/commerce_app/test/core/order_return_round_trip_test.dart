@@ -66,6 +66,12 @@ void main() {
     ));
     await api.authorizePayment(placed.id);
     final paid = await api.capturePayment(placed.id);
+    // Payment and completion are separate transitions; this fixture exercises
+    // the generated return client while Admin completion gets its own slice.
+    await queryExecute(
+      "UPDATE orders SET status = 'completed' WHERE id = ?",
+      [paid.id],
+    ).execute(database.executor);
 
     final returned = await api.requestOrderReturn(OrderReturnRequestBody(
       orderId: paid.id,

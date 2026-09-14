@@ -44,7 +44,17 @@ final class ReturnScenario {
         ..bearer(account.token);
       final captured = await capture.send();
       captured.assertOk();
-      order = Order.fromJson(captured.json! as Map<String, Object?>);
+      // Completion is independent from payment capture; model that Admin
+      // transition explicitly until the dedicated completion slice lands.
+      await queryExecute(
+        "UPDATE orders SET status = 'completed' WHERE id = ?",
+        [order.id],
+      ).execute(harness.database.executor);
+      final read = client.get('/store/orders/${order.id}')
+        ..bearer(account.token);
+      final refreshed = await read.send();
+      refreshed.assertOk();
+      order = Order.fromJson(refreshed.json! as Map<String, Object?>);
     }
     return (order: order, token: account.token);
   }

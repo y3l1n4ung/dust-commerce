@@ -19,14 +19,14 @@ enum CaptureFailure {
   cancelled,
 }
 
-/// Captures the payment on [orderId], completing the order.
+/// Captures the payment on [orderId] without completing its lifecycle.
 ///
 /// Both writes happen in one transaction: an order marked paid whose payment
 /// row still says authorised, or the reverse, is a reconciliation problem
 /// somebody discovers a month later.
 ///
 /// Capture is conditional in SQL, so a second attempt affects no rows and
-/// returns the already-completed order rather than moving money again.
+/// returns the already-paid order rather than moving money again.
 Future<Result<Result<OrderResponse, CaptureFailure>, SqlxError>> capturePayment(
   CommerceDatabase database, {
   required String orderId,
@@ -75,8 +75,8 @@ Future<Result<Result<OrderResponse, CaptureFailure>, SqlxError>> capturePayment(
       return Ok(Ok(order));
     }
 
-    final completed = await writes.completeOrder(orderId);
-    if (completed case Err(:final error)) return Err(error);
+    final marked = await writes.markOrderCaptured(orderId);
+    if (marked case Err(:final error)) return Err(error);
 
     // The explicit response owns its public captured transition in one place.
     return Ok(Ok(order.captured()));

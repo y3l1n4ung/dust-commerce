@@ -84,7 +84,7 @@ extension OrderResponseValues on OrderResponse {
 
   Money _money(int amount) => Money(amount: amount, currencyCode: currencyCode);
 
-  /// Returns the response state after successful payment capture.
+  /// Returns the response state after payment capture only.
   OrderResponse captured() => OrderResponse(
         orderId: orderId,
         displayId: displayId,
@@ -96,7 +96,7 @@ extension OrderResponseValues on OrderResponse {
         orderDiscountTotal: orderDiscountTotal,
         orderTax: orderTax,
         orderTotal: orderTotal,
-        storedStatus: OrderStatus.completed.name,
+        storedStatus: storedStatus,
         storedPaymentStatus: PaymentStatus.captured.name,
         placedAtText: placedAtText,
         regionId: regionId,
@@ -104,7 +104,7 @@ extension OrderResponseValues on OrderResponse {
         regionTaxRate: regionTaxRate,
         regionTaxInclusive: regionTaxInclusive,
         regionCountries: regionCountries,
-        items: [for (final item in items) item.delivered()],
+        items: items,
         shippingAddressJson: shippingAddressJson,
         billingAddressJson: billingAddressJson,
         paymentAmount: paymentAmount,

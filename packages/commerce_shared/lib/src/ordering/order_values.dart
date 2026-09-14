@@ -48,7 +48,7 @@ extension OrderValues on Order {
   /// The number of units ordered.
   int get itemCount => items.fold(0, (count, item) => count + item.quantity);
 
-  /// This order with payment captured, which completes it.
+  /// This order with payment captured while its lifecycle remains open.
   ///
   /// Throws [StateError] when the order was cancelled: taking money for
   /// something called off is the failure this guard exists to prevent.
@@ -56,16 +56,7 @@ extension OrderValues on Order {
     if (status == OrderStatus.cancelled) {
       throw StateError('cannot capture payment on a cancelled order');
     }
-    return copyWith(
-      items: [
-        for (final item in items)
-          item.copyWith(
-            detail: item.detail.copyWith(deliveredQuantity: item.quantity),
-          ),
-      ],
-      status: OrderStatus.completed,
-      paymentStatus: PaymentStatus.captured,
-    );
+    return copyWith(paymentStatus: PaymentStatus.captured);
   }
 
   /// This order cancelled.

@@ -31,11 +31,11 @@ WHERE id = ? AND status = 'authorized'
   }
 
   @override
-  Future<Result<ExecResult, SqlxError>> completeOrder(String orderId) {
+  Future<Result<ExecResult, SqlxError>> markOrderCaptured(String orderId) {
     return _db.execute(
       r'''
 UPDATE orders
-SET payment_status = 'captured', status = 'completed'
+SET payment_status = 'captured'
 WHERE id = ? AND status != 'cancelled'
 ''',
       [orderId],

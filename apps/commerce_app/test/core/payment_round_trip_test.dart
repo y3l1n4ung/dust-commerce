@@ -74,7 +74,7 @@ void main() {
     expect(paid.paymentStatus, PaymentStatus.captured);
     expect(retried.id, placed.id);
     expect(retried.paymentStatus, PaymentStatus.captured);
-    expect(retried.status, OrderStatus.completed);
+    expect(retried.status, OrderStatus.pending);
   });
 }
 

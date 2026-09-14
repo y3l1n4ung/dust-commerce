@@ -93,13 +93,13 @@ void main() {
   });
 
   group('lifecycle', () {
-    test('capturing payment marks it paid and completes the order', () {
+    test('capturing payment does not complete or deliver the order', () {
       final captured = placed().captured();
 
       expect(captured.paymentStatus, PaymentStatus.captured);
       expect(captured.isPaid, isTrue);
-      expect(captured.status, OrderStatus.completed);
-      expect(captured.items.single.detail.deliveredQuantity, 2);
+      expect(captured.status, OrderStatus.pending);
+      expect(captured.items.single.detail.deliveredQuantity, 0);
     });
 
     test('cancelling a pending order leaves the payment awaiting', () {
