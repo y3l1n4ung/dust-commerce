@@ -1,4 +1,5 @@
 import 'package:commerce_server/src/features/admin_order/handler.dart';
+import 'package:commerce_server/src/features/admin_order/cancel_order_handler.dart';
 import 'package:commerce_server/src/features/admin_order/create_fulfillment_handler.dart';
 import 'package:commerce_server/src/features/admin_order/create_shipment_handler.dart';
 import 'package:commerce_server/src/features/admin_order/cancel_fulfillment_handler.dart';
@@ -12,6 +13,7 @@ Router adminOrderRoutes() => Router()
   ..route('/orders', get(listAdminOrdersHandler))
   ..route('/orders/export', get(exportAdminOrdersHandler))
   ..route('/orders/{id}', get(readAdminOrderHandler))
+  ..route('/orders/{id}/cancel', post(cancelAdminOrderHandler))
   ..route(
     '/orders/{id}/fulfillments',
     post(createAdminOrderFulfillmentHandler),
