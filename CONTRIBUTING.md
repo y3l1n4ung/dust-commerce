@@ -26,6 +26,10 @@
 8. **Package verification starts at the repository root.** Run
    `./scripts/verify_package.sh <package>` so source paths, Dust roots, working
    directories and the Dart/Flutter test runner come from one checked contract.
+9. **Source parity comes before pixel comparison.** Pin the reference commit,
+   inspect the component plus every locale and formatter it calls, and record
+   the exact visible output before implementing Flutter. Browser screenshots
+   verify the finished render; they do not replace source truth.
 
 ## Splitting
 
