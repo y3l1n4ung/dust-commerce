@@ -16,32 +16,18 @@ import 'customer_address_card.dart';
 /// Authenticated Medusa shipping-address route.
 @AppRoute('/account/addresses',
     name: 'accountAddresses', guards: [CustomerGuard])
-final class AccountAddressesPage extends StatefulWidget {
+final class AccountAddressesPage extends StatelessWidget {
   /// Creates the address-book page.
   const AccountAddressesPage({super.key});
-
-  @override
-  State<AccountAddressesPage> createState() => _AccountAddressesPageState();
-}
-
-class _AccountAddressesPageState extends State<AccountAddressesPage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final addresses = context.readAddressBookViewModel();
-      if (addresses.state.status == AddressBookStatus.idle) {
-        unawaited(addresses.load());
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     final account = context.watchAccountViewModel().value;
     final addresses = context.watchAddressBookViewModel().value;
     final customer = account.customer;
+    if (customer != null && addresses.status == AddressBookStatus.idle) {
+      _queueAddressLoad(context);
+    }
     return StoreScaffold(
       body: customer == null
           ? const Center(child: CircularProgressIndicator())
@@ -53,6 +39,15 @@ class _AccountAddressesPageState extends State<AccountAddressesPage> {
             ),
     );
   }
+}
+
+void _queueAddressLoad(BuildContext context) {
+  final addressBook = context.readAddressBookViewModel();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (addressBook.state.status == AddressBookStatus.idle) {
+      unawaited(addressBook.load());
+    }
+  });
 }
 
 final class _AddressBookContent extends StatelessWidget {
