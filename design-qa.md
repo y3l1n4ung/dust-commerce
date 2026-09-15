@@ -1279,4 +1279,72 @@ proves source-structure and local behavior parity, not pixel parity.
 
 Store authenticated order history and detail result: passed
 
+## Store language selector
+
+Source truth paths:
+
+- Pinned Medusa DTC source at commit
+  `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/layout/components/language-select/index.tsx`,
+  `components/side-menu/index.tsx`,
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/lib/data/locales.ts`,
+  and `lib/data/locale-actions.ts`.
+- Live source:
+  `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`.
+
+Implementation URL: a temporary release Store at
+`http://127.0.0.1:13004/products/t-shirt?v_id=var_tshirt_m_black` isolated
+language preference QA from the official Store session. The final build remains
+available at `http://127.0.0.1:13001`.
+
+Viewport and state: English light theme at the default `1280 x 720` viewport,
+plus Morrow compact QA at `390 x 844`, device-pixel ratio 1. Morrow had the
+Dust-compiled `en` and `my` locales; the live Medusa deployment returned no
+configured locales and therefore correctly hid its conditional Language row.
+The temporary viewport override was reset after QA.
+
+**Source and behavior findings**
+
+- Both menus use the same inset translucent panel, four primary destinations,
+  bottom preference rows, 16px flags, a trailing directional arrow, and a
+  rights line. Morrow adds only its approved branding and `Powered by dust`
+  treatment elsewhere in the Store shell.
+- The pinned selector includes Default plus configured locales, localizes each
+  language name, persists the choice, refreshes the current route, and closes
+  the side menu after selection.
+- Morrow already persisted only supported Dust locale codes and restored them
+  before routing, but its drawer remained open after selection.
+- Commit `5f5a766` closes the drawer after a successful language change and
+  replaces the selector's private `Widget` helper with a real widget class.
+  Commit `073f431` removes that resolved debt from the frozen structure
+  baseline.
+- Release-browser QA selected Burmese from a T-shirt detail page, observed the
+  drawer close, retained `/products/t-shirt?v_id=var_tshirt_m_black`, rendered
+  the translated Flutter chrome, survived a hard reload, and cleared back to
+  Default. The final browser pass reported no warning or error logs.
+
+**Comparison boundary**
+
+The live source has no configured locales, so it supplies authoritative
+unconfigured-menu geometry but no selector popup raster. Morrow's `en` and
+`my` bundles are explicit application configuration and permit the source
+interaction to be exercised locally. Product titles and descriptions remain
+server-owned English because dust-commerce has no localized-content module;
+this pass does not claim translated commerce data or Medusa cart-locale
+semantics.
+
+**Validation**
+
+- The Store release Web build succeeded.
+- All 139 Store tests pass; the five focused shell tests cover supported,
+  unsupported, persisted and cleared locale state. No widget test was added.
+- Flutter analysis reports no issue; Dust reports all 54 Store outputs clean.
+- Dust i18n checks 684 translations with zero errors; its 15 warnings remain
+  the existing stale/equal-fallback inventory outside this slice.
+- Handwritten formatting, file-size, widget composition, response boundaries,
+  and diff whitespace checks pass.
+
+Store language selector result: passed for configured local behavior; matched
+configured-source raster unavailable
+
 final result: blocked
