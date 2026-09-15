@@ -1904,4 +1904,72 @@ restoration, URL preservation, empty-cart safety, desktop and compact local
 rendering, Back navigation, and browser-log cleanliness; a same-state live
 Medusa no-cart raster remains unavailable
 
+## Store checkout Delivery state
+
+Source truth at current Medusa DTC commit
+`bd2441acc18359533758fbf4db5bc80129055d2e`:
+
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/modules/checkout/components/shipping/index.tsx`;
+- live source checkout: `https://next.medusajs.com/dk/checkout`; and
+- implementation checkout: `http://127.0.0.1:13001/checkout?step=delivery`.
+
+**Source and behavior findings**
+
+- Medusa renders Shipping method choices as one mutually exclusive radio group.
+  Each row uses 32px horizontal and 16px vertical padding, an 8px radius, a
+  16px radio-to-label gap, and 8px between choices. Selection changes the row
+  to the interactive border; calculated choices without a price are disabled.
+- The local release build uses the same row geometry and keeps price and
+  eligibility server-owned. A real address save exposed Free shipping,
+  Standard shipping and Express shipping. Free shipping was correctly disabled
+  because the cart did not satisfy its item-total rule.
+- The first semantics pass exposed the choices as buttons with `aria-current`.
+  The focused correction now exposes radio-button roles, one checked value,
+  disabled state, and a mutually exclusive group. The visible row remains a
+  concrete widget; no private method returns a Widget.
+- Local copy retains the grammatically correct “How would you like your order
+  delivered” instead of reproducing the source typo “you order”. This is a
+  deliberate production-copy correction, not an accidental visual divergence.
+
+**Interaction evidence**
+
+- Selecting Standard shipping changed authoritative Shipping to USD 5.00, Tax
+  to USD 3.50 and Total to USD 38.50. Continue to payment advanced to Payment,
+  where the collapsed Delivery summary retained Standard shipping at USD 5.00.
+- Returning to Delivery retained the selected option. Selecting Express then
+  changed Shipping to USD 15.00, Tax to USD 4.50 and Total to USD 49.50.
+- Browser accessibility reported Free shipping disabled and unchecked,
+  Standard unchecked, and Express checked. At `390 x 844`, the same selected,
+  disabled and unchecked states remained present with the compact Back label,
+  ordered checkout sections, totals and attribution; no layout overflow was
+  observed.
+
+**Evidence limits**
+
+- The current live Medusa checkout rendered its checkout shell and populated
+  cart, but its address content remained in a loading state. No remote address
+  or cart mutation was performed, so a same-state Delivery raster is not
+  claimed. The source implementation and local rendered state were compared
+  separately.
+- Medusa source contains pickup-option handling, but neither its live checkout
+  data nor the Dust backend exposes a matching pickup model. Pickup parity
+  remains open rather than being represented as a display-only option.
+- Screenshots remain current-run browser evidence instead of persisted
+  filesystem artifacts.
+
+**Validation**
+
+- All 141 Store tests pass and Flutter analysis reports no issue.
+- Dust reports all 54 Store outputs clean. Dust i18n checks 688 translations
+  with zero errors; its 15 warnings remain the existing stale/equal-fallback
+  inventory outside this slice.
+- Release Web rebuild, handwritten formatting, file-size, response-boundary,
+  project-structure and diff-whitespace checks pass. No widget test was added.
+
+Store checkout Delivery result: passed for current source-code composition,
+real API-backed eligibility and selection, recalculated totals, payment
+progression, restored choice state, radio accessibility semantics, and desktop
+and compact local rendering; same-state live Medusa and pickup parity remain
+open
+
 final result: blocked
