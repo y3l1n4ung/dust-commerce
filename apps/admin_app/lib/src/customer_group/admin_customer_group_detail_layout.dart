@@ -14,8 +14,14 @@ final class AdminCustomerGroupDetailLayout extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     required this.onOpenCustomer,
+    required this.onAddCustomer,
+    required this.onRemoveCustomers,
+    required this.membershipBusy,
     super.key,
   });
+
+  /// Opens the customer candidate focus route.
+  final VoidCallback onAddCustomer;
 
   /// Complete customer-group allowlist.
   final AdminCustomerGroupDetail customerGroup;
@@ -28,6 +34,12 @@ final class AdminCustomerGroupDetailLayout extends StatelessWidget {
 
   /// Opens one customer profile from the group table.
   final ValueChanged<String> onOpenCustomer;
+
+  /// Confirms and removes selected memberships.
+  final Future<bool> Function(List<String>) onRemoveCustomers;
+
+  /// Whether an add/remove command is in flight.
+  final bool membershipBusy;
 
   /// Current detail and customer-section state.
   final AdminCustomerGroupDetailState state;
@@ -49,6 +61,9 @@ final class AdminCustomerGroupDetailLayout extends StatelessWidget {
               AdminCustomerGroupCustomerSection(
                 state: state,
                 onOpenCustomer: onOpenCustomer,
+                onAdd: onAddCustomer,
+                onRemove: onRemoveCustomers,
+                busy: membershipBusy,
               ),
               const SizedBox(height: 12),
               AdminCustomerGroupDataSections(customerGroup: customerGroup),

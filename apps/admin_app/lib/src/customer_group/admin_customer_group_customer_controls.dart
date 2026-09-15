@@ -10,11 +10,23 @@ final class AdminCustomerGroupCustomerControls extends StatelessWidget {
   const AdminCustomerGroupCustomerControls({
     required this.search,
     required this.state,
+    required this.selectedCount,
+    required this.busy,
+    required this.onRemove,
     super.key,
   });
 
+  /// Whether a membership command blocks table actions.
+  final bool busy;
+
+  /// Removes the current selection after confirmation.
+  final VoidCallback onRemove;
+
   /// Search input owned by the parent stateful section.
   final TextEditingController search;
+
+  /// Number of selected member rows across pages.
+  final int selectedCount;
 
   /// Current customer query controls.
   final AdminCustomerGroupDetailState state;
@@ -22,10 +34,13 @@ final class AdminCustomerGroupCustomerControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (context, constraints) {
-          final title = Text(
-            'Customers',
-            style: Theme.of(context).textTheme.titleMedium,
-          );
+          final command = selectedCount == 0
+              ? const SizedBox.shrink()
+              : TextButton.icon(
+                  onPressed: busy ? null : onRemove,
+                  icon: const Icon(Icons.remove_circle_outline, size: 17),
+                  label: Text('Remove ($selectedCount)'),
+                );
           final controls = Row(mainAxisSize: MainAxisSize.min, children: [
             SizedBox(
               width: constraints.maxWidth < 520 ? 180 : 220,
@@ -47,10 +62,10 @@ final class AdminCustomerGroupCustomerControls extends StatelessWidget {
           if (constraints.maxWidth < 650) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [title, const SizedBox(height: 10), controls],
+              children: [command, const SizedBox(height: 10), controls],
             );
           }
-          return Row(children: [Expanded(child: title), controls]);
+          return Row(children: [Expanded(child: command), controls]);
         },
       );
 }

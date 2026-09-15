@@ -1,4 +1,4 @@
-import 'package:admin_app/src/customer/admin_customer_table.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_customer_table.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_state.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_view_model.dart';
 import 'package:dust_dart/fp.dart';
@@ -10,11 +10,31 @@ final class AdminCustomerGroupCustomerBody extends StatelessWidget {
   const AdminCustomerGroupCustomerBody({
     required this.state,
     required this.onOpen,
+    required this.selected,
+    required this.busy,
+    required this.onToggle,
+    required this.onTogglePage,
+    required this.onRemove,
     super.key,
   });
 
+  /// Whether a membership command blocks table actions.
+  final bool busy;
+
   /// Opens one customer detail route.
   final ValueChanged<String> onOpen;
+
+  /// Removes one row after confirmation.
+  final ValueChanged<String> onRemove;
+
+  /// Toggles one row.
+  final ValueChanged<String> onToggle;
+
+  /// Toggles every row on the current page.
+  final ValueChanged<bool> onTogglePage;
+
+  /// Selected customer ids across group pages.
+  final Set<String> selected;
 
   /// Current customer section state.
   final AdminCustomerGroupDetailState state;
@@ -48,7 +68,16 @@ final class AdminCustomerGroupCustomerBody extends StatelessWidget {
       );
     }
     return Stack(children: [
-      AdminCustomerTable(customers: state.customers, onOpen: onOpen),
+      AdminCustomerGroupCustomerTable(
+        customers: state.customers,
+        selected: selected,
+        disabled: const {},
+        busy: busy,
+        onToggle: onToggle,
+        onTogglePage: onTogglePage,
+        onOpen: onOpen,
+        onRemove: onRemove,
+      ),
       if (state.customersStatus == AdminCustomerGroupCustomersStatus.loading)
         const LinearProgressIndicator(minHeight: 2),
     ]);

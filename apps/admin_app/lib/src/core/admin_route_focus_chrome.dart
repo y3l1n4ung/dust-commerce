@@ -35,10 +35,17 @@ final class AdminRouteFocusKeyboard extends StatelessWidget {
 /// Minimal top bar used by Medusa route-focus modals.
 final class AdminRouteFocusHeader extends StatelessWidget {
   /// Creates the close affordance.
-  const AdminRouteFocusHeader({required this.onClose, super.key});
+  const AdminRouteFocusHeader({
+    required this.onClose,
+    this.trailing,
+    super.key,
+  });
 
   /// Closes the focus surface when submission is idle.
   final VoidCallback? onClose;
+
+  /// Optional status content aligned opposite the close affordance.
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -63,6 +70,8 @@ final class AdminRouteFocusHeader extends StatelessWidget {
             ),
             child: Text('esc', style: Theme.of(context).textTheme.labelSmall),
           ),
+          const Spacer(),
+          if (trailing != null) trailing!,
         ]),
       );
 }
