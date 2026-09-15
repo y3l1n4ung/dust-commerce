@@ -15,40 +15,48 @@ class HomeHero extends StatelessWidget {
           color: StoreColors.subtle,
           border: Border(bottom: BorderSide(color: StoreColors.border)),
         ),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const TranslatedText(
-                'shop_hero_title',
-                defaultText: 'Everyday essentials, considered.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 30, height: 4 / 3),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < 240) {
+              return const SizedBox.shrink();
+            }
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const TranslatedText(
+                    'shop_hero_title',
+                    defaultText: 'Everyday essentials, considered.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 30, height: 4 / 3),
+                  ),
+                  const TranslatedText(
+                    'shop_hero_subtitle',
+                    defaultText: 'Powered by dust',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 30,
+                      height: 4 / 3,
+                      color: StoreColors.foregroundSubtle,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  OutlinedButton(
+                    onPressed: () =>
+                        PrimaryScrollController.of(context).animateTo(
+                      MediaQuery.sizeOf(context).height * 0.75,
+                      duration: const Duration(milliseconds: 350),
+                      curve: Curves.easeOut,
+                    ),
+                    child: const TranslatedText(
+                      'shop_products_action',
+                      defaultText: 'Shop products',
+                    ),
+                  ),
+                ],
               ),
-              const TranslatedText(
-                'shop_hero_subtitle',
-                defaultText: 'Powered by dust',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  height: 4 / 3,
-                  color: StoreColors.foregroundSubtle,
-                ),
-              ),
-              const SizedBox(height: 24),
-              OutlinedButton(
-                onPressed: () => PrimaryScrollController.of(context).animateTo(
-                  MediaQuery.sizeOf(context).height * 0.75,
-                  duration: const Duration(milliseconds: 350),
-                  curve: Curves.easeOut,
-                ),
-                child: const TranslatedText(
-                  'shop_products_action',
-                  defaultText: 'Shop products',
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
       );
 }

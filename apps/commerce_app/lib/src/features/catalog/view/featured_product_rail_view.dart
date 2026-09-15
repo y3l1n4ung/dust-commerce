@@ -27,37 +27,49 @@ class FeaturedProductRailView extends StatelessWidget {
               horizontal: 24,
               vertical: MediaQuery.sizeOf(context).width >= 1024 ? 96 : 48,
             ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth <= 0) {
+                  return const SizedBox.shrink();
+                }
+                final desktop = constraints.maxWidth >= 976;
+                const spacing = 24.0;
+                final preferredColumns = desktop ? 3 : 2;
+                final columns =
+                    constraints.maxWidth < spacing ? 1 : preferredColumns;
+                final cardWidth =
+                    (constraints.maxWidth - (columns - 1) * spacing) / columns;
+                return Column(
                   children: [
-                    TranslatedText.dynamic(
-                      'shop_collection_${rail.collection.id}',
-                      fallback: rail.collection.title,
-                      style: Theme.of(context).textTheme.titleLarge,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TranslatedText.dynamic(
+                            'shop_collection_${rail.collection.id}',
+                            fallback: rail.collection.title,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerRight,
+                            child: StoreInteractiveLink(
+                              onPressed: () => context.navigator
+                                  .collection(handle: rail.collection.handle)
+                                  .go(),
+                              child: const TranslatedText(
+                                'shop_view_all',
+                                defaultText: 'View all',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    StoreInteractiveLink(
-                      onPressed: () => context.navigator
-                          .collection(handle: rail.collection.handle)
-                          .go(),
-                      child: const TranslatedText(
-                        'shop_view_all',
-                        defaultText: 'View all',
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                LayoutBuilder(
-                  builder: (context, constraints) {
-                    final desktop = MediaQuery.sizeOf(context).width >= 1024;
-                    final columns = desktop ? 3 : 2;
-                    const spacing = 24.0;
-                    final cardWidth =
-                        (constraints.maxWidth - (columns - 1) * spacing) /
-                            columns;
-                    return Wrap(
+                    const SizedBox(height: 32),
+                    Wrap(
                       spacing: spacing,
                       runSpacing: desktop ? 144 : 96,
                       children: [
@@ -71,10 +83,10 @@ class FeaturedProductRailView extends StatelessWidget {
                             ),
                           ),
                       ],
-                    );
-                  },
-                ),
-              ],
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),

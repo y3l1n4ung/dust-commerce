@@ -19,46 +19,56 @@ class StoreScaffold extends StatelessWidget {
     void openStore() => context.navigator.catalog().go();
 
     return Scaffold(
-      appBar: AppBar(
-        excludeHeaderSemantics: true,
-        toolbarHeight: 64,
-        leadingWidth: 88,
-        leading: Builder(
-          builder: (context) => TextButton(
-            onPressed: Scaffold.of(context).openDrawer,
-            child: const TranslatedText(
-              'shop_menu',
-              defaultText: 'Menu',
-            ),
-          ),
-        ),
-        title: Semantics(
-          button: true,
-          container: true,
-          label: brand,
-          namesRoute: true,
-          onTap: openStore,
-          child: ExcludeSemantics(
-            child: TextButton(
-              onPressed: openStore,
-              child: Text(brand),
-            ),
-          ),
-        ),
-        actions: [
-          if (MediaQuery.sizeOf(context).width >= 1024)
-            TextButton(
-              onPressed: () => context.navigator.account().go(),
-              child: const TranslatedText(
-                'shop_account_title',
-                defaultText: 'Account',
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(64),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < 240) {
+              return const SizedBox.shrink();
+            }
+            final desktop = MediaQuery.sizeOf(context).width >= 1024;
+            return AppBar(
+              excludeHeaderSemantics: true,
+              toolbarHeight: 64,
+              leadingWidth: 88,
+              leading: Builder(
+                builder: (context) => TextButton(
+                  onPressed: Scaffold.of(context).openDrawer,
+                  child: const TranslatedText(
+                    'shop_menu',
+                    defaultText: 'Menu',
+                  ),
+                ),
               ),
-            ),
-          if (MediaQuery.sizeOf(context).width >= 1024)
-            const SizedBox(width: 12),
-          const CartPreview(),
-          const SizedBox(width: 12),
-        ],
+              title: Semantics(
+                button: true,
+                container: true,
+                label: brand,
+                namesRoute: true,
+                onTap: openStore,
+                child: ExcludeSemantics(
+                  child: TextButton(
+                    onPressed: openStore,
+                    child: Text(brand),
+                  ),
+                ),
+              ),
+              actions: [
+                if (desktop)
+                  TextButton(
+                    onPressed: () => context.navigator.account().go(),
+                    child: const TranslatedText(
+                      'shop_account_title',
+                      defaultText: 'Account',
+                    ),
+                  ),
+                if (desktop) const SizedBox(width: 12),
+                const CartPreview(),
+                const SizedBox(width: 12),
+              ],
+            );
+          },
+        ),
       ),
       drawerScrimColor: Colors.transparent,
       drawer: const StoreMenu(),

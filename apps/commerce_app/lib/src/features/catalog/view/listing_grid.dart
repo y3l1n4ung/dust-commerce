@@ -34,13 +34,17 @@ class ListingGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (context, constraints) {
+          if (constraints.maxWidth <= 0) {
+            return const SizedBox.shrink();
+          }
           final viewportWidth = MediaQuery.sizeOf(context).width;
-          final columns = viewportWidth >= 1280
+          final preferredColumns = viewportWidth >= 1280
               ? 4
               : viewportWidth >= 1024
                   ? 3
                   : 2;
           const spacing = 24.0;
+          final columns = constraints.maxWidth < spacing ? 1 : preferredColumns;
           final cardWidth =
               (constraints.maxWidth - (columns - 1) * spacing) / columns;
           return Column(
