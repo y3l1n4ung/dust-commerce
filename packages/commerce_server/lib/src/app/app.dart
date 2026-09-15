@@ -49,6 +49,7 @@ Router buildApp(
     requireEmailVerification: requireEmailVerification,
   );
   return Router()
+    ..layer(const NoStoreByDefault())
     ..nest('/auth', accountAuthRoutes())
     ..nest('/auth', adminAuthRoutes())
     ..nest('/admin', adminRoutes())

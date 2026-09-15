@@ -18,6 +18,7 @@ void main() {
 
     (await client.get('/health').send())
       ..assertOk()
+      ..assertHeader('cache-control', 'no-store')
       ..assertJson({'status': 'ok'});
   });
 }
