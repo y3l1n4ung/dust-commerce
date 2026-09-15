@@ -5,6 +5,7 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'account_section.dart';
+import 'account_navigation_items.dart';
 
 /// Compact account navigation translated from Medusa's mobile AccountNav.
 final class MobileAccountNavigation extends StatelessWidget {
@@ -55,48 +56,31 @@ final class MobileAccountNavigation extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        _item(
-          Icons.person_outline,
-          context.tr('shop_account_profile', defaultText: 'Profile'),
-          () => context.navigator.accountProfile().go(),
+        MobileAccountNavigationItem(
+          icon: Icons.person_outline,
+          label: context.tr('shop_account_profile', defaultText: 'Profile'),
+          onTap: () => context.navigator.accountProfile().go(),
         ),
-        _item(
-          Icons.location_on_outlined,
-          context.tr('shop_account_addresses', defaultText: 'Addresses'),
-          () => context.navigator.accountAddresses().go(),
+        MobileAccountNavigationItem(
+          icon: Icons.location_on_outlined,
+          label: context.tr(
+            'shop_account_addresses',
+            defaultText: 'Addresses',
+          ),
+          onTap: () => context.navigator.accountAddresses().go(),
         ),
-        _item(
-          Icons.inventory_2_outlined,
-          context.tr('shop_account_orders', defaultText: 'Orders'),
-          () => context.navigator.accountOrders().go(),
+        MobileAccountNavigationItem(
+          icon: Icons.inventory_2_outlined,
+          label: context.tr('shop_account_orders', defaultText: 'Orders'),
+          onTap: () => context.navigator.accountOrders().go(),
         ),
-        _item(
-          Icons.logout,
-          context.tr('shop_account_log_out', defaultText: 'Log out'),
-          context.readAccountViewModel().signOut,
+        MobileAccountNavigationItem(
+          icon: Icons.logout,
+          label: context.tr('shop_account_log_out', defaultText: 'Log out'),
+          onTap: context.readAccountViewModel().signOut,
           enabled: !state.isBusy,
         ),
       ],
     );
   }
-
-  Widget _item(
-    IconData icon,
-    String label,
-    VoidCallback onTap, {
-    bool enabled = true,
-  }) =>
-      Column(
-        children: [
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 32),
-            leading: Icon(icon, size: 20),
-            title: Text(label),
-            trailing: const Icon(Icons.chevron_right, size: 20),
-            enabled: enabled,
-            onTap: onTap,
-          ),
-          const Divider(height: 1),
-        ],
-      );
 }

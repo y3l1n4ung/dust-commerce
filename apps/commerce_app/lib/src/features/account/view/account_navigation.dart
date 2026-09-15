@@ -4,6 +4,7 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'account_section.dart';
+import 'account_navigation_items.dart';
 
 /// Desktop account section navigation translated from Medusa AccountNav.
 final class AccountNavigation extends StatelessWidget {
@@ -27,25 +28,41 @@ final class AccountNavigation extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 16),
-          _link(
-            context,
-            AccountSection.overview,
-            context.tr('shop_account_overview', defaultText: 'Overview'),
+          AccountNavigationLink(
+            active: active,
+            section: AccountSection.overview,
+            label: context.tr(
+              'shop_account_overview',
+              defaultText: 'Overview',
+            ),
+            onPressed: () => context.navigator.account().go(),
           ),
-          _link(
-            context,
-            AccountSection.profile,
-            context.tr('shop_account_profile', defaultText: 'Profile'),
+          AccountNavigationLink(
+            active: active,
+            section: AccountSection.profile,
+            label: context.tr(
+              'shop_account_profile',
+              defaultText: 'Profile',
+            ),
+            onPressed: () => context.navigator.accountProfile().go(),
           ),
-          _link(
-            context,
-            AccountSection.addresses,
-            context.tr('shop_account_addresses', defaultText: 'Addresses'),
+          AccountNavigationLink(
+            active: active,
+            section: AccountSection.addresses,
+            label: context.tr(
+              'shop_account_addresses',
+              defaultText: 'Addresses',
+            ),
+            onPressed: () => context.navigator.accountAddresses().go(),
           ),
-          _link(
-            context,
-            AccountSection.orders,
-            context.tr('shop_account_orders', defaultText: 'Orders'),
+          AccountNavigationLink(
+            active: active,
+            section: AccountSection.orders,
+            label: context.tr(
+              'shop_account_orders',
+              defaultText: 'Orders',
+            ),
+            onPressed: () => context.navigator.accountOrders().go(),
           ),
           const SizedBox(height: 16),
           TextButton(
@@ -74,34 +91,5 @@ final class AccountNavigation extends StatelessWidget {
             ),
           ],
         ],
-      );
-
-  Widget _link(
-    BuildContext context,
-    AccountSection section,
-    String label,
-  ) =>
-      Padding(
-        padding: const EdgeInsets.only(bottom: 12),
-        child: TextButton(
-          onPressed: () => switch (section) {
-            AccountSection.overview => context.navigator.account().go(),
-            AccountSection.profile => context.navigator.accountProfile().go(),
-            AccountSection.addresses =>
-              context.navigator.accountAddresses().go(),
-            AccountSection.orders => context.navigator.accountOrders().go(),
-          },
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-            minimumSize: Size.zero,
-            foregroundColor: section == active
-                ? StoreColors.foreground
-                : StoreColors.foregroundSubtle,
-            textStyle: TextStyle(
-              fontWeight: section == active ? FontWeight.w600 : FontWeight.w400,
-            ),
-          ),
-          child: Text(label),
-        ),
       );
 }
