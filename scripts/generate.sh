@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Regenerates every committed Dust output from handwritten workspace sources.
+# Regenerates every ignored Dust output from handwritten workspace sources.
 # Formatting is intentionally separate and excludes generated .g.dart files.
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

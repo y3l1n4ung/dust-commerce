@@ -61,7 +61,7 @@ running Medusa Admin was not available, so pixel parity is not claimed.
 - Dust checks: 50 Admin-contract, 133 server, 120 database and 47 Admin-app
   outputs clean with zero stale files.
 - Every touched handwritten file is within 180 lines; `main.dart` is exactly
-  180 lines. Generated output is committed exactly as emitted.
+  180 lines. Generated output is rebuilt and validated by Dust in CI.
 - Changed-slice review found no widget-building helper method, response
   inheritance, intermediate response model or nested `Result` signature.
 - Repository-wide format and file-size gates still report only their inherited

@@ -63,6 +63,10 @@ There is no server code generator in Dust today. Handlers are written against
 `dust_server`'s API directly, and that is not a workaround — the runtime is
 designed to be written against.
 
+Generated `.g.dart` files are ignored. Local and CI builds run
+`./scripts/generate.sh` before analysis or tests; CI validates every normal,
+database, and i18n output before compiling its consumers.
+
 ## Layout
 
 ```

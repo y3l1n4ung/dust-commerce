@@ -110,10 +110,11 @@ Three Dust behaviours shaped the code and are reported upstream:
 
 ## Verifying
 
-CI runs what a contributor should run: `dust check` proves committed generated
-files match their sources, `dust check --db` validates every query against the
-real schema, `dust i18n check` catches drifted translations, and
-`scripts/check_file_size.sh` enforces the 180-line rule. All exit non-zero on
-failure, which was tested rather than assumed.
+CI starts from ignored generated output, runs `scripts/generate.sh`, and uses
+`dust check` to validate normal output, `dust check --db` to validate every
+query against the real schema, and `dust i18n check` to catch drifted
+translations before consumers compile. `scripts/check_file_size.sh` enforces
+the 180-line rule. All exit non-zero on failure, which was tested rather than
+assumed.
 
 Do not run `dart format` across a package — see [CONTRIBUTING](../../CONTRIBUTING.md).

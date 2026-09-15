@@ -88,7 +88,7 @@ Authenticated browser QA verified:
   release Web build succeeded.
 - Focused server deletion tests: 4; focused Admin deletion-state tests: 2.
 - Every touched handwritten Dart file remains below 180 lines.
-- Generated output is committed exactly as Dust emitted it.
+- Generated output is rebuilt and validated by Dust in CI.
 
 ## Remaining parity boundary
 

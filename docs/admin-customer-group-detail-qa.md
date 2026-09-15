@@ -93,7 +93,7 @@ Authenticated browser QA verified:
   build succeeded.
 - Every new or touched handwritten Dart file remains below 180 lines; the
   largest touched file is 168 lines.
-- Generated output is committed exactly as Dust emitted it.
+- Generated output is rebuilt and validated by Dust in CI.
 
 ## Remaining parity boundary
 

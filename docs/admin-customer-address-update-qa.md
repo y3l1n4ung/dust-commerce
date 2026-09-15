@@ -74,7 +74,7 @@ preservation, and typed response decoding.
 - Admin: Dust clean, analyzer clean, generated-client integration test passed.
 - File-size, backend-structure, response-inheritance, nested-Result, private
   Widget-builder, formatting, and generated-diff gates passed.
-- Generated files are committed exactly as Dust emitted them.
+- Generated output is rebuilt and validated by Dust in CI.
 
 ## Remaining parity boundary
 

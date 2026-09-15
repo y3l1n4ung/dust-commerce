@@ -92,7 +92,7 @@ Authenticated browser QA verified:
 - Focused server route tests: 4; focused Admin edit-state tests: 2.
 - Every touched handwritten Dart file remains below 180 lines; the largest new
   UI file is 173 lines.
-- Generated output is committed exactly as Dust emitted it.
+- Generated output is rebuilt and validated by Dust in CI.
 - The repository-wide naming linter still reports 22 historical filenames
   outside this slice; every new backend operation uses the permitted `update`
   name and introduces no new naming debt.

@@ -58,14 +58,24 @@ jobs:
       - name: Resolve dependencies
         run: flutter pub get --enforce-lockfile
 
-      # CI regenerates every output and then rejects any working-tree change.
-      # Formatting remains handwritten-only, so .g.dart stays generator-owned.
+      # A clean checkout intentionally contains no .g.dart. Build every output
+      # before analysis and tests, then prove the files remain generator-owned.
       - name: Regenerate Dust output
         run: ./scripts/generate.sh
 
-      - name: Generated output is deterministic
+      - name: Generated output policy is enforced
         run: |
           set -euo pipefail
+          test -z "$(git ls-files -- '**/*.g.dart')"
+          generated_count="$(find apps packages -type f -name '*.g.dart' \
+            | wc -l | tr -d ' ')"
+          test "$generated_count" -gt 0
+          while IFS= read -r -d '' generated; do
+            git check-ignore --no-index --quiet "$generated" || {
+              echo "Generated Dart is not ignored: $generated" >&2
+              exit 1
+            }
+          done < <(find apps packages -type f -name '*.g.dart' -print0)
           dust check --root packages/commerce_admin_shared
           dust check --root packages/commerce_shared
           dust check --root packages/commerce_server
@@ -73,12 +83,7 @@ jobs:
           dust check --root apps/admin_app
           dust check --db --root packages/commerce_server
           dust i18n check --root apps/commerce_app
-          git diff --exit-code -- \
-            packages/commerce_admin_shared \
-            packages/commerce_shared \
-            packages/commerce_server \
-            apps/commerce_app \
-            apps/admin_app
+          git diff --exit-code
           test -z "$(git ls-files --others --exclude-standard -- \
             packages/commerce_admin_shared \
             packages/commerce_shared \

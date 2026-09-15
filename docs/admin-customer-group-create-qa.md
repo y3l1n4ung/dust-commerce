@@ -107,7 +107,7 @@ Authenticated browser QA verified:
   build succeeded.
 - Every touched handwritten Dart file remains within 180 code lines; the
   largest customer-group creation UI file is 120 lines.
-- Generated output is committed exactly as Dust emitted it.
+- Generated output is rebuilt and validated by Dust in CI.
 
 ## Remaining parity boundary
 

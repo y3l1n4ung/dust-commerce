@@ -14,8 +14,9 @@
    `list`.** Nothing else, in `handler/`, `service/` or `repository/`. One that
    outgrows the budget becomes a folder of the same name. See
    [the backend structure](docs/architecture/backend-structure.md).
-5. **Generated output is committed.** CI runs `dust check` and `dust check --db`
-   to prove the committed files match their sources.
+5. **Generated output is ignored.** Run `./scripts/generate.sh` before local
+   analysis or tests. CI starts without `.g.dart`, regenerates every Dust root,
+   then runs `dust check` and `dust check --db` before compiling consumers.
 6. **One `Result` per boundary.** Never return `Result<Result<T, DomainError>,
    DatabaseError>`. Define one feature failure type, include an internal/database
    variant, and flatten infrastructure errors before returning from the service.

@@ -93,7 +93,7 @@ were empty after the completed add flow.
   release Web build succeeded.
 - Focused membership coverage: 2 contract, 6 server, and 3 Admin state tests.
 - All new handwritten Dart remains within the 180-code-line gate.
-- Generated output is committed exactly as Dust emitted it.
+- Generated output is rebuilt and validated by Dust in CI.
 
 ## Remaining parity boundary
 
