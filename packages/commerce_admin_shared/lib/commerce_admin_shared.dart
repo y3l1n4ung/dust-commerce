@@ -2,6 +2,7 @@
 library;
 
 export 'src/admin_auth.dart';
+export 'src/admin_batch_customer_group_customers.dart';
 export 'src/admin_cancel_fulfillment.dart';
 export 'src/admin_create_fulfillment.dart';
 export 'src/admin_create_shipment.dart';
