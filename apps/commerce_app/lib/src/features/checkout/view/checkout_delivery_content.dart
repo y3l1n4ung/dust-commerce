@@ -4,6 +4,8 @@ import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+import 'checkout_delivery_choice.dart';
+
 /// Expanded server-priced delivery choices and progression action.
 final class CheckoutDeliveryChoices extends StatelessWidget {
   /// Creates the delivery-choice list.
@@ -42,7 +44,7 @@ final class CheckoutDeliveryChoices extends StatelessWidget {
             const Center(child: CircularProgressIndicator())
           else
             for (final option in cart.shippingOptions) ...[
-              _DeliveryChoice(
+              CheckoutDeliveryChoice(
                 option: option,
                 selected: selected?.optionId == option.optionId,
                 available: option.isAvailableFor(cart.cart!.subtotal),
@@ -115,65 +117,4 @@ final class CheckoutDeliverySummary extends StatelessWidget {
       ],
     );
   }
-}
-
-final class _DeliveryChoice extends StatelessWidget {
-  const _DeliveryChoice({
-    required this.option,
-    required this.selected,
-    required this.available,
-    required this.enabled,
-    required this.onTap,
-  });
-
-  final bool available;
-  final bool enabled;
-  final VoidCallback onTap;
-  final ShippingOption option;
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) => Material(
-        color: StoreColors.base,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: selected ? StoreColors.interactive : StoreColors.border,
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: InkWell(
-          onTap: enabled && available ? onTap : null,
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-            child: Row(
-              children: [
-                Icon(
-                  selected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                  size: 18,
-                  color: !available
-                      ? StoreColors.foregroundDisabled
-                      : selected
-                          ? StoreColors.interactive
-                          : StoreColors.foregroundMuted,
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    option.name,
-                    style: TextStyle(
-                      color: available
-                          ? StoreColors.foreground
-                          : StoreColors.foregroundDisabled,
-                    ),
-                  ),
-                ),
-                Text(available ? formatMoney(option.amount) : '-'),
-              ],
-            ),
-          ),
-        ),
-      );
 }
