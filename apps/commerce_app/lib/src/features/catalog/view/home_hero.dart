@@ -42,6 +42,7 @@ class HomeHero extends StatelessWidget {
                       fontSize: 32,
                       height: 1.25,
                       fontWeight: FontWeight.w600,
+                      color: StoreColors.foregroundSubtle,
                     ),
                   ),
                   const SizedBox(height: 24),
