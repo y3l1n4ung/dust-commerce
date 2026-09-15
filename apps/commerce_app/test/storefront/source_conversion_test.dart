@@ -74,6 +74,15 @@ void main() {
     );
   });
 
+  test('a missing product enters the main-route not-found state', () async {
+    final product = ProductViewModel(ProductViewModelArgs(api: api));
+
+    await product.load('does-not-exist');
+
+    expect(product.state.status, ProductDetailStatus.missing);
+    expect(product.state.message, isNull);
+  });
+
   test('related products come from the API and exclude the current item',
       () async {
     final product = ProductViewModel(ProductViewModelArgs(api: api));

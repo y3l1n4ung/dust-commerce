@@ -14,6 +14,9 @@ enum ProductDetailStatus {
   /// The product is ready to render.
   ready,
 
+  /// No published product exists at the requested handle.
+  missing,
+
   /// The product request failed.
   failed,
 }

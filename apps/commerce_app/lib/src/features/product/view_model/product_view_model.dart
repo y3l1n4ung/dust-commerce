@@ -1,6 +1,7 @@
 import 'package:commerce_app/src/core/api/api.dart';
 import 'package:commerce_app/src/features/product/model/product_state.dart';
 import 'package:commerce_shared/commerce_shared.dart';
+import 'package:dio/dio.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'product_view_model.g.dart';
@@ -48,14 +49,21 @@ class ProductViewModel extends $ProductViewModel {
         ),
       );
       await _loadRelated(product, currency, revision);
-    } on Object {
+    } on Object catch (error) {
       if (revision != _revision) return;
+      final missing =
+          error is DioException && error.response?.statusCode == 404;
       emit(
-        ProductDetailState(
-          status: ProductDetailStatus.failed,
-          currencyCode: currency,
-          message: 'Could not load this product. Please try again.',
-        ),
+        missing
+            ? ProductDetailState(
+                status: ProductDetailStatus.missing,
+                currencyCode: currency,
+              )
+            : ProductDetailState(
+                status: ProductDetailStatus.failed,
+                currencyCode: currency,
+                message: 'Could not load this product. Please try again.',
+              ),
       );
     }
   }

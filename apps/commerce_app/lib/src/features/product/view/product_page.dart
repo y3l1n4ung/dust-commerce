@@ -62,6 +62,7 @@ class _ProductPageState extends State<ProductPage> {
         ProductDetailStatus.idle ||
         ProductDetailStatus.loading =>
           const Center(child: CircularProgressIndicator()),
+        ProductDetailStatus.missing => const StoreMainNotFound(),
         ProductDetailStatus.failed => _Failure(message: state.message!),
         ProductDetailStatus.ready => ProductLayout(state: state),
       },

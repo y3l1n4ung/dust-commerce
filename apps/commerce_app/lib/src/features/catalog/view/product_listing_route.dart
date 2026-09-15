@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:commerce_app/commerce_app.dart';
-import 'package:commerce_app/route.dart';
 import 'package:flutter/material.dart';
 
 /// Connects one typed route to the shared product-listing state machine.
@@ -55,10 +54,6 @@ class _ProductListingRouteState extends State<ProductListingRoute> {
   Future<void> _load() async {
     final viewModel = context.readProductListingViewModel();
     await widget.load(viewModel);
-    if (!mounted || viewModel.state.requestKey != widget.requestKey) return;
-    if (viewModel.state.status == ProductListingStatus.missing) {
-      context.navigator.notFound().replace();
-    }
   }
 
   @override

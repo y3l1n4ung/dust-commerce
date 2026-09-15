@@ -52,7 +52,7 @@ class ProductListingView extends StatelessWidget {
       return _ListingFailure(onRetry: onRetry);
     }
     if (state.status == ProductListingStatus.missing) {
-      return const SizedBox.shrink();
+      return const StoreMainNotFound();
     }
 
     return SingleChildScrollView(
