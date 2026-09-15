@@ -2,6 +2,8 @@ import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+import 'product_tab.dart';
+
 /// Expandable product and delivery facts translated from Medusa `ProductTabs`.
 class ProductTabs extends StatelessWidget {
   /// Creates the two independent product accordions.
@@ -14,23 +16,20 @@ class ProductTabs extends StatelessWidget {
   Widget build(BuildContext context) => Column(
         children: [
           const Divider(height: 1),
-          ExpansionTile(
-            tilePadding: const EdgeInsets.symmetric(horizontal: 4),
-            childrenPadding: const EdgeInsets.fromLTRB(4, 12, 4, 28),
+          ProductTab(
             title: const TranslatedText(
               'shop_product_information',
               defaultText: 'Product Information',
             ),
-            children: [_ProductInformation(details: details)],
+            child: _ProductInformation(details: details),
           ),
-          ExpansionTile(
-            tilePadding: const EdgeInsets.symmetric(horizontal: 4),
-            childrenPadding: const EdgeInsets.fromLTRB(4, 12, 4, 28),
+          const Divider(height: 1),
+          ProductTab(
             title: const TranslatedText(
               'shop_shipping_returns',
               defaultText: 'Shipping & Returns',
             ),
-            children: const [_ShippingInformation()],
+            child: const _ShippingInformation(),
           ),
           const Divider(height: 1),
         ],
