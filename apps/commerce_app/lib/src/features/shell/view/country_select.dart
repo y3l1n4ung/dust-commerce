@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -28,20 +29,38 @@ final class StoreCountrySelect extends StatelessWidget {
     final cart = context.watchCartViewModel().value;
     final changing = cart.operation == CartOperation.region &&
         cart.status == CartStatus.loading;
+    final popupHeight = math.min(442.0, options.length * 36.0);
 
     return PopupMenuButton<String>(
       enabled: !changing,
       color: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      elevation: 4,
+      menuPadding: EdgeInsets.zero,
+      constraints: const BoxConstraints(
+        minWidth: 320,
+        maxWidth: 320,
+        maxHeight: 442,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      offset: Offset(0, -popupHeight - 8),
       onSelected: (country) => unawaited(_change(context, country)),
       itemBuilder: (context) => [
         for (final country in options)
           PopupMenuItem(
             value: country,
+            height: 36,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               children: [
                 _StoreCountryFlag(countryCode: country),
                 const SizedBox(width: 8),
-                Text(countryName(context, country)),
+                Text(
+                  countryName(context, country).toUpperCase(),
+                  style: const TextStyle(fontSize: 12, height: 20 / 12),
+                ),
               ],
             ),
           ),
