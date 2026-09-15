@@ -87,11 +87,7 @@ dust --version
 
 ```bash
 flutter pub get
-dust build --root packages/commerce_shared
-dust build --root packages/commerce_admin_shared
-dust build --root packages/commerce_server && dust db build --root packages/commerce_server
-dust build --root apps/commerce_app
-dust build --root apps/admin_app
+./scripts/generate.sh
 ```
 
 Start a local API with the deterministic development catalogue:
