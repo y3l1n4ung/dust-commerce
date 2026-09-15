@@ -822,4 +822,103 @@ as an explicit P2 blocker.
 
 Admin Shipping Profiles settings result: blocked
 
+## Store home responsive layout and typography
+
+Source visual truth paths:
+
+- Pinned source at commit `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/home/components/hero/index.tsx`
+  and
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/home/components/featured-products/product-rail/index.tsx`.
+- Live rendered source: `https://next.medusajs.com/dk`.
+
+Implementation screenshot path: in-app browser captures retained in the task
+evidence for `http://127.0.0.1:13001/` after the responsive-layout, hero,
+product-rail, subtitle-color, and header-typography commits.
+
+Viewport: the desktop pair used equal `1280 x 720` CSS viewports at device-pixel
+ratio 2. The browser returned a `1265 x 712` source raster because of the visible
+source scrollbar and a `1280 x 720` implementation raster; comparison normalized
+the implementation by `1265 / 1280`. The compact pair used equal `390 x 844` CSS
+viewports at device-pixel ratio 1. The source capture cropped to `375 x 812`
+while the implementation remained `390 x 844`; the implementation was compared
+at the same `375 / 390` scale and no finding was filed from browser chrome or
+scrollbar crop.
+
+State: public English light-theme home at scroll position zero, followed by one
+compact page scroll through the product rail. Medusa renders its own brand,
+starter copy, GitHub action, and Clothing products. Morrow intentionally renders
+the approved brand, `Powered by dust`, Store action, Featured collection, and
+its real dust-commerce demo products.
+
+**Findings**
+
+- No actionable P0, P1, or P2 difference remains in the header, hero, collection
+  heading, responsive grid geometry, or compact product rail for this slice.
+- Brand, hero copy, action copy, collection names, prices, and product images are
+  intentional product and merchant-data differences rather than design drift.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: the live Medusa header computes the brand at `18px/20px`
+  weight 500 and actions at `12px/20px` weight 400. Its hero headings compute at
+  `32px/40px` weight 600 despite conflicting authored utility classes. Morrow now
+  matches those rendered values. The rail heading and View all link use the
+  pinned `Text`/`text-base` contract at `16px/24px` weight 400.
+- Spacing and layout rhythm: both storefronts use a 64px header, a `75vh` hero,
+  a 24px hero action gap, 24px horizontal rail inset, 32px rail-header gap,
+  two compact columns, 24px column spacing, and 96px compact row spacing. The
+  measured compact hero boundary is 697px in both implementations.
+- Colors and visual tokens: the title uses `#18181b`, the subtitle and header use
+  `#52525b`, the interaction link uses `#3b82f6`, and the subtle background and
+  border remain mapped to the existing Store tokens.
+- Image quality and asset fidelity: each backend uses real merchant product
+  imagery. The compact Morrow rail rendered sharp source-hosted product images
+  with the established source card treatment; no placeholder or code-drawn
+  asset was introduced.
+- Copy and content: Morrow retains the user-approved `MORROW`, `Everyday
+  essentials, considered.`, `Powered by dust`, and `Shop products` copy. The
+  source-specific Medusa/GitHub wording is intentionally not copied as product
+  identity.
+
+**Full-view comparison evidence**
+
+The live Medusa and Morrow desktop captures were emitted together at equal
+`1280 x 720` CSS viewports. A second combined input compared both at equal
+`390 x 844` CSS viewports. Header geometry, hero centering, `75vh` boundary,
+button placement, rail header alignment, and above-the-fold density align after
+normalizing the source scrollbar crop.
+
+**Focused region comparison evidence**
+
+The compact full-view pair keeps the complete header, hero type, button, border,
+rail heading, View all link, and first product row legible in one frame, so a
+separate crop was not needed. A one-page compact scroll additionally exposed the
+two-column product cards, wrapped titles, prices, images, and row rhythm.
+
+**Comparison history**
+
+- The first full-page stress capture produced a negative product-card width and
+  cascading Flutter layout assertions. Commit `f13269f` sizes grids from their
+  real constraints, falls back to one column before spacing can become negative,
+  and guards transient zero-width AppBar and hero frames.
+- Fresh full-page and normal captures after `f13269f` completed without a red
+  assertion band or browser warning. The `390 x 844` product rail also rendered
+  two working columns without overflow.
+- The first equal compact pair found 30px normal-weight hero copy, a muted-value
+  error, a 24px collection heading, and a 12px centered brand. Commits `d1407cf`,
+  `e7138ae`, `61adc95`, and `581f40e` match the live computed hero, subtitle,
+  rail, brand, and action tokens as separate stacked responsibilities.
+- The final equal compact and desktop pairs produced no browser warning or error.
+  Store analysis, all 136 Store tests, Dust generation checks, formatting, and
+  the file-size budget passed. No widget test was added.
+
+**Implementation checklist**
+
+- No remaining fix is required for this home slice.
+- Continue the same source-code-first, matched-viewport loop for the next
+  unresolved customer route already listed above.
+
+Store home responsive layout and typography result: passed
+
 final result: blocked
