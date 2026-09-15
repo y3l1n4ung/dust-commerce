@@ -1599,4 +1599,76 @@ Store compact signed-out account result: passed for responsive structure and
 the sign-in/register interaction; persisted screenshot-artifact evidence remains
 unavailable
 
+## Store compact product tabs
+
+Source truth paths:
+
+- Pinned Medusa DTC source at commit
+  `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/tmp/medusa-dtc-19e8a6f/apps/storefront/src/modules/products/templates/index.tsx`,
+  `components/product-tabs/{index,accordion}.tsx`, and
+  `components/product-actions/mobile-actions.tsx`.
+- Live source:
+  `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`.
+
+Implementation URL:
+`http://127.0.0.1:13001/products/heavyweight-black-tee?v_id=var_demo_02`.
+
+Viewport and state: English light theme, one in-stock simple product, and a
+nominal `390 x 844` CSS viewport. The live source capture was cropped to a
+`375 x 812` raster by its visible scrollbar; the Flutter capture retained the
+complete `390 x 844` viewport. Source and implementation captures were emitted
+together in each comparison input. They remain current-run session evidence
+rather than a persisted filesystem screenshot artifact.
+
+**Source and behavior findings**
+
+- Both pages preserve the source order: collection, title, description, two
+  independent tabs, gallery, inline purchase controls, related products, and a
+  bottom mobile purchase surface once the inline action leaves the viewport.
+- The first open-tab comparison exposed Material defaults not present in the
+  source: a full-row gray interaction wash and a blue chevron. A dedicated
+  `ProductTab` now keeps the row white and uses the source's neutral plus/minus
+  state with a 300ms transition.
+- The Shipping & Returns comparison exposed paraphrased local body copy. All
+  three English descriptions now match the pinned source exactly.
+- Shipping icons now use the source's 16px scale and 8px content gap.
+- Titles, prices, product facts, image counts, and raster assets intentionally
+  differ because Medusa serves Espresso Cup while Morrow serves Heavyweight
+  Black Tee. Those merchant-data differences were not encoded as UI changes.
+
+**Interaction evidence**
+
+- Product Information opened independently on both pages and exposed the same
+  two-column fact hierarchy.
+- Shipping & Returns then opened independently on both pages and exposed the
+  same three icon, title, and body rows in the same order.
+- The settled source tab reported no browser log entry. The local tab reported
+  only Flutter bootstrap debug entries, with no warning or error.
+
+**Evidence limits**
+
+- The nominal viewport is shared, but the source scrollbar changes its output
+  raster by 15px. The comparison establishes responsive structure and behavior,
+  not pixel equality.
+- This pair covers equivalent simple products. Matched unavailable-combination,
+  sold-out, and post-add states still depend on equivalent live source data.
+- Screenshots were displayed together but could not be exported to a local file
+  by the browser surface. Formal persisted screenshot-audit completion is not
+  claimed.
+
+**Validation**
+
+- The Store release Web build succeeded and the final route was recaptured.
+- All 139 Store tests pass; Flutter analysis reports no issue.
+- Dust reports all 54 Store outputs clean. Dust i18n checks 684 translations
+  with zero errors; its 15 warnings remain the existing stale/equal-fallback
+  inventory outside this slice.
+- Handwritten formatting, file-size, response-boundary, project-structure, and
+  diff whitespace checks pass. No widget test was added.
+
+Store compact product tabs result: passed for equivalent simple-product layout,
+accordion interaction, and source copy; persisted screenshot-artifact evidence
+remains unavailable
+
 final result: blocked
