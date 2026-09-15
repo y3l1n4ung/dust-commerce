@@ -1804,4 +1804,33 @@ Store main-route not-found result: passed for desktop source structure, typed
 404 behavior, URL preservation, responsive local layout, footer ownership, and
 frontpage recovery; a matched compact source raster remains unavailable
 
+## Current Medusa DTC source pin
+
+Upstream truth: `medusajs/dtc-starter` `main` resolved to
+`bd2441acc18359533758fbf4db5bc80129055d2e` on 2026-09-15. The local current
+source worktree is `/tmp/medusa-dtc-bd2441a`.
+
+The previous parity pin was
+`19e8a6fbefea5a385e9502409908bfbebbecf526`. A Git tree comparison from that
+revision to current `main` changes five files only:
+
+- `apps/backend/package.json`;
+- `apps/storefront/package.json`;
+- `apps/storefront/tsconfig.tsbuildinfo`;
+- root `package.json`; and
+- `pnpm-lock.yaml`.
+
+No file under `apps/storefront/src` changed. The Store dependency revision
+advances Medusa packages and `@medusajs/ui-preset` from 2.20.1 to 2.21.0 and
+Next.js from 15.5.21 to 15.5.24.
+
+The published UI preset archives for 2.20.1 and 2.21.0 were unpacked and
+compared recursively. Only `CHANGELOG.md`, `package.json`, and Turbo build-log
+metadata differ; shipped theme tokens and component files are identical.
+Existing code-to-layout evidence therefore applies to current Medusa `main`.
+Future source inspections use the refreshed worktree and 2.21.0 token authority.
+
+Current Medusa DTC source-pin result: passed; storefront source and rendered
+token inputs have no material drift from the completed comparisons
+
 final result: blocked

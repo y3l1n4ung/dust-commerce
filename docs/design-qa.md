@@ -3,7 +3,7 @@
 ## Source truth
 
 - Medusa DTC source commit:
-  `19e8a6fbefea5a385e9502409908bfbebbecf526`.
+  `bd2441acc18359533758fbf4db5bc80129055d2e`.
 - Verification route:
   `apps/storefront/src/app/[countryCode]/(main)/verify-account/page.tsx`.
 - Verification component:

@@ -2,10 +2,18 @@
 
 The implementation target is the customer-facing storefront in
 [medusajs/dtc-starter](https://github.com/medusajs/dtc-starter), pinned at
-`19e8a6fbefea5a385e9502409908bfbebbecf526`. React and Next.js constructs are
+`bd2441acc18359533758fbf4db5bc80129055d2e`. React and Next.js constructs are
 translated into native Flutter and Dust patterns; the application talks only
 to the dust-commerce API. Visual tokens are pinned to
-`@medusajs/ui-preset@2.20.1`, the version used by that source revision.
+`@medusajs/ui-preset@2.21.0`, the version used by that source revision.
+
+The source pin was refreshed against upstream `main` on 2026-09-15. Compared
+with the previous `19e8a6f` reference, the current tree changes only dependency
+manifests, the lockfile, and generated TypeScript build metadata; no storefront
+source file changed. Published UI preset packages 2.20.1 and 2.21.0 also have
+identical shipped theme and component files, apart from package metadata,
+changelog, and build-log metadata. Existing source conversions therefore remain
+valid against the current revision rather than being assumed from an old pin.
 
 Progress is tracked in [GitHub issue #29](https://github.com/y3l1n4ung/dust-commerce/issues/29)
 and the `Medusa DTC storefront parity` milestone.
@@ -43,7 +51,7 @@ the pinned DTC source has no equivalent route.
 ## Theme and selection map
 
 These values come from the light tokens in
-`@medusajs/ui-preset@2.20.1/src/theme/tokens/colors.ts`. Flutter uses semantic
+`@medusajs/ui-preset@2.21.0/src/theme/tokens/colors.ts`. Flutter uses semantic
 names so components do not invent close-but-different greys.
 
 | Medusa source token or class | Exact source value | Flutter owner |
