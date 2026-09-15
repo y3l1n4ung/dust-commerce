@@ -43,6 +43,14 @@ abstract interface class AdminCustomerApi {
     @Path('address_id') String addressId,
   );
 
+  /// Partially updates one owned destination and returns its refreshed parent.
+  @POST('/admin/customers/{id}/addresses/{address_id}')
+  Future<AdminCustomerDetail> updateCustomerAddress(
+    @Path() String id,
+    @Path('address_id') String addressId,
+    @Body() AdminUpdateCustomerAddress body,
+  );
+
   /// Reads one merchant-visible customer profile and active address book.
   @GET('/admin/customers/{id}')
   Future<AdminCustomerDetail> customer(@Path() String id);
