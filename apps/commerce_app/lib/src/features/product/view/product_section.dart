@@ -37,7 +37,10 @@ class ProductSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            info,
+            Padding(
+              padding: const EdgeInsets.only(top: 32),
+              child: info,
+            ),
             const SizedBox(height: 32),
             gallery,
             const SizedBox(height: 32),
