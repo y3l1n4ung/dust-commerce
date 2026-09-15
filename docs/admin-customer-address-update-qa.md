@@ -78,9 +78,9 @@ preservation, and typed response decoding.
 
 ## Remaining parity boundary
 
-Customer-group created/updated date controls and a same-state Medusa customer
-raster comparison remain. Address update has no visual comparison because the
-pinned Medusa Admin presents no corresponding screen or action. Broader Admin
-and storefront parity is not yet complete.
+Customer-group created/updated date controls are now implemented in a later
+stacked slice. A same-state Medusa customer raster comparison remains. Address
+update has no visual comparison because the pinned Medusa Admin presents no
+corresponding screen or action. Broader parity is not yet complete.
 
 final result: passed for the pinned API contract and generated client behavior.

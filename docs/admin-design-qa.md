@@ -640,6 +640,10 @@ API, explicit-contract, direct-SQLx, responsive layout and live data checks
 against the pinned source structure. The address update is API-only because the
 pinned dashboard exposes no Edit action. Same-state customer raster parity
 remains open.
+Customer-group Created and Updated filtering passes the pinned Add-filter,
+preset, Custom, active-chip and clear interaction structure. Live API-backed QA
+covered both filters, the empty state and an inclusive same-day custom range;
+pixel parity remains unclaimed without a same-state Medusa raster.
 The product-list sales-channel slice passes its typed contract, direct SQLx
 projection, source-shaped truncation/tooltip behavior and clean-start browser
 QA. Its whole-screen density and thumbnail differences remain an open visual

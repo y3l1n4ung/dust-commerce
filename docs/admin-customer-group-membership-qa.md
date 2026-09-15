@@ -98,9 +98,9 @@ were empty after the completed add flow.
 ## Remaining parity boundary
 
 Customer address update is now implemented in a later stacked slice.
-Customer-group created/updated date filters and a same-state Medusa customer
-raster comparison remain separate work. The broader Admin and storefront are
-not yet a complete Medusa replacement.
+Customer-group created/updated date filters are now implemented in a later
+stacked slice. A same-state Medusa customer raster comparison and broader Admin
+and storefront parity remain open.
 
 final result: passed for source structure and live add behavior; removal is
 integration-tested and its live confirmation was canceled intentionally.
