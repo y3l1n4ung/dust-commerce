@@ -62,7 +62,10 @@ final class _AdminCustomerServicePageState
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const Spacer(),
-                      Text('${state.count} requests'),
+                      Text(
+                        '${state.count} '
+                        '${state.count == 1 ? 'request' : 'requests'}',
+                      ),
                     ],
                   ),
                 ),
