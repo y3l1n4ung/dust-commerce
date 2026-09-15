@@ -9,6 +9,10 @@ Progress is tracked by
 [GitHub issue #40](https://github.com/y3l1n4ung/dust-commerce/issues/40) and the
 `Medusa admin parity` milestone.
 
+The product-specific Customer Service extension is tracked separately in
+[customer-service-qa.md](customer-service-qa.md) so it is not mislabeled as a
+Medusa Admin source-parity feature.
+
 The repository's 180-code-line gate still reports 6 legacy files. New slices
 add no over-limit handwritten file, and touched legacy files are split by
 responsibility. The remaining debt stays visible instead of weakening the gate.

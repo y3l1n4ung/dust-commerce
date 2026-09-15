@@ -10,6 +10,10 @@ to the dust-commerce API. Visual tokens are pinned to
 Progress is tracked in [GitHub issue #29](https://github.com/y3l1n4ung/dust-commerce/issues/29)
 and the `Medusa DTC storefront parity` milestone.
 
+The functional Customer Service route is documented in
+[customer-service-qa.md](customer-service-qa.md) as a Morrow extension because
+the pinned DTC source has no equivalent route.
+
 ## Source-to-Dust map
 
 | Medusa source | Flutter/Dust owner | Status |
