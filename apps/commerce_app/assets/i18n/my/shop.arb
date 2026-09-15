@@ -102,6 +102,15 @@
   "@account_not_member": {
     "description": "Prompt shown below sign-in."
   },
+  "account_order_item": "ပစ္စည်း {count} ခု",
+  "@account_order_item": {
+    "description": "Singular quantity summary for an order.",
+    "placeholders": {
+      "count": {
+        "example": "1"
+      }
+    }
+  },
   "account_order_items": "ပစ္စည်း {count} ခု",
   "@account_order_items": {
     "description": "Quantity summary for an order.",
@@ -219,6 +228,15 @@
   "account_return_history_loading": "ပြန်အပ်မှုမှတ်တမ်း တင်နေသည်",
   "@account_return_history_loading": {
     "description": "Accessible progress label while return history loads."
+  },
+  "account_return_item": "ပစ္စည်း {quantity} ခု",
+  "@account_return_item": {
+    "description": "Singular quantity summary for a return request.",
+    "placeholders": {
+      "quantity": {
+        "example": "1"
+      }
+    }
   },
   "account_return_items": "ပစ္စည်း {quantity} ခု",
   "@account_return_items": {

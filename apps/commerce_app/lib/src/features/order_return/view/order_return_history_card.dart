@@ -35,12 +35,16 @@ final class OrderReturnHistoryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${MaterialLocalizations.of(context).formatMediumDate(item.requestedAt.toLocal())} · '
-                    '${context.tr(
-                      'shop_account_return_items',
-                      defaultText: '{quantity} item(s)',
-                      args: {'quantity': item.itemQuantity},
-                    )}',
+                    '${formatStoreDate(MaterialLocalizations.of(context), item.requestedAt)} · '
+                    '${item.itemQuantity == 1 ? context.tr(
+                        'shop_account_return_item',
+                        defaultText: '{quantity} item',
+                        args: {'quantity': item.itemQuantity},
+                      ) : context.tr(
+                        'shop_account_return_items',
+                        defaultText: '{quantity} items',
+                        args: {'quantity': item.itemQuantity},
+                      )}',
                     style: const TextStyle(
                       color: StoreColors.foregroundSubtle,
                     ),

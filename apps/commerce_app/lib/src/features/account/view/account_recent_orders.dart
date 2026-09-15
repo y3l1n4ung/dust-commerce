@@ -86,8 +86,10 @@ final class _RecentOrderCard extends StatelessWidget {
                             'shop_account_date_placed',
                             defaultText: 'Date placed',
                           ),
-                          value: MaterialLocalizations.of(context)
-                              .formatMediumDate(order.placedAt.toLocal()),
+                          value: formatStoreDate(
+                            MaterialLocalizations.of(context),
+                            order.placedAt,
+                          ),
                         ),
                         _OrderValue(
                           label: context.tr(

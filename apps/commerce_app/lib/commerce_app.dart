@@ -6,6 +6,7 @@ export 'src/core/country_name.dart';
 export 'src/core/money.dart';
 export 'src/core/product_image.dart';
 export 'src/core/store_scaffold.dart';
+export 'src/core/store_date.dart';
 export 'src/core/store_interactive_link.dart';
 export 'src/core/store_theme.dart';
 export 'src/core/storage/storage.dart';

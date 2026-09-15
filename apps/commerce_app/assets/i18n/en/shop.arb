@@ -102,6 +102,15 @@
   "@account_not_member": {
     "description": "Prompt shown below sign-in."
   },
+  "account_order_item": "{count} item",
+  "@account_order_item": {
+    "description": "Singular quantity summary for an order.",
+    "placeholders": {
+      "count": {
+        "example": "1"
+      }
+    }
+  },
   "account_order_items": "{count} items",
   "@account_order_items": {
     "description": "Quantity summary for an order.",
@@ -220,7 +229,16 @@
   "@account_return_history_loading": {
     "description": "Accessible progress label while return history loads."
   },
-  "account_return_items": "{quantity} item(s)",
+  "account_return_item": "{quantity} item",
+  "@account_return_item": {
+    "description": "Singular quantity summary for a return request.",
+    "placeholders": {
+      "quantity": {
+        "example": "1"
+      }
+    }
+  },
+  "account_return_items": "{quantity} items",
   "@account_return_items": {
     "description": "Total units included in one historical return.",
     "placeholders": {"quantity": {"example": "2"}}

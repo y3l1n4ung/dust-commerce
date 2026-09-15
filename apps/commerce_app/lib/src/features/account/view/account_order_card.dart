@@ -25,19 +25,26 @@ class AccountOrderCard extends StatelessWidget {
             spacing: 8,
             children: [
               Text(
-                MaterialLocalizations.of(context).formatMediumDate(
-                  order.placedAt.toLocal(),
+                formatStoreDate(
+                  MaterialLocalizations.of(context),
+                  order.placedAt,
                 ),
                 style: const TextStyle(fontSize: 12),
               ),
               Text(formatMoney(order.total),
                   style: const TextStyle(fontSize: 12)),
               Text(
-                context.tr(
-                  'shop_account_order_items',
-                  defaultText: '{count} items',
-                  args: {'count': order.itemCount},
-                ),
+                order.itemCount == 1
+                    ? context.tr(
+                        'shop_account_order_item',
+                        defaultText: '{count} item',
+                        args: {'count': order.itemCount},
+                      )
+                    : context.tr(
+                        'shop_account_order_items',
+                        defaultText: '{count} items',
+                        args: {'count': order.itemCount},
+                      ),
                 style: const TextStyle(fontSize: 12),
               ),
             ],

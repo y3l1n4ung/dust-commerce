@@ -85,10 +85,7 @@ final class OrderPaymentDetails extends StatelessWidget {
           : providerId;
 
   String _paymentDate(BuildContext context, DateTime value) {
-    final local = value.toLocal();
-    final material = MaterialLocalizations.of(context);
-    return '${material.formatMediumDate(local)}, '
-        '${material.formatTimeOfDay(TimeOfDay.fromDateTime(local))}';
+    return formatStoreDateTime(MaterialLocalizations.of(context), value);
   }
 }
 

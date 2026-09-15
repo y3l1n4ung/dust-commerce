@@ -51,8 +51,10 @@ final class AccountOrderDetailContent extends StatelessWidget {
             'shop_checkout_order_date',
             defaultText: 'Order date: {date}',
             args: {
-              'date': MaterialLocalizations.of(context)
-                  .formatMediumDate(order.placedAt.toLocal()),
+              'date': formatStoreDate(
+                MaterialLocalizations.of(context),
+                order.placedAt,
+              ),
             },
           )),
           const SizedBox(height: 8),

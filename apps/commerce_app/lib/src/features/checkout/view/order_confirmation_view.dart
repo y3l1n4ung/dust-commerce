@@ -49,7 +49,12 @@ final class OrderConfirmationView extends StatelessWidget {
                         Text(context.tr(
                           'shop_checkout_order_date',
                           defaultText: 'Order date: {date}',
-                          args: {'date': _date(order.placedAt)},
+                          args: {
+                            'date': formatStoreDate(
+                              MaterialLocalizations.of(context),
+                              order.placedAt,
+                            ),
+                          },
                         )),
                         const SizedBox(height: 8),
                         Text(
@@ -91,25 +96,4 @@ final class OrderConfirmationView extends StatelessWidget {
           ],
         ),
       );
-
-  static String _date(DateTime value) {
-    const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    final local = value.toLocal();
-    return '${weekdays[local.weekday - 1]} ${months[local.month - 1]} '
-        '${local.day} ${local.year}';
-  }
 }
