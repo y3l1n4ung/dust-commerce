@@ -1,0 +1,99 @@
+name: Delivery
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: delivery-main
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: 3.44.1
+
+jobs:
+  package:
+    name: Package release artifacts
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout the verified revision
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Resolve dependencies
+        run: flutter pub get --enforce-lockfile
+
+      - name: Validate the production API origin
+        env:
+          API_BASE_URL: ${{ vars.PRODUCTION_API_BASE_URL }}
+        run: |
+          set -euo pipefail
+          case "$API_BASE_URL" in
+            http://?*|https://?*) ;;
+            *)
+              echo "Set PRODUCTION_API_BASE_URL to an absolute HTTP(S) origin." >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Build the Store and Admin web apps
+        env:
+          API_BASE_URL: ${{ vars.PRODUCTION_API_BASE_URL }}
+        run: |
+          set -euo pipefail
+          (cd apps/commerce_app && flutter build web --release --no-pub \
+            --dart-define=API_BASE_URL="$API_BASE_URL")
+          (cd apps/admin_app && flutter build web --release --no-pub \
+            --dart-define=API_BASE_URL="$API_BASE_URL")
+          test -f apps/commerce_app/build/web/index.html
+          test -f apps/admin_app/build/web/index.html
+
+      - name: Build the Linux API bundle
+        run: |
+          set -euo pipefail
+          install_root="$RUNNER_TEMP/dust-commerce-server"
+          mkdir -p "$install_root"
+          dart compile exe packages/commerce_server/bin/server.dart \
+            -o "$install_root/dust-commerce-server"
+          cp LICENSE README.md "$install_root/"
+          cp -R packages/commerce_server/migrations "$install_root/"
+          tar -czf "$RUNNER_TEMP/dust-commerce-server-linux-x64.tar.gz" \
+            -C "$install_root" .
+
+      - name: Upload the Store artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: morrow-store-${{ github.event.workflow_run.head_sha }}
+          path: apps/commerce_app/build/web
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload the Admin artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: morrow-admin-${{ github.event.workflow_run.head_sha }}
+          path: apps/admin_app/build/web
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload the API artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dust-commerce-server-linux-x64-${{ github.event.workflow_run.head_sha }}
+          path: ${{ runner.temp }}/dust-commerce-server-linux-x64.tar.gz
+          if-no-files-found: error
+          retention-days: 14

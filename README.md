@@ -160,6 +160,14 @@ flutter run -d web-server \
 The repository-owned development ports are `13001` for the storefront,
 `13002` for admin, and `3878` for the API. None uses a framework default.
 
+## Delivery
+
+Every successful CI run on `main` packages the Store, Admin, and Linux API as
+downloadable GitHub Actions artifacts. Set the repository variable
+`PRODUCTION_API_BASE_URL` to the deployed API origin before merging; release
+web builds reject the local development default. Artifact creation is
+continuous delivery only: deployment remains the hosting platform's job.
+
 Then the same checks CI runs:
 
 ```bash
