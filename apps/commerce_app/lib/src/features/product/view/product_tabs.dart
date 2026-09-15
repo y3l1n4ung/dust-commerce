@@ -123,7 +123,8 @@ class _ShippingInformation extends StatelessWidget {
             body: context.tr(
               'shop_fast_delivery_body',
               defaultText:
-                  'Your package will arrive in 3-5 business days at your pick up location or at home.',
+                  'Your package will arrive in 3-5 business days at your pick '
+                  'up location or in the comfort of your home.',
             ),
           ),
           _ShippingFact(
@@ -135,7 +136,8 @@ class _ShippingInformation extends StatelessWidget {
             body: context.tr(
               'shop_simple_exchanges_body',
               defaultText:
-                  "If the fit is not right, we'll exchange your product for a new one.",
+                  "Is the fit not quite right? No worries - we'll exchange "
+                  'your product for a new one.',
             ),
           ),
           _ShippingFact(
@@ -144,7 +146,9 @@ class _ShippingInformation extends StatelessWidget {
             body: context.tr(
               'shop_easy_returns_body',
               defaultText:
-                  "Return your product for a refund. We'll make the process hassle-free.",
+                  "Just return your product and we'll refund your money. No "
+                  "questions asked – we'll do our best to make sure your "
+                  'return is hassle-free.',
             ),
           ),
         ],
