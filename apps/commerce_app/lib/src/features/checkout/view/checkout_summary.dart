@@ -4,6 +4,7 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import '../../cart/view/promotion_code.dart';
+import 'checkout_total_row.dart';
 
 /// Sticky desktop checkout summary translated from Medusa CheckoutSummary.
 final class CheckoutSummary extends StatelessWidget {
@@ -106,52 +107,49 @@ final class _CheckoutTotals extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          _row(context.tr('shop_checkout_subtotal', defaultText: 'Subtotal'),
-              view.subtotal),
-          _row(context.tr('shop_checkout_shipping', defaultText: 'Shipping'),
-              view.shippingTotal),
+          CheckoutTotalRow(
+            label: context.tr(
+              'shop_checkout_subtotal',
+              defaultText: 'Subtotal',
+            ),
+            money: view.subtotal,
+          ),
+          CheckoutTotalRow(
+            label: context.tr(
+              'shop_checkout_shipping',
+              defaultText: 'Shipping',
+            ),
+            money: view.shippingTotal,
+          ),
           if (!view.discountTotal.isZero)
-            _row(context.tr('shop_checkout_discount', defaultText: 'Discount'),
-                view.discountTotal,
-                discount: true),
-          _row(context.tr('shop_checkout_taxes', defaultText: 'Taxes'),
-              view.tax),
+            CheckoutTotalRow(
+              label: context.tr(
+                'shop_checkout_discount',
+                defaultText: 'Discount',
+              ),
+              money: view.discountTotal,
+              discount: true,
+            ),
+          CheckoutTotalRow(
+            label: context.tr(
+              'shop_checkout_taxes',
+              defaultText: 'Taxes',
+            ),
+            money: view.tax,
+          ),
           const SizedBox(height: 12),
           const Divider(),
           const SizedBox(height: 12),
-          _row(context.tr('shop_checkout_total', defaultText: 'Total'),
-              view.total,
-              strong: true),
+          CheckoutTotalRow(
+            label: context.tr(
+              'shop_checkout_total',
+              defaultText: 'Total',
+            ),
+            money: view.total,
+            strong: true,
+          ),
           const SizedBox(height: 16),
           const Divider(),
         ],
-      );
-
-  Widget _row(
-    String label,
-    Money money, {
-    bool discount = false,
-    bool strong = false,
-  }) =>
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label,
-                style: TextStyle(
-                  color: StoreColors.foregroundSubtle,
-                  fontWeight: strong ? FontWeight.w600 : null,
-                )),
-            Text(
-              '${discount ? '- ' : ''}${formatMoney(money)}',
-              style: TextStyle(
-                color:
-                    discount ? StoreColors.interactive : StoreColors.foreground,
-                fontWeight: strong ? FontWeight.w600 : null,
-              ),
-            ),
-          ],
-        ),
       );
 }
