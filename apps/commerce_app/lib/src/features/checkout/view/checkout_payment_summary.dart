@@ -58,13 +58,16 @@ final class PaymentProviderTitle extends StatelessWidget {
   /// Provider identifier from the server.
   final String id;
 
-  @override
-  Widget build(BuildContext context) => id == 'manual'
-      ? const TranslatedText(
+  /// Resolves a provider identifier to its localized customer-facing title.
+  static String label(BuildContext context, String id) => id == 'manual'
+      ? context.tr(
           'shop_checkout_manual_payment',
           defaultText: 'Manual Payment',
         )
-      : Text(id);
+      : id;
+
+  @override
+  Widget build(BuildContext context) => Text(label(context, id));
 }
 
 final class _PaymentSummaryColumn extends StatelessWidget {

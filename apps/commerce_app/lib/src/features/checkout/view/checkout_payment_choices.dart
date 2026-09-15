@@ -1,10 +1,9 @@
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
-import 'checkout_payment_summary.dart';
+import 'checkout_payment_choice.dart';
 
 /// Expanded region-backed payment choices and progression action.
 final class CheckoutPaymentChoices extends StatelessWidget {
@@ -42,7 +41,7 @@ final class CheckoutPaymentChoices extends StatelessWidget {
             )
           else ...[
             for (final provider in state.paymentProviders) ...[
-              _PaymentProviderChoice(
+              CheckoutPaymentChoice(
                 provider: provider,
                 selected: state.isPaymentSelected(provider.id),
                 enabled: !state.isBusy,
@@ -76,53 +75,5 @@ final class CheckoutPaymentChoices extends StatelessWidget {
             ),
           ],
         ],
-      );
-}
-
-final class _PaymentProviderChoice extends StatelessWidget {
-  const _PaymentProviderChoice({
-    required this.provider,
-    required this.selected,
-    required this.enabled,
-  });
-
-  final bool enabled;
-  final PaymentProviderView provider;
-  final bool selected;
-
-  @override
-  Widget build(BuildContext context) => Material(
-        color: StoreColors.base,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: selected ? StoreColors.interactive : StoreColors.border,
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: InkWell(
-          onTap: enabled
-              ? () => context.readCheckoutViewModel().selectPayment(provider.id)
-              : null,
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-            child: Row(
-              children: [
-                Icon(
-                  selected
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                  size: 18,
-                  color: selected
-                      ? StoreColors.interactive
-                      : StoreColors.foregroundMuted,
-                ),
-                const SizedBox(width: 16),
-                Expanded(child: PaymentProviderTitle(id: provider.id)),
-                const Icon(Icons.credit_card, size: 20),
-              ],
-            ),
-          ),
-        ),
       );
 }
