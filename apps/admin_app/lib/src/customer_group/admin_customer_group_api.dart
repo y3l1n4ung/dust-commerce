@@ -24,6 +24,13 @@ abstract interface class AdminCustomerGroupApi {
   @GET('/admin/customer-groups/{id}')
   Future<AdminCustomerGroupDetailResponse> customerGroup(@Path() String id);
 
+  /// Applies one atomic add/remove membership batch.
+  @POST('/admin/customer-groups/{id}/customers')
+  Future<AdminCustomerGroupDetailResponse> updateCustomerGroupCustomers(
+    @Path() String id,
+    @Body() AdminBatchCustomerGroupCustomers body,
+  );
+
   /// Retires one customer group and returns the Medusa acknowledgement.
   @DELETE('/admin/customer-groups/{id}')
   Future<AdminCustomerGroupDeleted> deleteCustomerGroup(@Path() String id);

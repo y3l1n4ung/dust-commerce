@@ -3,6 +3,7 @@ import 'package:admin_app/src/customer_group/admin_customer_group_create_view_mo
 import 'package:admin_app/src/customer_group/admin_customer_group_delete_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_edit_view_model.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_membership_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_view_model.dart';
 import 'package:dio/dio.dart';
 
@@ -27,6 +28,9 @@ final class AdminCustomerGroupDependencies {
       list: AdminCustomerGroupViewModel(
         AdminCustomerGroupViewModelArgs(api: api),
       ),
+      membership: AdminCustomerGroupMembershipViewModel(
+        AdminCustomerGroupMembershipViewModelArgs(api: api),
+      ),
     );
   }
 
@@ -36,6 +40,7 @@ final class AdminCustomerGroupDependencies {
     required this.delete,
     required this.edit,
     required this.list,
+    required this.membership,
   });
 
   /// Focused customer-group creation state.
@@ -52,4 +57,7 @@ final class AdminCustomerGroupDependencies {
 
   /// Customer-group collection state.
   final AdminCustomerGroupViewModel list;
+
+  /// Focused customer-group membership command state.
+  final AdminCustomerGroupMembershipViewModel membership;
 }
