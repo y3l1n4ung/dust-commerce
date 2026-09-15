@@ -1,15 +1,15 @@
+import 'package:admin_app/src/core/admin_date_filter_control.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_state.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 /// Active customer-group date constraints with direct clear actions.
 final class AdminCustomerGroupActiveFilters extends StatelessWidget {
   /// Creates the active-filter row.
   const AdminCustomerGroupActiveFilters({
     required this.state,
-    required this.onClearCreatedAt,
-    required this.onClearUpdatedAt,
+    required this.onCreatedAtChanged,
+    required this.onUpdatedAtChanged,
     required this.onClearAll,
     super.key,
   });
@@ -17,11 +17,11 @@ final class AdminCustomerGroupActiveFilters extends StatelessWidget {
   /// Clears every customer-group date filter.
   final VoidCallback onClearAll;
 
-  /// Clears the creation-time constraint.
-  final VoidCallback onClearCreatedAt;
+  /// Applies or clears the creation-time constraint.
+  final ValueChanged<AdminDateFilter> onCreatedAtChanged;
 
-  /// Clears the update-time constraint.
-  final VoidCallback onClearUpdatedAt;
+  /// Applies or clears the update-time constraint.
+  final ValueChanged<AdminDateFilter> onUpdatedAtChanged;
 
   /// Current server query state.
   final AdminCustomerGroupState state;
@@ -35,14 +35,16 @@ final class AdminCustomerGroupActiveFilters extends StatelessWidget {
         Expanded(
           child: Wrap(spacing: 8, runSpacing: 8, children: [
             if (!state.createdAt.isEmpty)
-              InputChip(
-                label: Text('Created: ${_dateLabel(state.createdAt)}'),
-                onDeleted: onClearCreatedAt,
+              AdminDateFilterChip(
+                label: 'Created',
+                value: state.createdAt,
+                onChanged: onCreatedAtChanged,
               ),
             if (!state.updatedAt.isEmpty)
-              InputChip(
-                label: Text('Updated: ${_dateLabel(state.updatedAt)}'),
-                onDeleted: onClearUpdatedAt,
+              AdminDateFilterChip(
+                label: 'Updated',
+                value: state.updatedAt,
+                onChanged: onUpdatedAtChanged,
               ),
           ]),
         ),
@@ -50,19 +52,4 @@ final class AdminCustomerGroupActiveFilters extends StatelessWidget {
       ]),
     );
   }
-}
-
-String _dateLabel(AdminDateFilter filter) {
-  final format = DateFormat.MMMd();
-  final from = filter.greaterThanOrEqual.match(
-    some: (date) => format.format(date.toLocal()),
-    none: () => '',
-  );
-  final to = filter.lessThanOrEqual.match(
-    some: (date) => format.format(date.toLocal()),
-    none: () => '',
-  );
-  if (from.isNotEmpty && to.isNotEmpty) return '$from – $to';
-  if (from.isNotEmpty) return 'since $from';
-  return 'before $to';
 }

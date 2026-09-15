@@ -3,7 +3,7 @@ import 'package:admin_app/src/customer_group/admin_customer_group_filter_menu.da
 import 'package:admin_app/src/customer_group/admin_customer_group_sort.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_state.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_view_model.dart';
-import 'package:dust_dart/fp.dart';
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
 
 /// Search, date-filter, and ordering controls for the group table.
@@ -51,7 +51,12 @@ final class _AdminCustomerGroupToolbarState
         child: LayoutBuilder(
           builder: (context, constraints) => _AdminCustomerGroupQueryRow(
             compact: constraints.maxWidth < 620,
-            filter: AdminCustomerGroupFilterMenu(onSelected: _editFilter),
+            filter: AdminCustomerGroupFilterMenu(
+              createdAt: widget.state.createdAt,
+              updatedAt: widget.state.updatedAt,
+              onCreatedAtChanged: _createdAtChanged,
+              onUpdatedAtChanged: _updatedAtChanged,
+            ),
             query: _AdminCustomerGroupSearch(
               controller: _search,
               focusNode: widget.searchFocus,
@@ -66,42 +71,24 @@ final class _AdminCustomerGroupToolbarState
       ),
       AdminCustomerGroupActiveFilters(
         state: widget.state,
-        onClearCreatedAt: viewModel.filterByCreatedAt,
-        onClearUpdatedAt: viewModel.filterByUpdatedAt,
+        onCreatedAtChanged: _createdAtChanged,
+        onUpdatedAtChanged: _updatedAtChanged,
         onClearAll: viewModel.clearFilters,
       ),
     ]);
   }
 
-  Future<void> _editFilter(AdminCustomerGroupFilterKind kind) => switch (kind) {
-        AdminCustomerGroupFilterKind.createdAt => _pickDate(created: true),
-        AdminCustomerGroupFilterKind.updatedAt => _pickDate(created: false),
-      };
+  Future<void> _createdAtChanged(AdminDateFilter value) =>
+      context.readAdminCustomerGroupViewModel().filterByCreatedAt(
+            from: value.greaterThanOrEqual,
+            to: value.lessThanOrEqual,
+          );
 
-  Future<void> _pickDate({required bool created}) async {
-    final today = DateTime.now();
-    final range = await showDateRangePicker(
-      context: context,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(today.year + 1, 12, 31),
-    );
-    if (range == null || !mounted) return;
-    final from = Some(range.start);
-    final to = Some(DateTime(
-      range.end.year,
-      range.end.month,
-      range.end.day,
-      23,
-      59,
-      59,
-      999,
-      999,
-    ));
-    final viewModel = context.readAdminCustomerGroupViewModel();
-    await (created
-        ? viewModel.filterByCreatedAt(from: from, to: to)
-        : viewModel.filterByUpdatedAt(from: from, to: to));
-  }
+  Future<void> _updatedAtChanged(AdminDateFilter value) =>
+      context.readAdminCustomerGroupViewModel().filterByUpdatedAt(
+            from: value.greaterThanOrEqual,
+            to: value.lessThanOrEqual,
+          );
 }
 
 final class _AdminCustomerGroupQueryRow extends StatelessWidget {

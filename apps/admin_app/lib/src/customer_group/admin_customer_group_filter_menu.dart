@@ -1,43 +1,55 @@
+import 'package:admin_app/src/core/admin_date_filter_control.dart';
+import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
-
-/// Date filters exposed by Medusa's customer-group list source.
-enum AdminCustomerGroupFilterKind {
-  /// Database-owned creation instant.
-  createdAt,
-
-  /// Database-owned last-update instant.
-  updatedAt,
-}
 
 /// Source-shaped Add filter menu for customer groups.
 final class AdminCustomerGroupFilterMenu extends StatelessWidget {
   /// Creates the customer-group filter menu.
-  const AdminCustomerGroupFilterMenu({required this.onSelected, super.key});
+  const AdminCustomerGroupFilterMenu({
+    required this.createdAt,
+    required this.updatedAt,
+    required this.onCreatedAtChanged,
+    required this.onUpdatedAtChanged,
+    super.key,
+  });
 
-  /// Opens the selected date-range editor.
-  final ValueChanged<AdminCustomerGroupFilterKind> onSelected;
+  /// Current creation-time comparison.
+  final AdminDateFilter createdAt;
+
+  /// Applies a creation-time preset or custom range.
+  final ValueChanged<AdminDateFilter> onCreatedAtChanged;
+
+  /// Applies an update-time preset or custom range.
+  final ValueChanged<AdminDateFilter> onUpdatedAtChanged;
+
+  /// Current update-time comparison.
+  final AdminDateFilter updatedAt;
 
   @override
-  Widget build(BuildContext context) => PopupMenuButton(
-        tooltip: 'Add filter',
-        onSelected: onSelected,
-        itemBuilder: (context) => const [
-          PopupMenuItem(
-            value: AdminCustomerGroupFilterKind.createdAt,
-            child: Text('Created'),
+  Widget build(BuildContext context) {
+    if (!createdAt.isEmpty && !updatedAt.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return MenuAnchor(
+      alignmentOffset: const Offset(0, 8),
+      menuChildren: [
+        if (createdAt.isEmpty)
+          AdminDateFilterSubmenu(
+            label: 'Created',
+            value: createdAt,
+            onChanged: onCreatedAtChanged,
           ),
-          PopupMenuItem(
-            value: AdminCustomerGroupFilterKind.updatedAt,
-            child: Text('Updated'),
+        if (updatedAt.isEmpty)
+          AdminDateFilterSubmenu(
+            label: 'Updated',
+            value: updatedAt,
+            onChanged: onUpdatedAtChanged,
           ),
-        ],
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 7),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Icon(Icons.add_rounded, size: 16),
-            SizedBox(width: 4),
-            Text('Add filter'),
-          ]),
-        ),
-      );
+      ],
+      builder: (context, controller, child) => OutlinedButton(
+        onPressed: controller.isOpen ? controller.close : controller.open,
+        child: const Text('Add filter'),
+      ),
+    );
+  }
 }

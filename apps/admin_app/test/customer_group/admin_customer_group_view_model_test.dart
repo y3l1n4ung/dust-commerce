@@ -69,6 +69,18 @@ void main() {
   });
 
   test('keeps search, date, and ordering controls in state', () async {
+    await groups.filterByUpdatedAt(
+      from: Some(DateTime.utc(2026, 9, 12)),
+      to: Some(DateTime.utc(2026, 9, 12, 23, 59, 59)),
+    );
+
+    expect(groups.state.customerGroups.single.id, 'cusgrp_vip');
+    expect(
+      groups.state.updatedAt.greaterThanOrEqual,
+      Some(DateTime.utc(2026, 9, 12)),
+    );
+
+    await groups.clearFilters();
     await groups.search('Retail');
     await groups.filterByCreatedAt(
       from: Some(DateTime.utc(2026, 9, 10)),

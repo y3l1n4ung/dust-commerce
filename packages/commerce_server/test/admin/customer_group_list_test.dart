@@ -66,6 +66,20 @@ void main() {
     final groups = json['customer_groups']! as List<Object?>;
     expect(groups, hasLength(1));
     expect(groups.single, containsPair('id', 'cusgrp_retail'));
+
+    final updatedUri = Uri(path: '/admin/customer-groups', queryParameters: {
+      'updated_at': jsonEncode({r'$gte': '2026-09-12T00:00:00Z'}),
+      'order': '-updated_at',
+    });
+    final updatedRequest = harness.client.get(updatedUri.toString())
+      ..bearer(await harness.adminToken());
+    final updatedResponse = await updatedRequest.send();
+    updatedResponse.assertOk();
+    final updatedGroups = (updatedResponse.json!
+        as Map<String, Object?>)['customer_groups']! as List<Object?>;
+    expect(updatedGroups.map((value) => (value! as Map)['id']), [
+      'cusgrp_vip',
+    ]);
   });
 
   test('group list rejects filters and order outside its allowlist', () async {
