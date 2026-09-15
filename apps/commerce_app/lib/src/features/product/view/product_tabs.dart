@@ -172,8 +172,8 @@ class _ShippingFact extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 20),
-            const SizedBox(width: 10),
+            Icon(icon, size: 16),
+            const SizedBox(width: 8),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
