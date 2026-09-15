@@ -1295,7 +1295,9 @@ Source truth paths:
   `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/lib/data/locales.ts`,
   and `lib/data/locale-actions.ts`.
 - Live source:
-  `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`.
+  `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`,
+  `/products/electric-bike?v_id=variant_01KA90S8C45YNQCAX3NJ2W9MV1`, and
+  `/products/hoodie?v_id=variant_01KBNDBWA7DXVAZXSW9382X261`.
 
 Implementation URL: a temporary release Store at
 `http://127.0.0.1:13004/products/t-shirt?v_id=var_tshirt_m_black` isolated
@@ -1612,7 +1614,9 @@ Source truth paths:
   `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`.
 
 Implementation URL:
-`http://127.0.0.1:13001/products/heavyweight-black-tee?v_id=var_demo_02`.
+`http://127.0.0.1:13001/products/heavyweight-black-tee?v_id=var_demo_02`,
+`/products/swim-shorts?v_id=var_demo_16`, and
+`/products/t-shirt?v_id=var_tshirt_m_black`.
 
 Viewport and state: English light theme, one in-stock simple product, and a
 nominal `390 x 844` CSS viewport. The live source capture was cropped to a
@@ -1643,6 +1647,16 @@ rather than a persisted filesystem screenshot artifact.
   two-column fact hierarchy.
 - Shipping & Returns then opened independently on both pages and exposed the
   same three icon, title, and body rows in the same order.
+- At `390 x 780`, Medusa Electric Bike and Morrow Swim Shorts both exposed the
+  fixed title row and disabled gray `Out of stock` action once their inline
+  purchase control was outside the viewport. Morrow's USD price remains a real
+  merchant-data difference; the live Electric Bike renders no price.
+- Medusa Hoodie and Morrow Essential T-Shirt opened equivalent compact option
+  sheets with the same dimmed backdrop, bottom-aligned white panel, 48px close
+  control at the 24px gutter, and 12px panel separation. Panel height and body
+  content differ because the live Hoodie has one generated default option and
+  therefore renders an empty body, while Morrow exposes real Size and Color
+  choices.
 - The settled source tab reported no browser log entry. The local tab reported
   only Flutter bootstrap debug entries, with no warning or error.
 
@@ -1651,8 +1665,9 @@ rather than a persisted filesystem screenshot artifact.
 - The nominal viewport is shared, but the source scrollbar changes its output
   raster by 15px. The comparison establishes responsive structure and behavior,
   not pixel equality.
-- This pair covers equivalent simple products. Matched unavailable-combination,
-  sold-out, and post-add states still depend on equivalent live source data.
+- Equivalent simple and sold-out products are covered. A matched
+  unavailable-combination and post-add state still depends on equivalent live
+  source data.
 - Screenshots were displayed together but could not be exported to a local file
   by the browser surface. Formal persisted screenshot-audit completion is not
   claimed.
@@ -1668,7 +1683,7 @@ rather than a persisted filesystem screenshot artifact.
   diff whitespace checks pass. No widget test was added.
 
 Store compact product tabs result: passed for equivalent simple-product layout,
-accordion interaction, and source copy; persisted screenshot-artifact evidence
-remains unavailable
+accordion interaction, source copy, sold-out action, and option-sheet chrome;
+persisted screenshot-artifact evidence remains unavailable
 
 final result: blocked
