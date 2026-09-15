@@ -14,7 +14,7 @@ final class CheckoutScaffold extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           toolbarHeight: 64,
-          leadingWidth: 240,
+          leadingWidth: MediaQuery.sizeOf(context).width >= 1024 ? 240 : 96,
           leading: TextButton.icon(
             onPressed: () => context.navigator.cart().go(),
             icon: const Icon(Icons.chevron_left, size: 18),
@@ -30,7 +30,15 @@ final class CheckoutScaffold extends StatelessWidget {
           ),
           title: TextButton(
             onPressed: () => context.navigator.catalog().go(),
-            child: const TranslatedText('shop_brand', defaultText: 'MORROW'),
+            child: const TranslatedText(
+              'shop_brand',
+              defaultText: 'MORROW',
+              style: TextStyle(
+                fontSize: 18,
+                height: 20 / 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
         ),
         body: body,
