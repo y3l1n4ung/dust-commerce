@@ -1972,4 +1972,79 @@ progression, restored choice state, radio accessibility semantics, and desktop
 and compact local rendering; same-state live Medusa and pickup parity remain
 open
 
+## Store checkout Payment state
+
+Source truth at current Medusa DTC commit
+`bd2441acc18359533758fbf4db5bc80129055d2e`:
+
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/modules/checkout/components/payment/index.tsx`;
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/modules/checkout/components/payment-container/index.tsx`;
+- live source checkout: `https://next.medusajs.com/dk/checkout`; and
+- implementation checkout: `http://127.0.0.1:13001/checkout?step=payment`.
+
+**Source and behavior findings**
+
+- Medusa renders available providers as one Headless UI radio group. Each
+  provider row uses 32px horizontal and 16px vertical padding, an 8px radius,
+  8px bottom spacing, a 16px radio-to-title gap, and a provider icon at the
+  opposite edge. Selection changes only the interactive border and radio.
+- Dust discovers providers through the cart region API and retains selection in
+  the server-owned payment session. The initial local Manual Payment option was
+  exposed as a generic button even though its visual radio state matched the
+  source.
+- The focused correction extracts a concrete payment-choice widget and exposes
+  checked state plus mutual exclusion. Its accessibility label uses the same
+  localized provider-title resolver as visible copy, so an internal provider id
+  does not replace the customer-facing name.
+- Medusa's manual-payment development hint is intentionally absent from the
+  production-shaped local release build. It is a test instruction guarded by
+  `NODE_ENV === "development"`, not customer checkout content.
+
+**Interaction evidence**
+
+- Before selection, browser accessibility reported Manual Payment as an
+  unchecked radio and Continue to review as disabled. Selecting it performed
+  the real server mutation, changed the radio value to checked, and enabled the
+  progression action.
+- Continue to review preserved Manual Payment in the collapsed two-column
+  summary with Payment method, Payment details, the credit-card icon, and
+  “Another step will appear”, matching the source composition.
+- A browser-native hard reload preserved `?step=payment` and restored the
+  checked radio from the cart payment session. The browser automation helper's
+  synthetic reload returned its original launch URL, so it was not treated as
+  route evidence.
+- At `390 x 844`, Payment uses the compact Back label, keeps the full-width
+  provider row and ordered checkout/cart sections, and renders without
+  horizontal overflow. The settled final build reports no browser warnings or
+  errors.
+
+**Evidence limits**
+
+- The current live Medusa checkout continues to show its checkout shell and
+  populated cart while its address content remains loading. No remote address,
+  shipping or payment mutation was performed, so a same-state Payment raster is
+  not claimed; current source composition and local rendered behavior were
+  verified separately.
+- The current DTC backend seed creates a shipping fulfillment set with Standard
+  and Express shipping only. Its conditional pickup UI has no seeded pickup
+  fulfillment set, so inventing one in Dust is not required for the reachable
+  reference flow and remains a separate capability.
+- Screenshots remain current-run browser evidence instead of persisted
+  filesystem artifacts.
+
+**Validation**
+
+- All 141 Store tests pass and Flutter analysis reports no issue.
+- Dust reports all 54 Store outputs clean. Dust i18n checks 688 translations
+  with zero errors; its 15 warnings remain the existing stale/equal-fallback
+  inventory outside this slice.
+- The final release Web rebuild, handwritten formatting, file-size,
+  response-boundary, project-structure and diff-whitespace checks pass. No
+  widget test was added.
+
+Store checkout Payment result: passed for current source-code composition,
+server-retained provider selection, disabled/enabled progression, checked radio
+semantics, Review summary, browser-native hard reload, compact rendering and
+browser-log cleanliness; a same-state live Medusa raster remains unavailable
+
 final result: blocked
