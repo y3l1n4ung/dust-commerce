@@ -18,59 +18,48 @@ final class _AddFilterMenu extends StatelessWidget {
     final products = context.readAdminProductViewModel();
     final menu = <Widget>[
       if (state.typeIds.isEmpty && types.isNotEmpty)
-        _selectSubmenu(
-          context,
-          'Type',
-          types,
-          state.typeIds,
-          products.filterByTypes,
+        _SelectFilterSubmenu(
+          label: 'Type',
+          choices: types,
+          selected: state.typeIds,
+          onChanged: products.filterByTypes,
         ),
       if (state.tagIds.isEmpty && tags.isNotEmpty)
-        _selectSubmenu(
-          context,
-          'Tag',
-          tags,
-          state.tagIds,
-          products.filterByTags,
+        _SelectFilterSubmenu(
+          label: 'Tag',
+          choices: tags,
+          selected: state.tagIds,
+          onChanged: products.filterByTags,
         ),
       if (state.statuses.isEmpty)
-        _selectSubmenu(
-          context,
-          'Status',
-          statuses,
-          state.statuses.map((status) => status.name).toList(),
-          (ids) => products.filterByStatuses([
+        _SelectFilterSubmenu(
+          label: 'Status',
+          choices: statuses,
+          selected: state.statuses.map((status) => status.name).toList(),
+          onChanged: (ids) => products.filterByStatuses([
             for (final status in AdminProductLifecycle.values)
               if (ids.contains(status.name)) status,
           ]),
         ),
       if (state.createdAt.isEmpty)
-        SubmenuButton(
+        AdminDateFilterSubmenu(
+          label: 'Created',
           style: _addFilterItemStyle,
           menuStyle: _filterMenuStyle(context),
-          submenuIcon: const WidgetStatePropertyAll(SizedBox.shrink()),
-          menuChildren: _dateMenuItems(
-            context,
-            (value) => products.filterByCreatedAt(
-              from: value.greaterThanOrEqual,
-              to: value.lessThanOrEqual,
-            ),
+          onChanged: (value) => products.filterByCreatedAt(
+            from: value.greaterThanOrEqual,
+            to: value.lessThanOrEqual,
           ),
-          child: const Text('Created'),
         ),
       if (state.updatedAt.isEmpty)
-        SubmenuButton(
+        AdminDateFilterSubmenu(
+          label: 'Updated',
           style: _addFilterItemStyle,
           menuStyle: _filterMenuStyle(context),
-          submenuIcon: const WidgetStatePropertyAll(SizedBox.shrink()),
-          menuChildren: _dateMenuItems(
-            context,
-            (value) => products.filterByUpdatedAt(
-              from: value.greaterThanOrEqual,
-              to: value.lessThanOrEqual,
-            ),
+          onChanged: (value) => products.filterByUpdatedAt(
+            from: value.greaterThanOrEqual,
+            to: value.lessThanOrEqual,
           ),
-          child: const Text('Updated'),
         ),
     ];
     if (menu.isEmpty) return const SizedBox.shrink();
@@ -102,7 +91,13 @@ final class _MultiFilterChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) => _FilterChipMenu(
         label: '$label: ${_selectionLabel(choices, selected)}',
-        menuChildren: _checkItems(choices, selected, onChanged),
+        menuChildren: [
+          _MultiFilterChoices(
+            choices: choices,
+            selected: selected,
+            onChanged: onChanged,
+          ),
+        ],
         onClear: () => onChanged(const []),
       );
 }
@@ -154,28 +149,6 @@ final class _FilterChipMenu extends StatelessWidget {
         ),
       );
 }
-
-List<Widget> _checkItems(
-  List<_FilterChoice> choices,
-  List<String> selected,
-  ValueChanged<List<String>> onChanged,
-) =>
-    [
-      for (final choice in choices)
-        CheckboxMenuButton(
-          value: selected.contains(choice.id),
-          closeOnActivate: false,
-          onChanged: (_) => onChanged(_toggle(selected, choice.id)),
-          child: Text(choice.label),
-        ),
-    ];
-
-List<String> _toggle(List<String> selected, String id) => selected.contains(id)
-    ? [
-        for (final value in selected)
-          if (value != id) value
-      ]
-    : [...selected, id];
 
 String _selectionLabel(List<_FilterChoice> choices, List<String> selected) {
   final labels = [

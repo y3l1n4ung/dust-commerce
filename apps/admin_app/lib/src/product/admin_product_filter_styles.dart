@@ -15,18 +15,3 @@ MenuStyle _filterMenuStyle(BuildContext context) => MenuStyle(
       maximumSize: const WidgetStatePropertyAll(Size(300, 200)),
       padding: const WidgetStatePropertyAll(EdgeInsets.all(4)),
     );
-
-Widget _selectSubmenu(
-  BuildContext context,
-  String label,
-  List<_FilterChoice> choices,
-  List<String> selected,
-  ValueChanged<List<String>> onChanged,
-) =>
-    SubmenuButton(
-      style: _addFilterItemStyle,
-      menuStyle: _filterMenuStyle(context),
-      submenuIcon: const WidgetStatePropertyAll(SizedBox.shrink()),
-      menuChildren: _checkItems(choices, selected, onChanged),
-      child: Text(label),
-    );

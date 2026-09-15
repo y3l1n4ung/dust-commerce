@@ -1,14 +1,11 @@
-import 'dart:math';
-
+import 'package:admin_app/src/core/admin_date_filter_control.dart';
 import 'package:admin_app/src/product/admin_product_state.dart';
 import 'package:admin_app/src/product/admin_product_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
-import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 part 'admin_product_filter_controls.dart';
-part 'admin_product_date_filter.dart';
+part 'admin_product_filter_selection.dart';
 part 'admin_product_filter_styles.dart';
 
 typedef _FilterChoice = ({String id, String label});
@@ -70,7 +67,7 @@ final class AdminProductFilterBar extends StatelessWidget {
             onChanged: products.filterByTags,
           ),
         if (!state.createdAt.isEmpty)
-          _DateFilterChip(
+          AdminDateFilterChip(
             label: 'Created',
             value: state.createdAt,
             onChanged: (value) => products.filterByCreatedAt(
@@ -79,7 +76,7 @@ final class AdminProductFilterBar extends StatelessWidget {
             ),
           ),
         if (!state.updatedAt.isEmpty)
-          _DateFilterChip(
+          AdminDateFilterChip(
             label: 'Updated',
             value: state.updatedAt,
             onChanged: (value) => products.filterByUpdatedAt(
