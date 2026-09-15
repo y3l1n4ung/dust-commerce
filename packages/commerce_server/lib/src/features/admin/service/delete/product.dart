@@ -10,7 +10,9 @@ enum AdminDeleteProductFailure {
 }
 
 /// Soft-deletes one product graph while retaining historical rows.
-Future<Result<Result<AdminProductDeleted, AdminDeleteProductFailure>, SqlxError>>
+Future<
+        Result<Result<AdminProductDeleted, AdminDeleteProductFailure>,
+            SqlxError>>
     deleteAdminProduct(CommerceDatabase database, String productId) =>
         database.transaction((tx) async {
           final deletes = AdminProductDeleteRepository(tx);

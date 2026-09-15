@@ -22,7 +22,8 @@ void main() {
 
   test('keeps zero and two-channel states explicit', () {
     final empty = adminProductSalesChannelPresentation(const []);
-    final exact = adminProductSalesChannelPresentation(channels.take(2).toList());
+    final exact =
+        adminProductSalesChannelPresentation(channels.take(2).toList());
 
     expect(empty.names, isEmpty);
     expect(empty.overflow, isEmpty);

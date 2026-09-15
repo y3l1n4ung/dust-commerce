@@ -3,8 +3,7 @@ part of 'order_transfer_mail_config.dart';
 String _required(Map<String, String> source, String key) {
   final value = source[key]?.trim();
   if (value == null || value.isEmpty) {
-    throw FormatException(
-        '$key is required when SMTP email is configured.');
+    throw FormatException('$key is required when SMTP email is configured.');
   }
   return _withoutControlCharacters(value, key);
 }

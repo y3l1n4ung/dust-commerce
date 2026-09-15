@@ -40,7 +40,8 @@ Future<void> _respond(HttpRequest request) async {
   expect(request.headers.value('authorization'), 'Bearer admin-token');
   request.response.headers.contentType = ContentType.json;
   if (request.uri.path == '/admin/stock-locations') {
-    expect(request.uri.queryParameters, {'q': '', 'limit': '20', 'offset': '0'});
+    expect(
+        request.uri.queryParameters, {'q': '', 'limit': '20', 'offset': '0'});
     request.response.write(jsonEncode({
       'stock_locations': [
         {'id': 'sloc_main', 'name': 'Morrow Warehouse'},

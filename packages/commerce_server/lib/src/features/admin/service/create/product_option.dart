@@ -19,8 +19,10 @@ enum AdminCreateProductOptionFailure {
 
 /// Creates one global product option and its values atomically.
 Future<
-    Result<Result<AdminProductOptionDetailResponse,
-        AdminCreateProductOptionFailure>, SqlxError>> createAdminProductOption(
+    Result<
+        Result<AdminProductOptionDetailResponse,
+            AdminCreateProductOptionFailure>,
+        SqlxError>> createAdminProductOption(
   CommerceDatabase database,
   AdminCreateProductOption input, {
   required String Function() nextId,
