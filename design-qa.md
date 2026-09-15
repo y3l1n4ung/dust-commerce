@@ -1347,4 +1347,70 @@ semantics.
 Store language selector result: passed for configured local behavior; matched
 configured-source raster unavailable
 
+## Store country selector behavior
+
+Source truth paths:
+
+- Pinned Medusa DTC source at commit
+  `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/tmp/medusa-dtc-19e8a6f/apps/storefront/src/modules/layout/components/country-select/index.tsx`,
+  `components/side-menu/index.tsx`, `lib/data/cart.ts`, and
+  `lib/data/regions.ts`.
+- Live source:
+  `https://next.medusajs.com/dk/products/espresso-cup?v_id=variant_01KA906CNZ2951NNN2GDFV1QF8`.
+
+Implementation URL: a temporary release Store at
+`http://127.0.0.1:13004/products/t-shirt?v_id=var_tshirt_m_black` isolated
+country and cart persistence from the official Store session. The final build
+remains available at `http://127.0.0.1:13001`.
+
+Viewport and state: English light theme with a one-item T-shirt cart at the
+default `1280 x 720` viewport, plus local compact QA at `390 x 844` and
+device-pixel ratio 1. The live source country list was captured in its Denmark
+product state before implementation. The temporary viewport override was
+reset after QA.
+
+**Source and behavior findings**
+
+- The pinned selector derives alphabetized choices from active regions, uses
+  16px SVG flags, updates any existing cart, preserves the current path and
+  closes the side menu immediately after selection.
+- Morrow already derived countries from its active region response, persisted
+  a supported country, restored it before routing, and accepted only the
+  server's atomic cart repricing and regional shipping reset. Its drawer stayed
+  open after a successful selection.
+- Commit `6a1de88` closes the drawer only after both cart and shell selection
+  succeed and replaces the private `Widget` flag helper with a focused widget
+  class. Commit `db50d7e` removes that resolved debt from the frozen structure
+  baseline.
+- Release-browser QA changed a one-item cart from Denmark/EUR to United
+  States/USD on `/products/t-shirt?v_id=var_tshirt_m_black`. The drawer closed,
+  the exact product URL and variant remained, the price changed from EUR 10.00
+  to USD 15.00, the cart retained one item with a USD 16.50 total, and country,
+  currency and cart survived a hard reload. Resetting to Denmark restored the
+  EUR 10.00 cart and closed the compact drawer. Browser logs contained no
+  warnings or errors.
+
+**Comparison boundary**
+
+The local backend exposes eight configured countries while the live Medusa
+deployment exposes fourteen; both selectors correctly render their active
+region inventory. This pass proves source interaction and local behavior
+parity. It does not claim popup pixel parity: Morrow's current list remains
+content-width and title case, while the pinned source uses a minimum 320px
+uppercase panel.
+
+**Validation**
+
+- The Store release Web build succeeded.
+- All 139 Store tests pass; the seven focused cart-region and shell tests pass.
+  No widget test was added.
+- Flutter analysis reports no issue; Dust reports all 54 Store outputs clean.
+- Dust i18n checks 684 translations with zero errors; its 15 warnings remain
+  the existing stale/equal-fallback inventory outside this slice.
+- Handwritten formatting, file-size, widget composition, response boundaries,
+  and diff whitespace checks pass.
+
+Store country selector behavior result: passed; popup visual parity remains
+
 final result: blocked
