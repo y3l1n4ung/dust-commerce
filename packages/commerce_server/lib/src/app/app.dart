@@ -6,6 +6,7 @@ import 'package:commerce_server/src/features/category/category.dart';
 import 'package:commerce_server/src/features/catalog/catalog.dart';
 import 'package:commerce_server/src/features/checkout/checkout.dart';
 import 'package:commerce_server/src/features/collection/collection.dart';
+import 'package:commerce_server/src/features/customer_service/customer_service.dart';
 import 'package:commerce_server/src/features/order_transfer/order_transfer.dart';
 import 'package:commerce_server/src/features/order_return/order_return.dart';
 import 'package:commerce_server/src/features/payment/payment.dart';
@@ -56,6 +57,7 @@ Router buildApp(
     ..nest('/store', categoryRoutes())
     ..nest('/store', catalogRoutes())
     ..nest('/store', collectionRoutes())
+    ..nest('/store', customerServiceRoutes())
     ..nest('/store', cartRoutes())
     ..nest('/store', checkoutRoutes())
     ..nest('/store', orderTransferRoutes())
@@ -81,6 +83,10 @@ Router buildApp(
       ),
     )
     ..withState(CategoryDeps(categories: ProductCategoryRepository(executor)))
+    ..withState(CustomerServiceDeps(
+      requests: CustomerServiceRepository(executor),
+      nextId: clock.nextId,
+    ))
     ..withState(
       CollectionDeps(collections: ProductCollectionRepository(executor)),
     )

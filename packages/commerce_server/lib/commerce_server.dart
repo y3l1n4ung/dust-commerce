@@ -18,6 +18,7 @@ export 'src/features/category/category.dart';
 export 'src/features/catalog/catalog.dart';
 export 'src/features/checkout/checkout.dart';
 export 'src/features/collection/collection.dart';
+export 'src/features/customer_service/customer_service.dart';
 export 'src/features/order_transfer/order_transfer.dart';
 export 'src/features/order_return/order_return.dart';
 export 'src/features/payment/payment.dart';
