@@ -1217,4 +1217,66 @@ Testing stopped before order placement.
 
 Store authenticated account composition result: passed
 
+## Store authenticated order history and detail
+
+Source truth paths:
+
+- Pinned Medusa DTC source at commit
+  `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/account/components/order-overview/index.tsx`,
+  `components/order-card/index.tsx`, and
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/order/templates/order-details-template.tsx`.
+- The source uses `Date.toDateString()` for a year-bearing order date and
+  selects singular `item` only when the total quantity is one.
+
+Implementation URLs: the official Store remains
+`http://127.0.0.1:13001/account/orders`. A temporary release Store on
+`http://127.0.0.1:13004/account/orders` isolated the populated QA identity
+from the existing `13001` account session.
+
+Viewport: the order list was verified at the default `1280 x 720` browser
+viewport and at `390 x 844`, both at device-pixel ratio 1. The detail route
+was also verified at `390 x 844`. The temporary viewport override was reset
+after QA.
+
+State: English light theme, signed in with a fake local QA customer. Three
+server-created orders exercised quantities one, two, and three, distinct
+products, EUR totals, and captured versus awaiting payment states. No customer
+secret is recorded here.
+
+**Findings and correction**
+
+- Populated browser evidence exposed `1 items` in the local card while the
+  source renders `1 item`.
+- Local account, confirmation, payment, and return dates used a medium date
+  without the calendar year; the source order views include the year.
+- Commit `6c9e1cd` centralizes customer-facing date and date-time formatting,
+  retains the year, and supplies explicit singular and plural order/return
+  translations without changing server-owned timestamps.
+- The settled desktop and compact order list renders `1 item`, `2 items`,
+  `3 items`, and `Tue, Sep 15, 2026`. The compact detail renders the same full
+  date, order/payment status, line item, delivery, address, contact, method,
+  and totals without overflow.
+- The final browser pass reported no warning or error logs.
+
+**Comparison boundary**
+
+The pinned source implementation establishes the hierarchy, copy, plural
+rule, date semantics, card media, and detail-section order. No disposable
+authenticated Medusa session or matched raster was available, so this pass
+proves source-structure and local behavior parity, not pixel parity.
+
+**Validation**
+
+- Store release Web build succeeded for the populated QA pass.
+- All 139 Store tests pass, including two focused date-format tests; no widget
+  test was added.
+- Flutter analysis reports no issue; Dust reports all 54 Store outputs clean.
+- Dust i18n checks 684 translations with zero errors; its 15 warnings are the
+  existing stale/equal-fallback inventory outside this slice.
+- Handwritten formatting, the frozen 180-line baseline, widget composition,
+  backend response boundaries, and diff whitespace checks pass.
+
+Store authenticated order history and detail result: passed
+
 final result: blocked
