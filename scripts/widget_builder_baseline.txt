@@ -18,4 +18,3 @@ apps/admin_app/lib/src/product_type/admin_product_type_edit_drawer.dart:2
 apps/admin_app/lib/src/product_type/admin_product_type_page.dart:1
 apps/admin_app/lib/src/product_type/detail/admin_product_type_products_section.dart:1
 apps/commerce_app/lib/src/features/shell/view/country_select.dart:1
-apps/commerce_app/lib/src/features/shell/view/language_select.dart:1
