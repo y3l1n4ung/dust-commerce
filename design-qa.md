@@ -1833,4 +1833,75 @@ Future source inspections use the refreshed worktree and 2.21.0 token authority.
 Current Medusa DTC source-pin result: passed; storefront source and rendered
 token inputs have no material drift from the completed comparisons
 
+## Store checkout not-found boundary
+
+Source truth paths at current Medusa DTC commit
+`bd2441acc18359533758fbf4db5bc80129055d2e`:
+
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/app/[countryCode]/(checkout)/layout.tsx`;
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/app/[countryCode]/(checkout)/checkout/page.tsx`;
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/app/[countryCode]/(checkout)/not-found.tsx`.
+
+Live source shell: `https://next.medusajs.com/dk/checkout`.
+
+Fresh-session implementation URL: `http://localhost:13001/checkout`. The
+alternate local hostname isolates cart storage without deleting the existing
+`127.0.0.1` QA cart; both origins serve the same release Web bundle.
+
+**Source and behavior findings**
+
+- Medusa keeps the checkout-only Back/brand header and bottom attribution around
+  its generic 404 body when no cart exists. The original local guard redirected
+  the missing capability to `/cart`, losing both the URL and checkout boundary.
+- `CheckoutGuard` still restores cart state before route activation. A missing
+  capability now proceeds to the checkout page so it can render the source 404
+  at `/checkout`; a known valid-but-empty cart continues to return to `/cart`
+  rather than entering an unusable payment flow.
+- The shared checkout attribution was extracted into a concrete widget and is
+  reused by successful and not-found checkout bodies. No method returns a
+  Widget.
+- Desktop local rendering preserves `BACK TO SHOPPING CART`, centered `MORROW`,
+  the source-exact generic 404 hierarchy, and `Powered by dust` below the
+  viewport-height body. At `390 x 844`, the header switches to source-shaped
+  `BACK` while retaining the same centered content without overflow.
+
+**Interaction evidence**
+
+- The header Back action navigated the fresh session from `/checkout` to the
+  empty `/cart` route. Browser Back restored `/checkout` and the same 404 state.
+- `Go to frontpage` changed the route to `/`. The alternate hostname is not in
+  the API's production-shaped CORS allowlist, so catalogue loading on that QA
+  origin is not claimed; frontpage recovery on the allowed `127.0.0.1` origin
+  was already verified in the root and main-route 404 slices.
+- The settled live checkout shell and a new local checkout-404 tab each reported
+  zero browser warnings or errors.
+
+**Evidence limits**
+
+- The live Medusa browser session already owns a populated cart, so its checkout
+  URL renders the form rather than the no-cart boundary. Clearing that remote
+  cart was not required or performed. The live checkout shell and live generic
+  404 body were therefore verified separately against their current source
+  composition; a same-state full-page raster is not claimed.
+- Screenshots remain current-run session evidence rather than persisted
+  filesystem artifacts.
+
+**Validation**
+
+- The Store release Web build succeeded and the fresh-session route was
+  recaptured at desktop and compact sizes.
+- All 141 Store tests pass. Dedicated non-widget route-guard tests prove both
+  missing-cart URL preservation and valid empty-cart rejection; Flutter analysis
+  reports no issue.
+- Dust reports all 54 Store outputs clean. Dust i18n checks 688 translations
+  with zero errors; its 15 warnings remain the existing stale/equal-fallback
+  inventory outside this slice.
+- Handwritten formatting, file-size, response-boundary, project-structure, and
+  diff whitespace checks pass. No widget test was added.
+
+Store checkout not-found result: passed for source composition, route-level
+restoration, URL preservation, empty-cart safety, desktop and compact local
+rendering, Back navigation, and browser-log cleanliness; a same-state live
+Medusa no-cart raster remains unavailable
+
 final result: blocked
