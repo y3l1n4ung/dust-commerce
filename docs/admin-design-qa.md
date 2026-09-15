@@ -634,11 +634,12 @@ The order list, region filtering, detail, fulfillment shipment, delivery,
 cancellation, independent manual-payment refunds and filtered CSV export pass
 protected API, generated-client, responsive layout and live-data behavior
 checks against the pinned source structure.
-The customer list, detail, mutations, and customer-group
-list/create/detail/edit/delete/membership flows pass protected API,
-explicit-contract, direct-SQLx, responsive layout and live data checks against
-the pinned source structure. Address update and same-state customer raster
-parity remain open.
+The customer list, detail, mutations, address create/read/update/delete, and
+customer-group list/create/detail/edit/delete/membership flows pass protected
+API, explicit-contract, direct-SQLx, responsive layout and live data checks
+against the pinned source structure. The address update is API-only because the
+pinned dashboard exposes no Edit action. Same-state customer raster parity
+remains open.
 The product-list sales-channel slice passes its typed contract, direct SQLx
 projection, source-shaped truncation/tooltip behavior and clean-start browser
 QA. Its whole-screen density and thumbnail differences remain an open visual
