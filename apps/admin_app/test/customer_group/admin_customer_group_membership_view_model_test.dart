@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:admin_app/src/core/admin_api.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_api.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_candidate_state.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_candidate_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_membership_state.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_membership_view_model.dart';
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
@@ -15,6 +17,7 @@ void main() {
   late CommerceDatabase database;
   late TestClient server;
   late AdminCustomerGroupMembershipViewModel memberships;
+  late AdminCustomerGroupCandidateViewModel candidates;
 
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('admin_group_membership');
@@ -59,6 +62,11 @@ VALUES ('cgc_ada', 'cusgrp_partners', 'cus_ada')
         api: AdminCustomerGroupApi(dio, baseUrl: server.origin),
       ),
     );
+    candidates = AdminCustomerGroupCandidateViewModel(
+      AdminCustomerGroupCandidateViewModelArgs(
+        api: AdminCustomerGroupApi(dio, baseUrl: server.origin),
+      ),
+    );
   });
 
   tearDown(() async {
@@ -99,5 +107,19 @@ VALUES ('cgc_ada', 'cusgrp_partners', 'cus_ada')
       unauthorized.state.failure,
       const Some('Your admin session has expired.'),
     );
+  });
+
+  test('loads an independent searchable 10-row candidate page', () async {
+    await candidates.load();
+
+    expect(candidates.state.status, AdminCustomerGroupCandidateStatus.ready);
+    expect(candidates.state.count, 2);
+    expect(candidates.state.limit, 10);
+    expect(candidates.state.customers.map((customer) => customer.id),
+        ['cus_ada', 'cus_grace']);
+
+    await candidates.search('Ada');
+    expect(candidates.state.count, 1);
+    expect(candidates.state.customers.single.id, 'cus_ada');
   });
 }

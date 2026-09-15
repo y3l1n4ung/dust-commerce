@@ -7,6 +7,7 @@ import 'package:admin_app/src/customer/admin_customer_detail_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_edit_view_model.dart';
 import 'package:admin_app/src/customer/admin_customer_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_create_view_model.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_candidate_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_delete_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_edit_view_model.dart';
@@ -64,66 +65,71 @@ final class AdminViewModelScope extends StatelessWidget {
                     value: deps.customers.create,
                     child: AdminCustomerViewModelScope.value(
                       value: deps.customers.list,
-                      child: AdminCustomerGroupCreateViewModelScope.value(
-                        value: deps.customerGroups.create,
-                        child: AdminCustomerGroupDeleteViewModelScope.value(
-                          value: deps.customerGroups.delete,
-                          child: AdminCustomerGroupEditViewModelScope.value(
-                            value: deps.customerGroups.edit,
-                            child: AdminCustomerGroupMembershipViewModelScope
-                                .value(
-                              value: deps.customerGroups.membership,
-                              child:
-                                  AdminCustomerGroupDetailViewModelScope.value(
-                                value: deps.customerGroups.detail,
-                                child: AdminCustomerGroupViewModelScope.value(
-                                  value: deps.customerGroups.list,
-                                  child: AdminOrderDetailViewModelScope.value(
-                                    value: deps.orderDetail,
-                                    child: AdminFulfillmentContextViewModelScope
-                                        .value(
-                                      value: deps.fulfillmentContext,
-                                      child: AdminReturnViewModelScope.value(
-                                        value: deps.returns,
-                                        child: AdminProductViewModelScope.value(
-                                          value: deps.products,
+                      child: AdminCustomerGroupCandidateViewModelScope.value(
+                        value: deps.customerGroups.candidates,
+                        child: AdminCustomerGroupCreateViewModelScope.value(
+                          value: deps.customerGroups.create,
+                          child: AdminCustomerGroupDeleteViewModelScope.value(
+                            value: deps.customerGroups.delete,
+                            child: AdminCustomerGroupEditViewModelScope.value(
+                              value: deps.customerGroups.edit,
+                              child: AdminCustomerGroupMembershipViewModelScope
+                                  .value(
+                                value: deps.customerGroups.membership,
+                                child: AdminCustomerGroupDetailViewModelScope
+                                    .value(
+                                  value: deps.customerGroups.detail,
+                                  child: AdminCustomerGroupViewModelScope.value(
+                                    value: deps.customerGroups.list,
+                                    child: AdminOrderDetailViewModelScope.value(
+                                      value: deps.orderDetail,
+                                      child:
+                                          AdminFulfillmentContextViewModelScope
+                                              .value(
+                                        value: deps.fulfillmentContext,
+                                        child: AdminReturnViewModelScope.value(
+                                          value: deps.returns,
                                           child:
-                                              AdminProductDetailViewModelScope
-                                                  .value(
-                                            value: deps.productDetail,
+                                              AdminProductViewModelScope.value(
+                                            value: deps.products,
                                             child:
-                                                AdminProductCreateViewModelScope
+                                                AdminProductDetailViewModelScope
                                                     .value(
-                                              value: deps.productCreate,
+                                              value: deps.productDetail,
                                               child:
-                                                  AdminProductOptionViewModelScope
+                                                  AdminProductCreateViewModelScope
                                                       .value(
-                                                value: deps.productOptions,
+                                                value: deps.productCreate,
                                                 child:
-                                                    AdminProductOptionDetailViewModelScope
+                                                    AdminProductOptionViewModelScope
                                                         .value(
-                                                  value:
-                                                      deps.productOptionDetail,
+                                                  value: deps.productOptions,
                                                   child:
-                                                      AdminProductTypeViewModelScope
+                                                      AdminProductOptionDetailViewModelScope
                                                           .value(
-                                                    value: deps.productTypes,
+                                                    value: deps
+                                                        .productOptionDetail,
                                                     child:
-                                                        AdminProductTypeDetailViewModelScope
+                                                        AdminProductTypeViewModelScope
                                                             .value(
-                                                      value: deps
-                                                          .productTypeDetail,
+                                                      value: deps.productTypes,
                                                       child:
-                                                          AdminShippingProfileViewModelScope
+                                                          AdminProductTypeDetailViewModelScope
                                                               .value(
                                                         value: deps
-                                                            .shippingProfiles,
+                                                            .productTypeDetail,
                                                         child:
-                                                            AdminShippingProfileDetailViewModelScope
+                                                            AdminShippingProfileViewModelScope
                                                                 .value(
                                                           value: deps
-                                                              .shippingProfileDetail,
-                                                          child: child,
+                                                              .shippingProfiles,
+                                                          child:
+                                                              AdminShippingProfileDetailViewModelScope
+                                                                  .value(
+                                                            value: deps
+                                                                .shippingProfileDetail,
+                                                            child: child,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),

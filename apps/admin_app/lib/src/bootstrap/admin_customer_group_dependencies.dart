@@ -1,4 +1,5 @@
 import 'package:admin_app/src/customer_group/admin_customer_group_api.dart';
+import 'package:admin_app/src/customer_group/admin_customer_group_candidate_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_create_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_delete_view_model.dart';
 import 'package:admin_app/src/customer_group/admin_customer_group_detail_view_model.dart';
@@ -13,6 +14,9 @@ final class AdminCustomerGroupDependencies {
   factory AdminCustomerGroupDependencies(Dio dio, String baseUrl) {
     final api = AdminCustomerGroupApi(dio, baseUrl: baseUrl);
     return AdminCustomerGroupDependencies._(
+      candidates: AdminCustomerGroupCandidateViewModel(
+        AdminCustomerGroupCandidateViewModelArgs(api: api),
+      ),
       create: AdminCustomerGroupCreateViewModel(
         AdminCustomerGroupCreateViewModelArgs(api: api),
       ),
@@ -35,6 +39,7 @@ final class AdminCustomerGroupDependencies {
   }
 
   const AdminCustomerGroupDependencies._({
+    required this.candidates,
     required this.create,
     required this.detail,
     required this.delete,
@@ -42,6 +47,9 @@ final class AdminCustomerGroupDependencies {
     required this.list,
     required this.membership,
   });
+
+  /// Independent Add Customers candidate-list state.
+  final AdminCustomerGroupCandidateViewModel candidates;
 
   /// Focused customer-group creation state.
   final AdminCustomerGroupCreateViewModel create;

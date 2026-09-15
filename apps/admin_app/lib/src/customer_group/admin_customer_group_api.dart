@@ -31,6 +31,16 @@ abstract interface class AdminCustomerGroupApi {
     @Body() AdminBatchCustomerGroupCustomers body,
   );
 
+  /// Lists customers for Medusa's Add Customers focus surface.
+  @GET('/admin/customers')
+  Future<AdminCustomerList> listCustomerGroupCandidates(
+    @Query('q') String query,
+    @Query('has_account') String hasAccount,
+    @Query('order') String order,
+    @Query('limit') int limit,
+    @Query('offset') int offset,
+  );
+
   /// Retires one customer group and returns the Medusa acknowledgement.
   @DELETE('/admin/customer-groups/{id}')
   Future<AdminCustomerGroupDeleted> deleteCustomerGroup(@Path() String id);

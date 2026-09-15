@@ -172,6 +172,53 @@ final class _$AdminCustomerGroupApi implements AdminCustomerGroupApi {
   }
 
   @override
+  Future<AdminCustomerList> listCustomerGroupCandidates(
+    String query,
+    String hasAccount,
+    String order,
+    int limit,
+    int offset,
+  ) async {
+    final _queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _extra = <String, dynamic>{};
+    _headers['accept'] = 'application/json';
+    _queryParameters['q'] = query;
+    _queryParameters['has_account'] = hasAccount;
+    _queryParameters['order'] = order;
+    _queryParameters['limit'] = limit;
+    _queryParameters['offset'] = offset;
+    final Object? _data = null;
+    final _options = Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: null,
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+      _setStreamType<AdminCustomerList>(
+        _options
+            .compose(
+              _dio.options,
+              '/admin/customers',
+              queryParameters: _queryParameters,
+              data: _data,
+              cancelToken: null,
+              onSendProgress: null,
+              onReceiveProgress: null,
+            )
+            .copyWith(
+              baseUrl: _combineBaseUrls(
+                _dio.options.baseUrl,
+                _baseUrl ?? 'http://localhost:3878',
+              ),
+            ),
+      ),
+    );
+    return AdminCustomerList.fromJson(_result.data as Map<String, dynamic>);
+  }
+
+  @override
   Future<AdminCustomerGroupDeleted> deleteCustomerGroup(String id) async {
     final _queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
