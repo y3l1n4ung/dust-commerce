@@ -1533,4 +1533,70 @@ session evidence rather than a persisted filesystem screenshot artifact.
 Store compact populated cart result: passed for responsive structure and live
 quantity behavior; persisted screenshot-artifact evidence remains unavailable
 
+## Store compact signed-out account
+
+Source truth paths:
+
+- Pinned Medusa DTC source at commit
+  `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/tmp/medusa-dtc-19e8a6f/apps/storefront/src/modules/account/templates/account-layout.tsx`,
+  `login-template.tsx`, and `components/{login,register}/index.tsx`.
+- Live source: `https://next.medusajs.com/dk/account`.
+
+Implementation URL: `http://127.0.0.1:13001/account`.
+
+Viewport and state: English light theme and signed-out account state at a
+nominal `390 x 844` CSS viewport. The live source capture was cropped to a
+`375 x 812` raster by its visible scrollbar; the Flutter capture retained the
+complete `390 x 844` viewport. Source and implementation captures were emitted
+together in the same comparison input. They remain current-run session evidence
+rather than a persisted filesystem screenshot artifact.
+
+**Source and behavior findings**
+
+- The pinned source uses one 384px-max form, 32px inner padding, an in-place
+  sign-in/register switch, and a support block below the account content.
+- Morrow preserves the form hierarchy, field order, required markers, password
+  visibility control, primary action, membership switch, 24px page inset, and
+  source spacing. Product-name substitutions are intentional brand adaptation.
+- Registration exposes first name, last name, email, optional phone, password,
+  terms copy, Join, and the return-to-sign-in action in the same source order.
+- The first compact comparison exposed a responsive defect in `AccountSupport`:
+  the local desktop row narrowed the support paragraph. The implementation now
+  follows the source's compact column, keeping the help copy full-width and the
+  Customer Service link on its own right-aligned row with a 32px gap.
+
+**Interaction evidence**
+
+- Both live pages switched from Sign in to Register and back in place without
+  navigation or submission.
+- No source form was submitted and no account was created.
+- The settled source tab reported no browser log entry. The local tab reported
+  only Flutter bootstrap debug entries, with no warning or error.
+
+**Evidence limits**
+
+- Browser autofill briefly projected a previously saved value into one local
+  registration field; this was browser-owned state and is not application data.
+- The nominal viewport is shared, but the source scrollbar changes its output
+  raster by 15px. The comparison establishes responsive structure and behavior,
+  not pixel equality.
+- Screenshots were displayed together but could not be exported to a local file
+  by the browser surface. Formal persisted screenshot-audit completion is not
+  claimed.
+
+**Validation**
+
+- The Store release Web build succeeded and the updated route was recaptured.
+- All 139 Store tests pass; Flutter analysis reports no issue.
+- Dust reports all 54 Store outputs clean. Dust i18n checks 684 translations
+  with zero errors; its 15 warnings remain the existing stale/equal-fallback
+  inventory outside this slice.
+- Handwritten formatting, file-size, response-boundary, project-structure, and
+  diff whitespace checks pass. No widget test was added.
+
+Store compact signed-out account result: passed for responsive structure and
+the sign-in/register interaction; persisted screenshot-artifact evidence remains
+unavailable
+
 final result: blocked
