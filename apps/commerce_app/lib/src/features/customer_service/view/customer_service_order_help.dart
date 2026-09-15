@@ -29,6 +29,15 @@ final class CustomerServiceOrderHelp extends StatelessWidget {
               defaultText: 'Contact',
             ),
           ),
+          const SizedBox(height: 8),
+          StoreInteractiveLink(
+            onPressed: () =>
+                context.navigator.contact(orderReference: orderReference).go(),
+            child: const TranslatedText(
+              'shop_account_returns_exchanges',
+              defaultText: 'Returns & Exchanges',
+            ),
+          ),
         ],
       );
 }
