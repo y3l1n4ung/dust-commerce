@@ -1019,4 +1019,97 @@ browser warning.
 
 Store compact product layout and related cards result: passed
 
+## Store checkout composition and customer journey
+
+Source visual truth paths:
+
+- Pinned source at commit `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/checkout/components/shipping-address/index.tsx`,
+  `addresses/index.tsx`, `country-select/index.tsx`, `shipping/index.tsx`,
+  `payment/index.tsx`, `address-select/index.tsx`,
+  `templates/checkout-form/index.tsx`, and
+  `templates/checkout-summary/index.tsx`.
+- Pinned route and layout sources:
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/app/[countryCode]/(checkout)/checkout/page.tsx`
+  and `layout.tsx`.
+- Live rendered source:
+  `https://next.medusajs.com/dk/checkout?step=address`.
+
+Implementation URL:
+`http://127.0.0.1:13001/checkout?step=address`.
+
+Viewport: the compact source and implementation comparison used equal
+`390 x 844` CSS viewports at device-pixel ratio 1. The source capture was
+cropped by its browser surface to a `375 x 812` raster while the implementation
+capture retained `390 x 844`; findings were made from the shared CSS viewport
+and normalized content region, not the crop.
+
+State: public English light theme. The live source rendered its healthy empty
+cart checkout because its live product Add to Cart mutation failed. Morrow
+rendered a real one-item cart. Shipping-address composition is comparable;
+source and implementation cart-summary density is intentionally not claimed as
+a same-state visual pair.
+
+**Findings**
+
+- No actionable P0, P1, or P2 difference remains in the compact checkout
+  header, address title, two-column field grid, country control, billing toggle,
+  contact row, primary action, or collapsed Delivery and Payment sections.
+- Blank submission uses native browser validation in the React source and
+  readable inline Flutter validation in Morrow. Both block invalid progress;
+  exact validation-popover raster parity is not claimed.
+- The live source product mutation currently returns a production Server
+  Components error, so a populated same-state source checkout comparison is
+  blocked by source runtime state rather than inferred from screenshots.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: checkout headings, labels, summaries, totals, product
+  lines, and primary actions retain the established Store scale and hierarchy.
+- Spacing and layout rhythm: the compact form uses the pinned two-column address
+  grid, 16px inter-field gap, section dividers, and vertically ordered address,
+  delivery, payment, review, and cart-summary content.
+- Colors and visual tokens: inputs, borders, muted summaries, selected radio
+  controls, interaction links, and primary buttons remain mapped to Store
+  semantic colors.
+- Copy and content: Morrow keeps its real customer, cart, product, price,
+  delivery, and payment data plus the approved `Powered by dust` footer.
+
+**Full-view comparison evidence**
+
+The source and Morrow address pages were emitted together from equal compact CSS
+viewports. Their checkout shell, address hierarchy, field matrix, billing row,
+contact row, Continue action, and collapsed next-step sections align. The cart
+summaries were excluded from parity scoring because only Morrow had a real line
+item.
+
+**Focused region comparison evidence**
+
+After the refactor, a fresh local compact journey submitted a fake QA address,
+selected United States, chose Standard shipping and Manual Payment, and reached
+the Review step. The review showed the server-owned USD 15.00 subtotal, USD
+5.00 shipping, USD 2.00 taxes, and USD 22.00 total. Testing stopped before
+`Place order`, and the browser reported no warning or error.
+
+**Comparison history**
+
+- Source inspection established the compact one-column checkout and desktop
+  form-plus-summary contracts before implementation review.
+- Commits `d009a82`, `4466f52`, `71b82bf`, `0584fe8`, `f9b40f8`, and `8bfd6a6`
+  replace all 14 checkout private methods returning `Widget` with focused widget
+  classes while preserving state and async mutation ownership.
+- Checkout files remain within the 180-line handwritten limit. Dust reports all
+  54 Store sources clean, Flutter analysis passes, the seven focused checkout
+  tests pass, formatting and the file-size gate pass, and no widget test was
+  added.
+
+**Implementation checklist**
+
+- The address-through-review customer flow is working against the local backend
+  and needs no further composition refactor in this slice.
+- Re-run a populated source checkout comparison when the live source Add to Cart
+  mutation becomes healthy; do not infer missing source states.
+
+Store checkout composition and customer journey result: passed
+
 final result: blocked
