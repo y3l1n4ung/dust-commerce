@@ -9,6 +9,7 @@ export 'cart_view.dart';
 export 'catalog_view.dart';
 export 'customer_address.dart';
 export 'customer_registration.dart';
+export 'customer_service.dart';
 export 'option_filter_view.dart';
 export 'password.dart';
 export 'payment_provider_view.dart';
