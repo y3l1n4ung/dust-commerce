@@ -135,14 +135,15 @@ account, so authenticated head-to-head evidence remains open.
 **Findings**
 
 - [P1] Remaining route groups still lack rendered comparison
-  Location: compact product and cart layouts; checkout authenticated,
+  Location: compact product layout; checkout authenticated,
   payment, review and confirmation states; account and order
   views; transfer-request states; mismatch banner; and the global shipping
   popup.
   Evidence: matched comparisons now cover the transfer decision, desktop
   catalogue, compact Store refinements and featured rail, compact collection
   grid/footer/menu, desktop product structure, empty and populated desktop cart,
-  open cart preview, signed-out account, and the open promotion form. The
+  compact populated guest cart, open cart preview, signed-out account, and the
+  open promotion form. The
   remaining states listed above do not yet have matched captures.
   Impact: their typography, responsive spacing, imagery and interaction states
   remain visually unverified.
@@ -1460,5 +1461,72 @@ viewport override was reset.
 
 Store country selector behavior result: passed; formal combined popup visual
 comparison remains blocked by the unavailable comparison artifact
+
+## Store compact populated cart
+
+Source truth paths:
+
+- Pinned Medusa DTC source at commit
+  `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/tmp/medusa-dtc-19e8a6f/apps/storefront/src/modules/cart/templates/index.tsx`,
+  `templates/items.tsx`, `templates/summary.tsx`, and
+  `components/item/index.tsx`.
+- Live source: `https://next.medusajs.com/dk/cart`.
+
+Implementation URL: `http://127.0.0.1:13001/cart`.
+
+Viewport and state: English light theme and an anonymous populated cart at a
+nominal `390 x 844` CSS viewport. The live source capture was cropped to a
+`375 x 812` raster by its visible horizontal scrollbar; the Flutter capture
+retained the complete `390 x 844` viewport. Source and implementation captures
+were emitted together in the same comparison input. They remain current-run
+session evidence rather than a persisted filesystem screenshot artifact.
+
+**Source and behavior findings**
+
+- The pinned source renders the anonymous sign-in prompt, 32px Cart heading,
+  Item/Quantity/Total compact header, 48px thumbnail, delete action, 40px
+  quantity control, Summary, promotion entry, server totals, and checkout link.
+- Morrow renders the same hierarchy and control order from its Dust cart
+  response. Its real T-shirt data and USD prices intentionally differ from the
+  live source's iPhone fixture and EUR prices.
+- At this compact width the live source table exceeds the viewport: the Total
+  header and value are clipped and the page exposes a horizontal scrollbar.
+  Morrow keeps Item, Quantity, and Total inside the viewport. This is an
+  intentional native-mobile correction, not a source defect copied forward.
+- The matched captures show the same 24px page inset, prompt divider, heading
+  scale, table-divider rhythm, neutral quantity pill, promotion link, and
+  one-column Summary placement. Differences in row height follow the source's
+  longer product title and variant copy.
+
+**Interaction evidence**
+
+- Local keyboard selection changed quantity from 1 to 2. The header count and
+  line total changed atomically from 1 to 2 and USD 15.00 to USD 30.00; subtotal,
+  tax, and grand total changed from USD 15.00, USD 1.50, and USD 16.50 to
+  USD 30.00, USD 3.00, and USD 33.00.
+- The settled source and implementation tabs reported no browser warning or
+  error. Removal was not repeated through the browser because automated tests
+  already cover it and this pass did not need to destroy the captured cart.
+
+**Evidence limits**
+
+- The nominal viewport is shared, but the source's own scrollbar changes its
+  output raster by 15px. The comparison therefore establishes responsive
+  structure and behavior, not pixel equality.
+- Screenshots could be displayed together but not exported to a local file by
+  the browser surface. Formal persisted screenshot-audit completion is not
+  claimed.
+
+**Validation**
+
+- A clean checkout generated 365 ignored Dust outputs with no tracked
+  `.g.dart` or unexpected source changes.
+- All 63 SQLx migration pairs ran up and down to an empty application schema.
+- All five analyzers, handwritten formatting, 1,038 tests, the file-size gate,
+  and the backend structure gate pass. No widget test was added.
+
+Store compact populated cart result: passed for responsive structure and live
+quantity behavior; persisted screenshot-artifact evidence remains unavailable
 
 final result: blocked
