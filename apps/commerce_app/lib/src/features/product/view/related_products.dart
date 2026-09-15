@@ -40,16 +40,26 @@ class RelatedProducts extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 64),
-              _content(context, constraints.maxWidth),
+              _RelatedProductsContent(
+                state: state,
+                width: constraints.maxWidth,
+              ),
             ],
           ),
         );
       },
     );
   }
+}
 
-  Widget _content(BuildContext context, double width) =>
-      switch (state.relatedStatus) {
+class _RelatedProductsContent extends StatelessWidget {
+  const _RelatedProductsContent({required this.state, required this.width});
+
+  final ProductDetailState state;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) => switch (state.relatedStatus) {
         RelatedProductsStatus.idle ||
         RelatedProductsStatus.loading =>
           const SizedBox(
