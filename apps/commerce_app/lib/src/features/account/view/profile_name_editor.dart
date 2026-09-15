@@ -4,6 +4,7 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'account_info_editor.dart';
+import 'profile_editor_field.dart';
 
 /// Editable customer name translated from Medusa ProfileName.
 final class ProfileNameEditor extends StatefulWidget {
@@ -62,24 +63,26 @@ class _ProfileNameEditorState extends State<ProfileNameEditor> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: _field(
-                context,
-                _firstName,
-                context.tr(
+              child: ProfileEditorField(
+                controller: _firstName,
+                label: context.tr(
                   'shop_account_first_name',
                   defaultText: 'First name',
                 ),
+                autofillHints: const [AutofillHints.givenName],
+                validator: (value) => _required(context, value),
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: _field(
-                context,
-                _lastName,
-                context.tr(
+              child: ProfileEditorField(
+                controller: _lastName,
+                label: context.tr(
                   'shop_account_last_name',
                   defaultText: 'Last name',
                 ),
+                autofillHints: const [AutofillHints.familyName],
+                validator: (value) => _required(context, value),
               ),
             ),
           ],
@@ -88,26 +91,13 @@ class _ProfileNameEditorState extends State<ProfileNameEditor> {
     );
   }
 
-  Widget _field(
-    BuildContext context,
-    TextEditingController controller,
-    String label,
-  ) =>
-      TextFormField(
-        controller: controller,
-        validator: (value) => value == null || value.trim().isEmpty
-            ? context.tr(
-                'shop_account_required',
-                defaultText: 'This field is required.',
-              )
-            : null,
-        decoration: InputDecoration(
-          labelText: '$label *',
-          filled: true,
-          fillColor: StoreColors.subtle,
-          border: const OutlineInputBorder(),
-        ),
-      );
+  String? _required(BuildContext context, String? value) =>
+      value == null || value.trim().isEmpty
+          ? context.tr(
+              'shop_account_required',
+              defaultText: 'This field is required.',
+            )
+          : null;
 
   Future<bool> _save() async {
     if (!_formKey.currentState!.validate()) return false;

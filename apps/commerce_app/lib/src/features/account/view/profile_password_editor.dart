@@ -3,6 +3,7 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'account_info_editor.dart';
+import 'profile_editor_field.dart';
 
 /// Working password editor for the TODO present in the Medusa source.
 final class ProfilePasswordEditor extends StatefulWidget {
@@ -52,35 +53,38 @@ final class _ProfilePasswordEditorState extends State<ProfilePasswordEditor> {
               spacing: 16,
               runSpacing: 16,
               children: [
-                _field(
-                  width,
-                  _oldPassword,
-                  context.tr(
+                ProfileEditorField(
+                  width: width,
+                  controller: _oldPassword,
+                  label: context.tr(
                     'shop_account_old_password',
                     defaultText: 'Old password',
                   ),
-                  AutofillHints.password,
-                  _validateOld,
+                  autofillHints: const [AutofillHints.password],
+                  obscureText: true,
+                  validator: _validateOld,
                 ),
-                _field(
-                  width,
-                  _newPassword,
-                  context.tr(
+                ProfileEditorField(
+                  width: width,
+                  controller: _newPassword,
+                  label: context.tr(
                     'shop_account_new_password',
                     defaultText: 'New password',
                   ),
-                  AutofillHints.newPassword,
-                  _validateNew,
+                  autofillHints: const [AutofillHints.newPassword],
+                  obscureText: true,
+                  validator: _validateNew,
                 ),
-                _field(
-                  width,
-                  _confirmPassword,
-                  context.tr(
+                ProfileEditorField(
+                  width: width,
+                  controller: _confirmPassword,
+                  label: context.tr(
                     'shop_account_confirm_password',
                     defaultText: 'Confirm password',
                   ),
-                  AutofillHints.newPassword,
-                  _validateConfirmation,
+                  autofillHints: const [AutofillHints.newPassword],
+                  obscureText: true,
+                  validator: _validateConfirmation,
                 ),
               ],
             );
@@ -89,29 +93,6 @@ final class _ProfilePasswordEditorState extends State<ProfilePasswordEditor> {
       ),
     );
   }
-
-  Widget _field(
-    double width,
-    TextEditingController controller,
-    String label,
-    String autofillHint,
-    String? Function(String?) validator,
-  ) =>
-      SizedBox(
-        width: width,
-        child: TextFormField(
-          controller: controller,
-          obscureText: true,
-          autofillHints: [autofillHint],
-          validator: validator,
-          decoration: InputDecoration(
-            labelText: '$label *',
-            filled: true,
-            fillColor: StoreColors.subtle,
-            border: const OutlineInputBorder(),
-          ),
-        ),
-      );
 
   String? _validateOld(String? value) => _passwordLength(value);
 
