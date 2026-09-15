@@ -3,6 +3,7 @@ import 'package:commerce_server/src/features/admin/handler/handler.dart';
 import 'package:commerce_server/src/features/admin_fulfillment_context/router.dart';
 import 'package:commerce_server/src/features/admin_customer/router.dart';
 import 'package:commerce_server/src/features/admin_customer_group/router.dart';
+import 'package:commerce_server/src/features/admin_customer_service/router.dart';
 import 'package:commerce_server/src/features/admin_order/router.dart';
 import 'package:commerce_server/src/features/admin_refund/router.dart';
 import 'package:commerce_server/src/features/admin_region/router.dart';
@@ -28,6 +29,7 @@ Router adminRoutes() => Router()
   ..merge(adminOrderRoutes())
   ..merge(adminCustomerRoutes())
   ..merge(adminCustomerGroupRoutes())
+  ..merge(adminCustomerServiceRoutes())
   ..merge(adminRefundRoutes())
   ..merge(adminFulfillmentContextRoutes())
   ..merge(adminReturnRoutes())
