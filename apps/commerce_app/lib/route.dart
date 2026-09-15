@@ -48,7 +48,7 @@ final class CommerceRouter extends $CommerceRouter {
   }
 }
 
-/// Allows checkout only while a non-empty cart capability is valid.
+/// Restores checkout and rejects a known empty cart before the route builds.
 final class CheckoutGuard implements AsyncRouteGuard<CommerceRoute> {
   /// Creates the cart-level checkout guard.
   const CheckoutGuard(this.cart);
@@ -60,7 +60,9 @@ final class CheckoutGuard implements AsyncRouteGuard<CommerceRoute> {
   Future<CommerceRoute?> canActivate(CommerceRoute route) async {
     await cart.restore();
     final view = cart.state.cart;
-    return view != null && !view.cart.isEmpty ? null : const CartRoute();
+    // A missing capability must reach Checkout's source-owned 404 boundary.
+    if (view == null) return null;
+    return view.cart.isEmpty ? const CartRoute() : null;
   }
 }
 

@@ -1,9 +1,9 @@
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_shared/commerce_shared.dart';
-import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'checkout_address_section.dart';
+import 'checkout_attribution.dart';
 import 'checkout_delivery_section.dart';
 import 'checkout_payment_section.dart';
 import 'checkout_review_section.dart';
@@ -92,17 +92,7 @@ final class CheckoutLayout extends StatelessWidget {
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: TranslatedText(
-              'shop_hero_subtitle',
-              defaultText: 'Powered by dust',
-              style: TextStyle(
-                color: StoreColors.foregroundMuted,
-                fontSize: 12,
-              ),
-            ),
-          ),
+          const CheckoutAttribution(),
         ],
       ),
     );

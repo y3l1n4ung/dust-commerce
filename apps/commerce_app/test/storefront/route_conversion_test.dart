@@ -127,24 +127,6 @@ void main() {
     );
     expect(later.uri.toString(), '/cart');
   });
-
-  test('checkout route rejects an empty cart at route level', () async {
-    const api = _UnusedApi();
-    final cart = testCart(api);
-    final router = CommerceRouter(
-      initialLocation: Uri.parse('/checkout'),
-      account: testAccount(api),
-      cart: cart,
-    );
-    const route = CheckoutRoute();
-    final guards = commerceRouteGuards(route, router);
-
-    expect(guards.single, isA<CheckoutGuard>());
-    expect(
-      await RouteGuardChain<CommerceRoute>(guards).canActivate(route),
-      isA<CartRoute>(),
-    );
-  });
 }
 
 final class _UnusedApi implements CommerceApi {

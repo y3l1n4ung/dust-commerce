@@ -3,9 +3,10 @@ import 'package:commerce_app/route.dart';
 import 'package:flutter/material.dart';
 
 import 'checkout_layout.dart';
+import 'checkout_not_found.dart';
 import 'checkout_scaffold.dart';
 
-/// Medusa-compatible public checkout guarded by a live cart capability.
+/// Medusa-compatible public checkout prepared by the route-level cart guard.
 @AppRoute('/checkout', name: 'checkout', guards: [CheckoutGuard])
 final class CheckoutPage extends StatefulWidget {
   /// Creates the checkout route.
@@ -30,8 +31,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    final checkout = context.watchCheckoutViewModel().value;
     final cart = context.watchCartViewModel().value;
+    if (cart.status == CartStatus.idle || cart.status == CartStatus.loading) {
+      return const CheckoutScaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    final view = cart.cart;
+    if (view == null) {
+      return const CheckoutScaffold(body: CheckoutNotFound());
+    }
+    final checkout = context.watchCheckoutViewModel().value;
     final account = context.watchAccountViewModel().value;
     final addresses = context.watchAddressBookViewModel().value;
     if (account.customer != null &&
@@ -39,8 +49,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       _scheduleAddressLoad();
     }
     if (checkout.status == CheckoutStatus.idle) _schedulePrepare();
-    final view = cart.cart;
-    if (view == null || checkout.status == CheckoutStatus.idle) {
+    if (checkout.status == CheckoutStatus.idle) {
       return const CheckoutScaffold(
         body: Center(child: CircularProgressIndicator()),
       );
