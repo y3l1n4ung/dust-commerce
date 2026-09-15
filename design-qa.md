@@ -1112,4 +1112,109 @@ the Review step. The review showed the server-owned USD 15.00 subtotal, USD
 
 Store checkout composition and customer journey result: passed
 
+## Store authenticated account composition
+
+Source visual truth paths:
+
+- Pinned Medusa DTC source at commit
+  `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/account/templates/account-layout.tsx`,
+  `components/account-nav/index.tsx`, `components/overview/index.tsx`,
+  `components/account-info/index.tsx`, `components/profile-name/index.tsx`,
+  `components/profile-password/index.tsx`,
+  `components/profile-billing-address/index.tsx`,
+  `components/address-book/index.tsx`,
+  `components/address-card/add-address.tsx`, and
+  `components/address-card/edit-address-modal.tsx`.
+- Saved-address checkout behavior was also checked against
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/checkout/components/addresses/index.tsx`,
+  `address-select/index.tsx`, and `country-select/index.tsx`.
+
+Implementation URLs:
+`http://127.0.0.1:13001/account`, `/account/profile`,
+`/account/addresses`, and `/checkout?step=address`.
+
+Viewport: the authenticated account overview was verified at the default
+`1280 x 720` browser viewport at device-pixel ratio 1. The complete
+product-to-checkout saved-address journey was also verified at an isolated
+`390 x 844` CSS viewport at device-pixel ratio 1. The temporary compact
+viewport override was reset after QA.
+
+State: English light theme, signed in with a fake local QA customer. The local
+account has one persisted address and no recent orders. No customer secret is
+recorded here. The live Medusa deployment did not provide an equivalent
+authenticated customer session, so the source-code contract and local rendered
+state were reviewed, but authenticated pixel parity is not claimed.
+
+**Findings**
+
+- The local overview follows the source hierarchy: account navigation, customer
+  greeting, signed-in identity, profile completion, saved-address count, recent
+  orders, help callout, and Store footer.
+- Profile name and password editors retain the source two-column desktop grid.
+  New addresses start blank, while edit forms load only the selected persisted
+  address.
+- Route guarding now reuses a server-proven authenticated customer instead of
+  forcing identity restoration on every private route. Address loading retries
+  after identity restoration, preventing a valid saved address from appearing
+  empty during a route transition.
+- Private API responses default to `Cache-Control: no-store`; immutable public
+  media keeps its explicit cache policy.
+- No actionable browser warning or error was reported during the isolated
+  product, cart, checkout, and saved-address selection journey.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: account headings, completion values, navigation,
+  address cards, editor labels, and supporting copy use the established Store
+  scale.
+- Spacing and layout rhythm: desktop account navigation and content columns,
+  two-column editor fields, overview metrics, section dividers, and compact
+  checkout fields follow the pinned source composition.
+- Colors and visual tokens: neutral borders, muted metadata, blue interaction
+  links, selected controls, and primary actions use Store semantic tokens.
+- Copy and content: the UI renders real server-owned customer and address data
+  and retains the approved `Powered by dust` footer.
+
+**Full-view comparison evidence**
+
+The settled local account overview visibly rendered `Hello Ada`, the QA email,
+`50% COMPLETED`, `1 SAVED`, `No recent orders`, the customer-service callout,
+and the complete footer. The source implementation files establish the same
+information architecture. A matched authenticated Medusa raster was unavailable,
+so this evidence supports composition and behavior, not pixel parity.
+
+**Focused region comparison evidence**
+
+An isolated local journey opened the T-shirt product, added its selected variant
+to a real cart, entered checkout, opened the saved-address selector, selected
+`Ada Morrow / 1 Test Street / SW1A 1AA, London / GB`, and observed the first
+name, last name, street, postal code, city, country, and email fields populate.
+Testing stopped before order placement.
+
+**Comparison history**
+
+- Source inspection established the account navigation, overview, editor, and
+  address-book contracts before the final browser pass.
+- Commits `fca7b5b`, `ed962d7`, `9d8f962`, `2a8fc43`, `d773b96`, and `7ed59ce`
+  split navigation and editor widgets while preserving page-owned state.
+- Commits `22b85b6`, `38391ed`, and `aabdbe0` close address restoration, private
+  caching, and route-guard races. Commit `967387d` updates the enforced widget
+  debt baseline after those extractions.
+- Dust checks are clean for 63 Admin-contract, 39 Store-contract, 152 server,
+  54 Store, 71 Admin, and 137 database sources. Analysis passes for all five
+  Dart/Flutter packages. Tests pass: 38 Admin-contract, 146 Store-contract,
+  553 server, 137 Store, and 162 Admin tests. SQLx applies all 63 one-table
+  reversible migrations and reverts them to zero application tables. Formatting,
+  file-size, structure, and diff checks pass. No widget test was added.
+
+**Implementation checklist**
+
+- Authenticated profile and address management are working against the local
+  backend, and a saved address can drive the real checkout form.
+- Capture a matched authenticated Medusa account raster if a disposable source
+  login becomes available; do not infer that visual state from source code.
+
+Store authenticated account composition result: passed
+
 final result: blocked
