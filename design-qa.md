@@ -1686,4 +1686,61 @@ Store compact product tabs result: passed for equivalent simple-product layout,
 accordion interaction, source copy, sold-out action, and option-sheet chrome;
 persisted screenshot-artifact evidence remains unavailable
 
+## Store not-found route
+
+Source truth paths:
+
+- Pinned Medusa DTC source at commit
+  `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/tmp/medusa-dtc-19e8a6f/apps/storefront/src/app/not-found.tsx` and
+  `/tmp/medusa-dtc-19e8a6f/apps/storefront/src/app/[countryCode]/(main)/not-found.tsx`.
+- Live source: `https://next.medusajs.com/dk/does-not-exist`.
+
+Implementation URL: `http://127.0.0.1:13001/does-not-exist`, which resolves to
+the local `/404` route.
+
+Viewport and state: English light theme at an exact `390 x 844` CSS viewport.
+Source and implementation captures had equal `390 x 844` rasters and were
+emitted together in the comparison input. They remain current-run session
+evidence rather than persisted filesystem screenshot artifacts.
+
+**Source and behavior findings**
+
+- The original local fallback was one unstyled sentence. It now matches the
+  source hierarchy and exact English copy: a 30px semibold heading with 48px
+  line height, 16px vertical gaps, 12px explanatory copy with 20px line height,
+  and the shared underlined interactive-link treatment.
+- The content group preserves the source's 64px bottom offset. The root fallback
+  intentionally excludes storefront navigation and footer because the live
+  root not-found route does the same.
+- English and Burmese strings are compiled through Dust i18n rather than
+  embedding one-locale UI state.
+
+**Interaction evidence**
+
+- Activating `Go to frontpage` navigated the local release build from `/404` to
+  `/` and loaded the catalogue home successfully.
+- The settled source tab reported no browser log entry. The local tab reported
+  only Flutter bootstrap debug entries, with no warning or error.
+
+**Evidence limits**
+
+- Screenshots were displayed together but could not be exported to a local file
+  by the browser surface. Formal persisted screenshot-audit completion is not
+  claimed.
+
+**Validation**
+
+- The Store release Web build succeeded and the final route was recaptured.
+- All 139 Store tests pass; Flutter analysis reports no issue.
+- Dust reports all 54 Store outputs clean. Dust i18n checks 688 translations
+  with zero errors; its 15 warnings remain the existing stale/equal-fallback
+  inventory outside this slice.
+- Handwritten formatting, file-size, response-boundary, project-structure, and
+  diff whitespace checks pass. No widget test was added.
+
+Store not-found result: passed for equal-raster compact hierarchy, exact copy,
+responsive placement, and frontpage recovery; persisted screenshot-artifact
+evidence remains unavailable
+
 final result: blocked
