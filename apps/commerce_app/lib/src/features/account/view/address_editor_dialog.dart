@@ -11,7 +11,6 @@ import 'customer_address_form.dart';
 final class AddressEditorDialog extends StatefulWidget {
   /// Creates a customer-address dialog.
   const AddressEditorDialog({
-    required this.customer,
     required this.countries,
     required this.hasDefaultShipping,
     this.address,
@@ -23,9 +22,6 @@ final class AddressEditorDialog extends StatefulWidget {
 
   /// Active server-provided country codes.
   final List<String> countries;
-
-  /// Current customer used to prefill a new address.
-  final Customer customer;
 
   /// Whether another address is already the default shipping destination.
   final bool hasDefaultShipping;
@@ -42,10 +38,7 @@ class _AddressEditorDialogState extends State<AddressEditorDialog> {
   void initState() {
     super.initState();
     _controllers = widget.address == null
-        ? CustomerAddressControllers.forCustomer(
-            widget.customer,
-            widget.countries,
-          )
+        ? CustomerAddressControllers.forNewAddress()
         : CustomerAddressControllers.fromAddress(widget.address!);
   }
 

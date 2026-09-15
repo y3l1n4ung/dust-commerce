@@ -3,16 +3,9 @@ import 'package:flutter/material.dart';
 
 /// Text-editing resources for one customer-address form.
 final class CustomerAddressControllers {
-  /// Creates fields prefilled for a new customer address.
-  CustomerAddressControllers.forCustomer(
-    Customer customer,
-    List<String> countries,
-  ) : this._(
-          firstName: customer.firstName ?? '',
-          lastName: customer.lastName ?? '',
-          phone: customer.phone ?? '',
-          countryCode: countries.firstOrNull ?? '',
-        );
+  /// Creates blank fields for Medusa's new-address form.
+  CustomerAddressControllers.forNewAddress({String phone = ''})
+      : this._(phone: phone);
 
   /// Creates fields prefilled from an existing address.
   CustomerAddressControllers.fromAddress(CustomerAddressView address)

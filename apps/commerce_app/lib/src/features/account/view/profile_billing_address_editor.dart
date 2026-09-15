@@ -62,9 +62,8 @@ class _ProfileBillingAddressEditorState
     final billing = _billing;
     _addressId = billing?.id;
     _controllers = billing == null
-        ? CustomerAddressControllers.forCustomer(
-            widget.customer,
-            widget.state.countries,
+        ? CustomerAddressControllers.forNewAddress(
+            phone: widget.customer.phone ?? '',
           )
         : CustomerAddressControllers.fromAddress(billing);
   }

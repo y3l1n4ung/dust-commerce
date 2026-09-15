@@ -49,19 +49,15 @@ class _AccountAddressesPageState extends State<AccountAddressesPage> {
               customer: customer,
               state: account,
               active: AccountSection.addresses,
-              child: _AddressBookContent(
-                customer: customer,
-                state: addresses,
-              ),
+              child: _AddressBookContent(state: addresses),
             ),
     );
   }
 }
 
 final class _AddressBookContent extends StatelessWidget {
-  const _AddressBookContent({required this.customer, required this.state});
+  const _AddressBookContent({required this.state});
 
-  final Customer customer;
   final AddressBookState state;
 
   @override
@@ -126,7 +122,6 @@ final class _AddressBookContent extends StatelessWidget {
     unawaited(showDialog<void>(
       context: context,
       builder: (_) => AddressEditorDialog(
-        customer: customer,
         countries: state.countries,
         hasDefaultShipping:
             state.addresses.any((item) => item.isDefaultShipping),
