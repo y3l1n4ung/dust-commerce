@@ -1743,4 +1743,65 @@ Store not-found result: passed for equal-raster compact hierarchy, exact copy,
 responsive placement, and frontpage recovery; persisted screenshot-artifact
 evidence remains unavailable
 
+## Store main-route not-found boundary
+
+Source truth paths:
+
+- Pinned Medusa DTC source at commit
+  `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/tmp/medusa-dtc-19e8a6f/apps/storefront/src/app/[countryCode]/(main)/layout.tsx`,
+  `/tmp/medusa-dtc-19e8a6f/apps/storefront/src/app/[countryCode]/(main)/not-found.tsx`,
+  and the product, collection, and category route pages that call Next.js
+  `notFound()`.
+- Live source: `https://next.medusajs.com/dk/products/does-not-exist`.
+
+Implementation URL:
+`http://127.0.0.1:13001/products/does-not-exist`.
+
+The initial source and implementation comparison used equal `1280 x 720` CSS
+viewports. A local `390 x 844` compact capture then verified the responsive
+boundary. The remote Medusa tab did not accept that temporary compact override,
+so no matched compact raster is claimed. Captures remain current-run session
+evidence rather than persisted filesystem screenshot artifacts.
+
+**Source and behavior findings**
+
+- Medusa's missing product keeps the main navigation and footer around the same
+  generic 404 message used at the root. The original local route instead showed
+  a generic API retry error, omitted the footer, and did not distinguish a 404
+  from a transient failure.
+- A typed `ProductDetailStatus.missing` now maps only an HTTP 404 to the
+  source-shaped boundary. Other failures retain their retry state.
+- Missing product, collection, and category states render inside the existing
+  `StoreScaffold`, preserve the requested URL, and share one main-route 404 body
+  followed by the API-backed Store footer. Unknown root URLs continue to use
+  the intentionally bare root boundary.
+- The local free-shipping popup was dismissed before the final compact capture.
+  Its presence is real cart/rule state, while the live Medusa cart exposes no
+  equivalent conditional-price popup.
+
+**Interaction evidence**
+
+- Activating `Go to frontpage` navigated the local release build from the
+  missing-product URL to `/`; browser Back returned to the same missing-product
+  URL and restored the source-shaped boundary.
+- Both settled tabs reported zero browser warnings or errors.
+
+**Validation**
+
+- The Store release Web build succeeded and the final route was recaptured.
+- All 140 Store tests pass, including a real server round trip proving an
+  unknown product enters the missing state; Flutter analysis reports no issue.
+- Existing collection and category integration coverage proves unknown taxonomy
+  enters the same missing lifecycle.
+- Dust reports all 54 Store outputs clean. Dust i18n checks 688 translations
+  with zero errors; its 15 warnings remain the existing stale/equal-fallback
+  inventory outside this slice.
+- Handwritten formatting, file-size, response-boundary, project-structure, and
+  diff whitespace checks pass. No widget test was added.
+
+Store main-route not-found result: passed for desktop source structure, typed
+404 behavior, URL preservation, responsive local layout, footer ownership, and
+frontpage recovery; a matched compact source raster remains unavailable
+
 final result: blocked
