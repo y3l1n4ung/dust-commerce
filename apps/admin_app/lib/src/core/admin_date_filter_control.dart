@@ -32,6 +32,7 @@ final class AdminDateFilterChip extends StatelessWidget {
     return MenuAnchor(
       menuChildren: [
         _AdminDateFilterChoices(
+          navigator: Navigator.of(context, rootNavigator: true),
           value: value,
           now: current,
           onChanged: onChanged,
@@ -106,6 +107,7 @@ final class AdminDateFilterSubmenu extends StatelessWidget {
       submenuIcon: const WidgetStatePropertyAll(SizedBox.shrink()),
       menuChildren: [
         _AdminDateFilterChoices(
+          navigator: Navigator.of(context, rootNavigator: true),
           value: value,
           now: current,
           onChanged: onChanged,
@@ -118,11 +120,13 @@ final class AdminDateFilterSubmenu extends StatelessWidget {
 
 final class _AdminDateFilterChoices extends StatelessWidget {
   const _AdminDateFilterChoices({
+    required this.navigator,
     required this.value,
     required this.now,
     required this.onChanged,
   });
 
+  final NavigatorState navigator;
   final DateTime now;
   final ValueChanged<AdminDateFilter> onChanged;
   final AdminDateFilter value;
@@ -140,12 +144,12 @@ final class _AdminDateFilterChoices extends StatelessWidget {
           MenuItemButton(
             onPressed: () async {
               final range = await showDateRangePicker(
-                context: context,
+                context: navigator.context,
                 firstDate: DateTime(2000),
                 lastDate: DateTime(now.year + 1, 12, 31),
                 initialDateRange: adminDateFilterInitialRange(value, now),
               );
-              if (range == null || !context.mounted) return;
+              if (range == null || !navigator.mounted) return;
               onChanged(AdminDateFilter(
                 greaterThanOrEqual: Some(range.start),
                 lessThanOrEqual: Some(adminDateFilterEndOfDay(range.end)),
