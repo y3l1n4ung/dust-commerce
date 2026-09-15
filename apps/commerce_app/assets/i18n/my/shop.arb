@@ -1161,9 +1161,17 @@
   "@menu": {
     "description": "Opens storefront navigation."
   },
-  "not_found": "ဤစာမျက်နှာ မရှိပါ",
-  "@not_found": {
-    "description": "Translation for `shop_not_found`."
+  "not_found_body": "သင် ဝင်ရောက်ရန် ကြိုးစားသော စာမျက်နှာ မရှိပါ။",
+  "@not_found_body": {
+    "description": "Explanation shown for an unknown storefront route."
+  },
+  "not_found_frontpage": "ပင်မစာမျက်နှာသို့ သွားရန်",
+  "@not_found_frontpage": {
+    "description": "Returns from an unknown route to the storefront home."
+  },
+  "not_found_title": "စာမျက်နှာကို ရှာမတွေ့ပါ",
+  "@not_found_title": {
+    "description": "Heading shown for an unknown storefront route."
   },
   "origin_country": "ထုတ်လုပ်သည့်နိုင်ငံ",
   "@origin_country": {

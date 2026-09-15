@@ -1161,9 +1161,17 @@
   "@menu": {
     "description": "Opens storefront navigation."
   },
-  "not_found": "That page does not exist",
-  "@not_found": {
-    "description": "Translation for `shop_not_found`."
+  "not_found_body": "The page you tried to access does not exist.",
+  "@not_found_body": {
+    "description": "Explanation shown for an unknown storefront route."
+  },
+  "not_found_frontpage": "Go to frontpage",
+  "@not_found_frontpage": {
+    "description": "Returns from an unknown route to the storefront home."
+  },
+  "not_found_title": "Page not found",
+  "@not_found_title": {
+    "description": "Heading shown for an unknown storefront route."
   },
   "origin_country": "Country of origin",
   "@origin_country": {
