@@ -4,6 +4,7 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'account_auth_layout.dart';
+import 'account_auth_field.dart';
 import 'account_verification_notice.dart';
 
 part 'account_form_actions.dart';

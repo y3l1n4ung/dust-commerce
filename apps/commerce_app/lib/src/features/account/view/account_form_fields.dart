@@ -25,8 +25,7 @@ class _AccountFormFields extends StatelessWidget {
   Widget build(BuildContext context) => Column(
         children: [
           if (registering) ...[
-            _field(
-              context,
+            AccountAuthField(
               controller: firstName,
               label: context.tr(
                 'shop_account_first_name',
@@ -36,8 +35,7 @@ class _AccountFormFields extends StatelessWidget {
               validator: (value) => _required(context, value),
             ),
             const SizedBox(height: 8),
-            _field(
-              context,
+            AccountAuthField(
               controller: lastName,
               label: context.tr(
                 'shop_account_last_name',
@@ -48,8 +46,7 @@ class _AccountFormFields extends StatelessWidget {
             ),
             const SizedBox(height: 8),
           ],
-          _field(
-            context,
+          AccountAuthField(
             controller: email,
             label: context.tr('shop_account_email', defaultText: 'Email'),
             keyboardType: TextInputType.emailAddress,
@@ -58,8 +55,7 @@ class _AccountFormFields extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           if (registering) ...[
-            _field(
-              context,
+            AccountAuthField(
               controller: phone,
               label: context.tr('shop_account_phone', defaultText: 'Phone'),
               keyboardType: TextInputType.phone,
@@ -68,8 +64,7 @@ class _AccountFormFields extends StatelessWidget {
             ),
             const SizedBox(height: 8),
           ],
-          _field(
-            context,
+          AccountAuthField(
             controller: password,
             label: context.tr(
               'shop_account_password',
@@ -98,57 +93,6 @@ class _AccountFormFields extends StatelessWidget {
             ),
           ),
         ],
-      );
-
-  Widget _field(
-    BuildContext context, {
-    required TextEditingController controller,
-    required String label,
-    TextInputType? keyboardType,
-    Iterable<String>? autofillHints,
-    String? Function(String?)? validator,
-    Widget? suffixIcon,
-    bool obscureText = false,
-    bool required = true,
-  }) =>
-      TextFormField(
-        controller: controller,
-        keyboardType: keyboardType,
-        autofillHints: autofillHints,
-        validator: validator,
-        obscureText: obscureText,
-        obscuringCharacter: '•',
-        decoration: InputDecoration(
-          label: Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(text: label),
-                if (required)
-                  const TextSpan(
-                    text: '*',
-                    style: TextStyle(color: StoreColors.rose),
-                  ),
-              ],
-            ),
-          ),
-          suffixIcon: suffixIcon,
-          suffixIconConstraints: const BoxConstraints(
-            minWidth: 48,
-            minHeight: 44,
-          ),
-          filled: true,
-          fillColor: StoreColors.subtle,
-          isDense: true,
-          constraints: const BoxConstraints(minHeight: 44),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6),
-            borderSide: const BorderSide(color: StoreColors.border),
-          ),
-          contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-        ),
       );
 
   String? _required(BuildContext context, String? value) =>
