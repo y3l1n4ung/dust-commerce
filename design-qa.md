@@ -2009,10 +2009,11 @@ Source truth at current Medusa DTC commit
 - Continue to review preserved Manual Payment in the collapsed two-column
   summary with Payment method, Payment details, the credit-card icon, and
   “Another step will appear”, matching the source composition.
-- A browser-native hard reload preserved `?step=payment` and restored the
-  checked radio from the cart payment session. The browser automation helper's
-  synthetic reload returned its original launch URL, so it was not treated as
-  route evidence.
+- Fresh document navigation to `?step=payment` restored the checked radio from
+  the cart payment session. The keyboard shortcut left the Flutter document
+  and semantic node identifiers unchanged, while the browser automation
+  reload helper returned its original launch URL; neither was treated as
+  reload evidence.
 - At `390 x 844`, Payment uses the compact Back label, keeps the full-width
   provider row and ordered checkout/cart sections, and renders without
   horizontal overflow. The settled final build reports no browser warnings or
@@ -2044,7 +2045,66 @@ Source truth at current Medusa DTC commit
 
 Store checkout Payment result: passed for current source-code composition,
 server-retained provider selection, disabled/enabled progression, checked radio
-semantics, Review summary, browser-native hard reload, compact rendering and
+semantics, Review summary, fresh-document restoration, compact rendering and
 browser-log cleanliness; a same-state live Medusa raster remains unavailable
+
+## Store checkout large actions
+
+Source truth at current Medusa DTC commit
+`bd2441acc18359533758fbf4db5bc80129055d2e`:
+
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/modules/checkout/components/review/index.tsx`;
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/modules/checkout/components/payment-button/index.tsx`; and
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/modules/common/components/ui/index.tsx`.
+
+**Source and implementation findings**
+
+- Medusa's shared large primary button uses `h-12 px-6 text-lg`: 48px height,
+  24px horizontal padding and 18px type, with a 6px radius, black enabled
+  surface and gray-800 hover surface.
+- The local Review action inherited the 40px Material theme button height. An
+  outer 48px constraint on Payment could still leave a 40px semantic button,
+  so a wrapper alone was not an equivalent implementation.
+- One concrete checkout action now owns the large-button geometry, progress,
+  disabled state, hover treatment and button semantics. Address, Delivery,
+  Payment and Review reuse it; no method returns a `Widget`.
+- Localized labels remain resolved from literal Dust i18n keys at each caller.
+  This keeps extraction deterministic and avoids hiding keys behind a dynamic
+  component parameter.
+
+**Rendered evidence**
+
+- Fresh release-document measurements report Place order at 48px by 141.64px,
+  Continue to review at 48px by 200.42px, Continue to payment at 48px by
+  218.58px, and Continue to delivery at 48px by 210.76px.
+- Review at `390 x 844` keeps the source's compact single-column checkout
+  composition without horizontal overflow. The settled document reports no
+  browser warnings or errors.
+- The keyboard reload shortcut did not replace the Flutter document: semantic
+  node identifiers remained unchanged. The browser helper instead restored its
+  original launch URL. Only direct fresh document navigation was used for the
+  measurements and retained-state evidence above.
+
+**Evidence limits**
+
+- The live Medusa checkout remained on its loading address content, so a
+  same-state remote Review or Payment raster is not claimed. Source code and
+  local rendered behavior were compared separately.
+- The current DTC seed exposes Standard and Express shipping only. Its dormant
+  pickup branch is not a reachable reference capability and was not invented
+  in Dust for this visual correction.
+
+**Validation**
+
+- All 141 Store tests pass and Flutter analysis reports no issue.
+- Dust reports all 54 Store outputs clean. Dust i18n checks 688 translations
+  with zero errors; its 15 warnings are the existing stale/equal-fallback
+  inventory outside this slice.
+- The release Web build, handwritten formatting, file-size, response-boundary,
+  project-structure and diff-whitespace checks pass. No widget test was added.
+
+Store checkout large actions result: passed for shared source geometry,
+fresh-document measurements, compact rendering and browser-log cleanliness;
+same-state live Medusa rendering remains unavailable
 
 final result: blocked
