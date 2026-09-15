@@ -59,56 +59,61 @@ class _RelatedProductsContent extends StatelessWidget {
   final double width;
 
   @override
-  Widget build(BuildContext context) => switch (state.relatedStatus) {
-        RelatedProductsStatus.idle ||
-        RelatedProductsStatus.loading =>
-          const SizedBox(
-            height: 220,
-            child: Center(child: CircularProgressIndicator()),
+  Widget build(BuildContext context) {
+    const spacing = 24.0;
+    final preferredColumns = width >= 1280
+        ? 4
+        : width >= 1024
+            ? 3
+            : 2;
+    final columns = width < spacing ? 1 : preferredColumns;
+    final cardWidth = (width - (columns - 1) * spacing) / columns;
+    return switch (state.relatedStatus) {
+      RelatedProductsStatus.idle ||
+      RelatedProductsStatus.loading =>
+        const SizedBox(
+          height: 220,
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      RelatedProductsStatus.failed => SizedBox(
+          height: 160,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  state.relatedMessage ??
+                      context.tr(
+                        'shop_related_products_failed',
+                        defaultText: 'Could not load related products.',
+                      ),
+                ),
+                const SizedBox(height: 12),
+                TextButton(
+                  onPressed: context.readProductViewModel().loadRelated,
+                  child: const TranslatedText(
+                    'shop_retry',
+                    defaultText: 'Try again',
+                  ),
+                ),
+              ],
+            ),
           ),
-        RelatedProductsStatus.failed => SizedBox(
-            height: 160,
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    state.relatedMessage ??
-                        context.tr(
-                          'shop_related_products_failed',
-                          defaultText: 'Could not load related products.',
-                        ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextButton(
-                    onPressed: context.readProductViewModel().loadRelated,
-                    child: const TranslatedText(
-                      'shop_retry',
-                      defaultText: 'Try again',
-                    ),
-                  ),
-                ],
+        ),
+      RelatedProductsStatus.ready => Wrap(
+          spacing: spacing,
+          runSpacing: 32,
+          children: [
+            for (final product in state.relatedProducts)
+              SizedBox(
+                width: cardWidth,
+                child: ProductCard(
+                  product: product,
+                  currencyCode: state.currencyCode,
+                ),
               ),
-            ),
-          ),
-        RelatedProductsStatus.ready => GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: width >= 1280
-                  ? 4
-                  : width >= 1024
-                      ? 3
-                      : 2,
-              childAspectRatio: 0.58,
-              crossAxisSpacing: 24,
-              mainAxisSpacing: 32,
-            ),
-            itemCount: state.relatedProducts.length,
-            itemBuilder: (_, index) => ProductCard(
-              product: state.relatedProducts[index],
-              currencyCode: state.currencyCode,
-            ),
-          ),
-      };
+          ],
+        ),
+    };
+  }
 }
