@@ -1,7 +1,8 @@
 part of 'admin_gate.dart';
 
 /// Owns authenticated route transitions separately from shell composition.
-mixin _AdminHomeActions on State<_AdminHome>, _AdminCustomerGroupActions {
+mixin _AdminHomeActions
+    on State<_AdminHome>, _AdminCustomerGroupActions, _AdminSupportActions {
   FocusNode get _customerSearchFocus;
   FocusNode get _orderSearchFocus;
   FocusNode get _optionSearchFocus;
@@ -13,6 +14,7 @@ mixin _AdminHomeActions on State<_AdminHome>, _AdminCustomerGroupActions {
   String get selectedCustomerIdForNavigation => _selectedCustomerId;
 
   void _requestSearch() {
+    if (requestSupportSearch()) return;
     if (_route == _AdminRoute.customerGroups) {
       _showCustomerGroups();
       WidgetsBinding.instance.addPostFrameCallback((_) {

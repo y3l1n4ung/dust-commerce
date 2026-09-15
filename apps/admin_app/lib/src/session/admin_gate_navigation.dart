@@ -21,6 +21,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
       themes: widget.themes,
       title: switch (_route) {
         _AdminRoute.customers => 'Customers',
+        _AdminRoute.customerService => 'Customer Service',
         _AdminRoute.customerGroups => 'Customer Groups',
         _AdminRoute.customerGroup => switch (customerGroupDetail) {
             Some(value: final group) => 'Customer Groups  ›  ${group.name}',
@@ -61,6 +62,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
       onSearchRequested: _requestSearch,
       onCustomersRequested: _showCustomers,
       onCustomerGroupsRequested: _showCustomerGroups,
+      onCustomerServiceRequested: _showCustomerService,
       onOrdersRequested: _showOrders,
       onProductsRequested: _showProducts,
       onProductOptionsRequested: _showProductOptions,
@@ -74,6 +76,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
         _AdminRoute.customerGroups ||
         _AdminRoute.customerGroup =>
           AdminShellSection.customerGroups,
+        _AdminRoute.customerService => AdminShellSection.customerService,
         _AdminRoute.orders || _AdminRoute.order => AdminShellSection.orders,
         _AdminRoute.products ||
         _AdminRoute.product =>
@@ -101,6 +104,9 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
             searchFocus: _customerGroupSearchFocus,
             onCreate: _createCustomerGroup,
             onOpen: _showCustomerGroup,
+          ),
+        _AdminRoute.customerService => AdminCustomerServicePage(
+            searchFocus: _supportSearchFocus,
           ),
         _AdminRoute.customerGroup => AdminCustomerGroupDetailPage(
             customerGroupId: selectedIdForNavigation,

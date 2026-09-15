@@ -5,6 +5,7 @@ import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:flutter/material.dart';
 
 part 'admin_sidebar_subnav.dart';
+part 'admin_sidebar_header.dart';
 
 /// Medusa Admin's compact navigation hierarchy with Morrow identity.
 final class AdminSidebar extends StatelessWidget {
@@ -15,6 +16,7 @@ final class AdminSidebar extends StatelessWidget {
     required this.onSearchRequested,
     required this.onCustomersRequested,
     required this.onCustomerGroupsRequested,
+    required this.onCustomerServiceRequested,
     required this.onOrdersRequested,
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
@@ -33,6 +35,9 @@ final class AdminSidebar extends StatelessWidget {
 
   /// Opens the merchant customer-group route.
   final VoidCallback onCustomerGroupsRequested;
+
+  /// Opens the customer-service inbox.
+  final VoidCallback onCustomerServiceRequested;
 
   /// Opens the merchant order table.
   final VoidCallback onOrdersRequested;
@@ -116,6 +121,12 @@ final class AdminSidebar extends StatelessWidget {
                   selected: selectedSection == AdminShellSection.customerGroups,
                   onTap: onCustomerGroupsRequested,
                 ),
+                _SubNav(
+                  label: 'Customer Service',
+                  selected:
+                      selectedSection == AdminShellSection.customerService,
+                  onTap: onCustomerServiceRequested,
+                ),
                 const _NavRow(icon: Icons.sell_outlined, label: 'Promotions'),
                 const _SubNav(label: 'Campaigns'),
                 const _NavRow(
@@ -143,33 +154,6 @@ final class AdminSidebar extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      );
-}
-
-final class _StoreHeader extends StatelessWidget {
-  const _StoreHeader({required this.user});
-
-  final AdminUser user;
-
-  @override
-  Widget build(BuildContext context) => SizedBox(
-        height: 30,
-        child: Row(
-          children: [
-            const AdminAvatar(label: 'M'),
-            const SizedBox(width: 8),
-            const Expanded(
-              child: Text('Morrow', overflow: TextOverflow.ellipsis),
-            ),
-            IconButton(
-              tooltip: 'Store actions',
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints.tightFor(width: 28, height: 28),
-              onPressed: () {},
-              icon: const Icon(Icons.more_horiz_rounded, size: 17),
-            ),
-          ],
         ),
       );
 }

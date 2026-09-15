@@ -13,6 +13,7 @@ final class AdminShell extends StatelessWidget {
     required this.onSearchRequested,
     required this.onCustomersRequested,
     required this.onCustomerGroupsRequested,
+    required this.onCustomerServiceRequested,
     required this.onOrdersRequested,
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
@@ -36,6 +37,9 @@ final class AdminShell extends StatelessWidget {
 
   /// Opens the merchant customer-group table.
   final VoidCallback onCustomerGroupsRequested;
+
+  /// Opens the merchant customer-service inbox.
+  final VoidCallback onCustomerServiceRequested;
 
   /// Opens the merchant order table.
   final VoidCallback onOrdersRequested;
@@ -77,6 +81,7 @@ final class AdminShell extends StatelessWidget {
             onSearchRequested: onSearchRequested,
             onCustomersRequested: onCustomersRequested,
             onCustomerGroupsRequested: onCustomerGroupsRequested,
+            onCustomerServiceRequested: onCustomerServiceRequested,
             onOrdersRequested: onOrdersRequested,
             onProductsRequested: onProductsRequested,
             onProductOptionsRequested: onProductOptionsRequested,
