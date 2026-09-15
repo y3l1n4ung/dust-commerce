@@ -4,12 +4,9 @@ import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
-import 'checkout_address_fields.dart';
 import 'checkout_address_controllers.dart';
+import 'checkout_address_form.dart';
 import 'checkout_address_summary.dart';
-import 'checkout_billing_toggle.dart';
-import 'checkout_contact_fields.dart';
-import 'checkout_saved_address_selector.dart';
 import 'checkout_step_header.dart';
 
 /// Shipping and optional billing form translated from Medusa Addresses.
@@ -81,80 +78,26 @@ class _CheckoutAddressSectionState extends State<CheckoutAddressSection> {
             onEdit: () => context.pushCheckoutStep('address'),
           ),
           if (widget.open)
-            _formBody()
+            CheckoutAddressForm(
+              addressBook: widget.addressBook,
+              billing: _billing,
+              countries: widget.countries,
+              customer: widget.customer,
+              email: _email,
+              formKey: _form,
+              onContinue: _continue,
+              onSameAsBillingChanged: (value) {
+                setState(() => _sameAsBilling = value);
+              },
+              onSavedAddressSelected: _selectSavedAddress,
+              sameAsBilling: _sameAsBilling,
+              shipping: _shipping,
+              state: widget.state,
+            )
           else
             CheckoutAddressSummary(state: widget.state),
           const CheckoutSectionDivider(),
         ],
-      );
-
-  Widget _formBody() => Padding(
-        padding: const EdgeInsets.only(bottom: 28),
-        child: Form(
-          key: _form,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (widget.customer case final customer?) ...[
-                CheckoutSavedAddressSelector(
-                  customer: customer,
-                  state: widget.addressBook,
-                  countries: widget.countries,
-                  draft: _shipping.draft,
-                  onSelected: _selectSavedAddress,
-                ),
-                if (widget.addressBook.status != AddressBookStatus.ready ||
-                    widget.addressBook
-                        .shippingAddressesFor(widget.countries)
-                        .isNotEmpty)
-                  const SizedBox(height: 24),
-              ],
-              CheckoutAddressFields(
-                controllers: _shipping,
-                countries: widget.countries,
-              ),
-              CheckoutBillingToggle(
-                value: _sameAsBilling,
-                onChanged: (value) => setState(() => _sameAsBilling = value),
-              ),
-              CheckoutContactFields(controllers: _shipping, email: _email),
-              if (!_sameAsBilling) ...[
-                const SizedBox(height: 32),
-                const TranslatedText(
-                  'shop_checkout_billing_address',
-                  defaultText: 'Billing address',
-                  style: TextStyle(
-                    fontSize: 24,
-                    height: 1.5,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                CheckoutAddressFields(
-                  controllers: _billing,
-                  countries: widget.countries,
-                ),
-              ],
-              const SizedBox(height: 36),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: FilledButton(
-                  onPressed: widget.state.isBusy ? null : _continue,
-                  child: const TranslatedText(
-                    'shop_checkout_continue_delivery',
-                    defaultText: 'Continue to delivery',
-                  ),
-                ),
-              ),
-              if (widget.state.status == CheckoutStatus.failed &&
-                  widget.state.operation == CheckoutOperation.prepare) ...[
-                const SizedBox(height: 12),
-                Text(widget.state.message!,
-                    style: const TextStyle(color: Colors.red)),
-              ],
-            ],
-          ),
-        ),
       );
 
   void _selectSavedAddress(CustomerAddressView address) {
