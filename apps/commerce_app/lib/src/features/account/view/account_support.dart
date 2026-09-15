@@ -1,4 +1,5 @@
 import 'package:commerce_app/commerce_app.dart';
+import 'package:commerce_app/route.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
@@ -37,10 +38,12 @@ class AccountSupport extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 24),
-          const TranslatedText(
-            'shop_account_customer_service',
-            defaultText: 'Customer Service',
-            style: TextStyle(color: StoreColors.foregroundSubtle),
+          StoreInteractiveLink(
+            onPressed: () => context.navigator.customerService().go(),
+            child: const TranslatedText(
+              'shop_account_customer_service',
+              defaultText: 'Customer Service',
+            ),
           ),
         ],
       );

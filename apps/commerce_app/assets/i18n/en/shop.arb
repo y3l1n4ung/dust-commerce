@@ -1372,6 +1372,90 @@
   "@sort_price_desc": {
     "description": "Sorts products from highest to lowest price."
   },
+  "customer_service_contact": "Contact",
+  "@customer_service_contact": {
+    "description": "Opens support from an order."
+  },
+  "customer_service_email": "Email",
+  "@customer_service_email": {
+    "description": "Support reply email label."
+  },
+  "customer_service_email_invalid": "Enter a valid email address.",
+  "@customer_service_email_invalid": {
+    "description": "Support email validation."
+  },
+  "customer_service_failed": "We could not send your message. Please try again.",
+  "@customer_service_failed": {
+    "description": "Retryable support submission feedback."
+  },
+  "customer_service_intro": "Tell us what you need help with. Include an order number for order or return questions.",
+  "@customer_service_intro": {
+    "description": "Support form introduction."
+  },
+  "customer_service_invalid": "Check the form and try again.",
+  "@customer_service_invalid": {
+    "description": "Rejected support input feedback."
+  },
+  "customer_service_message": "Message",
+  "@customer_service_message": {
+    "description": "Support message label."
+  },
+  "customer_service_name": "Name",
+  "@customer_service_name": {
+    "description": "Support contact name label."
+  },
+  "customer_service_order": "Order number (optional)",
+  "@customer_service_order": {
+    "description": "Optional related order label."
+  },
+  "customer_service_received": "Message received",
+  "@customer_service_received": {
+    "description": "Support submission success heading."
+  },
+  "customer_service_reference": "Keep this reference: {id}",
+  "@customer_service_reference": {
+    "description": "Persisted support request reference.",
+    "placeholders": {
+      "id": {
+        "example": "csr_01",
+        "type": "String"
+      }
+    }
+  },
+  "customer_service_required": "This field is required.",
+  "@customer_service_required": {
+    "description": "Required support field validation."
+  },
+  "customer_service_send": "Send message",
+  "@customer_service_send": {
+    "description": "Support submission action."
+  },
+  "customer_service_send_another": "Send another message",
+  "@customer_service_send_another": {
+    "description": "Starts another support request."
+  },
+  "customer_service_session_expired": "Your session expired. Sign in again or clear it to continue as a guest.",
+  "@customer_service_session_expired": {
+    "description": "Expired optional session feedback."
+  },
+  "customer_service_subject": "Subject",
+  "@customer_service_subject": {
+    "description": "Support subject label."
+  },
+  "customer_service_title": "Customer Service",
+  "@customer_service_title": {
+    "description": "Support page heading."
+  },
+  "customer_service_too_long": "Use at most {count} characters.",
+  "@customer_service_too_long": {
+    "description": "Support field length validation.",
+    "placeholders": {
+      "count": {
+        "example": "1",
+        "type": "int"
+      }
+    }
+  },
   "title": "Store",
   "@title": {
     "description": "Translation for `shop_title`."

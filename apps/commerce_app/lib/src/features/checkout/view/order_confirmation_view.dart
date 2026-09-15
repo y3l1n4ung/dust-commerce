@@ -78,19 +78,8 @@ final class OrderConfirmationView extends StatelessWidget {
                         const SizedBox(height: 40),
                         const Divider(),
                         const SizedBox(height: 24),
-                        const TranslatedText(
-                          'shop_checkout_need_help',
-                          defaultText: 'Need help?',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 8),
-                        const TranslatedText(
-                          'shop_checkout_help_body',
-                          defaultText:
-                              'If you have questions about your order, contact our '
-                              'customer service team.',
-                          style: TextStyle(color: StoreColors.foregroundSubtle),
+                        CustomerServiceOrderHelp(
+                          orderReference: '${order.displayId}',
                         ),
                       ],
                     ),

@@ -93,6 +93,19 @@ void main() {
     );
   });
 
+  test('public support routes retain an optional order reference', () {
+    final contact = parseCommerceRoute(
+      Uri.parse('/contact?orderReference=%2342'),
+    );
+    const service = CustomerServiceRoute(orderReference: '42');
+
+    expect(contact, isA<ContactRoute>());
+    expect((contact as ContactRoute).orderReference, '#42');
+    expect(contact.requiresAuth, isFalse);
+    expect(service.location, '/customer-service?orderReference=42');
+    expect(service.requiresAuth, isFalse);
+  });
+
   test('router preserves the browser location on its first parse', () {
     const api = _UnusedApi();
     final router = CommerceRouter(

@@ -52,20 +52,24 @@ final class _StorefrontScopes extends StatelessWidget {
                         value: cart,
                         child: CheckoutViewModelScope.value(
                           value: checkout,
-                          child: ProductViewModelScope(
-                            args: (_) => ProductViewModelArgs(api: api),
-                            create: (_, args) => ProductViewModel(args),
-                            child: CatalogViewModelScope(
-                              args: (_) => CatalogViewModelArgs(api: api),
-                              create: (_, args) => CatalogViewModel(args),
-                              child: ProductListingViewModelScope(
-                                args: (_) =>
-                                    ProductListingViewModelArgs(api: api),
-                                create: (_, args) =>
-                                    ProductListingViewModel(args),
-                                child: StoreShellViewModelScope.value(
-                                  value: shell,
-                                  child: child,
+                          child: CustomerServiceViewModelScope(
+                            args: (_) => CustomerServiceViewModelArgs(api: api),
+                            create: (_, args) => CustomerServiceViewModel(args),
+                            child: ProductViewModelScope(
+                              args: (_) => ProductViewModelArgs(api: api),
+                              create: (_, args) => ProductViewModel(args),
+                              child: CatalogViewModelScope(
+                                args: (_) => CatalogViewModelArgs(api: api),
+                                create: (_, args) => CatalogViewModel(args),
+                                child: ProductListingViewModelScope(
+                                  args: (_) =>
+                                      ProductListingViewModelArgs(api: api),
+                                  create: (_, args) =>
+                                      ProductListingViewModel(args),
+                                  child: StoreShellViewModelScope.value(
+                                    value: shell,
+                                    child: child,
+                                  ),
                                 ),
                               ),
                             ),

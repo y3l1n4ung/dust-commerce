@@ -3,15 +3,9 @@ import 'package:dust_dart/http.dart';
 
 part 'commerce_api.g.dart';
 
-/// The storefront API, generated from this declaration.
+/// Generated Store API sharing wire models with the server.
 ///
-/// Every type crossing the wire here — [Product], [Cart], [Order], [Money] —
-/// is the same class the server encodes with. Both ends are generated from one
-/// definition in `commerce_shared`, so a field renamed there is a compile error
-/// on both sides rather than a mismatch discovered at runtime.
-///
-/// The base URL is a development default and is overridden per environment
-/// through the factory.
+/// The factory overrides the development base URL per environment.
 @HttpClient(
   baseUrl: 'http://localhost:3878',
   headers: {'accept': 'application/json'},
@@ -83,6 +77,12 @@ abstract interface class CommerceApi {
   /// Revokes the bearer token configured on the Dio client.
   @DELETE('/auth/session')
   Future<SessionDeleted> signOut();
+
+  /// Persists one guest-compatible customer-service request.
+  @POST('/store/customer-service')
+  Future<CustomerServiceSubmission> submitCustomerService(
+    @Body() CustomerServiceRequestBody body,
+  );
 
   /// A page of the published catalogue.
   @GET('/store/products')

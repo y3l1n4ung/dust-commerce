@@ -101,6 +101,8 @@ final class AccountOrderDetailContent extends StatelessWidget {
           const SizedBox(height: 8),
           OrderReceiptTotals(order: order),
           OrderReturnSection(order: order),
+          const SizedBox(height: 32),
+          CustomerServiceOrderHelp(orderReference: '${order.displayId}'),
         ],
       );
 

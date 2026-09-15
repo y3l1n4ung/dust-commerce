@@ -1372,6 +1372,90 @@
   "@sort_price_desc": {
     "description": "Sorts products from highest to lowest price."
   },
+  "customer_service_contact": "ဆက်သွယ်ရန်",
+  "@customer_service_contact": {
+    "description": "Opens support from an order."
+  },
+  "customer_service_email": "အီးမေးလ်",
+  "@customer_service_email": {
+    "description": "Support reply email label."
+  },
+  "customer_service_email_invalid": "မှန်ကန်သော အီးမေးလ်လိပ်စာ ထည့်ပါ။",
+  "@customer_service_email_invalid": {
+    "description": "Support email validation."
+  },
+  "customer_service_failed": "မက်ဆေ့ချ်ကို မပို့နိုင်ခဲ့ပါ။ ထပ်မံကြိုးစားပါ။",
+  "@customer_service_failed": {
+    "description": "Retryable support submission feedback."
+  },
+  "customer_service_intro": "လိုအပ်သည့်အကူအညီကို ပြောပြပါ။ အော်ဒါ သို့မဟုတ် ပြန်အပ်ခြင်းဆိုင်ရာ မေးခွန်းများအတွက် အော်ဒါနံပါတ်ကို ထည့်ပါ။",
+  "@customer_service_intro": {
+    "description": "Support form introduction."
+  },
+  "customer_service_invalid": "ဖောင်ကို စစ်ဆေးပြီး ထပ်မံကြိုးစားပါ။",
+  "@customer_service_invalid": {
+    "description": "Rejected support input feedback."
+  },
+  "customer_service_message": "မက်ဆေ့ချ်",
+  "@customer_service_message": {
+    "description": "Support message label."
+  },
+  "customer_service_name": "အမည်",
+  "@customer_service_name": {
+    "description": "Support contact name label."
+  },
+  "customer_service_order": "အော်ဒါနံပါတ် (မဖြစ်မနေ မဟုတ်ပါ)",
+  "@customer_service_order": {
+    "description": "Optional related order label."
+  },
+  "customer_service_received": "မက်ဆေ့ချ် လက်ခံရရှိပါပြီ",
+  "@customer_service_received": {
+    "description": "Support submission success heading."
+  },
+  "customer_service_reference": "ဤရည်ညွှန်းနံပါတ်ကို သိမ်းထားပါ: {id}",
+  "@customer_service_reference": {
+    "description": "Persisted support request reference.",
+    "placeholders": {
+      "id": {
+        "example": "csr_01",
+        "type": "String"
+      }
+    }
+  },
+  "customer_service_required": "ဤအကွက်ကို ဖြည့်ရန် လိုအပ်ပါသည်။",
+  "@customer_service_required": {
+    "description": "Required support field validation."
+  },
+  "customer_service_send": "မက်ဆေ့ချ် ပို့ရန်",
+  "@customer_service_send": {
+    "description": "Support submission action."
+  },
+  "customer_service_send_another": "နောက်ထပ် မက်ဆေ့ချ် ပို့ရန်",
+  "@customer_service_send_another": {
+    "description": "Starts another support request."
+  },
+  "customer_service_session_expired": "သင့်စက်ရှင် သက်တမ်းကုန်သွားပါပြီ။ အကောင့်ပြန်ဝင်ပါ သို့မဟုတ် ဧည့်သည်အဖြစ် ဆက်လုပ်ရန် စက်ရှင်ကို ရှင်းပါ။",
+  "@customer_service_session_expired": {
+    "description": "Expired optional session feedback."
+  },
+  "customer_service_subject": "အကြောင်းအရာ",
+  "@customer_service_subject": {
+    "description": "Support subject label."
+  },
+  "customer_service_title": "ဝယ်ယူသူဝန်ဆောင်မှု",
+  "@customer_service_title": {
+    "description": "Support page heading."
+  },
+  "customer_service_too_long": "အများဆုံး စာလုံးရေ {count} လုံးသာ ထည့်ပါ။",
+  "@customer_service_too_long": {
+    "description": "Support field length validation.",
+    "placeholders": {
+      "count": {
+        "example": "1",
+        "type": "int"
+      }
+    }
+  },
   "title": "ဆိုင်",
   "@title": {
     "description": "Translation for `shop_title`."
