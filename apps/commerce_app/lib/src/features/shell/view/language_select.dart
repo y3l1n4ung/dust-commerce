@@ -31,7 +31,7 @@ final class StoreLanguageSelect extends StatelessWidget {
             value: locale,
             child: Row(
               children: [
-                _flag(locale),
+                _StoreLocaleFlag(locale: locale),
                 const SizedBox(width: 8),
                 Text(_label(context, locale)),
               ],
@@ -47,7 +47,7 @@ final class StoreLanguageSelect extends StatelessWidget {
               style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
             const SizedBox(width: 8),
-            _flag(selected),
+            _StoreLocaleFlag(locale: selected),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -66,18 +66,6 @@ final class StoreLanguageSelect extends StatelessWidget {
     );
   }
 
-  Widget _flag(String locale) => switch (locale) {
-        'en' => CountryFlag.fromCountryCode(
-            'us',
-            theme: const ImageTheme(width: 16, height: 16),
-          ),
-        'my' => CountryFlag.fromCountryCode(
-            'mm',
-            theme: const ImageTheme(width: 16, height: 16),
-          ),
-        _ => const SizedBox(width: 16, height: 16),
-      };
-
   Future<void> _change(BuildContext context, String locale) async {
     final preference = locale.isEmpty ? const None<String>() : Some(locale);
     final changed = await context.readStoreShellViewModel().selectLocale(
@@ -87,11 +75,31 @@ final class StoreLanguageSelect extends StatelessWidget {
     I18nScope.of(context).setLocale(
       locale.isEmpty ? appI18nFallbackLocale : locale,
     );
+    Navigator.of(context).pop();
   }
 
   String _label(BuildContext context, String locale) => switch (locale) {
         'en' => context.tr('shop_language_english', defaultText: 'English'),
         'my' => context.tr('shop_language_burmese', defaultText: 'Burmese'),
         _ => context.tr('shop_language_default', defaultText: 'Default'),
+      };
+}
+
+final class _StoreLocaleFlag extends StatelessWidget {
+  const _StoreLocaleFlag({required this.locale});
+
+  final String locale;
+
+  @override
+  Widget build(BuildContext context) => switch (locale) {
+        'en' => CountryFlag.fromCountryCode(
+            'us',
+            theme: const ImageTheme(width: 16, height: 16),
+          ),
+        'my' => CountryFlag.fromCountryCode(
+            'mm',
+            theme: const ImageTheme(width: 16, height: 16),
+          ),
+        _ => const SizedBox(width: 16, height: 16),
       };
 }
