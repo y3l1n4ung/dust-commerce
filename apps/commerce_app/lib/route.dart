@@ -75,7 +75,7 @@ final class CustomerGuard implements AsyncRouteGuard<CommerceRoute> {
   @override
   Future<CommerceRoute?> canActivate(CommerceRoute route) async {
     final account = customerSession.account;
-    await account.restore(force: true);
+    if (!account.state.isAuthenticated) await account.restore();
     return account.state.isAuthenticated ? null : const AccountRoute();
   }
 }

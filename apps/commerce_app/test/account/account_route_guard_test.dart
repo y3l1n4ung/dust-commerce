@@ -1,5 +1,6 @@
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../core/support.dart';
@@ -39,6 +40,25 @@ void main() {
     expect(commerceRouteGuards(const AccountRoute(), router), isEmpty);
   });
 
+  test('an authenticated guard reuses the server-proven customer', () async {
+    final now = DateTime.utc(2100, 1, 1, 12);
+    final sessions = MemoryAuthSessionStore()
+      ..value = StoredAuthSession(
+        token: 'opaque-test-token',
+        expiresAt: now.add(const Duration(hours: 1)),
+      );
+    final api = _CountingAccountApi();
+    final account = AccountViewModel(
+      AccountViewModelArgs(api: api, sessions: sessions, now: () => now),
+    );
+    await account.restore();
+    final guard = CustomerGuard(CustomerSessionRouterRefresh(account));
+
+    expect(await guard.canActivate(const AccountAddressesRoute()), isNull);
+    expect(api.currentCustomerCalls, 1);
+    expect(account.state.customer, _customer);
+  });
+
   test('order details preserve the source route and opaque id', () {
     const route = AccountOrderDetailRoute(id: 'order_1');
 
@@ -71,3 +91,23 @@ final class _UnusedApi implements CommerceApi {
   Object? noSuchMethod(Invocation invocation) =>
       throw UnsupportedError('No API request expected');
 }
+
+final class _CountingAccountApi implements CommerceApi {
+  var currentCustomerCalls = 0;
+
+  @override
+  Future<Customer> currentCustomer() async {
+    currentCustomerCalls++;
+    return _customer;
+  }
+
+  @override
+  Object? noSuchMethod(Invocation invocation) =>
+      throw UnsupportedError('Unexpected API request');
+}
+
+const _customer = Customer(
+  id: 'cus_ada',
+  email: 'ada@example.test',
+  firstName: 'Ada',
+);
