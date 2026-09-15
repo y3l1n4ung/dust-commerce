@@ -1395,10 +1395,57 @@ reset after QA.
 
 The local backend exposes eight configured countries while the live Medusa
 deployment exposes fourteen; both selectors correctly render their active
-region inventory. This pass proves source interaction and local behavior
-parity. It does not claim popup pixel parity: Morrow's current list remains
-content-width and title case, while the pinned source uses a minimum 320px
-uppercase panel.
+region inventory. The behavior pass originally found a P2 visual mismatch:
+Morrow's list was content-width, title case, 48px per row and viewport-clamped
+below its trigger, while the source uses a 320px uppercase panel above it.
+Commit `467b8cd` corrects that mismatch without changing region behavior.
+
+**Popup comparison evidence**
+
+- Source visual truth: the live URL above, captured open in the in-app Browser
+  at `1280 x 720` CSS pixels and `1280 x 720` image pixels, device-pixel ratio
+  1. The pinned source file above supplies the corresponding classes.
+- Rendered implementation: the temporary release URL above, captured open at
+  `1280 x 720` CSS/image pixels and at `390 x 844` CSS/image pixels, both at
+  device-pixel ratio 1. The safe browser capture is session evidence and was
+  not exported to a filesystem screenshot path.
+- Source DOM measurement: the panel is `320 x 442`, ends at y=604, and sits
+  8px above a 28px trigger at y=612. Its first row is 36px high with 12px type,
+  20px line height, 12px horizontal padding, an 8px flag gap, uppercase text,
+  an 8px radius and the source drop shadow.
+- Implementation measurement: the eight-country panel is `320 x 288`, uses
+  the same 36px rows, typography, padding, gap, uppercase treatment and radius,
+  and ends at y=595 exactly 8px above its 40px Flutter trigger at y=603. The
+  different panel height is expected configured data, not layout drift.
+- Full-view and focused drawer captures show the panel aligned at x=32 on both
+  desktop implementations. The compact capture keeps the complete 320px panel
+  inside a 390px viewport with the trigger and footer reachable.
+- The browser refused the generated data-URL comparison board under its URL
+  safety policy. Because the two captures could not be placed into one combined
+  comparison artifact, this formal visual pass remains blocked rather than
+  claiming pixel parity from separate images.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: Inter, 12px regular, 20px line height and uppercase
+  option labels match the measured source values.
+- Spacing and layout rhythm: width, row height, inset, padding, gap, radius and
+  8px anchor separation match; total height differs only with active countries.
+- Colors and visual tokens: both use a white panel, black option copy, real
+  country colors and a neutral drop shadow.
+- Image quality and asset fidelity: both render real 16px SVG country flags;
+  no emoji, text glyph or drawn substitute is used.
+- Copy and content: country names come from each backend's active-region data.
+  Morrow's eight-country inventory intentionally differs from Medusa's current
+  fourteen-country deployment.
+
+**Interaction evidence**
+
+At `390 x 844`, selecting United States closed the drawer, retained
+`/products/t-shirt?v_id=var_tshirt_m_black`, repriced the selected T-shirt from
+EUR 10.00 to USD 15.00, retained the one-item cart, and survived a hard reload.
+The final compact browser pass reported no warning or error logs. The temporary
+viewport override was reset.
 
 **Validation**
 
@@ -1411,6 +1458,7 @@ uppercase panel.
 - Handwritten formatting, file-size, widget composition, response boundaries,
   and diff whitespace checks pass.
 
-Store country selector behavior result: passed; popup visual parity remains
+Store country selector behavior result: passed; formal combined popup visual
+comparison remains blocked by the unavailable comparison artifact
 
 final result: blocked
