@@ -16,6 +16,16 @@ class StoreScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brand = context.tr('shop_brand', defaultText: 'MORROW');
+    const actionStyle = TextStyle(
+      fontSize: 12,
+      height: 20 / 12,
+      fontWeight: FontWeight.w400,
+    );
+    const brandStyle = TextStyle(
+      fontSize: 18,
+      height: 20 / 18,
+      fontWeight: FontWeight.w500,
+    );
     void openStore() => context.navigator.catalog().go();
 
     return Scaffold(
@@ -37,6 +47,7 @@ class StoreScaffold extends StatelessWidget {
                   child: const TranslatedText(
                     'shop_menu',
                     defaultText: 'Menu',
+                    style: actionStyle,
                   ),
                 ),
               ),
@@ -49,7 +60,7 @@ class StoreScaffold extends StatelessWidget {
                 child: ExcludeSemantics(
                   child: TextButton(
                     onPressed: openStore,
-                    child: Text(brand),
+                    child: Text(brand, style: brandStyle),
                   ),
                 ),
               ),
@@ -60,6 +71,7 @@ class StoreScaffold extends StatelessWidget {
                     child: const TranslatedText(
                       'shop_account_title',
                       defaultText: 'Account',
+                      style: actionStyle,
                     ),
                   ),
                 if (desktop) const SizedBox(width: 12),

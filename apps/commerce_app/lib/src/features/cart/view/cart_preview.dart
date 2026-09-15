@@ -51,6 +51,11 @@ class _CartPreviewState extends State<CartPreview> {
           defaultText: 'Cart ({count})',
           args: {'count': count},
         ),
+        style: const TextStyle(
+          fontSize: 12,
+          height: 20 / 12,
+          fontWeight: FontWeight.w400,
+        ),
       ),
     );
     if (!desktop) return button;
