@@ -46,7 +46,7 @@ final class _ProfilePasswordEditorState extends State<ProfilePasswordEditor> {
         key: _formKey,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final width = constraints.maxWidth >= 560
+            final width = constraints.maxWidth > 16
                 ? (constraints.maxWidth - 16) / 2
                 : constraints.maxWidth;
             return Wrap(
