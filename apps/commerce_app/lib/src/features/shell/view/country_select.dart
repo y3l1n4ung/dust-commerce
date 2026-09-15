@@ -39,7 +39,7 @@ final class StoreCountrySelect extends StatelessWidget {
             value: country,
             child: Row(
               children: [
-                _flag(country),
+                _StoreCountryFlag(countryCode: country),
                 const SizedBox(width: 8),
                 Text(countryName(context, country)),
               ],
@@ -55,7 +55,7 @@ final class StoreCountrySelect extends StatelessWidget {
               style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
             const SizedBox(width: 8),
-            _flag(code),
+            _StoreCountryFlag(countryCode: code),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -74,11 +74,6 @@ final class StoreCountrySelect extends StatelessWidget {
     );
   }
 
-  Widget _flag(String countryCode) => CountryFlag.fromCountryCode(
-        countryCode,
-        theme: const ImageTheme(width: 16, height: 16),
-      );
-
   Future<void> _change(BuildContext context, String countryCode) async {
     final shell = context.readStoreShellViewModel();
     final target = shell.state.regionForCountry(countryCode);
@@ -95,6 +90,19 @@ final class StoreCountrySelect extends StatelessWidget {
       ));
       return;
     }
-    await shell.selectCountry(countryCode);
+    final selected = await shell.selectCountry(countryCode);
+    if (selected && context.mounted) Navigator.of(context).pop();
   }
+}
+
+final class _StoreCountryFlag extends StatelessWidget {
+  const _StoreCountryFlag({required this.countryCode});
+
+  final String countryCode;
+
+  @override
+  Widget build(BuildContext context) => CountryFlag.fromCountryCode(
+        countryCode,
+        theme: const ImageTheme(width: 16, height: 16),
+      );
 }
