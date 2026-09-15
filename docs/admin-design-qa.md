@@ -574,6 +574,15 @@ raster is available, so pixel parity is not claimed.
   timestamp. Compact and `1440 x 1000` layouts, Escape dismissal and final
   browser logs passed. All 146 non-widget Admin and 527 server tests pass; both
   Dust modes and analyzers are clean, and no widget test was added.
+- Customer-group membership now follows the pinned full-screen 10-row selector
+  and selectable detail table. Live QA added Dorothy Vaughan to VIP Customers,
+  showed the exact singular success message, refreshed the count from two to
+  three, and persisted the authenticated Admin actor with database-generated
+  UTC timestamps. Existing members stayed checked and disabled with the exact
+  tooltip. The per-row Remove action opened the exact singular irreversible
+  prompt and was canceled to preserve the fixture; server integration proves
+  removal and rollback. All 151 non-widget Admin and 537 server tests pass;
+  Dust, analyzers, release build, structure and size gates are clean.
 
 ## Open findings
 
@@ -626,10 +635,10 @@ cancellation, independent manual-payment refunds and filtered CSV export pass
 protected API, generated-client, responsive layout and live-data behavior
 checks against the pinned source structure.
 The customer list, detail, mutations, and customer-group
-list/create/detail/edit/delete pass protected API, explicit-contract,
-direct-SQLx, responsive layout and live data checks against the pinned source
-structure. Group membership mutation, address update and same-state customer
-raster parity remain open.
+list/create/detail/edit/delete/membership flows pass protected API,
+explicit-contract, direct-SQLx, responsive layout and live data checks against
+the pinned source structure. Address update and same-state customer raster
+parity remain open.
 The product-list sales-channel slice passes its typed contract, direct SQLx
 projection, source-shaped truncation/tooltip behavior and clean-start browser
 QA. Its whole-screen density and thumbnail differences remain an open visual
