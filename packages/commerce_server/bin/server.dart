@@ -39,6 +39,7 @@ Future<void> main() async {
     if (config.seed) {
       await seedDevelopmentStore(database);
       await seedDevelopmentDemoCatalog(database);
+      await seedDevelopmentSupportInbox(database);
     }
     final app = buildApp(
       database,

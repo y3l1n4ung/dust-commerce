@@ -6,6 +6,7 @@ part 'development_product_option_seed.dart';
 part 'development_demo_catalog_seed.dart';
 part 'development_demo_relation_seed.dart';
 part 'development_fulfillment_seed.dart';
+part 'development_support_seed.dart';
 
 /// Inserts the deterministic catalogue used for local storefront development.
 ///
@@ -23,6 +24,14 @@ Future<void> seedDevelopmentStore(DatabaseClient database) async {
 /// only when `COMMERCE_SEED=true`; production never calls either function.
 Future<void> seedDevelopmentDemoCatalog(DatabaseClient database) async {
   await _seed(database, _demoStatements, 'Development demo catalogue seed');
+}
+
+/// Adds varied guest requests for exercising the protected Admin inbox.
+///
+/// The stable primary keys make repeated local startup idempotent. Production
+/// never calls this opt-in fixture layer.
+Future<void> seedDevelopmentSupportInbox(DatabaseClient database) async {
+  await _seed(database, _supportStatements, 'Development support inbox seed');
 }
 
 Future<void> _seed(

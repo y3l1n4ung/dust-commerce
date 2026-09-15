@@ -110,6 +110,34 @@ void main() {
       20,
     );
   });
+
+  test('support inbox seed is varied and idempotent', () async {
+    final directory = await Directory.systemTemp.createTemp('commerce_support');
+    final database = CommerceDatabase.open(
+      '${directory.path}/commerce.db',
+      options: commerceOptions,
+    );
+    addTearDown(() async {
+      await database.close();
+      await directory.delete(recursive: true);
+    });
+
+    await seedDevelopmentSupportInbox(database);
+    await seedDevelopmentSupportInbox(database);
+
+    expect(await _count(database, 'customer_service_requests'), 5);
+    expect(
+        await _where(database, 'customer_service_requests', "status = 'open'"),
+        2);
+    expect(
+        await _where(
+            database, 'customer_service_requests', "status = 'in_progress'"),
+        2);
+    expect(
+        await _where(database, 'customer_service_requests',
+            "status = 'resolved' AND resolved_at IS NOT NULL"),
+        1);
+  });
 }
 
 Future<int> _count(CommerceDatabase database, String table) async {
