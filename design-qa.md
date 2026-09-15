@@ -256,10 +256,11 @@ buttons enabled, changed `v_id` while preserving the unrelated `qa` query, and
 rendered its deterministic sold-out product with a disabled `Out of stock`
 action. The compact option route now announces `Select options`, exposes a
 labelled Close control and opens without browser console warnings. The live
-Medusa catalog has no sparse option combination, and browser
-policy rejected the local two-raster comparison board, so compact visual parity
-and the unavailable-combination rendered pair remain blocked rather than
-inferred from separate captures.
+Medusa catalog has no sparse option combination. A later equal-raster pair now
+proves the compact page rhythm, gallery, sticky purchase chrome, option-sheet
+chrome and related-card grid. Populated option-body density and the
+unavailable-combination rendered pair remain blocked rather than inferred from
+different merchant states.
 The implementation-only compact cart pass used a `390 x 844` CSS viewport with
 one anonymous line. Changing quantity from one to two updated the cart count,
 line total, subtotal, tax and total from the server, and checkout opened
@@ -468,8 +469,8 @@ unnecessary. The missing rendered source control remains the comparison limit.
   option queries; compact sorting, option filtering, collection, shared-footer
   and side-menu QA now pass.
 - Capture a matched compact product pair for unavailable-combination and
-  add-to-cart feedback states; selected, option-sheet, query-preservation and
-  sold-out behavior are now browser-verified separately.
+  add-to-cart feedback states; page layout, selected state, option-sheet chrome,
+  query preservation and sold-out behavior are browser-verified.
 - Retry the matched compact populated-cart capture when the live source can add
   a line; local quantity, authoritative totals and address-step handoff pass,
   while browser line removal and a same-state shipping popup remain open.
@@ -489,8 +490,6 @@ unnecessary. The missing rendered source control remains the comparison limit.
 
 - Reassess the transfer page's residual P3 text-rendering variation only after
   a true equal-raster capture is available.
-
-final result: blocked
 
 ## Admin product media slice
 
@@ -920,5 +919,104 @@ two-column product cards, wrapped titles, prices, images, and row rhythm.
   unresolved customer route already listed above.
 
 Store home responsive layout and typography result: passed
+
+## Store compact product layout and related cards
+
+Source visual truth paths:
+
+- Pinned source at commit `19e8a6fbefea5a385e9502409908bfbebbecf526`:
+  `/private/tmp/dtc-starter-reference-20260913/apps/storefront/src/modules/products/templates/index.tsx`,
+  `templates/product-info/index.tsx`, `components/image-gallery/index.tsx`,
+  `components/product-actions/{index.tsx,mobile-actions.tsx,option-select.tsx}`,
+  `components/product-tabs/index.tsx`, and
+  `components/related-products/index.tsx`.
+- Live rendered sources:
+  `https://next.medusajs.com/dk/products/espresso-cup` and
+  `https://next.medusajs.com/dk/products/hoodie`.
+
+Implementation URL:
+`http://127.0.0.1:13001/products/t-shirt?v_id=var_tshirt_m_black`.
+The implementation and source captures were emitted together by the in-app
+browser and retained in the task evidence.
+
+Viewport: every final comparison used equal `390 x 844` CSS viewports and
+`390 x 844` output rasters at device-pixel ratio 1.
+
+State: public English light theme with a selected, in-stock variant. The source
+used Hoodie with its only live Default option value; Morrow used Essential
+T-Shirt with Size M and Color Black. A second pair opened each compact option
+surface. The live Medusa fixture rendered an empty option body because its
+products expose only one variant, while Morrow correctly rendered its richer
+Size and Color controls. Related-product headings and two-column cards were
+compared below the fold.
+
+**Findings**
+
+- No actionable P0, P1, or P2 difference remains in the matched compact page
+  rhythm, gallery, sticky purchase chrome, related heading, or related-card
+  layout.
+- The live source cannot provide a populated multi-option or unavailable
+  combination state. Morrow's additional controls are real merchant-data
+  behavior, so their contents are not claimed as a pixel-matched source pair.
+
+**Required fidelity surfaces**
+
+- Fonts and typography: title, description, accordion labels, sticky product
+  summary, price, option labels, and related heading use the established Store
+  scale. Merchant title and description length are intentionally different.
+- Spacing and layout rhythm: both use a 64px header, 24px page inset, 32px
+  compact product-column inset, 32px transition into the gallery, `29 / 34`
+  gallery ratio, 16px sticky action padding, and a two-column related grid with
+  24px column and 32px row gaps.
+- Colors and visual tokens: base, subtle, muted, border, selected interactive,
+  disabled, overlay, and primary-action colors remain mapped through Store
+  semantic tokens.
+- Image quality and asset fidelity: both render real merchant images in the
+  source-authored aspect ratios. No placeholder or synthetic product asset was
+  introduced.
+- Copy and content: Morrow retains its approved brand, product data, USD price,
+  and `Powered by dust` identity. Source-specific Medusa product copy is not
+  copied as merchant data.
+
+**Full-view comparison evidence**
+
+The initial matched pair exposed Morrow's product information 32px too high.
+Commit `9a87e9d` adds the missing source `py-8` compact inset. The final pair
+aligns the collection baseline and product column; subsequent vertical
+difference is exactly explained by Medusa's five-line description versus
+Morrow's two-line description. Fresh local captures had no browser warnings or
+errors.
+
+**Focused region comparison evidence**
+
+The option-sheet pair confirms the same bottom-aligned overlay, 48px circular
+close control, border rhythm, and compact action entry. It does not claim equal
+option-body density because the live source has no multi-variant fixture. The
+first focused related-grid capture exposed Flutter overflow stripes on every
+card. Commit `23f4aec` replaces the fixed-height grid with content-sized card
+columns; the final focused capture shows two clean rows with no overflow or
+browser warning.
+
+**Comparison history**
+
+- Source code was inspected before the first capture and established the
+  compact template, option, mobile-action, gallery, tab, and related-product
+  contracts.
+- Equal-viewport Espresso Cup and Hoodie comparisons isolated the missing
+  compact top inset from ordinary merchant-copy and image differences.
+- Commit `57c07cd` replaces the forbidden private `Widget`-returning helper
+  with a private widget class without changing behavior.
+- Dust reports all 54 Store sources clean, Flutter analysis passes, all 136
+  Store tests pass, handwritten formatting and the file-size gate pass, and no
+  widget test was added.
+
+**Implementation checklist**
+
+- No remaining fix is required for the compact product-layout and related-card
+  surfaces covered by this slice.
+- Retain the wider option functionality and capture a truly matched populated
+  or unavailable-combination pair when the live source exposes that state.
+
+Store compact product layout and related cards result: passed
 
 final result: blocked
