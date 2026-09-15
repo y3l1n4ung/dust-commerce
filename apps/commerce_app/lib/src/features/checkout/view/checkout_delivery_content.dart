@@ -5,6 +5,7 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'checkout_delivery_choice.dart';
+import 'checkout_primary_action.dart';
 
 /// Expanded server-priced delivery choices and progression action.
 final class CheckoutDeliveryChoices extends StatelessWidget {
@@ -76,14 +77,14 @@ final class CheckoutDeliveryChoices extends StatelessWidget {
           const SizedBox(height: 24),
           Align(
             alignment: Alignment.centerLeft,
-            child: FilledButton(
-              onPressed: selected == null || state.isBusy
-                  ? null
-                  : () => context.pushCheckoutStep('payment'),
-              child: const TranslatedText(
+            child: CheckoutPrimaryAction(
+              label: context.tr(
                 'shop_checkout_continue_payment',
                 defaultText: 'Continue to payment',
               ),
+              onPressed: selected == null || state.isBusy
+                  ? null
+                  : () => context.pushCheckoutStep('payment'),
             ),
           ),
         ],

@@ -35,6 +35,9 @@ abstract final class StoreColors {
   /// Primary action surface used by the DTC storefront button component.
   static const buttonPrimary = Color(0xff000000);
 
+  /// Tailwind gray-800 hover used by the DTC primary button component.
+  static const buttonPrimaryHover = Color(0xff1f2937);
+
   /// Primary foreground.
   static const foreground = Color(0xff18181b);
 

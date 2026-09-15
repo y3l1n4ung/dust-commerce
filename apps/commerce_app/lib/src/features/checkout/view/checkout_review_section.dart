@@ -3,6 +3,7 @@ import 'package:commerce_app/route.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+import 'checkout_primary_action.dart';
 import 'checkout_step_header.dart';
 
 /// Legal acknowledgement and final idempotent place-order action.
@@ -47,17 +48,13 @@ final class CheckoutReviewSection extends StatelessWidget {
             const SizedBox(height: 24),
             Align(
               alignment: Alignment.centerLeft,
-              child: FilledButton(
-                onPressed: state.isBusy ? null : () => _place(context),
-                child: state.isBusy
-                    ? const SizedBox.square(
-                        dimension: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const TranslatedText(
-                        'shop_checkout_place_order',
-                        defaultText: 'Place order',
-                      ),
+              child: CheckoutPrimaryAction(
+                label: context.tr(
+                  'shop_checkout_place_order',
+                  defaultText: 'Place order',
+                ),
+                busy: state.isBusy,
+                onPressed: () => _place(context),
               ),
             ),
           ],

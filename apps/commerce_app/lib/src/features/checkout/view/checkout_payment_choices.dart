@@ -4,6 +4,7 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'checkout_payment_choice.dart';
+import 'checkout_primary_action.dart';
 
 /// Expanded region-backed payment choices and progression action.
 final class CheckoutPaymentChoices extends StatelessWidget {
@@ -53,24 +54,14 @@ final class CheckoutPaymentChoices extends StatelessWidget {
             const SizedBox(height: 24),
             Align(
               alignment: Alignment.centerLeft,
-              child: SizedBox(
-                height: 48,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    textStyle: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  onPressed: state.hasAvailablePaymentMethod && !state.isBusy
-                      ? () => context.pushCheckoutStep('review')
-                      : null,
-                  child: const TranslatedText(
-                    'shop_checkout_continue_review',
-                    defaultText: 'Continue to review',
-                  ),
+              child: CheckoutPrimaryAction(
+                label: context.tr(
+                  'shop_checkout_continue_review',
+                  defaultText: 'Continue to review',
                 ),
+                onPressed: state.hasAvailablePaymentMethod && !state.isBusy
+                    ? () => context.pushCheckoutStep('review')
+                    : null,
               ),
             ),
           ],

@@ -7,6 +7,7 @@ import 'checkout_address_controllers.dart';
 import 'checkout_address_fields.dart';
 import 'checkout_billing_toggle.dart';
 import 'checkout_contact_fields.dart';
+import 'checkout_primary_action.dart';
 import 'checkout_saved_address_selector.dart';
 
 /// Expanded shipping, billing, and contact form for the address step.
@@ -113,12 +114,12 @@ final class CheckoutAddressForm extends StatelessWidget {
               const SizedBox(height: 36),
               Align(
                 alignment: Alignment.centerLeft,
-                child: FilledButton(
-                  onPressed: state.isBusy ? null : onContinue,
-                  child: const TranslatedText(
+                child: CheckoutPrimaryAction(
+                  label: context.tr(
                     'shop_checkout_continue_delivery',
                     defaultText: 'Continue to delivery',
                   ),
+                  onPressed: state.isBusy ? null : onContinue,
                 ),
               ),
               if (state.status == CheckoutStatus.failed &&
