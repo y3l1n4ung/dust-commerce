@@ -2107,4 +2107,65 @@ Store checkout large actions result: passed for shared source geometry,
 fresh-document measurements, compact rendering and browser-log cleanliness;
 same-state live Medusa rendering remains unavailable
 
+## Store order confirmation help links
+
+Source truth at current Medusa DTC commit
+`bd2441acc18359533758fbf4db5bc80129055d2e`:
+
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/app/[countryCode]/(main)/order/[id]/confirmed/page.tsx`;
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/modules/order/templates/order-completed-template.tsx`; and
+- `/tmp/medusa-dtc-bd2441a/apps/storefront/src/modules/order/components/help/index.tsx`.
+
+**Source and implementation findings**
+
+- The source confirmation template renders the full order receipt, then a
+  `Need help?` block with two links: `Contact` and `Returns & Exchanges`. Both
+  links navigate to `/contact`.
+- The local confirmation already restored the source receipt hierarchy after a
+  real checkout: success heading, confirmation email, order date, order number,
+  Summary, line item, totals, Delivery, Payment and footer. The focused gap was
+  the second help link, because Morrow rendered only `Contact`.
+- The correction keeps the existing contact route and adds the missing
+  `Returns & Exchanges` link beside `Contact`. Both actions route to
+  `/contact?orderReference=4` in the verified order, preserving Morrow's useful
+  visible order-number prefill.
+
+**Browser evidence**
+
+- A release-mode local checkout placed order `4` from the Review step with a
+  real cart: two black medium T-shirts, `USD 30.00` subtotal, `USD 15.00`
+  Express shipping, `USD 4.50` tax and `USD 49.50` total.
+- Desktop confirmation at `13001` rendered the source section order and zero
+  cart count after checkout.
+- Compact confirmation at `390 x 844` rendered both accessible links under
+  `Need help?`: `Contact` and `Returns & Exchanges`. It had no horizontal
+  overflow in the visible confirmation and footer states.
+- Selecting `Returns & Exchanges` navigated to
+  `/contact?orderReference=4`; the contact form showed order number `4`
+  prefilled. Browser Back returned to a fresh confirmation document with both
+  links still present.
+- The settled browser pass reported no warning or error logs.
+
+**Evidence limits**
+
+- The public Medusa checkout still did not reach a same-state completed order,
+  so this pass compares pinned source structure plus local browser behavior,
+  not a remote same-order raster.
+- The source `/contact` destination is separate from the Morrow customer-service
+  route; retaining the order-reference query is a local product improvement
+  over the bare source link.
+
+**Validation**
+
+- All 141 Store tests pass and Flutter analysis reports no issue.
+- Dust reports all 54 Store outputs clean. Dust i18n checks 688 translations
+  with zero errors; its 15 warnings are the existing stale/equal-fallback
+  inventory outside this slice.
+- Handwritten formatting, file-size, response-boundary, project-structure and
+  diff-whitespace checks pass. No widget test was added.
+
+Store order confirmation help links result: passed for current source-code
+composition, compact browser behavior, contact prefill and browser-log
+cleanliness; same-state live Medusa confirmation remains unavailable
+
 final result: blocked
