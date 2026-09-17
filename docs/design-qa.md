@@ -33,6 +33,28 @@ same-state pair, the in-app browser proxy returned
 the pinned local clone, but source code is not a substitute for a same-state
 rendered comparison.
 
+## Product add-feedback slice
+
+The pinned `CartDropdown` opens for five seconds when the cart item count
+changes outside `/cart`; it does not show a separate toast. Morrow already
+uses the same boundary in `CartPreview`, so the QA pass verified behavior
+rather than adding duplicate product state.
+
+Live local browser QA opened
+`/products/t-shirt?v_id=var_tshirt_m_black`, added one selected `M / Black`
+Essential T-Shirt, and observed the navigation count change to `Cart (1)`.
+The desktop cart preview opened immediately with the thumbnail, variant,
+quantity, USD 15.00 subtotal and `Go to cart`, then closed after the timed
+window. Browser logs contained no warnings or errors. The separate
+free-shipping nudge remained visible after the cart preview closed, which
+matches its independent source slice.
+
+The current demo catalogue cannot render a real unavailable option
+combination: Essential T-Shirt contains every Size × Color variant, while the
+other optioned products are single-axis. That behavior remains covered by the
+source-conversion test that removes one variant and proves offered values stay
+selectable while purchase is disabled and `v_id` clears.
+
 ## Customer-return request slice
 
 The pinned order-detail source keeps `Returns & Exchanges` in the compact
