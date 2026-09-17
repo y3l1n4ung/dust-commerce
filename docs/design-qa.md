@@ -53,9 +53,13 @@ The opt-in demo catalogue now includes `Split Raglan Tee`, a published
 two-axis product with only `S / Black` and `M / White` variants. Focused
 Storefront and server tests prove the product appears only in the development
 demo layer, exposes both offered Size and Color values, resolves `S / Black`
-to a real variant, and leaves `S / White` without a selected variant. A live
-browser rendering pass remains before claiming same-state unavailable-combo
-visual parity.
+to a real variant, and leaves `S / White` without a selected variant. Live
+release-mode browser QA on an isolated seeded Store opened `S / Black`, then
+selected `White`: `v_id` cleared, both selected option values stayed visible,
+the price fell back to `From USD 23.25`, and the action disabled as
+`Select variant`. Selecting `M` then re-enabled the real `M / White` variant
+and restored `v_id=var_demo_21_m_white`. Browser logs contained no warnings or
+errors.
 
 ## Customer-return request slice
 

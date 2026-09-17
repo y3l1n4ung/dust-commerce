@@ -30,6 +30,10 @@ class ProductViewModel extends $ProductViewModel {
     String? variantId,
   }) async {
     final revision = ++_revision;
+    final currentSelection =
+        state.product?.handle == handle && variantId == null
+            ? state.selection
+            : const <String, String>{};
     emit(
       ProductDetailState(
         status: ProductDetailStatus.loading,
@@ -45,7 +49,8 @@ class ProductViewModel extends $ProductViewModel {
           relatedStatus: RelatedProductsStatus.loading,
           product: product,
           currencyCode: currency,
-          selection: product.variantById(variantId ?? '')?.optionValues ?? {},
+          selection: product.variantById(variantId ?? '')?.optionValues ??
+              currentSelection,
         ),
       );
       await _loadRelated(product, currency, revision);

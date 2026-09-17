@@ -157,6 +157,27 @@ void main() {
     );
   });
 
+  test('unavailable reload keeps the partial option selection', () async {
+    await seedDevelopmentDemoCatalog(database);
+    final product = ProductViewModel(ProductViewModelArgs(api: api));
+
+    await product.load(
+      'split-raglan-tee',
+      variantId: 'var_demo_21_s_black',
+    );
+    product.select('opt_color', 'White');
+    expect(product.state.selectedVariant, isNull);
+
+    await product.load('split-raglan-tee');
+    product.select('opt_size', 'M');
+
+    expect(product.state.selection, {
+      'opt_color': 'White',
+      'opt_size': 'M',
+    });
+    expect(product.state.selectedVariant?.id, 'var_demo_21_m_white');
+  });
+
   test('selected variant creates a server cart and line item', () async {
     final product = await api.product('t-shirt', currency: 'usd');
     final cart = CartViewModel(
