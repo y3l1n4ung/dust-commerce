@@ -16,6 +16,16 @@ SELECT
   CASE WHEN id = 'prod_demo_16' THEN 0 ELSE 8 + CAST(substr(id, 11) AS INTEGER)
   END
 FROM products WHERE id LIKE 'prod_demo_%'
+  AND id != 'prod_demo_21'
+'''),
+  _Statement(r'''
+INSERT OR IGNORE INTO product_variants
+  (id, product_id, title, sku, inventory_quantity)
+VALUES
+  ('var_demo_21_s_black', 'prod_demo_21', 'S / Black',
+   'DEMO-21-S-BLACK', 14),
+  ('var_demo_21_m_white', 'prod_demo_21', 'M / White',
+   'DEMO-21-M-WHITE', 15)
 '''),
   _Statement(r'''
 INSERT OR IGNORE INTO variant_prices (variant_id, currency_code, amount)
@@ -35,6 +45,33 @@ CROSS JOIN (
   SELECT 'eur', 1200, 2600, 2200, 1700, 20
 ) currency
 WHERE product.id LIKE 'prod_demo_%'
+'''),
+  _Statement(r'''
+INSERT OR IGNORE INTO product_product_options
+  (id, product_id, product_option_id)
+VALUES
+  ('prodopt_demo_21_size', 'prod_demo_21', 'opt_size'),
+  ('prodopt_demo_21_color', 'prod_demo_21', 'opt_color')
+'''),
+  _Statement(r'''
+INSERT OR IGNORE INTO product_product_option_values
+  (id, product_product_option_id, product_option_value_id)
+VALUES
+  ('prodoptval_demo_21_size_s', 'prodopt_demo_21_size', 'optval_size_s'),
+  ('prodoptval_demo_21_size_m', 'prodopt_demo_21_size', 'optval_size_m'),
+  ('prodoptval_demo_21_color_black', 'prodopt_demo_21_color',
+   'optval_color_black'),
+  ('prodoptval_demo_21_color_white', 'prodopt_demo_21_color',
+   'optval_color_white')
+'''),
+  _Statement(r'''
+INSERT OR IGNORE INTO variant_option_values
+  (variant_id, option_id, option_value_id)
+VALUES
+  ('var_demo_21_s_black', 'opt_size', 'optval_size_s'),
+  ('var_demo_21_s_black', 'opt_color', 'optval_color_black'),
+  ('var_demo_21_m_white', 'opt_size', 'optval_size_m'),
+  ('var_demo_21_m_white', 'opt_color', 'optval_color_white')
 '''),
   _Statement(r'''
 INSERT OR IGNORE INTO product_category_products (product_id, category_id, rank)

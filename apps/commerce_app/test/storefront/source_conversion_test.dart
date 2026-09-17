@@ -130,24 +130,24 @@ void main() {
     expect(product.state.relatedMessage, isNotNull);
   });
 
-  test('offered values permit a source-visible unavailable combination',
+  test('demo product exposes a source-visible unavailable combination',
       () async {
-    final product = await api.product('t-shirt', currency: 'usd');
-    final sparse = product.copyWith(
-      variants: product.variants
-          .where((variant) =>
-              variant.id == 'var_tshirt_s_black' ||
-              variant.id == 'var_tshirt_m_white')
-          .toList(),
-    );
+    await seedDevelopmentDemoCatalog(database);
+    final product = await api.product('split-raglan-tee', currency: 'usd');
     final state = ProductDetailState(
       status: ProductDetailStatus.ready,
-      product: sparse,
+      product: product,
       selection: const {'opt_size': 'S'},
     );
 
     expect(state.canSelect('opt_color', 'Black'), isTrue);
     expect(state.canSelect('opt_color', 'White'), isTrue);
+    expect(
+        product.variantFor(const {
+          'opt_size': 'S',
+          'opt_color': 'Black',
+        })?.id,
+        'var_demo_21_s_black');
     expect(
       state.copyWith(selection: const {
         'opt_size': 'S',

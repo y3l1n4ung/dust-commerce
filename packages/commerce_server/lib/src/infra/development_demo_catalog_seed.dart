@@ -90,6 +90,11 @@ VALUES
   ('prod_demo_20', 'pcol_seasonal', 'ptyp_shorts', 'Sample Utility Shorts',
    'sample-utility-shorts', 'A draft utility short for catalogue review.',
    'https://medusa-public-images.s3.eu-west-1.amazonaws.com/shorts-vintage-front.png',
-   310, 'draft')
+   310, 'draft'),
+  ('prod_demo_21', 'pcol_featured', 'ptyp_shirt', 'Split Raglan Tee',
+   'split-raglan-tee',
+   'A two-axis demo tee with one intentionally unavailable combination.',
+   'https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-black-front.png',
+   410, 'published')
 '''),
 ];

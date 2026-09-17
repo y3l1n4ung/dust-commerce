@@ -29,8 +29,8 @@ void main() {
     final page = await api.products(currency: 'usd', limit: 100);
     await products.loadStore();
 
-    expect(page.total, 20);
-    expect(page.products, hasLength(20));
+    expect(page.total, 21);
+    expect(page.products, hasLength(21));
     expect(products.state.status, ProductListingStatus.ready);
     expect(products.state.products, hasLength(12));
     expect(products.state.totalPages, 2);

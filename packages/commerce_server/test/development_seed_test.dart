@@ -96,18 +96,26 @@ void main() {
     await seedDevelopmentDemoCatalog(database);
     await seedDevelopmentDemoCatalog(database);
 
-    expect(await _count(database, 'products'), 24);
-    expect(await _count(database, 'product_variants'), 34);
-    expect(await _count(database, 'variant_prices'), 68);
-    expect(await _count(database, 'product_images'), 30);
-    expect(await _where(database, 'products', "status = 'published'"), 20);
+    expect(await _count(database, 'products'), 25);
+    expect(await _count(database, 'product_variants'), 36);
+    expect(await _count(database, 'variant_prices'), 72);
+    expect(await _count(database, 'product_images'), 31);
+    expect(await _where(database, 'products', "status = 'published'"), 21);
     expect(await _where(database, 'products', "status = 'draft'"), 2);
     expect(await _where(database, 'products', "status = 'proposed'"), 1);
     expect(await _where(database, 'products', "status = 'rejected'"), 1);
-    expect(await _where(database, 'products', "id LIKE 'prod_demo_%'"), 20);
+    expect(await _where(database, 'products', "id LIKE 'prod_demo_%'"), 21);
     expect(
       await _where(database, 'product_variants', "sku LIKE 'DEMO-%'"),
-      20,
+      22,
+    );
+    expect(
+      await _where(
+        database,
+        'variant_option_values',
+        "variant_id LIKE 'var_demo_21_%'",
+      ),
+      4,
     );
   });
 

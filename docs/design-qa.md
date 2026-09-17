@@ -49,11 +49,13 @@ window. Browser logs contained no warnings or errors. The separate
 free-shipping nudge remained visible after the cart preview closed, which
 matches its independent source slice.
 
-The current demo catalogue cannot render a real unavailable option
-combination: Essential T-Shirt contains every Size × Color variant, while the
-other optioned products are single-axis. That behavior remains covered by the
-source-conversion test that removes one variant and proves offered values stay
-selectable while purchase is disabled and `v_id` clears.
+The opt-in demo catalogue now includes `Split Raglan Tee`, a published
+two-axis product with only `S / Black` and `M / White` variants. Focused
+Storefront and server tests prove the product appears only in the development
+demo layer, exposes both offered Size and Color values, resolves `S / Black`
+to a real variant, and leaves `S / White` without a selected variant. A live
+browser rendering pass remains before claiming same-state unavailable-combo
+visual parity.
 
 ## Customer-return request slice
 
