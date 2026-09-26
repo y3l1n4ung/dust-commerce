@@ -248,6 +248,8 @@ The failure state also follows the source `text-ui-fg-error` treatment instead
 of rendering as muted helper copy.
 Search hits use the same subtle hover surface as the source
 `hover:bg-ui-bg-base-hover` link row.
+The first non-empty debounced query enters the source `Searching…` state
+immediately instead of leaving the start message visible until the timer fires.
 
 ## Open findings
 

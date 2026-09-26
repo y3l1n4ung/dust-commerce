@@ -114,7 +114,9 @@ final class _StoreSearchDrawerState extends State<StoreSearchDrawer> {
     }
     setState(() {
       _failed = false;
+      _loading = _hits.isEmpty;
       _query = query;
+      _searched = true;
     });
     _timer = Timer(const Duration(milliseconds: 250), () => _search(query));
   }
