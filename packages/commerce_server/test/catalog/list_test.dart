@@ -124,14 +124,17 @@ void main() {
 
     test('filters by stable option value id', () async {
       final matching = await list(options: '["optval_large"]');
+      final impossible = await list(options: '["optval_large","missing"]');
       final missing = await list(options: '["not-a-value"]');
 
       expect(ok(matching).map((row) => row.handle), ['t-shirt']);
+      expect(ok(impossible), isEmpty);
       expect(ok(missing), isEmpty);
       expect(
         ok(await count(options: '["optval_large"]')),
         1,
       );
+      expect(ok(await count(options: '["optval_large","missing"]')), 0);
     });
 
     test('excludes products and option choices unavailable in the currency',

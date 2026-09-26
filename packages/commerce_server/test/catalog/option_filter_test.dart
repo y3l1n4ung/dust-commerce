@@ -52,6 +52,17 @@ void main() {
     expect((products.single! as Map<String, Object?>)['handle'], 't-shirt');
   });
 
+  test('product listing requires every repeated option value', () async {
+    final response = await client
+        .get('/store/products?optionValueIds=optval_large'
+            '&optionValueIds=missing')
+        .send();
+    response.assertOk();
+
+    expect(response.json, containsPair('total', 0));
+    expect(response.json, containsPair('products', isEmpty));
+  });
+
   test('product listing filters by repeated category handles', () async {
     final response = await client
         .get('/store/products?category=shirts&category=missing')
