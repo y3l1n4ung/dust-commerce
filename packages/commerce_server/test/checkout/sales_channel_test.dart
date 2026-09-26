@@ -14,6 +14,12 @@ void main() {
       r"INSERT INTO sales_channels (id, name) VALUES ('sc_web', 'Online Store')",
       const [],
     ).execute(harness.database.executor);
+    await queryExecute(
+      r"INSERT INTO product_sales_channels "
+      r"(id, product_id, sales_channel_id) VALUES "
+      r"('psc_shirt_web', 'prod_shirt', 'sc_web')",
+      const [],
+    ).execute(harness.database.executor);
 
     final cartId = await harness.cartWith('var_small');
     final cartChannel = await queryRaw(
