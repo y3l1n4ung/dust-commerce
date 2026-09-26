@@ -96,8 +96,8 @@ class _ProductCardState extends State<ProductCard> {
                 ),
                 const SizedBox(width: 8),
                 if (price != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       if (original != null)
                         Text(
@@ -107,6 +107,7 @@ class _ProductCardState extends State<ProductCard> {
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
+                      if (original != null) const SizedBox(width: 8),
                       Text(
                         formatMoney(price),
                         style: TextStyle(
