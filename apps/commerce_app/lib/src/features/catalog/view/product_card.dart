@@ -91,7 +91,11 @@ class _ProductCardState extends State<ProductCard> {
                 Expanded(
                   child: Text(
                     product.title,
-                    style: const TextStyle(color: StoreColors.foregroundSubtle),
+                    style: const TextStyle(
+                      color: StoreColors.foregroundSubtle,
+                      fontSize: 14,
+                      height: 20 / 14,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -105,6 +109,8 @@ class _ProductCardState extends State<ProductCard> {
                           style: const TextStyle(
                             color: StoreColors.foregroundMuted,
                             decoration: TextDecoration.lineThrough,
+                            fontSize: 14,
+                            height: 20 / 14,
                           ),
                         ),
                       if (original != null) const SizedBox(width: 8),
@@ -114,6 +120,8 @@ class _ProductCardState extends State<ProductCard> {
                           color: original == null
                               ? StoreColors.foregroundMuted
                               : StoreColors.interactive,
+                          fontSize: 14,
+                          height: 20 / 14,
                         ),
                       ),
                     ],
