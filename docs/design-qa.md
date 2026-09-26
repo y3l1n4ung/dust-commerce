@@ -61,6 +61,26 @@ the price fell back to `From USD 23.25`, and the action disabled as
 and restored `v_id=var_demo_21_m_white`. Browser logs contained no warnings or
 errors.
 
+## Authenticated account overview slice
+
+The pinned account source uses the same `1024px` `small` breakpoint for the
+account shell. At desktop width it renders a 240px left navigation, `Hello
+{first_name}`, `Signed in as: {email}`, four-part profile completion, saved
+address count, latest-five recent orders, and the shared `Got questions?`
+footer. Under the breakpoint the overview content is hidden and the mobile
+account navigation shows `Hello {first_name}`, `Profile`, `Addresses`,
+`Orders`, and `Log out`.
+
+Live local browser QA used a fresh database-backed customer,
+`qa-account-1790395696@example.com`, with first name `Ada`, last name
+`Lovelace`, and phone `+1 555 0100`. The desktop `/account` route rendered
+the source-shaped left nav, `Hello Ada`, the signed-in email, `75% COMPLETED`,
+`0 SAVED`, `No recent orders`, and the customer-service footer. The compact
+`390 × 844` route rendered `Hello Ada`, the four mobile navigation rows and
+the same footer, with no visible account overview metrics, matching the pinned
+source's `hidden small:block` overview boundary. Browser logs contained no
+warnings or errors.
+
 ## Customer-return request slice
 
 The pinned order-detail source keeps `Returns & Exchanges` in the compact
@@ -169,8 +189,6 @@ checks are clean.
 - P2 — Repeat the verification success/failure capture against the live Medusa
   preview when its route is reachable, combine each same-state pair, and judge
   visible differences before declaring rendered parity.
-- P2 — Continue compact and authenticated account-state comparisons from the
-  storefront parity ledger.
 - P2 — Complete same-state Review and order-confirmation comparisons.
 - P1 — Add external payment-provider refund adapters before claiming a complete
   production refund lifecycle; labels and exchanges remain separate.
@@ -182,11 +200,12 @@ reason selection, and navigation pass. Customer return creation and
 server-side rejection pass against the live local stack. Exhausted quantities
 are also disabled before submission. Customer return history passes desktop,
 compact and reload browser QA as an explicit extension beneath the pinned
-source's help block. Exact code-to-layout translation is implemented where the
-pinned source owns a screen. Store order status and return eligibility now use
-the real fulfillment lifecycle. Admin requested-return receipt, intact
-inventory restoration and independent manual-payment refunds pass, while
-broader storefront visual parity and external refund-provider support are not
-claimed.
+source's help block. Authenticated account overview and compact navigation
+pass against the pinned source structure. Exact code-to-layout translation is
+implemented where the pinned source owns a screen. Store order status and
+return eligibility now use the real fulfillment lifecycle. Admin
+requested-return receipt, intact inventory restoration and independent
+manual-payment refunds pass, while broader storefront visual parity and
+external refund-provider support are not claimed.
 
 final result: partial
