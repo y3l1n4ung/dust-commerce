@@ -12,6 +12,7 @@ class ProductImage extends StatelessWidget {
     this.placeholderColor,
     this.placeholderSize,
     this.semanticLabel,
+    this.transitionDuration = Duration.zero,
     super.key,
   });
 
@@ -33,6 +34,9 @@ class ProductImage extends StatelessWidget {
   /// Optional accessible label for standalone product imagery.
   final String? semanticLabel;
 
+  /// Optional decoration animation for source hover transitions.
+  final Duration transitionDuration;
+
   /// Remote merchant image URL.
   final String? url;
 
@@ -41,7 +45,9 @@ class ProductImage extends StatelessWidget {
     final source = url;
     return AspectRatio(
       aspectRatio: aspectRatio,
-      child: DecoratedBox(
+      child: AnimatedContainer(
+        duration: transitionDuration,
+        curve: Curves.easeInOut,
         decoration: BoxDecoration(
           color: StoreColors.subtle,
           border: border ? Border.all(color: StoreColors.border) : null,

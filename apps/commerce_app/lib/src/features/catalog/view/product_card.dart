@@ -83,6 +83,7 @@ class _ProductCardState extends State<ProductCard> {
               aspectRatio: widget.featured ? 11 / 14 : 9 / 16,
               border: false,
               boxShadow: _hovered ? _cardHoverShadow : _cardRestShadow,
+              transitionDuration: const Duration(milliseconds: 150),
             ),
             const SizedBox(height: 16),
             Row(
