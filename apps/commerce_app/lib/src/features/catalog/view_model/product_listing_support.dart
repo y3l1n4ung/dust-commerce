@@ -26,9 +26,17 @@ String listingRequestKey(
   String sortBy, [
   List<String> optionValueIds = const [],
   String currencyCode = 'usd',
+  String searchQuery = '',
 ]) =>
     '$kind:$handle:${page < 1 ? 1 : page}:${normalizedProductSort(sortBy)}:'
-    '${normalizedOptionValueIds(optionValueIds).join(',')}:$currencyCode';
+    '${normalizedOptionValueIds(optionValueIds).join(',')}:$currencyCode:'
+    '${normalizedSearchQuery(searchQuery)}';
+
+/// Keeps Store search predictable and bounded before it reaches the API.
+String normalizedSearchQuery(String value) {
+  final query = value.trim();
+  return query.length <= 120 ? query : query.substring(0, 120);
+}
 
 /// Removes empty and duplicate option values while preserving URL order.
 List<String> normalizedOptionValueIds(Iterable<String> values) {
@@ -126,6 +134,7 @@ final class _ListingMeta {
     this.children = const [],
     this.optionFilters = const [],
     this.selectedOptionValueIds = const [],
+    this.searchQuery = '',
     this.collection = const None(),
     this.category = const None(),
     this.currencyCode = 'usd',
@@ -140,6 +149,7 @@ final class _ListingMeta {
   final int page;
   final List<ProductCategory> parents;
   final String requestKey;
+  final String searchQuery;
   final List<String> selectedOptionValueIds;
   final String sortBy;
   final String title;
@@ -161,6 +171,7 @@ final class _ListingMeta {
         children: children ?? this.children,
         optionFilters: optionFilters ?? this.optionFilters,
         selectedOptionValueIds: selectedOptionValueIds,
+        searchQuery: searchQuery,
         collection: collection,
         category: category,
         currencyCode: currencyCode,
@@ -180,6 +191,7 @@ final class _ListingMeta {
         children: children,
         optionFilters: optionFilters,
         selectedOptionValueIds: selectedOptionValueIds,
+        searchQuery: searchQuery,
         products: products,
         sortBy: sortBy,
         currentPage: page,

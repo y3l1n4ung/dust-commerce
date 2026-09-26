@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'listing_grid.dart';
 import 'listing_header.dart';
 import 'listing_refinements.dart';
+import 'listing_search_box.dart';
 
 /// Store, collection, and category body translated from Medusa templates.
 class ProductListingView extends StatelessWidget {
@@ -14,6 +15,7 @@ class ProductListingView extends StatelessWidget {
     required this.requestKey,
     required this.onRetry,
     required this.onSortChanged,
+    this.onSearchChanged,
     required this.onPageChanged,
     required this.onOptionValuesChanged,
     required this.onCategorySelected,
@@ -34,6 +36,9 @@ class ProductListingView extends StatelessWidget {
 
   /// Changes the Medusa-compatible sort query.
   final ValueChanged<String> onSortChanged;
+
+  /// Changes the free-text Store search query.
+  final ValueChanged<String>? onSearchChanged;
 
   /// Route/query state this widget expects.
   final String requestKey;
@@ -75,6 +80,7 @@ class ProductListingView extends StatelessWidget {
                     );
                     final products = _ListingProducts(
                       state: state,
+                      onSearchChanged: onSearchChanged,
                       onPageChanged: onPageChanged,
                       onCategorySelected: onCategorySelected,
                     );
@@ -113,12 +119,14 @@ class ProductListingView extends StatelessWidget {
 class _ListingProducts extends StatelessWidget {
   const _ListingProducts({
     required this.state,
+    required this.onSearchChanged,
     required this.onPageChanged,
     required this.onCategorySelected,
   });
 
   final ValueChanged<String> onCategorySelected;
   final ValueChanged<int> onPageChanged;
+  final ValueChanged<String>? onSearchChanged;
   final ProductListingState state;
 
   @override
@@ -129,6 +137,13 @@ class _ListingProducts extends StatelessWidget {
             state: state,
             onCategorySelected: onCategorySelected,
           ),
+          if (onSearchChanged case final onSearchChanged?) ...[
+            const SizedBox(height: 24),
+            ListingSearchBox(
+              query: state.searchQuery,
+              onChanged: onSearchChanged,
+            ),
+          ],
           if (state.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 64),

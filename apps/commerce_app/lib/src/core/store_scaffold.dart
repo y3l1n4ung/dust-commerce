@@ -3,6 +3,7 @@ import 'package:commerce_app/route.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+import '../features/shell/view/store_search_action.dart';
 import 'store_menu.dart';
 
 /// The navigation shell translated from Medusa DTC Nav and SideMenu.
@@ -65,6 +66,8 @@ class StoreScaffold extends StatelessWidget {
                 ),
               ),
               actions: [
+                const StoreSearchAction(),
+                const SizedBox(width: 4),
                 if (desktop)
                   TextButton(
                     onPressed: () => context.navigator.account().go(),

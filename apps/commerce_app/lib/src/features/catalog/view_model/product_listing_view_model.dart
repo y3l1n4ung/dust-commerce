@@ -30,10 +30,12 @@ class ProductListingViewModel extends $ProductListingViewModel {
   Future<void> loadStore({
     int page = 1,
     String sortBy = 'created_at',
+    String query = '',
     List<String> optionValueIds = const [],
     String currency = 'usd',
   }) async {
     final selected = normalizedOptionValueIds(optionValueIds);
+    final search = normalizedSearchQuery(query);
     final meta = _ListingMeta(
       requestKey: listingRequestKey(
         'store',
@@ -42,10 +44,12 @@ class ProductListingViewModel extends $ProductListingViewModel {
         sortBy,
         selected,
         currency,
+        search,
       ),
       title: 'All products',
       page: page < 1 ? 1 : page,
       sortBy: normalizedProductSort(sortBy),
+      searchQuery: search,
       selectedOptionValueIds: selected,
       currencyCode: currency,
     );
@@ -155,6 +159,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
     try {
       final productRequest = args.api.products(
         currency: meta.currencyCode,
+        query: meta.searchQuery.isEmpty ? null : meta.searchQuery,
         collection: _nullable(meta.collection),
         category: _nullable(meta.category),
         optionValueIds: meta.selectedOptionValueIds,

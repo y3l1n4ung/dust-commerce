@@ -10,6 +10,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
   CatalogListRepository lists,
   CatalogCountRepository counts, {
   required String currencyCode,
+  Option<String> query = const None(),
   Option<String> collection = const None(),
   Option<String> category = const None(),
   Option<String> tag = const None(),
@@ -21,6 +22,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
     currencyCode,
     limit,
     offset,
+    nullableOf(query),
     nullableOf(collection),
     nullableOf(category),
     nullableOf(tag),
@@ -30,6 +32,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
 
   final total = await counts.countPublished(
     currencyCode,
+    nullableOf(query),
     nullableOf(collection),
     nullableOf(category),
     nullableOf(tag),

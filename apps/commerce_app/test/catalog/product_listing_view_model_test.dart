@@ -100,6 +100,17 @@ void main() {
     ]);
   });
 
+  test('store search filters products and keys the route identity', () async {
+    await viewModel.loadStore(query: ' Product 01 ');
+
+    expect(viewModel.state.status, ProductListingStatus.ready);
+    expect(viewModel.state.searchQuery, 'Product 01');
+    expect(viewModel.state.requestKey, contains(':Product 01'));
+    expect(viewModel.state.products.map((product) => product.handle), [
+      'product-01',
+    ]);
+  });
+
   test('option discovery failure does not take down products', () async {
     final resilient = ProductListingViewModel(
       ProductListingViewModelArgs(api: _OptionFailureApi(viewModel.args.api)),
@@ -138,6 +149,7 @@ final class _OptionFailureApi implements CommerceApi {
   @override
   Future<ProductPageView> products({
     String? currency,
+    String? query,
     String? collection,
     String? category,
     String? tag,
@@ -147,6 +159,7 @@ final class _OptionFailureApi implements CommerceApi {
   }) =>
       delegate.products(
         currency: currency,
+        query: query,
         collection: collection,
         category: category,
         tag: tag,

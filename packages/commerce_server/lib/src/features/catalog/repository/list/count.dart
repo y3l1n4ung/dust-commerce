@@ -25,26 +25,28 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       AND sellable_variant.deleted_at IS NULL
       AND sellable_price.currency_code = $1
   )
-  AND ($2 IS NULL OR collection.handle = $2)
-  AND ($3 IS NULL OR EXISTS (
+  AND ($2 IS NULL OR lower(product.title) LIKE '%' || lower($2) || '%'
+       OR lower(product.handle) LIKE '%' || lower($2) || '%')
+  AND ($3 IS NULL OR collection.handle = $3)
+  AND ($4 IS NULL OR EXISTS (
     SELECT 1
     FROM product_category_products filter_link
     JOIN product_categories filter_category
       ON filter_category.id = filter_link.category_id
     WHERE filter_link.product_id = product.id
-      AND filter_category.handle = $3
+      AND filter_category.handle = $4
       AND filter_category.is_active = 1
       AND filter_category.deleted_at IS NULL
   ))
-  AND ($4 IS NULL OR EXISTS (
+  AND ($5 IS NULL OR EXISTS (
     SELECT 1
     FROM product_tag_products filter_link
     JOIN product_tags filter_tag ON filter_tag.id = filter_link.tag_id
     WHERE filter_link.product_id = product.id
-      AND lower(filter_tag.value) = lower($4)
+      AND lower(filter_tag.value) = lower($5)
       AND filter_tag.deleted_at IS NULL
   ))
-  AND (json_array_length($5) = 0 OR EXISTS (
+  AND (json_array_length($6) = 0 OR EXISTS (
     SELECT 1
     FROM product_variants filter_variant
     JOIN variant_prices filter_price
@@ -66,12 +68,13 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       AND filter_product_option.deleted_at IS NULL
       AND filter_value.deleted_at IS NULL
       AND filter_choice.option_value_id IN (
-        SELECT value FROM json_each($5)
+        SELECT value FROM json_each($6)
       )
   ))
 ''')
   Future<Result<int, SqlxError>> countPublished(
     String currencyCode,
+    String? query,
     String? collectionHandle,
     String? categoryHandle,
     String? tag,

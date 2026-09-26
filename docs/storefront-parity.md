@@ -7,13 +7,12 @@ translated into native Flutter and Dust patterns; the application talks only
 to the dust-commerce API. Visual tokens are pinned to
 `@medusajs/ui-preset@2.21.0`, the version used by that source revision.
 
-The source pin was refreshed against upstream `main` on 2026-09-15. Compared
-with the previous `19e8a6f` reference, the current tree changes only dependency
-manifests, the lockfile, and generated TypeScript build metadata; no storefront
-source file changed. Published UI preset packages 2.20.1 and 2.21.0 also have
+The source pin was refreshed against upstream `main` on 2026-09-26. Current
+Medusa DTC adds storefront search in the nav, `/store` page and right-side
+drawer; this repository tracks that as a tested slice instead of treating the
+older pin as frozen truth. Published UI preset packages 2.20.1 and 2.21.0 have
 identical shipped theme and component files, apart from package metadata,
-changelog, and build-log metadata. Existing source conversions therefore remain
-valid against the current revision rather than being assumed from an old pin.
+changelog, and build-log metadata.
 
 Progress is tracked in [GitHub issue #29](https://github.com/y3l1n4ung/dust-commerce/issues/29)
 and the `Medusa DTC storefront parity` milestone.
@@ -26,14 +25,14 @@ the pinned DTC source has no equivalent route.
 
 | Medusa source | Flutter/Dust owner | Status |
 | :--- | :--- | :--- |
-| `layout/templates/nav` and `footer` | shared storefront shell | implemented in #19 with nav, menu, cart count, API-backed footer taxonomy, Morrow branding, and only `Powered by dust`; the compact menu and collection-footer composition passed rendered comparison, and the actionable brand now provides an explicit route label without Flutter web semantic warnings |
+| `layout/templates/nav` and `footer` | shared storefront shell | implemented in #19 with nav, menu, cart count, API-backed footer taxonomy, Morrow branding, and only `Powered by dust`; the compact menu and collection-footer composition passed rendered comparison, and the actionable brand now provides an explicit route label without Flutter web semantic warnings. Current-source search now opens a right-side drawer with Medusa's title, search field, 12-hit page, loading, empty and failure states. |
 | `layout/components/language-select` | storefront language preference | implemented in #19 with Default plus compiled Dust locales, localized names, real SVG flags, durable selection and startup restoration before routing. Source inspection and release-browser QA now verify selection closes the menu, preserves the complete product URL, survives a hard reload and clears back to Default; the live source advertises no locales, so a matched configured-selector raster remains unavailable. Product content localization is not claimed. |
 | `layout/components/country-select` | shipping-country and selling-region switch | implemented in #24 with alphabetized active-region countries, real SVG flags, persisted selection, path-preserving navigation, atomic cart repricing, regional shipping reset and currency-aware catalogue reload. Source inspection and release-browser QA verify successful selection closes the menu, retains the cart and survives reload. The popup now copies Medusa's measured 320px width, 442px maximum height, 36px uppercase rows, 8px radius and placement 8px above its trigger; the configured country inventories still differ. |
 | `home/components/hero` | home hero | implemented in #19 |
 | `app/not-found` and `(main)/not-found` | unknown and missing-resource recovery | implemented with the source-exact hierarchy and copy, localized content, and a working frontpage link. Unknown routes retain the bare root boundary; missing products, collections, and categories preserve their URL and the Store navigation/footer. Root compact and main desktop comparisons plus compact local verification are recorded in `design-qa.md`. |
 | `featured-products/product-rail` | featured product grid | implemented in #18 with source-ordered, API-backed collection rails; the compact two-column grid now uses natural-height cards and passed rendered comparison with the source's 24px column and 96px row gaps without overflow |
 | `products/components/product-preview` | product card | implemented in #19 |
-| `store/templates` | catalogue | partial in #18 and #19; source sorting, 12-item paging, stable option-value filtering, and optional filter discovery implemented; desktop grid and compact refinement geometry passed rendered source comparison. Compact page controls now match the pinned 18px/28.8px medium type and exact 12px visible gap, page 2 retains sort and repeated option queries, and refinement changes reset to page 1 against the real API. The public Medusa fixture has too few products to render its control, so rendered pagination comparison remains unavailable. |
+| `store/templates` | catalogue | partial in #18 and #19; source sorting, 12-item paging, stable option-value filtering, optional filter discovery, and current-source `q` search are implemented. Desktop grid and compact refinement geometry passed rendered source comparison. Compact page controls now match the pinned 18px/28.8px medium type and exact 12px visible gap, page 2 retains sort and repeated option queries, refinement changes reset to page 1, and search is retained in route state against the real API. The public Medusa fixture has too few products to render its control, so rendered pagination comparison remains unavailable. |
 | `products/templates` | product detail route | implemented in #22; source-ordered mobile and sticky desktop composition plus variant-specific image filtering, with desktop geometry, compact simple-product accordions, equivalent sold-out actions and option-sheet chrome passing rendered source comparison; compact selected state, desktop add-feedback and fixture-backed unavailable-combination rendering are browser-verified |
 | `products/components/product-actions` | variant state and add to cart | implemented in #22, including source-selectable option values, exact-variant resolution, query-preserving `v_id`, unavailable combinations, variant-associated gallery reloads and a labelled, console-clean sticky-mobile option dialog |
 | `products/components/related-products` | API-backed recommendations | implemented in #22 with loading, empty, failure and success states |

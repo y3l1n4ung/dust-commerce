@@ -99,6 +99,17 @@ class StoreShellViewModel extends $StoreShellViewModel {
     return true;
   }
 
+  /// Searches published products for the shared navigation drawer.
+  Future<ProductPageView> searchProducts(
+    String query, {
+    required String currencyCode,
+  }) =>
+      args.api.products(
+        currency: currencyCode,
+        query: query.trim(),
+        limit: 12,
+      );
+
   Future<List<ProductCollection>> _collections() async {
     try {
       return (await args.api.collections(limit: 100)).collections;

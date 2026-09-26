@@ -13,10 +13,15 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
   final deps = (state as Ok<CatalogDeps, Rejection>).value;
 
   final paging = pagingOf(request);
+  final search = queryOptionOf(request, 'q');
+  if (search case Some(:final value) when value.length > 120) {
+    return const Err(Rejection.badRequest('Product search is too long'));
+  }
   final result = await listProducts(
     deps.lists,
     deps.counts,
     currencyCode: currencyOf(request),
+    query: search,
     collection: queryOptionOf(request, 'collection'),
     category: queryOptionOf(request, 'category'),
     tag: queryOptionOf(request, 'tag'),

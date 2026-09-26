@@ -34,6 +34,7 @@ final class ProductListingState with _$ProductListingState {
     this.children = const [],
     this.optionFilters = const [],
     this.selectedOptionValueIds = const [],
+    this.searchQuery = '',
     this.products = const [],
     this.sortBy = 'created_at',
     this.currentPage = 1,
@@ -67,6 +68,9 @@ final class ProductListingState with _$ProductListingState {
 
   /// Stable option-value identifiers active in the browser query.
   final List<String> selectedOptionValueIds;
+
+  /// Free-text product search retained in the Store route query.
+  final String searchQuery;
 
   /// Medusa-compatible sort query value.
   final String sortBy;

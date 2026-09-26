@@ -1,49 +1,81 @@
 {
   "@@locale": "my",
   "@@context": "Translations for `shop` namespace.",
-  "shipping_to": "ပို့ဆောင်မည့် နိုင်ငံ:",
-  "@shipping_to": {
-    "description": "Country selector label in the store menu."
+  "account_add_address": "လိပ်စာထည့်ရန်",
+  "@account_add_address": {
+    "description": "New customer-address dialog title."
   },
-  "country_change_failed": "ပို့ဆောင်မည့်နိုင်ငံကို မပြောင်းနိုင်ပါ။",
-  "@country_change_failed": {
-    "description": "Retryable selling-country change failure."
+  "account_address": "လိပ်စာ",
+  "@account_address": {
+    "description": "Primary street-address field label."
   },
-  "country_denmark": "ဒိန်းမတ်",
-  "@country_denmark": {"description": "Country display name."},
-  "country_france": "ပြင်သစ်",
-  "@country_france": {"description": "Country display name."},
-  "country_germany": "ဂျာမနီ",
-  "@country_germany": {"description": "Country display name."},
-  "country_italy": "အီတလီ",
-  "@country_italy": {"description": "Country display name."},
-  "country_spain": "စပိန်",
-  "@country_spain": {"description": "Country display name."},
-  "country_sweden": "ဆွီဒင်",
-  "@country_sweden": {"description": "Country display name."},
-  "country_united_kingdom": "ယူနိုက်တက်ကင်းဒမ်း",
-  "@country_united_kingdom": {"description": "Country display name."},
-  "country_united_states": "အမေရိကန်ပြည်ထောင်စု",
-  "@country_united_states": {"description": "Country display name."},
+  "account_address_error": "လိပ်စာစာရင်းကို မဖွင့်နိုင်ပါ။",
+  "@account_address_error": {
+    "description": "Customer address-book load failure."
+  },
+  "account_address_line_2": "တိုက်ခန်း၊ အခန်း စသည်",
+  "@account_address_line_2": {
+    "description": "Secondary street-address field label."
+  },
+  "account_addresses": "လိပ်စာများ",
+  "@account_addresses": {
+    "description": "Account address-book navigation label."
+  },
+  "account_addresses_body": "ပို့ဆောင်ရေးလိပ်စာများကို ကြည့်ရှုပြင်ဆင်နိုင်ပြီး ငွေရှင်းချိန်တွင် အသုံးပြုရန် လိုသလောက် ထည့်နိုင်ပါသည်။",
+  "@account_addresses_body": {
+    "description": "Customer address-book supporting copy."
+  },
   "account_already_member": "အဖွဲ့ဝင် ဖြစ်ပြီးပြီလား။",
   "@account_already_member": {
     "description": "Prompt shown below registration."
+  },
+  "account_back_overview": "အော်ဒါစာရင်းသို့ ပြန်သွားရန်",
+  "@account_back_overview": {
+    "description": "Returns from one order to order history."
+  },
+  "account_billing_address": "ငွေတောင်းခံလိပ်စာ",
+  "@account_billing_address": {
+    "description": "Customer default billing-address label."
+  },
+  "account_city": "မြို့",
+  "@account_city": {
+    "description": "Customer-address city field label."
+  },
+  "account_company": "ကုမ္ပဏီ",
+  "@account_company": {
+    "description": "Customer-address company field label."
   },
   "account_completed": "ပြီးစီးမှု",
   "@account_completed": {
     "description": "Profile completion suffix."
   },
-  "account_date_placed": "အော်ဒါတင်သည့်ရက်",
-  "@account_date_placed": {
-    "description": "Recent-order placement-date label."
+  "account_confirm_password": "စကားဝှက် အတည်ပြုရန်",
+  "@account_confirm_password": {
+    "description": "Repeated replacement-password field label."
   },
   "account_continue_shopping": "ဆက်လက်စျေးဝယ်ရန်",
   "@account_continue_shopping": {
     "description": "Returns from empty order history to the store."
   },
+  "account_country": "နိုင်ငံ",
+  "@account_country": {
+    "description": "Customer-address country field label."
+  },
+  "account_current_password_incorrect": "လက်ရှိစကားဝှက် မမှန်ပါ။",
+  "@account_current_password_incorrect": {
+    "description": "Failed current-password reauthentication."
+  },
   "account_customer_service": "ဝယ်ယူသူဝန်ဆောင်မှု",
   "@account_customer_service": {
     "description": "Customer service label."
+  },
+  "account_date_placed": "အော်ဒါတင်သည့်ရက်",
+  "@account_date_placed": {
+    "description": "Recent-order placement-date label."
+  },
+  "account_edit_address": "လိပ်စာပြင်ရန်",
+  "@account_edit_address": {
+    "description": "Existing customer-address dialog title."
   },
   "account_email": "အီးမေးလ်",
   "@account_email": {
@@ -52,6 +84,38 @@
   "account_first_name": "အမည်",
   "@account_first_name": {
     "description": "Customer given-name field label."
+  },
+  "account_fulfillment_canceled": "ပယ်ဖျက်ပြီး",
+  "@account_fulfillment_canceled": {
+    "description": "Order whose fulfillment was canceled."
+  },
+  "account_fulfillment_delivered": "ပို့ဆောင်ပြီး",
+  "@account_fulfillment_delivered": {
+    "description": "Order with every unit delivered."
+  },
+  "account_fulfillment_fulfilled": "ဖြည့်ဆည်းပြီး",
+  "@account_fulfillment_fulfilled": {
+    "description": "Order with every unit fulfilled."
+  },
+  "account_fulfillment_not_fulfilled": "မဖြည့်ဆည်းရသေး",
+  "@account_fulfillment_not_fulfilled": {
+    "description": "Order with no active fulfillment."
+  },
+  "account_fulfillment_partially_delivered": "တစ်စိတ်တစ်ပိုင်း ပို့ဆောင်ပြီး",
+  "@account_fulfillment_partially_delivered": {
+    "description": "Order with some units delivered."
+  },
+  "account_fulfillment_partially_fulfilled": "တစ်စိတ်တစ်ပိုင်း ဖြည့်ဆည်းပြီး",
+  "@account_fulfillment_partially_fulfilled": {
+    "description": "Order with some units fulfilled."
+  },
+  "account_fulfillment_partially_shipped": "တစ်စိတ်တစ်ပိုင်း ပို့ပြီး",
+  "@account_fulfillment_partially_shipped": {
+    "description": "Order with some units shipped."
+  },
+  "account_fulfillment_shipped": "ပို့ပြီး",
+  "@account_fulfillment_shipped": {
+    "description": "Order with every unit shipped."
   },
   "account_hello": "မင်္ဂလာပါ {name}",
   "@account_hello": {
@@ -78,10 +142,6 @@
   "@account_join_us": {
     "description": "Switches from sign-in to registration."
   },
-  "account_sentence_end": "။",
-  "@account_sentence_end": {
-    "description": "Punctuation ending the account-mode switch prompt."
-  },
   "account_last_name": "မျိုးရိုးအမည်",
   "@account_last_name": {
     "description": "Customer family-name field label."
@@ -90,17 +150,58 @@
   "@account_log_out": {
     "description": "Customer sign-out action."
   },
+  "account_name": "အမည်",
+  "@account_name": {
+    "description": "Customer full-name profile label."
+  },
+  "account_new_address": "လိပ်စာအသစ်",
+  "@account_new_address": {
+    "description": "Adds a customer address."
+  },
+  "account_new_password": "စကားဝှက်အသစ်",
+  "@account_new_password": {
+    "description": "Replacement-password field label."
+  },
+  "account_no_billing_address": "ငွေတောင်းခံလိပ်စာ မရှိသေးပါ",
+  "@account_no_billing_address": {
+    "description": "Empty customer billing-address state."
+  },
   "account_no_orders": "မကြာသေးမီ အော်ဒါ မရှိပါ",
   "@account_no_orders": {
     "description": "Empty recent-order state."
   },
-  "account_back_overview": "အော်ဒါစာရင်းသို့ ပြန်သွားရန်",
-  "@account_back_overview": {
-    "description": "Returns from one order to order history."
-  },
   "account_not_member": "အဖွဲ့ဝင် မဖြစ်သေးဘူးလား။",
   "@account_not_member": {
     "description": "Prompt shown below sign-in."
+  },
+  "account_not_set": "မသတ်မှတ်ရသေးပါ",
+  "@account_not_set": {
+    "description": "Missing optional profile value."
+  },
+  "account_old_password": "စကားဝှက်ဟောင်း",
+  "@account_old_password": {
+    "description": "Current-password reauthentication field label."
+  },
+  "account_open_order": "အော်ဒါ #{id} သို့ သွားရန်",
+  "@account_open_order": {
+    "description": "Accessible recent-order link label.",
+    "placeholders": {
+      "id": {
+        "example": "order_123"
+      }
+    }
+  },
+  "account_order_details": "အော်ဒါ အသေးစိတ်",
+  "@account_order_details": {
+    "description": "Customer order-detail heading."
+  },
+  "account_order_id": "အော်ဒါ ID",
+  "@account_order_id": {
+    "description": "Order-transfer identifier field placeholder."
+  },
+  "account_order_id_required": "အော်ဒါ ID ထည့်ရန်လိုသည်",
+  "@account_order_id_required": {
+    "description": "Required order-transfer identifier validation."
   },
   "account_order_item": "ပစ္စည်း {count} ခု",
   "@account_order_item": {
@@ -120,26 +221,13 @@
       }
     }
   },
-  "account_order_number": "အော်ဒါနံပါတ်",
-  "@account_order_number": {
-    "description": "Recent-order identifier label."
-  },
-  "account_open_order": "အော်ဒါ #{id} သို့ သွားရန်",
-  "@account_open_order": {
-    "description": "Accessible recent-order link label.",
-    "placeholders": {
-      "id": {
-        "example": "order_123"
-      }
-    }
-  },
-  "account_order_details": "အော်ဒါ အသေးစိတ်",
-  "@account_order_details": {
-    "description": "Customer order-detail heading."
-  },
   "account_order_load_failed": "ဤအော်ဒါကို မဖွင့်နိုင်ပါ။ ထပ်ကြိုးစားပါ။",
   "@account_order_load_failed": {
     "description": "Retryable customer order-detail failure."
+  },
+  "account_order_number": "အော်ဒါနံပါတ်",
+  "@account_order_number": {
+    "description": "Recent-order identifier label."
   },
   "account_order_session_expired": "အကောင့်ဝင်ထားမှု သက်တမ်းကုန်သွားပါပြီ။ ထပ်မံအကောင့်ဝင်ပါ။",
   "@account_order_session_expired": {
@@ -153,13 +241,65 @@
   "@account_order_summary": {
     "description": "Frozen order totals heading."
   },
+  "account_order_transfers": "အော်ဒါလွှဲပြောင်းမှုများ",
+  "@account_order_transfers": {
+    "description": "Heading above the order-transfer request form."
+  },
+  "account_order_transfers_body": "သင်ရှာနေသော အော်ဒါကို မတွေ့ဘူးလား။\nအော်ဒါတစ်ခုကို သင့်အကောင့်နှင့် ချိတ်ဆက်ပါ။",
+  "@account_order_transfers_body": {
+    "description": "Explains how to connect an existing order."
+  },
   "account_order_unavailable": "ထိုအော်ဒါကို ရှာမတွေ့ပါ။",
   "@account_order_unavailable": {
     "description": "Missing or unowned order-detail state."
   },
-  "account_payment_status": "ငွေပေးချေမှု အခြေအနေ",
-  "@account_payment_status": {
-    "description": "Order payment lifecycle label."
+  "account_orders": "အော်ဒါများ",
+  "@account_orders": {
+    "description": "Customer order-history navigation label."
+  },
+  "account_orders_body": "ယခင်အော်ဒါများနှင့် ၎င်းတို့၏ အခြေအနေကို ကြည့်ပါ။",
+  "@account_orders_body": {
+    "description": "Customer order-history supporting copy."
+  },
+  "account_orders_empty_body": "သင့်တွင် အော်ဒါမရှိသေးပါ။ စျေးဝယ်ကြရအောင်။",
+  "@account_orders_empty_body": {
+    "description": "Empty order-history supporting copy."
+  },
+  "account_orders_empty_title": "ပြသရန် မရှိသေးပါ",
+  "@account_orders_empty_title": {
+    "description": "Empty order-history heading."
+  },
+  "account_orders_load_failed": "သင့်အော်ဒါများကို မတင်နိုင်ပါ။ ထပ်ကြိုးစားပါ။",
+  "@account_orders_load_failed": {
+    "description": "Retryable order-history failure."
+  },
+  "account_overview": "အကျဉ်းချုပ်",
+  "@account_overview": {
+    "description": "Account overview navigation label."
+  },
+  "account_password": "စကားဝှက်",
+  "@account_password": {
+    "description": "Customer password field label."
+  },
+  "account_password_hidden": "လုံခြုံရေးအတွက် စကားဝှက်ကို မပြထားပါ",
+  "@account_password_hidden": {
+    "description": "Collapsed password editor summary."
+  },
+  "account_password_length": "စာလုံး ၁၂ လုံးမှ ၁၀၂၄ လုံးအထိ အသုံးပြုပါ။",
+  "@account_password_length": {
+    "description": "Password-field validation."
+  },
+  "account_password_mismatch": "စကားဝှက်များ မတူညီပါ။",
+  "@account_password_mismatch": {
+    "description": "Password confirmation validation."
+  },
+  "account_password_same": "မတူညီသော စကားဝှက်ကို အသုံးပြုပါ။",
+  "@account_password_same": {
+    "description": "Rejects reusing the current password."
+  },
+  "account_password_update_failed": "စကားဝှက်ကို မပြောင်းနိုင်ပါ။ ထပ်ကြိုးစားပါ။",
+  "@account_password_update_failed": {
+    "description": "Display-safe password-rotation failure."
   },
   "account_payment_awaiting": "ငွေပေးချေရန် စောင့်ဆိုင်းနေသည်",
   "@account_payment_awaiting": {
@@ -173,37 +313,65 @@
   "@account_payment_refunded": {
     "description": "Payment has been returned."
   },
-  "account_orders": "အော်ဒါများ",
-  "@account_orders": {
-    "description": "Customer order-history navigation label."
+  "account_payment_status": "ငွေပေးချေမှု အခြေအနေ",
+  "@account_payment_status": {
+    "description": "Order payment lifecycle label."
   },
-  "account_orders_body": "ယခင်အော်ဒါများနှင့် ၎င်းတို့၏ အခြေအနေကို ကြည့်ပါ။",
-  "@account_orders_body": {
-    "description": "Customer order-history supporting copy."
+  "account_phone": "ဖုန်း",
+  "@account_phone": {
+    "description": "Customer telephone field label."
   },
-  "account_order_transfers": "အော်ဒါလွှဲပြောင်းမှုများ",
-  "@account_order_transfers": {
-    "description": "Heading above the order-transfer request form."
+  "account_postal_code": "စာပို့သင်္ကေတ",
+  "@account_postal_code": {
+    "description": "Customer-address postal-code field label."
   },
-  "account_order_transfers_body": "သင်ရှာနေသော အော်ဒါကို မတွေ့ဘူးလား။\nအော်ဒါတစ်ခုကို သင့်အကောင့်နှင့် ချိတ်ဆက်ပါ။",
-  "@account_order_transfers_body": {
-    "description": "Explains how to connect an existing order."
+  "account_profile": "ပရိုဖိုင်",
+  "@account_profile": {
+    "description": "Account profile section title."
   },
-  "account_order_id": "အော်ဒါ ID",
-  "@account_order_id": {
-    "description": "Order-transfer identifier field placeholder."
+  "account_profile_body": "အမည်၊ အီးမေးလ်နှင့် ဖုန်းနံပါတ်အပါအဝင် ပရိုဖိုင်အချက်အလက်များကို ကြည့်ရှုပြင်ဆင်နိုင်ပြီး ငွေတောင်းခံလိပ်စာ သို့မဟုတ် စကားဝှက်ကိုလည်း ပြင်နိုင်ပါသည်။",
+  "@account_profile_body": {
+    "description": "Customer profile supporting copy."
   },
-  "account_order_id_required": "အော်ဒါ ID ထည့်ရန်လိုသည်",
-  "@account_order_id_required": {
-    "description": "Required order-transfer identifier validation."
+  "account_province": "တိုင်း / ပြည်နယ်",
+  "@account_province": {
+    "description": "Customer-address province field label."
+  },
+  "account_questions": "မေးခွန်းရှိပါသလား။",
+  "@account_questions": {
+    "description": "Account help heading."
+  },
+  "account_questions_body": "မကြာခဏမေးလေ့ရှိသော မေးခွန်းများနှင့် အဖြေများကို ဝယ်ယူသူဝန်ဆောင်မှုစာမျက်နှာတွင် ကြည့်နိုင်ပါသည်။",
+  "@account_questions_body": {
+    "description": "Account help supporting copy."
+  },
+  "account_recent_orders": "မကြာသေးမီ အော်ဒါများ",
+  "@account_recent_orders": {
+    "description": "Recent customer orders heading."
+  },
+  "account_register_body": "Morrow အဖွဲ့ဝင်ပရိုဖိုင် ဖန်တီးပြီး ပိုမိုကောင်းမွန်သော စျေးဝယ်အတွေ့အကြုံကို ရယူပါ။",
+  "@account_register_body": {
+    "description": "Customer registration supporting copy."
+  },
+  "account_register_title": "Morrow အဖွဲ့ဝင် ဖြစ်လာပါ",
+  "@account_register_title": {
+    "description": "Customer registration heading."
+  },
+  "account_request_return": "ပြန်အပ်ရန် တောင်းဆိုမည်",
+  "@account_request_return": {
+    "description": "Heading above the return item selector."
   },
   "account_request_transfer": "လွှဲပြောင်းရန် တောင်းဆိုမည်",
   "@account_request_transfer": {
     "description": "Submits an order-transfer request."
   },
-  "account_request_return": "ပြန်အပ်ရန် တောင်းဆိုမည်",
-  "@account_request_return": {
-    "description": "Heading above the return item selector."
+  "account_required": "ဤအချက်ကို ဖြည့်ရန်လိုသည်။",
+  "@account_required": {
+    "description": "Required account-field validation."
+  },
+  "account_restore_failed": "သိမ်းထားသော အကောင့်ဝင်မှုကို အတည်မပြုနိုင်ပါ။",
+  "@account_restore_failed": {
+    "description": "Saved-session restore failure."
   },
   "account_return_choose_items": "ပြန်အပ်လိုသည့် ပစ္စည်းများနှင့် အရေအတွက်ကို ရွေးချယ်ပါ။",
   "@account_return_choose_items": {
@@ -241,16 +409,15 @@
   "account_return_items": "ပစ္စည်း {quantity} ခု",
   "@account_return_items": {
     "description": "Total units included in one historical return.",
-    "placeholders": {"quantity": {"example": "2"}}
+    "placeholders": {
+      "quantity": {
+        "example": "2"
+      }
+    }
   },
   "account_return_load_more": "နောက်ထပ် ပြန်အပ်မှုများ ပြမည်",
   "@account_return_load_more": {
     "description": "Loads the next bounded return-history page."
-  },
-  "account_return_number": "ပြန်အပ်မှု #{id}",
-  "@account_return_number": {
-    "description": "Customer-facing return request number.",
-    "placeholders": {"id": {"example": "1001"}}
   },
   "account_return_no_items": "ဤအော်ဒါတွင် ပြန်အပ်ရန် ပစ္စည်း မကျန်တော့ပါ။",
   "@account_return_no_items": {
@@ -264,10 +431,23 @@
   "@account_return_note": {
     "description": "Optional customer return context field."
   },
+  "account_return_number": "ပြန်အပ်မှု #{id}",
+  "@account_return_number": {
+    "description": "Customer-facing return request number.",
+    "placeholders": {
+      "id": {
+        "example": "1001"
+      }
+    }
+  },
   "account_return_quantity": "အရေအတွက် {quantity}",
   "@account_return_quantity": {
     "description": "Selected return item quantity.",
-    "placeholders": {"quantity": {"example": "2"}}
+    "placeholders": {
+      "quantity": {
+        "example": "2"
+      }
+    }
   },
   "account_return_reason": "အကြောင်းပြချက် (မဖြစ်မနေ မဟုတ်ပါ)",
   "@account_return_reason": {
@@ -292,28 +472,24 @@
   "account_return_received": "ပြန်အပ်ရန် တောင်းဆိုချက် #{id} ကို လက်ခံရရှိပါပြီ",
   "@account_return_received": {
     "description": "Persisted return acknowledgement heading.",
-    "placeholders": {"id": {"example": "1001"}}
+    "placeholders": {
+      "id": {
+        "example": "1001"
+      }
+    }
   },
   "account_return_received_body": "{quantity} ခုအတွက် သင့်တောင်းဆိုချက်ကို စစ်ဆေးပါမည်။",
   "@account_return_received_body": {
     "description": "Persisted return acknowledgement detail.",
-    "placeholders": {"quantity": {"example": "2"}}
+    "placeholders": {
+      "quantity": {
+        "example": "2"
+      }
+    }
   },
   "account_return_session_expired": "အကောင့်ဝင်ထားမှု သက်တမ်းကုန်သွားပါပြီ။ ထပ်မံအကောင့်ဝင်ပါ။",
   "@account_return_session_expired": {
     "description": "Expired-session return failure."
-  },
-  "account_return_unavailable": "ဤအော်ဒါကို မရနိုင်တော့ပါ။",
-  "@account_return_unavailable": {
-    "description": "Missing or unowned return order failure."
-  },
-  "account_returns_exchanges": "ပြန်အပ်ခြင်းနှင့် လဲလှယ်ခြင်း",
-  "@account_returns_exchanges": {
-    "description": "Opens the real order return form from the help block."
-  },
-  "account_submit_return": "ပြန်အပ်ရန် တင်သွင်းမည်",
-  "@account_submit_return": {
-    "description": "Submits the selected return items."
   },
   "account_return_status_canceled": "ပယ်ဖျက်ပြီး",
   "@account_return_status_canceled": {
@@ -335,90 +511,13 @@
   "@account_return_status_requested": {
     "description": "Requested return-history status."
   },
-  "account_transfer_requested": "အော်ဒါ {id} အတွက် လွှဲပြောင်းရန် တောင်းဆိုပြီးပါပြီ",
-  "@account_transfer_requested": {
-    "description": "Successful order-transfer request heading.",
-    "placeholders": {"id": {"example": "order_123"}}
+  "account_return_unavailable": "ဤအော်ဒါကို မရနိုင်တော့ပါ။",
+  "@account_return_unavailable": {
+    "description": "Missing or unowned return order failure."
   },
-  "account_transfer_email_sent": "လက်ရှိ အော်ဒါဆက်သွယ်ရန်အီးမေးလ်သို့ ပို့ပြီးပါပြီ။",
-  "@account_transfer_email_sent": {
-    "description": "Confirms transfer email delivery without disclosing the address."
-  },
-  "account_transfer_email_pending": "အီးမေးလ်ပို့ရန် စောင့်ဆိုင်းနေသည်။ ထပ်မံကြိုးစားရန် အော်ဒါတူကို ပြန်တင်ပါ။",
-  "@account_transfer_email_pending": {
-    "description": "Explains a retryable transfer-email delivery state."
-  },
-  "account_orders_empty_body": "သင့်တွင် အော်ဒါမရှိသေးပါ။ စျေးဝယ်ကြရအောင်။",
-  "@account_orders_empty_body": {
-    "description": "Empty order-history supporting copy."
-  },
-  "account_orders_empty_title": "ပြသရန် မရှိသေးပါ",
-  "@account_orders_empty_title": {
-    "description": "Empty order-history heading."
-  },
-  "account_overview": "အကျဉ်းချုပ်",
-  "@account_overview": {
-    "description": "Account overview navigation label."
-  },
-  "account_password": "စကားဝှက်",
-  "@account_password": {
-    "description": "Customer password field label."
-  },
-  "account_confirm_password": "စကားဝှက် အတည်ပြုရန်",
-  "@account_confirm_password": {
-    "description": "Repeated replacement-password field label."
-  },
-  "account_current_password_incorrect": "လက်ရှိစကားဝှက် မမှန်ပါ။",
-  "@account_current_password_incorrect": {
-    "description": "Failed current-password reauthentication."
-  },
-  "account_new_password": "စကားဝှက်အသစ်",
-  "@account_new_password": {
-    "description": "Replacement-password field label."
-  },
-  "account_old_password": "စကားဝှက်ဟောင်း",
-  "@account_old_password": {
-    "description": "Current-password reauthentication field label."
-  },
-  "account_password_hidden": "လုံခြုံရေးအတွက် စကားဝှက်ကို မပြထားပါ",
-  "@account_password_hidden": {
-    "description": "Collapsed password editor summary."
-  },
-  "account_password_length": "စာလုံး ၁၂ လုံးမှ ၁၀၂၄ လုံးအထိ အသုံးပြုပါ။",
-  "@account_password_length": {
-    "description": "Password-field validation."
-  },
-  "account_password_mismatch": "စကားဝှက်များ မတူညီပါ။",
-  "@account_password_mismatch": {
-    "description": "Password confirmation validation."
-  },
-  "account_password_same": "မတူညီသော စကားဝှက်ကို အသုံးပြုပါ။",
-  "@account_password_same": {
-    "description": "Rejects reusing the current password."
-  },
-  "account_password_update_failed": "စကားဝှက်ကို မပြောင်းနိုင်ပါ။ ထပ်ကြိုးစားပါ။",
-  "@account_password_update_failed": {
-    "description": "Display-safe password-rotation failure."
-  },
-  "account_phone": "ဖုန်း",
-  "@account_phone": {
-    "description": "Customer telephone field label."
-  },
-  "account_profile": "ပရိုဖိုင်",
-  "@account_profile": {
-    "description": "Account profile section title."
-  },
-  "account_questions": "မေးခွန်းရှိပါသလား။",
-  "@account_questions": {
-    "description": "Account help heading."
-  },
-  "account_questions_body": "မကြာခဏမေးလေ့ရှိသော မေးခွန်းများနှင့် အဖြေများကို ဝယ်ယူသူဝန်ဆောင်မှုစာမျက်နှာတွင် ကြည့်နိုင်ပါသည်။",
-  "@account_questions_body": {
-    "description": "Account help supporting copy."
-  },
-  "account_recent_orders": "မကြာသေးမီ အော်ဒါများ",
-  "@account_recent_orders": {
-    "description": "Recent customer orders heading."
+  "account_returns_exchanges": "ပြန်အပ်ခြင်းနှင့် လဲလှယ်ခြင်း",
+  "@account_returns_exchanges": {
+    "description": "Opens the real order return form from the help block."
   },
   "account_saved": "သိမ်းထားသည်",
   "@account_saved": {
@@ -428,21 +527,13 @@
   "@account_see_details": {
     "description": "Opens one customer order."
   },
-  "account_register_body": "Morrow အဖွဲ့ဝင်ပရိုဖိုင် ဖန်တီးပြီး ပိုမိုကောင်းမွန်သော စျေးဝယ်အတွေ့အကြုံကို ရယူပါ။",
-  "@account_register_body": {
-    "description": "Customer registration supporting copy."
+  "account_sentence_end": "။",
+  "@account_sentence_end": {
+    "description": "Punctuation ending the account-mode switch prompt."
   },
-  "account_register_title": "Morrow အဖွဲ့ဝင် ဖြစ်လာပါ",
-  "@account_register_title": {
-    "description": "Customer registration heading."
-  },
-  "account_required": "ဤအချက်ကို ဖြည့်ရန်လိုသည်။",
-  "@account_required": {
-    "description": "Required account-field validation."
-  },
-  "account_restore_failed": "သိမ်းထားသော အကောင့်ဝင်မှုကို အတည်မပြုနိုင်ပါ။",
-  "@account_restore_failed": {
-    "description": "Saved-session restore failure."
+  "account_shipping_addresses": "ပို့ဆောင်ရေးလိပ်စာများ",
+  "@account_shipping_addresses": {
+    "description": "Customer address-book heading."
   },
   "account_show_password": "စကားဝှက် ပြရန်",
   "@account_show_password": {
@@ -456,141 +547,13 @@
   "@account_sign_in_body": {
     "description": "Customer sign-in supporting copy."
   },
-  "account_signed_in_as": "အကောင့်ဝင်ထားသည့် အီးမေးလ်: ",
-  "@account_signed_in_as": {
-    "description": "Label before the signed-in email."
-  },
-  "account_terms": "အကောင့်ဖန်တီးခြင်းဖြင့် ကျွန်ုပ်တို့၏ ကိုယ်ရေးအချက်အလက်မူဝါဒနှင့် အသုံးပြုမှုစည်းမျဉ်းများကို သဘောတူပါသည်။",
-  "@account_terms": {
-    "description": "Registration legal acknowledgement."
-  },
-  "account_total_amount": "စုစုပေါင်းငွေ",
-  "@account_total_amount": {
-    "description": "Recent-order total label."
-  },
-  "account_orders_load_failed": "သင့်အော်ဒါများကို မတင်နိုင်ပါ။ ထပ်ကြိုးစားပါ။",
-  "@account_orders_load_failed": {
-    "description": "Retryable order-history failure."
-  },
-  "account_title": "အကောင့်",
-  "@account_title": {
-    "description": "Customer account navigation label."
-  },
-  "account_welcome_back": "ပြန်လည်ကြိုဆိုပါသည်",
-  "@account_welcome_back": {
-    "description": "Customer sign-in heading."
-  },
-  "account_addresses": "လိပ်စာများ",
-  "@account_addresses": {
-    "description": "Account address-book navigation label."
-  },
-  "account_addresses_body": "ပို့ဆောင်ရေးလိပ်စာများကို ကြည့်ရှုပြင်ဆင်နိုင်ပြီး ငွေရှင်းချိန်တွင် အသုံးပြုရန် လိုသလောက် ထည့်နိုင်ပါသည်။",
-  "@account_addresses_body": {
-    "description": "Customer address-book supporting copy."
-  },
-  "account_add_address": "လိပ်စာထည့်ရန်",
-  "@account_add_address": {
-    "description": "New customer-address dialog title."
-  },
-  "account_address": "လိပ်စာ",
-  "@account_address": {
-    "description": "Primary street-address field label."
-  },
-  "account_address_error": "လိပ်စာစာရင်းကို မဖွင့်နိုင်ပါ။",
-  "@account_address_error": {
-    "description": "Customer address-book load failure."
-  },
-  "account_address_line_2": "တိုက်ခန်း၊ အခန်း စသည်",
-  "@account_address_line_2": {
-    "description": "Secondary street-address field label."
-  },
-  "account_billing_address": "ငွေတောင်းခံလိပ်စာ",
-  "@account_billing_address": {
-    "description": "Customer default billing-address label."
-  },
-  "account_city": "မြို့",
-  "@account_city": {
-    "description": "Customer-address city field label."
-  },
-  "account_company": "ကုမ္ပဏီ",
-  "@account_company": {
-    "description": "Customer-address company field label."
-  },
-  "account_country": "နိုင်ငံ",
-  "@account_country": {
-    "description": "Customer-address country field label."
-  },
-  "account_edit_address": "လိပ်စာပြင်ရန်",
-  "@account_edit_address": {
-    "description": "Existing customer-address dialog title."
-  },
-  "account_name": "အမည်",
-  "@account_name": {
-    "description": "Customer full-name profile label."
-  },
-  "account_new_address": "လိပ်စာအသစ်",
-  "@account_new_address": {
-    "description": "Adds a customer address."
-  },
-  "account_no_billing_address": "ငွေတောင်းခံလိပ်စာ မရှိသေးပါ",
-  "@account_no_billing_address": {
-    "description": "Empty customer billing-address state."
-  },
-  "account_not_set": "မသတ်မှတ်ရသေးပါ",
-  "@account_not_set": {
-    "description": "Missing optional profile value."
-  },
-  "account_postal_code": "စာပို့သင်္ကေတ",
-  "@account_postal_code": {
-    "description": "Customer-address postal-code field label."
-  },
-  "account_profile_body": "အမည်၊ အီးမေးလ်နှင့် ဖုန်းနံပါတ်အပါအဝင် ပရိုဖိုင်အချက်အလက်များကို ကြည့်ရှုပြင်ဆင်နိုင်ပြီး ငွေတောင်းခံလိပ်စာ သို့မဟုတ် စကားဝှက်ကိုလည်း ပြင်နိုင်ပါသည်။",
-  "@account_profile_body": {
-    "description": "Customer profile supporting copy."
-  },
-  "account_province": "တိုင်း / ပြည်နယ်",
-  "@account_province": {
-    "description": "Customer-address province field label."
-  },
-  "account_shipping_addresses": "ပို့ဆောင်ရေးလိပ်စာများ",
-  "@account_shipping_addresses": {
-    "description": "Customer address-book heading."
-  },
   "account_sign_in_email": "အကောင့်ဝင် အီးမေးလ်",
   "@account_sign_in_email": {
     "description": "Explains that the profile email identifies sign-in."
   },
-  "account_fulfillment_not_fulfilled": "မဖြည့်ဆည်းရသေး",
-  "@account_fulfillment_not_fulfilled": {
-    "description": "Order with no active fulfillment."
-  },
-  "account_fulfillment_partially_fulfilled": "တစ်စိတ်တစ်ပိုင်း ဖြည့်ဆည်းပြီး",
-  "@account_fulfillment_partially_fulfilled": {
-    "description": "Order with some units fulfilled."
-  },
-  "account_fulfillment_fulfilled": "ဖြည့်ဆည်းပြီး",
-  "@account_fulfillment_fulfilled": {
-    "description": "Order with every unit fulfilled."
-  },
-  "account_fulfillment_partially_shipped": "တစ်စိတ်တစ်ပိုင်း ပို့ပြီး",
-  "@account_fulfillment_partially_shipped": {
-    "description": "Order with some units shipped."
-  },
-  "account_fulfillment_shipped": "ပို့ပြီး",
-  "@account_fulfillment_shipped": {
-    "description": "Order with every unit shipped."
-  },
-  "account_fulfillment_partially_delivered": "တစ်စိတ်တစ်ပိုင်း ပို့ဆောင်ပြီး",
-  "@account_fulfillment_partially_delivered": {
-    "description": "Order with some units delivered."
-  },
-  "account_fulfillment_delivered": "ပို့ဆောင်ပြီး",
-  "@account_fulfillment_delivered": {
-    "description": "Order with every unit delivered."
-  },
-  "account_fulfillment_canceled": "ပယ်ဖျက်ပြီး",
-  "@account_fulfillment_canceled": {
-    "description": "Order whose fulfillment was canceled."
+  "account_signed_in_as": "အကောင့်ဝင်ထားသည့် အီးမေးလ်: ",
+  "@account_signed_in_as": {
+    "description": "Label before the signed-in email."
   },
   "account_status_archived": "သိမ်းဆည်းပြီး",
   "@account_status_archived": {
@@ -608,6 +571,39 @@
   "@account_status_pending": {
     "description": "Pending order status."
   },
+  "account_submit_return": "ပြန်အပ်ရန် တင်သွင်းမည်",
+  "@account_submit_return": {
+    "description": "Submits the selected return items."
+  },
+  "account_terms": "အကောင့်ဖန်တီးခြင်းဖြင့် ကျွန်ုပ်တို့၏ ကိုယ်ရေးအချက်အလက်မူဝါဒနှင့် အသုံးပြုမှုစည်းမျဉ်းများကို သဘောတူပါသည်။",
+  "@account_terms": {
+    "description": "Registration legal acknowledgement."
+  },
+  "account_title": "အကောင့်",
+  "@account_title": {
+    "description": "Customer account navigation label."
+  },
+  "account_total_amount": "စုစုပေါင်းငွေ",
+  "@account_total_amount": {
+    "description": "Recent-order total label."
+  },
+  "account_transfer_email_pending": "အီးမေးလ်ပို့ရန် စောင့်ဆိုင်းနေသည်။ ထပ်မံကြိုးစားရန် အော်ဒါတူကို ပြန်တင်ပါ။",
+  "@account_transfer_email_pending": {
+    "description": "Explains a retryable transfer-email delivery state."
+  },
+  "account_transfer_email_sent": "လက်ရှိ အော်ဒါဆက်သွယ်ရန်အီးမေးလ်သို့ ပို့ပြီးပါပြီ။",
+  "@account_transfer_email_sent": {
+    "description": "Confirms transfer email delivery without disclosing the address."
+  },
+  "account_transfer_requested": "အော်ဒါ {id} အတွက် လွှဲပြောင်းရန် တောင်းဆိုပြီးပါပြီ",
+  "@account_transfer_requested": {
+    "description": "Successful order-transfer request heading.",
+    "placeholders": {
+      "id": {
+        "example": "order_123"
+      }
+    }
+  },
   "account_updated": "{label} ကို အောင်မြင်စွာ ပြင်ဆင်ပြီးပါပြီ",
   "@account_updated": {
     "description": "Confirms one profile field update.",
@@ -617,25 +613,19 @@
       }
     }
   },
-  "cancel": "မလုပ်တော့ပါ",
-  "@cancel": {
-    "description": "Cancels the current form."
+  "account_verification_sent": "{email} သို့ အတည်ပြုလင့်ခ် ပို့လိုက်ပါပြီ။ အီးမေးလ်ကို အတည်ပြုပြီး အကောင့်ဝင်ပါ။",
+  "@account_verification_sent": {
+    "description": "Registration or sign-in email verification notice.",
+    "placeholders": {
+      "email": {
+        "example": "ada@example.com",
+        "type": "String"
+      }
+    }
   },
-  "edit": "ပြင်ရန်",
-  "@edit": {
-    "description": "Edits an existing value."
-  },
-  "remove": "ဖယ်ရှားရန်",
-  "@remove": {
-    "description": "Removes a saved item."
-  },
-  "save": "သိမ်းရန်",
-  "@save": {
-    "description": "Saves the current form."
-  },
-  "save_changes": "ပြင်ဆင်ချက်များ သိမ်းရန်",
-  "@save_changes": {
-    "description": "Saves profile changes."
+  "account_welcome_back": "ပြန်လည်ကြိုဆိုပါသည်",
+  "@account_welcome_back": {
+    "description": "Customer sign-in heading."
   },
   "add_to_cart": "စျေးခြင်းတောင်းထဲ ထည့်ရန်",
   "@add_to_cart": {
@@ -653,6 +643,10 @@
   "@brand": {
     "description": "Storefront wordmark."
   },
+  "cancel": "မလုပ်တော့ပါ",
+  "@cancel": {
+    "description": "Cancels the current form."
+  },
   "cart_account_prompt": "အကောင့်ရှိပြီးပြီလား။",
   "@cart_account_prompt": {
     "description": "Guest cart sign-in prompt heading."
@@ -668,10 +662,6 @@
   "cart_apply": "အသုံးပြုရန်",
   "@cart_apply": {
     "description": "Submits a promotion code."
-  },
-  "cart_loading": "လုပ်ဆောင်နေသည်...",
-  "@cart_loading": {
-    "description": "ခြင်းတောင်း ပြင်ဆင်နေစဉ် ပြသသည့် ပရိုမိုးရှင်းလုပ်ဆောင်ချက်။"
   },
   "cart_checkout": "ငွေရှင်းရန်",
   "@cart_checkout": {
@@ -705,6 +695,10 @@
   "cart_load_failed": "စျေးခြင်းတောင်းကို မဖွင့်နိုင်ပါ။",
   "@cart_load_failed": {
     "description": "Display-safe failure shown when cart restoration fails."
+  },
+  "cart_loading": "လုပ်ဆောင်နေသည်...",
+  "@cart_loading": {
+    "description": "ခြင်းတောင်း ပြင်ဆင်နေစဉ် ပြသသည့် ပရိုမိုးရှင်းလုပ်ဆောင်ချက်။"
   },
   "cart_preview_empty": "သင့်စျေးခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိပါ။",
   "@cart_preview_empty": {
@@ -787,34 +781,6 @@
   "@cart_transferring": {
     "description": "Pending guest-cart transfer action."
   },
-  "free_shipping_away": " ဖိုး ဝယ်ယူပါ",
-  "@free_shipping_away": {
-    "description": "Suffix after the amount remaining for free shipping."
-  },
-  "free_shipping_close": "အခမဲ့ပို့ဆောင်ရေး စာတိုကို ပိတ်ရန်",
-  "@free_shipping_close": {
-    "description": "Accessible label for dismissing the free-shipping popup."
-  },
-  "free_shipping_only": "နောက်ထပ် ",
-  "@free_shipping_only": {
-    "description": "Prefix before the amount remaining for free shipping."
-  },
-  "free_shipping_unlock": "အခမဲ့ ပို့ဆောင်ခ ရယူပါ",
-  "@free_shipping_unlock": {
-    "description": "Heading in the conditional free-shipping popup."
-  },
-  "free_shipping_unlocked": "အခမဲ့ ပို့ဆောင်ခ ရပါပြီ!",
-  "@free_shipping_unlocked": {
-    "description": "Success shown when free delivery becomes available."
-  },
-  "free_shipping_view_cart": "စျေးခြင်းတောင်း ကြည့်ရန်",
-  "@free_shipping_view_cart": {
-    "description": "Free-shipping popup link to the active cart."
-  },
-  "free_shipping_view_products": "ပစ္စည်းများ ကြည့်ရန်",
-  "@free_shipping_view_products": {
-    "description": "Free-shipping popup link to product browsing."
-  },
   "cart_update_failed": "ဤပစ္စည်းကို ပြင်ဆင်၍မရပါ။",
   "@cart_update_failed": {
     "description": "Fallback failure shown below a cart line."
@@ -827,6 +793,10 @@
         "example": "Medium / White"
       }
     }
+  },
+  "catalog_failure": "ကုန်ပစ္စည်းစာရင်းကို ရယူ၍ မရပါ။",
+  "@catalog_failure": {
+    "description": "Safe error shown when the home catalogue cannot load."
   },
   "checkout_address": "လိပ်စာ",
   "@checkout_address": {
@@ -1084,319 +1054,45 @@
   "@checkout_total": {
     "description": "Translation for `shop_checkout_total`."
   },
-  "dimensions": "အတိုင်းအတာ",
-  "@dimensions": {
-    "description": "Product dimensions fact label."
-  },
-  "easy_returns": "လွယ်ကူသော ပြန်အပ်မှု",
-  "@easy_returns": {
-    "description": "Return policy title."
-  },
-  "easy_returns_body": "ကုန်ပစ္စည်းကို ပြန်အပ်ပြီး ငွေပြန်လည်ရယူနိုင်ပါသည်။",
-  "@easy_returns_body": {
-    "description": "Return policy detail."
-  },
-  "empty": "ရောင်းစရာ မရှိသေးပါ",
-  "@empty": {
-    "description": "Translation for `shop_empty`."
-  },
-  "explore_products": "ကုန်ပစ္စည်းများ ကြည့်ရန်",
-  "@explore_products": {
-    "description": "Link from the empty cart to the catalogue."
-  },
-  "fast_delivery": "မြန်ဆန်သော ပို့ဆောင်မှု",
-  "@fast_delivery": {
-    "description": "Fast-delivery policy title."
-  },
-  "fast_delivery_body": "သင့်ပစ္စည်းကို လုပ်ငန်းရက် ၃ ရက်မှ ၅ ရက်အတွင်း လက်ခံရရှိပါမည်။",
-  "@fast_delivery_body": {
-    "description": "Fast-delivery policy detail."
-  },
-  "footer_categories": "အမျိုးအစားများ",
-  "@footer_categories": {
-    "description": "Footer category-navigation heading."
-  },
-  "footer_collections": "စုစည်းမှုများ",
-  "@footer_collections": {
-    "description": "Footer collection-navigation heading."
-  },
-  "footer_documentation": "စာရွက်စာတမ်းများ",
-  "@footer_documentation": {
-    "description": "Footer link to Dust documentation."
-  },
-  "footer_rights": "© {year} Morrow။ မူပိုင်ခွင့်အားလုံး ထိန်းသိမ်းထားသည်။",
-  "@footer_rights": {
-    "description": "Current-year storefront copyright line.",
-    "placeholders": {
-      "year": {
-        "example": "2026"
-      }
-    }
-  },
-  "footer_source_code": "မူရင်းကုဒ်",
-  "@footer_source_code": {
-    "description": "Footer link to this storefront source."
-  },
-  "from_price": "မှစ၍ ",
-  "@from_price": {
-    "description": "Prefix shown before the cheapest unselected variant price."
-  },
-  "hero_subtitle": "Powered by dust",
-  "@hero_subtitle": {
-    "description": "Home hero supporting line."
-  },
-  "hero_title": "နေ့စဉ်သုံးပစ္စည်းများကို သေချာစွာ ရွေးချယ်ထားသည်။",
-  "@hero_title": {
-    "description": "Home hero heading."
-  },
-  "home": "ပင်မစာမျက်နှာ",
-  "@home": {
-    "description": "Home navigation link."
-  },
-  "material": "ပစ္စည်းအမျိုးအစား",
-  "@material": {
-    "description": "Product material fact label."
-  },
-  "menu": "မီနူး",
-  "@menu": {
-    "description": "Opens storefront navigation."
-  },
-  "not_found_body": "သင် ဝင်ရောက်ရန် ကြိုးစားသော စာမျက်နှာ မရှိပါ။",
-  "@not_found_body": {
-    "description": "Explanation shown for an unknown storefront route."
-  },
-  "not_found_frontpage": "ပင်မစာမျက်နှာသို့ သွားရန်",
-  "@not_found_frontpage": {
-    "description": "Returns from an unknown route to the storefront home."
-  },
-  "not_found_title": "စာမျက်နှာကို ရှာမတွေ့ပါ",
-  "@not_found_title": {
-    "description": "Heading shown for an unknown storefront route."
-  },
-  "origin_country": "ထုတ်လုပ်သည့်နိုင်ငံ",
-  "@origin_country": {
-    "description": "Product origin fact label."
-  },
-  "catalog_failure": "ကုန်ပစ္စည်းစာရင်းကို ရယူ၍ မရပါ။",
-  "@catalog_failure": {
-    "description": "Safe error shown when the home catalogue cannot load."
-  },
-  "pagination_ellipsis": "…",
-  "@pagination_ellipsis": {
-    "description": "Gap between non-adjacent product page numbers."
-  },
-  "out_of_stock": "ပစ္စည်းကုန်နေပါသည်",
-  "@out_of_stock": {
-    "description": "Unavailable selected variant label."
-  },
-  "price_separator": "—",
-  "@price_separator": {
-    "description": "Separator between product title and price."
-  },
-  "product_information": "ကုန်ပစ္စည်း အချက်အလက်",
-  "@product_information": {
-    "description": "Product facts accordion title."
-  },
-  "products_failure": "ကုန်ပစ္စည်းများကို ရယူ၍ မရပါ။",
-  "@products_failure": {
-    "description": "Safe error shown when a product listing cannot load."
-  },
-  "product_type": "အမျိုးအစား",
-  "@product_type": {
-    "description": "Product type fact label."
-  },
-  "products_action": "ကုန်ပစ္စည်းများ ဝယ်ယူရန်",
-  "@products_action": {
-    "description": "Scrolls from the hero to the product grid."
-  },
-  "related_products": "ဆက်စပ်ကုန်ပစ္စည်းများ",
-  "@related_products": {
-    "description": "Recommendation section label."
-  },
-  "related_products_body": "ဤကုန်ပစ္စည်းများကိုလည်း ကြည့်ရှုနိုင်ပါသည်။",
-  "@related_products_body": {
-    "description": "Recommendation section heading."
-  },
-  "related_products_failed": "ဆက်စပ်ကုန်ပစ္စည်းများကို မဖွင့်နိုင်ပါ။",
-  "@related_products_failed": {
-    "description": "Display-safe recommendation failure."
-  },
-  "retry": "ထပ်ကြိုးစားပါ",
-  "@retry": {
-    "description": "Translation for `shop_retry`."
-  },
-  "select_option": "{name} ရွေးချယ်ပါ",
-  "@select_option": {
-    "description": "Prompts for a named product option.",
-    "placeholders": {
-      "name": {
-        "example": "Size"
-      }
-    }
-  },
-  "select_options": "ရွေးချယ်စရာများ ရွေးရန်",
-  "@select_options": {
-    "description": "Opens product options from the sticky mobile purchase bar."
-  },
-  "select_variant": "အမျိုးအစား ရွေးချယ်ပါ",
-  "@select_variant": {
-    "description": "Prompts for a complete option selection."
-  },
-  "shipping_returns": "ပို့ဆောင်မှုနှင့် ပြန်အပ်မှု",
-  "@shipping_returns": {
-    "description": "Delivery policy accordion title."
-  },
-  "simple_exchanges": "လွယ်ကူသော လဲလှယ်မှု",
-  "@simple_exchanges": {
-    "description": "Exchange policy title."
-  },
-  "simple_exchanges_body": "အရွယ်အစား မကိုက်ညီပါက ကုန်ပစ္စည်းအသစ်ဖြင့် လဲပေးပါမည်။",
-  "@simple_exchanges_body": {
-    "description": "Exchange policy detail."
-  },
-  "language_label": "ဘာသာစကား:",
-  "@language_label": {
-    "description": "Label for the storefront language selector."
-  },
-  "language_default": "မူလ",
-  "@language_default": {
-    "description": "Uses the storefront fallback language."
-  },
-  "language_english": "အင်္ဂလိပ်",
-  "@language_english": {
-    "description": "English language option."
-  },
-  "language_burmese": "မြန်မာ",
-  "@language_burmese": {
-    "description": "Burmese language option."
-  },
   "close": "ပိတ်မည်",
   "@close": {
     "description": "Dismisses transient storefront feedback."
   },
-  "order_transfer_illustration": "အော်ဒါပိုင်ဆိုင်မှု လွှဲပြောင်းခြင်း",
-  "@order_transfer_illustration": {
-    "description": "Accessible label for the transfer illustration."
+  "country_change_failed": "ပို့ဆောင်မည့်နိုင်ငံကို မပြောင်းနိုင်ပါ။",
+  "@country_change_failed": {
+    "description": "Retryable selling-country change failure."
   },
-  "order_transfer_title": "အော်ဒါ {id} အတွက် လွှဲပြောင်းရန် တောင်းဆိုမှု",
-  "@order_transfer_title": {
-    "description": "Order-transfer decision page heading.",
-    "placeholders": {"id": {"example": "order_123"}}
+  "country_denmark": "ဒိန်းမတ်",
+  "@country_denmark": {
+    "description": "Country display name."
   },
-  "order_transfer_intro": "သင့်အော်ဒါ ({id}) ၏ ပိုင်ဆိုင်မှုကို လွှဲပြောင်းရန် တောင်းဆိုချက်တစ်ခု ရရှိထားသည်။ သဘောတူပါက အောက်ပါခလုတ်ဖြင့် အတည်ပြုပါ။",
-  "@order_transfer_intro": {
-    "description": "Introduces the transfer decision.",
-    "placeholders": {"id": {"example": "order_123"}}
+  "country_france": "ပြင်သစ်",
+  "@country_france": {
+    "description": "Country display name."
   },
-  "order_transfer_responsibility": "လက်ခံပါက ပိုင်ရှင်အသစ်သည် ဤအော်ဒါနှင့် သက်ဆိုင်သော တာဝန်နှင့် ခွင့်ပြုချက်အားလုံးကို လွှဲယူမည်။",
-  "@order_transfer_responsibility": {
-    "description": "Explains the effect of accepting a transfer."
+  "country_germany": "ဂျာမနီ",
+  "@country_germany": {
+    "description": "Country display name."
   },
-  "order_transfer_ignore": "ဤတောင်းဆိုမှုကို မသိရှိပါက သို့မဟုတ် ပိုင်ဆိုင်မှုကို ဆက်လက်ထားလိုပါက မည်သည့်လုပ်ဆောင်ချက်မျှ မလိုပါ။",
-  "@order_transfer_ignore": {
-    "description": "Explains the safe no-action transfer choice."
+  "country_italy": "အီတလီ",
+  "@country_italy": {
+    "description": "Country display name."
   },
-  "order_transfer_accept": "လွှဲပြောင်းမှုကို လက်ခံမည်",
-  "@order_transfer_accept": {
-    "description": "Accepts an order-transfer request."
+  "country_spain": "စပိန်",
+  "@country_spain": {
+    "description": "Country display name."
   },
-  "order_transfer_decline": "လွှဲပြောင်းမှုကို ငြင်းပယ်မည်",
-  "@order_transfer_decline": {
-    "description": "Declines an order-transfer request."
+  "country_sweden": "ဆွီဒင်",
+  "@country_sweden": {
+    "description": "Country display name."
   },
-  "order_transfer_accepted": "အော်ဒါကို အောင်မြင်စွာ လွှဲပြောင်းပြီးပါပြီ!",
-  "@order_transfer_accepted": {
-    "description": "Successful acceptance feedback."
+  "country_united_kingdom": "ယူနိုက်တက်ကင်းဒမ်း",
+  "@country_united_kingdom": {
+    "description": "Country display name."
   },
-  "order_transfer_declined": "အော်ဒါလွှဲပြောင်းမှုကို အောင်မြင်စွာ ငြင်းပယ်ပြီးပါပြီ!",
-  "@order_transfer_declined": {
-    "description": "Successful decline feedback."
-  },
-  "order_transfer_invalid_request": "အော်ဒါ ID ကို စစ်ဆေးပြီး ထပ်ကြိုးစားပါ။",
-  "@order_transfer_invalid_request": {
-    "description": "Invalid transfer request feedback."
-  },
-  "order_transfer_session_expired": "အကောင့်ဝင်ထားမှု သက်တမ်းကုန်သွားပါပြီ။ ထပ်မံအကောင့်ဝင်ပါ။",
-  "@order_transfer_session_expired": {
-    "description": "Expired transfer requester session feedback."
-  },
-  "order_transfer_unavailable": "ဤလွှဲပြောင်းလင့်ခ်သည် မမှန်ကန်ပါ သို့မဟုတ် သက်တမ်းကုန်သွားပါပြီ။",
-  "@order_transfer_unavailable": {
-    "description": "Indistinguishable invalid or expired capability feedback."
-  },
-  "order_transfer_order_unavailable": "ဤအော်ဒါကို ဆက်လက်လွှဲပြောင်း၍ မရတော့ပါ။",
-  "@order_transfer_order_unavailable": {
-    "description": "Explains that the order changed after the transfer request."
-  },
-  "order_transfer_conflict": "ဤလွှဲပြောင်းမှုတွင် မတူညီသော ဆုံးဖြတ်ချက် ချပြီးသားဖြစ်သည်။",
-  "@order_transfer_conflict": {
-    "description": "Conflicting transfer decision feedback."
-  },
-  "order_transfer_delivery_unavailable": "လွှဲပြောင်းအီးမေးလ် ဝန်ဆောင်မှု မရနိုင်သေးပါ။ နောက်မှ ထပ်ကြိုးစားပါ။",
-  "@order_transfer_delivery_unavailable": {
-    "description": "Unavailable transfer-email service feedback."
-  },
-  "order_transfer_failed": "လွှဲပြောင်းမှုကို မပြင်ဆင်နိုင်ပါ။ ထပ်ကြိုးစားပါ။",
-  "@order_transfer_failed": {
-    "description": "Retryable transfer failure feedback."
-  },
-  "account_verification_sent": "{email} သို့ အတည်ပြုလင့်ခ် ပို့လိုက်ပါပြီ။ အီးမေးလ်ကို အတည်ပြုပြီး အကောင့်ဝင်ပါ။",
-  "@account_verification_sent": {
-    "description": "Registration or sign-in email verification notice.",
-    "placeholders": {
-      "email": {
-        "type": "String",
-        "example": "ada@example.com"
-      }
-    }
-  },
-  "email_verification_title": "အီးမေးလ် အတည်ပြုခြင်း",
-  "@email_verification_title": {
-    "description": "Email verification page title."
-  },
-  "email_verification_loading": "အီးမေးလ်ကို အတည်ပြုနေပါသည်...",
-  "@email_verification_loading": {
-    "description": "Email verification progress."
-  },
-  "email_verification_success": "အီးမေးလ် အတည်ပြုပြီးပါပြီ။ ယခု အကောင့်ဝင်နိုင်ပါပြီ။",
-  "@email_verification_success": {
-    "description": "Successful email verification message."
-  },
-  "email_verification_failed": "ဤအတည်ပြုလင့်ခ်သည် မမှန်ပါ သို့မဟုတ် သက်တမ်းကုန်သွားပါပြီ။ အတည်ပြုအီးမေးလ်အသစ် ရယူရန် အကောင့်ဝင်ပါ။",
-  "@email_verification_failed": {
-    "description": "Invalid, expired, or consumed verification message."
-  },
-  "email_verification_sign_in": "အကောင့်ဝင်ရန် သွားမည်",
-  "@email_verification_sign_in": {
-    "description": "Returns from verification to account sign in."
-  },
-  "more": "ထပ်ရှိသည်",
-  "@more": {
-    "description": "Completes the hidden order-item count."
-  },
-  "option_fallback": "ရွေးချယ်စရာ",
-  "@option_fallback": {
-    "description": "Fallback heading for a merchant option without a title."
-  },
-  "options": "ရွေးချယ်စရာများ",
-  "@options": {
-    "description": "Heading above store-wide option filters."
-  },
-  "sort_by": "အစီအစဉ်",
-  "@sort_by": {
-    "description": "Heading above product sort choices."
-  },
-  "sort_latest": "နောက်ဆုံးရောက်ကုန်ပစ္စည်းများ",
-  "@sort_latest": {
-    "description": "Sorts products by newest first."
-  },
-  "sort_price_asc": "ဈေးနှုန်း: အနိမ့်မှ အမြင့်",
-  "@sort_price_asc": {
-    "description": "Sorts products from lowest to highest price."
-  },
-  "sort_price_desc": "ဈေးနှုန်း: အမြင့်မှ အနိမ့်",
-  "@sort_price_desc": {
-    "description": "Sorts products from highest to lowest price."
+  "country_united_states": "အမေရိကန်ပြည်ထောင်စု",
+  "@country_united_states": {
+    "description": "Country display name."
   },
   "customer_service_contact": "ဆက်သွယ်ရန်",
   "@customer_service_contact": {
@@ -1481,6 +1177,390 @@
         "type": "int"
       }
     }
+  },
+  "dimensions": "အတိုင်းအတာ",
+  "@dimensions": {
+    "description": "Product dimensions fact label."
+  },
+  "easy_returns": "လွယ်ကူသော ပြန်အပ်မှု",
+  "@easy_returns": {
+    "description": "Return policy title."
+  },
+  "easy_returns_body": "ကုန်ပစ္စည်းကို ပြန်အပ်ပြီး ငွေပြန်လည်ရယူနိုင်ပါသည်။",
+  "@easy_returns_body": {
+    "description": "Return policy detail."
+  },
+  "edit": "ပြင်ရန်",
+  "@edit": {
+    "description": "Edits an existing value."
+  },
+  "email_verification_failed": "ဤအတည်ပြုလင့်ခ်သည် မမှန်ပါ သို့မဟုတ် သက်တမ်းကုန်သွားပါပြီ။ အတည်ပြုအီးမေးလ်အသစ် ရယူရန် အကောင့်ဝင်ပါ။",
+  "@email_verification_failed": {
+    "description": "Invalid, expired, or consumed verification message."
+  },
+  "email_verification_loading": "အီးမေးလ်ကို အတည်ပြုနေပါသည်...",
+  "@email_verification_loading": {
+    "description": "Email verification progress."
+  },
+  "email_verification_sign_in": "အကောင့်ဝင်ရန် သွားမည်",
+  "@email_verification_sign_in": {
+    "description": "Returns from verification to account sign in."
+  },
+  "email_verification_success": "အီးမေးလ် အတည်ပြုပြီးပါပြီ။ ယခု အကောင့်ဝင်နိုင်ပါပြီ။",
+  "@email_verification_success": {
+    "description": "Successful email verification message."
+  },
+  "email_verification_title": "အီးမေးလ် အတည်ပြုခြင်း",
+  "@email_verification_title": {
+    "description": "Email verification page title."
+  },
+  "empty": "ရောင်းစရာ မရှိသေးပါ",
+  "@empty": {
+    "description": "Translation for `shop_empty`."
+  },
+  "explore_products": "ကုန်ပစ္စည်းများ ကြည့်ရန်",
+  "@explore_products": {
+    "description": "Link from the empty cart to the catalogue."
+  },
+  "fast_delivery": "မြန်ဆန်သော ပို့ဆောင်မှု",
+  "@fast_delivery": {
+    "description": "Fast-delivery policy title."
+  },
+  "fast_delivery_body": "သင့်ပစ္စည်းကို လုပ်ငန်းရက် ၃ ရက်မှ ၅ ရက်အတွင်း လက်ခံရရှိပါမည်။",
+  "@fast_delivery_body": {
+    "description": "Fast-delivery policy detail."
+  },
+  "footer_categories": "အမျိုးအစားများ",
+  "@footer_categories": {
+    "description": "Footer category-navigation heading."
+  },
+  "footer_collections": "စုစည်းမှုများ",
+  "@footer_collections": {
+    "description": "Footer collection-navigation heading."
+  },
+  "footer_documentation": "စာရွက်စာတမ်းများ",
+  "@footer_documentation": {
+    "description": "Footer link to Dust documentation."
+  },
+  "footer_rights": "© {year} Morrow။ မူပိုင်ခွင့်အားလုံး ထိန်းသိမ်းထားသည်။",
+  "@footer_rights": {
+    "description": "Current-year storefront copyright line.",
+    "placeholders": {
+      "year": {
+        "example": "2026"
+      }
+    }
+  },
+  "footer_source_code": "မူရင်းကုဒ်",
+  "@footer_source_code": {
+    "description": "Footer link to this storefront source."
+  },
+  "free_shipping_away": " ဖိုး ဝယ်ယူပါ",
+  "@free_shipping_away": {
+    "description": "Suffix after the amount remaining for free shipping."
+  },
+  "free_shipping_close": "အခမဲ့ပို့ဆောင်ရေး စာတိုကို ပိတ်ရန်",
+  "@free_shipping_close": {
+    "description": "Accessible label for dismissing the free-shipping popup."
+  },
+  "free_shipping_only": "နောက်ထပ် ",
+  "@free_shipping_only": {
+    "description": "Prefix before the amount remaining for free shipping."
+  },
+  "free_shipping_unlock": "အခမဲ့ ပို့ဆောင်ခ ရယူပါ",
+  "@free_shipping_unlock": {
+    "description": "Heading in the conditional free-shipping popup."
+  },
+  "free_shipping_unlocked": "အခမဲ့ ပို့ဆောင်ခ ရပါပြီ!",
+  "@free_shipping_unlocked": {
+    "description": "Success shown when free delivery becomes available."
+  },
+  "free_shipping_view_cart": "စျေးခြင်းတောင်း ကြည့်ရန်",
+  "@free_shipping_view_cart": {
+    "description": "Free-shipping popup link to the active cart."
+  },
+  "free_shipping_view_products": "ပစ္စည်းများ ကြည့်ရန်",
+  "@free_shipping_view_products": {
+    "description": "Free-shipping popup link to product browsing."
+  },
+  "from_price": "မှစ၍ ",
+  "@from_price": {
+    "description": "Prefix shown before the cheapest unselected variant price."
+  },
+  "hero_subtitle": "Powered by dust",
+  "@hero_subtitle": {
+    "description": "Home hero supporting line."
+  },
+  "hero_title": "နေ့စဉ်သုံးပစ္စည်းများကို သေချာစွာ ရွေးချယ်ထားသည်။",
+  "@hero_title": {
+    "description": "Home hero heading."
+  },
+  "home": "ပင်မစာမျက်နှာ",
+  "@home": {
+    "description": "Home navigation link."
+  },
+  "language_burmese": "မြန်မာ",
+  "@language_burmese": {
+    "description": "Burmese language option."
+  },
+  "language_default": "မူလ",
+  "@language_default": {
+    "description": "Uses the storefront fallback language."
+  },
+  "language_english": "အင်္ဂလိပ်",
+  "@language_english": {
+    "description": "English language option."
+  },
+  "language_label": "ဘာသာစကား:",
+  "@language_label": {
+    "description": "Label for the storefront language selector."
+  },
+  "material": "ပစ္စည်းအမျိုးအစား",
+  "@material": {
+    "description": "Product material fact label."
+  },
+  "menu": "မီနူး",
+  "@menu": {
+    "description": "Opens storefront navigation."
+  },
+  "more": "ထပ်ရှိသည်",
+  "@more": {
+    "description": "Completes the hidden order-item count."
+  },
+  "not_found_body": "သင် ဝင်ရောက်ရန် ကြိုးစားသော စာမျက်နှာ မရှိပါ။",
+  "@not_found_body": {
+    "description": "Explanation shown for an unknown storefront route."
+  },
+  "not_found_frontpage": "ပင်မစာမျက်နှာသို့ သွားရန်",
+  "@not_found_frontpage": {
+    "description": "Returns from an unknown route to the storefront home."
+  },
+  "not_found_title": "စာမျက်နှာကို ရှာမတွေ့ပါ",
+  "@not_found_title": {
+    "description": "Heading shown for an unknown storefront route."
+  },
+  "option_fallback": "ရွေးချယ်စရာ",
+  "@option_fallback": {
+    "description": "Fallback heading for a merchant option without a title."
+  },
+  "options": "ရွေးချယ်စရာများ",
+  "@options": {
+    "description": "Heading above store-wide option filters."
+  },
+  "order_transfer_accept": "လွှဲပြောင်းမှုကို လက်ခံမည်",
+  "@order_transfer_accept": {
+    "description": "Accepts an order-transfer request."
+  },
+  "order_transfer_accepted": "အော်ဒါကို အောင်မြင်စွာ လွှဲပြောင်းပြီးပါပြီ!",
+  "@order_transfer_accepted": {
+    "description": "Successful acceptance feedback."
+  },
+  "order_transfer_conflict": "ဤလွှဲပြောင်းမှုတွင် မတူညီသော ဆုံးဖြတ်ချက် ချပြီးသားဖြစ်သည်။",
+  "@order_transfer_conflict": {
+    "description": "Conflicting transfer decision feedback."
+  },
+  "order_transfer_decline": "လွှဲပြောင်းမှုကို ငြင်းပယ်မည်",
+  "@order_transfer_decline": {
+    "description": "Declines an order-transfer request."
+  },
+  "order_transfer_declined": "အော်ဒါလွှဲပြောင်းမှုကို အောင်မြင်စွာ ငြင်းပယ်ပြီးပါပြီ!",
+  "@order_transfer_declined": {
+    "description": "Successful decline feedback."
+  },
+  "order_transfer_delivery_unavailable": "လွှဲပြောင်းအီးမေးလ် ဝန်ဆောင်မှု မရနိုင်သေးပါ။ နောက်မှ ထပ်ကြိုးစားပါ။",
+  "@order_transfer_delivery_unavailable": {
+    "description": "Unavailable transfer-email service feedback."
+  },
+  "order_transfer_failed": "လွှဲပြောင်းမှုကို မပြင်ဆင်နိုင်ပါ။ ထပ်ကြိုးစားပါ။",
+  "@order_transfer_failed": {
+    "description": "Retryable transfer failure feedback."
+  },
+  "order_transfer_ignore": "ဤတောင်းဆိုမှုကို မသိရှိပါက သို့မဟုတ် ပိုင်ဆိုင်မှုကို ဆက်လက်ထားလိုပါက မည်သည့်လုပ်ဆောင်ချက်မျှ မလိုပါ။",
+  "@order_transfer_ignore": {
+    "description": "Explains the safe no-action transfer choice."
+  },
+  "order_transfer_illustration": "အော်ဒါပိုင်ဆိုင်မှု လွှဲပြောင်းခြင်း",
+  "@order_transfer_illustration": {
+    "description": "Accessible label for the transfer illustration."
+  },
+  "order_transfer_intro": "သင့်အော်ဒါ ({id}) ၏ ပိုင်ဆိုင်မှုကို လွှဲပြောင်းရန် တောင်းဆိုချက်တစ်ခု ရရှိထားသည်။ သဘောတူပါက အောက်ပါခလုတ်ဖြင့် အတည်ပြုပါ။",
+  "@order_transfer_intro": {
+    "description": "Introduces the transfer decision.",
+    "placeholders": {
+      "id": {
+        "example": "order_123"
+      }
+    }
+  },
+  "order_transfer_invalid_request": "အော်ဒါ ID ကို စစ်ဆေးပြီး ထပ်ကြိုးစားပါ။",
+  "@order_transfer_invalid_request": {
+    "description": "Invalid transfer request feedback."
+  },
+  "order_transfer_order_unavailable": "ဤအော်ဒါကို ဆက်လက်လွှဲပြောင်း၍ မရတော့ပါ။",
+  "@order_transfer_order_unavailable": {
+    "description": "Explains that the order changed after the transfer request."
+  },
+  "order_transfer_responsibility": "လက်ခံပါက ပိုင်ရှင်အသစ်သည် ဤအော်ဒါနှင့် သက်ဆိုင်သော တာဝန်နှင့် ခွင့်ပြုချက်အားလုံးကို လွှဲယူမည်။",
+  "@order_transfer_responsibility": {
+    "description": "Explains the effect of accepting a transfer."
+  },
+  "order_transfer_session_expired": "အကောင့်ဝင်ထားမှု သက်တမ်းကုန်သွားပါပြီ။ ထပ်မံအကောင့်ဝင်ပါ။",
+  "@order_transfer_session_expired": {
+    "description": "Expired transfer requester session feedback."
+  },
+  "order_transfer_title": "အော်ဒါ {id} အတွက် လွှဲပြောင်းရန် တောင်းဆိုမှု",
+  "@order_transfer_title": {
+    "description": "Order-transfer decision page heading.",
+    "placeholders": {
+      "id": {
+        "example": "order_123"
+      }
+    }
+  },
+  "order_transfer_unavailable": "ဤလွှဲပြောင်းလင့်ခ်သည် မမှန်ကန်ပါ သို့မဟုတ် သက်တမ်းကုန်သွားပါပြီ။",
+  "@order_transfer_unavailable": {
+    "description": "Indistinguishable invalid or expired capability feedback."
+  },
+  "origin_country": "ထုတ်လုပ်သည့်နိုင်ငံ",
+  "@origin_country": {
+    "description": "Product origin fact label."
+  },
+  "out_of_stock": "ပစ္စည်းကုန်နေပါသည်",
+  "@out_of_stock": {
+    "description": "Unavailable selected variant label."
+  },
+  "pagination_ellipsis": "…",
+  "@pagination_ellipsis": {
+    "description": "Gap between non-adjacent product page numbers."
+  },
+  "price_separator": "—",
+  "@price_separator": {
+    "description": "Separator between product title and price."
+  },
+  "product_information": "ကုန်ပစ္စည်း အချက်အလက်",
+  "@product_information": {
+    "description": "Product facts accordion title."
+  },
+  "product_type": "အမျိုးအစား",
+  "@product_type": {
+    "description": "Product type fact label."
+  },
+  "products_action": "ကုန်ပစ္စည်းများ ဝယ်ယူရန်",
+  "@products_action": {
+    "description": "Scrolls from the hero to the product grid."
+  },
+  "products_failure": "ကုန်ပစ္စည်းများကို ရယူ၍ မရပါ။",
+  "@products_failure": {
+    "description": "Safe error shown when a product listing cannot load."
+  },
+  "related_products": "ဆက်စပ်ကုန်ပစ္စည်းများ",
+  "@related_products": {
+    "description": "Recommendation section label."
+  },
+  "related_products_body": "ဤကုန်ပစ္စည်းများကိုလည်း ကြည့်ရှုနိုင်ပါသည်။",
+  "@related_products_body": {
+    "description": "Recommendation section heading."
+  },
+  "related_products_failed": "ဆက်စပ်ကုန်ပစ္စည်းများကို မဖွင့်နိုင်ပါ။",
+  "@related_products_failed": {
+    "description": "Display-safe recommendation failure."
+  },
+  "remove": "ဖယ်ရှားရန်",
+  "@remove": {
+    "description": "Removes a saved item."
+  },
+  "retry": "ထပ်ကြိုးစားပါ",
+  "@retry": {
+    "description": "Translation for `shop_retry`."
+  },
+  "save": "သိမ်းရန်",
+  "@save": {
+    "description": "Saves the current form."
+  },
+  "save_changes": "ပြင်ဆင်ချက်များ သိမ်းရန်",
+  "@save_changes": {
+    "description": "Saves profile changes."
+  },
+  "search_clear": "ရှာဖွေမှု ရှင်းရန်",
+  "@search_clear": {
+    "description": "Translation for `shop_search_clear`."
+  },
+  "search_close": "ပိတ်ရန်",
+  "@search_close": {
+    "description": "Translation for `shop_search_close`."
+  },
+  "search_empty": "မတွေ့ပါ",
+  "@search_empty": {
+    "description": "Translation for `shop_search_empty`."
+  },
+  "search_failed": "ပစ္စည်းရှာဖွေမှု မအောင်မြင်ပါ။",
+  "@search_failed": {
+    "description": "Translation for `shop_search_failed`."
+  },
+  "search_loading": "ရှာဖွေနေသည်…",
+  "@search_loading": {
+    "description": "Translation for `shop_search_loading`."
+  },
+  "search_products": "ပစ္စည်းများ ရှာရန်",
+  "@search_products": {
+    "description": "Translation for `shop_search_products`."
+  },
+  "search_start": "ပစ္စည်းရှာရန် စာရိုက်ပါ။",
+  "@search_start": {
+    "description": "Translation for `shop_search_start`."
+  },
+  "search_title": "ရှာဖွေရန်",
+  "@search_title": {
+    "description": "Translation for `shop_search_title`."
+  },
+  "select_option": "{name} ရွေးချယ်ပါ",
+  "@select_option": {
+    "description": "Prompts for a named product option.",
+    "placeholders": {
+      "name": {
+        "example": "Size"
+      }
+    }
+  },
+  "select_options": "ရွေးချယ်စရာများ ရွေးရန်",
+  "@select_options": {
+    "description": "Opens product options from the sticky mobile purchase bar."
+  },
+  "select_variant": "အမျိုးအစား ရွေးချယ်ပါ",
+  "@select_variant": {
+    "description": "Prompts for a complete option selection."
+  },
+  "shipping_returns": "ပို့ဆောင်မှုနှင့် ပြန်အပ်မှု",
+  "@shipping_returns": {
+    "description": "Delivery policy accordion title."
+  },
+  "shipping_to": "ပို့ဆောင်မည့် နိုင်ငံ:",
+  "@shipping_to": {
+    "description": "Country selector label in the store menu."
+  },
+  "simple_exchanges": "လွယ်ကူသော လဲလှယ်မှု",
+  "@simple_exchanges": {
+    "description": "Exchange policy title."
+  },
+  "simple_exchanges_body": "အရွယ်အစား မကိုက်ညီပါက ကုန်ပစ္စည်းအသစ်ဖြင့် လဲပေးပါမည်။",
+  "@simple_exchanges_body": {
+    "description": "Exchange policy detail."
+  },
+  "sort_by": "အစီအစဉ်",
+  "@sort_by": {
+    "description": "Heading above product sort choices."
+  },
+  "sort_latest": "နောက်ဆုံးရောက်ကုန်ပစ္စည်းများ",
+  "@sort_latest": {
+    "description": "Sorts products by newest first."
+  },
+  "sort_price_asc": "ဈေးနှုန်း: အနိမ့်မှ အမြင့်",
+  "@sort_price_asc": {
+    "description": "Sorts products from lowest to highest price."
+  },
+  "sort_price_desc": "ဈေးနှုန်း: အမြင့်မှ အနိမ့်",
+  "@sort_price_desc": {
+    "description": "Sorts products from highest to lowest price."
   },
   "title": "ဆိုင်",
   "@title": {

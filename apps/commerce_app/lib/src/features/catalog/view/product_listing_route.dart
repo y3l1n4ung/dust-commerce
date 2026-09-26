@@ -10,6 +10,7 @@ class ProductListingRoute extends StatefulWidget {
     required this.requestKey,
     required this.load,
     required this.onSortChanged,
+    this.onSearchChanged,
     required this.onPageChanged,
     required this.onOptionValuesChanged,
     required this.onCategorySelected,
@@ -30,6 +31,9 @@ class ProductListingRoute extends StatefulWidget {
 
   /// Changes the route sort query.
   final ValueChanged<String> onSortChanged;
+
+  /// Changes the Store free-text search query.
+  final ValueChanged<String>? onSearchChanged;
 
   /// Route/query identity used to reject state from the previous page.
   final String requestKey;
@@ -63,6 +67,7 @@ class _ProductListingRouteState extends State<ProductListingRoute> {
           requestKey: widget.requestKey,
           onRetry: _loadAfterFrame,
           onSortChanged: widget.onSortChanged,
+          onSearchChanged: widget.onSearchChanged,
           onPageChanged: widget.onPageChanged,
           onOptionValuesChanged: widget.onOptionValuesChanged,
           onCategorySelected: widget.onCategorySelected,

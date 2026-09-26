@@ -88,6 +88,7 @@ abstract interface class CommerceApi {
   @GET('/store/products')
   Future<ProductPageView> products({
     @Query('currency') String? currency,
+    @Query('q') String? query,
     @Query('collection') String? collection,
     @Query('category') String? category,
     @Query('tag') String? tag,

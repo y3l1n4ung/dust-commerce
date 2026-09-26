@@ -16,6 +16,7 @@ final class RelatedFailureApi implements CommerceApi {
   @override
   Future<ProductPageView> products({
     String? currency,
+    String? query,
     String? collection,
     String? category,
     String? tag,
