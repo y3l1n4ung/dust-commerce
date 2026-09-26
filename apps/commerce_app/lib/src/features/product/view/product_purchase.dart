@@ -34,6 +34,29 @@ class ProductPrice extends StatelessWidget {
         ? Theme.of(context).textTheme.bodyLarge
         : Theme.of(context).textTheme.titleLarge;
     final sale = price != null && original != null && original > price;
+    if (compact) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          if (sale) ...[
+            Text(
+              formatMoney(original),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    decoration: TextDecoration.lineThrough,
+                  ),
+            ),
+            const SizedBox(width: 8),
+          ],
+          Text(
+            price == null ? '-' : formatMoney(price),
+            style: style?.copyWith(
+              color: sale ? StoreColors.interactive : null,
+            ),
+          ),
+        ],
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
