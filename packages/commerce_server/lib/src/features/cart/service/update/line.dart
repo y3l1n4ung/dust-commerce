@@ -67,7 +67,8 @@ Future<Result<Option<AddLineFailure>, SqlxError>> _addLine(
   if (cartOption case None()) return const Ok(Some(AddLineFailure.noCart));
   final cart = (cartOption as Some<CartResponse>).value;
 
-  final priced = await catalog.findVariant(variantId, cart.currencyCode);
+  final priced =
+      await catalog.findVariantForCart(variantId, cart.currencyCode, cartId);
   if (priced case Err(:final error)) return Err(error);
   final variantOption = optionOf(
     (priced as Ok<SellableVariant?, SqlxError>).value,

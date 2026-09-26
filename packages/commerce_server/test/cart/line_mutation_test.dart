@@ -45,6 +45,19 @@ void main() {
     return CartView.fromJson(response.json! as Map<String, Object?>);
   }
 
+  group('POST /store/carts/{id}/line-items', () {
+    test('rejects a variant outside the cart sales channel', () async {
+      await _channel(database, 'sc_wholesale');
+      final cartId = await newCart();
+
+      final response = await (client.post('/store/carts/$cartId/line-items')
+            ..json({'variant_id': 'var_small'}))
+          .send();
+
+      response.assertUnprocessable();
+    });
+  });
+
   group('PATCH /store/carts/{id}/line-items/{lineId}', () {
     test('replaces quantity and returns authoritative totals', () async {
       final cartId = await newCart();
@@ -77,6 +90,24 @@ void main() {
       final unchanged =
           CartView.fromJson(current.json! as Map<String, Object?>);
       expect(unchanged.cart.items.single.quantity, 1);
+    });
+
+    test('rejects a line whose product left the cart channel', () async {
+      await _channel(database, 'sc_web');
+      final cartId = await newCart();
+      final lineId = (await addLine(cartId, 'var_small')).cart.items.single.id;
+      await _run(
+        database,
+        "UPDATE product_sales_channels SET deleted_at = "
+        "'2026-09-26T00:00:00.000Z' WHERE product_id = 'prod_shirt'",
+      );
+
+      final response = await (client.patch(
+        '/store/carts/$cartId/line-items/$lineId',
+      )..json({'quantity': 2}))
+          .send();
+
+      response.assertConflict();
     });
 
     test('does not mutate a line from another cart', () async {
@@ -136,26 +167,44 @@ void main() {
   });
 }
 
-Future<void> _seed(CommerceDatabase database) async {
-  Future<void> run(String sql) =>
-      queryExecute(sql, []).execute(database.executor);
+Future<void> _channel(CommerceDatabase database, String productChannel) async {
+  await _run(
+    database,
+    "INSERT INTO sales_channels (id, name) VALUES "
+    "('sc_web', 'Online Store'), ('sc_wholesale', 'Wholesale')",
+  );
+  await _run(
+    database,
+    "INSERT INTO product_sales_channels "
+    "(id, product_id, sales_channel_id) VALUES "
+    "('psc_shirt', 'prod_shirt', '$productChannel')",
+  );
+}
 
-  await run(
+Future<void> _seed(CommerceDatabase database) async {
+  await _run(
+    database,
     r"INSERT INTO regions (id, name, currency_code, tax_rate, countries) "
     r"VALUES ('reg_us', 'United States', 'usd', 1000, 'us')",
   );
-  await run(
+  await _run(
+    database,
     r"INSERT INTO products (id, title, handle, status) VALUES "
     r"('prod_shirt', 'T-Shirt', 't-shirt', 'published')",
   );
-  await run(
+  await _run(
+    database,
     r"INSERT INTO product_variants "
     r"(id, product_id, title, inventory_quantity) VALUES "
     r"('var_small', 'prod_shirt', 'Small', 50), "
     r"('var_large', 'prod_shirt', 'Large', 2)",
   );
-  await run(
+  await _run(
+    database,
     r"INSERT INTO variant_prices (variant_id, currency_code, amount) VALUES "
     r"('var_small', 'usd', 1999), ('var_large', 'usd', 2199)",
   );
 }
+
+Future<void> _run(CommerceDatabase database, String sql) =>
+    queryExecute(sql, const []).execute(database.executor);

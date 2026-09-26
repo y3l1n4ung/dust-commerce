@@ -84,6 +84,24 @@ void main() {
       expect(handles, isNot(contains('secret-hoodie')));
     });
 
+    test('lists only products sold through the storefront channel', () async {
+      await _run(
+        database,
+        "INSERT INTO sales_channels (id, name) VALUES "
+        "('sc_web', 'Online Store'), ('sc_wholesale', 'Wholesale')",
+      );
+      await _run(
+        database,
+        "INSERT INTO product_sales_channels "
+        "(id, product_id, sales_channel_id) VALUES "
+        "('psc_shirt', 'prod_shirt', 'sc_web'), "
+        "('psc_mug', 'prod_mug', 'sc_wholesale')",
+      );
+
+      expect(ok(await list()).map((row) => row.handle), ['t-shirt']);
+      expect(ok(await count()), 1);
+    });
+
     test('pages, so a large catalogue does not arrive at once', () async {
       final first = await list(limit: 1);
       final second = await list(limit: 1, offset: 1);
@@ -167,3 +185,6 @@ void main() {
     });
   });
 }
+
+Future<void> _run(CommerceDatabase database, String sql) =>
+    queryExecute(sql, const []).execute(database.executor);

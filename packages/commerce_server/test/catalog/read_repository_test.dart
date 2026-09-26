@@ -55,11 +55,39 @@ void main() {
     expect(ok(await reads().findByHandle('nothing', 'usd')), isNull);
   });
 
+  test('findByHandle hides products outside the storefront channel', () async {
+    await _run(
+      database,
+      "INSERT INTO sales_channels (id, name) VALUES "
+      "('sc_web', 'Online Store'), ('sc_wholesale', 'Wholesale')",
+    );
+    await _run(
+      database,
+      "INSERT INTO product_sales_channels "
+      "(id, product_id, sales_channel_id) VALUES "
+      "('psc_shirt', 'prod_shirt', 'sc_web'), "
+      "('psc_mug', 'prod_mug', 'sc_wholesale')",
+    );
+
+    expect(ok(await reads().findByHandle('t-shirt', 'usd'))?.id, 'prod_shirt');
+    expect(ok(await reads().findByHandle('mug', 'usd')), isNull);
+  });
+
   test('findVariant scopes variant reads to the requested currency', () async {
-    final row = ok(await reads().findVariant('var_small', 'usd'));
+    final row = ok(await reads().findVariantForCart(
+      'var_small',
+      'usd',
+      'legacy_cart',
+    ));
 
     expect(row?.amount, 1999);
     expect(row?.inventoryQuantity, 5);
-    expect(ok(await reads().findVariant('var_large', 'eur')), isNull);
+    expect(
+      ok(await reads().findVariantForCart('var_large', 'eur', 'legacy_cart')),
+      isNull,
+    );
   });
 }
+
+Future<void> _run(CommerceDatabase database, String sql) =>
+    queryExecute(sql, const []).execute(database.executor);

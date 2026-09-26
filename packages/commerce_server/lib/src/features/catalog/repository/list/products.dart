@@ -53,18 +53,14 @@ SELECT product.id, product.title, product.handle, product.description,
        coalesce((
          SELECT json_group_array(json(ordered.option_json))
          FROM (
-           SELECT json_object(
-             'id', option.id, 'title', option.title,
-             'values', json(coalesce((
+          SELECT json_object('id', option.id, 'title', option.title,
+            'values', json(coalesce((
                SELECT json_group_array(ordered_value.value)
                FROM (
-                 SELECT option_value.value
-                 FROM product_product_option_values availability
-                 JOIN product_option_values option_value
-                   ON option_value.id = availability.product_option_value_id
-                 WHERE availability.product_product_option_id = link.id
-                   AND option_value.deleted_at IS NULL AND availability.deleted_at IS NULL
-                 ORDER BY option_value.rank, option_value.id
+                SELECT option_value.value FROM product_product_option_values availability
+                JOIN product_option_values option_value ON option_value.id = availability.product_option_value_id
+                WHERE availability.product_product_option_id = link.id AND option_value.deleted_at IS NULL
+                  AND availability.deleted_at IS NULL ORDER BY option_value.rank, option_value.id
                ) ordered_value
              ), '[]'))
            ) AS option_json
@@ -77,29 +73,21 @@ SELECT product.id, product.title, product.handle, product.description,
        coalesce((
          SELECT json_group_array(json(ordered.variant_json))
          FROM (
-           SELECT json_object(
-             'id', variant.id, 'title', variant.title, 'sku', variant.sku,
+          SELECT json_object('id', variant.id, 'title', variant.title, 'sku', variant.sku,
              'inventory_quantity', variant.inventory_quantity, 'manage_inventory', variant.manage_inventory,
              'allow_backorder', variant.allow_backorder, 'amount', price.amount,
              'currency_code', price.currency_code,
              'original_amount', original_price.amount,
              'option_values', json(coalesce((
-               SELECT json_group_object(choice.option_id, option_value.value)
-               FROM variant_option_values choice
-               JOIN product_option_values option_value
-                 ON option_value.id = choice.option_value_id
-                AND option_value.option_id = choice.option_id
-               WHERE choice.variant_id = variant.id
-                 AND option_value.deleted_at IS NULL
+              SELECT json_group_object(choice.option_id, option_value.value) FROM variant_option_values choice
+              JOIN product_option_values option_value ON option_value.id = choice.option_value_id AND option_value.option_id = choice.option_id
+              WHERE choice.variant_id = variant.id AND option_value.deleted_at IS NULL
              ), '{}')),
              'images', json(coalesce((
                SELECT json_group_array(json(ordered_image.image_json))
                FROM (
-                 SELECT json_object('id', image.id, 'url', image.url, 'rank', image.rank) AS image_json
-                 FROM product_image_variants image_variant
-                 JOIN product_images image ON image.id = image_variant.image_id
-                 WHERE image_variant.variant_id = variant.id
-                   AND image.deleted_at IS NULL
+                SELECT json_object('id', image.id, 'url', image.url, 'rank', image.rank) AS image_json FROM product_image_variants image_variant
+                JOIN product_images image ON image.id = image_variant.image_id WHERE image_variant.variant_id = variant.id AND image.deleted_at IS NULL
                  ORDER BY image.rank, image.id
                ) ordered_image
              ), '[]'))
@@ -124,6 +112,13 @@ JOIN (
 LEFT JOIN product_collections collection ON collection.id = product.collection_id AND collection.deleted_at IS NULL
 LEFT JOIN product_types product_type ON product_type.id = product.type_id AND product_type.deleted_at IS NULL
 WHERE product.status = 'published' AND product.deleted_at IS NULL
+  AND (NOT EXISTS (SELECT 1 FROM sales_channels channel WHERE channel.is_disabled = 0 AND channel.deleted_at IS NULL) OR EXISTS (
+    SELECT 1 FROM product_sales_channels channel_link
+    WHERE channel_link.product_id = product.id AND channel_link.deleted_at IS NULL
+      AND channel_link.sales_channel_id = (
+        SELECT id FROM sales_channels WHERE is_disabled = 0 AND deleted_at IS NULL ORDER BY id LIMIT 1
+      )
+  ))
   AND ($4 IS NULL OR lower(product.title) LIKE '%' || lower($4) || '%' OR lower(product.handle) LIKE '%' || lower($4) || '%')
   AND ($5 IS NULL OR collection.handle = $5)
   AND (json_array_length($6) = 0 OR EXISTS (

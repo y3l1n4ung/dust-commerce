@@ -15,28 +15,13 @@ abstract final class CatalogReadRepository {
   @Query(r'''
 SELECT product.id, product.title, product.handle, product.description,
        product.thumbnail, product.status,
-       CASE WHEN collection.id IS NULL THEN 'null' ELSE json_object(
-         'id', collection.id,
-         'title', collection.title,
-         'handle', collection.handle
-       ) END AS collection,
-       json_object(
-         'material', product.material,
-         'origin_country', product.origin_country,
-         'product_type', product_type.value,
-         'weight', product.weight,
-         'length', product.length,
-         'width', product.width,
-         'height', product.height
-       ) AS details,
+       CASE WHEN collection.id IS NULL THEN 'null' ELSE json_object('id', collection.id, 'title', collection.title, 'handle', collection.handle) END AS collection,
+       json_object('material', product.material, 'origin_country', product.origin_country, 'product_type', product_type.value,
+         'weight', product.weight, 'length', product.length, 'width', product.width, 'height', product.height) AS details,
        coalesce((
          SELECT json_group_array(json(ordered.image_json))
          FROM (
-           SELECT json_object(
-             'id', image.id,
-             'url', image.url,
-             'rank', image.rank
-           ) AS image_json
+           SELECT json_object('id', image.id, 'url', image.url, 'rank', image.rank) AS image_json
            FROM product_images image
            WHERE image.product_id = product.id AND image.deleted_at IS NULL
            ORDER BY image.rank, image.id
@@ -45,13 +30,9 @@ SELECT product.id, product.title, product.handle, product.description,
        coalesce((
          SELECT json_group_array(json(ordered.category_json))
          FROM (
-           SELECT json_object(
-             'id', category.id,
-             'name', category.name,
-             'description', category.description,
-             'handle', category.handle,
-             'parent_id', category.parent_category_id
-           ) AS category_json
+           SELECT json_object('id', category.id, 'name', category.name,
+             'description', category.description, 'handle', category.handle,
+             'parent_id', category.parent_category_id) AS category_json
            FROM product_category_products link
            JOIN product_categories category ON category.id = link.category_id
            WHERE link.product_id = product.id
@@ -74,8 +55,7 @@ SELECT product.id, product.title, product.handle, product.description,
          SELECT json_group_array(json(ordered.option_json))
          FROM (
            SELECT json_object(
-             'id', option.id,
-             'title', option.title,
+             'id', option.id, 'title', option.title,
              'values', json(coalesce((
                SELECT json_group_array(ordered_value.value)
                FROM (
@@ -102,13 +82,10 @@ SELECT product.id, product.title, product.handle, product.description,
          SELECT json_group_array(json(ordered.variant_json))
          FROM (
            SELECT json_object(
-             'id', variant.id,
-             'title', variant.title,
-             'sku', variant.sku,
+             'id', variant.id, 'title', variant.title, 'sku', variant.sku,
              'inventory_quantity', variant.inventory_quantity,
              'manage_inventory', variant.manage_inventory,
-             'allow_backorder', variant.allow_backorder,
-             'amount', price.amount,
+             'allow_backorder', variant.allow_backorder, 'amount', price.amount,
              'currency_code', price.currency_code,
              'original_amount', original_price.amount,
              'option_values', json(coalesce((
@@ -123,11 +100,7 @@ SELECT product.id, product.title, product.handle, product.description,
              'images', json(coalesce((
                SELECT json_group_array(json(ordered_image.image_json))
                FROM (
-                 SELECT json_object(
-                   'id', image.id,
-                   'url', image.url,
-                   'rank', image.rank
-                 ) AS image_json
+                 SELECT json_object('id', image.id, 'url', image.url, 'rank', image.rank) AS image_json
                  FROM product_image_variants image_variant
                  JOIN product_images image ON image.id = image_variant.image_id
                  WHERE image_variant.variant_id = variant.id
@@ -155,13 +128,23 @@ LEFT JOIN product_types product_type
 WHERE product.handle = $1
   AND product.status = 'published'
   AND product.deleted_at IS NULL
+  AND (NOT EXISTS (SELECT 1 FROM sales_channels channel WHERE channel.is_disabled = 0 AND channel.deleted_at IS NULL)
+       OR EXISTS (
+         SELECT 1 FROM product_sales_channels channel_link
+         WHERE channel_link.product_id = product.id AND channel_link.deleted_at IS NULL
+           AND channel_link.sales_channel_id = (
+             SELECT id FROM sales_channels
+             WHERE is_disabled = 0 AND deleted_at IS NULL
+             ORDER BY id LIMIT 1
+           )
+       ))
 ''')
   Future<Result<ProductResponse?, SqlxError>> findByHandle(
     String handle,
     String currencyCode,
   );
 
-  /// One variant with its price, for adding a line to a cart.
+  /// One variant only when its product is still sold through the cart channel.
   @Query(r'''
 SELECT v.id, v.product_id, v.title, v.sku, v.inventory_quantity,
        v.manage_inventory, v.allow_backorder,
@@ -174,9 +157,22 @@ WHERE v.id = $1 AND p.currency_code = $2
   AND v.deleted_at IS NULL
   AND product.deleted_at IS NULL
   AND product.status = 'published'
+  AND (NOT EXISTS (SELECT 1 FROM cart_sales_channels WHERE cart_id = $3)
+       OR EXISTS (
+    SELECT 1 FROM cart_sales_channels cart_channel
+    JOIN product_sales_channels product_channel
+      ON product_channel.sales_channel_id = cart_channel.sales_channel_id
+    JOIN sales_channels channel ON channel.id = cart_channel.sales_channel_id
+    WHERE cart_channel.cart_id = $3
+      AND product_channel.product_id = product.id
+      AND product_channel.deleted_at IS NULL
+      AND channel.is_disabled = 0
+      AND channel.deleted_at IS NULL
+  ))
 ''')
-  Future<Result<SellableVariant?, SqlxError>> findVariant(
+  Future<Result<SellableVariant?, SqlxError>> findVariantForCart(
     String variantId,
     String currencyCode,
+    String cartId,
   );
 }

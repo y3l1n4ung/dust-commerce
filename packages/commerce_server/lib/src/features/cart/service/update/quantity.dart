@@ -67,7 +67,11 @@ Future<Result<Option<UpdateLineFailure>, SqlxError>> _updateLineQuantity(
   }
   final line = (lineOption as Some<LineItemResponse>).value;
 
-  final priced = await catalog.findVariant(line.variantId, cart.currencyCode);
+  final priced = await catalog.findVariantForCart(
+    line.variantId,
+    cart.currencyCode,
+    cartId,
+  );
   if (priced case Err(:final error)) return Err(error);
   final variantOption = optionOf(
     (priced as Ok<SellableVariant?, SqlxError>).value,

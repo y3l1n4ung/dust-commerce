@@ -23,6 +23,16 @@ JOIN (
 LEFT JOIN product_collections collection
   ON collection.id = product.collection_id AND collection.deleted_at IS NULL
 WHERE product.status = 'published' AND product.deleted_at IS NULL
+  AND (NOT EXISTS (SELECT 1 FROM sales_channels channel WHERE channel.is_disabled = 0 AND channel.deleted_at IS NULL)
+       OR EXISTS (
+         SELECT 1 FROM product_sales_channels channel_link
+         WHERE channel_link.product_id = product.id AND channel_link.deleted_at IS NULL
+           AND channel_link.sales_channel_id = (
+             SELECT id FROM sales_channels
+             WHERE is_disabled = 0 AND deleted_at IS NULL
+             ORDER BY id LIMIT 1
+           )
+       ))
   AND ($2 IS NULL OR lower(product.title) LIKE '%' || lower($2) || '%'
        OR lower(product.handle) LIKE '%' || lower($2) || '%')
   AND ($3 IS NULL OR collection.handle = $3)

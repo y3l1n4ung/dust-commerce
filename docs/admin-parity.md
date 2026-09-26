@@ -295,7 +295,8 @@ validated Medusa `sales_channel_id` filter and list rows expose the channel
 label while preserving legacy channel-less orders. Admin now loads those
 choices through its Dio-owned authorization boundary, exposes the searchable
 multi-select, includes it in export state and renders the real row label.
-Product-channel availability remains a separate slice.
+Product-channel availability is now enforced on Store list/detail/add/update
+against the current single-store channel.
 
 Product creation now follows Medusa's option permutation contract: merchants can
 add and remove option axes, comma values normalize without changing first-entry
