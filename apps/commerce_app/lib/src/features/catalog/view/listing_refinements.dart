@@ -4,6 +4,7 @@ import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
 import 'listing_category_filters.dart';
+import 'listing_current_refinements.dart';
 import 'listing_label_filters.dart';
 import 'listing_option_filters.dart';
 import 'listing_price_range.dart';
@@ -29,6 +30,7 @@ class ListingRefinements extends StatelessWidget {
     this.onCategoryHandlesChanged,
     this.onLabelValuesChanged,
     this.onPriceRangeChanged,
+    this.onClearAll,
     super.key,
   });
 
@@ -40,6 +42,9 @@ class ListingRefinements extends StatelessWidget {
 
   /// Replaces the repeated category query.
   final ValueChanged<List<String>>? onCategoryHandlesChanged;
+
+  /// Clears every Store refinement in one route update.
+  final VoidCallback? onClearAll;
 
   /// Store-only label refinements discovered from matching products.
   final List<ProductLabelFilter> labelFilters;
@@ -90,6 +95,23 @@ class ListingRefinements extends StatelessWidget {
               selected: selected,
               onChanged: onChanged,
             ),
+            if (onClearAll case final clearAll?)
+              ListingCurrentRefinements(
+                options: options,
+                selectedOptionValueIds: selectedOptionValueIds,
+                onOptionValuesChanged: onOptionValuesChanged,
+                categoryFilters: categoryFilters,
+                selectedCategoryHandles: selectedCategoryHandles,
+                onCategoryHandlesChanged: onCategoryHandlesChanged,
+                labelFilters: labelFilters,
+                selectedLabelValues: selectedLabelValues,
+                onLabelValuesChanged: onLabelValuesChanged,
+                selectedMaxPrice: selectedMaxPrice,
+                selectedMinPrice: selectedMinPrice,
+                currencyCode: currencyCode,
+                onPriceRangeChanged: onPriceRangeChanged,
+                onClearAll: clearAll,
+              ),
             if (options.isNotEmpty) ...[
               const SizedBox(height: 48),
               ListingOptionFilters(

@@ -161,6 +161,12 @@ class StorePage extends StatelessWidget {
             minPrice: minPrice,
           )
           .go(),
+      onClearRefinements: () => context.navigator
+          .store(
+            q: currentQuery,
+            sortBy: currentSort,
+          )
+          .go(),
       onCategorySelected: (handle) =>
           context.navigator.category(handle: handle).go(),
     );

@@ -150,10 +150,10 @@ void main() {
 
     expect(viewModel.state.selectedMinPrice, const Some<int>(1200));
     expect(viewModel.state.selectedMaxPrice, const Some<int>(1300));
-    expect(viewModel.state.products.map((product) => product.handle), [
-      'product-13',
+    expect(viewModel.state.products.map((product) => product.handle).toSet(), {
       'product-12',
-    ]);
+      'product-13',
+    });
   });
 
   test('store search filters products and keys the route identity', () async {

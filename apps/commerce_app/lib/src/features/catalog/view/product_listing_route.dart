@@ -16,6 +16,7 @@ class ProductListingRoute extends StatefulWidget {
     this.onCategoryHandlesChanged,
     this.onLabelValuesChanged,
     this.onPriceRangeChanged,
+    this.onClearRefinements,
     required this.onCategorySelected,
     super.key,
   });
@@ -34,6 +35,9 @@ class ProductListingRoute extends StatefulWidget {
 
   /// Changes the route page query.
   final ValueChanged<int> onPageChanged;
+
+  /// Clears Store refinements in one route update.
+  final VoidCallback? onClearRefinements;
 
   /// Replaces the Store price-range query and resets pagination.
   final void Function(int? minPrice, int? maxPrice)? onPriceRangeChanged;
@@ -85,6 +89,7 @@ class _ProductListingRouteState extends State<ProductListingRoute> {
           onCategoryHandlesChanged: widget.onCategoryHandlesChanged,
           onLabelValuesChanged: widget.onLabelValuesChanged,
           onPriceRangeChanged: widget.onPriceRangeChanged,
+          onClearRefinements: widget.onClearRefinements,
           onCategorySelected: widget.onCategorySelected,
         ),
       );

@@ -19,6 +19,7 @@ class ProductListingView extends StatelessWidget {
     this.onCategoryHandlesChanged,
     this.onLabelValuesChanged,
     this.onPriceRangeChanged,
+    this.onClearRefinements,
     required this.onCategorySelected,
     super.key,
   });
@@ -34,6 +35,9 @@ class ProductListingView extends StatelessWidget {
 
   /// Changes the one-based page query.
   final ValueChanged<int> onPageChanged;
+
+  /// Clears all Store-only refinements.
+  final VoidCallback? onClearRefinements;
 
   /// Changes the Store price-range query.
   final void Function(int? minPrice, int? maxPrice)? onPriceRangeChanged;
@@ -94,6 +98,7 @@ class ProductListingView extends StatelessWidget {
                       selectedLabelValues: state.selectedLabelValues,
                       onLabelValuesChanged: onLabelValuesChanged,
                       onPriceRangeChanged: onPriceRangeChanged,
+                      onClearAll: onClearRefinements,
                       priceBounds: state.priceBounds,
                       currencyCode: state.currencyCode,
                       selectedMaxPrice: state.selectedMaxPrice,

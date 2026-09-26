@@ -635,6 +635,10 @@
   "@add_to_cart_failed": {
     "description": "Shown when an add-to-cart request fails."
   },
+  "applied_filters": "သုံးထားသော စစ်ထုတ်မှုများ",
+  "@applied_filters": {
+    "description": "Translation for `shop_applied_filters`."
+  },
   "back_to_store": "ဆိုင်သို့ ပြန်သွားရန်",
   "@back_to_store": {
     "description": "Link from a failed detail route to the store."
@@ -1057,6 +1061,10 @@
   "checkout_total": "စုစုပေါင်း",
   "@checkout_total": {
     "description": "Translation for `shop_checkout_total`."
+  },
+  "clear_all": "အားလုံးရှင်းရန်",
+  "@clear_all": {
+    "description": "Translation for `shop_clear_all`."
   },
   "close": "ပိတ်မည်",
   "@close": {
