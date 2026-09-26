@@ -91,6 +91,15 @@ a selection removes the current page. Option discovery is intentionally
 non-fatal, while collection and category routes retain incoming selections but
 hide the picker exactly as the source templates do.
 
+Store search was browser-verified on 2026-09-26 against commit `d89bed8` using
+a fresh seeded SQLite database and the live Store on `127.0.0.1:13001`. The nav
+search opens the right-side drawer with the source title, close action,
+placeholder, start state and clear control; `tee` returns Classic White Tee,
+Heavyweight Black Tee and Split Raglan Tee; `zzzz` renders the explicit empty
+state. Direct `/store?q=tee` restores the page search and filtered grid, and
+editing it to `hoodie` updates the URL to `/store?q=hoodie` with only Oversized
+Hoodie and Zip Hoodie visible.
+
 The Medusa-only `ProductOnboardingCta` is intentionally excluded. It appears
 only when a private admin-setup cookie is present and links to Medusa's local
 admin onboarding flow; it is not a customer storefront capability or a valid
