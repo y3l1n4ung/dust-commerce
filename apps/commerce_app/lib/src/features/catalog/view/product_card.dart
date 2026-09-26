@@ -66,7 +66,7 @@ class _ProductCardState extends State<ProductCard> {
     final original = product.cheapestOriginalIn(widget.currencyCode);
     final readablePrice = price == null ? 'unavailable' : formatMoney(price);
     return Semantics(
-      button: true,
+      link: true,
       label: '${product.title}, $readablePrice',
       child: InkWell(
         onTap: () => context.navigator.product(handle: product.handle).push(),
