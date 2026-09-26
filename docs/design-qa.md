@@ -168,6 +168,15 @@ showed no overflow and the browser console contained no warnings or errors.
 The full 467-test server suite, 128 non-widget Store tests, both analyzers and
 normal plus SQLx Dust checks pass.
 
+## Collection/category refinement route slice
+
+Collection and category routes now keep option-value refinements functional
+instead of decorative. Toggling an option replaces the repeated
+`optionValueIds` query, resets pagination to page one, preserves the route
+handle and current sort, and clear-all removes the taxonomy route refinements.
+Focused route-conversion and listing ViewModel tests cover the URL retention,
+collection metadata, category hierarchy, filtering and missing-taxonomy states.
+
 ## Customer return-history slice
 
 The pinned DTC order detail has no customer return-history component. Its

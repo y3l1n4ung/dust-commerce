@@ -85,6 +85,48 @@ void main() {
     expect(category.location, '/categories/clothing%2Fshirts?page=3');
   });
 
+  test('taxonomy routes retain option refinements without page stickiness', () {
+    const collection = CollectionRoute(
+      handle: 'summer',
+      page: 3,
+      sortBy: 'price_desc',
+      optionValueIds: ['red', 'small'],
+    );
+    const refinedCollection = CollectionRoute(
+      handle: 'summer',
+      sortBy: 'price_desc',
+      optionValueIds: ['blue'],
+    );
+    const category = CategoryRoute(
+      handle: 'clothing/shirts',
+      page: 2,
+      sortBy: 'title_asc',
+      optionValueIds: ['small'],
+    );
+    const refinedCategory = CategoryRoute(
+      handle: 'clothing/shirts',
+      sortBy: 'title_asc',
+      optionValueIds: ['large'],
+    );
+
+    expect(
+      collection.location,
+      '/collections/summer?page=3&sortBy=price_desc&optionValueIds=red&optionValueIds=small',
+    );
+    expect(
+      refinedCollection.location,
+      '/collections/summer?sortBy=price_desc&optionValueIds=blue',
+    );
+    expect(
+      category.location,
+      '/categories/clothing%2Fshirts?page=2&sortBy=title_asc&optionValueIds=small',
+    );
+    expect(
+      refinedCategory.location,
+      '/categories/clothing%2Fshirts?sortBy=title_asc&optionValueIds=large',
+    );
+  });
+
   test('emailed transfer capability round-trips through the public route', () {
     final transfer = parseCommerceRoute(
       Uri.parse('/order/order_1/transfer/capability-token_123'),

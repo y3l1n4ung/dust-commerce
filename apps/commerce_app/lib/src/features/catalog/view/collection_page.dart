@@ -69,7 +69,16 @@ class CollectionPage extends StatelessWidget {
             optionValueIds: selected,
           )
           .go(),
-      onOptionValuesChanged: (_) {},
+      onOptionValuesChanged: (values) => context.navigator
+          .collection(
+            handle: handle,
+            sortBy: currentSort,
+            optionValueIds: values,
+          )
+          .go(),
+      onClearRefinements: () => context.navigator
+          .collection(handle: handle, sortBy: currentSort)
+          .go(),
       onCategorySelected: (categoryHandle) =>
           context.navigator.category(handle: categoryHandle).go(),
     );
