@@ -7,11 +7,15 @@ class ProductImage extends StatelessWidget {
   const ProductImage({
     required this.url,
     this.aspectRatio = 11 / 14,
+    this.semanticLabel,
     super.key,
   });
 
   /// Width-to-height ratio of the Medusa image slot.
   final double aspectRatio;
+
+  /// Optional accessible label for standalone product imagery.
+  final String? semanticLabel;
 
   /// Remote merchant image URL.
   final String? url;
@@ -30,16 +34,25 @@ class ProductImage extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: source == null
-              ? const Center(child: Icon(Icons.image_not_supported_outlined))
+              ? Semantics(
+                  label: semanticLabel,
+                  child: const Center(
+                    child: Icon(Icons.image_not_supported_outlined),
+                  ),
+                )
               : Image.network(
                   source,
                   fit: BoxFit.cover,
+                  semanticLabel: semanticLabel,
                   // Medusa's public seed CDN omits CORS headers. An HTML image
                   // keeps merchant-hosted assets usable on web; native targets
                   // continue through Flutter's byte-based network loader.
                   webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
-                  errorBuilder: (_, __, ___) => const Center(
-                    child: Icon(Icons.broken_image_outlined),
+                  errorBuilder: (_, __, ___) => Semantics(
+                    label: semanticLabel,
+                    child: const Center(
+                      child: Icon(Icons.broken_image_outlined),
+                    ),
                   ),
                   loadingBuilder: (context, child, progress) => progress == null
                       ? child

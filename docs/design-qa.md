@@ -49,6 +49,12 @@ window. Browser logs contained no warnings or errors. The separate
 free-shipping nudge remained visible after the cart preview closed, which
 matches its independent source slice.
 
+Product-detail accessibility now follows the pinned gallery source's
+`Product image N` alternative text. Live local AX QA on
+`/products/t-shirt?v_id=var_tshirt_m_black` exposed `image Product image 1`
+and `image Product image 2` while preserving the selected variant, price and
+Add to cart controls.
+
 The opt-in demo catalogue now includes `Split Raglan Tee`, a published
 two-axis product with only `S / Black` and `M / White` variants. Focused
 Storefront and server tests prove the product appears only in the development
