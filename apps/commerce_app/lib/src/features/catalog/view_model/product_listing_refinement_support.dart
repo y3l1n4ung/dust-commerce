@@ -46,6 +46,23 @@ List<ProductLabelFilter> _labelFiltersOf(List<Product> products) {
   return List.unmodifiable(filters.take(20));
 }
 
+Option<ProductPriceBounds> _priceBoundsOf(
+  List<Product> products,
+  String currencyCode,
+) {
+  int? min;
+  int? max;
+  for (final product in products) {
+    final amount = product.cheapestIn(currencyCode)?.amount;
+    if (amount == null) continue;
+    if (min == null || amount < min) min = amount;
+    if (max == null || amount > max) max = amount;
+  }
+  return min == null || max == null
+      ? const None<ProductPriceBounds>()
+      : Some<ProductPriceBounds>(ProductPriceBounds(min: min, max: max));
+}
+
 Future<List<ProductOptionFilterView>> _optionalOptionFilters(
   CommerceApi api,
   int limit,
@@ -71,6 +88,8 @@ Future<List<ProductCategoryFilter>> _optionalCategoryFilters(
       collection: _nullable(meta.collection),
       categoryHandles: const [],
       labels: meta.selectedLabelValues,
+      maxPrice: _nullableInt(meta.selectedMaxPrice),
+      minPrice: _nullableInt(meta.selectedMinPrice),
       optionValueIds: meta.selectedOptionValueIds,
       limit: limit,
     );
@@ -93,6 +112,8 @@ Future<List<ProductLabelFilter>> _optionalLabelFilters(
       collection: _nullable(meta.collection),
       categoryHandles: meta.selectedCategoryHandles,
       labels: const [],
+      maxPrice: _nullableInt(meta.selectedMaxPrice),
+      minPrice: _nullableInt(meta.selectedMinPrice),
       optionValueIds: meta.selectedOptionValueIds,
       limit: limit,
     );
@@ -102,11 +123,33 @@ Future<List<ProductLabelFilter>> _optionalLabelFilters(
   }
 }
 
+Future<Option<ProductPriceBounds>> _optionalPriceBounds(
+  CommerceApi api,
+  int limit,
+  _ListingMeta meta,
+) async {
+  try {
+    final result = await api.products(
+      currency: meta.currencyCode,
+      query: meta.searchQuery.isEmpty ? null : meta.searchQuery,
+      collection: _nullable(meta.collection),
+      categoryHandles: _categoryHandles(meta),
+      labels: meta.selectedLabelValues,
+      optionValueIds: meta.selectedOptionValueIds,
+      limit: limit,
+    );
+    return _priceBoundsOf(result.products, meta.currencyCode);
+  } on Object {
+    return const None<ProductPriceBounds>();
+  }
+}
+
 Future<(ProductPageView, _ListingMeta)> _withRefinementFilters(
   Future<ProductPageView> products,
   Future<List<ProductOptionFilterView>>? optionFilters,
   Future<List<ProductCategoryFilter>>? categoryFilters,
   Future<List<ProductLabelFilter>>? labelFilters,
+  Future<Option<ProductPriceBounds>>? priceBounds,
   _ListingMeta meta,
 ) async {
   final values = await Future.wait<Object>([
@@ -114,6 +157,7 @@ Future<(ProductPageView, _ListingMeta)> _withRefinementFilters(
     optionFilters ?? Future.value(meta.optionFilters),
     categoryFilters ?? Future.value(meta.categoryFilters),
     labelFilters ?? Future.value(meta.labelFilters),
+    priceBounds ?? Future.value(meta.priceBounds),
   ]);
   return (
     values.first as ProductPageView,
@@ -121,6 +165,7 @@ Future<(ProductPageView, _ListingMeta)> _withRefinementFilters(
       optionFilters: values[1] as List<ProductOptionFilterView>,
       categoryFilters: values[2] as List<ProductCategoryFilter>,
       labelFilters: values[3] as List<ProductLabelFilter>,
+      priceBounds: values[4] as Option<ProductPriceBounds>,
     ),
   );
 }

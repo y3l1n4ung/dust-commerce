@@ -57,6 +57,22 @@ final class ProductLabelFilter with _$ProductLabelFilter {
   final String value;
 }
 
+/// Minor-unit bounds for the Store price refinement.
+@Derive([ToString(), Eq()])
+final class ProductPriceBounds with _$ProductPriceBounds {
+  /// Creates a price-range facet from matching product prices.
+  const ProductPriceBounds({required this.min, required this.max});
+
+  /// Highest cheapest-product price in the current currency.
+  final int max;
+
+  /// Lowest cheapest-product price in the current currency.
+  final int min;
+
+  /// Whether the bounds can render a useful slider.
+  bool get canRefine => min < max;
+}
+
 /// Complete render state for store, collection, and category listings.
 @Derive([ToString(), Eq(), CopyWith()])
 final class ProductListingState with _$ProductListingState {
@@ -71,8 +87,11 @@ final class ProductListingState with _$ProductListingState {
     this.categoryFilters = const [],
     this.labelFilters = const [],
     this.optionFilters = const [],
+    this.priceBounds = const None(),
     this.selectedCategoryHandles = const [],
     this.selectedLabelValues = const [],
+    this.selectedMaxPrice = const None(),
+    this.selectedMinPrice = const None(),
     this.selectedOptionValueIds = const [],
     this.searchQuery = '',
     this.products = const [],
@@ -106,6 +125,9 @@ final class ProductListingState with _$ProductListingState {
   /// Store-only refinement axes; empty on routes that hide the picker.
   final List<ProductOptionFilterView> optionFilters;
 
+  /// Store-only price bounds discovered from matching products.
+  final Option<ProductPriceBounds> priceBounds;
+
   /// Products on the requested page.
   final List<Product> products;
 
@@ -120,6 +142,12 @@ final class ProductListingState with _$ProductListingState {
 
   /// Stable label values active in the Store browser query.
   final List<String> selectedLabelValues;
+
+  /// Active upper price bound in minor units.
+  final Option<int> selectedMaxPrice;
+
+  /// Active lower price bound in minor units.
+  final Option<int> selectedMinPrice;
 
   /// Free-text product search retained in the Store route query.
   final String searchQuery;

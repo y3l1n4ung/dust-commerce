@@ -11,12 +11,15 @@ String listingRequestKey(
   List<String> labelValues = const [],
   String currencyCode = 'usd',
   String searchQuery = '',
+  Option<int> minPrice = const None(),
+  Option<int> maxPrice = const None(),
 ]) =>
     '$kind:$handle:${page < 1 ? 1 : page}:${normalizedProductSort(sortBy)}:'
     '${normalizedOptionValueIds(optionValueIds).join(',')}:'
     '${normalizedCategoryHandles(categoryHandles).join(',')}:'
     '${normalizedLabelValues(labelValues).join(',')}:$currencyCode:'
-    '${normalizedSearchQuery(searchQuery)}';
+    '${normalizedSearchQuery(searchQuery)}:${_optionKey(minPrice)}:'
+    '${_optionKey(maxPrice)}';
 
 /// Keeps Store search predictable and bounded before it reaches the API.
 String normalizedSearchQuery(String value) {
@@ -36,6 +39,10 @@ List<String> normalizedCategoryHandles(Iterable<String> values) =>
 List<String> normalizedLabelValues(Iterable<String> values) =>
     _normalizedTokens(values);
 
+/// Keeps optional price URL params non-negative and explicit.
+Option<int> normalizedPriceBoundary(int? value) =>
+    value == null || value < 0 ? const None<int>() : Some<int>(value);
+
 /// Restricts public sort query values to the source-supported set.
 String normalizedProductSort(String value) =>
     const {'created_at', 'price_asc', 'price_desc'}.contains(value)
@@ -45,6 +52,16 @@ String normalizedProductSort(String value) =>
 String? _nullable(Option<String> value) => switch (value) {
       Some(:final value) => value,
       None() => null,
+    };
+
+int? _nullableInt(Option<int> value) => switch (value) {
+      Some(:final value) => value,
+      None() => null,
+    };
+
+String _optionKey(Option<int> value) => switch (value) {
+      Some(:final value) => '$value',
+      None() => '',
     };
 
 List<String> _categoryHandles(_ListingMeta meta) {

@@ -136,6 +136,26 @@ void main() {
     ]);
   });
 
+  test('store exposes price bounds and filters by selected range', () async {
+    await viewModel.loadStore();
+    final bounds = viewModel.state.priceBounds as Some<ProductPriceBounds>;
+
+    expect(bounds.value.min, 100);
+    expect(bounds.value.max, 1999);
+
+    await viewModel.loadStore(
+      minPrice: const Some<int>(1200),
+      maxPrice: const Some<int>(1300),
+    );
+
+    expect(viewModel.state.selectedMinPrice, const Some<int>(1200));
+    expect(viewModel.state.selectedMaxPrice, const Some<int>(1300));
+    expect(viewModel.state.products.map((product) => product.handle), [
+      'product-13',
+      'product-12',
+    ]);
+  });
+
   test('store search filters products and keys the route identity', () async {
     await viewModel.loadStore(query: ' Product 01 ');
 

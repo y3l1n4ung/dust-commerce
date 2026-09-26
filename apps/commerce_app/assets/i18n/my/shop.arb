@@ -1441,6 +1441,10 @@
   "@pagination_ellipsis": {
     "description": "Gap between non-adjacent product page numbers."
   },
+  "price": "ဈေးနှုန်း",
+  "@price": {
+    "description": "Translation for `shop_price`."
+  },
   "price_separator": "—",
   "@price_separator": {
     "description": "Separator between product title and price."

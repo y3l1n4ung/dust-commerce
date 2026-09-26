@@ -56,3 +56,13 @@ List<String> queryValuesOf(Request request, String name) {
   }
   return normalized.toList();
 }
+
+/// A non-negative minor-unit price query, represented explicitly.
+Result<Option<int>, Rejection> priceQueryOf(Request request, String name) {
+  final value = request.requestedUri.queryParameters[name]?.trim();
+  if (value == null || value.isEmpty) return const Ok(None<int>());
+  final parsed = int.tryParse(value);
+  return parsed == null || parsed < 0
+      ? Err(Rejection.badRequest('Invalid $name'))
+      : Ok(Some<int>(parsed));
+}

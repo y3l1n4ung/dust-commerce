@@ -1,5 +1,6 @@
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_app/route.dart';
+import 'package:dust_dart/fp.dart';
 import 'package:flutter/material.dart';
 
 import 'product_listing_route.dart';
@@ -15,6 +16,8 @@ class StorePage extends StatelessWidget {
     this.optionValueIds = const [],
     this.category = const [],
     this.labels = const [],
+    this.maxPrice,
+    this.minPrice,
     super.key,
   });
 
@@ -23,6 +26,12 @@ class StorePage extends StatelessWidget {
 
   /// Stable product label values repeated in the URL query.
   final List<String> labels;
+
+  /// Upper price bound in minor units.
+  final int? maxPrice;
+
+  /// Lower price bound in minor units.
+  final int? minPrice;
 
   /// Stable option-value identifiers repeated in the URL query.
   final List<String> optionValueIds;
@@ -44,6 +53,8 @@ class StorePage extends StatelessWidget {
     final selected = normalizedOptionValueIds(optionValueIds);
     final selectedCategories = normalizedCategoryHandles(category);
     final selectedLabels = normalizedLabelValues(labels);
+    final selectedMinPrice = normalizedPriceBoundary(minPrice);
+    final selectedMaxPrice = normalizedPriceBoundary(maxPrice);
     final currency = context.watchStoreShellViewModel().value.currencyCode;
     final requestKey = listingRequestKey(
       'store',
@@ -55,6 +66,8 @@ class StorePage extends StatelessWidget {
       selectedLabels,
       currency,
       currentQuery,
+      selectedMinPrice,
+      selectedMaxPrice,
     );
     return ProductListingRoute(
       key: ValueKey(requestKey),
@@ -66,6 +79,8 @@ class StorePage extends StatelessWidget {
         optionValueIds: selected,
         categoryHandles: selectedCategories,
         labels: selectedLabels,
+        maxPrice: selectedMaxPrice,
+        minPrice: selectedMinPrice,
         currency: currency,
       ),
       onSortChanged: (value) => context.navigator
@@ -75,6 +90,8 @@ class StorePage extends StatelessWidget {
             optionValueIds: selected,
             category: selectedCategories,
             labels: selectedLabels,
+            maxPrice: _valueOf(selectedMaxPrice),
+            minPrice: _valueOf(selectedMinPrice),
           )
           .go(),
       onSearchChanged: (value) => context.navigator
@@ -84,6 +101,8 @@ class StorePage extends StatelessWidget {
             optionValueIds: selected,
             category: selectedCategories,
             labels: selectedLabels,
+            maxPrice: _valueOf(selectedMaxPrice),
+            minPrice: _valueOf(selectedMinPrice),
           )
           .go(),
       onPageChanged: (value) => context.navigator
@@ -94,6 +113,8 @@ class StorePage extends StatelessWidget {
             optionValueIds: selected,
             category: selectedCategories,
             labels: selectedLabels,
+            maxPrice: _valueOf(selectedMaxPrice),
+            minPrice: _valueOf(selectedMinPrice),
           )
           .go(),
       onOptionValuesChanged: (values) => context.navigator
@@ -103,6 +124,8 @@ class StorePage extends StatelessWidget {
             optionValueIds: values,
             category: selectedCategories,
             labels: selectedLabels,
+            maxPrice: _valueOf(selectedMaxPrice),
+            minPrice: _valueOf(selectedMinPrice),
           )
           .go(),
       onCategoryHandlesChanged: (values) => context.navigator
@@ -112,6 +135,8 @@ class StorePage extends StatelessWidget {
             optionValueIds: selected,
             category: values,
             labels: selectedLabels,
+            maxPrice: _valueOf(selectedMaxPrice),
+            minPrice: _valueOf(selectedMinPrice),
           )
           .go(),
       onLabelValuesChanged: (values) => context.navigator
@@ -121,10 +146,28 @@ class StorePage extends StatelessWidget {
             optionValueIds: selected,
             category: selectedCategories,
             labels: values,
+            maxPrice: _valueOf(selectedMaxPrice),
+            minPrice: _valueOf(selectedMinPrice),
+          )
+          .go(),
+      onPriceRangeChanged: (minPrice, maxPrice) => context.navigator
+          .store(
+            q: currentQuery,
+            sortBy: currentSort,
+            optionValueIds: selected,
+            category: selectedCategories,
+            labels: selectedLabels,
+            maxPrice: maxPrice,
+            minPrice: minPrice,
           )
           .go(),
       onCategorySelected: (handle) =>
           context.navigator.category(handle: handle).go(),
     );
   }
+
+  int? _valueOf(Option<int> value) => switch (value) {
+        Some(:final value) => value,
+        None() => null,
+      };
 }

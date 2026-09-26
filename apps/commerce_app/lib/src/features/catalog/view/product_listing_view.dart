@@ -2,10 +2,8 @@ import 'package:commerce_app/commerce_app.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
-import 'listing_grid.dart';
-import 'listing_header.dart';
+import 'listing_products.dart';
 import 'listing_refinements.dart';
-import 'listing_search_box.dart';
 
 /// Store, collection, and category body translated from Medusa templates.
 class ProductListingView extends StatelessWidget {
@@ -20,6 +18,7 @@ class ProductListingView extends StatelessWidget {
     required this.onOptionValuesChanged,
     this.onCategoryHandlesChanged,
     this.onLabelValuesChanged,
+    this.onPriceRangeChanged,
     required this.onCategorySelected,
     super.key,
   });
@@ -35,6 +34,9 @@ class ProductListingView extends StatelessWidget {
 
   /// Changes the one-based page query.
   final ValueChanged<int> onPageChanged;
+
+  /// Changes the Store price-range query.
+  final void Function(int? minPrice, int? maxPrice)? onPriceRangeChanged;
 
   /// Changes the stable option-value selections.
   final ValueChanged<List<String>> onOptionValuesChanged;
@@ -91,8 +93,13 @@ class ProductListingView extends StatelessWidget {
                       labelFilters: state.labelFilters,
                       selectedLabelValues: state.selectedLabelValues,
                       onLabelValuesChanged: onLabelValuesChanged,
+                      onPriceRangeChanged: onPriceRangeChanged,
+                      priceBounds: state.priceBounds,
+                      currencyCode: state.currencyCode,
+                      selectedMaxPrice: state.selectedMaxPrice,
+                      selectedMinPrice: state.selectedMinPrice,
                     );
-                    final products = _ListingProducts(
+                    final products = ListingProducts(
                       state: state,
                       onSearchChanged: onSearchChanged,
                       onPageChanged: onPageChanged,
@@ -128,56 +135,6 @@ class ProductListingView extends StatelessWidget {
       ),
     );
   }
-}
-
-class _ListingProducts extends StatelessWidget {
-  const _ListingProducts({
-    required this.state,
-    required this.onSearchChanged,
-    required this.onPageChanged,
-    required this.onCategorySelected,
-  });
-
-  final ValueChanged<String> onCategorySelected;
-  final ValueChanged<int> onPageChanged;
-  final ValueChanged<String>? onSearchChanged;
-  final ProductListingState state;
-
-  @override
-  Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ListingHeader(
-            state: state,
-            onCategorySelected: onCategorySelected,
-          ),
-          if (onSearchChanged case final onSearchChanged?) ...[
-            const SizedBox(height: 24),
-            ListingSearchBox(
-              query: state.searchQuery,
-              onChanged: onSearchChanged,
-            ),
-          ],
-          if (state.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 64),
-              child: Center(
-                child: TranslatedText(
-                  'shop_empty',
-                  defaultText: 'Nothing for sale yet',
-                ),
-              ),
-            )
-          else
-            ListingGrid(
-              products: state.products,
-              currencyCode: state.currencyCode,
-              currentPage: state.currentPage,
-              totalPages: state.totalPages,
-              onPageChanged: onPageChanged,
-            ),
-        ],
-      );
 }
 
 class _ListingFailure extends StatelessWidget {

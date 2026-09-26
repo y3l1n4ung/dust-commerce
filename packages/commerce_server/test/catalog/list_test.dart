@@ -30,9 +30,51 @@ void main() {
   });
 
   group('listPublished', () {
+    Future<Result<List<ProductResponse>, SqlxError>> list({
+      String currency = 'usd',
+      int limit = 10,
+      int offset = 0,
+      String? collection,
+      String categories = '[]',
+      String labels = '[]',
+      int? minPrice,
+      int? maxPrice,
+      String options = '[]',
+    }) =>
+        lists.listPublished(
+          currency,
+          limit,
+          offset,
+          null,
+          collection,
+          categories,
+          labels,
+          minPrice,
+          maxPrice,
+          options,
+        );
+
+    Future<Result<int, SqlxError>> count({
+      String currency = 'usd',
+      String categories = '[]',
+      String labels = '[]',
+      int? minPrice,
+      int? maxPrice,
+      String options = '[]',
+    }) =>
+        counts.countPublished(
+          currency,
+          null,
+          null,
+          categories,
+          labels,
+          minPrice,
+          maxPrice,
+          options,
+        );
+
     test('returns only published products', () async {
-      final result =
-          await lists.listPublished('usd', 10, 0, null, null, '[]', '[]', '[]');
+      final result = await list();
       final handles = ok(result).map((row) => row.handle);
 
       expect(handles, ['mug', 't-shirt']);
@@ -40,31 +82,22 @@ void main() {
     });
 
     test('pages, so a large catalogue does not arrive at once', () async {
-      final first =
-          await lists.listPublished('usd', 1, 0, null, null, '[]', '[]', '[]');
-      final second =
-          await lists.listPublished('usd', 1, 1, null, null, '[]', '[]', '[]');
+      final first = await list(limit: 1);
+      final second = await list(limit: 1, offset: 1);
 
       expect(ok(first).single.handle, 'mug');
       expect(ok(second).single.handle, 't-shirt');
     });
 
     test('counts what it would page through', () async {
-      expect(
-        ok(await counts.countPublished('usd', null, null, '[]', '[]', '[]')),
-        2,
-      );
+      expect(ok(await count()), 2);
     });
 
     test('filters by collection, category and tag', () async {
-      final byCollection = await lists.listPublished(
-          'usd', 10, 0, null, 'summer', '[]', '[]', '[]');
-      final byCategory = await lists.listPublished(
-          'usd', 10, 0, null, null, '["shirts"]', '[]', '[]');
-      final byTag = await lists.listPublished(
-          'usd', 10, 0, null, null, '[]', '["Cotton"]', '[]');
-      final byEitherCategory = await lists.listPublished(
-          'usd', 10, 0, null, null, '["shirts","missing"]', '[]', '[]');
+      final byCollection = await list(collection: 'summer');
+      final byCategory = await list(categories: '["shirts"]');
+      final byTag = await list(labels: '["Cotton"]');
+      final byEitherCategory = await list(categories: '["shirts","missing"]');
 
       expect(ok(byCollection).map((row) => row.handle), ['t-shirt']);
       expect(ok(byCategory).map((row) => row.handle), ['t-shirt']);
@@ -73,56 +106,22 @@ void main() {
     });
 
     test('filters by stable option value id', () async {
-      final matching = await lists.listPublished(
-        'usd',
-        10,
-        0,
-        null,
-        null,
-        '[]',
-        '[]',
-        '["optval_large"]',
-      );
-      final missing = await lists.listPublished(
-        'usd',
-        10,
-        0,
-        null,
-        null,
-        '[]',
-        '[]',
-        '["not-a-value"]',
-      );
+      final matching = await list(options: '["optval_large"]');
+      final missing = await list(options: '["not-a-value"]');
 
       expect(ok(matching).map((row) => row.handle), ['t-shirt']);
       expect(ok(missing), isEmpty);
       expect(
-        ok(await counts.countPublished(
-          'usd',
-          null,
-          null,
-          '[]',
-          '[]',
-          '["optval_large"]',
-        )),
+        ok(await count(options: '["optval_large"]')),
         1,
       );
     });
 
     test('excludes products and option choices unavailable in the currency',
         () async {
-      final eur =
-          await lists.listPublished('eur', 10, 0, null, null, '[]', '[]', '[]');
-      final unavailableChoice = await lists.listPublished(
-        'eur',
-        10,
-        0,
-        null,
-        null,
-        '[]',
-        '[]',
-        '["optval_large"]',
-      );
+      final eur = await list(currency: 'eur');
+      final unavailableChoice =
+          await list(currency: 'eur', options: '["optval_large"]');
 
       expect(ok(eur).map((row) => row.handle), ['t-shirt']);
       expect(ok(eur).single.variants.map((variant) => variant.id), [
@@ -130,7 +129,19 @@ void main() {
       ]);
       expect(ok(unavailableChoice), isEmpty);
       expect(
-        ok(await counts.countPublished('eur', null, null, '[]', '[]', '[]')),
+        ok(await count(currency: 'eur')),
+        1,
+      );
+    });
+
+    test('filters by cheapest price in the requested currency', () async {
+      final fromTen = await list(minPrice: 1000);
+      final upToTen = await list(maxPrice: 1000);
+
+      expect(ok(fromTen).map((row) => row.handle), ['t-shirt']);
+      expect(ok(upToTen).map((row) => row.handle), ['mug']);
+      expect(
+        ok(await count(minPrice: 1000)),
         1,
       );
     });

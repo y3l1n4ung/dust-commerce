@@ -7,6 +7,7 @@ extension _ProductListingLoader on ProductListingViewModel {
     Future<List<ProductOptionFilterView>>? optionFilters,
     Future<List<ProductCategoryFilter>>? categoryFilters,
     Future<List<ProductLabelFilter>>? labelFilters,
+    Future<Option<ProductPriceBounds>>? priceBounds,
   }) async {
     try {
       final productRequest = args.api.products(
@@ -15,6 +16,8 @@ extension _ProductListingLoader on ProductListingViewModel {
         collection: _nullable(meta.collection),
         categoryHandles: _categoryHandles(meta),
         labels: meta.selectedLabelValues,
+        maxPrice: _nullableInt(meta.selectedMaxPrice),
+        minPrice: _nullableInt(meta.selectedMinPrice),
         optionValueIds: meta.selectedOptionValueIds,
         limit: ProductListingViewModel._sourceFetchLimit,
       );
@@ -23,6 +26,7 @@ extension _ProductListingLoader on ProductListingViewModel {
         optionFilters,
         categoryFilters,
         labelFilters,
+        priceBounds,
         meta,
       );
       if (!_active(revision)) return;

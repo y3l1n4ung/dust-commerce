@@ -17,6 +17,10 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
   if (search case Some(:final value) when value.length > 120) {
     return const Err(Rejection.badRequest('Product search is too long'));
   }
+  final minPrice = priceQueryOf(request, 'minPrice');
+  if (minPrice case Err(:final error)) return Err(error);
+  final maxPrice = priceQueryOf(request, 'maxPrice');
+  if (maxPrice case Err(:final error)) return Err(error);
   final result = await listProducts(
     deps.lists,
     deps.counts,
@@ -25,6 +29,8 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
     collection: queryOptionOf(request, 'collection'),
     categoryHandles: queryValuesOf(request, 'category'),
     labels: _labelsOf(request),
+    minPrice: (minPrice as Ok<Option<int>, Rejection>).value,
+    maxPrice: (maxPrice as Ok<Option<int>, Rejection>).value,
     optionValueIds: queryValuesOf(request, 'optionValueIds'),
     limit: paging.limit,
     offset: paging.offset,

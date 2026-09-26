@@ -12,8 +12,11 @@ final class _ListingMeta {
     this.categoryFilters = const [],
     this.labelFilters = const [],
     this.optionFilters = const [],
+    this.priceBounds = const None(),
     this.selectedCategoryHandles = const [],
     this.selectedLabelValues = const [],
+    this.selectedMaxPrice = const None(),
+    this.selectedMinPrice = const None(),
     this.selectedOptionValueIds = const [],
     this.searchQuery = '',
     this.collection = const None(),
@@ -31,10 +34,13 @@ final class _ListingMeta {
   final List<ProductOptionFilterView> optionFilters;
   final int page;
   final List<ProductCategory> parents;
+  final Option<ProductPriceBounds> priceBounds;
   final String requestKey;
   final String searchQuery;
   final List<String> selectedCategoryHandles;
   final List<String> selectedLabelValues;
+  final Option<int> selectedMaxPrice;
+  final Option<int> selectedMinPrice;
   final List<String> selectedOptionValueIds;
   final String sortBy;
   final String title;
@@ -47,6 +53,7 @@ final class _ListingMeta {
     List<ProductCategoryFilter>? categoryFilters,
     List<ProductLabelFilter>? labelFilters,
     List<ProductOptionFilterView>? optionFilters,
+    Option<ProductPriceBounds>? priceBounds,
   }) =>
       _ListingMeta(
         requestKey: requestKey,
@@ -59,8 +66,11 @@ final class _ListingMeta {
         categoryFilters: categoryFilters ?? this.categoryFilters,
         labelFilters: labelFilters ?? this.labelFilters,
         optionFilters: optionFilters ?? this.optionFilters,
+        priceBounds: priceBounds ?? this.priceBounds,
         selectedCategoryHandles: selectedCategoryHandles,
         selectedLabelValues: selectedLabelValues,
+        selectedMaxPrice: selectedMaxPrice,
+        selectedMinPrice: selectedMinPrice,
         selectedOptionValueIds: selectedOptionValueIds,
         searchQuery: searchQuery,
         collection: collection,
@@ -83,8 +93,11 @@ final class _ListingMeta {
         categoryFilters: categoryFilters,
         labelFilters: labelFilters,
         optionFilters: optionFilters,
+        priceBounds: priceBounds,
         selectedCategoryHandles: selectedCategoryHandles,
         selectedLabelValues: selectedLabelValues,
+        selectedMaxPrice: selectedMaxPrice,
+        selectedMinPrice: selectedMinPrice,
         selectedOptionValueIds: selectedOptionValueIds,
         searchQuery: searchQuery,
         products: products,

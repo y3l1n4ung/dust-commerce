@@ -75,6 +75,23 @@ void main() {
     expect((products.single! as Map<String, Object?>)['handle'], 't-shirt');
   });
 
+  test('product listing filters by cheapest price range', () async {
+    final response =
+        await client.get('/store/products?minPrice=1000&maxPrice=2000').send();
+    response.assertOk();
+    final body = response.json! as Map<String, Object?>;
+    final products = body['products']! as List<Object?>;
+
+    expect(body['total'], 1);
+    expect((products.single! as Map<String, Object?>)['handle'], 't-shirt');
+  });
+
+  test('invalid price range is rejected at the HTTP boundary', () async {
+    final response = await client.get('/store/products?minPrice=-1').send();
+
+    expect(response.statusCode, 400);
+  });
+
   test('unknown option value answers an empty valid page', () async {
     final response =
         await client.get('/store/products?optionValueIds=not-a-value').send();

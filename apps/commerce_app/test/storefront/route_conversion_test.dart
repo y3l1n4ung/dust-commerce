@@ -53,7 +53,7 @@ void main() {
   test('generated listing routes retain sort and page queries', () {
     final store = parseCommerceRoute(
       Uri.parse(
-        '/store?page=2&sortBy=price_asc&optionValueIds=small&optionValueIds=blue&category=shirts&labels=Cotton',
+        '/store?page=2&sortBy=price_asc&optionValueIds=small&optionValueIds=blue&category=shirts&labels=Cotton&minPrice=100&maxPrice=2000',
       ),
     );
     final collection = parseCommerceRoute(
@@ -68,11 +68,13 @@ void main() {
     expect(store, isA<StoreRoute>());
     expect(
       store.location,
-      '/store?page=2&sortBy=price_asc&optionValueIds=small&optionValueIds=blue&category=shirts&labels=Cotton',
+      '/store?page=2&sortBy=price_asc&optionValueIds=small&optionValueIds=blue&category=shirts&labels=Cotton&maxPrice=2000&minPrice=100',
     );
     expect((store as StoreRoute).optionValueIds, ['small', 'blue']);
     expect(store.category, ['shirts']);
     expect(store.labels, ['Cotton']);
+    expect(store.maxPrice, 2000);
+    expect(store.minPrice, 100);
     expect(collection, isA<CollectionRoute>());
     expect(
       collection.location,

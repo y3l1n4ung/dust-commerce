@@ -13,18 +13,16 @@ abstract final class CatalogCountRepository {
   @Query(r'''
 SELECT COUNT(*) AS total
 FROM products product
+JOIN (
+  SELECT variant.product_id, min(price.amount) AS min_price
+  FROM product_variants variant
+  JOIN variant_prices price ON price.variant_id = variant.id
+  WHERE variant.deleted_at IS NULL AND price.currency_code = $1
+  GROUP BY variant.product_id
+) priced ON priced.product_id = product.id
 LEFT JOIN product_collections collection
   ON collection.id = product.collection_id AND collection.deleted_at IS NULL
 WHERE product.status = 'published' AND product.deleted_at IS NULL
-  AND EXISTS (
-    SELECT 1
-    FROM product_variants sellable_variant
-    JOIN variant_prices sellable_price
-      ON sellable_price.variant_id = sellable_variant.id
-    WHERE sellable_variant.product_id = product.id
-      AND sellable_variant.deleted_at IS NULL
-      AND sellable_price.currency_code = $1
-  )
   AND ($2 IS NULL OR lower(product.title) LIKE '%' || lower($2) || '%'
        OR lower(product.handle) LIKE '%' || lower($2) || '%')
   AND ($3 IS NULL OR collection.handle = $3)
@@ -48,7 +46,9 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       )
       AND filter_tag.deleted_at IS NULL
   ))
-  AND (json_array_length($6) = 0 OR EXISTS (
+  AND ($6 IS NULL OR priced.min_price >= $6)
+  AND ($7 IS NULL OR priced.min_price <= $7)
+  AND (json_array_length($8) = 0 OR EXISTS (
     SELECT 1
     FROM product_variants filter_variant
     JOIN variant_prices filter_price
@@ -70,7 +70,7 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       AND filter_product_option.deleted_at IS NULL
       AND filter_value.deleted_at IS NULL
       AND filter_choice.option_value_id IN (
-        SELECT value FROM json_each($6)
+        SELECT value FROM json_each($8)
       )
   ))
 ''')
@@ -80,6 +80,8 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
     String? collectionHandle,
     String categoryHandlesJson,
     String labelValuesJson,
+    int? minPrice,
+    int? maxPrice,
     String optionValueIdsJson,
   );
 }
