@@ -89,6 +89,7 @@ abstract interface class CommerceApi {
   Future<ProductPageView> products({
     @Query('currency') String? currency,
     @Query('q') String? query,
+    @Query('sortBy') String? sortBy,
     @Query('collection') String? collection,
     @Query('category') List<String> categoryHandles = const [],
     @Query('labels') List<String> labels = const [],

@@ -18,6 +18,7 @@ final class OptionFailureApi implements CommerceApi {
   Future<ProductPageView> products({
     String? currency,
     String? query,
+    String? sortBy,
     String? collection,
     List<String> categoryHandles = const [],
     List<String> labels = const [],
@@ -32,6 +33,7 @@ final class OptionFailureApi implements CommerceApi {
       delegate.products(
         currency: currency,
         query: query,
+        sortBy: sortBy,
         collection: collection,
         categoryHandles: categoryHandles,
         labels: labels,

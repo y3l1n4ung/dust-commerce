@@ -63,9 +63,6 @@ Option<ProductPriceBounds> _priceBoundsOf(
       : Some<ProductPriceBounds>(ProductPriceBounds(min: min, max: max));
 }
 
-bool _canRefineOnSale(List<Product> products, String currencyCode) =>
-    products.any((product) => product.isOnSaleIn(currencyCode));
-
 Future<List<ProductOptionFilterView>> _optionalOptionFilters(
   CommerceApi api,
   int limit,
@@ -156,6 +153,7 @@ Future<(ProductPageView, _ListingMeta)> _withRefinementFilters(
   Future<List<ProductCategoryFilter>>? categoryFilters,
   Future<List<ProductLabelFilter>>? labelFilters,
   Future<Option<ProductPriceBounds>>? priceBounds,
+  Future<bool>? canRefineOnSale,
   _ListingMeta meta,
 ) async {
   final values = await Future.wait<Object>([
@@ -164,6 +162,7 @@ Future<(ProductPageView, _ListingMeta)> _withRefinementFilters(
     categoryFilters ?? Future.value(meta.categoryFilters),
     labelFilters ?? Future.value(meta.labelFilters),
     priceBounds ?? Future.value(meta.priceBounds),
+    canRefineOnSale ?? Future.value(meta.canRefineOnSale),
   ]);
   return (
     values.first as ProductPageView,
@@ -172,10 +171,7 @@ Future<(ProductPageView, _ListingMeta)> _withRefinementFilters(
       categoryFilters: values[2] as List<ProductCategoryFilter>,
       labelFilters: values[3] as List<ProductLabelFilter>,
       priceBounds: values[4] as Option<ProductPriceBounds>,
-      canRefineOnSale: _canRefineOnSale(
-        (values.first as ProductPageView).products,
-        meta.currencyCode,
-      ),
+      canRefineOnSale: values[5] as bool,
     ),
   );
 }

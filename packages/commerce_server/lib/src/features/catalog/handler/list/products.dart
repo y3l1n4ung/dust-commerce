@@ -21,6 +21,8 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
   if (minPrice case Err(:final error)) return Err(error);
   final maxPrice = priceQueryOf(request, 'maxPrice');
   if (maxPrice case Err(:final error)) return Err(error);
+  final sortBy = _sortOf(request);
+  if (sortBy case Err(:final error)) return Err(error);
   final result = await listProducts(
     deps.lists,
     deps.counts,
@@ -29,6 +31,7 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
     collection: queryOptionOf(request, 'collection'),
     categoryHandles: queryValuesOf(request, 'category'),
     labels: _labelsOf(request),
+    sortBy: (sortBy as Ok<String, Rejection>).value,
     minPrice: (minPrice as Ok<Option<int>, Rejection>).value,
     maxPrice: (maxPrice as Ok<Option<int>, Rejection>).value,
     onSale: queryToggleOf(request, 'onSale'),
@@ -41,6 +44,24 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
     Ok(value: final page) => Ok(page),
     Err() => const Err(Rejection.internal()),
   };
+}
+
+Result<String, Rejection> _sortOf(Request request) {
+  final value = switch (queryOptionOf(request, 'sortBy')) {
+    Some(:final value) => value,
+    None() => 'created_at',
+  };
+  if (const {
+    'relevance',
+    'created_at',
+    'price_asc',
+    'price_desc',
+    'title_asc',
+    'title_desc',
+  }.contains(value)) {
+    return Ok(value);
+  }
+  return const Err(Rejection.badRequest('Unknown product sort'));
 }
 
 List<String> _labelsOf(Request request) {

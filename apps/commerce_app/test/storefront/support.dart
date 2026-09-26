@@ -17,6 +17,7 @@ final class RelatedFailureApi implements CommerceApi {
   Future<ProductPageView> products({
     String? currency,
     String? query,
+    String? sortBy,
     String? collection,
     List<String> categoryHandles = const [],
     List<String> labels = const [],

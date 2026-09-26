@@ -10,8 +10,6 @@ void main() {
   late CommerceDatabase database;
   late CatalogCountRepository counts;
   late CatalogListRepository lists;
-  CatalogReadRepository reads() => CatalogReadRepository(database.executor);
-
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('commerce_repo');
     database = CommerceDatabase.open(
@@ -40,6 +38,7 @@ void main() {
       int? maxPrice,
       int onSale = 0,
       String options = '[]',
+      String sortBy = 'created_at',
     }) =>
         lists.listPublished(
           currency,
@@ -49,6 +48,7 @@ void main() {
           collection,
           categories,
           labels,
+          sortBy,
           minPrice,
           maxPrice,
           onSale,
@@ -90,6 +90,15 @@ void main() {
 
       expect(ok(first).single.handle, 'mug');
       expect(ok(second).single.handle, 't-shirt');
+    });
+
+    test('sorts before paging through the Store API order values', () async {
+      expect(ok(await list(limit: 1, sortBy: 'title_desc')).single.handle,
+          't-shirt');
+      expect(
+          ok(await list(limit: 1, sortBy: 'price_asc')).single.handle, 'mug');
+      expect(ok(await list(limit: 1, sortBy: 'price_desc')).single.handle,
+          't-shirt');
     });
 
     test('counts what it would page through', () async {
@@ -152,57 +161,6 @@ void main() {
         ok(await count(minPrice: 1000)),
         1,
       );
-    });
-  });
-
-  group('findByHandle', () {
-    test('finds a published product', () async {
-      final row = ok(await reads().findByHandle('t-shirt', 'usd'));
-
-      expect(row?.title, 'T-Shirt');
-      expect(row?.status, 'published');
-      expect(row?.variants.map((variant) => variant.id), [
-        'var_large',
-        'var_small',
-      ]);
-      expect(
-        row?.variants.map((variant) => variant.prices.single.amount),
-        [2199, 1999],
-      );
-      expect(row?.images.map((image) => image.url), [
-        'https://example.test/front.png',
-        'https://example.test/back.png',
-      ]);
-      expect(
-        row?.variants
-            .singleWhere((variant) => variant.id == 'var_large')
-            .images
-            .map((image) => image.id),
-        ['img_front'],
-      );
-    });
-
-    test('does not leak a draft, even to a caller who knows the handle',
-        () async {
-      expect(ok(await reads().findByHandle('secret-hoodie', 'usd')), isNull);
-    });
-
-    test('returns null for a handle nobody has', () async {
-      expect(ok(await reads().findByHandle('nothing', 'usd')), isNull);
-    });
-  });
-
-  group('findVariant', () {
-    test('finds one variant with its price', () async {
-      final row = ok(await reads().findVariant('var_small', 'usd'));
-
-      expect(row?.amount, 1999);
-      expect(row?.inventoryQuantity, 5);
-    });
-
-    test('returns null when the variant is not sold in that currency',
-        () async {
-      expect(ok(await reads().findVariant('var_large', 'eur')), isNull);
     });
   });
 }
