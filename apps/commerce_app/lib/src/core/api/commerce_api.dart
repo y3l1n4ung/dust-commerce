@@ -90,7 +90,7 @@ abstract interface class CommerceApi {
     @Query('currency') String? currency,
     @Query('q') String? query,
     @Query('collection') String? collection,
-    @Query('category') String? category,
+    @Query('category') List<String> categoryHandles = const [],
     @Query('tag') String? tag,
     @Query('optionValueIds') List<String> optionValueIds = const [],
     @Query('limit') int? limit,

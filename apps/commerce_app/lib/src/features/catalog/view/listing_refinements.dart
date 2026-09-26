@@ -1,8 +1,10 @@
 import 'package:commerce_app/src/core/store_theme.dart';
+import 'package:commerce_app/src/features/catalog/model/product_listing_state.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
+import 'listing_category_filters.dart';
 import 'listing_option_filters.dart';
 
 /// Source-matched three-choice SortProducts control.
@@ -14,8 +16,17 @@ class ListingRefinements extends StatelessWidget {
     required this.options,
     required this.selectedOptionValueIds,
     required this.onOptionValuesChanged,
+    required this.categoryFilters,
+    required this.selectedCategoryHandles,
+    this.onCategoryHandlesChanged,
     super.key,
   });
+
+  /// Store-only category refinements discovered from matching products.
+  final List<ProductCategoryFilter> categoryFilters;
+
+  /// Replaces the repeated category query.
+  final ValueChanged<List<String>>? onCategoryHandlesChanged;
 
   /// Receives one Medusa sort query value.
   final ValueChanged<String> onChanged;
@@ -28,6 +39,9 @@ class ListingRefinements extends StatelessWidget {
 
   /// Current Medusa sort query value.
   final String selected;
+
+  /// Stable category handles currently selected.
+  final List<String> selectedCategoryHandles;
 
   /// Stable option-value identifiers currently selected.
   final List<String> selectedOptionValueIds;
@@ -54,6 +68,15 @@ class ListingRefinements extends StatelessWidget {
                 options: options,
                 selectedValueIds: selectedOptionValueIds,
                 onChanged: onOptionValuesChanged,
+              ),
+            ],
+            if (onCategoryHandlesChanged case final onChanged?
+                when categoryFilters.isNotEmpty) ...[
+              const SizedBox(height: 48),
+              ListingCategoryFilters(
+                categories: categoryFilters,
+                selectedHandles: selectedCategoryHandles,
+                onChanged: onChanged,
               ),
             ],
           ],

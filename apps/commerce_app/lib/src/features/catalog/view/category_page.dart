@@ -40,6 +40,7 @@ class CategoryPage extends StatelessWidget {
       currentPage,
       currentSort,
       selected,
+      const [],
       currency,
     );
     return ProductListingRoute(

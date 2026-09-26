@@ -21,6 +21,26 @@ enum ProductListingStatus {
   failed,
 }
 
+/// One category facet in the Store refinement sidebar.
+@Derive([ToString(), Eq()])
+final class ProductCategoryFilter with _$ProductCategoryFilter {
+  /// Creates a category facet from product response categories.
+  const ProductCategoryFilter({
+    required this.handle,
+    required this.name,
+    required this.count,
+  });
+
+  /// Number of currently matching products in this category.
+  final int count;
+
+  /// Stable category handle sent as the repeated `category` query.
+  final String handle;
+
+  /// Customer-facing category label.
+  final String name;
+}
+
 /// Complete render state for store, collection, and category listings.
 @Derive([ToString(), Eq(), CopyWith()])
 final class ProductListingState with _$ProductListingState {
@@ -32,7 +52,9 @@ final class ProductListingState with _$ProductListingState {
     this.description = '',
     this.parents = const [],
     this.children = const [],
+    this.categoryFilters = const [],
     this.optionFilters = const [],
+    this.selectedCategoryHandles = const [],
     this.selectedOptionValueIds = const [],
     this.searchQuery = '',
     this.products = const [],
@@ -44,6 +66,9 @@ final class ProductListingState with _$ProductListingState {
 
   /// Direct child categories shown above a category's product grid.
   final List<ProductCategory> children;
+
+  /// Store-only category refinements discovered from matching products.
+  final List<ProductCategoryFilter> categoryFilters;
 
   /// One-based page rendered by this state.
   final int currentPage;
@@ -68,6 +93,9 @@ final class ProductListingState with _$ProductListingState {
 
   /// Stable option-value identifiers active in the browser query.
   final List<String> selectedOptionValueIds;
+
+  /// Stable category handles active in the Store browser query.
+  final List<String> selectedCategoryHandles;
 
   /// Free-text product search retained in the Store route query.
   final String searchQuery;

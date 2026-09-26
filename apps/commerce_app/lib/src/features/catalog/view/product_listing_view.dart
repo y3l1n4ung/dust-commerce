@@ -18,12 +18,16 @@ class ProductListingView extends StatelessWidget {
     this.onSearchChanged,
     required this.onPageChanged,
     required this.onOptionValuesChanged,
+    this.onCategoryHandlesChanged,
     required this.onCategorySelected,
     super.key,
   });
 
   /// Category breadcrumb and child navigation.
   final ValueChanged<String> onCategorySelected;
+
+  /// Changes the stable Store category selections.
+  final ValueChanged<List<String>>? onCategoryHandlesChanged;
 
   /// Changes the one-based page query.
   final ValueChanged<int> onPageChanged;
@@ -77,6 +81,9 @@ class ProductListingView extends StatelessWidget {
                       options: state.optionFilters,
                       selectedOptionValueIds: state.selectedOptionValueIds,
                       onOptionValuesChanged: onOptionValuesChanged,
+                      categoryFilters: state.categoryFilters,
+                      selectedCategoryHandles: state.selectedCategoryHandles,
+                      onCategoryHandlesChanged: onCategoryHandlesChanged,
                     );
                     final products = _ListingProducts(
                       state: state,

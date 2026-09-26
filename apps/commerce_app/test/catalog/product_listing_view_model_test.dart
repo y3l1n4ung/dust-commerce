@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_server/commerce_server.dart';
-import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/http.dart';
 import 'package:dust_server/testing.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../core/support.dart';
+import 'product_listing_test_support.dart';
 
 void main() {
   late Directory directory;
@@ -22,7 +22,7 @@ void main() {
       options: commerceOptions,
     );
     await seedRoundTripCatalog(database);
-    await _seedPage(database);
+    await seedListingPage(database);
     server = await TestClient.serve(buildApp(database));
     viewModel = ProductListingViewModel(
       ProductListingViewModelArgs(
@@ -100,6 +100,26 @@ void main() {
     ]);
   });
 
+  test('store exposes categories and filters by selected handles', () async {
+    await viewModel.loadStore();
+
+    expect(viewModel.state.categoryFilters.map((filter) => filter.name), [
+      'Shirts',
+      'Accessories',
+    ]);
+    expect(viewModel.state.categoryFilters.map((filter) => filter.count), [
+      13,
+      1,
+    ]);
+
+    await viewModel.loadStore(categoryHandles: const ['accessories']);
+
+    expect(viewModel.state.selectedCategoryHandles, ['accessories']);
+    expect(viewModel.state.products.map((product) => product.handle), [
+      'product-13',
+    ]);
+  });
+
   test('store search filters products and keys the route identity', () async {
     await viewModel.loadStore(query: ' Product 01 ');
 
@@ -113,7 +133,7 @@ void main() {
 
   test('option discovery failure does not take down products', () async {
     final resilient = ProductListingViewModel(
-      ProductListingViewModelArgs(api: _OptionFailureApi(viewModel.args.api)),
+      ProductListingViewModelArgs(api: OptionFailureApi(viewModel.args.api)),
     );
     addTearDown(resilient.dispose);
 
@@ -132,75 +152,4 @@ void main() {
     await viewModel.loadCategory('unknown');
     expect(viewModel.state.status, ProductListingStatus.missing);
   });
-}
-
-final class _OptionFailureApi implements CommerceApi {
-  const _OptionFailureApi(this.delegate);
-
-  final CommerceApi delegate;
-
-  @override
-  Future<ProductOptionFilterListView> productOptions({
-    int? limit,
-    int? offset,
-  }) =>
-      Future.error(StateError('option discovery unavailable'));
-
-  @override
-  Future<ProductPageView> products({
-    String? currency,
-    String? query,
-    String? collection,
-    String? category,
-    String? tag,
-    List<String> optionValueIds = const [],
-    int? limit,
-    int? offset,
-  }) =>
-      delegate.products(
-        currency: currency,
-        query: query,
-        collection: collection,
-        category: category,
-        tag: tag,
-        optionValueIds: optionValueIds,
-        limit: limit,
-        offset: offset,
-      );
-
-  @override
-  Object? noSuchMethod(Invocation invocation) =>
-      throw UnsupportedError('unused API method');
-}
-
-Future<void> _seedPage(CommerceDatabase database) async {
-  for (var index = 1; index <= 13; index++) {
-    final suffix = index.toString().padLeft(2, '0');
-    await queryExecute(
-      'INSERT INTO products '
-      '(id, collection_id, title, handle, status) VALUES (?, ?, ?, ?, ?)',
-      [
-        'prod_$suffix',
-        'col_summer',
-        'Product $suffix',
-        'product-$suffix',
-        'published',
-      ],
-    ).execute(database.executor);
-    await queryExecute(
-      'INSERT INTO product_variants '
-      '(id, product_id, title, inventory_quantity) VALUES (?, ?, ?, ?)',
-      ['var_$suffix', 'prod_$suffix', 'Default', 10],
-    ).execute(database.executor);
-    await queryExecute(
-      'INSERT INTO variant_prices '
-      '(variant_id, currency_code, amount) VALUES (?, ?, ?)',
-      ['var_$suffix', 'usd', index * 100],
-    ).execute(database.executor);
-    await queryExecute(
-      'INSERT INTO product_category_products '
-      '(product_id, category_id) VALUES (?, ?)',
-      ['prod_$suffix', 'cat_shirts'],
-    ).execute(database.executor);
-  }
 }

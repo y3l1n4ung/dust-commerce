@@ -12,7 +12,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
   required String currencyCode,
   Option<String> query = const None(),
   Option<String> collection = const None(),
-  Option<String> category = const None(),
+  List<String> categoryHandles = const [],
   Option<String> tag = const None(),
   List<String> optionValueIds = const [],
   int limit = 20,
@@ -24,7 +24,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
     offset,
     nullableOf(query),
     nullableOf(collection),
-    nullableOf(category),
+    jsonEncode(categoryHandles),
     nullableOf(tag),
     jsonEncode(optionValueIds),
   );
@@ -34,7 +34,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
     currencyCode,
     nullableOf(query),
     nullableOf(collection),
-    nullableOf(category),
+    jsonEncode(categoryHandles),
     nullableOf(tag),
     jsonEncode(optionValueIds),
   );

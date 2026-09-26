@@ -130,13 +130,13 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
   )
   AND ($4 IS NULL OR lower(product.title) LIKE '%' || lower($4) || '%' OR lower(product.handle) LIKE '%' || lower($4) || '%')
   AND ($5 IS NULL OR collection.handle = $5)
-  AND ($6 IS NULL OR EXISTS (
+  AND (json_array_length($6) = 0 OR EXISTS (
     SELECT 1
     FROM product_category_products filter_link
     JOIN product_categories filter_category
       ON filter_category.id = filter_link.category_id
     WHERE filter_link.product_id = product.id
-      AND filter_category.handle = $6
+      AND filter_category.handle IN (SELECT value FROM json_each($6))
       AND filter_category.is_active = 1
       AND filter_category.deleted_at IS NULL
   ))
@@ -177,7 +177,7 @@ LIMIT $2 OFFSET $3
     int offset,
     String? query,
     String? collectionHandle,
-    String? categoryHandle,
+    String categoryHandlesJson,
     String? tag,
     String optionValueIdsJson,
   );

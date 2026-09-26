@@ -40,6 +40,7 @@ class CollectionPage extends StatelessWidget {
       currentPage,
       currentSort,
       selected,
+      const [],
       currency,
     );
     return ProductListingRoute(

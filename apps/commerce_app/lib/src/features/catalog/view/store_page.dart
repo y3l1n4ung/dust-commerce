@@ -13,8 +13,12 @@ class StorePage extends StatelessWidget {
     this.q = '',
     this.sortBy = 'created_at',
     this.optionValueIds = const [],
+    this.category = const [],
     super.key,
   });
+
+  /// Stable category handles repeated in the URL query.
+  final List<String> category;
 
   /// Stable option-value identifiers repeated in the URL query.
   final List<String> optionValueIds;
@@ -34,6 +38,7 @@ class StorePage extends StatelessWidget {
     final currentQuery = normalizedSearchQuery(q);
     final currentSort = normalizedProductSort(sortBy);
     final selected = normalizedOptionValueIds(optionValueIds);
+    final selectedCategories = normalizedCategoryHandles(category);
     final currency = context.watchStoreShellViewModel().value.currencyCode;
     final requestKey = listingRequestKey(
       'store',
@@ -41,6 +46,7 @@ class StorePage extends StatelessWidget {
       currentPage,
       currentSort,
       selected,
+      selectedCategories,
       currency,
       currentQuery,
     );
@@ -52,16 +58,23 @@ class StorePage extends StatelessWidget {
         query: currentQuery,
         sortBy: currentSort,
         optionValueIds: selected,
+        categoryHandles: selectedCategories,
         currency: currency,
       ),
       onSortChanged: (value) => context.navigator
-          .store(q: currentQuery, sortBy: value, optionValueIds: selected)
+          .store(
+            q: currentQuery,
+            sortBy: value,
+            optionValueIds: selected,
+            category: selectedCategories,
+          )
           .go(),
       onSearchChanged: (value) => context.navigator
           .store(
             q: normalizedSearchQuery(value),
             sortBy: currentSort,
             optionValueIds: selected,
+            category: selectedCategories,
           )
           .go(),
       onPageChanged: (value) => context.navigator
@@ -70,10 +83,24 @@ class StorePage extends StatelessWidget {
             page: value,
             sortBy: currentSort,
             optionValueIds: selected,
+            category: selectedCategories,
           )
           .go(),
       onOptionValuesChanged: (values) => context.navigator
-          .store(q: currentQuery, sortBy: currentSort, optionValueIds: values)
+          .store(
+            q: currentQuery,
+            sortBy: currentSort,
+            optionValueIds: values,
+            category: selectedCategories,
+          )
+          .go(),
+      onCategoryHandlesChanged: (values) => context.navigator
+          .store(
+            q: currentQuery,
+            sortBy: currentSort,
+            optionValueIds: selected,
+            category: values,
+          )
           .go(),
       onCategorySelected: (handle) =>
           context.navigator.category(handle: handle).go(),

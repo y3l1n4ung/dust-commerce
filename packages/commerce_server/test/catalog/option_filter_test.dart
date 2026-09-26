@@ -52,6 +52,18 @@ void main() {
     expect((products.single! as Map<String, Object?>)['handle'], 't-shirt');
   });
 
+  test('product listing filters by repeated category handles', () async {
+    final response = await client
+        .get('/store/products?category=shirts&category=missing')
+        .send();
+    response.assertOk();
+    final body = response.json! as Map<String, Object?>;
+    final products = body['products']! as List<Object?>;
+
+    expect(body['total'], 1);
+    expect((products.single! as Map<String, Object?>)['handle'], 't-shirt');
+  });
+
   test('unknown option value answers an empty valid page', () async {
     final response =
         await client.get('/store/products?optionValueIds=not-a-value').send();

@@ -1,0 +1,79 @@
+import 'package:commerce_app/commerce_app.dart';
+import 'package:commerce_server/commerce_server.dart';
+import 'package:commerce_shared/commerce_shared.dart';
+
+final class OptionFailureApi implements CommerceApi {
+  const OptionFailureApi(this.delegate);
+
+  final CommerceApi delegate;
+
+  @override
+  Future<ProductOptionFilterListView> productOptions({
+    int? limit,
+    int? offset,
+  }) =>
+      Future.error(StateError('option discovery unavailable'));
+
+  @override
+  Future<ProductPageView> products({
+    String? currency,
+    String? query,
+    String? collection,
+    List<String> categoryHandles = const [],
+    String? tag,
+    List<String> optionValueIds = const [],
+    int? limit,
+    int? offset,
+  }) =>
+      delegate.products(
+        currency: currency,
+        query: query,
+        collection: collection,
+        categoryHandles: categoryHandles,
+        tag: tag,
+        optionValueIds: optionValueIds,
+        limit: limit,
+        offset: offset,
+      );
+
+  @override
+  Object? noSuchMethod(Invocation invocation) =>
+      throw UnsupportedError('unused API method');
+}
+
+Future<void> seedListingPage(CommerceDatabase database) async {
+  await queryExecute(
+    'INSERT INTO product_categories (id, name, handle) VALUES (?, ?, ?)',
+    ['cat_accessories', 'Accessories', 'accessories'],
+  ).execute(database.executor);
+  for (var index = 1; index <= 13; index++) {
+    final suffix = index.toString().padLeft(2, '0');
+    final categoryId = index == 13 ? 'cat_accessories' : 'cat_shirts';
+    await queryExecute(
+      'INSERT INTO products '
+      '(id, collection_id, title, handle, status) VALUES (?, ?, ?, ?, ?)',
+      [
+        'prod_$suffix',
+        'col_summer',
+        'Product $suffix',
+        'product-$suffix',
+        'published',
+      ],
+    ).execute(database.executor);
+    await queryExecute(
+      'INSERT INTO product_variants '
+      '(id, product_id, title, inventory_quantity) VALUES (?, ?, ?, ?)',
+      ['var_$suffix', 'prod_$suffix', 'Default', 10],
+    ).execute(database.executor);
+    await queryExecute(
+      'INSERT INTO variant_prices '
+      '(variant_id, currency_code, amount) VALUES (?, ?, ?)',
+      ['var_$suffix', 'usd', index * 100],
+    ).execute(database.executor);
+    await queryExecute(
+      'INSERT INTO product_category_products '
+      '(product_id, category_id) VALUES (?, ?)',
+      ['prod_$suffix', categoryId],
+    ).execute(database.executor);
+  }
+}

@@ -23,7 +23,7 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
     currencyCode: currencyOf(request),
     query: search,
     collection: queryOptionOf(request, 'collection'),
-    category: queryOptionOf(request, 'category'),
+    categoryHandles: queryValuesOf(request, 'category'),
     tag: queryOptionOf(request, 'tag'),
     optionValueIds: queryValuesOf(request, 'optionValueIds'),
     limit: paging.limit,

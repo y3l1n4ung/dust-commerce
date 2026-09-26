@@ -5,6 +5,10 @@ import 'package:dust_dart/fp.dart';
 import 'package:dust_flutter/state.dart';
 
 part 'product_listing_view_model.g.dart';
+part 'product_listing_loader.dart';
+part 'product_listing_meta.dart';
+part 'product_listing_query.dart';
+part 'product_listing_refinement_support.dart';
 part 'product_listing_support.dart';
 
 /// Dependencies for source-shaped product listing routes.
@@ -32,9 +36,11 @@ class ProductListingViewModel extends $ProductListingViewModel {
     String sortBy = 'created_at',
     String query = '',
     List<String> optionValueIds = const [],
+    List<String> categoryHandles = const [],
     String currency = 'usd',
   }) async {
     final selected = normalizedOptionValueIds(optionValueIds);
+    final selectedCategories = normalizedCategoryHandles(categoryHandles);
     final search = normalizedSearchQuery(query);
     final meta = _ListingMeta(
       requestKey: listingRequestKey(
@@ -43,6 +49,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
         page,
         sortBy,
         selected,
+        selectedCategories,
         currency,
         search,
       ),
@@ -50,6 +57,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
       page: page < 1 ? 1 : page,
       sortBy: normalizedProductSort(sortBy),
       searchQuery: search,
+      selectedCategoryHandles: selectedCategories,
       selectedOptionValueIds: selected,
       currencyCode: currency,
     );
@@ -58,6 +66,8 @@ class ProductListingViewModel extends $ProductListingViewModel {
       meta,
       revision,
       optionFilters: _optionalOptionFilters(args.api, _sourceFetchLimit),
+      categoryFilters:
+          _optionalCategoryFilters(args.api, _sourceFetchLimit, meta),
     );
   }
 
@@ -77,6 +87,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
         page,
         sortBy,
         selected,
+        const [],
         currency,
       ),
       title: '',
@@ -116,6 +127,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
         page,
         sortBy,
         selected,
+        const [],
         currency,
       ),
       title: '',
@@ -146,44 +158,6 @@ class ProductListingViewModel extends $ProductListingViewModel {
         ),
         revision,
       );
-    } on Object {
-      _fail(meta, revision);
-    }
-  }
-
-  Future<void> _loadProducts(
-    _ListingMeta meta,
-    int revision, {
-    Future<List<ProductOptionFilterView>>? optionFilters,
-  }) async {
-    try {
-      final productRequest = args.api.products(
-        currency: meta.currencyCode,
-        query: meta.searchQuery.isEmpty ? null : meta.searchQuery,
-        collection: _nullable(meta.collection),
-        category: _nullable(meta.category),
-        optionValueIds: meta.selectedOptionValueIds,
-        limit: _sourceFetchLimit,
-      );
-      final (result, resolvedMeta) = optionFilters == null
-          ? (await productRequest, meta)
-          : await _withOptionFilters(productRequest, optionFilters, meta);
-      if (!_active(revision)) return;
-      final sorted = _sorted(
-        result.products,
-        resolvedMeta.sortBy,
-        resolvedMeta.currencyCode,
-      );
-      final start = (resolvedMeta.page - 1) * _limit;
-      final end = (start + _limit).clamp(0, sorted.length);
-      final products = start >= sorted.length
-          ? const <Product>[]
-          : sorted.sublist(start, end);
-      emit(resolvedMeta.toState(
-        status: ProductListingStatus.ready,
-        products: products,
-        totalPages: (sorted.length + _limit - 1) ~/ _limit,
-      ));
     } on Object {
       _fail(meta, revision);
     }

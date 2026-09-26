@@ -18,7 +18,7 @@ final class RelatedFailureApi implements CommerceApi {
     String? currency,
     String? query,
     String? collection,
-    String? category,
+    List<String> categoryHandles = const [],
     String? tag,
     List<String> optionValueIds = const [],
     int? limit,

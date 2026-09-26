@@ -798,6 +798,10 @@
   "@catalog_failure": {
     "description": "Safe error shown when the home catalogue cannot load."
   },
+  "category": "Category",
+  "@category": {
+    "description": "Translation for `shop_category`."
+  },
   "checkout_address": "Address",
   "@checkout_address": {
     "description": "Translation for `shop_checkout_address`."

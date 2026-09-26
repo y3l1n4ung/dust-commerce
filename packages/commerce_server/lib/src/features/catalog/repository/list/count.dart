@@ -28,13 +28,13 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
   AND ($2 IS NULL OR lower(product.title) LIKE '%' || lower($2) || '%'
        OR lower(product.handle) LIKE '%' || lower($2) || '%')
   AND ($3 IS NULL OR collection.handle = $3)
-  AND ($4 IS NULL OR EXISTS (
+  AND (json_array_length($4) = 0 OR EXISTS (
     SELECT 1
     FROM product_category_products filter_link
     JOIN product_categories filter_category
       ON filter_category.id = filter_link.category_id
     WHERE filter_link.product_id = product.id
-      AND filter_category.handle = $4
+      AND filter_category.handle IN (SELECT value FROM json_each($4))
       AND filter_category.is_active = 1
       AND filter_category.deleted_at IS NULL
   ))
@@ -76,7 +76,7 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
     String currencyCode,
     String? query,
     String? collectionHandle,
-    String? categoryHandle,
+    String categoryHandlesJson,
     String? tag,
     String optionValueIdsJson,
   );

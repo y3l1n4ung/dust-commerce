@@ -798,6 +798,10 @@
   "@catalog_failure": {
     "description": "Safe error shown when the home catalogue cannot load."
   },
+  "category": "အမျိုးအစား",
+  "@category": {
+    "description": "Translation for `shop_category`."
+  },
   "checkout_address": "လိပ်စာ",
   "@checkout_address": {
     "description": "Translation for `shop_checkout_address`."
