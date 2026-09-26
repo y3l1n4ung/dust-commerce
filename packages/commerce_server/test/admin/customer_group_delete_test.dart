@@ -59,6 +59,28 @@ SELECT count(*) FROM customers WHERE id IN ('cus_ada', 'cus_guest')
     expect(customers.single.readIndex<int>(0), 2);
   });
 
+  test('deleted group names can be created again', () async {
+    final token = await harness.adminToken();
+    final deleted = harness.client.delete('/admin/customer-groups/cusgrp_vip')
+      ..bearer(token);
+    (await deleted.send()).assertOk();
+    final created = harness.client.post('/admin/customer-groups')
+      ..bearer(token)
+      ..json({'name': 'VIP'});
+
+    final response = await created.send();
+
+    response.assertOk();
+    final body = response.json! as Map<String, Object?>;
+    final group = body['customer_group']! as Map<String, Object?>;
+    expect(group['name'], 'VIP');
+    final active = await harness.raw(r'''
+SELECT count(*) FROM customer_groups
+WHERE name = 'VIP' AND deleted_at IS NULL
+''');
+    expect(active.single.readIndex<int>(0), 1);
+  });
+
   test('missing, retired, and repeatedly deleted groups are not found',
       () async {
     final token = await harness.adminToken();

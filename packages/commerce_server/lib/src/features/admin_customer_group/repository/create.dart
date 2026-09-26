@@ -13,14 +13,18 @@ abstract final class AdminCustomerGroupCreateRepository {
   /// Inserts one group and returns only the explicit Admin response columns.
   @Query(r'''
 INSERT INTO customer_groups (id, name, created_by, metadata)
-VALUES ($1, $2, $3, $4)
+SELECT $1, $2, $3, $4
+WHERE NOT EXISTS (
+  SELECT 1 FROM customer_groups
+  WHERE name = $2 AND deleted_at IS NULL
+)
 RETURNING id,
           name,
           '[]' AS customers_json,
           created_at,
           updated_at
 ''')
-  Future<Result<AdminCustomerGroupResponse, SqlxError>> insert(
+  Future<Result<AdminCustomerGroupResponse?, SqlxError>> insert(
     String id,
     String name,
     String createdBy,

@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:commerce_admin_shared/commerce_admin_shared.dart'
     show AdminCreateCustomerGroup;
+import 'package:commerce_server/src/features/admin_customer_group/create_failure.dart';
 import 'package:commerce_server/src/features/admin_customer_group/create_response.dart';
 import 'package:commerce_server/src/features/admin_customer_group/repository/create.dart';
 import 'package:dust_dart/db.dart';
 
 /// Creates one merchant-owned customer segment.
-Future<Result<AdminCustomerGroupCreateResult, SqlxError>>
+Future<Result<AdminCustomerGroupCreateResult, AdminCustomerGroupCreateError>>
     createAdminCustomerGroup(
   AdminCustomerGroupCreateRepository groups,
   AdminCreateCustomerGroup input, {
@@ -25,9 +26,12 @@ Future<Result<AdminCustomerGroupCreateResult, SqlxError>>
     metadata,
   );
   return switch (result) {
-    Ok(:final value) => Ok(AdminCustomerGroupCreateResult(
-        customerGroup: value,
+    Ok(value: final group?) => Ok(AdminCustomerGroupCreateResult(
+        customerGroup: group,
       )),
-    Err(:final error) => Err(error),
+    Ok(value: null) => const Err(AdminCustomerGroupCreateRejected(
+        AdminCustomerGroupCreateFailure.nameConflict,
+      )),
+    Err(:final error) => Err(AdminCustomerGroupCreateStorage(error)),
   };
 }

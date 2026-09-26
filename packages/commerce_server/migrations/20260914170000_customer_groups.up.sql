@@ -17,8 +17,8 @@ CREATE TABLE customer_groups (
   deleted_at TEXT
 );
 
-CREATE INDEX idx_customer_groups_active_name
-ON customer_groups (name, created_at, id)
+CREATE UNIQUE INDEX idx_customer_groups_active_name
+ON customer_groups (name)
 WHERE deleted_at IS NULL;
 
 -- SQLite has no automatic ON UPDATE timestamp, so this maintains updated_at.

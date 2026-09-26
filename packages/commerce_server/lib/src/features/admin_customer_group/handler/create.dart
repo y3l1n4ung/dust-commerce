@@ -1,5 +1,6 @@
 import 'package:commerce_admin_shared/commerce_admin_shared.dart';
 import 'package:commerce_server/src/features/admin/extractor.dart';
+import 'package:commerce_server/src/features/admin_customer_group/create_failure.dart';
 import 'package:commerce_server/src/features/admin_customer_group/create_response.dart';
 import 'package:commerce_server/src/features/admin_customer_group/deps.dart';
 import 'package:commerce_server/src/features/admin_customer_group/service/create.dart';
@@ -34,6 +35,9 @@ Future<Result<AdminCustomerGroupCreateResult, Rejection>>
   );
   return switch (result) {
     Ok(:final value) => Ok(value),
-    Err() => const Err(Rejection.internal()),
+    Err(error: AdminCustomerGroupCreateRejected()) =>
+      const Err(Rejection.conflict('A customer group already uses this name')),
+    Err(error: AdminCustomerGroupCreateStorage()) =>
+      const Err(Rejection.internal()),
   };
 }

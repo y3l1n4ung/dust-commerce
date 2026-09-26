@@ -61,6 +61,24 @@ LIMIT 1
     });
   });
 
+  test('same active name conflicts without overwriting', () async {
+    final token = await harness.adminToken();
+    final first = harness.client.post('/admin/customer-groups')
+      ..bearer(token)
+      ..json({'name': 'QA Group'});
+    (await first.send()).assertOk();
+    final duplicate = harness.client.post('/admin/customer-groups')
+      ..bearer(token)
+      ..json({'name': 'QA Group'});
+
+    (await duplicate.send()).assertConflict();
+    final rows = await harness.raw(r'''
+SELECT count(*) FROM customer_groups
+WHERE name = 'QA Group' AND deleted_at IS NULL
+''');
+    expect(rows.single.readIndex<int>(0), 1);
+  });
+
   test('invalid or undeclared input writes no customer group', () async {
     final token = await harness.adminToken();
     final blank = harness.client.post('/admin/customer-groups')
