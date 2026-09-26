@@ -8,6 +8,7 @@ class ProductImage extends StatelessWidget {
     required this.url,
     this.aspectRatio = 11 / 14,
     this.border = true,
+    this.boxShadow,
     this.placeholderColor,
     this.placeholderSize,
     this.semanticLabel,
@@ -19,6 +20,9 @@ class ProductImage extends StatelessWidget {
 
   /// Whether the image slot draws the default storefront border.
   final bool border;
+
+  /// Optional source shadow for card-style image slots.
+  final List<BoxShadow>? boxShadow;
 
   /// Optional placeholder icon color for source-specific thumbnail slots.
   final Color? placeholderColor;
@@ -42,6 +46,7 @@ class ProductImage extends StatelessWidget {
           color: StoreColors.subtle,
           border: border ? Border.all(color: StoreColors.border) : null,
           borderRadius: BorderRadius.circular(8),
+          boxShadow: boxShadow,
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8),

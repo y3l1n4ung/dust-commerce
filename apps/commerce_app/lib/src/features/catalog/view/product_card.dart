@@ -4,7 +4,7 @@ import 'package:commerce_shared/commerce_shared.dart';
 import 'package:flutter/material.dart';
 
 /// ProductPreview translated from the Medusa DTC source.
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   /// Creates a product card.
   const ProductCard({
     required this.product,
@@ -23,22 +23,66 @@ class ProductCard extends StatelessWidget {
   final Product product;
 
   @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  static const _cardRestShadow = [
+    BoxShadow(color: Color(0x14000000), spreadRadius: 1),
+    BoxShadow(
+      color: Color(0x14000000),
+      offset: Offset(0, 1),
+      blurRadius: 2,
+      spreadRadius: -1,
+    ),
+    BoxShadow(
+      color: Color(0x0a000000),
+      offset: Offset(0, 2),
+      blurRadius: 4,
+    ),
+  ];
+
+  static const _cardHoverShadow = [
+    BoxShadow(color: Color(0x14000000), spreadRadius: 1),
+    BoxShadow(
+      color: Color(0x14000000),
+      offset: Offset(0, 1),
+      blurRadius: 2,
+      spreadRadius: -1,
+    ),
+    BoxShadow(
+      color: Color(0x1a000000),
+      offset: Offset(0, 2),
+      blurRadius: 8,
+    ),
+  ];
+
+  var _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    final price = product.cheapestIn(currencyCode);
-    final original = product.cheapestOriginalIn(currencyCode);
+    final product = widget.product;
+    final price = product.cheapestIn(widget.currencyCode);
+    final original = product.cheapestOriginalIn(widget.currencyCode);
     final readablePrice = price == null ? 'unavailable' : formatMoney(price);
     return Semantics(
       button: true,
       label: '${product.title}, $readablePrice',
       child: InkWell(
         onTap: () => context.navigator.product(handle: product.handle).push(),
+        onHover: (hovered) {
+          if (_hovered == hovered) return;
+          setState(() => _hovered = hovered);
+        },
         borderRadius: BorderRadius.circular(8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ProductImage(
               url: product.previewImageUrl,
-              aspectRatio: featured ? 11 / 14 : 9 / 16,
+              aspectRatio: widget.featured ? 11 / 14 : 9 / 16,
+              border: false,
+              boxShadow: _hovered ? _cardHoverShadow : _cardRestShadow,
             ),
             const SizedBox(height: 16),
             Row(
