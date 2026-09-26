@@ -20,6 +20,7 @@ final class AdminSidebar extends StatelessWidget {
     required this.onOrdersRequested,
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
+    required this.onPromotionsRequested,
     required this.onProductTypesRequested,
     required this.onShippingProfilesRequested,
     required this.selectedSection,
@@ -47,6 +48,9 @@ final class AdminSidebar extends StatelessWidget {
 
   /// Opens the global product-options route.
   final VoidCallback onProductOptionsRequested;
+
+  /// Opens the merchant promotions table.
+  final VoidCallback onPromotionsRequested;
 
   /// Opens product classifications in Settings.
   final VoidCallback onProductTypesRequested;
@@ -127,7 +131,12 @@ final class AdminSidebar extends StatelessWidget {
                       selectedSection == AdminShellSection.customerService,
                   onTap: onCustomerServiceRequested,
                 ),
-                const _NavRow(icon: Icons.sell_outlined, label: 'Promotions'),
+                _NavRow(
+                  icon: Icons.sell_outlined,
+                  label: 'Promotions',
+                  selected: selectedSection == AdminShellSection.promotions,
+                  onTap: onPromotionsRequested,
+                ),
                 const _SubNav(label: 'Campaigns'),
                 const _NavRow(
                     icon: Icons.list_alt_outlined, label: 'Price Lists'),

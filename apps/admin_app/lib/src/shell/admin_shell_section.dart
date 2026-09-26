@@ -18,6 +18,9 @@ enum AdminShellSection {
   /// Product-option list and detail routes.
   productOptions,
 
+  /// Promotion-list routes.
+  promotions,
+
   /// Settings routes for reusable product classifications.
   productTypes,
 

@@ -9,6 +9,7 @@ mixin _AdminHomeActions
   FocusNode get _searchFocus;
   FocusNode get _typeSearchFocus;
   FocusNode get _profileSearchFocus;
+  FocusNode get _promotionSearchFocus;
 
   String get selectedIdForNavigation => _selectedId;
   String get selectedCustomerIdForNavigation => _selectedCustomerId;
@@ -51,6 +52,13 @@ mixin _AdminHomeActions
       _showShippingProfiles();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _profileSearchFocus.requestFocus();
+      });
+      return;
+    }
+    if (_route == _AdminRoute.promotions) {
+      _showPromotions();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _promotionSearchFocus.requestFocus();
       });
       return;
     }
@@ -149,6 +157,14 @@ mixin _AdminHomeActions
         _route = _AdminRoute.shippingProfile;
         _selectedId = id;
       });
+
+  void _showPromotions() {
+    context.readAdminPromotionViewModel().load(offset: 0);
+    setState(() {
+      _route = _AdminRoute.promotions;
+      _selectedId = '';
+    });
+  }
 
   Future<void> _createProduct() async {
     final created = await showAdminProductCreatePage(context);

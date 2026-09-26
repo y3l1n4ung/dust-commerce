@@ -53,6 +53,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
             Some(value: final type) => 'Product Types  ›  ${type.value}',
             None() => 'Product Types',
           },
+        _AdminRoute.promotions => 'Promotions',
         _AdminRoute.shippingProfiles => 'Settings  ›  Shipping Profiles',
         _AdminRoute.shippingProfile => switch (profileDetail) {
             Some(:final value) => 'Shipping Profiles  ›  ${value.name}',
@@ -66,6 +67,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
       onOrdersRequested: _showOrders,
       onProductsRequested: _showProducts,
       onProductOptionsRequested: _showProductOptions,
+      onPromotionsRequested: _showPromotions,
       onProductTypesRequested: _showProductTypes,
       onShippingProfilesRequested: _showShippingProfiles,
       selectedSection: switch (_route) {
@@ -84,6 +86,7 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
         _AdminRoute.productOptions ||
         _AdminRoute.productOption =>
           AdminShellSection.productOptions,
+        _AdminRoute.promotions => AdminShellSection.promotions,
         _AdminRoute.productTypes ||
         _AdminRoute.productType =>
           AdminShellSection.productTypes,
@@ -154,6 +157,9 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
         _AdminRoute.productTypes => AdminProductTypePage(
             searchFocus: _typeSearchFocus,
             onOpen: _showProductType,
+          ),
+        _AdminRoute.promotions => AdminPromotionPage(
+            searchFocus: _promotionSearchFocus,
           ),
         _AdminRoute.productType => AdminProductTypeDetailPage(
             productTypeId: selectedIdForNavigation,

@@ -17,6 +17,7 @@ final class AdminShell extends StatelessWidget {
     required this.onOrdersRequested,
     required this.onProductsRequested,
     required this.onProductOptionsRequested,
+    required this.onPromotionsRequested,
     required this.onProductTypesRequested,
     required this.onShippingProfilesRequested,
     required this.selectedSection,
@@ -49,6 +50,9 @@ final class AdminShell extends StatelessWidget {
 
   /// Opens the global product-options table.
   final VoidCallback onProductOptionsRequested;
+
+  /// Opens the merchant promotions table.
+  final VoidCallback onPromotionsRequested;
 
   /// Opens product classifications in Settings.
   final VoidCallback onProductTypesRequested;
@@ -85,6 +89,7 @@ final class AdminShell extends StatelessWidget {
             onOrdersRequested: onOrdersRequested,
             onProductsRequested: onProductsRequested,
             onProductOptionsRequested: onProductOptionsRequested,
+            onPromotionsRequested: onPromotionsRequested,
             onProductTypesRequested: onProductTypesRequested,
             onShippingProfilesRequested: onShippingProfilesRequested,
             selectedSection: selectedSection,
