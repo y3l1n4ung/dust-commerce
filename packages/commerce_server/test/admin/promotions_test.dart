@@ -52,9 +52,10 @@ void main() {
 
   test('reads one active promotion detail envelope', () async {
     final token = await harness.adminToken();
-    final response = await (harness.client.get('/admin/promotions/promo_welcome')
-          ..bearer(token))
-        .send();
+    final response =
+        await (harness.client.get('/admin/promotions/promo_welcome')
+              ..bearer(token))
+            .send();
 
     response.assertOk();
     final body = response.json! as Map<String, Object?>;
