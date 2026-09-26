@@ -1509,7 +1509,7 @@
   "@search_clear": {
     "description": "Translation for `shop_search_clear`."
   },
-  "search_close": "Close",
+  "search_close": "Close search",
   "@search_close": {
     "description": "Translation for `shop_search_close`."
   },

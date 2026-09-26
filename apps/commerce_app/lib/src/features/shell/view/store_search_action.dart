@@ -24,7 +24,10 @@ final class StoreSearchAction extends StatelessWidget {
     showGeneralDialog<void>(
       context: context,
       barrierDismissible: true,
-      barrierLabel: context.tr('shop_search_close', defaultText: 'Close'),
+      barrierLabel: context.tr(
+        'shop_search_close',
+        defaultText: 'Close search',
+      ),
       barrierColor: Colors.black.withValues(alpha: 0.20),
       transitionDuration: const Duration(milliseconds: 180),
       pageBuilder: (dialogContext, _, __) => StoreSearchDrawer(

@@ -186,7 +186,10 @@ final class StoreSearchHeader extends StatelessWidget {
                 ),
               ),
               IconButton(
-                tooltip: context.tr('shop_search_close', defaultText: 'Close'),
+                tooltip: context.tr(
+                  'shop_search_close',
+                  defaultText: 'Close search',
+                ),
                 icon: const Icon(Icons.close, size: 20),
                 onPressed: onClose,
               ),
