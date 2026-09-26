@@ -245,6 +245,8 @@ The drawer chrome now follows the same current source geometry: bordered
 padding, 16px hit gap, no result dividers, and 56×64 rounded subtle thumbnails.
 The failure state also follows the source `text-ui-fg-error` treatment instead
 of rendering as muted helper copy.
+Search hits use the same subtle hover surface as the source
+`hover:bg-ui-bg-base-hover` link row.
 
 ## Open findings
 

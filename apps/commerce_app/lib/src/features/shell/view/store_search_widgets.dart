@@ -87,6 +87,7 @@ final class _StoreSearchHit extends StatelessWidget {
         onTap: () => onSelected(product.handle),
         child: ExcludeSemantics(
           child: InkWell(
+            hoverColor: StoreColors.subtleHover,
             onTap: () => onSelected(product.handle),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
