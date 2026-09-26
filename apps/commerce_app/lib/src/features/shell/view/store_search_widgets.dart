@@ -82,7 +82,7 @@ final class _StoreSearchHit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Semantics(
-        button: true,
+        link: true,
         label: product.title,
         onTap: () => onSelected(product.handle),
         child: ExcludeSemantics(
@@ -109,6 +109,11 @@ final class _StoreSearchHit extends StatelessWidget {
                       product.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: StoreColors.foreground,
+                        fontSize: 14,
+                        height: 22.4 / 14,
+                      ),
                     ),
                   ),
                 ],
