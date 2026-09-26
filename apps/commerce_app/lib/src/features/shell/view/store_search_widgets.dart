@@ -131,25 +131,35 @@ final class _StoreSearchHit extends StatelessWidget {
   final Product product;
 
   @override
-  Widget build(BuildContext context) => InkWell(
+  Widget build(BuildContext context) => Semantics(
+        button: true,
+        label: product.title,
         onTap: () => onSelected(product.handle),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 56,
-                child: ProductImage(url: product.thumbnail, aspectRatio: 7 / 8),
+        child: ExcludeSemantics(
+          child: InkWell(
+            onTap: () => onSelected(product.handle),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 56,
+                    child: ProductImage(
+                      url: product.thumbnail,
+                      aspectRatio: 7 / 8,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      product.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  product.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       );

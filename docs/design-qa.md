@@ -231,6 +231,16 @@ subtree is a concrete widget class. All 82 non-widget Admin tests and all 386
 server tests pass. Admin and server analyzers, normal Dust checks and SQLx Dust
 checks are clean.
 
+## Store search-result accessibility slice
+
+The current Medusa DTC `SearchHit` is one product link with a decorative
+thumbnail (`alt=""`) and visible product title. Morrow now exposes each drawer
+hit as one semantic product button and excludes the thumbnail/title subtree from
+duplicate semantics, keeping product discovery actionable without noisy image
+announcements. Live local AX QA searched `tee`, exposed `Classic White Tee`,
+`Heavyweight Black Tee` and `Split Raglan Tee` as buttons without thumbnail
+noise, and selecting the first result opened `/products/classic-white-tee`.
+
 ## Open findings
 
 - P2 — Repeat the verification success/failure capture against the live Medusa
