@@ -1574,6 +1574,10 @@
   "@sort_by": {
     "description": "Heading above product sort choices."
   },
+  "sort_relevance": "သက်ဆိုင်မှု",
+  "@sort_relevance": {
+    "description": "Sorts products using the search index default relevance."
+  },
   "sort_latest": "နောက်ဆုံးရောက်ကုန်ပစ္စည်းများ",
   "@sort_latest": {
     "description": "Sorts products by newest first."
@@ -1585,6 +1589,14 @@
   "sort_price_desc": "ဈေးနှုန်း: အမြင့်မှ အနိမ့်",
   "@sort_price_desc": {
     "description": "Sorts products from highest to lowest price."
+  },
+  "sort_title_asc": "ခေါင်းစဉ်: A မှ Z",
+  "@sort_title_asc": {
+    "description": "Sorts products alphabetically by title."
+  },
+  "sort_title_desc": "ခေါင်းစဉ်: Z မှ A",
+  "@sort_title_desc": {
+    "description": "Sorts products reverse alphabetically by title."
   },
   "title": "ဆိုင်",
   "@title": {

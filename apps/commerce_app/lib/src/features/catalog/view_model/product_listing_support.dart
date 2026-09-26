@@ -24,8 +24,10 @@ List<Product> _sorted(
   String currencyCode,
 ) {
   final sorted = products.toList(growable: false);
-  if (sortBy == 'created_at') return sorted;
+  if (sortBy == 'created_at' || sortBy == 'relevance') return sorted;
   sorted.sort((left, right) {
+    if (sortBy == 'title_asc') return left.title.compareTo(right.title);
+    if (sortBy == 'title_desc') return right.title.compareTo(left.title);
     final leftPrice = left.cheapestIn(currencyCode)?.amount;
     final rightPrice = right.cheapestIn(currencyCode)?.amount;
     if (leftPrice == null) return rightPrice == null ? 0 : 1;

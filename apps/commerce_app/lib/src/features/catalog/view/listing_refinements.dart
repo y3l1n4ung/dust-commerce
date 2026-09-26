@@ -11,7 +11,7 @@ import 'listing_option_filters.dart';
 import 'listing_price_range.dart';
 import 'listing_sort_products.dart';
 
-/// Source-matched three-choice SortProducts control.
+/// Source-matched Store refinement sidebar.
 class ListingRefinements extends StatelessWidget {
   /// Creates the sort refinement list.
   const ListingRefinements({

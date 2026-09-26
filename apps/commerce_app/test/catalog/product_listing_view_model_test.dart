@@ -78,6 +78,14 @@ void main() {
     );
   });
 
+  test('current Medusa title choices sort by product title', () async {
+    await viewModel.loadStore(sortBy: 'title_asc');
+    expect(viewModel.state.products.first.title, 'Product 01');
+
+    await viewModel.loadStore(sortBy: 'title_desc');
+    expect(viewModel.state.products.first.title, 'T-Shirt');
+  });
+
   test('currency is part of the listing request identity', () async {
     await viewModel.loadCollection('summer');
     final usdKey = viewModel.state.requestKey;

@@ -58,7 +58,7 @@ void main() {
     );
     final collection = parseCommerceRoute(
       Uri.parse(
-        '/collections/featured?sortBy=price_desc&optionValueIds=small',
+        '/collections/featured?sortBy=title_desc&optionValueIds=small',
       ),
     );
     final category = parseCommerceRoute(
@@ -78,7 +78,7 @@ void main() {
     expect(collection, isA<CollectionRoute>());
     expect(
       collection.location,
-      '/collections/featured?sortBy=price_desc&optionValueIds=small',
+      '/collections/featured?sortBy=title_desc&optionValueIds=small',
     );
     expect((collection as CollectionRoute).optionValueIds, ['small']);
     expect(category, isA<CategoryRoute>());

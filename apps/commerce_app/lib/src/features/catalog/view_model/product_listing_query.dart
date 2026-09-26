@@ -48,8 +48,14 @@ Option<int> normalizedPriceBoundary(int? value) =>
 bool normalizedOnSale(String value) => value == 'true' || value == '1';
 
 /// Restricts public sort query values to the source-supported set.
-String normalizedProductSort(String value) =>
-    const {'created_at', 'price_asc', 'price_desc'}.contains(value)
+String normalizedProductSort(String value) => const {
+      'relevance',
+      'created_at',
+      'price_asc',
+      'price_desc',
+      'title_asc',
+      'title_desc',
+    }.contains(value)
         ? value
         : 'created_at';
 

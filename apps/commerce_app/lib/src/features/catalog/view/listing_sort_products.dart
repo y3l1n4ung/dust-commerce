@@ -2,7 +2,7 @@ import 'package:commerce_app/src/core/store_theme.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
-/// Source-matched three-choice SortProducts control.
+/// Source-matched SortProducts control.
 class SortProducts extends StatelessWidget {
   /// Creates the Store sort radio list.
   const SortProducts(
@@ -15,7 +15,14 @@ class SortProducts extends StatelessWidget {
   final String selected;
 
   /// Medusa-supported sort query values.
-  static const choices = <String>['created_at', 'price_asc', 'price_desc'];
+  static const choices = <String>[
+    'relevance',
+    'created_at',
+    'price_asc',
+    'price_desc',
+    'title_asc',
+    'title_desc',
+  ];
 
   @override
   Widget build(BuildContext context) => Column(
@@ -43,6 +50,10 @@ class SortProducts extends StatelessWidget {
 
   /// Customer-facing label for the Medusa sort value.
   static String label(BuildContext context, String value) => switch (value) {
+        'relevance' => context.tr(
+            'shop_sort_relevance',
+            defaultText: 'Relevance',
+          ),
         'price_asc' => context.tr(
             'shop_sort_price_asc',
             defaultText: 'Price: Low -> High',
@@ -50,6 +61,14 @@ class SortProducts extends StatelessWidget {
         'price_desc' => context.tr(
             'shop_sort_price_desc',
             defaultText: 'Price: High -> Low',
+          ),
+        'title_asc' => context.tr(
+            'shop_sort_title_asc',
+            defaultText: 'Title: A -> Z',
+          ),
+        'title_desc' => context.tr(
+            'shop_sort_title_desc',
+            defaultText: 'Title: Z -> A',
           ),
         _ => context.tr('shop_sort_latest', defaultText: 'Latest Arrivals'),
       };
