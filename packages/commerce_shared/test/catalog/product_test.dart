@@ -177,4 +177,17 @@ void main() {
       expect(subject.imagesForVariant('unknown'), [front, back]);
     });
   });
+
+  group('preview image', () {
+    test('uses thumbnail before falling back to the first gallery image', () {
+      expect(
+        product()
+            .copyWith(thumbnail: 'https://example.test/thumb.png')
+            .previewImageUrl,
+        'https://example.test/thumb.png',
+      );
+      expect(product().previewImageUrl, 'https://example.test/shirt.png');
+      expect(product().copyWith(images: const []).previewImageUrl, isNull);
+    });
+  });
 }

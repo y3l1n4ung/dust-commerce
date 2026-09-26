@@ -153,6 +153,10 @@ class Product with _$Product {
   bool get isPurchasable =>
       status.isVisible && variants.any((variant) => variant.isInStock);
 
+  /// Product-card image, matching Medusa's thumbnail-then-gallery fallback.
+  String? get previewImageUrl =>
+      thumbnail ?? (images.isEmpty ? null : images.first.url);
+
   /// The lowest price across variants in [currencyCode], or null.
   Money? cheapestIn(String currencyCode) {
     return cheapestVariantIn(currencyCode)?.priceIn(currencyCode);

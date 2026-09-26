@@ -37,7 +37,7 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ProductImage(
-              url: product.thumbnail,
+              url: product.previewImageUrl,
               aspectRatio: featured ? 11 / 14 : 9 / 16,
             ),
             const SizedBox(height: 16),
