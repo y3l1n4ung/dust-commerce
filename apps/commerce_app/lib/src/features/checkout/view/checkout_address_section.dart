@@ -114,7 +114,7 @@ class _CheckoutAddressSectionState extends State<CheckoutAddressSection> {
       billing: _billing.draft,
       sameAsBilling: _sameAsBilling,
     );
-    if (!valid || !await checkout.loadDelivery() || !mounted) return;
+    if (!valid || !mounted) return;
     context.pushCheckoutStep('delivery');
   }
 }

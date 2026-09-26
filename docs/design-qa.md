@@ -81,6 +81,33 @@ the same footer, with no visible account overview metrics, matching the pinned
 source's `hidden small:block` overview boundary. Browser logs contained no
 warnings or errors.
 
+## Checkout Review and order-confirmation slice
+
+The current Medusa upstream `main` is `e3a237c9b8773cf35c899dabfe73afaebacbc8d5`.
+Compared with the pinned `bd2441acc18359533758fbf4db5bc80129055d2e` target,
+the checkout and order-completion source files are unchanged. Morrow's Review
+step preserves the source hierarchy: completed address, delivery, and payment
+summaries stay collapsed above the final legal acknowledgement and large
+`Place order` action. The confirmation route preserves the source order:
+thank-you heading, confirmation email, order date, interactive order number,
+`Summary`, line items, totals, delivery, payment, `Need help?`, and footer.
+
+Live local browser QA used a fresh seeded database and completed a guest
+checkout for `Essential T-Shirt`, variant `M / Black`, with Standard shipping
+and Manual Payment. The Review step rendered the selected address, shipping
+method, manual payment details, USD 22.00 total, Morrow privacy-policy text and
+`Place order`. Placing the order opened
+`/order/id_Vtw4cMriy064SwGfrnCkfshZYbN9J7tamLLJO1ZMqbg/confirmed` with
+order number `1`, the confirmation email `qa-checkout@example.com`, line item,
+subtotal, shipping, taxes, total, delivery, payment, Contact and Returns &
+Exchanges links, and `Powered by dust`. Browser logs contained no warnings or
+errors.
+
+The same pass exposed that the Address button persisted the address but could
+remain on `?step=address` before a refresh. The route now follows the source
+flow more directly: save the address, then move to Delivery; the Delivery page
+already owns loading server-priced shipping options.
+
 ## Customer-return request slice
 
 The pinned order-detail source keeps `Returns & Exchanges` in the compact
@@ -189,7 +216,9 @@ checks are clean.
 - P2 — Repeat the verification success/failure capture against the live Medusa
   preview when its route is reachable, combine each same-state pair, and judge
   visible differences before declaring rendered parity.
-- P2 — Complete same-state Review and order-confirmation comparisons.
+- P2 — Capture a running Medusa checkout Review and confirmation state if exact
+  pixel parity is required; source comparison and local browser behavior now
+  pass for this slice.
 - P1 — Add external payment-provider refund adapters before claiming a complete
   production refund lifecycle; labels and exchanges remain separate.
 
@@ -203,7 +232,9 @@ compact and reload browser QA as an explicit extension beneath the pinned
 source's help block. Authenticated account overview and compact navigation
 pass against the pinned source structure. Exact code-to-layout translation is
 implemented where the pinned source owns a screen. Store order status and
-return eligibility now use the real fulfillment lifecycle. Admin
+return eligibility now use the real fulfillment lifecycle. Checkout Review,
+manual placement and order confirmation now pass source comparison and live
+local browser QA. Admin
 requested-return receipt, intact inventory restoration and independent
 manual-payment refunds pass, while broader storefront visual parity and
 external refund-provider support are not claimed.
