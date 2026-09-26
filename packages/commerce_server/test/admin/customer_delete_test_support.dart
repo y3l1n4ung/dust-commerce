@@ -60,9 +60,9 @@ VALUES
 INSERT INTO auth_tokens (token_hash, auth_identity_id, expires_at)
 VALUES
   ('${await Tokens.fingerprint(customerToken)}', 'auth_customer',
-   '2027-09-14T12:00:00.000Z'),
+   '2100-01-08T12:00:00.000Z'),
   ('${await Tokens.fingerprint(sharedToken)}', 'auth_shared',
-   '2027-09-14T12:00:00.000Z')
+   '2100-01-08T12:00:00.000Z')
 ''');
   await harness.raw(r'''
 INSERT INTO email_verifications
@@ -70,7 +70,7 @@ INSERT INTO email_verifications
 VALUES
   ('auth_customer',
    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-   '2027-09-14T12:00:00.000Z')
+   '2100-01-08T12:00:00.000Z')
 ''');
   await harness.raw(r'''
 INSERT INTO carts (id, region_id, customer_id, email, completed_at)

@@ -60,7 +60,7 @@ final class AdminHarness {
       TestClient(buildApp(
         database,
         nextId: () => 'id_${++requestId}',
-        now: () => DateTime.utc(2026, 9, 13, 12),
+        now: () => DateTime.utc(2100, 1, 1, 12),
         mediaStorage: mediaStorage,
       )),
     );
