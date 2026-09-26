@@ -138,6 +138,15 @@ class ProductVariant with _$ProductVariant {
     return price != null && original != null && original > price;
   }
 
+  /// Rounded sale percentage matching Medusa's storefront display.
+  int? salePercentageDiffIn(String currencyCode) {
+    final price = priceIn(currencyCode);
+    final original = originalPriceIn(currencyCode);
+    if (price == null || original == null || original <= price) return null;
+    if (original.amount == 0) return null;
+    return (((original.amount - price.amount) / original.amount) * 100).round();
+  }
+
   static void _checkPrices(List<Money> prices, {String name = 'prices'}) {
     final currencies = prices.map((price) => price.currencyCode).toList();
     if (currencies.toSet().length != currencies.length) {

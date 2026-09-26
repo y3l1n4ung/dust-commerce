@@ -22,6 +22,10 @@ class ProductPrice extends StatelessWidget {
         product.cheapestIn(state.currencyCode);
     final original = selected?.originalPriceIn(state.currencyCode) ??
         product.cheapestOriginalIn(state.currencyCode);
+    final salePercent = selected?.salePercentageDiffIn(state.currencyCode) ??
+        product
+            .cheapestVariantIn(state.currencyCode)
+            ?.salePercentageDiffIn(state.currencyCode);
     final prefix = selected == null
         ? context.tr('shop_from_price', defaultText: 'From ')
         : '';
@@ -29,18 +33,32 @@ class ProductPrice extends StatelessWidget {
     final style = compact
         ? Theme.of(context).textTheme.bodyLarge
         : Theme.of(context).textTheme.titleLarge;
+    final sale = price != null && original != null && original > price;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: style),
-        if (price != null && original != null && original > price) ...[
+        Text(
+          label,
+          style: style?.copyWith(
+            color: sale ? StoreColors.interactive : null,
+          ),
+        ),
+        if (sale) ...[
           const SizedBox(height: 4),
           Text(
             'Original: ${formatMoney(original)}',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: StoreColors.foregroundSubtle,
                   decoration: TextDecoration.lineThrough,
                 ),
           ),
+          if (salePercent != null)
+            Text(
+              '-$salePercent%',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: StoreColors.interactive,
+                  ),
+            ),
         ],
       ],
     );

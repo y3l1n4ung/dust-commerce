@@ -70,6 +70,11 @@ void main() {
       expect(variant().isOnSaleIn('usd'), isTrue);
       expect(variant().isOnSaleIn('eur'), isFalse);
     });
+
+    test('reports the rounded sale percentage used by the storefront', () {
+      expect(variant().salePercentageDiffIn('usd'), 20);
+      expect(variant().salePercentageDiffIn('eur'), isNull);
+    });
   });
 
   group('availability', () {
