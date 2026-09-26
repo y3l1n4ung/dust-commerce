@@ -4,56 +4,6 @@ import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
-/// Search input matching the Medusa drawer and Store search boxes.
-final class StoreSearchField extends StatelessWidget {
-  /// Creates the search field.
-  const StoreSearchField({
-    required this.controller,
-    required this.onChanged,
-    required this.onClear,
-    super.key,
-  });
-
-  /// Text controller owned by the drawer.
-  final TextEditingController controller;
-
-  /// Debounced upstream change callback.
-  final ValueChanged<String> onChanged;
-
-  /// Clears the current query.
-  final VoidCallback onClear;
-
-  @override
-  Widget build(BuildContext context) => TextField(
-        autofocus: true,
-        controller: controller,
-        textInputAction: TextInputAction.search,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(
-            Icons.search,
-            size: 18,
-            color: StoreColors.foregroundMuted,
-          ),
-          suffixIcon: controller.text.isEmpty
-              ? null
-              : IconButton(
-                  tooltip: context.tr(
-                    'shop_search_clear',
-                    defaultText: 'Clear search',
-                  ),
-                  icon: const Icon(Icons.close, size: 18),
-                  onPressed: onClear,
-                ),
-          hintText: context.tr(
-            'shop_search_products',
-            defaultText: 'Search products',
-          ),
-          border: const UnderlineInputBorder(),
-        ),
-        onChanged: onChanged,
-      );
-}
-
 /// Search result, loading, empty, and error states.
 final class StoreSearchBody extends StatelessWidget {
   /// Creates the drawer body.
@@ -112,10 +62,9 @@ final class StoreSearchBody extends StatelessWidget {
       );
     }
     if (hits.isEmpty) return _StoreSearchEmpty(query: query);
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: hits.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
       itemBuilder: (context, index) => _StoreSearchHit(
         product: hits[index],
         onSelected: onProductSelected,
@@ -139,7 +88,7 @@ final class _StoreSearchHit extends StatelessWidget {
           child: InkWell(
             onTap: () => onSelected(product.handle),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
                   SizedBox(
@@ -149,7 +98,7 @@ final class _StoreSearchHit extends StatelessWidget {
                       aspectRatio: 7 / 8,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Text(
                       product.title,
@@ -172,12 +121,13 @@ final class _StoreSearchEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: Text(
           '${context.tr(
             'shop_search_empty',
             defaultText: 'No products found for',
           )} "$query"',
+          textAlign: TextAlign.center,
           style: const TextStyle(color: StoreColors.foregroundSubtle),
         ),
       );
@@ -190,8 +140,9 @@ final class _StoreSearchMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: DefaultTextStyle.merge(
+          textAlign: TextAlign.center,
           style: const TextStyle(color: StoreColors.foregroundSubtle),
           child: child,
         ),

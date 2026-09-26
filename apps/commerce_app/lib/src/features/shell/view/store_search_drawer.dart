@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:commerce_app/src/core/store_theme.dart';
+import 'package:commerce_app/src/features/shell/view/store_search_field.dart';
 import 'package:commerce_app/src/features/shell/view/store_search_widgets.dart';
 import 'package:commerce_app/src/features/shell/view_model/store_shell_view_model.dart';
 import 'package:commerce_shared/commerce_shared.dart';
@@ -60,6 +61,13 @@ final class _StoreSearchDrawerState extends State<StoreSearchDrawer> {
           child: DecoratedBox(
             decoration: const BoxDecoration(
               border: Border(left: BorderSide(color: StoreColors.border)),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 24,
+                  color: Color(0x1a18181b),
+                  offset: Offset(-8, 0),
+                ),
+              ],
             ),
             child: SafeArea(
               child: Column(
@@ -67,13 +75,10 @@ final class _StoreSearchDrawerState extends State<StoreSearchDrawer> {
                   StoreSearchHeader(
                     onClose: () => Navigator.of(context).pop(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-                    child: StoreSearchField(
-                      controller: _controller,
-                      onChanged: _changed,
-                      onClear: _clear,
-                    ),
+                  StoreSearchField(
+                    controller: _controller,
+                    onChanged: _changed,
+                    onClear: _clear,
                   ),
                   Expanded(
                     child: StoreSearchBody(
@@ -157,22 +162,34 @@ final class StoreSearchHeader extends StatelessWidget {
   final VoidCallback onClose;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(24, 20, 16, 12),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                context.tr('shop_search_title', defaultText: 'Search'),
-                style: Theme.of(context).textTheme.titleLarge,
+  Widget build(BuildContext context) => DecoratedBox(
+        decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: StoreColors.border)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+          child: Row(
+            children: [
+              Expanded(
+                child: Semantics(
+                  header: true,
+                  child: Text(
+                    context.tr('shop_search_title', defaultText: 'Search'),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      height: 28 / 18,
+                    ),
+                  ),
+                ),
               ),
-            ),
-            IconButton(
-              tooltip: context.tr('shop_search_close', defaultText: 'Close'),
-              icon: const Icon(Icons.close, size: 20),
-              onPressed: onClose,
-            ),
-          ],
+              IconButton(
+                tooltip: context.tr('shop_search_close', defaultText: 'Close'),
+                icon: const Icon(Icons.close, size: 20),
+                onPressed: onClose,
+              ),
+            ],
+          ),
         ),
       );
 }
