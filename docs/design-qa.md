@@ -243,6 +243,8 @@ noise, and selecting the first result opened `/products/classic-white-tee`.
 The drawer chrome now follows the same current source geometry: bordered
 16px/12px title row, bordered 16px search row, 8px result-list vertical
 padding, 16px hit gap, no result dividers, and 56×64 rounded subtle thumbnails.
+The failure state also follows the source `text-ui-fg-error` treatment instead
+of rendering as muted helper copy.
 
 ## Open findings
 

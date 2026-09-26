@@ -55,6 +55,7 @@ final class StoreSearchBody extends StatelessWidget {
     }
     if (failed) {
       return const _StoreSearchMessage(
+        color: StoreColors.danger,
         child: TranslatedText(
           'shop_search_failed',
           defaultText: 'Could not search products.',
@@ -134,16 +135,20 @@ final class _StoreSearchEmpty extends StatelessWidget {
 }
 
 final class _StoreSearchMessage extends StatelessWidget {
-  const _StoreSearchMessage({required this.child});
+  const _StoreSearchMessage({
+    required this.child,
+    this.color = StoreColors.foregroundSubtle,
+  });
 
   final Widget child;
+  final Color color;
 
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: DefaultTextStyle.merge(
           textAlign: TextAlign.center,
-          style: const TextStyle(color: StoreColors.foregroundSubtle),
+          style: TextStyle(color: color),
           child: child,
         ),
       );
