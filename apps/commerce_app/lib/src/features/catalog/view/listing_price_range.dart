@@ -121,17 +121,22 @@ class _PriceRangeBody extends StatelessWidget {
             padding: const EdgeInsets.only(right: 24),
             child: Column(
               children: [
-                RangeSlider(
-                  values: value,
-                  min: bounds.min.toDouble(),
-                  max: bounds.max.toDouble(),
-                  divisions: bounds.max - bounds.min,
-                  labels: RangeLabels(
-                    _money(value.start),
-                    _money(value.end),
+                Semantics(
+                  label: context.tr('shop_price', defaultText: 'Price'),
+                  value: '${_money(value.start)} - ${_money(value.end)}',
+                  child: RangeSlider(
+                    values: value,
+                    min: bounds.min.toDouble(),
+                    max: bounds.max.toDouble(),
+                    divisions: bounds.max - bounds.min,
+                    labels: RangeLabels(
+                      _money(value.start),
+                      _money(value.end),
+                    ),
+                    semanticFormatterCallback: _money,
+                    onChanged: onChanged,
+                    onChangeEnd: onChangeEnd,
                   ),
-                  onChanged: onChanged,
-                  onChangeEnd: onChangeEnd,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

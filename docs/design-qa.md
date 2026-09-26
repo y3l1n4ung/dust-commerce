@@ -177,6 +177,11 @@ handle and current sort, and clear-all removes the taxonomy route refinements.
 Focused route-conversion and listing ViewModel tests cover the URL retention,
 collection metadata, category hierarchy, filtering and missing-taxonomy states.
 
+Accessibility QA on the live local Store route exposed that Flutter Web named
+the price slider thumbs as raw integers. The price refinement now keeps the
+native range control while exposing the formatted group value, e.g.
+`Price USD 15.00 - USD 40.00`, after enabling Flutter semantics in the browser.
+
 ## Customer return-history slice
 
 The pinned DTC order detail has no customer return-history component. Its
