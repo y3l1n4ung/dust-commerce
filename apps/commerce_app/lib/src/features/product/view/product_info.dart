@@ -36,12 +36,15 @@ class ProductInfo extends StatelessWidget {
             product.title,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   height: 4 / 3,
+                  fontWeight: FontWeight.w600,
                 ),
           ),
           const SizedBox(height: 16),
           Text(
             product.description ?? '',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: StoreColors.foregroundSubtle,
+                ),
           ),
           const SizedBox(height: 24),
           ProductTabs(details: product.details),
