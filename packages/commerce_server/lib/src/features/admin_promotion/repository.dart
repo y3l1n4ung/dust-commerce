@@ -84,4 +84,23 @@ WHERE deleted_at IS NULL
     String updatedBefore,
     String updatedTo,
   );
+
+  /// Reads one active promotion row.
+  @Query(r'''
+SELECT id, code, type, value, currency_code, starts_at, ends_at, usage_limit,
+       usage_count, created_at, updated_at, 0 AS is_automatic,
+       CASE
+         WHEN starts_at IS NOT NULL
+              AND starts_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+           THEN 'scheduled'
+         WHEN (ends_at IS NOT NULL
+               AND ends_at < strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+              OR (usage_limit IS NOT NULL AND usage_count >= usage_limit)
+           THEN 'expired'
+         ELSE 'active'
+       END AS status
+FROM promotions
+WHERE id = $1 AND deleted_at IS NULL
+''')
+  Future<Result<AdminPromotionResponse?, SqlxError>> find(String id);
 }

@@ -49,6 +49,18 @@ Future<Result<AdminPromotionListResponse, SqlxError>> listAdminPromotions(
   ));
 }
 
+/// Reads one active merchant-visible promotion, or none when hidden.
+Future<Result<Option<AdminPromotionDetailResponse>, SqlxError>>
+    readAdminPromotion(AdminPromotionRepository promotions, String id) async {
+  final result = await promotions.find(id);
+  return switch (result) {
+    Ok(value: final promotion?) =>
+      Ok(Some(AdminPromotionDetailResponse(promotion: promotion))),
+    Ok(value: null) => const Ok(None()),
+    Err(:final error) => Err(error),
+  };
+}
+
 String _value(Option<DateTime> value) => switch (value) {
       Some(value: final instant) => instant.toIso8601String(),
       None() => '',

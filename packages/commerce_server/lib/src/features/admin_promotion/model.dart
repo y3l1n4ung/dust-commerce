@@ -110,6 +110,17 @@ final class AdminPromotionListResponse with _$AdminPromotionListResponse {
   final List<AdminPromotionResponse> promotions;
 }
 
+/// Medusa-compatible envelope for promotion detail retrieval.
+@Derive([Serialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class AdminPromotionDetailResponse with _$AdminPromotionDetailResponse {
+  /// Creates one explicit promotion detail envelope.
+  const AdminPromotionDetailResponse({required this.promotion});
+
+  /// Direct SQLx row without persistence-only fields.
+  final AdminPromotionResponse promotion;
+}
+
 final class _AdminPromotionBoolFromInt implements SqlxTryFrom<bool, int> {
   const _AdminPromotionBoolFromInt();
 

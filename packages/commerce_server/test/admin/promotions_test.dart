@@ -50,6 +50,39 @@ void main() {
     expect(DateTime.parse(row['updated_at']! as String).isUtc, isTrue);
   });
 
+  test('reads one active promotion detail envelope', () async {
+    final token = await harness.adminToken();
+    final response = await (harness.client.get('/admin/promotions/promo_welcome')
+          ..bearer(token))
+        .send();
+
+    response.assertOk();
+    final body = response.json! as Map<String, Object?>;
+    expect(body.keys, {'promotion'});
+    final promotion = body['promotion']! as Map<String, Object?>;
+    expect(promotion['id'], 'promo_welcome');
+    expect(promotion['code'], 'WELCOME10');
+    expect(promotion['status'], 'active');
+    expect(promotion, isNot(contains('deleted_at')));
+  });
+
+  test('missing and retired promotions are hidden', () async {
+    final token = await harness.adminToken();
+    await harness.raw(r'''
+UPDATE promotions
+SET deleted_at = '2026-01-02T00:00:00.000Z'
+WHERE id = 'promo_welcome'
+''');
+
+    final retired = harness.client.get('/admin/promotions/promo_welcome')
+      ..bearer(token);
+    final missing = harness.client.get('/admin/promotions/promo_missing')
+      ..bearer(token);
+
+    (await retired.send()).assertNotFound();
+    (await missing.send()).assertNotFound();
+  });
+
   test('filters and orders promotions before the page boundary', () async {
     final token = await harness.adminToken();
     await harness.raw(r'''

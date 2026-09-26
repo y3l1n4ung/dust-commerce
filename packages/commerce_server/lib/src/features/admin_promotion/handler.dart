@@ -32,3 +32,23 @@ Future<Result<AdminPromotionListResponse, Rejection>>
     Err() => const Err(Rejection.internal()),
   };
 }
+
+/// `GET /admin/promotions/{id}` — reads one active promotion.
+Future<Result<AdminPromotionDetailResponse, Rejection>>
+    readAdminPromotionHandler(Request request) async {
+  final actor = await const Extension<AuthenticatedAdmin>().extract(request);
+  if (actor case Err(:final error)) return Err(error);
+  final id = pathParametersOf(request)['id'];
+  if (id == null || id.isEmpty) {
+    return const Err(Rejection.badRequest('A promotion id is required'));
+  }
+  final state = await adminPromotionDeps(request);
+  if (state case Err(:final error)) return Err(error);
+  final deps = (state as Ok<AdminPromotionDeps, Rejection>).value;
+  final result = await readAdminPromotion(deps.promotions, id);
+  return switch (result) {
+    Ok(value: Some(:final value)) => Ok(value),
+    Ok(value: None()) => Err(Rejection.notFound('Promotion "$id"')),
+    Err() => const Err(Rejection.internal()),
+  };
+}

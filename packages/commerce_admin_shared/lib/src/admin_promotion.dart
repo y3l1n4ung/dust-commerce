@@ -169,3 +169,18 @@ final class AdminPromotionList with _$AdminPromotionList {
   /// Direct allowlisted promotion rows.
   final List<AdminPromotion> promotions;
 }
+
+/// Medusa-compatible envelope returned by promotion detail retrieval.
+@Derive([ToString(), Eq(), Serialize(), Deserialize()])
+@SerDe(renameAll: SerDeRename.snakeCase)
+final class AdminPromotionDetail with _$AdminPromotionDetail {
+  /// Creates one explicit promotion detail envelope.
+  const AdminPromotionDetail({required this.promotion});
+
+  /// Decodes one generated Admin API response.
+  factory AdminPromotionDetail.fromJson(Map<String, Object?> json) =>
+      _$AdminPromotionDetailFromJson(json);
+
+  /// Merchant-visible promotion detail.
+  final AdminPromotion promotion;
+}

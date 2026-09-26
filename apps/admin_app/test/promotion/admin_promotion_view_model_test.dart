@@ -14,6 +14,7 @@ void main() {
   late Directory directory;
   late CommerceDatabase database;
   late TestClient server;
+  late AdminPromotionApi api;
   late AdminPromotionViewModel promotions;
 
   setUp(() async {
@@ -41,9 +42,10 @@ void main() {
     );
     final dio = Dio()
       ..options.headers['authorization'] = 'Bearer ${token.token}';
+    api = AdminPromotionApi(dio, baseUrl: server.origin);
     promotions = AdminPromotionViewModel(
       AdminPromotionViewModelArgs(
-        api: AdminPromotionApi(dio, baseUrl: server.origin),
+        api: api,
       ),
     );
   });
@@ -64,6 +66,13 @@ void main() {
     await promotions.search('missing');
     expect(promotions.state.count, 0);
     expect(promotions.state.promotions, isEmpty);
+  });
+
+  test('reads promotion detail through the generated client', () async {
+    final detail = await api.promotion('promo_welcome');
+
+    expect(detail.promotion.code, 'WELCOME10');
+    expect(detail.promotion.status, AdminPromotionStatus.active);
   });
 
   test('retains date filters and order across loads', () async {

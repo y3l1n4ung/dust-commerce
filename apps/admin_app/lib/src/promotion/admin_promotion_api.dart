@@ -23,4 +23,8 @@ abstract interface class AdminPromotionApi {
     @Query('limit') int limit,
     @Query('offset') int offset,
   );
+
+  /// Reads one active promotion detail.
+  @GET('/admin/promotions/{id}')
+  Future<AdminPromotionDetail> promotion(@Path() String id);
 }
