@@ -8,9 +8,13 @@ final class AdminPromotionTableBody extends StatelessWidget {
   /// Creates the loading, error, empty, or populated table surface.
   const AdminPromotionTableBody({
     required this.state,
+    required this.onOpen,
     required this.onRetry,
     super.key,
   });
+
+  /// Opens one promotion detail route.
+  final ValueChanged<String> onOpen;
 
   /// Retries the current server page.
   final VoidCallback onRetry;
@@ -45,7 +49,7 @@ final class AdminPromotionTableBody extends StatelessWidget {
       );
     }
     return Stack(children: [
-      AdminPromotionTable(promotions: state.promotions),
+      AdminPromotionTable(promotions: state.promotions, onOpen: onOpen),
       if (state.status == AdminPromotionLoadStatus.loading)
         const LinearProgressIndicator(minHeight: 2),
     ]);

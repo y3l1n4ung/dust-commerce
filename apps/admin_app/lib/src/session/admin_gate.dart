@@ -27,6 +27,8 @@ import 'package:admin_app/src/product_type/admin_product_type_page.dart';
 import 'package:admin_app/src/product_type/admin_product_type_detail_page.dart';
 import 'package:admin_app/src/product_type/admin_product_type_detail_view_model.dart';
 import 'package:admin_app/src/product_type/admin_product_type_view_model.dart';
+import 'package:admin_app/src/promotion/admin_promotion_detail_page.dart';
+import 'package:admin_app/src/promotion/admin_promotion_detail_view_model.dart';
 import 'package:admin_app/src/promotion/admin_promotion_page.dart';
 import 'package:admin_app/src/promotion/admin_promotion_view_model.dart';
 import 'package:admin_app/src/session/admin_session_state.dart';
@@ -47,6 +49,7 @@ part 'admin_gate_actions.dart';
 part 'admin_gate_customer_group_actions.dart';
 part 'admin_gate_navigation.dart';
 part 'admin_gate_support_actions.dart';
+part 'admin_gate_title.dart';
 
 /// Switches between sign-in and the authenticated admin shell.
 final class AdminGate extends StatelessWidget {
@@ -163,6 +166,7 @@ enum _AdminRoute {
   productTypes,
   productType,
   promotions,
+  promotion,
   shippingProfiles,
   shippingProfile,
 }

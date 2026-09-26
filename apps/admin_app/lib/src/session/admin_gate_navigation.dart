@@ -16,50 +16,21 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
         .watchAdminShippingProfileDetailViewModel()
         .value
         .shippingProfile;
+    final promotionDetail =
+        context.watchAdminPromotionDetailViewModel().value.promotion;
     return AdminShell(
       user: widget.user,
       themes: widget.themes,
-      title: switch (_route) {
-        _AdminRoute.customers => 'Customers',
-        _AdminRoute.customerService => 'Customer Service',
-        _AdminRoute.customerGroups => 'Customer Groups',
-        _AdminRoute.customerGroup => switch (customerGroupDetail) {
-            Some(value: final group) => 'Customer Groups  ›  ${group.name}',
-            None() => 'Customer Groups',
-          },
-        _AdminRoute.customer => switch (customerDetail) {
-            Some(value: final customer) =>
-              'Customers  ›  ${customer.email.match(some: (value) => value, none: () => customer.id)}',
-            None() => 'Customers',
-          },
-        _AdminRoute.customerOrder => switch (orderDetail) {
-            Some(value: final order) => 'Customers  ›  #${order.displayId}',
-            None() => 'Customers',
-          },
-        _AdminRoute.orders => 'Orders',
-        _AdminRoute.order => switch (orderDetail) {
-            Some(value: final order) => 'Orders  ›  #${order.displayId}',
-            None() => 'Orders',
-          },
-        _AdminRoute.products => 'Products',
-        _AdminRoute.product => 'Product details',
-        _AdminRoute.productOptions => 'Options',
-        _AdminRoute.productOption => switch (optionDetail) {
-            Some(value: final option) => 'Options  ›  ${option.title}',
-            None() => 'Options',
-          },
-        _AdminRoute.productTypes => 'Settings  ›  Product Types',
-        _AdminRoute.productType => switch (typeDetail) {
-            Some(value: final type) => 'Product Types  ›  ${type.value}',
-            None() => 'Product Types',
-          },
-        _AdminRoute.promotions => 'Promotions',
-        _AdminRoute.shippingProfiles => 'Settings  ›  Shipping Profiles',
-        _AdminRoute.shippingProfile => switch (profileDetail) {
-            Some(:final value) => 'Shipping Profiles  ›  ${value.name}',
-            None() => 'Shipping Profiles',
-          },
-      },
+      title: _adminShellTitle(
+        route: _route,
+        optionDetail: optionDetail,
+        orderDetail: orderDetail,
+        customerDetail: customerDetail,
+        customerGroupDetail: customerGroupDetail,
+        typeDetail: typeDetail,
+        profileDetail: profileDetail,
+        promotionDetail: promotionDetail,
+      ),
       onSearchRequested: _requestSearch,
       onCustomersRequested: _showCustomers,
       onCustomerGroupsRequested: _showCustomerGroups,
@@ -86,7 +57,9 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
         _AdminRoute.productOptions ||
         _AdminRoute.productOption =>
           AdminShellSection.productOptions,
-        _AdminRoute.promotions => AdminShellSection.promotions,
+        _AdminRoute.promotions ||
+        _AdminRoute.promotion =>
+          AdminShellSection.promotions,
         _AdminRoute.productTypes ||
         _AdminRoute.productType =>
           AdminShellSection.productTypes,
@@ -160,6 +133,11 @@ mixin _AdminHomeNavigation on State<_AdminHome>, _AdminHomeActions {
           ),
         _AdminRoute.promotions => AdminPromotionPage(
             searchFocus: _promotionSearchFocus,
+            onOpen: _showPromotion,
+          ),
+        _AdminRoute.promotion => AdminPromotionDetailPage(
+            promotionId: selectedIdForNavigation,
+            onBack: _showPromotions,
           ),
         _AdminRoute.productType => AdminProductTypeDetailPage(
             productTypeId: selectedIdForNavigation,

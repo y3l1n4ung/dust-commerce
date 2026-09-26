@@ -55,7 +55,7 @@ mixin _AdminHomeActions
       });
       return;
     }
-    if (_route == _AdminRoute.promotions) {
+    if (_route == _AdminRoute.promotions || _route == _AdminRoute.promotion) {
       _showPromotions();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _promotionSearchFocus.requestFocus();
@@ -165,6 +165,11 @@ mixin _AdminHomeActions
       _selectedId = '';
     });
   }
+
+  void _showPromotion(String id) => setState(() {
+        _route = _AdminRoute.promotion;
+        _selectedId = id;
+      });
 
   Future<void> _createProduct() async {
     final created = await showAdminProductCreatePage(context);

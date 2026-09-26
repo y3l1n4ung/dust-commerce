@@ -5,7 +5,14 @@ import 'package:intl/intl.dart';
 /// Compact promotion table with Medusa's visible columns.
 final class AdminPromotionTable extends StatelessWidget {
   /// Creates promotion rows.
-  const AdminPromotionTable({required this.promotions, super.key});
+  const AdminPromotionTable({
+    required this.promotions,
+    required this.onOpen,
+    super.key,
+  });
+
+  /// Opens one promotion detail route.
+  final ValueChanged<String> onOpen;
 
   /// Explicit rows from the Admin contract.
   final List<AdminPromotion> promotions;
@@ -16,7 +23,7 @@ final class AdminPromotionTable extends StatelessWidget {
         children: [
           const _AdminPromotionTableHeader(),
           for (final promotion in promotions)
-            _AdminPromotionTableRow(promotion: promotion),
+            _AdminPromotionTableRow(promotion: promotion, onOpen: onOpen),
         ],
       );
 }
@@ -39,32 +46,43 @@ final class _AdminPromotionTableHeader extends StatelessWidget {
 }
 
 final class _AdminPromotionTableRow extends StatelessWidget {
-  const _AdminPromotionTableRow({required this.promotion});
+  const _AdminPromotionTableRow({
+    required this.promotion,
+    required this.onOpen,
+  });
 
+  final ValueChanged<String> onOpen;
   final AdminPromotion promotion;
 
   @override
-  Widget build(BuildContext context) => Container(
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        decoration: BoxDecoration(
-          border:
-              Border(top: BorderSide(color: Theme.of(context).dividerColor)),
-        ),
-        child: Row(children: [
-          Expanded(flex: 4, child: SelectableText(promotion.code)),
-          Expanded(flex: 3, child: Text(_method)),
-          Expanded(flex: 3, child: _StatusBadge(status: promotion.status)),
-          Expanded(
-            flex: 3,
-            child: Text(
-              DateFormat.yMMMd().format(promotion.createdAt.toLocal()),
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+  Widget build(BuildContext context) => Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => onOpen(promotion.id),
+          child: Container(
+            height: 52,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: Theme.of(context).dividerColor),
               ),
             ),
+            child: Row(children: [
+              Expanded(flex: 4, child: Text(promotion.code)),
+              Expanded(flex: 3, child: Text(_method)),
+              Expanded(flex: 3, child: _StatusBadge(status: promotion.status)),
+              Expanded(
+                flex: 3,
+                child: Text(
+                  DateFormat.yMMMd().format(promotion.createdAt.toLocal()),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ]),
           ),
-        ]),
+        ),
       );
 
   String get _method => promotion.isAutomatic ? 'Automatic' : 'Code';

@@ -8,7 +8,14 @@ import 'package:flutter/material.dart';
 /// Medusa's promotions list backed by the protected API.
 final class AdminPromotionPage extends StatefulWidget {
   /// Creates the promotions route.
-  const AdminPromotionPage({required this.searchFocus, super.key});
+  const AdminPromotionPage({
+    required this.searchFocus,
+    required this.onOpen,
+    super.key,
+  });
+
+  /// Opens one promotion detail route.
+  final ValueChanged<String> onOpen;
 
   /// Focus target shared with the sidebar search action.
   final FocusNode searchFocus;
@@ -46,6 +53,7 @@ final class _AdminPromotionPageState extends State<AdminPromotionPage> {
               Divider(height: 1, color: Theme.of(context).dividerColor),
               AdminPromotionTableBody(
                 state: state,
+                onOpen: widget.onOpen,
                 onRetry: context.readAdminPromotionViewModel().load,
               ),
               AdminPromotionPagination(state: state),

@@ -24,6 +24,7 @@ import 'package:admin_app/src/product_option/admin_product_option_view_model.dar
 import 'package:admin_app/src/product_type/admin_product_type_detail_view_model.dart';
 import 'package:admin_app/src/product_type/admin_product_type_view_model.dart';
 import 'package:admin_app/src/promotion/admin_promotion_api.dart';
+import 'package:admin_app/src/promotion/admin_promotion_detail_view_model.dart';
 import 'package:admin_app/src/promotion/admin_promotion_view_model.dart';
 import 'package:admin_app/src/session/admin_session_view_model.dart';
 import 'package:admin_app/src/shipping_profile/admin_shipping_profile_api.dart';
@@ -105,6 +106,9 @@ final class AdminDependencies {
       promotions: AdminPromotionViewModel(
         AdminPromotionViewModelArgs(api: promotionApi),
       ),
+      promotionDetail: AdminPromotionDetailViewModel(
+        AdminPromotionDetailViewModelArgs(api: promotionApi),
+      ),
     );
   }
 
@@ -127,6 +131,7 @@ final class AdminDependencies {
     required this.shippingProfiles,
     required this.shippingProfileDetail,
     required this.promotions,
+    required this.promotionDetail,
   });
 
   /// Signed-in Admin session state.
@@ -182,4 +187,7 @@ final class AdminDependencies {
 
   /// Promotion collection state.
   final AdminPromotionViewModel promotions;
+
+  /// Selected promotion detail state.
+  final AdminPromotionDetailViewModel promotionDetail;
 }
