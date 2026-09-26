@@ -57,7 +57,7 @@ class _ProductInformation extends StatelessWidget {
                     'shop_origin_country',
                     defaultText: 'Country of origin',
                   ),
-                  value: details.originCountry?.toUpperCase(),
+                  value: details.originCountry,
                 ),
                 _Fact(
                   label: context.tr('shop_product_type', defaultText: 'Type'),
