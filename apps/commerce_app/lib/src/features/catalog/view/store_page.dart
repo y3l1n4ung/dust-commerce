@@ -14,11 +14,15 @@ class StorePage extends StatelessWidget {
     this.sortBy = 'created_at',
     this.optionValueIds = const [],
     this.category = const [],
+    this.labels = const [],
     super.key,
   });
 
   /// Stable category handles repeated in the URL query.
   final List<String> category;
+
+  /// Stable product label values repeated in the URL query.
+  final List<String> labels;
 
   /// Stable option-value identifiers repeated in the URL query.
   final List<String> optionValueIds;
@@ -39,6 +43,7 @@ class StorePage extends StatelessWidget {
     final currentSort = normalizedProductSort(sortBy);
     final selected = normalizedOptionValueIds(optionValueIds);
     final selectedCategories = normalizedCategoryHandles(category);
+    final selectedLabels = normalizedLabelValues(labels);
     final currency = context.watchStoreShellViewModel().value.currencyCode;
     final requestKey = listingRequestKey(
       'store',
@@ -47,6 +52,7 @@ class StorePage extends StatelessWidget {
       currentSort,
       selected,
       selectedCategories,
+      selectedLabels,
       currency,
       currentQuery,
     );
@@ -59,6 +65,7 @@ class StorePage extends StatelessWidget {
         sortBy: currentSort,
         optionValueIds: selected,
         categoryHandles: selectedCategories,
+        labels: selectedLabels,
         currency: currency,
       ),
       onSortChanged: (value) => context.navigator
@@ -67,6 +74,7 @@ class StorePage extends StatelessWidget {
             sortBy: value,
             optionValueIds: selected,
             category: selectedCategories,
+            labels: selectedLabels,
           )
           .go(),
       onSearchChanged: (value) => context.navigator
@@ -75,6 +83,7 @@ class StorePage extends StatelessWidget {
             sortBy: currentSort,
             optionValueIds: selected,
             category: selectedCategories,
+            labels: selectedLabels,
           )
           .go(),
       onPageChanged: (value) => context.navigator
@@ -84,6 +93,7 @@ class StorePage extends StatelessWidget {
             sortBy: currentSort,
             optionValueIds: selected,
             category: selectedCategories,
+            labels: selectedLabels,
           )
           .go(),
       onOptionValuesChanged: (values) => context.navigator
@@ -92,6 +102,7 @@ class StorePage extends StatelessWidget {
             sortBy: currentSort,
             optionValueIds: values,
             category: selectedCategories,
+            labels: selectedLabels,
           )
           .go(),
       onCategoryHandlesChanged: (values) => context.navigator
@@ -100,6 +111,16 @@ class StorePage extends StatelessWidget {
             sortBy: currentSort,
             optionValueIds: selected,
             category: values,
+            labels: selectedLabels,
+          )
+          .go(),
+      onLabelValuesChanged: (values) => context.navigator
+          .store(
+            q: currentQuery,
+            sortBy: currentSort,
+            optionValueIds: selected,
+            category: selectedCategories,
+            labels: values,
           )
           .go(),
       onCategorySelected: (handle) =>

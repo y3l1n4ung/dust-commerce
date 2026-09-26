@@ -90,7 +90,7 @@ void main() {
       final categories = await api.categories(handle: 'clothing/shirts');
       final options = await api.productOptions();
       final filtered = await api.products(
-        tag: 'cotton',
+        labels: const ['cotton'],
         optionValueIds: const ['optval_small'],
       );
 

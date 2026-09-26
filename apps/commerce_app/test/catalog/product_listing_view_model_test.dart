@@ -120,6 +120,22 @@ void main() {
     ]);
   });
 
+  test('store exposes labels and filters by selected values', () async {
+    await viewModel.loadStore();
+
+    expect(viewModel.state.labelFilters.map((filter) => filter.value), [
+      'Cotton',
+      'Gift',
+    ]);
+
+    await viewModel.loadStore(labels: const ['Gift']);
+
+    expect(viewModel.state.selectedLabelValues, ['Gift']);
+    expect(viewModel.state.products.map((product) => product.handle), [
+      'product-13',
+    ]);
+  });
+
   test('store search filters products and keys the route identity', () async {
     await viewModel.loadStore(query: ' Product 01 ');
 

@@ -14,6 +14,7 @@ class ProductListingRoute extends StatefulWidget {
     required this.onPageChanged,
     required this.onOptionValuesChanged,
     this.onCategoryHandlesChanged,
+    this.onLabelValuesChanged,
     required this.onCategorySelected,
     super.key,
   });
@@ -23,6 +24,9 @@ class ProductListingRoute extends StatefulWidget {
 
   /// Replaces the repeated Store category query and resets pagination.
   final ValueChanged<List<String>>? onCategoryHandlesChanged;
+
+  /// Replaces the repeated Store labels query and resets pagination.
+  final ValueChanged<List<String>>? onLabelValuesChanged;
 
   /// Runs the exact store, collection, or category request.
   final Future<void> Function(ProductListingViewModel viewModel) load;
@@ -75,6 +79,7 @@ class _ProductListingRouteState extends State<ProductListingRoute> {
           onPageChanged: widget.onPageChanged,
           onOptionValuesChanged: widget.onOptionValuesChanged,
           onCategoryHandlesChanged: widget.onCategoryHandlesChanged,
+          onLabelValuesChanged: widget.onLabelValuesChanged,
           onCategorySelected: widget.onCategorySelected,
         ),
       );

@@ -8,12 +8,14 @@ String listingRequestKey(
   String sortBy, [
   List<String> optionValueIds = const [],
   List<String> categoryHandles = const [],
+  List<String> labelValues = const [],
   String currencyCode = 'usd',
   String searchQuery = '',
 ]) =>
     '$kind:$handle:${page < 1 ? 1 : page}:${normalizedProductSort(sortBy)}:'
     '${normalizedOptionValueIds(optionValueIds).join(',')}:'
-    '${normalizedCategoryHandles(categoryHandles).join(',')}:$currencyCode:'
+    '${normalizedCategoryHandles(categoryHandles).join(',')}:'
+    '${normalizedLabelValues(labelValues).join(',')}:$currencyCode:'
     '${normalizedSearchQuery(searchQuery)}';
 
 /// Keeps Store search predictable and bounded before it reaches the API.
@@ -28,6 +30,10 @@ List<String> normalizedOptionValueIds(Iterable<String> values) =>
 
 /// Removes empty and duplicate category handles while preserving URL order.
 List<String> normalizedCategoryHandles(Iterable<String> values) =>
+    _normalizedTokens(values);
+
+/// Removes empty and duplicate label values while preserving URL order.
+List<String> normalizedLabelValues(Iterable<String> values) =>
     _normalizedTokens(values);
 
 /// Restricts public sort query values to the source-supported set.

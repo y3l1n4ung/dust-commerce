@@ -13,7 +13,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
   Option<String> query = const None(),
   Option<String> collection = const None(),
   List<String> categoryHandles = const [],
-  Option<String> tag = const None(),
+  List<String> labels = const [],
   List<String> optionValueIds = const [],
   int limit = 20,
   int offset = 0,
@@ -25,7 +25,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
     nullableOf(query),
     nullableOf(collection),
     jsonEncode(categoryHandles),
-    nullableOf(tag),
+    jsonEncode(labels),
     jsonEncode(optionValueIds),
   );
   if (page case Err(:final error)) return Err(error);
@@ -35,7 +35,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
     nullableOf(query),
     nullableOf(collection),
     jsonEncode(categoryHandles),
-    nullableOf(tag),
+    jsonEncode(labels),
     jsonEncode(optionValueIds),
   );
   if (total case Err(:final error)) return Err(error);

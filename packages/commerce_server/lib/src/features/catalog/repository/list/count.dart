@@ -38,12 +38,14 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       AND filter_category.is_active = 1
       AND filter_category.deleted_at IS NULL
   ))
-  AND ($5 IS NULL OR EXISTS (
+  AND (json_array_length($5) = 0 OR EXISTS (
     SELECT 1
     FROM product_tag_products filter_link
     JOIN product_tags filter_tag ON filter_tag.id = filter_link.tag_id
     WHERE filter_link.product_id = product.id
-      AND lower(filter_tag.value) = lower($5)
+      AND lower(filter_tag.value) IN (
+        SELECT lower(value) FROM json_each($5)
+      )
       AND filter_tag.deleted_at IS NULL
   ))
   AND (json_array_length($6) = 0 OR EXISTS (
@@ -77,7 +79,7 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
     String? query,
     String? collectionHandle,
     String categoryHandlesJson,
-    String? tag,
+    String labelValuesJson,
     String optionValueIdsJson,
   );
 }

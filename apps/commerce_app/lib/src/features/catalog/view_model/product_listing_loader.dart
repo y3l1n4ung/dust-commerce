@@ -6,6 +6,7 @@ extension _ProductListingLoader on ProductListingViewModel {
     int revision, {
     Future<List<ProductOptionFilterView>>? optionFilters,
     Future<List<ProductCategoryFilter>>? categoryFilters,
+    Future<List<ProductLabelFilter>>? labelFilters,
   }) async {
     try {
       final productRequest = args.api.products(
@@ -13,6 +14,7 @@ extension _ProductListingLoader on ProductListingViewModel {
         query: meta.searchQuery.isEmpty ? null : meta.searchQuery,
         collection: _nullable(meta.collection),
         categoryHandles: _categoryHandles(meta),
+        labels: meta.selectedLabelValues,
         optionValueIds: meta.selectedOptionValueIds,
         limit: ProductListingViewModel._sourceFetchLimit,
       );
@@ -20,6 +22,7 @@ extension _ProductListingLoader on ProductListingViewModel {
         productRequest,
         optionFilters,
         categoryFilters,
+        labelFilters,
         meta,
       );
       if (!_active(revision)) return;

@@ -10,8 +10,10 @@ final class _ListingMeta {
     this.parents = const [],
     this.children = const [],
     this.categoryFilters = const [],
+    this.labelFilters = const [],
     this.optionFilters = const [],
     this.selectedCategoryHandles = const [],
+    this.selectedLabelValues = const [],
     this.selectedOptionValueIds = const [],
     this.searchQuery = '',
     this.collection = const None(),
@@ -25,12 +27,14 @@ final class _ListingMeta {
   final Option<String> collection;
   final String currencyCode;
   final String description;
+  final List<ProductLabelFilter> labelFilters;
   final List<ProductOptionFilterView> optionFilters;
   final int page;
   final List<ProductCategory> parents;
   final String requestKey;
   final String searchQuery;
   final List<String> selectedCategoryHandles;
+  final List<String> selectedLabelValues;
   final List<String> selectedOptionValueIds;
   final String sortBy;
   final String title;
@@ -41,6 +45,7 @@ final class _ListingMeta {
     List<ProductCategory>? parents,
     List<ProductCategory>? children,
     List<ProductCategoryFilter>? categoryFilters,
+    List<ProductLabelFilter>? labelFilters,
     List<ProductOptionFilterView>? optionFilters,
   }) =>
       _ListingMeta(
@@ -52,8 +57,10 @@ final class _ListingMeta {
         parents: parents ?? this.parents,
         children: children ?? this.children,
         categoryFilters: categoryFilters ?? this.categoryFilters,
+        labelFilters: labelFilters ?? this.labelFilters,
         optionFilters: optionFilters ?? this.optionFilters,
         selectedCategoryHandles: selectedCategoryHandles,
+        selectedLabelValues: selectedLabelValues,
         selectedOptionValueIds: selectedOptionValueIds,
         searchQuery: searchQuery,
         collection: collection,
@@ -74,8 +81,10 @@ final class _ListingMeta {
         parents: parents,
         children: children,
         categoryFilters: categoryFilters,
+        labelFilters: labelFilters,
         optionFilters: optionFilters,
         selectedCategoryHandles: selectedCategoryHandles,
+        selectedLabelValues: selectedLabelValues,
         selectedOptionValueIds: selectedOptionValueIds,
         searchQuery: searchQuery,
         products: products,

@@ -1303,6 +1303,10 @@
   "@home": {
     "description": "Home navigation link."
   },
+  "labels": "Labels",
+  "@labels": {
+    "description": "Translation for `shop_labels`."
+  },
   "language_burmese": "Burmese",
   "@language_burmese": {
     "description": "Burmese language option."

@@ -37,10 +37,12 @@ class ProductListingViewModel extends $ProductListingViewModel {
     String query = '',
     List<String> optionValueIds = const [],
     List<String> categoryHandles = const [],
+    List<String> labels = const [],
     String currency = 'usd',
   }) async {
     final selected = normalizedOptionValueIds(optionValueIds);
     final selectedCategories = normalizedCategoryHandles(categoryHandles);
+    final selectedLabels = normalizedLabelValues(labels);
     final search = normalizedSearchQuery(query);
     final meta = _ListingMeta(
       requestKey: listingRequestKey(
@@ -50,6 +52,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
         sortBy,
         selected,
         selectedCategories,
+        selectedLabels,
         currency,
         search,
       ),
@@ -58,6 +61,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
       sortBy: normalizedProductSort(sortBy),
       searchQuery: search,
       selectedCategoryHandles: selectedCategories,
+      selectedLabelValues: selectedLabels,
       selectedOptionValueIds: selected,
       currencyCode: currency,
     );
@@ -68,6 +72,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
       optionFilters: _optionalOptionFilters(args.api, _sourceFetchLimit),
       categoryFilters:
           _optionalCategoryFilters(args.api, _sourceFetchLimit, meta),
+      labelFilters: _optionalLabelFilters(args.api, _sourceFetchLimit, meta),
     );
   }
 
@@ -87,6 +92,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
         page,
         sortBy,
         selected,
+        const [],
         const [],
         currency,
       ),
@@ -127,6 +133,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
         page,
         sortBy,
         selected,
+        const [],
         const [],
         currency,
       ),

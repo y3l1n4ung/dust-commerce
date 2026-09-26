@@ -1303,6 +1303,10 @@
   "@home": {
     "description": "Home navigation link."
   },
+  "labels": "အညွှန်းများ",
+  "@labels": {
+    "description": "Translation for `shop_labels`."
+  },
   "language_burmese": "မြန်မာ",
   "@language_burmese": {
     "description": "Burmese language option."

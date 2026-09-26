@@ -24,7 +24,7 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
     query: search,
     collection: queryOptionOf(request, 'collection'),
     categoryHandles: queryValuesOf(request, 'category'),
-    tag: queryOptionOf(request, 'tag'),
+    labels: _labelsOf(request),
     optionValueIds: queryValuesOf(request, 'optionValueIds'),
     limit: paging.limit,
     offset: paging.offset,
@@ -34,4 +34,12 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
     Ok(value: final page) => Ok(page),
     Err() => const Err(Rejection.internal()),
   };
+}
+
+List<String> _labelsOf(Request request) {
+  final labels = [...queryValuesOf(request, 'labels')];
+  if (queryOptionOf(request, 'tag') case Some(:final value)) {
+    labels.add(value);
+  }
+  return labels;
 }

@@ -41,6 +41,22 @@ final class ProductCategoryFilter with _$ProductCategoryFilter {
   final String name;
 }
 
+/// One product-label facet in the Store refinement sidebar.
+@Derive([ToString(), Eq()])
+final class ProductLabelFilter with _$ProductLabelFilter {
+  /// Creates a label facet from product response tags.
+  const ProductLabelFilter({
+    required this.value,
+    required this.count,
+  });
+
+  /// Number of currently matching products with this label.
+  final int count;
+
+  /// Customer-facing tag value sent as the repeated `labels` query.
+  final String value;
+}
+
 /// Complete render state for store, collection, and category listings.
 @Derive([ToString(), Eq(), CopyWith()])
 final class ProductListingState with _$ProductListingState {
@@ -53,8 +69,10 @@ final class ProductListingState with _$ProductListingState {
     this.parents = const [],
     this.children = const [],
     this.categoryFilters = const [],
+    this.labelFilters = const [],
     this.optionFilters = const [],
     this.selectedCategoryHandles = const [],
+    this.selectedLabelValues = const [],
     this.selectedOptionValueIds = const [],
     this.searchQuery = '',
     this.products = const [],
@@ -69,6 +87,9 @@ final class ProductListingState with _$ProductListingState {
 
   /// Store-only category refinements discovered from matching products.
   final List<ProductCategoryFilter> categoryFilters;
+
+  /// Store-only label refinements discovered from matching products.
+  final List<ProductLabelFilter> labelFilters;
 
   /// One-based page rendered by this state.
   final int currentPage;
@@ -96,6 +117,9 @@ final class ProductListingState with _$ProductListingState {
 
   /// Stable category handles active in the Store browser query.
   final List<String> selectedCategoryHandles;
+
+  /// Stable label values active in the Store browser query.
+  final List<String> selectedLabelValues;
 
   /// Free-text product search retained in the Store route query.
   final String searchQuery;

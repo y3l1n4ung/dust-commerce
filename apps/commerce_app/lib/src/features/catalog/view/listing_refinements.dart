@@ -5,6 +5,7 @@ import 'package:dust_flutter/i18n.dart';
 import 'package:flutter/material.dart';
 
 import 'listing_category_filters.dart';
+import 'listing_label_filters.dart';
 import 'listing_option_filters.dart';
 
 /// Source-matched three-choice SortProducts control.
@@ -18,7 +19,10 @@ class ListingRefinements extends StatelessWidget {
     required this.onOptionValuesChanged,
     required this.categoryFilters,
     required this.selectedCategoryHandles,
+    required this.labelFilters,
+    required this.selectedLabelValues,
     this.onCategoryHandlesChanged,
+    this.onLabelValuesChanged,
     super.key,
   });
 
@@ -27,6 +31,12 @@ class ListingRefinements extends StatelessWidget {
 
   /// Replaces the repeated category query.
   final ValueChanged<List<String>>? onCategoryHandlesChanged;
+
+  /// Store-only label refinements discovered from matching products.
+  final List<ProductLabelFilter> labelFilters;
+
+  /// Replaces the repeated labels query.
+  final ValueChanged<List<String>>? onLabelValuesChanged;
 
   /// Receives one Medusa sort query value.
   final ValueChanged<String> onChanged;
@@ -42,6 +52,9 @@ class ListingRefinements extends StatelessWidget {
 
   /// Stable category handles currently selected.
   final List<String> selectedCategoryHandles;
+
+  /// Stable label values currently selected.
+  final List<String> selectedLabelValues;
 
   /// Stable option-value identifiers currently selected.
   final List<String> selectedOptionValueIds;
@@ -76,6 +89,15 @@ class ListingRefinements extends StatelessWidget {
               ListingCategoryFilters(
                 categories: categoryFilters,
                 selectedHandles: selectedCategoryHandles,
+                onChanged: onChanged,
+              ),
+            ],
+            if (onLabelValuesChanged case final onChanged?
+                when labelFilters.isNotEmpty) ...[
+              const SizedBox(height: 48),
+              ListingLabelFilters(
+                labels: labelFilters,
+                selectedValues: selectedLabelValues,
                 onChanged: onChanged,
               ),
             ],

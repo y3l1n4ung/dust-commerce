@@ -20,6 +20,7 @@ final class OptionFailureApi implements CommerceApi {
     String? query,
     String? collection,
     List<String> categoryHandles = const [],
+    List<String> labels = const [],
     String? tag,
     List<String> optionValueIds = const [],
     int? limit,
@@ -30,6 +31,7 @@ final class OptionFailureApi implements CommerceApi {
         query: query,
         collection: collection,
         categoryHandles: categoryHandles,
+        labels: labels,
         tag: tag,
         optionValueIds: optionValueIds,
         limit: limit,
@@ -45,6 +47,10 @@ Future<void> seedListingPage(CommerceDatabase database) async {
   await queryExecute(
     'INSERT INTO product_categories (id, name, handle) VALUES (?, ?, ?)',
     ['cat_accessories', 'Accessories', 'accessories'],
+  ).execute(database.executor);
+  await queryExecute(
+    'INSERT INTO product_tags (id, value) VALUES (?, ?)',
+    ['tag_gift', 'Gift'],
   ).execute(database.executor);
   for (var index = 1; index <= 13; index++) {
     final suffix = index.toString().padLeft(2, '0');
@@ -75,5 +81,11 @@ Future<void> seedListingPage(CommerceDatabase database) async {
       '(product_id, category_id) VALUES (?, ?)',
       ['prod_$suffix', categoryId],
     ).execute(database.executor);
+    if (index == 13) {
+      await queryExecute(
+        'INSERT INTO product_tag_products (product_id, tag_id) VALUES (?, ?)',
+        ['prod_$suffix', 'tag_gift'],
+      ).execute(database.executor);
+    }
   }
 }
