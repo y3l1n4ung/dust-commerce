@@ -110,6 +110,7 @@ SELECT product.id, product.title, product.handle, product.description,
              'allow_backorder', variant.allow_backorder,
              'amount', price.amount,
              'currency_code', price.currency_code,
+             'original_amount', original_price.amount,
              'option_values', json(coalesce((
                SELECT json_group_object(choice.option_id, option_value.value)
                FROM variant_option_values choice
@@ -137,6 +138,9 @@ SELECT product.id, product.title, product.handle, product.description,
            ) AS variant_json
            FROM product_variants variant
            JOIN variant_prices price ON price.variant_id = variant.id
+           LEFT JOIN variant_original_prices original_price
+             ON original_price.variant_id = variant.id
+            AND original_price.currency_code = price.currency_code
            WHERE variant.product_id = product.id
              AND variant.deleted_at IS NULL
              AND price.currency_code = $2

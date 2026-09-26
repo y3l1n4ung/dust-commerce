@@ -20,14 +20,29 @@ class ProductPrice extends StatelessWidget {
     final selected = state.selectedVariant;
     final price = selected?.priceIn(state.currencyCode) ??
         product.cheapestIn(state.currencyCode);
-    final label = price == null
-        ? '-'
-        : '${selected == null ? context.tr('shop_from_price', defaultText: 'From ') : ''}${formatMoney(price)}';
-    return Text(
-      label,
-      style: compact
-          ? Theme.of(context).textTheme.bodyLarge
-          : Theme.of(context).textTheme.titleLarge,
+    final original = selected?.originalPriceIn(state.currencyCode) ??
+        product.cheapestOriginalIn(state.currencyCode);
+    final prefix = selected == null
+        ? context.tr('shop_from_price', defaultText: 'From ')
+        : '';
+    final label = price == null ? '-' : '$prefix${formatMoney(price)}';
+    final style = compact
+        ? Theme.of(context).textTheme.bodyLarge
+        : Theme.of(context).textTheme.titleLarge;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: style),
+        if (price != null && original != null && original > price) ...[
+          const SizedBox(height: 4),
+          Text(
+            'Original: ${formatMoney(original)}',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  decoration: TextDecoration.lineThrough,
+                ),
+          ),
+        ],
+      ],
     );
   }
 }

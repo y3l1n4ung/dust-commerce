@@ -19,6 +19,7 @@ class ProductVariant with _$ProductVariant {
     required this.prices,
     required this.optionValues,
     this.images = const [],
+    this.originalPrices = const [],
     this.sku,
     this.inventoryQuantity = 0,
     this.manageInventory = true,
@@ -31,6 +32,7 @@ class ProductVariant with _$ProductVariant {
     required String id,
     required String title,
     required List<Money> prices,
+    List<Money> originalPrices = const [],
     String? sku,
     int inventoryQuantity = 0,
     bool manageInventory = true,
@@ -38,14 +40,8 @@ class ProductVariant with _$ProductVariant {
     Map<String, String> optionValues = const {},
     List<StoreProductImage> images = const [],
   }) {
-    final currencies = prices.map((price) => price.currencyCode).toList();
-    if (currencies.toSet().length != currencies.length) {
-      throw ArgumentError.value(
-        prices,
-        'prices',
-        'a variant has at most one price per currency',
-      );
-    }
+    _checkPrices(prices);
+    _checkPrices(originalPrices, name: 'originalPrices');
     if (inventoryQuantity < 0) {
       throw ArgumentError.value(
         inventoryQuantity,
@@ -57,6 +53,7 @@ class ProductVariant with _$ProductVariant {
       id: id,
       title: title,
       prices: prices,
+      originalPrices: originalPrices,
       sku: sku,
       inventoryQuantity: inventoryQuantity,
       manageInventory: manageInventory,
@@ -87,6 +84,9 @@ class ProductVariant with _$ProductVariant {
 
   /// The chosen value per option id, such as `{'opt_size': 'Small'}`.
   final Map<String, String> optionValues;
+
+  /// Crossed-out prices before sale pricing, one per currency at most.
+  final List<Money> originalPrices;
 
   /// At most one price per currency.
   final List<Money> prices;
@@ -120,5 +120,32 @@ class ProductVariant with _$ProductVariant {
       if (price.currencyCode == wanted) return price;
     }
     return null;
+  }
+
+  /// This variant's original crossed-out price in [currencyCode], or null.
+  Money? originalPriceIn(String currencyCode) {
+    final wanted = currencyCode.toLowerCase();
+    for (final price in originalPrices) {
+      if (price.currencyCode == wanted) return price;
+    }
+    return null;
+  }
+
+  /// Whether the active price is below its original price in [currencyCode].
+  bool isOnSaleIn(String currencyCode) {
+    final price = priceIn(currencyCode);
+    final original = originalPriceIn(currencyCode);
+    return price != null && original != null && original > price;
+  }
+
+  static void _checkPrices(List<Money> prices, {String name = 'prices'}) {
+    final currencies = prices.map((price) => price.currencyCode).toList();
+    if (currencies.toSet().length != currencies.length) {
+      throw ArgumentError.value(
+        prices,
+        name,
+        'a variant has at most one price per currency',
+      );
+    }
   }
 }

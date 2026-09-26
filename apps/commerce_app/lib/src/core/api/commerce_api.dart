@@ -95,6 +95,7 @@ abstract interface class CommerceApi {
     @Query('tag') String? tag,
     @Query('minPrice') int? minPrice,
     @Query('maxPrice') int? maxPrice,
+    @Query('onSale') String? onSale,
     @Query('optionValueIds') List<String> optionValueIds = const [],
     @Query('limit') int? limit,
     @Query('offset') int? offset,

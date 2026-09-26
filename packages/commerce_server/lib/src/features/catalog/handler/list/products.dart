@@ -31,6 +31,7 @@ Future<Result<ProductPageResponse, Rejection>> listProductsHandler(
     labels: _labelsOf(request),
     minPrice: (minPrice as Ok<Option<int>, Rejection>).value,
     maxPrice: (maxPrice as Ok<Option<int>, Rejection>).value,
+    onSale: queryToggleOf(request, 'onSale'),
     optionValueIds: queryValuesOf(request, 'optionValueIds'),
     limit: paging.limit,
     offset: paging.offset,

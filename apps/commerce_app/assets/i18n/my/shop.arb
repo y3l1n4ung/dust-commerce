@@ -1355,6 +1355,10 @@
   "@not_found_title": {
     "description": "Heading shown for an unknown storefront route."
   },
+  "on_sale_only": "လျှော့ဈေးပစ္စည်းများသာ",
+  "@on_sale_only": {
+    "description": "Translation for `shop_on_sale_only`."
+  },
   "option_fallback": "ရွေးချယ်စရာ",
   "@option_fallback": {
     "description": "Fallback heading for a merchant option without a title."

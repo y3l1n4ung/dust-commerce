@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'product_listing_route.dart';
 
+part 'store_page_query.dart';
+
 /// All-products page translated from Medusa StoreTemplate.
 @AppRoute('/store', name: 'store', guards: [])
 class StorePage extends StatelessWidget {
@@ -18,6 +20,7 @@ class StorePage extends StatelessWidget {
     this.labels = const [],
     this.maxPrice,
     this.minPrice,
+    this.onSale = '',
     super.key,
   });
 
@@ -33,6 +36,9 @@ class StorePage extends StatelessWidget {
   /// Lower price bound in minor units.
   final int? minPrice;
 
+  /// Medusa-compatible sale-only query toggle.
+  final String onSale;
+
   /// Stable option-value identifiers repeated in the URL query.
   final List<String> optionValueIds;
 
@@ -47,133 +53,24 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentPage = page < 1 ? 1 : page;
-    final currentQuery = normalizedSearchQuery(q);
-    final currentSort = normalizedProductSort(sortBy);
-    final selected = normalizedOptionValueIds(optionValueIds);
-    final selectedCategories = normalizedCategoryHandles(category);
-    final selectedLabels = normalizedLabelValues(labels);
-    final selectedMinPrice = normalizedPriceBoundary(minPrice);
-    final selectedMaxPrice = normalizedPriceBoundary(maxPrice);
-    final currency = context.watchStoreShellViewModel().value.currencyCode;
-    final requestKey = listingRequestKey(
-      'store',
-      '',
-      currentPage,
-      currentSort,
-      selected,
-      selectedCategories,
-      selectedLabels,
-      currency,
-      currentQuery,
-      selectedMinPrice,
-      selectedMaxPrice,
-    );
+    final query = _StorePageQuery.of(this, context);
     return ProductListingRoute(
-      key: ValueKey(requestKey),
-      requestKey: requestKey,
-      load: (viewModel) => viewModel.loadStore(
-        page: currentPage,
-        query: currentQuery,
-        sortBy: currentSort,
-        optionValueIds: selected,
-        categoryHandles: selectedCategories,
-        labels: selectedLabels,
-        maxPrice: selectedMaxPrice,
-        minPrice: selectedMinPrice,
-        currency: currency,
-      ),
-      onSortChanged: (value) => context.navigator
-          .store(
-            q: currentQuery,
-            sortBy: value,
-            optionValueIds: selected,
-            category: selectedCategories,
-            labels: selectedLabels,
-            maxPrice: _valueOf(selectedMaxPrice),
-            minPrice: _valueOf(selectedMinPrice),
-          )
-          .go(),
-      onSearchChanged: (value) => context.navigator
-          .store(
-            q: normalizedSearchQuery(value),
-            sortBy: currentSort,
-            optionValueIds: selected,
-            category: selectedCategories,
-            labels: selectedLabels,
-            maxPrice: _valueOf(selectedMaxPrice),
-            minPrice: _valueOf(selectedMinPrice),
-          )
-          .go(),
-      onPageChanged: (value) => context.navigator
-          .store(
-            q: currentQuery,
-            page: value,
-            sortBy: currentSort,
-            optionValueIds: selected,
-            category: selectedCategories,
-            labels: selectedLabels,
-            maxPrice: _valueOf(selectedMaxPrice),
-            minPrice: _valueOf(selectedMinPrice),
-          )
-          .go(),
-      onOptionValuesChanged: (values) => context.navigator
-          .store(
-            q: currentQuery,
-            sortBy: currentSort,
-            optionValueIds: values,
-            category: selectedCategories,
-            labels: selectedLabels,
-            maxPrice: _valueOf(selectedMaxPrice),
-            minPrice: _valueOf(selectedMinPrice),
-          )
-          .go(),
-      onCategoryHandlesChanged: (values) => context.navigator
-          .store(
-            q: currentQuery,
-            sortBy: currentSort,
-            optionValueIds: selected,
-            category: values,
-            labels: selectedLabels,
-            maxPrice: _valueOf(selectedMaxPrice),
-            minPrice: _valueOf(selectedMinPrice),
-          )
-          .go(),
-      onLabelValuesChanged: (values) => context.navigator
-          .store(
-            q: currentQuery,
-            sortBy: currentSort,
-            optionValueIds: selected,
-            category: selectedCategories,
-            labels: values,
-            maxPrice: _valueOf(selectedMaxPrice),
-            minPrice: _valueOf(selectedMinPrice),
-          )
-          .go(),
-      onPriceRangeChanged: (minPrice, maxPrice) => context.navigator
-          .store(
-            q: currentQuery,
-            sortBy: currentSort,
-            optionValueIds: selected,
-            category: selectedCategories,
-            labels: selectedLabels,
-            maxPrice: maxPrice,
-            minPrice: minPrice,
-          )
-          .go(),
-      onClearRefinements: () => context.navigator
-          .store(
-            q: currentQuery,
-            sortBy: currentSort,
-          )
-          .go(),
+      key: ValueKey(query.requestKey),
+      requestKey: query.requestKey,
+      load: query.load,
+      onSortChanged: (value) => query.go(context, sortBy: value),
+      onSearchChanged: (value) =>
+          query.go(context, q: normalizedSearchQuery(value)),
+      onPageChanged: (value) => query.go(context, page: value),
+      onOptionValuesChanged: (values) =>
+          query.go(context, optionValueIds: values),
+      onCategoryHandlesChanged: (values) => query.go(context, category: values),
+      onLabelValuesChanged: (values) => query.go(context, labels: values),
+      onPriceRangeChanged: (min, max) => query.goPrice(context, min, max),
+      onSaleChanged: (value) => query.go(context, onSale: value),
+      onClearRefinements: () => query.clear(context),
       onCategorySelected: (handle) =>
           context.navigator.category(handle: handle).go(),
     );
   }
-
-  int? _valueOf(Option<int> value) => switch (value) {
-        Some(:final value) => value,
-        None() => null,
-      };
 }

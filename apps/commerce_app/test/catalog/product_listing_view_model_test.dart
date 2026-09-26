@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:commerce_app/commerce_app.dart';
 import 'package:commerce_server/commerce_server.dart';
+import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_dart/http.dart';
 import 'package:dust_server/testing.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -154,6 +155,24 @@ void main() {
       'product-12',
       'product-13',
     });
+  });
+
+  test('store exposes sale toggle and filters discounted products', () async {
+    await viewModel.loadStore();
+
+    expect(viewModel.state.canRefineOnSale, isTrue);
+    expect(viewModel.state.products.any((it) => it.isOnSaleIn('usd')), isTrue);
+
+    await viewModel.loadStore(onSale: true);
+
+    expect(viewModel.state.selectedOnSale, isTrue);
+    expect(viewModel.state.products.map((product) => product.handle), [
+      'product-13',
+    ]);
+    expect(
+      viewModel.state.products.single.cheapestOriginalIn('usd'),
+      Money.of(1700, 'usd'),
+    );
   });
 
   test('store search filters products and keys the route identity', () async {

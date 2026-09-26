@@ -104,6 +104,26 @@ void main() {
       expect(product().cheapestIn('usd'), Money.of(1999, 'usd'));
       expect(product().cheapestIn('gbp'), isNull);
     });
+
+    test('reports original price for the cheapest sale variant', () {
+      final subject = Product.of(
+        id: 'prod_sale',
+        title: 'Sale Shirt',
+        handle: 'sale-shirt',
+        status: ProductStatus.published,
+        variants: [
+          ProductVariant.of(
+            id: 'v_sale',
+            title: 'Sale',
+            prices: [Money.of(1500, 'usd')],
+            originalPrices: [Money.of(2500, 'usd')],
+          ),
+        ],
+      );
+
+      expect(subject.cheapestOriginalIn('usd'), Money.of(2500, 'usd'));
+      expect(subject.isOnSaleIn('usd'), isTrue);
+    });
   });
 
   group('json', () {

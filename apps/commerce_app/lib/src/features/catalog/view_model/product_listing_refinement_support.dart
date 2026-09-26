@@ -63,6 +63,9 @@ Option<ProductPriceBounds> _priceBoundsOf(
       : Some<ProductPriceBounds>(ProductPriceBounds(min: min, max: max));
 }
 
+bool _canRefineOnSale(List<Product> products, String currencyCode) =>
+    products.any((product) => product.isOnSaleIn(currencyCode));
+
 Future<List<ProductOptionFilterView>> _optionalOptionFilters(
   CommerceApi api,
   int limit,
@@ -90,6 +93,7 @@ Future<List<ProductCategoryFilter>> _optionalCategoryFilters(
       labels: meta.selectedLabelValues,
       maxPrice: _nullableInt(meta.selectedMaxPrice),
       minPrice: _nullableInt(meta.selectedMinPrice),
+      onSale: meta.selectedOnSale ? 'true' : null,
       optionValueIds: meta.selectedOptionValueIds,
       limit: limit,
     );
@@ -114,6 +118,7 @@ Future<List<ProductLabelFilter>> _optionalLabelFilters(
       labels: const [],
       maxPrice: _nullableInt(meta.selectedMaxPrice),
       minPrice: _nullableInt(meta.selectedMinPrice),
+      onSale: meta.selectedOnSale ? 'true' : null,
       optionValueIds: meta.selectedOptionValueIds,
       limit: limit,
     );
@@ -135,6 +140,7 @@ Future<Option<ProductPriceBounds>> _optionalPriceBounds(
       collection: _nullable(meta.collection),
       categoryHandles: _categoryHandles(meta),
       labels: meta.selectedLabelValues,
+      onSale: meta.selectedOnSale ? 'true' : null,
       optionValueIds: meta.selectedOptionValueIds,
       limit: limit,
     );
@@ -166,6 +172,10 @@ Future<(ProductPageView, _ListingMeta)> _withRefinementFilters(
       categoryFilters: values[2] as List<ProductCategoryFilter>,
       labelFilters: values[3] as List<ProductLabelFilter>,
       priceBounds: values[4] as Option<ProductPriceBounds>,
+      canRefineOnSale: _canRefineOnSale(
+        (values.first as ProductPageView).products,
+        meta.currencyCode,
+      ),
     ),
   );
 }

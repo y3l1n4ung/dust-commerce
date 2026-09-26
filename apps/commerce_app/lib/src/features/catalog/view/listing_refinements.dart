@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'listing_category_filters.dart';
 import 'listing_current_refinements.dart';
 import 'listing_label_filters.dart';
+import 'listing_on_sale_toggle.dart';
 import 'listing_option_filters.dart';
 import 'listing_price_range.dart';
 import 'listing_sort_products.dart';
@@ -26,16 +27,22 @@ class ListingRefinements extends StatelessWidget {
     required this.priceBounds,
     required this.selectedMaxPrice,
     required this.selectedMinPrice,
+    required this.selectedOnSale,
+    required this.canRefineOnSale,
     required this.currencyCode,
     this.onCategoryHandlesChanged,
     this.onLabelValuesChanged,
     this.onPriceRangeChanged,
+    this.onSaleChanged,
     this.onClearAll,
     super.key,
   });
 
   /// Store-only category refinements discovered from matching products.
   final List<ProductCategoryFilter> categoryFilters;
+
+  /// Whether the current Store result can be narrowed to sale items.
+  final bool canRefineOnSale;
 
   /// Currency used by price-range labels.
   final String currencyCode;
@@ -61,6 +68,9 @@ class ListingRefinements extends StatelessWidget {
   /// Replaces the price range query.
   final void Function(int? minPrice, int? maxPrice)? onPriceRangeChanged;
 
+  /// Replaces the sale-only query toggle.
+  final ValueChanged<bool>? onSaleChanged;
+
   /// Store-only option axes discovered from the backend.
   final List<ProductOptionFilterView> options;
 
@@ -81,6 +91,9 @@ class ListingRefinements extends StatelessWidget {
 
   /// Active lower price bound in minor units.
   final Option<int> selectedMinPrice;
+
+  /// Whether sale-only filtering is active.
+  final bool selectedOnSale;
 
   /// Stable option-value identifiers currently selected.
   final List<String> selectedOptionValueIds;
@@ -108,8 +121,10 @@ class ListingRefinements extends StatelessWidget {
                 onLabelValuesChanged: onLabelValuesChanged,
                 selectedMaxPrice: selectedMaxPrice,
                 selectedMinPrice: selectedMinPrice,
+                selectedOnSale: selectedOnSale,
                 currencyCode: currencyCode,
                 onPriceRangeChanged: onPriceRangeChanged,
+                onSaleChanged: onSaleChanged,
                 onClearAll: clearAll,
               ),
             if (options.isNotEmpty) ...[
@@ -127,6 +142,15 @@ class ListingRefinements extends StatelessWidget {
                 currencyCode: currencyCode,
                 selectedMaxPrice: selectedMaxPrice,
                 selectedMinPrice: selectedMinPrice,
+                onChanged: onChanged,
+              ),
+            ],
+            if (onSaleChanged case final onChanged?
+                when canRefineOnSale || selectedOnSale) ...[
+              const SizedBox(height: 48),
+              ListingOnSaleToggle(
+                canRefine: canRefineOnSale,
+                selected: selectedOnSale,
                 onChanged: onChanged,
               ),
             ],

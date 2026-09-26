@@ -23,6 +23,7 @@ final class RelatedFailureApi implements CommerceApi {
     String? tag,
     int? minPrice,
     int? maxPrice,
+    String? onSale,
     List<String> optionValueIds = const [],
     int? limit,
     int? offset,

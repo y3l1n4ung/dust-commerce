@@ -57,6 +57,12 @@ List<String> queryValuesOf(Request request, String name) {
   return normalized.toList();
 }
 
+/// Whether a query toggle is explicitly enabled.
+bool queryToggleOf(Request request, String name) {
+  final value = request.requestedUri.queryParameters[name]?.trim();
+  return value == 'true' || value == '1';
+}
+
 /// A non-negative minor-unit price query, represented explicitly.
 Result<Option<int>, Rejection> priceQueryOf(Request request, String name) {
   final value = request.requestedUri.queryParameters[name]?.trim();

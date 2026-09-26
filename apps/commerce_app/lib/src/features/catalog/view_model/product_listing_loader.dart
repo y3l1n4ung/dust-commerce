@@ -18,6 +18,7 @@ extension _ProductListingLoader on ProductListingViewModel {
         labels: meta.selectedLabelValues,
         maxPrice: _nullableInt(meta.selectedMaxPrice),
         minPrice: _nullableInt(meta.selectedMinPrice),
+        onSale: meta.selectedOnSale ? 'true' : null,
         optionValueIds: meta.selectedOptionValueIds,
         limit: ProductListingViewModel._sourceFetchLimit,
       );

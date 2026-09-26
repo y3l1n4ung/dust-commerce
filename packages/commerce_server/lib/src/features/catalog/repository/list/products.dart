@@ -87,6 +87,7 @@ SELECT product.id, product.title, product.handle, product.description,
              'inventory_quantity', variant.inventory_quantity, 'manage_inventory', variant.manage_inventory,
              'allow_backorder', variant.allow_backorder, 'amount', price.amount,
              'currency_code', price.currency_code,
+             'original_amount', original_price.amount,
              'option_values', json(coalesce((
                SELECT json_group_object(choice.option_id, option_value.value)
                FROM variant_option_values choice
@@ -110,6 +111,7 @@ SELECT product.id, product.title, product.handle, product.description,
            ) AS variant_json
            FROM product_variants variant
            JOIN variant_prices price ON price.variant_id = variant.id
+           LEFT JOIN variant_original_prices original_price ON original_price.variant_id = variant.id AND original_price.currency_code = price.currency_code
            WHERE variant.product_id = product.id
              AND variant.deleted_at IS NULL
              AND price.currency_code = $1
@@ -130,30 +132,28 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
   AND ($4 IS NULL OR lower(product.title) LIKE '%' || lower($4) || '%' OR lower(product.handle) LIKE '%' || lower($4) || '%')
   AND ($5 IS NULL OR collection.handle = $5)
   AND (json_array_length($6) = 0 OR EXISTS (
-    SELECT 1
-    FROM product_category_products filter_link
-    JOIN product_categories filter_category
-      ON filter_category.id = filter_link.category_id
-    WHERE filter_link.product_id = product.id
-      AND filter_category.handle IN (SELECT value FROM json_each($6))
-      AND filter_category.is_active = 1
-      AND filter_category.deleted_at IS NULL
+    SELECT 1 FROM product_category_products filter_link
+    JOIN product_categories filter_category ON filter_category.id = filter_link.category_id
+    WHERE filter_link.product_id = product.id AND filter_category.handle IN (SELECT value FROM json_each($6))
+      AND filter_category.is_active = 1 AND filter_category.deleted_at IS NULL
   ))
   AND (json_array_length($7) = 0 OR EXISTS (
-    SELECT 1
-    FROM product_tag_products filter_link
+    SELECT 1 FROM product_tag_products filter_link
     JOIN product_tags filter_tag ON filter_tag.id = filter_link.tag_id
-    WHERE filter_link.product_id = product.id
-      AND lower(filter_tag.value) IN (
-        SELECT lower(value) FROM json_each($7)
-      )
+    WHERE filter_link.product_id = product.id AND lower(filter_tag.value) IN (SELECT lower(value) FROM json_each($7))
       AND filter_tag.deleted_at IS NULL
   ))
   AND ($8 IS NULL OR priced.min_price >= $8)
   AND ($9 IS NULL OR priced.min_price <= $9)
-  AND (json_array_length($10) = 0 OR EXISTS (
-    SELECT 1
-    FROM product_variants filter_variant
+  AND ($10 = 0 OR EXISTS (
+    SELECT 1 FROM product_variants sale_variant
+    JOIN variant_prices sale_price ON sale_price.variant_id = sale_variant.id
+    JOIN variant_original_prices sale_original ON sale_original.variant_id = sale_variant.id AND sale_original.currency_code = sale_price.currency_code
+    WHERE sale_variant.product_id = product.id
+      AND sale_variant.deleted_at IS NULL AND sale_price.currency_code = $1 AND sale_original.amount > sale_price.amount
+  ))
+  AND (json_array_length($11) = 0 OR EXISTS (
+    SELECT 1 FROM product_variants filter_variant
     JOIN variant_prices filter_price ON filter_price.variant_id = filter_variant.id
     JOIN variant_option_values filter_choice ON filter_choice.variant_id = filter_variant.id
     JOIN product_options filter_option ON filter_option.id = filter_choice.option_id
@@ -161,10 +161,9 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
     JOIN product_option_values filter_value ON filter_value.id = filter_choice.option_value_id AND filter_value.option_id = filter_choice.option_id
     WHERE filter_variant.product_id = product.id
       AND filter_variant.deleted_at IS NULL
-      AND filter_price.currency_code = $1
-      AND filter_option.deleted_at IS NULL AND filter_product_option.deleted_at IS NULL
-      AND filter_value.deleted_at IS NULL
-      AND filter_choice.option_value_id IN (SELECT value FROM json_each($10))
+      AND filter_price.currency_code = $1 AND filter_option.deleted_at IS NULL
+      AND filter_product_option.deleted_at IS NULL AND filter_value.deleted_at IS NULL
+      AND filter_choice.option_value_id IN (SELECT value FROM json_each($11))
   ))
 -- Latest arrivals are the source storefront default; handle is deterministic
 -- when a bulk insert gives multiple products the same generated timestamp.
@@ -181,6 +180,7 @@ LIMIT $2 OFFSET $3
     String labelValuesJson,
     int? minPrice,
     int? maxPrice,
+    int onSale,
     String optionValueIdsJson,
   );
 }

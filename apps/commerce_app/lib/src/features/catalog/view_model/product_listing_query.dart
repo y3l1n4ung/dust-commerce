@@ -13,13 +13,14 @@ String listingRequestKey(
   String searchQuery = '',
   Option<int> minPrice = const None(),
   Option<int> maxPrice = const None(),
+  String saleKey = '',
 ]) =>
     '$kind:$handle:${page < 1 ? 1 : page}:${normalizedProductSort(sortBy)}:'
     '${normalizedOptionValueIds(optionValueIds).join(',')}:'
     '${normalizedCategoryHandles(categoryHandles).join(',')}:'
     '${normalizedLabelValues(labelValues).join(',')}:$currencyCode:'
     '${normalizedSearchQuery(searchQuery)}:${_optionKey(minPrice)}:'
-    '${_optionKey(maxPrice)}';
+    '${_optionKey(maxPrice)}:$saleKey';
 
 /// Keeps Store search predictable and bounded before it reaches the API.
 String normalizedSearchQuery(String value) {
@@ -42,6 +43,9 @@ List<String> normalizedLabelValues(Iterable<String> values) =>
 /// Keeps optional price URL params non-negative and explicit.
 Option<int> normalizedPriceBoundary(int? value) =>
     value == null || value < 0 ? const None<int>() : Some<int>(value);
+
+/// Normalizes the Store on-sale toggle query.
+bool normalizedOnSale(String value) => value == 'true' || value == '1';
 
 /// Restricts public sort query values to the source-supported set.
 String normalizedProductSort(String value) =>

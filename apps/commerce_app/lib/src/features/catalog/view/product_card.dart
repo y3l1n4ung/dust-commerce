@@ -25,6 +25,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final price = product.cheapestIn(currencyCode);
+    final original = product.cheapestOriginalIn(currencyCode);
     final readablePrice = price == null ? 'unavailable' : formatMoney(price);
     return Semantics(
       button: true,
@@ -51,11 +52,26 @@ class ProductCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 if (price != null)
-                  Text(
-                    formatMoney(price),
-                    style: const TextStyle(
-                      color: StoreColors.foregroundMuted,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (original != null)
+                        Text(
+                          formatMoney(original),
+                          style: const TextStyle(
+                            color: StoreColors.foregroundMuted,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      Text(
+                        formatMoney(price),
+                        style: TextStyle(
+                          color: original == null
+                              ? StoreColors.foregroundMuted
+                              : StoreColors.interactive,
+                        ),
+                      ),
+                    ],
                   ),
               ],
             ),

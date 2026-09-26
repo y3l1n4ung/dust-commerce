@@ -29,6 +29,15 @@ VALUES
   ('var_sweatpants_s', 'eur', 1900), ('var_sweatpants_m', 'eur', 1900),
   ('var_shorts_s', 'eur', 1500), ('var_shorts_m', 'eur', 1500)
 '''),
+  _Statement(r'''
+INSERT OR IGNORE INTO variant_original_prices
+  (variant_id, currency_code, amount)
+VALUES
+  ('var_sweatshirt_s', 'usd', 4500),
+  ('var_sweatshirt_m', 'usd', 4500),
+  ('var_sweatshirt_s', 'eur', 3000),
+  ('var_sweatshirt_m', 'eur', 3000)
+'''),
 ];
 
 /// Region-specific shipping quotes and free-shipping thresholds.

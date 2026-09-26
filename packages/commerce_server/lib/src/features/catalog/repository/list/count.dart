@@ -48,7 +48,20 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
   ))
   AND ($6 IS NULL OR priced.min_price >= $6)
   AND ($7 IS NULL OR priced.min_price <= $7)
-  AND (json_array_length($8) = 0 OR EXISTS (
+  AND ($8 = 0 OR EXISTS (
+    SELECT 1
+    FROM product_variants sale_variant
+    JOIN variant_prices sale_price
+      ON sale_price.variant_id = sale_variant.id
+    JOIN variant_original_prices sale_original
+      ON sale_original.variant_id = sale_variant.id
+     AND sale_original.currency_code = sale_price.currency_code
+    WHERE sale_variant.product_id = product.id
+      AND sale_variant.deleted_at IS NULL
+      AND sale_price.currency_code = $1
+      AND sale_original.amount > sale_price.amount
+  ))
+  AND (json_array_length($9) = 0 OR EXISTS (
     SELECT 1
     FROM product_variants filter_variant
     JOIN variant_prices filter_price
@@ -70,7 +83,7 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
       AND filter_product_option.deleted_at IS NULL
       AND filter_value.deleted_at IS NULL
       AND filter_choice.option_value_id IN (
-        SELECT value FROM json_each($8)
+        SELECT value FROM json_each($9)
       )
   ))
 ''')
@@ -82,6 +95,7 @@ WHERE product.status = 'published' AND product.deleted_at IS NULL
     String labelValuesJson,
     int? minPrice,
     int? maxPrice,
+    int onSale,
     String optionValueIdsJson,
   );
 }

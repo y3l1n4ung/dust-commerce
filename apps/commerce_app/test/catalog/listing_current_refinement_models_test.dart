@@ -23,6 +23,7 @@ void main() {
       selectedLabelValues: const ['Cotton'],
       selectedMinPrice: const Some<int>(1000),
       selectedMaxPrice: const Some<int>(2000),
+      selectedOnSale: true,
       currencyCode: 'usd',
     );
 
@@ -32,6 +33,7 @@ void main() {
         'Size: M',
         'From USD 10.00',
         'Up to USD 20.00',
+        'On sale',
         'Category: Shirts',
         'Label: Cotton',
       ],

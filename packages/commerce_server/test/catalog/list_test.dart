@@ -10,7 +10,7 @@ void main() {
   late CommerceDatabase database;
   late CatalogCountRepository counts;
   late CatalogListRepository lists;
-  late CatalogReadRepository reads;
+  CatalogReadRepository reads() => CatalogReadRepository(database.executor);
 
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('commerce_repo');
@@ -20,7 +20,6 @@ void main() {
     );
     counts = CatalogCountRepository(database.executor);
     lists = CatalogListRepository(database.executor);
-    reads = CatalogReadRepository(database.executor);
     await seedCatalogList(database);
   });
 
@@ -39,6 +38,7 @@ void main() {
       String labels = '[]',
       int? minPrice,
       int? maxPrice,
+      int onSale = 0,
       String options = '[]',
     }) =>
         lists.listPublished(
@@ -51,6 +51,7 @@ void main() {
           labels,
           minPrice,
           maxPrice,
+          onSale,
           options,
         );
 
@@ -60,6 +61,7 @@ void main() {
       String labels = '[]',
       int? minPrice,
       int? maxPrice,
+      int onSale = 0,
       String options = '[]',
     }) =>
         counts.countPublished(
@@ -70,6 +72,7 @@ void main() {
           labels,
           minPrice,
           maxPrice,
+          onSale,
           options,
         );
 
@@ -91,6 +94,11 @@ void main() {
 
     test('counts what it would page through', () async {
       expect(ok(await count()), 2);
+    });
+
+    test('filters products with active sale prices', () async {
+      expect(ok(await list(onSale: 1)).map((row) => row.handle), ['t-shirt']);
+      expect(ok(await count(onSale: 1)), 1);
     });
 
     test('filters by collection, category and tag', () async {
@@ -149,7 +157,7 @@ void main() {
 
   group('findByHandle', () {
     test('finds a published product', () async {
-      final row = ok(await reads.findByHandle('t-shirt', 'usd'));
+      final row = ok(await reads().findByHandle('t-shirt', 'usd'));
 
       expect(row?.title, 'T-Shirt');
       expect(row?.status, 'published');
@@ -176,17 +184,17 @@ void main() {
 
     test('does not leak a draft, even to a caller who knows the handle',
         () async {
-      expect(ok(await reads.findByHandle('secret-hoodie', 'usd')), isNull);
+      expect(ok(await reads().findByHandle('secret-hoodie', 'usd')), isNull);
     });
 
     test('returns null for a handle nobody has', () async {
-      expect(ok(await reads.findByHandle('nothing', 'usd')), isNull);
+      expect(ok(await reads().findByHandle('nothing', 'usd')), isNull);
     });
   });
 
   group('findVariant', () {
     test('finds one variant with its price', () async {
-      final row = ok(await reads.findVariant('var_small', 'usd'));
+      final row = ok(await reads().findVariant('var_small', 'usd'));
 
       expect(row?.amount, 1999);
       expect(row?.inventoryQuantity, 5);
@@ -194,7 +202,7 @@ void main() {
 
     test('returns null when the variant is not sold in that currency',
         () async {
-      expect(ok(await reads.findVariant('var_large', 'eur')), isNull);
+      expect(ok(await reads().findVariant('var_large', 'eur')), isNull);
     });
   });
 }

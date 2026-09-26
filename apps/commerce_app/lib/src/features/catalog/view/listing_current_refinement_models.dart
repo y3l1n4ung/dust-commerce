@@ -14,6 +14,9 @@ enum ListingRefinementKind {
   /// Upper price boundary.
   maxPrice,
 
+  /// Sale-only toggle.
+  onSale,
+
   /// One selected category handle.
   category,
 
@@ -32,6 +35,7 @@ List<({ListingRefinementKind kind, String label, String value})>
   required List<String> selectedLabelValues,
   required Option<int> selectedMinPrice,
   required Option<int> selectedMaxPrice,
+  required bool selectedOnSale,
   required String currencyCode,
 }) {
   final optionLabels = _optionLabelsOf(options);
@@ -54,6 +58,12 @@ List<({ListingRefinementKind kind, String label, String value})>
         kind: ListingRefinementKind.maxPrice,
         value: '$value',
         label: 'Up to ${formatMoney(Money.of(value, currencyCode))}',
+      ),
+    if (selectedOnSale)
+      (
+        kind: ListingRefinementKind.onSale,
+        value: 'true',
+        label: 'On sale',
       ),
     for (final handle in selectedCategoryHandles)
       (

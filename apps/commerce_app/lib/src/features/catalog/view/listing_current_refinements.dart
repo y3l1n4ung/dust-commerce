@@ -20,10 +20,12 @@ class ListingCurrentRefinements extends StatelessWidget {
     required this.selectedLabelValues,
     required this.selectedMaxPrice,
     required this.selectedMinPrice,
+    required this.selectedOnSale,
     required this.currencyCode,
     this.onCategoryHandlesChanged,
     this.onLabelValuesChanged,
     this.onPriceRangeChanged,
+    this.onSaleChanged,
     this.onClearAll,
     super.key,
   });
@@ -52,6 +54,9 @@ class ListingCurrentRefinements extends StatelessWidget {
   /// Replaces the price range query.
   final void Function(int? minPrice, int? maxPrice)? onPriceRangeChanged;
 
+  /// Replaces the sale-only query toggle.
+  final ValueChanged<bool>? onSaleChanged;
+
   /// Store-only option axes discovered from the backend.
   final List<ProductOptionFilterView> options;
 
@@ -67,6 +72,9 @@ class ListingCurrentRefinements extends StatelessWidget {
   /// Active lower price bound in minor units.
   final Option<int> selectedMinPrice;
 
+  /// Whether only sale-priced products are shown.
+  final bool selectedOnSale;
+
   /// Stable option-value identifiers currently selected.
   final List<String> selectedOptionValueIds;
 
@@ -81,6 +89,7 @@ class ListingCurrentRefinements extends StatelessWidget {
       selectedLabelValues: selectedLabelValues,
       selectedMinPrice: selectedMinPrice,
       selectedMaxPrice: selectedMaxPrice,
+      selectedOnSale: selectedOnSale,
       currencyCode: currencyCode,
     );
     if (chips.isEmpty) return const SizedBox.shrink();
@@ -118,6 +127,8 @@ class ListingCurrentRefinements extends StatelessWidget {
         onPriceRangeChanged?.call(null, _intOf(selectedMaxPrice));
       case ListingRefinementKind.maxPrice:
         onPriceRangeChanged?.call(_intOf(selectedMinPrice), null);
+      case ListingRefinementKind.onSale:
+        onSaleChanged?.call(false);
       case ListingRefinementKind.category:
         onCategoryHandlesChanged?.call(
           _without(selectedCategoryHandles, chip.value),

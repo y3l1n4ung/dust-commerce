@@ -40,6 +40,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
     List<String> labels = const [],
     Option<int> minPrice = const None(),
     Option<int> maxPrice = const None(),
+    bool onSale = false,
     String currency = 'usd',
   }) async {
     final selected = normalizedOptionValueIds(optionValueIds);
@@ -59,6 +60,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
         search,
         minPrice,
         maxPrice,
+        onSale ? 'sale' : '',
       ),
       title: 'All products',
       page: page < 1 ? 1 : page,
@@ -68,6 +70,7 @@ class ProductListingViewModel extends $ProductListingViewModel {
       selectedLabelValues: selectedLabels,
       selectedMaxPrice: maxPrice,
       selectedMinPrice: minPrice,
+      selectedOnSale: onSale,
       selectedOptionValueIds: selected,
       currencyCode: currency,
     );

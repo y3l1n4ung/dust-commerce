@@ -116,6 +116,13 @@ final class ProductVariantsFromJson
             currencyCode: value['currency_code']! as String,
           ),
         ],
+        originalPrices: [
+          if (value['original_amount'] case final int amount)
+            Money(
+              amount: amount,
+              currencyCode: value['currency_code']! as String,
+            ),
+        ],
         inventoryQuantity: value['inventory_quantity']! as int,
         manageInventory: value['manage_inventory']! as int != 0,
         allowBackorder: value['allow_backorder']! as int != 0,

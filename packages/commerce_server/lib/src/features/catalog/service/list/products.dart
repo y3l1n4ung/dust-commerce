@@ -16,6 +16,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
   List<String> labels = const [],
   Option<int> minPrice = const None(),
   Option<int> maxPrice = const None(),
+  bool onSale = false,
   List<String> optionValueIds = const [],
   int limit = 20,
   int offset = 0,
@@ -30,6 +31,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
     jsonEncode(labels),
     nullableOf(minPrice),
     nullableOf(maxPrice),
+    onSale ? 1 : 0,
     jsonEncode(optionValueIds),
   );
   if (page case Err(:final error)) return Err(error);
@@ -42,6 +44,7 @@ Future<Result<ProductPageResponse, SqlxError>> listProducts(
     jsonEncode(labels),
     nullableOf(minPrice),
     nullableOf(maxPrice),
+    onSale ? 1 : 0,
     jsonEncode(optionValueIds),
   );
   if (total case Err(:final error)) return Err(error);

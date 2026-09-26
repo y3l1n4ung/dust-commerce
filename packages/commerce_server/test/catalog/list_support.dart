@@ -83,6 +83,11 @@ Future<void> seedCatalogList(CommerceDatabase database) async {
     r"('var_mug', 'usd', 999)",
   );
   await run(
+    r"INSERT INTO variant_original_prices "
+    r"(variant_id, currency_code, amount) VALUES "
+    r"('var_small', 'usd', 2499)",
+  );
+  await run(
     r"INSERT INTO product_image_variants (image_id, variant_id) VALUES "
     r"('img_front', 'var_large')",
   );

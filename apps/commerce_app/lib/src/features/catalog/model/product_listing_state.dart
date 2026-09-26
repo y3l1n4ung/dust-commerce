@@ -88,10 +88,12 @@ final class ProductListingState with _$ProductListingState {
     this.labelFilters = const [],
     this.optionFilters = const [],
     this.priceBounds = const None(),
+    this.canRefineOnSale = false,
     this.selectedCategoryHandles = const [],
     this.selectedLabelValues = const [],
     this.selectedMaxPrice = const None(),
     this.selectedMinPrice = const None(),
+    this.selectedOnSale = false,
     this.selectedOptionValueIds = const [],
     this.searchQuery = '',
     this.products = const [],
@@ -106,6 +108,9 @@ final class ProductListingState with _$ProductListingState {
 
   /// Store-only category refinements discovered from matching products.
   final List<ProductCategoryFilter> categoryFilters;
+
+  /// Whether the current Store result set contains any sale-priced products.
+  final bool canRefineOnSale;
 
   /// Store-only label refinements discovered from matching products.
   final List<ProductLabelFilter> labelFilters;
@@ -148,6 +153,9 @@ final class ProductListingState with _$ProductListingState {
 
   /// Active lower price bound in minor units.
   final Option<int> selectedMinPrice;
+
+  /// Whether the Store route is narrowed to sale-priced products.
+  final bool selectedOnSale;
 
   /// Free-text product search retained in the Store route query.
   final String searchQuery;

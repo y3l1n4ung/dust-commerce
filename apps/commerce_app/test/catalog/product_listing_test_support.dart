@@ -24,6 +24,7 @@ final class OptionFailureApi implements CommerceApi {
     String? tag,
     int? minPrice,
     int? maxPrice,
+    String? onSale,
     List<String> optionValueIds = const [],
     int? limit,
     int? offset,
@@ -37,6 +38,7 @@ final class OptionFailureApi implements CommerceApi {
         tag: tag,
         minPrice: minPrice,
         maxPrice: maxPrice,
+        onSale: onSale,
         optionValueIds: optionValueIds,
         limit: limit,
         offset: offset,
@@ -80,6 +82,13 @@ Future<void> seedListingPage(CommerceDatabase database) async {
       '(variant_id, currency_code, amount) VALUES (?, ?, ?)',
       ['var_$suffix', 'usd', index * 100],
     ).execute(database.executor);
+    if (index == 13) {
+      await queryExecute(
+        'INSERT INTO variant_original_prices '
+        '(variant_id, currency_code, amount) VALUES (?, ?, ?)',
+        ['var_$suffix', 'usd', 1700],
+      ).execute(database.executor);
+    }
     await queryExecute(
       'INSERT INTO product_category_products '
       '(product_id, category_id) VALUES (?, ?)',

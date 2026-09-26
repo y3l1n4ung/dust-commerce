@@ -172,6 +172,7 @@ void main() {
         'images',
         'manage_inventory',
         'option_values',
+        'original_prices',
         'prices',
         'sku',
         'title',

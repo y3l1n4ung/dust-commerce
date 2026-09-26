@@ -15,6 +15,7 @@ final class ProductVariantResponse with _$ProductVariantResponse {
     required this.id,
     required this.title,
     required this.prices,
+    required this.originalPrices,
     required this.optionValues,
     required this.images,
     required this.inventoryQuantity,
@@ -40,6 +41,9 @@ final class ProductVariantResponse with _$ProductVariantResponse {
 
   /// Selected value per product-option id.
   final Map<String, String> optionValues;
+
+  /// Crossed-out prices before sale pricing, one per currency at most.
+  final List<Money> originalPrices;
 
   /// Currency-scoped public prices.
   final List<Money> prices;

@@ -13,10 +13,12 @@ final class _ListingMeta {
     this.labelFilters = const [],
     this.optionFilters = const [],
     this.priceBounds = const None(),
+    this.canRefineOnSale = false,
     this.selectedCategoryHandles = const [],
     this.selectedLabelValues = const [],
     this.selectedMaxPrice = const None(),
     this.selectedMinPrice = const None(),
+    this.selectedOnSale = false,
     this.selectedOptionValueIds = const [],
     this.searchQuery = '',
     this.collection = const None(),
@@ -26,6 +28,7 @@ final class _ListingMeta {
 
   final Option<String> category;
   final List<ProductCategoryFilter> categoryFilters;
+  final bool canRefineOnSale;
   final List<ProductCategory> children;
   final Option<String> collection;
   final String currencyCode;
@@ -41,6 +44,7 @@ final class _ListingMeta {
   final List<String> selectedLabelValues;
   final Option<int> selectedMaxPrice;
   final Option<int> selectedMinPrice;
+  final bool selectedOnSale;
   final List<String> selectedOptionValueIds;
   final String sortBy;
   final String title;
@@ -54,6 +58,7 @@ final class _ListingMeta {
     List<ProductLabelFilter>? labelFilters,
     List<ProductOptionFilterView>? optionFilters,
     Option<ProductPriceBounds>? priceBounds,
+    bool? canRefineOnSale,
   }) =>
       _ListingMeta(
         requestKey: requestKey,
@@ -67,10 +72,12 @@ final class _ListingMeta {
         labelFilters: labelFilters ?? this.labelFilters,
         optionFilters: optionFilters ?? this.optionFilters,
         priceBounds: priceBounds ?? this.priceBounds,
+        canRefineOnSale: canRefineOnSale ?? this.canRefineOnSale,
         selectedCategoryHandles: selectedCategoryHandles,
         selectedLabelValues: selectedLabelValues,
         selectedMaxPrice: selectedMaxPrice,
         selectedMinPrice: selectedMinPrice,
+        selectedOnSale: selectedOnSale,
         selectedOptionValueIds: selectedOptionValueIds,
         searchQuery: searchQuery,
         collection: collection,
@@ -94,10 +101,12 @@ final class _ListingMeta {
         labelFilters: labelFilters,
         optionFilters: optionFilters,
         priceBounds: priceBounds,
+        canRefineOnSale: canRefineOnSale,
         selectedCategoryHandles: selectedCategoryHandles,
         selectedLabelValues: selectedLabelValues,
         selectedMaxPrice: selectedMaxPrice,
         selectedMinPrice: selectedMinPrice,
+        selectedOnSale: selectedOnSale,
         selectedOptionValueIds: selectedOptionValueIds,
         searchQuery: searchQuery,
         products: products,

@@ -155,14 +155,31 @@ class Product with _$Product {
 
   /// The lowest price across variants in [currencyCode], or null.
   Money? cheapestIn(String currencyCode) {
-    Money? cheapest;
+    return cheapestVariantIn(currencyCode)?.priceIn(currencyCode);
+  }
+
+  /// The variant with the lowest active price in [currencyCode], or null.
+  ProductVariant? cheapestVariantIn(String currencyCode) {
+    ProductVariant? cheapest;
     for (final variant in variants) {
       final price = variant.priceIn(currencyCode);
       if (price == null) continue;
-      if (cheapest == null || price < cheapest) cheapest = price;
+      final current = cheapest?.priceIn(currencyCode);
+      if (current == null || price < current) cheapest = variant;
     }
     return cheapest;
   }
+
+  /// Original price for the cheapest variant when that variant is on sale.
+  Money? cheapestOriginalIn(String currencyCode) {
+    final variant = cheapestVariantIn(currencyCode);
+    if (variant == null || !variant.isOnSaleIn(currencyCode)) return null;
+    return variant.originalPriceIn(currencyCode);
+  }
+
+  /// Whether any variant is discounted in [currencyCode].
+  bool isOnSaleIn(String currencyCode) =>
+      variants.any((variant) => variant.isOnSaleIn(currencyCode));
 
   /// The variant with [id], or null.
   ProductVariant? variantById(String id) {
