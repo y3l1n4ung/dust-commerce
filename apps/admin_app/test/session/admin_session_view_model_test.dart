@@ -13,7 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const password = 'correct horse battery staple';
-  final now = DateTime.utc(2026, 9, 13, 12);
+  final now = DateTime.utc(2100, 1, 1, 12);
   late Directory directory;
   late CommerceDatabase database;
   late TestClient server;
@@ -64,7 +64,7 @@ void main() {
     expect(first.state.status, AdminSessionStatus.signedIn);
     expect(sessions.value, isA<Some<StoredAdminSession>>());
     final stored = (sessions.value as Some<StoredAdminSession>).value;
-    expect(stored.expiresAt, DateTime.utc(2026, 9, 20, 12));
+    expect(stored.expiresAt, DateTime.utc(2100, 1, 8, 12));
     expect(first.state.toString(), isNot(contains(stored.token)));
 
     final restarted = model();
