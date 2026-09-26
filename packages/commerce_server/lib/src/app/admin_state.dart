@@ -5,6 +5,7 @@ import 'package:commerce_server/src/features/admin_customer_group/admin_customer
 import 'package:commerce_server/src/features/admin_customer_service/admin_customer_service.dart';
 import 'package:commerce_server/src/features/admin_fulfillment_context/admin_fulfillment_context.dart';
 import 'package:commerce_server/src/features/admin_order/admin_order.dart';
+import 'package:commerce_server/src/features/admin_promotion/admin_promotion.dart';
 import 'package:commerce_server/src/features/admin_region/admin_region.dart';
 import 'package:commerce_server/src/features/admin_return/admin_return.dart';
 import 'package:commerce_server/src/features/admin_sales_channel/admin_sales_channel.dart';
@@ -73,6 +74,9 @@ extension AdminStateRegistration on Router {
     withState(AdminReturnDeps(
       database: database,
       returns: AdminReturnRepository(executor),
+    ));
+    withState(AdminPromotionDeps(
+      promotions: AdminPromotionRepository(executor),
     ));
     withState(AdminRegionDeps(regions: AdminRegionRepository(executor)));
     withState(AdminFulfillmentContextDeps(

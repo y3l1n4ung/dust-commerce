@@ -5,6 +5,7 @@ import 'package:commerce_server/src/features/admin_customer/router.dart';
 import 'package:commerce_server/src/features/admin_customer_group/router.dart';
 import 'package:commerce_server/src/features/admin_customer_service/router.dart';
 import 'package:commerce_server/src/features/admin_order/router.dart';
+import 'package:commerce_server/src/features/admin_promotion/router.dart';
 import 'package:commerce_server/src/features/admin_refund/router.dart';
 import 'package:commerce_server/src/features/admin_region/router.dart';
 import 'package:commerce_server/src/features/admin_return/router.dart';
@@ -31,6 +32,7 @@ Router adminRoutes() => Router()
   ..merge(adminCustomerGroupRoutes())
   ..merge(adminCustomerServiceRoutes())
   ..merge(adminRefundRoutes())
+  ..merge(adminPromotionRoutes())
   ..merge(adminFulfillmentContextRoutes())
   ..merge(adminReturnRoutes())
   ..merge(adminRegionRoutes())

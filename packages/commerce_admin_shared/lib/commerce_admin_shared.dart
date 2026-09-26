@@ -48,6 +48,7 @@ export 'src/admin_product_image_variants.dart';
 export 'src/admin_product_import.dart';
 export 'src/admin_product_media.dart';
 export 'src/admin_product_variant.dart';
+export 'src/admin_promotion.dart';
 export 'src/admin_region.dart';
 export 'src/admin_receive_return.dart';
 export 'src/admin_refund.dart';
