@@ -50,7 +50,8 @@ void main() {
         ...'shipping_profile product_shipping_profile'.split(' '),
         ...'sales_channels cart_sales_channels'.split(' '),
         ...'order_sales_channels product_sales_channels'.split(' '),
-        ...'order_transfers variant_option_values variant_prices'.split(' '),
+        ...'order_transfers variant_option_values variant_prices variant_original_prices'
+            .split(' '),
         ...'return_reasons return_requests return_items fulfillments'
             .split(' '),
         ...'fulfillment_items fulfillment_labels'.split(' '),
