@@ -98,6 +98,9 @@ final class _StoreSearchHit extends StatelessWidget {
                     child: ProductImage(
                       url: product.thumbnail,
                       aspectRatio: 7 / 8,
+                      border: false,
+                      placeholderColor: StoreColors.foregroundMuted,
+                      placeholderSize: 20,
                     ),
                   ),
                   const SizedBox(width: 16),

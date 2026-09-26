@@ -7,12 +7,24 @@ class ProductImage extends StatelessWidget {
   const ProductImage({
     required this.url,
     this.aspectRatio = 11 / 14,
+    this.border = true,
+    this.placeholderColor,
+    this.placeholderSize,
     this.semanticLabel,
     super.key,
   });
 
   /// Width-to-height ratio of the Medusa image slot.
   final double aspectRatio;
+
+  /// Whether the image slot draws the default storefront border.
+  final bool border;
+
+  /// Optional placeholder icon color for source-specific thumbnail slots.
+  final Color? placeholderColor;
+
+  /// Optional placeholder icon size for source-specific thumbnail slots.
+  final double? placeholderSize;
 
   /// Optional accessible label for standalone product imagery.
   final String? semanticLabel;
@@ -28,7 +40,7 @@ class ProductImage extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: StoreColors.subtle,
-          border: Border.all(color: StoreColors.border),
+          border: border ? Border.all(color: StoreColors.border) : null,
           borderRadius: BorderRadius.circular(8),
         ),
         child: ClipRRect(
@@ -36,8 +48,12 @@ class ProductImage extends StatelessWidget {
           child: source == null
               ? Semantics(
                   label: semanticLabel,
-                  child: const Center(
-                    child: Icon(Icons.image_not_supported_outlined),
+                  child: Center(
+                    child: Icon(
+                      Icons.image_not_supported_outlined,
+                      color: placeholderColor,
+                      size: placeholderSize,
+                    ),
                   ),
                 )
               : Image.network(
@@ -50,8 +66,12 @@ class ProductImage extends StatelessWidget {
                   webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
                   errorBuilder: (_, __, ___) => Semantics(
                     label: semanticLabel,
-                    child: const Center(
-                      child: Icon(Icons.broken_image_outlined),
+                    child: Center(
+                      child: Icon(
+                        Icons.broken_image_outlined,
+                        color: placeholderColor,
+                        size: placeholderSize,
+                      ),
                     ),
                   ),
                   loadingBuilder: (context, child, progress) => progress == null
