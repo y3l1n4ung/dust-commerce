@@ -33,7 +33,10 @@ final class _ProductTabState extends State<ProductTab> {
           collapsedIconColor: StoreColors.foregroundMuted,
           collapsedShape: const Border(),
           collapsedTextColor: StoreColors.foregroundSubtle,
-          childrenPadding: const EdgeInsets.fromLTRB(4, 12, 4, 28),
+          childrenPadding: const EdgeInsets.symmetric(
+            horizontal: 4,
+            vertical: 32,
+          ),
           iconColor: StoreColors.foregroundMuted,
           onExpansionChanged: (expanded) =>
               setState(() => _expanded = expanded),
