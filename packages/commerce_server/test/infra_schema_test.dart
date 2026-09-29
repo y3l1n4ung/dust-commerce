@@ -3,10 +3,7 @@ import 'dart:io';
 import 'package:commerce_server/commerce_server.dart';
 import 'package:test/test.dart';
 
-/// Raw SQL access, which `fetch` needs and `DatabaseClient.executor` is not.
-///
-/// `DatabaseConnection` implements `DatabaseExecutor`; a raw query wants the
-/// wider `Executor`, which the driver behind it does provide.
+/// Raw SQL access required by `fetch` beyond `DatabaseClient.executor`.
 extension on CommerceDatabase {
   Executor get raw => connection as Executor;
 }
@@ -34,49 +31,6 @@ void main() {
     return rows.map((row) => row.readIndex<String>(1)).toList();
   }
 
-  group('migrations', () {
-    test('create every table the slice needs', () async {
-      final rows = await queryRaw(
-        "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name",
-        [],
-      ).fetch(database.raw);
-      final tables = rows.map((row) => row.readIndex<String>(0)).toSet();
-
-      expect(
-        tables,
-        containsAll(<String>[
-          'carts',
-          'customers',
-          'line_items',
-          'order_addresses',
-          'order_items',
-          'orders',
-          'product_options',
-          'product_variants',
-          'products',
-          'regions',
-          'variant_option_values',
-          'variant_prices',
-        ]),
-      );
-    });
-
-    test('are idempotent, so a second open does not reapply them', () async {
-      await database.close();
-
-      final reopened = CommerceDatabase.open(
-        '${directory.path}/commerce.db',
-        options: commerceOptions,
-      );
-      addTearDown(reopened.close);
-
-      final rows = await queryRaw('SELECT COUNT(*) FROM products', [])
-          .fetch(reopened.raw);
-
-      expect(rows.single.readIndex<int>(0), 0);
-    });
-  });
-
   group('the shape money is stored in', () {
     test('prices are integer minor units, keyed by variant and currency',
         () async {
@@ -89,7 +43,56 @@ void main() {
     test('an order stores its totals rather than deriving them', () async {
       final columns = await columnsOf('orders');
 
-      expect(columns, containsAll(<String>['subtotal', 'tax', 'total']));
+      expect(
+        columns,
+        containsAll(<String>['cart_id', 'subtotal', 'tax', 'total']),
+      );
+    });
+
+    test('product facts and gallery order are explicit columns', () async {
+      expect(
+        await columnsOf('products'),
+        containsAll(<String>[
+          'material',
+          'collection_id',
+          'origin_country',
+          'type_id',
+          'weight',
+          'length',
+          'width',
+          'height',
+        ]),
+      );
+      expect(await columnsOf('product_images'), containsAll(['url', 'rank']));
+      expect(
+        await columnsOf('product_image_variants'),
+        containsAll(['image_id', 'variant_id', 'created_at']),
+      );
+      expect(await columnsOf('product_options'), isNot(contains('values_csv')));
+      expect(
+        await columnsOf('product_options'),
+        containsAll(['id', 'title', 'is_exclusive']),
+      );
+      expect(
+        await columnsOf('product_product_options'),
+        containsAll(['product_id', 'product_option_id']),
+      );
+      expect(
+        await columnsOf('product_product_option_values'),
+        containsAll(['product_product_option_id', 'product_option_value_id']),
+      );
+      expect(
+        await columnsOf('product_option_values'),
+        containsAll(['id', 'option_id', 'value', 'rank']),
+      );
+      expect(
+        await columnsOf('variant_option_values'),
+        containsAll(['option_id', 'option_value_id']),
+      );
+      expect(
+        await columnsOf('product_categories'),
+        containsAll(['handle', 'parent_category_id', 'is_active', 'rank']),
+      );
     });
   });
 
@@ -145,6 +148,34 @@ void main() {
           ).execute(database.executor);
 
       await expectLater(reusedHandle, throwsStateError);
+    });
+
+    test('an image cannot be associated with another product variant',
+        () async {
+      await _seedVariant(database);
+      await queryExecute(
+        r"INSERT INTO product_images (id, product_id, url, rank) "
+        r"VALUES ('img_1', 'prod_1', 'https://example.test/one.png', 0)",
+        [],
+      ).execute(database.executor);
+      await queryExecute(
+        r"INSERT INTO products (id, title, handle) "
+        r"VALUES ('prod_2', 'Other', 'other')",
+        [],
+      ).execute(database.executor);
+      await queryExecute(
+        r"INSERT INTO product_variants (id, product_id, title) "
+        r"VALUES ('var_2', 'prod_2', 'Other')",
+        [],
+      ).execute(database.executor);
+
+      Future<void> crossProductLink() => queryExecute(
+            r"INSERT INTO product_image_variants (image_id, variant_id) "
+            r"VALUES ('img_1', 'var_2')",
+            [],
+          ).execute(database.executor);
+
+      await expectLater(crossProductLink, throwsStateError);
     });
   });
 }

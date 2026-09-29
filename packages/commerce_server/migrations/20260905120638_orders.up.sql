@@ -1,0 +1,68 @@
+-- Stores the immutable commercial snapshot produced by checkout.
+-- UTC timestamps use ISO-8601 TEXT because SQLite has no native TIMESTAMPTZ.
+CREATE TABLE orders (
+  id                 TEXT PRIMARY KEY,
+  -- Short monotonic number is shown to people; opaque ids remain API keys.
+  display_id         INTEGER NOT NULL UNIQUE CHECK (display_id > 0),
+  -- One cart can become one order; this is the checkout idempotency boundary.
+  cart_id            TEXT NOT NULL UNIQUE REFERENCES carts (id),
+  region_id          TEXT NOT NULL REFERENCES regions (id),
+  customer_id        TEXT REFERENCES customers (id),
+  email              TEXT NOT NULL COLLATE NOCASE,
+  currency_code      TEXT NOT NULL
+                     CHECK (length(currency_code) = 3
+                            AND currency_code = lower(currency_code)),
+  -- Every monetary value is an integer in the currency's minor unit.
+  subtotal           INTEGER NOT NULL CHECK (subtotal >= 0),
+  shipping_total     INTEGER NOT NULL DEFAULT 0 CHECK (shipping_total >= 0),
+  discount_total     INTEGER NOT NULL DEFAULT 0 CHECK (discount_total >= 0),
+  tax                INTEGER NOT NULL CHECK (tax >= 0),
+  total              INTEGER NOT NULL CHECK (total >= 0),
+  -- Names match Medusa's API so storage and response status cannot drift.
+  status             TEXT NOT NULL DEFAULT 'pending'
+                     CHECK (status IN (
+                       'pending', 'completed', 'canceled', 'archived'
+                     )),
+  payment_status     TEXT NOT NULL DEFAULT 'awaiting'
+                     CHECK (payment_status IN ('awaiting', 'captured', 'refunded')),
+  -- Shipping/promotion labels are copied so later catalog edits do not rewrite history.
+  shipping_option_id TEXT,
+  shipping_name      TEXT,
+  promotion_code     TEXT,
+  metadata           TEXT CHECK (metadata IS NULL OR json_valid(metadata)),
+  -- Business event time is explicit; created_at remains the database insert time.
+  placed_at          TEXT NOT NULL,
+  -- Cancellation time makes the irreversible lifecycle event auditable.
+  canceled_at        TEXT,
+  -- Nullable actor preserves the event if an Admin account is later deleted.
+  canceled_by        TEXT REFERENCES admin_users (id) ON DELETE SET NULL,
+  created_at         TEXT NOT NULL DEFAULT
+                     (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+  updated_at         TEXT NOT NULL DEFAULT
+                     (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+  deleted_at         TEXT,
+  -- Database checks make a corrupted or contradictory order total impossible.
+  CHECK (discount_total <= subtotal + shipping_total),
+  CHECK (total = subtotal + shipping_total - discount_total + tax),
+  -- Archival preserves a prior cancellation audit instead of erasing history.
+  CHECK (
+    (status = 'canceled' AND canceled_at IS NOT NULL) OR
+    (status = 'archived' AND
+      (canceled_by IS NULL OR canceled_at IS NOT NULL)) OR
+    (status NOT IN ('canceled', 'archived') AND
+      canceled_at IS NULL AND canceled_by IS NULL)
+  )
+);
+
+CREATE INDEX idx_orders_customer ON orders (customer_id)
+WHERE deleted_at IS NULL;
+CREATE INDEX idx_orders_email ON orders (email)
+WHERE deleted_at IS NULL;
+CREATE INDEX idx_orders_placed_at ON orders (placed_at);
+
+-- SQLite has no automatic ON UPDATE timestamp, so this maintains updated_at.
+CREATE TRIGGER orders_touch_updated_at AFTER UPDATE ON orders
+WHEN NEW.updated_at = OLD.updated_at BEGIN
+  UPDATE orders SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+  WHERE id = NEW.id;
+END;

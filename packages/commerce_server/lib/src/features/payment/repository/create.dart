@@ -16,8 +16,8 @@ abstract final class PaymentCreateRepository {
   /// a lie about what the system does.
   @Query(r'''
 INSERT INTO payment_collections (id, order_id, provider, amount,
-                                 currency_code, status, created_at)
-VALUES ($1, $2, $3, $4, $5, 'authorized', $6)
+                                 currency_code, status)
+VALUES ($1, $2, $3, $4, $5, 'authorized')
 ''')
   Future<Result<ExecResult, SqlxError>> authorize(
     String id,
@@ -25,6 +25,5 @@ VALUES ($1, $2, $3, $4, $5, 'authorized', $6)
     String provider,
     int amount,
     String currencyCode,
-    String createdAt,
   );
 }

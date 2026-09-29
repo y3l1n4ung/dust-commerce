@@ -21,11 +21,11 @@ WHERE id = $1 AND status = 'authorized'
 ''')
   Future<Result<ExecResult, SqlxError>> capture(String id, String capturedAt);
 
-  /// Marks the order paid and complete.
+  /// Marks the order paid without changing its independent lifecycle.
   @Query(r'''
 UPDATE orders
-SET payment_status = 'captured', status = 'completed'
-WHERE id = $1 AND status != 'cancelled'
+SET payment_status = 'captured'
+WHERE id = $1 AND status NOT IN ('canceled', 'archived')
 ''')
-  Future<Result<ExecResult, SqlxError>> completeOrder(String orderId);
+  Future<Result<ExecResult, SqlxError>> markOrderCaptured(String orderId);
 }

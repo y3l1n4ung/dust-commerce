@@ -88,9 +88,10 @@ the order is written: a sold-out line then fails before an order exists.
 
 ### Filters live in SQL
 
-Draft products are excluded by the query, and orders are scoped to an email by
-the query. A filter in Dart is one forgotten line away from showing somebody
-else's data; a filter in SQL cannot be forgotten by a caller.
+Draft products are excluded by the query, and account order reads are scoped to
+the authenticated customer id by the query. A filter in Dart is one forgotten
+line away from showing somebody else's data; a filter in SQL cannot be
+forgotten by a caller.
 
 ## Layers that were harder than expected
 
@@ -109,10 +110,11 @@ Three Dust behaviours shaped the code and are reported upstream:
 
 ## Verifying
 
-CI runs what a contributor should run: `dust check` proves committed generated
-files match their sources, `dust check --db` validates every query against the
-real schema, `dust i18n check` catches drifted translations, and
-`scripts/check_file_size.sh` enforces the 180-line rule. All exit non-zero on
-failure, which was tested rather than assumed.
+CI starts from ignored generated output, runs `scripts/generate.sh`, and uses
+`dust check` to validate normal output, `dust check --db` to validate every
+query against the real schema, and `dust i18n check` to catch drifted
+translations before consumers compile. `scripts/check_file_size.sh` enforces
+the 180-line rule. All exit non-zero on failure, which was tested rather than
+assumed.
 
 Do not run `dart format` across a package — see [CONTRIBUTING](../../CONTRIBUTING.md).

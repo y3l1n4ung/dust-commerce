@@ -1,0 +1,50 @@
+import 'package:commerce_app/src/core/store_theme.dart';
+import 'package:dust_flutter/i18n.dart';
+import 'package:flutter/material.dart';
+
+/// Medusa OnSaleToggle clone for discounted Store results.
+class ListingOnSaleToggle extends StatelessWidget {
+  /// Creates the sale-only checkbox.
+  const ListingOnSaleToggle({
+    required this.canRefine,
+    required this.selected,
+    required this.onChanged,
+    super.key,
+  });
+
+  /// Whether any current product can be narrowed by sale state.
+  final bool canRefine;
+
+  /// Whether sale-only filtering is active.
+  final bool selected;
+
+  /// Replaces the route sale toggle.
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!canRefine && !selected) return const SizedBox.shrink();
+    return InkWell(
+      onTap: () => onChanged(!selected),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Checkbox(
+            value: selected,
+            onChanged: (value) => onChanged(value ?? false),
+            activeColor: StoreColors.interactive,
+          ),
+          const TranslatedText(
+            'shop_on_sale_only',
+            defaultText: 'On sale only',
+            style: TextStyle(
+              color: StoreColors.foregroundSubtle,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

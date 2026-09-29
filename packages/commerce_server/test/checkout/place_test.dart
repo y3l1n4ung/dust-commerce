@@ -1,3 +1,4 @@
+import 'package:commerce_server/commerce_server.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:test/test.dart';
 
@@ -10,6 +11,39 @@ void main() {
   tearDown(() async => harness.stop());
 
   group('POST /store/checkout', () {
+    test('binds an authenticated cart and order to the customer', () async {
+      final account = await harness.account('ada@example.com');
+      final cartId = await harness.cartWith(
+        'var_small',
+        token: account.token,
+      );
+
+      final placed = await harness.checkout(
+        cartId,
+        email: 'spoofed@example.com',
+        token: account.token,
+      );
+      placed.assertCreated();
+      final order = Order.fromJson(placed.json! as Map<String, Object?>);
+
+      expect(order.customerId, account.customerId);
+      expect(order.email, 'ada@example.com');
+      final rows = await queryRaw(
+        'SELECT customer_id, email FROM carts WHERE id = ?',
+        [cartId],
+      ).fetch(harness.database.connection as Executor);
+      expect(rows.single.readIndex<String>(0), account.customerId);
+      expect(rows.single.readIndex<String>(1), 'ada@example.com');
+    });
+
+    test('hides a customer cart from another signed-in customer', () async {
+      final ada = await harness.account('ada@example.com');
+      final grace = await harness.account('grace@example.com');
+      final cartId = await harness.cartWith('var_small', token: ada.token);
+
+      (await harness.checkout(cartId, token: grace.token)).assertNotFound();
+    });
+
     test('turns a cart into an order with frozen totals', () async {
       final cartId = await harness.cartWith('var_small', quantity: 2);
 
@@ -45,6 +79,29 @@ void main() {
 
       expect(cart.isEmpty, isTrue);
     });
+
+    test('returns the same order when checkout is retried', () async {
+      final cartId = await harness.cartWith('var_small', quantity: 2);
+
+      final first = await harness.checkout(cartId);
+      final retried = await harness.checkout(cartId);
+
+      first.assertCreated();
+      retried.assertCreated();
+      final firstOrder = Order.fromJson(first.json! as Map<String, Object?>);
+      final retriedOrder =
+          Order.fromJson(retried.json! as Map<String, Object?>);
+      expect(retriedOrder.id, firstOrder.id);
+      expect(await harness.stockOf('var_small'), 48);
+
+      final rows = await queryRaw(
+        'SELECT COUNT(orders.id), completed_at FROM carts '
+        'LEFT JOIN orders ON orders.cart_id = carts.id WHERE carts.id = ?',
+        [cartId],
+      ).fetch(harness.database.connection as Executor);
+      expect(rows.single.readIndex<int>(0), 1);
+      expect(rows.single.readIndex<String?>(1), isNotNull);
+    });
   });
 
   group('when somebody else got there first', () {
@@ -66,13 +123,22 @@ void main() {
       (await harness.checkout(mine, email: 'loser@example.com'))
           .assertConflict();
 
-      (await harness.client.get('/store/orders?email=loser@example.com').send())
-        ..assertOk()
-        ..assertJsonContains({'count': 0});
+      final rows = await queryRaw(
+        'SELECT COUNT(*) FROM orders WHERE email = ?',
+        ['loser@example.com'],
+      ).fetch(harness.database.connection as Executor);
+      expect(rows.single.readIndex<int>(0), 0);
     });
   });
 
   group('what it refuses', () {
+    test('an invalid bearer token cannot downgrade to a guest', () async {
+      final request = harness.client.post('/store/carts')
+        ..bearer('not-a-real-token');
+
+      (await request.send()).assertUnauthorized();
+    });
+
     test('a cart nobody started', () async {
       (await harness.checkout('nope')).assertNotFound();
     });
@@ -83,6 +149,76 @@ void main() {
           CartView.fromJson(created.json! as Map<String, Object?>).cart.id;
 
       (await harness.checkout(cartId)).assertUnprocessable();
+    });
+
+    test('a cart without a payment selection', () async {
+      final cartId = await harness.cartWith('var_small');
+      (await harness.chooseStandardShipping(cartId)).assertOk();
+
+      final response = await (harness.client.post('/store/checkout')
+            ..json({
+              'cart_id': cartId,
+              'email': 'ada@example.com',
+              'shipping_address': harness.address(),
+            }))
+          .send();
+
+      response
+        ..assertUnprocessable()
+        ..assertJsonContains({
+          'error': 'Select a payment method before checkout',
+        });
+    });
+
+    test('a cart without a delivery selection', () async {
+      final cartId = await harness.cartWith('var_small');
+      final payment = harness.client
+          .post('/store/carts/$cartId/payment-sessions')
+        ..json({'provider_id': 'manual'});
+      (await payment.send()).assertOk();
+
+      final response = await (harness.client.post('/store/checkout')
+            ..json({
+              'cart_id': cartId,
+              'email': 'ada@example.com',
+              'shipping_address': harness.address(),
+            }))
+          .send();
+
+      response
+        ..assertUnprocessable()
+        ..assertJsonContains({
+          'error': 'Select a delivery method before checkout',
+        });
+      expect(await harness.stockOf('var_small'), 50);
+      final orders = await queryRaw(
+        'SELECT COUNT(*) FROM orders WHERE cart_id = ?',
+        [cartId],
+      ).fetch(harness.database.connection as Executor);
+      expect(orders.single.readIndex<int>(0), 0);
+    });
+
+    test('a provider disabled after selection', () async {
+      final cartId = await harness.cartWith('var_small');
+      (await harness.chooseStandardShipping(cartId)).assertOk();
+      final selected = harness.client
+          .post('/store/carts/$cartId/payment-sessions')
+        ..json({'provider_id': 'manual'});
+      (await selected.send()).assertOk();
+      await queryExecute(
+        r"UPDATE region_payment_providers SET enabled = 0 "
+        r"WHERE region_id = 'reg_us' AND provider_id = 'manual'",
+        const [],
+      ).execute(harness.database.executor);
+
+      final request = harness.client.post('/store/checkout')
+        ..json({
+          'cart_id': cartId,
+          'email': 'ada@example.com',
+          'shipping_address': harness.address(),
+        });
+
+      (await request.send()).assertUnprocessable();
     });
 
     test('an address that is not an email, naming the field', () async {

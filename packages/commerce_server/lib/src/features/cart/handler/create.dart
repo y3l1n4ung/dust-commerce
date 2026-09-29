@@ -1,4 +1,6 @@
+import 'package:commerce_server/src/features/account/extractor.dart';
 import 'package:commerce_server/src/features/cart/deps.dart';
+import 'package:commerce_server/src/features/cart/model/model.dart';
 import 'package:commerce_server/src/features/cart/service/service.dart';
 import 'package:commerce_shared/commerce_shared.dart';
 import 'package:dust_server/server.dart';
@@ -18,7 +20,11 @@ const OptionalExtractable<CreateCartBody> _body = OptionalExtractable(
 ///
 /// Answers with a [CartView] like every other cart endpoint, so a client has
 /// one shape to decode whether it created the cart or fetched it.
-Future<Result<CartView, Rejection>> createCartHandler(Request request) async {
+Future<Result<CartViewResponse, Rejection>> createCartHandler(
+  Request request,
+) async {
+  final context = await request.extract(const Extension<CustomerContext>());
+  final actor = context.authenticated;
   final decoded = await _body.extract(request);
   if (decoded case Err(:final error)) return Err(error);
 
@@ -33,18 +39,24 @@ Future<Result<CartView, Rejection>> createCartHandler(Request request) async {
   final deps = (state as Ok<CartDeps, Rejection>).value;
 
   final result = await createCart(
-    deps.creates,
+    deps.database,
     id: deps.clock.nextId(),
-    now: deps.clock.now(),
     regionId: body.regionId,
-    email: body.email,
+    email: actor.match(
+      some: (value) => value.customer.email,
+      none: () => body.email,
+    ),
+    customerId: actor.match(
+      some: (value) => value.customer.id,
+      none: () => null,
+    ),
   );
 
   return switch (result) {
-    Ok(value: final cart?) => Ok(CartView.of(cart)),
-    Ok() when body.regionId != null =>
+    Ok(value: Some(value: final cart)) => Ok(CartViewResponse.of(cart)),
+    Ok(value: None()) when body.regionId != null =>
       Err(Rejection.status(422, 'Region "${body.regionId}" does not exist')),
-    Ok() => const Err(
+    Ok(value: None()) => const Err(
         Rejection.status(503, 'The shop has no region configured'),
       ),
     Err() => const Err(Rejection.internal()),

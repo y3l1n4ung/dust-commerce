@@ -4,4 +4,4 @@ library;
 export 'create.dart';
 export 'list.dart';
 export 'read.dart';
-export 'update.dart';
+export 'update/update.dart';

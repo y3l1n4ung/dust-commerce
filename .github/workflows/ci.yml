@@ -2,66 +2,114 @@ name: CI
 
 on:
   push:
-    branches: [main]
   pull_request:
 
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   DUST_VERSION: v0.1.4
+  DUST_LINUX_X64_SHA256: daa13df76f2370fa5a41fb092ed2e1c6942c51ce748fc617622374af61313b77
+  FLUTTER_VERSION: 3.44.1
 
 jobs:
   verify:
     name: Verify
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
         with:
-          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
 
-      - name: Install the Dust CLI
+      - name: Install verification tools
         run: |
           set -euo pipefail
-          cargo install --locked \
-            --git https://github.com/y3l1n4ung/dust \
-            --tag "$DUST_VERSION" \
-            dust_cli
-          dust --version
+          sudo apt-get update
+          sudo apt-get install --yes ripgrep
+          rg --version
+
+      - name: Download the verified Dust CLI
+        run: ./scripts/install_dust_cli.sh
+
+      - name: Install the SQLx CLI
+        run: |
+          set -euo pipefail
+          cargo install sqlx-cli --locked --version 0.8.6 \
+            --no-default-features --features sqlite
+          sqlx --version
 
       - name: Resolve dependencies
-        run: flutter pub get
+        run: flutter pub get --enforce-lockfile
 
-      # A generated-code repository whose CI does not check the generated code
-      # is theatre. `dust check` fails when a committed .g.dart no longer
-      # matches its source, so a contributor who edits a model and forgets to
-      # rebuild is caught here rather than by a reviewer.
-      - name: Generated output is current
+      # A clean checkout intentionally contains no .g.dart. Build every output
+      # before analysis and tests, then prove the files remain generator-owned.
+      - name: Regenerate Dust output
+        run: ./scripts/generate.sh
+
+      - name: Generated output policy is enforced
         run: |
           set -euo pipefail
+          test -z "$(git ls-files -- '**/*.g.dart')"
+          generated_count="$(find apps packages -type f -name '*.g.dart' \
+            | wc -l | tr -d ' ')"
+          test "$generated_count" -gt 0
+          while IFS= read -r -d '' generated; do
+            git check-ignore --no-index --quiet "$generated" || {
+              echo "Generated Dart is not ignored: $generated" >&2
+              exit 1
+            }
+          done < <(find apps packages -type f -name '*.g.dart' -print0)
+          dust check --root packages/commerce_admin_shared
           dust check --root packages/commerce_shared
           dust check --root packages/commerce_server
           dust check --root apps/commerce_app
+          dust check --root apps/admin_app
+          dust check --db --root packages/commerce_server
+          dust i18n check --root apps/commerce_app
+          git diff --exit-code
+          test -z "$(git ls-files --others --exclude-standard -- \
+            packages/commerce_admin_shared \
+            packages/commerce_shared \
+            packages/commerce_server \
+            apps/commerce_app \
+            apps/admin_app)"
 
-      # SQL is validated against the real schema. A column that does not exist
-      # fails this step with `no such column` and a non-zero exit.
-      - name: SQL matches the schema
-        run: dust check --db --root packages/commerce_server
-
-      - name: Translations are current
-        run: dust i18n check --root apps/commerce_app
+      # Dust embeds ups for application startup. SQLx remains the operator tool
+      # and must also prove that every reversible pair runs in both directions.
+      - name: SQLx migrations run up and down
+        run: |
+          set -euo pipefail
+          export DATABASE_URL="sqlite://$RUNNER_TEMP/reversible.db"
+          sqlx database create
+          sqlx migrate run --source packages/commerce_server/migrations
+          for _migration in packages/commerce_server/migrations/*.down.sql; do
+            sqlx migrate revert --source packages/commerce_server/migrations
+          done
+          remaining="$(sqlite3 "$RUNNER_TEMP/reversible.db" \
+            "SELECT count(*) FROM sqlite_master WHERE type = 'table' \
+             AND name != '_sqlx_migrations';")"
+          test "$remaining" = "0"
 
       - name: Analyze
         run: |
           set -euo pipefail
+          dart analyze packages/commerce_admin_shared
           dart analyze packages/commerce_shared
           dart analyze packages/commerce_server
           (cd apps/commerce_app && flutter analyze --no-pub)
+          (cd apps/admin_app && flutter analyze --no-pub)
 
       # Handwritten Dart only. Formatting generated files rewrites them into
       # something the generator would not emit, and `dust check` above would
@@ -72,9 +120,11 @@ jobs:
       - name: Test
         run: |
           set -euo pipefail
+          (cd packages/commerce_admin_shared && dart test)
           (cd packages/commerce_shared && dart test)
           (cd packages/commerce_server && dart test)
-          (cd apps/commerce_app && flutter test)
+          (cd apps/commerce_app && flutter test --no-pub)
+          (cd apps/admin_app && flutter test --no-pub)
 
       # The 180-line rule from CONTRIBUTING.md, enforced rather than trusted.
       # Generated files are exempt: they are output, not source.
