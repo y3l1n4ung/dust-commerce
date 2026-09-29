@@ -18,12 +18,12 @@ class ProductActions extends StatelessWidget {
       children: [
         ProductOptionGroups(state: state, disabled: busy),
         if (state.product!.variants.length > 1) ...[
-          const SizedBox(height: 24),
-          const Divider(),
           const SizedBox(height: 16),
+          const Divider(),
+          const SizedBox(height: 8),
         ],
         ProductPrice(state: state),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         ProductPurchaseButton(state: state),
       ],
     );

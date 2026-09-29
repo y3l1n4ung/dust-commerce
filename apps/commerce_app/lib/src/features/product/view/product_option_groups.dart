@@ -61,7 +61,7 @@ class ProductOptionGroups extends StatelessWidget {
               ],
             ],
           ),
-          if (option.id != product.options.last.id) const SizedBox(height: 24),
+          if (option.id != product.options.last.id) const SizedBox(height: 16),
         ],
       ],
     );
