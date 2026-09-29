@@ -34,32 +34,42 @@ class ProductOptionGroups extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              for (var valueIndex = 0;
-                  valueIndex < option.values.length;
-                  valueIndex++) ...[
-                Expanded(
-                  child: ProductOptionButton(
-                    label: option.values[valueIndex],
-                    selected:
-                        state.selection[option.id] == option.values[valueIndex],
-                    onPressed: disabled ||
-                            !state.canSelect(
-                                option.id, option.values[valueIndex])
-                        ? null
-                        : () => _select(
-                              context,
-                              product.handle,
-                              option.id,
-                              option.values[valueIndex],
-                            ),
-                  ),
-                ),
-                if (valueIndex != option.values.length - 1)
-                  const SizedBox(width: 8),
-              ],
-            ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final width =
+                  constraints.maxWidth.isFinite ? constraints.maxWidth : 300.0;
+              final rawColumns = ((width + 8) / 72).floor();
+              final columns = rawColumns < 1
+                  ? 1
+                  : rawColumns > option.values.length
+                      ? option.values.length
+                      : rawColumns;
+              if (columns == 0) return const SizedBox.shrink();
+              final itemWidth = (width - ((columns - 1) * 8)) / columns;
+              return Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final value in option.values)
+                    SizedBox(
+                      width: itemWidth,
+                      child: ProductOptionButton(
+                        label: value,
+                        selected: state.selection[option.id] == value,
+                        onPressed:
+                            disabled || !state.canSelect(option.id, value)
+                                ? null
+                                : () => _select(
+                                      context,
+                                      product.handle,
+                                      option.id,
+                                      value,
+                                    ),
+                      ),
+                    ),
+                ],
+              );
+            },
           ),
           if (option.id != product.options.last.id) const SizedBox(height: 16),
         ],
